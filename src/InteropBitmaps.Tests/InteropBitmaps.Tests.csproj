@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net471</TargetFramework>
+    <RootNamespace>InteropBitmaps</RootNamespace>
+  </PropertyGroup>  
+
+  <ItemGroup>
+    <Content Include="Resources\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\diagram.jpg" />
+    <None Remove="Resources\shannon-blurred.jpg" />
+    <None Remove="Resources\shannon.jpg" />
+    <None Remove="Resources\white.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.2.0.20200208" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Backends.OpenCvSharp4\InteropBitmaps.Backends.OpenCvSharp4.csproj" />
+  </ItemGroup>  
+
+</Project>
