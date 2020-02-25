@@ -11,54 +11,46 @@ namespace InteropBitmaps
     public readonly ref struct SpanBitmap
     {
         #region lifecycle
-
-        public SpanBitmap(Span<Byte> data, int width, int height, int pixelSize, int scanlineSize = 0)
+        
+        public unsafe SpanBitmap(IntPtr data, in BitmapInfo info)
         {
-            Guard.BitmapRect(width, height, pixelSize, scanlineSize);
-
-            _Width = width;
-            _Height = height;
-            _PixelSize = pixelSize;
-            _ScanlineSize = scanlineSize > 0 ? scanlineSize : width * pixelSize;
-
-            _Readable = _Writable = data.Slice(0, _ScanlineSize * _Height);
+            _Info = info;
+            _Readable = _Writable = new Span<Byte>(data.ToPointer(), info.BitmapByteSize);
         }
 
-        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, int pixelSize, int scanlineSize = 0)
+        public SpanBitmap(Span<Byte> data, in BitmapInfo info)
         {
-            Guard.BitmapRect(width, height, pixelSize, scanlineSize);
+            _Info = info;
+            _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
+        }
 
-            _Width = width;
-            _Height = height;
-            _PixelSize = pixelSize;
-            _ScanlineSize = scanlineSize > 0 ? scanlineSize : width * pixelSize;
-
-            _Readable = data.Slice(0, _ScanlineSize * _Height);
+        public SpanBitmap(ReadOnlySpan<Byte> data, in BitmapInfo info)
+        {
+            _Info = info;
+            _Readable = data.Slice(0, _Info.BitmapByteSize);
             _Writable = null;
         }
 
-        public unsafe SpanBitmap(IntPtr data, int width, int height, int pixelSize, int scanlineSize = 0)
+        public SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
-            Guard.BitmapRect(width, height, pixelSize, scanlineSize);
-
-            _Width = width;
-            _Height = height;
-            _PixelSize = pixelSize;
-            _ScanlineSize = scanlineSize > 0 ? scanlineSize : width * pixelSize;
-
-            _Readable = _Writable = new Span<Byte>(data.ToPointer(), _ScanlineSize * _Height);
+            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
+        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        {
+            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Readable = data.Slice(0, _Info.BitmapByteSize);
+            _Writable = null;
+        }        
+        
         #endregion
 
         #region data
 
-        private readonly ReadOnlySpan<Byte> _Readable;
-        private readonly Span<Byte>         _Writable;
-        private readonly int _Width;
-        private readonly int _Height;
-        private readonly int _PixelSize;
-        private readonly int _ScanlineSize;
+        private readonly ReadOnlySpan<Byte>     _Readable;
+        private readonly Span<Byte>             _Writable;
+        private readonly BitmapInfo             _Info;
 
         #endregion
 
@@ -66,39 +58,39 @@ namespace InteropBitmaps
 
         public Span<Byte> WritableSpan => _Writable;
 
-        public ReadOnlySpan<Byte> ReadOnlySpan => _Readable;
+        public ReadOnlySpan<Byte> ReadableSpan => _Readable;
 
-        public int Width => _Width;
+        public int Width => _Info.Width;
 
-        public int Height => _Height;
+        public int Height => _Info.Height;
 
-        public (int Width, int Height) Size => (_Width, _Height);
+        public (int Width, int Height) Size => _Info.Size;
 
-        public int PixelSize => _PixelSize;
+        public int PixelSize => _Info.PixelSize;
 
-        public int ScanlineSize => _ScanlineSize;
+        public int ScanlineSize => _Info.ScanlineSize;
 
-        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Readable.Slice(y * _ScanlineSize, _Width * _PixelSize); }
+        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable, y); }
 
-        public Span<Byte> UseBytesScanline(int y) { return _Writable.Slice(y * _ScanlineSize, _Width * _PixelSize); }
+        public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
 
-        public unsafe void PinWritableMemory(Action<(IntPtr Poiter, int Width,int Height, int PixSize, int ScanSize)> onPin)
+        public unsafe void PinWritableMemory(Action<(IntPtr Poiter, BitmapInfo Info)> onPin)
         {
             if (_Writable.Length == 0) throw new InvalidOperationException();
 
             fixed (byte* ptr = &_Writable.GetPinnableReference())
             {
-                onPin((new IntPtr(ptr), _Width, _Height, _PixelSize, _ScanlineSize));
+                onPin((new IntPtr(ptr), _Info));
             }
         }
 
-        public unsafe void PinReadableMemory(Action<(IntPtr Poiter, int Width, int Height, int PixSize, int ScanSize)> onPin)
+        public unsafe void PinReadableMemory(Action<(IntPtr Poiter, BitmapInfo Info)> onPin)
         {
             if (_Writable.Length == 0) throw new InvalidOperationException();
 
             fixed (byte* ptr = &_Readable.GetPinnableReference())
             {
-                onPin((new IntPtr(ptr), _Width, _Height, _PixelSize, _ScanlineSize));
+                onPin((new IntPtr(ptr), _Info));
             }
         }
 
@@ -120,30 +112,27 @@ namespace InteropBitmaps
 
             for (int y = 0; y < srcRect.h; ++y)
             {
-                var srcRow = src.GetBytesScanline(xRect.y + y).Slice(xRect.x * _PixelSize, xRect.w * _PixelSize);
-                var dstRow = this.UseBytesScanline(dstY + y).Slice(dstX * _PixelSize, xRect.w * _PixelSize);
+                var srcRow = src._Info.GetPixels(src._Readable,xRect.x, xRect.y + y, xRect.w);
+                var dstRow = this._Info.UsePixels(this._Writable,dstX, dstY + y, xRect.w);
 
                 srcRow.CopyTo(dstRow);
             }
         }
 
+        public MemoryBitmap ToMemoryBitmap() { return new MemoryBitmap(_Readable.ToArray(), _Info); }
+
         public unsafe SpanBitmap<TPixel> AsSpanBitmap<TPixel>()
             where TPixel : unmanaged
         {
-            if (sizeof(TPixel) != _PixelSize) throw new ArgumentException(nameof(TPixel));
+            Guard.IsValidPixelFormat<TPixel>(_Info);
 
-            if (_Writable.Length > 0) return new SpanBitmap<TPixel>(_Writable, _Width, _Height, _ScanlineSize);
-            else                      return new SpanBitmap<TPixel>(_Readable, _Width, _Height, _ScanlineSize);
+            return _Writable.IsEmpty ? new SpanBitmap<TPixel>(_Readable, _Info) : new SpanBitmap<TPixel>(_Writable, _Info);
         }
-
-        public MemoryBitmap ToMemoryBitmap() { return new MemoryBitmap(_Readable.ToArray(), _Width, _Height, _PixelSize, _ScanlineSize); }
-
+        
         public unsafe MemoryBitmap<TPixel> ToMemoryBitmap<TPixel>()
             where TPixel : unmanaged
         {
-            if (sizeof(TPixel) != _PixelSize) throw new ArgumentException(nameof(TPixel));
-
-            return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Width, _Height, _ScanlineSize);
+            return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info);
         }
 
         #endregion
@@ -160,56 +149,72 @@ namespace InteropBitmaps
 
         public static implicit operator SpanBitmap(SpanBitmap<TPixel> other) { return other.AsSpanBitmap(); }
 
-        public unsafe SpanBitmap(Span<TPixel> data, int width, int height, int scanlineSize = 0)
+        public unsafe SpanBitmap(IntPtr data, in BitmapInfo info)
         {
-            Guard.BitmapRect(width, height, sizeof(TPixel), scanlineSize);
-
-            _Width = width;
-            _Height = height;
-            _PixelSize = sizeof(TPixel);
-            _ScanlineSize = scanlineSize > 0 ? scanlineSize : width * _PixelSize;
-
-            _Readable = _Writable = System.Runtime.InteropServices.MemoryMarshal
-                .Cast<TPixel, Byte>(data)
-                .Slice(0, _ScanlineSize * _Height);
+            Guard.IsValidPixelFormat<TPixel>(info);
+            _Info = info;
+            _Readable = _Writable = new Span<Byte>(data.ToPointer(), _Info.BitmapByteSize);
         }
+
+        internal SpanBitmap(Span<Byte> data, in BitmapInfo info)
+        {
+            Guard.IsValidPixelFormat<TPixel>(info);
+            _Info = info;
+            _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
+        }
+
+        internal SpanBitmap(ReadOnlySpan<Byte> data, in BitmapInfo info)
+        {
+            Guard.IsValidPixelFormat<TPixel>(info);
+            _Info = info;
+            _Readable = data.Slice(0, _Info.BitmapByteSize);
+            _Writable = null;
+        }        
 
         public unsafe SpanBitmap(Span<Byte> data, int width, int height, int scanlineSize = 0)
         {
-            Guard.BitmapRect(width, height, sizeof(TPixel), scanlineSize);
-
-            _Width = width;
-            _Height = height;
-            _PixelSize = sizeof(TPixel);
-            _ScanlineSize = scanlineSize > 0 ? scanlineSize : width * _PixelSize;
-
-            _Readable = _Writable = data.Slice(0, _ScanlineSize * _Height);
+            _Info = new BitmapInfo(width, height, sizeof(TPixel), scanlineSize);
+            _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
         public unsafe SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, int scanlineSize = 0)
         {
-            Guard.BitmapRect(width, height, sizeof(TPixel), scanlineSize);
-
-            _Width = width;
-            _Height = height;
-            _PixelSize = sizeof(TPixel);
-            _ScanlineSize = scanlineSize > 0 ? scanlineSize : width * _PixelSize;
-
-            _Readable = data.Slice(0, _ScanlineSize * _Height);
+            _Info = new BitmapInfo(width, height, sizeof(TPixel), scanlineSize);
+            _Readable = data.Slice(0, _Info.BitmapByteSize);
             _Writable = null;
         }
 
-        public unsafe SpanBitmap(IntPtr data, int width, int height, int scanlineSize = 0)
+        internal unsafe SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
-            Guard.NotNull(nameof(data), data);
-            Guard.BitmapRect(width, height, sizeof(TPixel), scanlineSize);
+            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            Guard.IsValidPixelFormat<TPixel>(_Info);
+            _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
+        }
 
-            _Width = width;
-            _Height = height;
-            _PixelSize = sizeof(TPixel);
-            _ScanlineSize = scanlineSize > 0 ? scanlineSize : width * _PixelSize;
+        internal unsafe SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        {
+            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            Guard.IsValidPixelFormat<TPixel>(_Info);
+            _Readable = data.Slice(0, _Info.BitmapByteSize);
+            _Writable = null;
+        }
 
-            _Readable = _Writable = new Span<Byte>(data.ToPointer(), _ScanlineSize * _Height);
+        public unsafe SpanBitmap(Span<TPixel> data, int width, int height, int scanlineSize = 0)
+        {
+            _Info = new BitmapInfo(width, height, sizeof(TPixel), scanlineSize);
+
+            _Readable = _Writable = System.Runtime.InteropServices.MemoryMarshal
+                .Cast<TPixel, Byte>(data)
+                .Slice(0, _Info.BitmapByteSize);
+        }
+
+        public unsafe SpanBitmap(Span<TPixel> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        {
+            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            Guard.IsValidPixelFormat<TPixel>(_Info);
+            _Readable = _Writable = System.Runtime.InteropServices.MemoryMarshal
+                .Cast<TPixel, Byte>(data)
+                .Slice(0, _Info.BitmapByteSize);
         }
 
         #endregion
@@ -217,11 +222,8 @@ namespace InteropBitmaps
         #region data
 
         private readonly ReadOnlySpan<Byte> _Readable;
-        private readonly Span<Byte>         _Writable;        
-        private readonly int _Width;
-        private readonly int _Height;
-        private readonly int _PixelSize;
-        private readonly int _ScanlineSize;
+        private readonly Span<Byte>         _Writable;
+        private readonly BitmapInfo         _Info;
 
         #endregion
 
@@ -229,30 +231,30 @@ namespace InteropBitmaps
 
         public Span<Byte> WritableSpan => _Writable;
 
-        public ReadOnlySpan<Byte> ReadOnlySpan => _Readable;
+        public ReadOnlySpan<Byte> ReadableSpan => _Readable;
 
-        public int Width => _Width;
+        public int Width => _Info.Width;
 
-        public int Height => _Height;
+        public int Height => _Info.Height;
 
-        public (int Width, int Height) Size => (_Width, _Height);
+        public (int Width, int Height) Size => _Info.Size;
 
-        public int PixelSize => _PixelSize;
+        public int PixelSize => _Info.PixelSize;
 
-        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Readable.Slice(y * _ScanlineSize, _Width * _PixelSize); }
+        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable,y); }
+
+        public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
 
         public ReadOnlySpan<TPixel> GetPixelsScanline(int y)
         {
-            var rowBytes = GetBytesScanline(y);
+            var rowBytes = _Info.GetScanline(_Readable, y);
 
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(rowBytes);
-        }
-
-        public Span<Byte> UseBytesScanline(int y) { return _Writable.Slice(y * _ScanlineSize, _Width * _PixelSize); }        
+        }        
 
         public Span<TPixel> UsePixelsScanline(int y)
         {
-            var rowBytes = UseBytesScanline(y);
+            var rowBytes = _Info.UseScanline(_Writable, y);
 
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(rowBytes);
         }
@@ -266,23 +268,7 @@ namespace InteropBitmaps
         #region API - Bulk operations
 
         public void SetPixels(int x, int y, IBitmap<TPixel> src) { SetPixels(x, y, src, (0, 0, src.Width, src.Height)); }
-
-        public void SetPixels(int dstX, int dstY, IBitmap<TPixel> src, in (int x, int y, int w, int h) srcRect)
-        {
-            var scanlines = _GetScanlines(dstX, dstY, (src.Width,src.Height), srcRect);
-
-            if (scanlines.IsEmpty) return;
-
-            for (int y = 0; y < scanlines.Height; ++y)
-            {
-                for (int x = 0; x < scanlines.Width; ++x)
-                {
-                    var pixel = src.GetPixel(scanlines.SourceX + x, scanlines.SourceY + y);
-                    this.SetPixel(scanlines.TargetX + x, scanlines.TargetY + y, pixel);
-                }
-            }
-        }
-
+        
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { SetPixels(dstX, dstY, src, (0, 0, src.Width, src.Height)); }
 
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src, in (int x, int y, int w, int h) srcRect)
@@ -300,6 +286,22 @@ namespace InteropBitmaps
             }
         }
 
+        public void SetPixels(int dstX, int dstY, IBitmap<TPixel> src, in (int x, int y, int w, int h) srcRect)
+        {
+            var scanlines = _GetScanlines(dstX, dstY, (src.Width, src.Height), srcRect);
+
+            if (scanlines.IsEmpty) return;
+
+            for (int y = 0; y < scanlines.Height; ++y)
+            {
+                for (int x = 0; x < scanlines.Width; ++x)
+                {
+                    var pixel = src.GetPixel(scanlines.SourceX + x, scanlines.SourceY + y);
+                    this.SetPixel(scanlines.TargetX + x, scanlines.TargetY + y, pixel);
+                }
+            }
+        }
+
         private RectangleOverlap _GetScanlines(int dstX, int dstY, (int w, int h) srcSiz, (int x, int y, int w, int h) srcRect)
         {
             var scanlines = new RectangleOverlap();
@@ -311,11 +313,10 @@ namespace InteropBitmaps
 
         public unsafe SpanBitmap AsSpanBitmap()
         {
-            if (_Writable.Length > 0) return new SpanBitmap(_Writable, _Width, _Height, sizeof(TPixel), _ScanlineSize);
-            else                      return new SpanBitmap(_Readable, _Width, _Height, sizeof(TPixel), _ScanlineSize);
+            return _Writable.IsEmpty ? new SpanBitmap(_Readable, _Info) : new SpanBitmap(_Writable, _Info);
         }
 
-        public MemoryBitmap<TPixel> ToMemoryBitmap() { return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Width, _Height, _ScanlineSize); }
+        public MemoryBitmap<TPixel> ToMemoryBitmap() { return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info); }
 
         #endregion
 

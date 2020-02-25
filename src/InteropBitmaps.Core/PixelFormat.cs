@@ -8,39 +8,29 @@ namespace InteropBitmaps
 
     public enum PixelElementFormat
     {
+        // 0
         Empty,
-        Undefined1,
-        Undefined4,
-        Undefined8,
-        Undefined16,
-        Undefined32,
 
-        Index8,
-        Index16,
+        // 1
+        Undefined1, Alpha1,
 
-        Red4,
-        Red8,
-        Red5,
-        Red32F,
+        // 4
+        Undefined4, Red4, Green4, Blue4, Alpha4,
 
-        Green4,
-        Green5,
-        Green6,
-        Green8,
-        Green32F,
+        // 5
+        Undefined5, Red5, Green5, Blue5,
 
-        Blue4,
-        Blue5,
-        Blue8,
-        Blue32F,
+        // 6
+        Undefined6, Green6,
 
-        Alpha1,
-        Alpha4,
-        Alpha8,
-        Alpha32F,
+        // 8
+        Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8,
 
-        Gray8,
-        Gray16,
+        // 16
+        Undefined16, Index16, Gray16,
+
+        // 32
+        Undefined32, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
     }
 
     [System.Diagnostics.DebuggerDisplay("{Element0-Element1-Element2-Element3}")]
@@ -98,6 +88,11 @@ namespace InteropBitmaps
             _Element1 = (Byte)e1;
             _Element2 = (Byte)e2;
             _Element3 = (Byte)e3;
+        }
+
+        public static unsafe PixelFormat GetUndefined<TPixel>() where TPixel:unmanaged
+        {
+            return GetUndefinedOfSize(sizeof(TPixel));
         }
 
         public static PixelFormat GetUndefinedOfSize(int byteCount)
@@ -169,6 +164,7 @@ namespace InteropBitmaps
             c += _GetBitLen(Element2);
             c += _GetBitLen(Element3);
 
+            if (c == 0) throw new InvalidOperationException("Format must not have a zero length");
             if ((c & 7) != 0) throw new InvalidOperationException("Format must have a length multiple of 8");
 
             return c / 8;
@@ -179,10 +175,22 @@ namespace InteropBitmaps
             switch(pef)
             {
                 case PEF.Empty: return 0;
+
+                case PEF.Alpha1:
                 case PEF.Undefined1: return 1;
-                case PEF.Undefined4: return 4;                
-                case PEF.Undefined16: return 16;
-                case PEF.Undefined32: return 32;
+
+                case PEF.Red4:
+                case PEF.Green4:
+                case PEF.Blue4:
+                case PEF.Undefined4: return 4;
+
+                case PEF.Red5:
+                case PEF.Green5:
+                case PEF.Blue5:
+                case PEF.Undefined5: return 5;
+
+                case PEF.Green6:
+                case PEF.Undefined6: return 6;
 
                 case PEF.Index8:
                 case PEF.Gray8:
@@ -191,11 +199,20 @@ namespace InteropBitmaps
                 case PEF.Blue8:
                 case PEF.Undefined8: return 8;
 
+                case PEF.Index16:
+                case PEF.Gray16:
+                case PEF.Undefined16: return 16;
+
+                case PEF.Gray32F:
+                case PEF.Red32F:
+                case PEF.Green32F:
+                case PEF.Blue32F:
+                case PEF.Undefined32: return 32;
+
                 default: throw new NotImplementedException();
             }
         }
 
         #endregion
-
     }
 }

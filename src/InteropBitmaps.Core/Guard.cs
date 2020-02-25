@@ -56,5 +56,11 @@ namespace InteropBitmaps
             Guard.GreaterThan(nameof(pixelSize), pixelSize, 0);
             if (scanlineSize > 0) Guard.EqualOrGreaterThan(nameof(scanlineSize), scanlineSize, width * pixelSize);
         }
+
+        public static unsafe void IsValidPixelFormat<TPixel>(in BitmapInfo info) where TPixel:unmanaged
+        {
+            if (info.PixelSize == sizeof(TPixel)) return;
+            throw new ArgumentException("Invalid pixel type.", nameof(TPixel));
+        }
     }
 }

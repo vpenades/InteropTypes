@@ -4,6 +4,7 @@ using System.Text;
 
 using SixLabors.ImageSharp.PixelFormats;
 using ELEMENT = InteropBitmaps.PixelElementFormat;
+using PEF = InteropBitmaps.PixelElementFormat;
 
 namespace InteropBitmaps
 {
@@ -12,27 +13,24 @@ namespace InteropBitmaps
 
     partial class ImageSharpToolkit
     {
-        public static PixelFormat GetInteropPixelFormat<TPixel>() where TPixel:struct,IPixel<TPixel>
+        public static PixelFormat GetPixelFormat<TPixel>()
+            where TPixel : unmanaged, IPixel<TPixel>
         {
-            return typeof(TPixel).GetImageSharpInteropPixelFormat();
+            if (typeof(TPixel) == typeof(Alpha8)) return new PixelFormat(PEF.Alpha8);
+            if (typeof(TPixel) == typeof(Argb32)) return new PixelFormat(PEF.Alpha8, PEF.Red8, PEF.Green8, PEF.Blue8);
+            if (typeof(TPixel) == typeof(Bgr24)) return new PixelFormat(PEF.Blue8, PEF.Green8, PEF.Red8);
+            if (typeof(TPixel) == typeof(Bgr565)) return new PixelFormat(PEF.Blue5, PEF.Green6, PEF.Red5);
+            if (typeof(TPixel) == typeof(Bgra32)) return new PixelFormat(PEF.Blue8, PEF.Green8, PEF.Red8, PEF.Alpha8);
+            if (typeof(TPixel) == typeof(Bgra4444)) return new PixelFormat(PEF.Blue4, PEF.Green4, PEF.Red4, PEF.Alpha4);
+            if (typeof(TPixel) == typeof(Bgra5551)) return new PixelFormat(PEF.Blue5, PEF.Green5, PEF.Red5, PEF.Alpha1);
+            if (typeof(TPixel) == typeof(Gray16)) return new PixelFormat(PEF.Gray16);
+            if (typeof(TPixel) == typeof(Gray8)) return new PixelFormat(PEF.Gray8);
+            if (typeof(TPixel) == typeof(Rgb24)) return new PixelFormat(PEF.Red8, PEF.Green8, PEF.Blue8);
+            if (typeof(TPixel) == typeof(Rgba32)) return new PixelFormat(PEF.Red8, PEF.Green8, PEF.Blue8, PEF.Alpha8);
+
+            throw new NotImplementedException();
         }
-
-        private static readonly uint _Fmt_Rgb24 = new PixelFormat(ELEMENT.Red8, ELEMENT.Green8, ELEMENT.Blue8).PackedFormat;
-        private static readonly uint _Fmt_Argb32 = new PixelFormat(ELEMENT.Alpha8, ELEMENT.Red8, ELEMENT.Green8, ELEMENT.Blue8).PackedFormat;
-        private static readonly uint _Fmt_Rgba32 = new PixelFormat(ELEMENT.Red8, ELEMENT.Green8, ELEMENT.Blue8, ELEMENT.Alpha8).PackedFormat;
-        private static readonly uint _Fmt_Bgra32 = new PixelFormat(ELEMENT.Blue8, ELEMENT.Green8, ELEMENT.Red8, ELEMENT.Alpha8).PackedFormat;
-        private static readonly uint _Fmt_RgbaVector = new PixelFormat(ELEMENT.Red32F, ELEMENT.Green32F, ELEMENT.Blue32F, ELEMENT.Alpha32F).PackedFormat;
-
-        public static PixelFormat GetImageSharpInteropPixelFormat(this Type pixelType)
-        {
-            if (pixelType == typeof(Rgb24)) return new PixelFormat(_Fmt_Rgb24);
-            if (pixelType == typeof(Argb32)) return new PixelFormat(_Fmt_Argb32);
-            if (pixelType == typeof(Rgba32)) return new PixelFormat(_Fmt_Rgba32);
-            if (pixelType == typeof(Bgra32)) return new PixelFormat(_Fmt_Bgra32);
-            if (pixelType == typeof(RgbaVector)) return new PixelFormat(_Fmt_RgbaVector);
-
-            throw new NotImplementedException(pixelType.ToString());
-        }
+        
 
         public static Type ToImageSharpPixelFormat(this PixelFormat fmt)
         {
