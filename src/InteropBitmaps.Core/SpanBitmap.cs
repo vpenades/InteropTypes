@@ -70,6 +70,22 @@ namespace InteropBitmaps
 
         public int ScanlineSize => _Info.ScanlineSize;
 
+        public SpanBitmap Slice(int x, int y, int width, int height)
+        {
+            var (offset, info) = _Info.Slice(x, y, width, height);
+
+            if (_Writable.IsEmpty)
+            {
+                var span = _Writable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap(span, info);
+            }
+            else
+            {
+                var span = _Readable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap(span, info);
+            }
+        }
+
         public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable, y); }
 
         public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
@@ -240,6 +256,22 @@ namespace InteropBitmaps
         public (int Width, int Height) Size => _Info.Size;
 
         public int PixelSize => _Info.PixelSize;
+
+        public SpanBitmap<TPixel> Slice(int x, int y, int width, int height)
+        {
+            var (offset, info) = _Info.Slice(x, y, width, height);
+
+            if (_Writable.IsEmpty)
+            {
+                var span = _Writable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap<TPixel>(span, info);
+            }
+            else
+            {
+                var span = _Readable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap<TPixel>(span, info);
+            }
+        }
 
         public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable,y); }
 

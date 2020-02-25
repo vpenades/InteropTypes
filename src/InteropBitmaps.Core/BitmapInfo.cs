@@ -33,6 +33,15 @@ namespace InteropBitmaps
             ScanlineSize = scanlineSize > 0 ? scanlineSize : width * pixelSize;
         }
 
+        private BitmapInfo(int width, int height, in BitmapInfo other)
+        {
+            Width = width;
+            Height = height;
+            PixelSize = other.PixelSize;
+            PixelFormat = other.PixelFormat;
+            ScanlineSize = other.ScanlineSize;
+        }
+
         #endregion
 
         #region data
@@ -54,6 +63,15 @@ namespace InteropBitmaps
         #endregion
 
         #region data
+
+        public (int Offset, BitmapInfo Info) Slice(int x, int y, int width, int height)
+        {
+            var offset = this.ScanlineSize * y + this.PixelSize * x;
+
+            var info = new BitmapInfo(width, height, this);
+
+            return (offset, info);
+        }
 
         public Span<Byte> UseScanline(Span<Byte> bitmap, int y)
         {
