@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace InteropBitmaps
 {
@@ -43,5 +45,14 @@ namespace InteropBitmaps
 
             NUnit.Framework.TestContext.AddTestAttachment(filePath);
         }
+    }
+
+    static class ImageSharpUtils
+    {
+        public static IImageProcessingContext FillPolygon(this IImageProcessingContext source, Color color, params (float,float)[] points)
+        {
+            return source.FillPolygon(color, points.Select(item => new SixLabors.Primitives.PointF(item.Item1, item.Item2)).ToArray());
+        }
+
     }
 }

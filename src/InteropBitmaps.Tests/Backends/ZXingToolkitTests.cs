@@ -34,10 +34,7 @@ namespace InteropBitmaps.Backends
 
                 foreach(var p in code.ResultPoints)
                 {
-                    var p1 = new POINT(p.X, p.Y - 5);
-                    var p2 = new POINT(p.X + 5, p.Y + 5);
-                    var p3 = new POINT(p.X - 5, p.Y + 5);
-                    image.Mutate(dc => dc.FillPolygon(SixLabors.ImageSharp.Color.Red, p1, p2, p3));
+                    image.Mutate(dc => dc.FillPolygon(SixLabors.ImageSharp.Color.Red, (p.X, p.Y - 5), (p.X + 5, p.Y + 5), (p.X - 5, p.Y + 5)));
                 }
 
                 var font = SixLabors.Fonts.SystemFonts.CreateFont("Arial", 20);

@@ -1,0 +1,1 @@
+https://github.com/ageitgey/face_recognition_models/models

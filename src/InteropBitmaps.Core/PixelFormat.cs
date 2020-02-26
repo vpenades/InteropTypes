@@ -4,9 +4,9 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    using PEF = PixelElementFormat;
+    using PEF = ComponentFormat;
 
-    public enum PixelElementFormat
+    public enum ComponentFormat
     {
         // 0
         Empty,
@@ -87,7 +87,7 @@ namespace InteropBitmaps
         {
             PackedFormat = 0;
             _Element0 = (Byte)e0;
-            _Element1 = _Element2 = _Element3 = (Byte)PixelElementFormat.Empty;
+            _Element1 = _Element2 = _Element3 = (Byte)ComponentFormat.Empty;
         }
 
         public PixelFormat(PEF e0, PEF e1)
@@ -95,16 +95,16 @@ namespace InteropBitmaps
             PackedFormat = 0;
             _Element0 = (Byte)e0;
             _Element1 = (Byte)e1;
-            _Element2 = _Element3 = (Byte)PixelElementFormat.Empty;
+            _Element2 = _Element3 = (Byte)ComponentFormat.Empty;
         }
 
-        public PixelFormat(PEF e0, PEF e1, PixelElementFormat e2)
+        public PixelFormat(PEF e0, PEF e1, ComponentFormat e2)
         {
             PackedFormat = 0;
             _Element0 = (Byte)e0;
             _Element1 = (Byte)e1;
             _Element2 = (Byte)e2;
-            _Element3 = (Byte)PixelElementFormat.Empty;
+            _Element3 = (Byte)ComponentFormat.Empty;
         }
 
         public PixelFormat(PEF e0, PEF e1, PEF e2, PEF e3)
@@ -208,6 +208,7 @@ namespace InteropBitmaps
                 case PEF.Red4:
                 case PEF.Green4:
                 case PEF.Blue4:
+                case PEF.Alpha4:
                 case PEF.Undefined4: return 4;
 
                 case PEF.Red5:
@@ -234,6 +235,7 @@ namespace InteropBitmaps
                 case PEF.Red32F:
                 case PEF.Green32F:
                 case PEF.Blue32F:
+                case PEF.Alpha32F:
                 case PEF.Undefined32: return 32;
 
                 default: throw new NotImplementedException();

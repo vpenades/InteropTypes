@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
-using ELEMENT = InteropBitmaps.PixelElementFormat;
+using ELEMENT = InteropBitmaps.ComponentFormat;
 
 namespace InteropBitmaps
 {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 using SixLabors.ImageSharp.PixelFormats;
-using ELEMENT = InteropBitmaps.PixelElementFormat;
-using PEF = InteropBitmaps.PixelElementFormat;
+using ELEMENT = InteropBitmaps.ComponentFormat;
+using PEF = InteropBitmaps.ComponentFormat;
 
 namespace InteropBitmaps
 {
