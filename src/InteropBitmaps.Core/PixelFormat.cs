@@ -38,16 +38,16 @@ namespace InteropBitmaps
     public readonly struct PixelFormat : IEquatable<PixelFormat>
     {
         #region constants
-
-        private const uint B0 = 1;
-        private const uint B1 = 256;
-        private const uint B2 = 256 * 256;
-        private const uint B3 = 256 * 256 * 256;
-
-        public const uint Empty = (uint)PEF.Empty;
-
-        public static class Standard
+        
+        public static class Packed
         {
+            private const uint B0 = 1;
+            private const uint B1 = 256;
+            private const uint B2 = 256 * 256;
+            private const uint B3 = 256 * 256 * 256;
+
+            public const uint Empty = (uint)PEF.Empty;
+
             public const uint X8 = B0 * (uint)PEF.Undefined8;
             public const uint X16 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8;
             public const uint X24 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8 | B2 * (uint)PEF.Undefined8;
@@ -69,13 +69,33 @@ namespace InteropBitmaps
             public const uint ARGB32 = B0 * (uint)PEF.Alpha8 | B1 * (uint)PEF.Red8 | B2 * (uint)PEF.Green8 | B3 * (uint)PEF.Blue8;
         }
 
+        public static class Standard
+        {
+            public static readonly PixelFormat Empty = new PixelFormat(Packed.Empty);
+
+            public static readonly PixelFormat GRAY8 = new PixelFormat(Packed.GRAY8);
+            public static readonly PixelFormat ALPHA8 = new PixelFormat(Packed.ALPHA8);
+
+            public static readonly PixelFormat GRAY16 = new PixelFormat(Packed.GRAY16);
+            public static readonly PixelFormat BGR565 = new PixelFormat(Packed.BGR565);
+            public static readonly PixelFormat BGRA4444 = new PixelFormat(Packed.BGRA4444);
+            public static readonly PixelFormat BGRA5551 = new PixelFormat(Packed.BGRA5551);
+
+            public static readonly PixelFormat RGB24 = new PixelFormat(Packed.RGB24);
+            public static readonly PixelFormat BGR24 = new PixelFormat(Packed.BGR24);
+
+            public static readonly PixelFormat RGBA32 = new PixelFormat(Packed.RGBA32);
+            public static readonly PixelFormat BGRA32 = new PixelFormat(Packed.BGRA32);
+            public static readonly PixelFormat ARGB32 = new PixelFormat(Packed.ARGB32);
+        }
+
         #endregion
 
         #region constructors
 
         public static implicit operator UInt32 (PixelFormat fmt) { return fmt.PackedFormat; }
 
-        public static implicit operator PixelFormat(UInt32 fmt) { return new PixelFormat(fmt); }
+        //public static implicit operator PixelFormat(UInt32 fmt) { return new PixelFormat(fmt); }
 
         public PixelFormat(UInt32 packedFormat)
         {
@@ -239,6 +259,65 @@ namespace InteropBitmaps
                 case PEF.Undefined32: return 32;
 
                 default: throw new NotImplementedException();
+            }
+        }
+
+        private int _FindByteIndex(PEF pef)
+        {
+            if (Element0 == pef) return 0;
+            if (Element1 == pef) return 1;
+            if (Element2 == pef) return 2;
+            if (Element3 == pef) return 3;
+            return -1;
+        }
+
+        private PEF _GetComponentAt(int byteIndex)
+        {
+            switch(byteIndex)
+            {
+                case 0: return Element0;
+                case 1: return Element1;
+                case 2: return Element2;
+                case 3: return Element3;
+                default: return PEF.Empty;
+            }
+        }
+
+        #endregion
+
+        #region static
+
+        public static void Convert(SpanBitmap dst, SpanBitmap src)
+        {
+            Guard.AreEqual(nameof(src), dst.Width, src.Width);
+            Guard.AreEqual(nameof(src), dst.Height, src.Height);            
+
+            var byteIndices = new int[dst.PixelSize];
+
+            for (int i = 0; i < byteIndices.Length; ++i)
+            {
+                var c = dst.PixelFormat._GetComponentAt(i);
+                var idx = src.PixelFormat._FindByteIndex(c);
+                if (idx < 0) throw new ArgumentException(nameof(src));
+                byteIndices[i] = idx;
+            }            
+
+            for (int y = 0; y < dst.Height; ++y)
+            {
+                var dstRow = dst.UseBytesScanline(y);
+                var srcRow = src.GetBytesScanline(y);
+
+                for(int x=0; x < dst.Width; ++x)
+                {
+                    for(int z=0; z < byteIndices.Length; ++z)
+                    {
+                        var idx = byteIndices[z];
+                        dstRow[z] = srcRow[idx];
+                    }
+
+                    dstRow.Slice(dst.PixelSize);
+                    srcRow.Slice(src.PixelSize);
+                }
             }
         }
 

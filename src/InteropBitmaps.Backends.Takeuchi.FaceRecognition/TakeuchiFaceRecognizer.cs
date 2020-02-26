@@ -46,6 +46,8 @@ namespace InteropBitmaps
 
         public IEnumerable<FaceRecognitionDotNet.Location> FindFaces(SpanBitmap bitmap)
         {
+            // if (bitmap.PixelSize != 1 && bitmap.PixelSize != 3) throw new ArgumentException("Only Gray and RGB formats are valid", nameof(bitmap));
+
             var tmp = _GetImage(bitmap);
 
             using (var img = tmp.CreateClient())
@@ -67,7 +69,7 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region 
+        #region  nested types.
 
         private class CachedImage
         {
@@ -76,16 +78,22 @@ namespace InteropBitmaps
 
             public void Update(SpanBitmap src)
             {
-                if (src.PixelSize != 1 && src.PixelSize != 3) throw new ArgumentException("Only Gray and RGB formats are valid", nameof(src));
-
-                if (Info.Width != src.Width || Info.Height != src.Height || Info.PixelSize != src.PixelSize)
+                if (Info.Width != src.Width || Info.Height != src.Height)
                 {
-                    Data = new byte[src.Width * src.Height * src.PixelSize];
-                    Info = new BitmapInfo(src.Width, src.Height, src.PixelFormat);
+                    
+                    Info = new BitmapInfo(src.Width, src.Height, PixelFormat.Standard.RGB24);
+                    Data = new byte[Info.BitmapByteSize];
                 }
 
                 var dst = new SpanBitmap(Data, Info);
-                dst.SetPixels(0, 0, src);
+
+                if (src.PixelFormat == dst.PixelFormat)
+                {
+                    dst.SetPixels(0, 0, src);
+                    return;
+                }
+
+                PixelFormat.Convert(dst, src);                
             }
 
             public FaceRecognitionDotNet.Image CreateClient()

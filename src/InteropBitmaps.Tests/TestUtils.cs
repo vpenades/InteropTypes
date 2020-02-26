@@ -51,7 +51,16 @@ namespace InteropBitmaps
     {
         public static IImageProcessingContext FillPolygon(this IImageProcessingContext source, Color color, params (float,float)[] points)
         {
-            return source.FillPolygon(color, points.Select(item => new SixLabors.Primitives.PointF(item.Item1, item.Item2)).ToArray());
+            var ppp = points.Select(item => new SixLabors.Primitives.PointF(item.Item1, item.Item2)).ToArray();
+
+            return source.FillPolygon(color, ppp);
+        }
+
+        public static IImageProcessingContext DrawPolygon(this IImageProcessingContext source, Color color, float thickness, params (float, float)[] points)
+        {
+            var ppp = points.Select(item => new SixLabors.Primitives.PointF(item.Item1, item.Item2)).ToArray();
+
+            return source.DrawPolygon(color, thickness, ppp);
         }
 
     }

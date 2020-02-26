@@ -14,9 +14,9 @@ namespace InteropBitmaps
         [Test]
         public void CreateMemoryBitmap()
         {
-            var m1 = new MemoryBitmap(16, 16, 4);
+            var m1 = new MemoryBitmap(16, 16, PixelFormat.Standard.RGBA32);
 
-            var m2 = new MemoryBitmap(new Byte[16 * 16 * 4], 16, 16, 4);
+            var m2 = new MemoryBitmap(new Byte[16 * 16 * 4], 16, 16, PixelFormat.Standard.RGBA32);
         }
     }
 }

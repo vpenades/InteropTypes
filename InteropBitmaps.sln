@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{227D251E-A653-47FC-AAF3-60FE3AD17C89}"
 EndProject
@@ -16,13 +16,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Tests", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.ZXing", "src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj", "{C7538BBF-8C64-4BCA-9BCA-DE67B7DC9B90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropBitmaps.Backends.Takeuchi.FaceRecognition", "src\InteropBitmaps.Backends.Takeuchi.FaceRecognition\InteropBitmaps.Backends.Takeuchi.FaceRecognition.csproj", "{FA6B67AD-9A01-4171-BB6C-1605BD08A186}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.Takeuchi.FaceRecognition", "src\InteropBitmaps.Backends.Takeuchi.FaceRecognition\InteropBitmaps.Backends.Takeuchi.FaceRecognition.csproj", "{FA6B67AD-9A01-4171-BB6C-1605BD08A186}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropBitmaps.Backends.Takeuchi.OpenPose", "src\InteropBitmaps.Backends.Takeuchi.OpenPose\InteropBitmaps.Backends.Takeuchi.OpenPose.csproj", "{D3656307-A426-49B0-A234-34379C0C3EC4}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -56,6 +54,10 @@ Global
 		{FA6B67AD-9A01-4171-BB6C-1605BD08A186}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA6B67AD-9A01-4171-BB6C-1605BD08A186}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA6B67AD-9A01-4171-BB6C-1605BD08A186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3656307-A426-49B0-A234-34379C0C3EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3656307-A426-49B0-A234-34379C0C3EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3656307-A426-49B0-A234-34379C0C3EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3656307-A426-49B0-A234-34379C0C3EC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,8 +70,13 @@ Global
 		{CB0FFE21-657D-4542-A95E-311122A430D6} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 		{C7538BBF-8C64-4BCA-9BCA-DE67B7DC9B90} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 		{FA6B67AD-9A01-4171-BB6C-1605BD08A186} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
+		{D3656307-A426-49B0-A234-34379C0C3EC4} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal

@@ -39,20 +39,20 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case PixelFormat.Standard.GRAY8: return typeof(Gray8);
-                case PixelFormat.Standard.GRAY16: return typeof(Gray16);
+                case PixelFormat.Packed.GRAY8: return typeof(Gray8);
+                case PixelFormat.Packed.GRAY16: return typeof(Gray16);
 
-                case PixelFormat.Standard.ALPHA8: return typeof(Alpha8);
+                case PixelFormat.Packed.ALPHA8: return typeof(Alpha8);
 
-                case PixelFormat.Standard.BGR565: return typeof(Bgr565);
-                case PixelFormat.Standard.BGRA4444: return typeof(Bgra4444);
+                case PixelFormat.Packed.BGR565: return typeof(Bgr565);
+                case PixelFormat.Packed.BGRA4444: return typeof(Bgra4444);
 
-                case PixelFormat.Standard.RGB24: return typeof(Rgb24);
-                case PixelFormat.Standard.BGR24: return typeof(Bgr24);
+                case PixelFormat.Packed.RGB24: return typeof(Rgb24);
+                case PixelFormat.Packed.BGR24: return typeof(Bgr24);
 
-                case PixelFormat.Standard.RGBA32: return typeof(Rgba32);
-                case PixelFormat.Standard.BGRA32: return typeof(Bgra32);
-                case PixelFormat.Standard.ARGB32: return typeof(Argb32);
+                case PixelFormat.Packed.RGBA32: return typeof(Rgba32);
+                case PixelFormat.Packed.BGRA32: return typeof(Bgra32);
+                case PixelFormat.Packed.ARGB32: return typeof(Argb32);
 
                 default: throw new NotImplementedException();
             }

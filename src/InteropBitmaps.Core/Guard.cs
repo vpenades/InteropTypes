@@ -7,6 +7,12 @@ namespace InteropBitmaps
     [System.Diagnostics.DebuggerStepThrough]
     static class Guard
     {
+        public static void IsNull(string paramName, Object param)
+        {
+            if (param == null) return;
+            throw new ArgumentException(paramName);
+        }
+
         public static void NotNull(string paramName, IntPtr param)
         {
             if (param != IntPtr.Zero) return;
@@ -17,7 +23,23 @@ namespace InteropBitmaps
         {
             if (param != null) return;
             throw new ArgumentNullException(paramName);
-        }        
+        }
+
+        public static void IsTrue(string paramName, Boolean param)
+        {
+            if (param) return;
+            throw new ArgumentException(paramName);
+        }
+
+        public static void IsFalse(string paramName, Boolean param)
+        {
+            if (!param) return;
+            throw new ArgumentException(paramName);
+        }
+
+
+
+
 
         public static void AreEqual<T>(string paramName, T param, T other) where T : IEquatable<T>
         {

@@ -24,21 +24,22 @@ namespace InteropBitmaps.Backends
 
             using (var image = SixLabors.ImageSharp.Image.Load(filePath))
             {
+                // detect code:
+
                 var code = image.AsSpanBitmap().ScanAndDecodeQRCode();
 
                 if (string.IsNullOrWhiteSpace(expected)) { Assert.Null(code); return; }
 
                 Assert.AreEqual(expected, code.Text);
 
+                // report result:
+
                 TestContext.WriteLine($"Code found: {code?.Text}");
 
-                foreach(var p in code.ResultPoints)
-                {
-                    image.Mutate(dc => dc.FillPolygon(SixLabors.ImageSharp.Color.Red, (p.X, p.Y - 5), (p.X + 5, p.Y + 5), (p.X - 5, p.Y + 5)));
-                }
-
+                var points = code.ResultPoints.Select(item => (item.X, item.Y)).ToArray();
                 var font = SixLabors.Fonts.SystemFonts.CreateFont("Arial", 20);
 
+                image.Mutate(dc => dc.DrawPolygon(SixLabors.ImageSharp.Color.Red, 3, points));
                 image.Mutate(dc => dc.DrawText(code.Text, font, SixLabors.ImageSharp.Color.Red, new POINT(5, 5)));
 
                 image.AttachToCurrentTest("Result.png");

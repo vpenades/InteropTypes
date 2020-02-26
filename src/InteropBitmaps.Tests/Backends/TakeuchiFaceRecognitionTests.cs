@@ -22,12 +22,9 @@ namespace InteropBitmaps.Backends
             {
                 using (var image = SixLabors.ImageSharp.Image.Load(filePath))
                 {
-                    using (var img2 = image.CloneAs<SixLabors.ImageSharp.PixelFormats.Rgb24>())
-                    {
-                        var result = faceRecog.FindFaces(img2.AsSpanBitmap().AsSpanBitmap()).ToArray();
+                    var result = faceRecog.FindFaces(image.AsSpanBitmap()).ToArray();
 
-                        TestContext.WriteLine($"{result[0].Left},{result[0].Top} {result[0].Right},{result[0].Bottom}");
-                    }
+                    TestContext.WriteLine($"{result[0].Left},{result[0].Top} {result[0].Right},{result[0].Bottom}");
                 }
             }
         }

@@ -6,21 +6,21 @@ namespace InteropBitmaps
 {
     public static class ZXingToolkit
     {
-        private static ZXing.RGBLuminanceSource.BitmapFormat _ToZXingFormat(PixelFormat enc)
+        internal static ZXing.RGBLuminanceSource.BitmapFormat _ToZXingFormat(this PixelFormat enc)
         {
             switch (enc.PackedFormat)
             {
-                case PixelFormat.Standard.GRAY8: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
-                case PixelFormat.Standard.GRAY16: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
+                case PixelFormat.Packed.GRAY8: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
+                case PixelFormat.Packed.GRAY16: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
 
-                case PixelFormat.Standard.BGR565: return ZXing.RGBLuminanceSource.BitmapFormat.RGB565; // notice that colors here are inverted                
+                case PixelFormat.Packed.BGR565: return ZXing.RGBLuminanceSource.BitmapFormat.RGB565; // notice that colors here are inverted                
 
-                case PixelFormat.Standard.RGB24: return ZXing.RGBLuminanceSource.BitmapFormat.RGB24;
-                case PixelFormat.Standard.BGR24: return ZXing.RGBLuminanceSource.BitmapFormat.BGR24;
+                case PixelFormat.Packed.RGB24: return ZXing.RGBLuminanceSource.BitmapFormat.RGB24;
+                case PixelFormat.Packed.BGR24: return ZXing.RGBLuminanceSource.BitmapFormat.BGR24;
 
-                case PixelFormat.Standard.RGBA32: return ZXing.RGBLuminanceSource.BitmapFormat.RGBA32;                
-                case PixelFormat.Standard.BGRA32: return ZXing.RGBLuminanceSource.BitmapFormat.BGRA32;
-                case PixelFormat.Standard.ARGB32: return ZXing.RGBLuminanceSource.BitmapFormat.ARGB32;
+                case PixelFormat.Packed.RGBA32: return ZXing.RGBLuminanceSource.BitmapFormat.RGBA32;                
+                case PixelFormat.Packed.BGRA32: return ZXing.RGBLuminanceSource.BitmapFormat.BGRA32;
+                case PixelFormat.Packed.ARGB32: return ZXing.RGBLuminanceSource.BitmapFormat.ARGB32;
 
                 default: return ZXing.RGBLuminanceSource.BitmapFormat.Unknown;
             }
@@ -50,7 +50,7 @@ namespace InteropBitmaps
 
         private static ZXing.LuminanceSource CreateLuminanceSource(this SpanBitmap src, ref Byte[] persistentBuffer)
         {
-            var fmt = _ToZXingFormat(src.PixelFormat);
+            var fmt = src.PixelFormat._ToZXingFormat();
             if (fmt == ZXing.RGBLuminanceSource.BitmapFormat.Unknown) return null;
 
             var len = src.Width * src.Height * src.PixelSize;
