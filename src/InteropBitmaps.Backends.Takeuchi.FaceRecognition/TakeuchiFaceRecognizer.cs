@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace InteropBitmaps
 {
     public sealed class TakeuchiFaceRecognizer : IDisposable
     {
+        #region lifecycle
+
         public TakeuchiFaceRecognizer(string modelsDirectoryPath)
         {
             if (IntPtr.Size != 8) throw new ArgumentException("Expected x64 architecture");
@@ -19,9 +22,17 @@ namespace InteropBitmaps
             _Recognizer = null;
         }
 
+        #endregion
+
+        #region data
+
         private FaceRecognitionDotNet.FaceRecognition _Recognizer;
 
         private CachedImage _Current;
+
+        #endregion
+
+        #region API
 
         private CachedImage _GetImage(SpanBitmap bitmap)
         {
@@ -37,13 +48,26 @@ namespace InteropBitmaps
         {
             var tmp = _GetImage(bitmap);
 
-            var img = tmp.CreateClient();
-
-            var locs = _Recognizer.FaceLocations(img);
-
-            return locs;
-            
+            using (var img = tmp.CreateClient())
+            {
+                return _Recognizer.FaceLocations(img).ToArray();
+            }            
         }
+
+        public void FindLandmarks(SpanBitmap bitmap)
+        {
+            var tmp = _GetImage(bitmap);
+
+            using (var img = tmp.CreateClient())
+            {
+                var locs = _Recognizer.FaceLocations(img);
+                var lnds = _Recognizer.FaceLandmark(img,locs).ToArray();               
+            }
+        }
+
+        #endregion
+
+        #region 
 
         private class CachedImage
         {
@@ -52,6 +76,8 @@ namespace InteropBitmaps
 
             public void Update(SpanBitmap src)
             {
+                if (src.PixelSize != 1 && src.PixelSize != 3) throw new ArgumentException("Only Gray and RGB formats are valid", nameof(src));
+
                 if (Info.Width != src.Width || Info.Height != src.Height || Info.PixelSize != src.PixelSize)
                 {
                     Data = new byte[src.Width * src.Height * src.PixelSize];
@@ -67,5 +93,7 @@ namespace InteropBitmaps
                 return FaceRecognitionDotNet.FaceRecognition.LoadImage(Data, Info.Height, Info.Width, Info.PixelSize);
             }
         }
+
+        #endregion
     }
 }
