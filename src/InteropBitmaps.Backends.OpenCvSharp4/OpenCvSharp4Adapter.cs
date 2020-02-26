@@ -28,16 +28,9 @@ namespace InteropBitmaps
             var mtype = MatType.CV_8UC(_Bitmap.PixelSize);
 
             var dst = new Mat(_Bitmap.Height, _Bitmap.Width, mtype);
-            var dstSpan = dst.AsSpanBitmap();
-            dstSpan.SetPixels(0, 0, _Bitmap);
+            dst.AsSpanBitmap().SetPixels(0, 0, _Bitmap);
+
             return dst;
-        }
-
-        public unsafe void Mutate(Action<Mat> context)
-        {
-            var mtype = MatType.CV_8UC(_Bitmap.PixelSize);
-
-            _Bitmap.PinWritableMemory(bmp => context(new Mat(bmp.Height, bmp.Width, mtype, bmp.Poiter, bmp.ScanSize)));
         }
 
         public unsafe void Mutate(Func<Mat, Mat> context)
@@ -54,11 +47,9 @@ namespace InteropBitmaps
             return r;
         }
 
-        private static unsafe void _Mutate((IntPtr Poiter, int Width, int Height, int PixSize, int ScanSize) bmp, Func<Mat, Mat> operation)
+        private static unsafe void _Mutate((IntPtr Poiter, BitmapInfo Info) bmp, Func<Mat, Mat> operation)
         {
-            var mtype = MatType.CV_8UC(bmp.PixSize);
-
-            using (var srcMat = new Mat(bmp.Height, bmp.Width, mtype, bmp.Poiter, bmp.ScanSize))
+            using (var srcMat = bmp.AsOpenCvMat())
             {
                 using (var dstMat = operation(srcMat))
                 {
@@ -79,20 +70,19 @@ namespace InteropBitmaps
 
                     throw new NotImplementedException();
 
+                    /*
                     using (var tmp = new Mat(dstMat.Width, dstMat.Height, mtype))
                     {
                         // dstMat.AssignTo(tmp, mtype);
                         srcMat.AsSpanBitmap().SetPixels(0, 0, tmp.AsSpanBitmap());
-                    }                    
+                    }*/                   
                 }
             }
         }
 
-        private static unsafe MemoryBitmap _CloneMutated((IntPtr Poiter, int Width, int Height, int PixSize, int ScanSize) bmp, Func<Mat, Mat> operation)
+        private static unsafe MemoryBitmap _CloneMutated((IntPtr Poiter, BitmapInfo Info) bmp, Func<Mat, Mat> operation)
         {
-            var mtype = MatType.CV_8UC(bmp.PixSize);
-
-            using (var srcMat = new Mat(bmp.Height, bmp.Width, mtype, bmp.Poiter, bmp.ScanSize))
+            using (var srcMat = bmp.AsOpenCvMat())
             {
                 using (var dstMat = operation(srcMat))
                 {
@@ -103,7 +93,7 @@ namespace InteropBitmaps
 
         public void Save(string filePath)
         {
-            Mutate(mat => mat.SaveImage(filePath));
+            Mutate(mat => { mat.SaveImage(filePath); return mat; } );
         }
 
         public void Blur((int w, int h) kernel)

@@ -13,16 +13,16 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case GDIFMT.Format8bppIndexed: return new PixelFormat(ELEMENT.Index8);
+                case GDIFMT.Format8bppIndexed: return PixelFormat.Standard.GRAY8;
 
-                case GDIFMT.Format16bppRgb565: return new PixelFormat(ELEMENT.Red5, ELEMENT.Green6, ELEMENT.Blue5);
-                case GDIFMT.Format16bppRgb555: return new PixelFormat(ELEMENT.Red5, ELEMENT.Green5, ELEMENT.Blue5, ELEMENT.Undefined1);
-                case GDIFMT.Format16bppArgb1555: return new PixelFormat(ELEMENT.Red5, ELEMENT.Green5, ELEMENT.Blue5, ELEMENT.Alpha1);
+                case GDIFMT.Format16bppRgb565: return PixelFormat.Standard.BGR565;
+                case GDIFMT.Format16bppRgb555: return PixelFormat.Standard.BGRA5551;
+                case GDIFMT.Format16bppArgb1555: return PixelFormat.Standard.BGRA5551;
 
-                case GDIFMT.Format24bppRgb: return new PixelFormat(ELEMENT.Red8, ELEMENT.Green8, ELEMENT.Blue8);
+                case GDIFMT.Format24bppRgb: return PixelFormat.Standard.RGB24;
 
-                case GDIFMT.Format32bppRgb: return new PixelFormat(ELEMENT.Red8, ELEMENT.Green8, ELEMENT.Blue8, ELEMENT.Undefined8);
-                case GDIFMT.Format32bppArgb: return new PixelFormat(ELEMENT.Alpha8, ELEMENT.Red8, ELEMENT.Green8, ELEMENT.Blue8);
+                case GDIFMT.Format32bppRgb: return PixelFormat.Standard.RGBA32;
+                case GDIFMT.Format32bppArgb: return PixelFormat.Standard.ARGB32;
 
                 case GDIFMT.PAlpha:
                 case GDIFMT.Format32bppPArgb:
@@ -57,6 +57,6 @@ namespace InteropBitmaps
 
                 default: throw new NotImplementedException();
             }
-        }
+        }        
     }
 }

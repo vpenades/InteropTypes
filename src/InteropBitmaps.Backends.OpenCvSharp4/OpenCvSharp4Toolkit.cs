@@ -3,20 +3,17 @@
 namespace InteropBitmaps
 {
 
-    // https://github.com/shimat/opencvsharp/wiki/Accessing-Pixel
+    
     public static partial class OpenCvSharp4Toolkit
     {
-        public static OpenCvSharp4Adapter AsOpenCVSharp(this MemoryBitmap bmp)
-        {
-            return new OpenCvSharp4Adapter(bmp);
-        }
+        // https://github.com/shimat/opencvsharp/wiki/Accessing-Pixel
 
-        public static OpenCvSharp4Adapter AsOpenCVSharp(this SpanBitmap bmp)
-        {
-            return new OpenCvSharp4Adapter(bmp);
-        }
+        public static OpenCvSharp4Adapter AsOpenCVSharp(this MemoryBitmap bmp) { return new OpenCvSharp4Adapter(bmp); }
 
-        public static OpenCvSharp4Adapter AsOpenCVSharp<TPixel>(this SpanBitmap<TPixel> bmp) where TPixel : unmanaged
+        public static OpenCvSharp4Adapter AsOpenCVSharp(this SpanBitmap bmp) { return new OpenCvSharp4Adapter(bmp); }
+
+        public static OpenCvSharp4Adapter AsOpenCVSharp<TPixel>(this SpanBitmap<TPixel> bmp)
+            where TPixel : unmanaged
         {
             return new OpenCvSharp4Adapter(bmp.AsSpanBitmap());
         }
@@ -29,16 +26,18 @@ namespace InteropBitmaps
             var mtype = src.Type();
             var psize = (mtype.Depth + 1) * mtype.Channels;
 
-            return new SpanBitmap(src.Data, src.Width, src.Height, psize, (int)src.Step());
+            var info = new BitmapInfo(src.Width, src.Height, psize, (int)src.Step());
+
+            return new SpanBitmap(src.Data, info);
         }
 
         public static unsafe SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this OpenCvSharp.Mat<TPixel> src)
             where TPixel : unmanaged
         {
-            return new SpanBitmap<TPixel>(src.Data, src.Width, src.Height, (int)src.Step());
+            var info = new BitmapInfo(src.Width, src.Height, sizeof(TPixel), (int)src.Step());
+
+            return new SpanBitmap<TPixel>(src.Data, info);
         }
-
-
 
         public static unsafe OpenCvSharp.Mat<TPixel> CopyToOpenCvSharp<TPixel>(this SpanBitmap<TPixel> srcSpan)
             where TPixel:unmanaged
@@ -49,6 +48,19 @@ namespace InteropBitmaps
             return dst;            
         }
 
+        public static OpenCvSharp.Mat AsOpenCvMat(this in (IntPtr Poiter, BitmapInfo Info) src)
+        {
+            var mtype = OpenCvSharp.MatType.CV_8UC(src.Info.PixelSize);
+
+            return new OpenCvSharp.Mat(src.Info.Height, src.Info.Width, mtype, src.Poiter, src.Info.ScanlineSize);
+        }
+
+        public static OpenCvSharp.Mat CreateOpenCvMat(this in BitmapInfo desc)
+        {
+            var mtype = OpenCvSharp.MatType.CV_8UC(desc.PixelSize);
+
+            return new OpenCvSharp.Mat(desc.Height, desc.Width, mtype);
+        }
         
     }
 }

@@ -16,17 +16,20 @@ namespace InteropBitmaps
         public static PixelFormat GetPixelFormat<TPixel>()
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            if (typeof(TPixel) == typeof(Alpha8)) return new PixelFormat(PEF.Alpha8);
-            if (typeof(TPixel) == typeof(Argb32)) return new PixelFormat(PEF.Alpha8, PEF.Red8, PEF.Green8, PEF.Blue8);
-            if (typeof(TPixel) == typeof(Bgr24)) return new PixelFormat(PEF.Blue8, PEF.Green8, PEF.Red8);
-            if (typeof(TPixel) == typeof(Bgr565)) return new PixelFormat(PEF.Blue5, PEF.Green6, PEF.Red5);
-            if (typeof(TPixel) == typeof(Bgra32)) return new PixelFormat(PEF.Blue8, PEF.Green8, PEF.Red8, PEF.Alpha8);
-            if (typeof(TPixel) == typeof(Bgra4444)) return new PixelFormat(PEF.Blue4, PEF.Green4, PEF.Red4, PEF.Alpha4);
-            if (typeof(TPixel) == typeof(Bgra5551)) return new PixelFormat(PEF.Blue5, PEF.Green5, PEF.Red5, PEF.Alpha1);
-            if (typeof(TPixel) == typeof(Gray16)) return new PixelFormat(PEF.Gray16);
-            if (typeof(TPixel) == typeof(Gray8)) return new PixelFormat(PEF.Gray8);
-            if (typeof(TPixel) == typeof(Rgb24)) return new PixelFormat(PEF.Red8, PEF.Green8, PEF.Blue8);
-            if (typeof(TPixel) == typeof(Rgba32)) return new PixelFormat(PEF.Red8, PEF.Green8, PEF.Blue8, PEF.Alpha8);
+            if (typeof(TPixel) == typeof(Gray8)) return PixelFormat.Standard.GRAY8;
+            if (typeof(TPixel) == typeof(Alpha8)) return PixelFormat.Standard.ALPHA8;
+
+            if (typeof(TPixel) == typeof(Gray16)) return PixelFormat.Standard.GRAY16;
+            if (typeof(TPixel) == typeof(Bgr565)) return PixelFormat.Standard.BGR565;
+            if (typeof(TPixel) == typeof(Bgra4444)) return PixelFormat.Standard.BGRA4444;
+            if (typeof(TPixel) == typeof(Bgra5551)) return PixelFormat.Standard.BGRA5551;            
+
+            if (typeof(TPixel) == typeof(Bgr24)) return PixelFormat.Standard.BGR24;
+            if (typeof(TPixel) == typeof(Rgb24)) return PixelFormat.Standard.RGB24;            
+
+            if (typeof(TPixel) == typeof(Argb32)) return PixelFormat.Standard.ARGB32;
+            if (typeof(TPixel) == typeof(Bgra32)) return PixelFormat.Standard.BGRA32;
+            if (typeof(TPixel) == typeof(Rgba32)) return PixelFormat.Standard.RGBA32;            
 
             throw new NotImplementedException();
         }
@@ -34,7 +37,25 @@ namespace InteropBitmaps
 
         public static Type ToImageSharpPixelFormat(this PixelFormat fmt)
         {
-            throw new NotImplementedException();
+            switch (fmt.PackedFormat)
+            {
+                case PixelFormat.Standard.GRAY8: return typeof(Gray8);
+                case PixelFormat.Standard.GRAY16: return typeof(Gray16);
+
+                case PixelFormat.Standard.ALPHA8: return typeof(Alpha8);
+
+                case PixelFormat.Standard.BGR565: return typeof(Bgr565);
+                case PixelFormat.Standard.BGRA4444: return typeof(Bgra4444);
+
+                case PixelFormat.Standard.RGB24: return typeof(Rgb24);
+                case PixelFormat.Standard.BGR24: return typeof(Bgr24);
+
+                case PixelFormat.Standard.RGBA32: return typeof(Rgba32);
+                case PixelFormat.Standard.BGRA32: return typeof(Bgra32);
+                case PixelFormat.Standard.ARGB32: return typeof(Argb32);
+
+                default: throw new NotImplementedException();
+            }
         }
     }
 }

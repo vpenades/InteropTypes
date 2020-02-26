@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    
+    <Authors>Vicente Penades</Authors>
+    <Copyright>Copyright (c) 2020 Vicente Penades</Copyright>
+    <Description>A collection of low level Bitmap types to help interact with in-memory bitmaps and third party libraries.</Description>
+    
+    <RepositoryUrl>https://github.com/vpenades/InteropBitmaps</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    
+    <PackageTags>C# glTF 3D</PackageTags>
+    <PackageProjectUrl>https://github.com/vpenades/InteropBitmaps</PackageProjectUrl>    
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    
+  </PropertyGroup>
+  
+  <!-- https://github.com/NuGet/Home/wiki/Packaging-License-within-the-nupkg#project-properties -->
+
+  <PropertyGroup>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>  
+
+
+<!--
+  <PropertyGroup>
+    <PackageIcon>InteropBitmaps.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MsBuildThisFileDirectory)..\build\Icons\InteropBitmaps.png" Pack="true" Visible="false" PackagePath="" />  
+  </ItemGroup>
+-->  
+	
+</Project>

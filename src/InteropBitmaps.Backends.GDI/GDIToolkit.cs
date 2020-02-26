@@ -8,27 +8,32 @@ namespace InteropBitmaps
     /// <see href="https://github.com/dotnet/runtime/tree/master/src/libraries/System.Drawing.Common"/>
     public static partial class GDIToolkit
     {
-        public static GDIAdapter AsGDI(this SpanBitmap bmp)
+        public static GDIAdapter AsGDI(this SpanBitmap bmp) { return new GDIAdapter(bmp); }
+
+        public static GDIAdapter AsGDI(this MemoryBitmap bmp) { return new GDIAdapter(bmp); }
+
+        public static GDIAdapter AsGDI<TPixel>(this SpanBitmap<TPixel> bmp)
+            where TPixel : unmanaged
+        { return new GDIAdapter(bmp.AsSpanBitmap()); }
+
+        public static GDIAdapter AsGDI<TPixel>(this MemoryBitmap<TPixel> bmp)
+            where TPixel : unmanaged
+        { return new GDIAdapter(bmp.AsSpanBitmap()); }        
+
+        public static SpanBitmap AsSpanBitmap(this System.Drawing.Imaging.BitmapData data)
         {
-            return new GDIAdapter(bmp);
+            var info = new BitmapInfo(data.Width, data.Height, data.PixelFormat.ToInteropPixelFormat(), data.Stride);
+
+            return new SpanBitmap(data.Scan0, info);
         }
 
-        public static GDIAdapter AsGDI(this MemoryBitmap bmp)
+        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this System.Drawing.Imaging.BitmapData data)
+            where TPixel: unmanaged
         {
-            return new GDIAdapter(bmp);
+            return data.AsSpanBitmap().AsSpanBitmap<TPixel>();
         }
 
-        public static GDIAdapter AsGDI<TPixel>(this SpanBitmap<TPixel> bmp) where TPixel : unmanaged
-        {
-            return new GDIAdapter(bmp.AsSpanBitmap());
-        }
-
-        public static GDIAdapter AsGDI<TPixel>(this MemoryBitmap<TPixel> bmp) where TPixel : unmanaged
-        {
-            return new GDIAdapter(bmp.AsSpanBitmap());
-        }
-
-        public static void Mutate(this Bitmap bmp, Action<System.Drawing.Imaging.BitmapData> action)
+        public static void Mutate(this Bitmap bmp, Action<(IntPtr Pointer, BitmapInfo Info)> action)
         {
             var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
@@ -38,7 +43,9 @@ namespace InteropBitmaps
             {
                 bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
 
-                action(bits);
+                var info = new BitmapInfo(bits.Width, bits.Height, bits.PixelFormat.ToInteropPixelFormat(), bits.Stride);
+
+                action((bits.Scan0, info));
             }
             finally
             {
@@ -56,24 +63,13 @@ namespace InteropBitmaps
             {
                 dstbits = dst.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, dst.PixelFormat);
 
-                dstbits.AsSpanBitmap().SetPixels(dstx, dsty, src);                
+                dstbits.AsSpanBitmap().SetPixels(dstx, dsty, src);
             }
             finally
             {
                 if (dstbits != null) dst.UnlockBits(dstbits);
             }
         }
-
-        public static SpanBitmap AsSpanBitmap(this System.Drawing.Imaging.BitmapData data)
-        {
-            return new SpanBitmap(data.Scan0, data.Width, data.Height, data.PixelFormat.GetPixelSize(), data.Stride);
-        }
-
-        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this System.Drawing.Imaging.BitmapData data)
-            where TPixel: unmanaged
-        {
-            return data.AsSpanBitmap().AsSpanBitmap<TPixel>();
-        }        
 
         public static MemoryBitmap CloneToMemoryBitmap(this Bitmap bmp)
         {

@@ -79,3 +79,5 @@ Other candidates:
 - Kinectv2, Orbbec, Nuitrack
 - Microsoft.ML
 - PLPlot
+- Xing
+- FaceRecognitionDotNet

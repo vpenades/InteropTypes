@@ -39,9 +39,35 @@ namespace InteropBitmaps
     {
         #region constants
 
-        public static readonly PixelFormat Empty = new PixelFormat(PEF.Empty);
+        private const uint B0 = 1;
+        private const uint B1 = 256;
+        private const uint B2 = 256 * 256;
+        private const uint B3 = 256 * 256 * 256;
 
-        public static readonly PixelFormat RGBA24 = new PixelFormat(PEF.Red8, PEF.Green8, PEF.Blue8, PEF.Alpha8);
+        public const uint Empty = (uint)PEF.Empty;
+
+        public static class Standard
+        {
+            public const uint X8 = B0 * (uint)PEF.Undefined8;
+            public const uint X16 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8;
+            public const uint X24 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8 | B2 * (uint)PEF.Undefined8;
+            public const uint X32 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8 | B2 * (uint)PEF.Undefined8 | B3 * (uint)PEF.Undefined8;
+
+            public const uint GRAY8 = B0 * (uint)PEF.Gray8;
+            public const uint ALPHA8 = B0 * (uint)PEF.Alpha8;
+
+            public const uint GRAY16 = B0 * (uint)PEF.Gray16;
+            public const uint BGR565 = B0 * (uint)PEF.Blue5 | B1 * (uint)PEF.Green6 | B2 * (uint)PEF.Red5;
+            public const uint BGRA4444 = B0 * (uint)PEF.Blue4 | B1 * (uint)PEF.Green4 | B2 * (uint)PEF.Red4 | B3 * (uint)PEF.Alpha4;
+            public const uint BGRA5551 = B0 * (uint)PEF.Blue5 | B1 * (uint)PEF.Green5 | B2 * (uint)PEF.Red5 | B3 * (uint)PEF.Alpha1;
+
+            public const uint RGB24 = B0 * (uint)PEF.Red8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Blue8;
+            public const uint BGR24 = B0 * (uint)PEF.Blue8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Red8;
+
+            public const uint RGBA32 = B0 * (uint)PEF.Red8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Blue8 | B3 * (uint)PEF.Alpha8;
+            public const uint BGRA32 = B0 * (uint)PEF.Blue8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Red8 | B3 * (uint)PEF.Alpha8;
+            public const uint ARGB32 = B0 * (uint)PEF.Alpha8 | B1 * (uint)PEF.Red8 | B2 * (uint)PEF.Green8 | B3 * (uint)PEF.Blue8;
+        }
 
         #endregion
 
@@ -193,6 +219,7 @@ namespace InteropBitmaps
                 case PEF.Undefined6: return 6;
 
                 case PEF.Index8:
+                case PEF.Alpha8:
                 case PEF.Gray8:
                 case PEF.Red8:
                 case PEF.Green8:

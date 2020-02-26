@@ -57,6 +57,8 @@ namespace InteropBitmaps
 
         public Memory<Byte> Buffer => _Data;
 
+        public SpanBitmap Span => new SpanBitmap(_Data.Span, _Info);
+
         #endregion
 
         #region API
@@ -110,6 +112,12 @@ namespace InteropBitmaps
         {
             Guard.IsValidPixelFormat<TPixel>(this.Info);
         }
+
+        #endregion
+
+        #region properties
+
+        public new SpanBitmap<TPixel> Span => new SpanBitmap<TPixel>(this.Buffer.Span, this.Info);
 
         #endregion
 

@@ -68,6 +68,8 @@ namespace InteropBitmaps
 
         public int PixelSize => _Info.PixelSize;
 
+        public PixelFormat PixelFormat => _Info.PixelFormat;
+
         public int ScanlineSize => _Info.ScanlineSize;
 
         public SpanBitmap Slice(int x, int y, int width, int height)
@@ -200,14 +202,14 @@ namespace InteropBitmaps
             _Writable = null;
         }
 
-        internal unsafe SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        public unsafe SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
             Guard.IsValidPixelFormat<TPixel>(_Info);
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        internal unsafe SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        public unsafe SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
             Guard.IsValidPixelFormat<TPixel>(_Info);
