@@ -39,11 +39,18 @@ namespace InteropBitmaps
             var dirPath = System.IO.Path.GetDirectoryName(filePath);
             System.IO.Directory.CreateDirectory(dirPath);
 
-            if (bmp.PixelSize == 1) bmp.AsImageSharp<SixLabors.ImageSharp.PixelFormats.Gray8>().Save(filePath);
-            if (bmp.PixelSize == 3) bmp.AsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgb24>().Save(filePath);
-            if (bmp.PixelSize == 4) bmp.AsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>().Save(filePath);
+            string _injectExt(string fp, string extPrefix)
+            {
+                var ext = System.IO.Path.GetExtension(fp);
+                fp = fp.Substring(0, fp.Length - ext.Length);
+                return $"{fp}.{extPrefix}{ext}";
+            }
 
-            NUnit.Framework.TestContext.AddTestAttachment(filePath);
+            bmp.AsGDI().Save(_injectExt(filePath,"GDI"));
+            NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "GDI"));
+
+            bmp.AsImageSharp().Save(_injectExt(filePath, "ImageSharp"));
+            NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "ImageSharp"));
         }
     }
 

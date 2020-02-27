@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SixLabors.ImageSharp.Processing;
+
 using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
@@ -22,9 +24,14 @@ namespace InteropBitmaps.Backends
             {
                 using (var image = SixLabors.ImageSharp.Image.Load(filePath))
                 {
-                    var result = faceRecog.FindFaces(image.AsSpanBitmap()).ToArray();
+                    var result = faceRecog.FindFaces(image.AsSpanBitmap());
 
-                    TestContext.WriteLine($"{result[0].Left},{result[0].Top} {result[0].Right},{result[0].Bottom}");
+                    foreach(var r in result)
+                    {
+                        image.Mutate(dc => dc.DrawPolygon(SixLabors.ImageSharp.Color.Red, 2, (r.Left, r.Top), (r.Right, r.Top), (r.Right, r.Bottom), (r.Left, r.Bottom)));
+                    }
+
+                    image.AttachToCurrentTest("Result.png");
                 }
             }
         }

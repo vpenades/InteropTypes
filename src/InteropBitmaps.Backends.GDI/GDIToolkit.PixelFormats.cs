@@ -33,6 +33,25 @@ namespace InteropBitmaps
             }
         }
 
+        public static GDIFMT ToGDIPixelFormat(this PixelFormat fmt)
+        {
+            switch (fmt)
+            {
+                case PixelFormat.Packed.GRAY8: return GDIFMT.Format8bppIndexed;
+
+                case PixelFormat.Packed.BGR565: return GDIFMT.Format16bppRgb565;                
+                case PixelFormat.Packed.BGRA5551: return GDIFMT.Format16bppArgb1555;
+
+                case PixelFormat.Packed.RGB24: return GDIFMT.Format24bppRgb;
+
+                case PixelFormat.Packed.RGBA32: return GDIFMT.Format32bppRgb;
+                case PixelFormat.Packed.ARGB32: return GDIFMT.Format32bppArgb;
+                case PixelFormat.Packed.BGRA32: return GDIFMT.Format32bppArgb;
+
+                default: throw new NotImplementedException(fmt.ToString());
+            }
+        }
+
         public static int GetPixelSize(this GDIFMT fmt)
         {
             switch (fmt)

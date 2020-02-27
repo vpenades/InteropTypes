@@ -23,7 +23,7 @@ namespace InteropBitmaps.Interop
 
             // Calculate blur factor using ImageSharp
             var blurfactor1 = bitmap
-                .AsImageSharp<SixLabors.ImageSharp.PixelFormats.Argb32>()
+                .AsImageSharp()
                 .CalculateBlurFactor();
 
             // blur with openCV
@@ -31,7 +31,7 @@ namespace InteropBitmaps.Interop
 
             // Calculate blur factor using ImageSharp
             var blurfactor2 = bitmap
-                .AsImageSharp<SixLabors.ImageSharp.PixelFormats.Argb32>()
+                .AsImageSharp()
                 .CalculateBlurFactor();
 
             // blur with openCV
@@ -39,7 +39,7 @@ namespace InteropBitmaps.Interop
 
             // Calculate blur factor using ImageSharp
             var blurfactor3 = bitmap
-                .AsImageSharp<SixLabors.ImageSharp.PixelFormats.Argb32>()
+                .AsImageSharp()
                 .CalculateBlurFactor();
 
             TestContext.WriteLine($"{filePath} => {blurfactor1}, {blurfactor2}, {blurfactor3}");

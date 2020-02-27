@@ -36,7 +36,7 @@ namespace InteropBitmaps
 
         #region API
 
-        public IEnumerable<FaceRecognitionDotNet.Location> FindFaces(SpanBitmap bitmap)
+        public FaceRecognitionDotNet.Location[] FindFaces(SpanBitmap bitmap)
         {
             using (var img = _UseTempImage(bitmap))
             {

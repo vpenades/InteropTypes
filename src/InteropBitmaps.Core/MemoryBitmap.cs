@@ -17,6 +17,11 @@ namespace InteropBitmaps
 
         public static implicit operator SpanBitmap(MemoryBitmap bmp) { return bmp.AsSpanBitmap(); }
 
+        public MemoryBitmap(in BitmapInfo info)
+            : this(new byte[info.BitmapByteSize], info)
+        {            
+        }
+
         public MemoryBitmap(Byte[] array, in BitmapInfo info)
         {
             _Info = info;

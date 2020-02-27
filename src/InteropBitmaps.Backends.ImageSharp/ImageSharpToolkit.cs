@@ -8,23 +8,21 @@ namespace InteropBitmaps
 {
     public static partial class ImageSharpToolkit
     {
-        public static ImageSharpAdapter<TPixel> AsImageSharp<TPixel>(this MemoryBitmap bitmap)
-            where TPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
+        public static ImageSharpAdapter AsImageSharp(this SpanBitmap bitmap) { return new ImageSharpAdapter(bitmap); }
+
+        public static ImageSharpAdapter AsImageSharp(this MemoryBitmap bitmap) { return new ImageSharpAdapter(bitmap.AsSpanBitmap()); }
+
+        public static ImageSharpAdapter<TPixel> AsImageSharp<TPixel>(this SpanBitmap<TPixel> bitmap)
+            where TPixel : unmanaged, IPixel<TPixel>
         {
-            return new ImageSharpAdapter<TPixel>(bitmap.AsSpanBitmapOfType<TPixel>());
+            return new ImageSharpAdapter<TPixel>(bitmap);
         }
 
         public static ImageSharpAdapter<TPixel> AsImageSharp<TPixel>(this MemoryBitmap<TPixel> bitmap)
-            where TPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             return new ImageSharpAdapter<TPixel>(bitmap);
-        }
-
-        public static ImageSharpAdapter<TPixel> AsImageSharp<TPixel>(this SpanBitmap<TPixel> bitmap)
-            where TPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
-        {
-            return new ImageSharpAdapter<TPixel>(bitmap);
-        }
+        }        
 
         public static MemoryBitmap<TPixel> CopyToMemoryBitmap<TPixel>(this Image<TPixel> src)
             where TPixel : unmanaged, IPixel<TPixel>

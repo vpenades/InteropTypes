@@ -7,11 +7,55 @@ using SixLabors.ImageSharp.Processing;
 
 namespace InteropBitmaps
 {
-    /// <summary>
-    /// Wraps a <see cref="SpanBitmap{TPixel}"/> so it can be used as an ImageSharp's <see cref="Image{TPixel}"/>
-    /// </summary>
-    /// <typeparam name="TPixel"></typeparam>
-    public readonly ref struct ImageSharpAdapter<TPixel>
+    public readonly ref struct ImageSharpAdapter
+    {
+        #region constructor
+
+        public ImageSharpAdapter(SpanBitmap bmp) { _Bitmap = bmp; }
+
+        #endregion
+
+        #region data
+
+        private readonly SpanBitmap _Bitmap;
+
+        #endregion
+
+        #region API
+
+        public Image CloneToImageSharp()
+        {
+            var dst = _Bitmap.PixelFormat.ImageSharpCreateEmptyImage(_Bitmap.Width,_Bitmap.Height);
+
+            dst.AsSpanBitmap().SetPixels(0,0,_Bitmap);
+
+            return dst;
+        }
+
+        public void Save(string filePath)
+        {
+            using (var img = CloneToImageSharp())
+            {
+                img.Save(filePath);
+            }
+        }
+
+        public double CalculateBlurFactor()
+        {
+            using (var img = CloneToImageSharp())
+            {
+                return img.EvaluateBlurFactor();
+            }
+        }
+
+        #endregion
+    }
+
+        /// <summary>
+        /// Wraps a <see cref="SpanBitmap{TPixel}"/> so it can be used as an ImageSharp's <see cref="Image{TPixel}"/>
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        public readonly ref struct ImageSharpAdapter<TPixel>
         where TPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
     {
         #region constructor
