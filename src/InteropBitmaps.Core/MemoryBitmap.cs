@@ -17,28 +17,40 @@ namespace InteropBitmaps
 
         public static implicit operator SpanBitmap(MemoryBitmap bmp) { return bmp.AsSpanBitmap(); }
 
+        public MemoryBitmap(Byte[] array, in BitmapInfo info)
+        {
+            _Info = info;
+            _Array = new ArraySegment<byte>(array, 0, _Info.BitmapByteSize);
+            _Data = array.AsMemory().Slice(0, _Info.BitmapByteSize);
+        }
+
         public MemoryBitmap(Memory<Byte> data, in BitmapInfo info)
         {
             _Info = info;
+            _Array = default;
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
         public MemoryBitmap(int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
-            _Data = new byte[_Info.BitmapByteSize];
+            var bytes = new byte[_Info.BitmapByteSize];
+            _Array = new ArraySegment<byte>(bytes);
+            _Data = bytes;
         }        
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Array = default;
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
-        
+
         #endregion
 
         #region data
 
+        private readonly ArraySegment<Byte> _Array;
         private readonly Memory<Byte> _Data;        
         private readonly BitmapInfo _Info;
 
@@ -77,6 +89,12 @@ namespace InteropBitmaps
             where TPixel : unmanaged
         {
             return new MemoryBitmap<TPixel>(_Data, _Info);
+        }
+
+        public Byte[] ToArray()
+        {
+            if (_Array.Offset == 0 && _Array.Count == _Info.BitmapByteSize) return _Array.Array;
+            return _Data.ToArray();            
         }
 
         #endregion

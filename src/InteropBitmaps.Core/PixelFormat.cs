@@ -315,8 +315,8 @@ namespace InteropBitmaps
                         dstRow[z] = srcRow[idx];
                     }
 
-                    dstRow.Slice(dst.PixelSize);
-                    srcRow.Slice(src.PixelSize);
+                    dstRow = dstRow.Slice(dst.PixelSize);
+                    srcRow = srcRow.Slice(src.PixelSize);
                 }
             }
         }
