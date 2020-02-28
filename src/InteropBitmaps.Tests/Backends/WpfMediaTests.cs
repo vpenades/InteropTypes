@@ -26,7 +26,8 @@ namespace InteropBitmaps.Backends
             memory.AttachToCurrentTest("Result.png");
 
             var writable = new System.Windows.Media.Imaging.WriteableBitmap(image);
-            var span = writable.AsSpanBitmap();
+            
+
         }
     }
 }

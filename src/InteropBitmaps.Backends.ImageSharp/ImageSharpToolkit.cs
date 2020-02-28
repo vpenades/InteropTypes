@@ -68,5 +68,34 @@ namespace InteropBitmaps
         }
 
 
+        public static Image CreateImageSharp(this BitmapInfo binfo)
+        {
+            return binfo.PixelFormat.CreateImageSharp(binfo.Width, binfo.Height);
+        }
+
+        public static Image CreateImageSharp(this PixelFormat fmt, int width, int height)
+        {
+            switch (fmt.PackedFormat)
+            {
+                case PixelFormat.Packed.GRAY8: return new Image<Gray8>(width, height);
+                case PixelFormat.Packed.GRAY16: return new Image<Gray16>(width, height);
+
+                case PixelFormat.Packed.ALPHA8: return new Image<Alpha8>(width, height);
+
+                case PixelFormat.Packed.BGR565: return new Image<Bgr565>(width, height);
+                case PixelFormat.Packed.BGRA4444: return new Image<Bgra4444>(width, height);
+
+                case PixelFormat.Packed.RGB24: return new Image<Rgb24>(width, height);
+                case PixelFormat.Packed.BGR24: return new Image<Bgr24>(width, height);
+
+                case PixelFormat.Packed.RGBA32: return new Image<Rgba32>(width, height);
+                case PixelFormat.Packed.BGRA32: return new Image<Bgra32>(width, height);
+                case PixelFormat.Packed.ARGB32: return new Image<Argb32>(width, height);
+
+                default: throw new NotImplementedException();
+            }
+        }
+
+
     }
 }

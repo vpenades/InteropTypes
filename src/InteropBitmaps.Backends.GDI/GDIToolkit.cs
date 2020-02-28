@@ -33,7 +33,7 @@ namespace InteropBitmaps
             return data.AsSpanBitmap().AsSpanBitmap<TPixel>();
         }
 
-        public static void Mutate(this Bitmap bmp, Action<(IntPtr Pointer, BitmapInfo Info)> action)
+        public static void Mutate(this Bitmap bmp, Action<PointerBitmap> action)
         {
             var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 

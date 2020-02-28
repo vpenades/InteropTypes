@@ -48,11 +48,11 @@ namespace InteropBitmaps
             return dst;            
         }
 
-        public static OpenCvSharp.Mat AsOpenCvMat(this in (IntPtr Poiter, BitmapInfo Info) src)
+        public static OpenCvSharp.Mat AsOpenCvMat(this in PointerBitmap src)
         {
             var mtype = OpenCvSharp.MatType.CV_8UC(src.Info.PixelSize);
 
-            return new OpenCvSharp.Mat(src.Info.Height, src.Info.Width, mtype, src.Poiter, src.Info.ScanlineSize);
+            return new OpenCvSharp.Mat(src.Info.Height, src.Info.Width, mtype, src.Pointer, src.Info.ScanlineSize);
         }
 
         public static OpenCvSharp.Mat CreateOpenCvMat(this in BitmapInfo desc)

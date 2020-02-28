@@ -12,10 +12,14 @@ namespace InteropBitmaps
     {
         #region lifecycle
         
-        public unsafe SpanBitmap(IntPtr data, in BitmapInfo info)
+        public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
         {
             _Info = info;
-            _Readable = _Writable = new Span<Byte>(data.ToPointer(), info.BitmapByteSize);
+
+            var span = new Span<Byte>(data.ToPointer(), info.BitmapByteSize);
+
+            _Readable = span;
+            _Writable = isReadOnly ? null : span;
         }
 
         public SpanBitmap(Span<Byte> data, in BitmapInfo info)
@@ -92,23 +96,27 @@ namespace InteropBitmaps
 
         public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
 
-        public unsafe void PinWritableMemory(Action<(IntPtr Poiter, BitmapInfo Info)> onPin)
+        public unsafe void PinWritableMemory(Action<PointerBitmap> onPin)
         {
             if (_Writable.Length == 0) throw new InvalidOperationException();
 
             fixed (byte* ptr = &_Writable.GetPinnableReference())
             {
-                onPin((new IntPtr(ptr), _Info));
+                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info);
+
+                onPin(ptrBmp);
             }
         }
 
-        public unsafe void PinReadableMemory(Action<(IntPtr Poiter, BitmapInfo Info)> onPin)
+        public unsafe void PinReadableMemory(Action<PointerBitmap> onPin)
         {
             if (_Writable.Length == 0) throw new InvalidOperationException();
 
             fixed (byte* ptr = &_Readable.GetPinnableReference())
             {
-                onPin((new IntPtr(ptr), _Info));
+                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info, true);
+
+                onPin(ptrBmp);
             }
         }
 

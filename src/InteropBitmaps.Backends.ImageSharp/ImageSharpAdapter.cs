@@ -25,7 +25,7 @@ namespace InteropBitmaps
 
         public Image CloneToImageSharp()
         {
-            var dst = _Bitmap.PixelFormat.ImageSharpCreateEmptyImage(_Bitmap.Width,_Bitmap.Height);
+            var dst = _Bitmap.PixelFormat.CreateImageSharp(_Bitmap.Width,_Bitmap.Height);
 
             dst.AsSpanBitmap().SetPixels(0,0,_Bitmap);
 

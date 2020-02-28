@@ -49,8 +49,8 @@ namespace InteropBitmaps
         public readonly int Width;
         public readonly int Height;
         public readonly int PixelSize;
-        public readonly uint PixelFormat;
         public readonly int ScanlineSize;
+        public readonly PixelFormat PixelFormat;        
 
         #endregion
 

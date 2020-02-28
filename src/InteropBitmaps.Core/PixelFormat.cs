@@ -9,7 +9,7 @@ namespace InteropBitmaps
     public enum ComponentFormat
     {
         // 0
-        Empty,
+        Empty = 0,
 
         // 1
         Undefined1, Alpha1,
@@ -218,6 +218,8 @@ namespace InteropBitmaps
 
         private static int _GetBitLen(PEF pef)
         {
+            // an alternative to the switch is to have a lookup table
+
             switch(pef)
             {
                 case PEF.Empty: return 0;
