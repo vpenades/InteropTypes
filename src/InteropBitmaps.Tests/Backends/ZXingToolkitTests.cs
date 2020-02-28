@@ -17,9 +17,12 @@ namespace InteropBitmaps.Backends
     public class ZXingToolkitTests
     {
         [TestCase("Resources\\QRCode.png", "http://tecnohotelnews.com/")]
+        [TestCase("Resources\\glyphs_printed.jpg", null)]
         [TestCase("Resources\\ios-11-camera-qr-code-scan.jpg", "WIFI:T:WPA2;S:iMore;P:iMore12345678;;")]
         public void ZXingFindQRCode(string filePath, string expected)
         {
+            // http://www.cvsandbox.com/
+
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
             using (var image = SixLabors.ImageSharp.Image.Load(filePath))

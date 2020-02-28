@@ -158,10 +158,10 @@ namespace InteropBitmaps
             }
             else
             {
-                var srcConverter = Converters.GetConverter(src.PixelFormat);
-                var dstConverter = Converters.GetConverter(this.PixelFormat);
+                var srcConverter = _PixelConverters.GetConverter(src.PixelFormat);
+                var dstConverter = _PixelConverters.GetConverter(this.PixelFormat);
 
-                Span<PixelBGRA32> tmp = stackalloc PixelBGRA32[xRect.w];
+                Span<_PixelBGRA32> tmp = stackalloc _PixelBGRA32[xRect.w];
 
                 for (int y = 0; y < srcRect.h; ++y)
                 {
@@ -258,7 +258,7 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region API
+        #region properties
 
         public Span<Byte> WritableSpan => _Writable;
 
@@ -271,6 +271,10 @@ namespace InteropBitmaps
         public (int Width, int Height) Size => _Info.Size;
 
         public int PixelSize => _Info.PixelSize;
+
+        #endregion
+
+        #region API
 
         public SpanBitmap<TPixel> Slice(int x, int y, int width, int height)
         {
@@ -362,7 +366,7 @@ namespace InteropBitmaps
         {
             return _Writable.IsEmpty ? new SpanBitmap(_Readable, _Info) : new SpanBitmap(_Writable, _Info);
         }
-
+        
         public MemoryBitmap<TPixel> ToMemoryBitmap() { return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info); }
 
         #endregion

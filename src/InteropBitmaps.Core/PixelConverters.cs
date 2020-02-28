@@ -5,7 +5,7 @@ using System.Text;
 namespace InteropBitmaps
 {
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-    public struct PixelBGRA32
+    struct _PixelBGRA32
     {
         #region data
 
@@ -27,14 +27,14 @@ namespace InteropBitmaps
         #endregion        
     }
 
-    public static class Converters
+    static class _PixelConverters
     {
         #region API
 
         public interface IConverter
         {
-            void ConvertFrom(Span<PixelBGRA32> dst, ReadOnlySpan<Byte> src);
-            void ConvertTo(Span<Byte> dst, ReadOnlySpan<PixelBGRA32> src);
+            void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<Byte> src);
+            void ConvertTo(Span<Byte> dst, ReadOnlySpan<_PixelBGRA32> src);
         }
 
         public static IConverter GetConverter(PixelFormat fmt)
@@ -56,7 +56,7 @@ namespace InteropBitmaps
         {
             const int SIZE = 3;
 
-            public void ConvertFrom(Span<PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -68,7 +68,7 @@ namespace InteropBitmaps
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
             {
                 for (int i = 0; i < src.Length; ++i)
                 {
@@ -84,7 +84,7 @@ namespace InteropBitmaps
         {
             const int SIZE = 3;
 
-            public void ConvertFrom(Span<PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -96,7 +96,7 @@ namespace InteropBitmaps
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
             {
                 for (int i = 0; i < src.Length; ++i)
                 {
@@ -112,7 +112,7 @@ namespace InteropBitmaps
         {
             const int SIZE = 4;
 
-            public void ConvertFrom(Span<PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -124,7 +124,7 @@ namespace InteropBitmaps
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
             {
                 for (int i = 0; i < src.Length; ++i)
                 {
@@ -141,7 +141,7 @@ namespace InteropBitmaps
         {
             const int SIZE = 4;
 
-            public void ConvertFrom(Span<PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -153,7 +153,7 @@ namespace InteropBitmaps
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
             {
                 for (int i = 0; i < src.Length; ++i)
                 {
@@ -170,16 +170,16 @@ namespace InteropBitmaps
         {
             const int SIZE = 4;
 
-            public void ConvertFrom(Span<PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
             {
-                var xsrc = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, PixelBGRA32>(src);
+                var xsrc = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PixelBGRA32>(src);
                 xsrc = xsrc.Slice(0, dst.Length);
                 xsrc.CopyTo(dst);
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
             {
-                var xdst = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, PixelBGRA32>(dst);
+                var xdst = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PixelBGRA32>(dst);
                 src.CopyTo(xdst);
             }
         }
