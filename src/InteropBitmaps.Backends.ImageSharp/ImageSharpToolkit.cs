@@ -8,6 +8,8 @@ namespace InteropBitmaps
 {
     public static partial class ImageSharpToolkit
     {
+        #region As adapter
+
         public static ImageSharpAdapter AsImageSharp(this SpanBitmap bitmap) { return new ImageSharpAdapter(bitmap); }
 
         public static ImageSharpAdapter AsImageSharp(this MemoryBitmap bitmap) { return new ImageSharpAdapter(bitmap.AsSpanBitmap()); }
@@ -22,9 +24,56 @@ namespace InteropBitmaps
             where TPixel : unmanaged, IPixel<TPixel>
         {
             return new ImageSharpAdapter<TPixel>(bitmap);
-        }        
+        }
 
-        public static MemoryBitmap<TPixel> CopyToMemoryBitmap<TPixel>(this Image<TPixel> src)
+        #endregion
+
+        #region As SpanBitmap
+
+        public static SpanBitmap AsSpanBitmap(this Image src)
+        {
+            if (src is Image<Alpha8> a8) return a8.AsSpanBitmap();
+            if (src is Image<Gray8> b8) return b8.AsSpanBitmap();
+            if (src is Image<Gray16> c8) return c8.AsSpanBitmap();
+
+            if (src is Image<Bgra4444> a16) return a16.AsSpanBitmap();
+            if (src is Image<Bgra5551> b16) return b16.AsSpanBitmap();
+            if (src is Image<Bgr565> c16) return c16.AsSpanBitmap();
+
+            if (src is Image<Rgb24> a24) return a24.AsSpanBitmap();
+            if (src is Image<Bgr24> b24) return b24.AsSpanBitmap();
+
+            if (src is Image<Rgba32> a32) return a32.AsSpanBitmap();
+            if (src is Image<Bgra32> b32) return b32.AsSpanBitmap();
+            if (src is Image<Argb32> c32) return c32.AsSpanBitmap();
+            if (src is Image<Rgba1010102> d32) return d32.AsSpanBitmap();
+
+            if (src is Image<Rgb48> a48) return a48.AsSpanBitmap();
+
+            if (src is Image<Rgba64> a64) return a64.AsSpanBitmap();
+
+            if (src is Image<HalfSingle> ah) return ah.AsSpanBitmap();
+            if (src is Image<HalfVector2> bh) return bh.AsSpanBitmap();
+            if (src is Image<HalfVector4> ch) return ch.AsSpanBitmap();
+
+            if (src is Image<RgbaVector> av) return av.AsSpanBitmap();
+
+            throw new NotImplementedException();
+        }
+
+        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this Image<TPixel> src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
+
+            return new SpanBitmap<TPixel>(span, src.Width, src.Height, GetPixelFormat<TPixel>());
+        }
+
+        #endregion
+
+        #region API
+
+        public static MemoryBitmap<TPixel> ToMemoryBitmap<TPixel>(this Image<TPixel> src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             var dst = new MemoryBitmap<TPixel>(src.Width, src.Height, GetPixelFormat<TPixel>());
@@ -38,35 +87,6 @@ namespace InteropBitmaps
 
             return dst;
         }
-
-        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this Image<TPixel> src)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
-
-            return new SpanBitmap<TPixel>(span, src.Width, src.Height, GetPixelFormat<TPixel>());
-        }
-
-        public static SpanBitmap AsSpanBitmap(this Image src)
-        {
-            if (src is Image<Alpha8> a8) return a8.AsSpanBitmap().AsSpanBitmap();
-            if (src is Image<Gray8> b8) return b8.AsSpanBitmap().AsSpanBitmap();
-            if (src is Image<Gray16> c8) return c8.AsSpanBitmap().AsSpanBitmap();            
-
-            if (src is Image<Bgra4444> a16) return a16.AsSpanBitmap().AsSpanBitmap();
-            if (src is Image<Bgra5551> b16) return b16.AsSpanBitmap().AsSpanBitmap();
-            if (src is Image<Bgr565> c16) return c16.AsSpanBitmap().AsSpanBitmap();
-
-            if (src is Image<Rgb24> a24) return a24.AsSpanBitmap().AsSpanBitmap();
-            if (src is Image<Bgr24> b24) return b24.AsSpanBitmap().AsSpanBitmap();
-
-            if (src is Image<Rgba32> a32) return a32.AsSpanBitmap().AsSpanBitmap();
-            if (src is Image<Bgra32> b32) return b32.AsSpanBitmap().AsSpanBitmap();
-            if (src is Image<Argb32> c32) return c32.AsSpanBitmap().AsSpanBitmap();
-
-            throw new NotImplementedException();
-        }
-
 
         public static Image CreateImageSharp(this BitmapInfo binfo)
         {
@@ -96,6 +116,6 @@ namespace InteropBitmaps
             }
         }
 
-
+        #endregion
     }
 }

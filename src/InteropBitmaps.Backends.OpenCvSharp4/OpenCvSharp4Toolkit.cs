@@ -20,13 +20,12 @@ namespace InteropBitmaps
 
         public static unsafe SpanBitmap AsSpanBitmap(this OpenCvSharp.Mat src)
         {
-            // src.IsContinuous = true;
-            // src.IsSubMatrix = false
+            // src.IsContinuous = true; ??
+            // src.IsSubMatrix = false ??
 
-            var mtype = src.Type();
-            var psize = (mtype.Depth + 1) * mtype.Channels;
+            var fmt = src.Type().ToInteropFormat();
 
-            var info = new BitmapInfo(src.Width, src.Height, psize, (int)src.Step());
+            var info = new BitmapInfo(src.Width, src.Height, fmt, (int)src.Step());
 
             return new SpanBitmap(src.Data, info);
         }
@@ -34,7 +33,9 @@ namespace InteropBitmaps
         public static unsafe SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this OpenCvSharp.Mat<TPixel> src)
             where TPixel : unmanaged
         {
-            var info = new BitmapInfo(src.Width, src.Height, sizeof(TPixel), (int)src.Step());
+            var fmt = src.Type().ToInteropFormat();
+
+            var info = new BitmapInfo(src.Width, src.Height, fmt, (int)src.Step());
 
             return new SpanBitmap<TPixel>(src.Data, info);
         }

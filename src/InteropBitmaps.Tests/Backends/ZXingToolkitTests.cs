@@ -13,7 +13,7 @@ using POINT = SixLabors.Primitives.PointF;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("ZXing Backend")]
+    [Category("Detector ZXing")]
     public class ZXingToolkitTests
     {
         [TestCase("Resources\\QRCode.png", "http://tecnohotelnews.com/")]

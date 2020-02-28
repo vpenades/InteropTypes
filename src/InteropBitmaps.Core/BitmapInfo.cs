@@ -7,18 +7,7 @@ namespace InteropBitmaps
     [System.Diagnostics.DebuggerDisplay("[{Width},{Height}]")]
     public readonly struct BitmapInfo
     {
-        #region lifecycle
-
-        public BitmapInfo(int width, int height, int pixelSize, int scanlineSize = 0)
-        {
-            Guard.BitmapRect(width, height, pixelSize, scanlineSize);
-
-            Width = width;
-            Height = height;
-            PixelSize = pixelSize;
-            PixelFormat = InteropBitmaps.PixelFormat.GetUndefinedOfSize(pixelSize);
-            ScanlineSize = scanlineSize > 0 ? scanlineSize : width * pixelSize;
-        }
+        #region lifecycle        
 
         public BitmapInfo(int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
@@ -88,9 +77,9 @@ namespace InteropBitmaps
             return bitmap.Slice(y * ScanlineSize + x * PixelSize, PixelSize);
         }
 
-        public Span<Byte> UsePixels(Span<Byte> bitmap, int x, int y, int count)
+        public Span<Byte> UsePixels(Span<Byte> bitmap, int x, int y, int pixelCount)
         {
-            return bitmap.Slice(y * ScanlineSize + x * PixelSize, PixelSize * count);
+            return bitmap.Slice(y * ScanlineSize + x * PixelSize, PixelSize * pixelCount);
         }
 
         public ReadOnlySpan<Byte> GetPixel(ReadOnlySpan<Byte> bitmap, int x, int y)
@@ -98,9 +87,9 @@ namespace InteropBitmaps
             return bitmap.Slice(y * ScanlineSize + x * PixelSize, PixelSize);
         }
 
-        public ReadOnlySpan<Byte> GetPixels(ReadOnlySpan<Byte> bitmap, int x, int y, int count)
+        public ReadOnlySpan<Byte> GetPixels(ReadOnlySpan<Byte> bitmap, int x, int y, int pixelCount)
         {
-            return bitmap.Slice(y * ScanlineSize + x * PixelSize, PixelSize * count);
+            return bitmap.Slice(y * ScanlineSize + x * PixelSize, PixelSize * pixelCount);
         }
 
         #endregion

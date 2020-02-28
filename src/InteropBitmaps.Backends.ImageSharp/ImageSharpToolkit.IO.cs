@@ -23,7 +23,7 @@ namespace InteropBitmaps
         {
             using (var img = Image.Load<Rgba32>(s))
             {
-                return img.CopyToMemoryBitmap();
+                return img.ToMemoryBitmap();
             }
         }
     }

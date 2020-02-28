@@ -10,6 +10,7 @@ namespace InteropBitmaps
     {
         // 0
         Empty = 0,
+        // DepthMillimetres, DepthCentimetres, DepthMetres
 
         // 1
         Undefined1, Alpha1,
@@ -33,7 +34,8 @@ namespace InteropBitmaps
         Undefined32, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
     }
 
-    [System.Diagnostics.DebuggerDisplay("{Element0-Element1-Element2-Element3}")]
+    // TODO: Rename to PixelEncoding
+    [System.Diagnostics.DebuggerDisplay("{Element0}-{Element1}-{Element2}-{Element3}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
     public readonly struct PixelFormat : IEquatable<PixelFormat>
     {
@@ -325,4 +327,6 @@ namespace InteropBitmaps
 
         #endregion
     }
+
+    
 }

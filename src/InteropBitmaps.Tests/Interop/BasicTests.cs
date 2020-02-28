@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Interop
 {
-    [Category("Interop - Basics")]
+    [Category("Backends GDI")]
     public class BasicTests
     {
         [TestCase("Resources\\shannon.jpg")]        

@@ -10,7 +10,7 @@ using SixLabors.ImageSharp;
 
 namespace InteropBitmaps.Interop
 {
-    [Category("ImageSharp + OpenCV")]
+    [Category("Bakends ImageSharp + OpenCV")]
     public class ImageSharpWithOpenCVTests
     {
         [TestCase("Resources\\shannon.jpg")]
@@ -18,14 +18,16 @@ namespace InteropBitmaps.Interop
         public void LoadImage(string filePath)
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            
+            var membmp = OpenCvSharp4Toolkit.LoadMemoryBitmapFromOpenCvSharp4(new System.IO.FileInfo(filePath));
 
-            var img = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(filePath);
+            membmp.AttachToCurrentTest("Result.png");
 
-            img.AttachToCurrentTest("original.png");
 
-            img.AsSpanBitmap().AsOpenCVSharp().Blur((5,1));            
-
-            img.AttachToCurrentTest("result.png");
+            // var imgsharp = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(filePath);
+            // imgsharp.AttachToCurrentTest("original.png");
+            // imgsharp.AsSpanBitmap().AsOpenCVSharp().Blur((5,1));
+            // imgsharp.AttachToCurrentTest("result.png");
         }
 
 

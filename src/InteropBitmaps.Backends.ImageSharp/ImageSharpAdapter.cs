@@ -11,19 +11,24 @@ namespace InteropBitmaps
     {
         #region constructor
 
-        public ImageSharpAdapter(SpanBitmap bmp) { _Bitmap = bmp; }
+        public ImageSharpAdapter(SpanBitmap bmp)
+        {
+            _Bitmap = bmp;
+            _ImageSharpPixelType = bmp.PixelFormat.ToImageSharpPixelFormat();
+        }
 
         #endregion
 
         #region data
 
         private readonly SpanBitmap _Bitmap;
+        private readonly Type _ImageSharpPixelType;
 
         #endregion
 
         #region API
 
-        public Image CloneToImageSharp()
+        public Image ToImageSharp()
         {
             var dst = _Bitmap.PixelFormat.CreateImageSharp(_Bitmap.Width,_Bitmap.Height);
 
@@ -32,9 +37,20 @@ namespace InteropBitmaps
             return dst;
         }
 
+        public Image ToImageSharp<TPixel>() where TPixel:unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
+        {
+            if (typeof(TPixel) != _ImageSharpPixelType) throw new ArgumentException(nameof(TPixel));
+
+            var dst = _Bitmap.PixelFormat.CreateImageSharp(_Bitmap.Width, _Bitmap.Height);
+
+            dst.AsSpanBitmap().SetPixels(0, 0, _Bitmap);
+
+            return dst;
+        }
+
         public void Save(string filePath)
         {
-            using (var img = CloneToImageSharp())
+            using (var img = ToImageSharp())
             {
                 img.Save(filePath);
             }
@@ -42,7 +58,7 @@ namespace InteropBitmaps
 
         public double CalculateBlurFactor()
         {
-            using (var img = CloneToImageSharp())
+            using (var img = ToImageSharp())
             {
                 return img.EvaluateBlurFactor();
             }
@@ -106,7 +122,7 @@ namespace InteropBitmaps
             {
                 tmp.Mutate(operation);
 
-                return tmp.CopyToMemoryBitmap();
+                return tmp.ToMemoryBitmap();
             }
         }
 

@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("Backend Takeuchi")]
+    [Category("Detector Takeuchi")]
     public class TakeuchiFaceRecognitionTests
     {
         [TestCase("Resources\\shannon.jpg")]        

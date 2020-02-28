@@ -46,11 +46,15 @@ namespace InteropBitmaps
                 return $"{fp}.{extPrefix}{ext}";
             }
 
-            bmp.AsGDI().Save(_injectExt(filePath,"GDI"));
-            NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "GDI"));
+            // try {
+                bmp.AsGDI().Save(_injectExt(filePath, "GDI"));
+                NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "GDI"));
+            // } catch { }
 
-            bmp.AsImageSharp().Save(_injectExt(filePath, "ImageSharp"));
-            NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "ImageSharp"));
+            // try {
+                bmp.AsImageSharp().Save(_injectExt(filePath, "ImageSharp"));
+                NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "ImageSharp"));
+            // } catch { }            
         }
     }
 

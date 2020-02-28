@@ -8,9 +8,10 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("GDI Backend")]
+    [Category("Backends GDI")]
     public class GDIToolkitTests
     {
+        [TestCase("Resources\\shannon.jpg")]
         [TestCase("Resources\\diagram.jpg")]
         [TestCase("Resources\\white.png")]
         public void LoadImage(string filePath)
@@ -21,7 +22,7 @@ namespace InteropBitmaps.Backends
                 .FileInfo(filePath)
                 .LoadMemoryBitmapFromGDI();
 
-            TestContext.WriteLine($"{filePath} > ({bitmap.Width},{bitmap.Height})");
+            bitmap.AttachToCurrentTest("Result.png");
         }
     }
 }

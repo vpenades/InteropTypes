@@ -86,19 +86,15 @@ namespace InteropBitmaps
         
         public unsafe SpanBitmap<TPixel> AsSpanBitmapOfType<TPixel>()
             where TPixel : unmanaged
-        {
-            return new SpanBitmap<TPixel>(_Data.Span, _Info);
-        }
+        { return new SpanBitmap<TPixel>(_Data.Span, _Info); }
 
-        public unsafe MemoryBitmap<TPixel> AsMemoryBitmap<TPixel>()
+        public unsafe MemoryBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged
-        {
-            return new MemoryBitmap<TPixel>(_Data, _Info);
-        }
+        { return new MemoryBitmap<TPixel>(_Data, _Info); }
 
         public Byte[] ToArray()
         {
-            if (_Array.Offset == 0 && _Array.Count == _Info.BitmapByteSize) return _Array.Array;
+            if (_Array.Offset == 0 && _Array.Array!=null && _Array.Array.Length == _Info.BitmapByteSize) return _Array.Array;
             return _Data.ToArray();            
         }
 

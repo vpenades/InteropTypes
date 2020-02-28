@@ -8,9 +8,10 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("ImageSharp Backend")]
+    [Category("Backends ImageSharp")]
     public class ImageSharpToolkitTests
     {
+        [TestCase("Resources\\shannon.jpg")]
         [TestCase("Resources\\diagram.jpg")]
         [TestCase("Resources\\white.png")]
         public void LoadImage(string filePath)
@@ -21,7 +22,7 @@ namespace InteropBitmaps.Backends
                 .FileInfo(filePath)
                 .LoadMemoryBitmapFromImageSharp();
 
-            TestContext.WriteLine($"{filePath} > ({bitmap.Width},{bitmap.Height})");
+            bitmap.AttachToCurrentTest("Result.png");
         }
     }
 }

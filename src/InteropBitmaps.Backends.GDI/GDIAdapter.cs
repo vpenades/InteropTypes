@@ -23,12 +23,11 @@ namespace InteropBitmaps
 
         #region API        
 
-        public Bitmap CloneToGDI()
+        public Bitmap CloneToGDI(bool allowCompatibleFormats = false)
         {
-            var pixFmt = _Bitmap.PixelFormat.ToGDIPixelFormat();
-            
+            var pixFmt = _Bitmap.PixelFormat.ToGDIPixelFormat(allowCompatibleFormats);            
 
-            if (_Bitmap.PixelSize != pixFmt.GetPixelSize()) throw new ArgumentException(nameof(pixFmt));
+            if (!allowCompatibleFormats && _Bitmap.PixelSize != pixFmt.GetPixelSize()) throw new ArgumentException(nameof(pixFmt));
 
             var dst = new Bitmap(_Bitmap.Width, _Bitmap.Height, pixFmt);
 
@@ -45,7 +44,7 @@ namespace InteropBitmaps
 
         public void Save(System.IO.FileInfo finfo)
         {
-            using (var img = CloneToGDI())
+            using (var img = CloneToGDI(true))
             {
                 img.Save(finfo.FullName);
             }
@@ -53,7 +52,7 @@ namespace InteropBitmaps
 
         public void Save(System.IO.FileInfo finfo, System.Drawing.Imaging.ImageFormat imgFmt)
         {
-            using (var img = CloneToGDI())
+            using (var img = CloneToGDI(true))
             {
                 img.Save(finfo.FullName, imgFmt);
             }

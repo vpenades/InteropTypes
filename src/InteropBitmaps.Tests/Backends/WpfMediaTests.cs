@@ -8,11 +8,12 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("WPF Backend")]
+    [Category("Backends WPF")]
     public class WpfMediaTests
     {
         [TestCase("Resources\\diagram.jpg")]
         [TestCase("Resources\\white.png")]
+        [TestCase("Resources\\shannon.jpg")]
         public void LoadImage(string filePath)
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);

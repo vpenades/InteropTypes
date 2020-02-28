@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Drawing;
 
-using GDIFMT = System.Drawing.Imaging.PixelFormat;
-
 namespace InteropBitmaps
 {
     /// <see href="https://github.com/dotnet/runtime/tree/master/src/libraries/System.Drawing.Common"/>
     public static partial class GDIToolkit
     {
+        #region As Adapter
+
         public static GDIAdapter AsGDI(this SpanBitmap bmp) { return new GDIAdapter(bmp); }
 
         public static GDIAdapter AsGDI(this MemoryBitmap bmp) { return new GDIAdapter(bmp); }
@@ -18,19 +18,35 @@ namespace InteropBitmaps
 
         public static GDIAdapter AsGDI<TPixel>(this MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged
-        { return new GDIAdapter(bmp.AsSpanBitmap()); }        
+        { return new GDIAdapter(bmp.AsSpanBitmap()); }
 
-        public static SpanBitmap AsSpanBitmap(this System.Drawing.Imaging.BitmapData data)
+        #endregion
+
+        #region As SpanBitmap
+
+        public static PointerBitmap AsPointerBitmap(this System.Drawing.Imaging.BitmapData data)
         {
             var info = new BitmapInfo(data.Width, data.Height, data.PixelFormat.ToInteropPixelFormat(), data.Stride);
 
-            return new SpanBitmap(data.Scan0, info);
+            return new PointerBitmap(data.Scan0, info);
+        }
+
+        public static SpanBitmap AsSpanBitmap(this System.Drawing.Imaging.BitmapData data)
+        {
+            return data.AsPointerBitmap().Span;
         }
 
         public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this System.Drawing.Imaging.BitmapData data)
             where TPixel: unmanaged
         {
-            return data.AsSpanBitmap().AsSpanBitmap<TPixel>();
+            return data.AsPointerBitmap().AsSpanBitmap<TPixel>();
+        }
+
+        #endregion
+
+        public static Bitmap CreateGDIBitmap(this BitmapInfo binfo)
+        {
+            return new Bitmap(binfo.Width, binfo.Height, binfo.PixelFormat.ToGDIPixelFormat());
         }
 
         public static void Mutate(this Bitmap bmp, Action<PointerBitmap> action)
@@ -41,11 +57,9 @@ namespace InteropBitmaps
 
             try
             {
-                bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
+                bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmp.PixelFormat);
 
-                var info = new BitmapInfo(bits.Width, bits.Height, bits.PixelFormat.ToInteropPixelFormat(), bits.Stride);
-
-                action((bits.Scan0, info));
+                action(bits.AsPointerBitmap());
             }
             finally
             {
@@ -61,7 +75,7 @@ namespace InteropBitmaps
 
             try
             {
-                dstbits = dst.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, dst.PixelFormat);
+                dstbits = dst.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, dst.PixelFormat);
 
                 dstbits.AsSpanBitmap().SetPixels(dstx, dsty, src);
             }
@@ -71,7 +85,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static MemoryBitmap CloneToMemoryBitmap(this Bitmap bmp)
+        public static MemoryBitmap ToMemoryBitmap(this Bitmap bmp)
         {
             var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
@@ -89,42 +103,24 @@ namespace InteropBitmaps
             }
         }        
 
-        public static MemoryBitmap CloneToMemoryBitmap(this Image img)
+        public static MemoryBitmap ToMemoryBitmap(this Image img)
         {
             using (var bmp = new Bitmap(img))
             {
-                return bmp.CloneToMemoryBitmap();
+                return bmp.ToMemoryBitmap();
             }
         }
 
-        public static MemoryBitmap CloneToMemoryBitmap(this TextureBrush brush)
+        public static MemoryBitmap ToMemoryBitmap(this TextureBrush brush)
         {
-            return brush.Image.CloneToMemoryBitmap();
-        }
+            return brush.Image.ToMemoryBitmap();
+        }        
 
-        public static MemoryBitmap<TPixel> CloneToMemoryBitmap<TPixel>(this Bitmap bmp) where TPixel : unmanaged
-        {
-            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-
-            System.Drawing.Imaging.BitmapData bits = null;
-
-            try
-            {
-                bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
-
-                return bits.AsSpanBitmap<TPixel>().ToMemoryBitmap();
-            }
-            finally
-            {
-                if (bits != null) bmp.UnlockBits(bits);
-            }
-        }
-
-        public static MemoryBitmap CloneToMemoryBitmap(this Icon icon)
+        public static MemoryBitmap ToMemoryBitmap(this Icon icon)
         {
             using (var bmp = icon.ToBitmap())
             {
-                return bmp.CloneToMemoryBitmap();
+                return bmp.ToMemoryBitmap();
             }
         }
 

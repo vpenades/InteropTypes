@@ -21,7 +21,7 @@ namespace InteropBitmaps
         {
             using (var img = Image.FromStream(s))
             {
-                return img.CloneToMemoryBitmap();
+                return img.ToMemoryBitmap();
             }
         }        
     }

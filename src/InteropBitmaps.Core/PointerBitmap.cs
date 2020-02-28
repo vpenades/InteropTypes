@@ -28,5 +28,10 @@ namespace InteropBitmaps
         public Boolean IsReadOnly => _IsReadOnly;
 
         public SpanBitmap Span => new SpanBitmap(_Pointer, _Info, _IsReadOnly);
+
+        public SpanBitmap<TPixel> AsSpanBitmap<TPixel>() where TPixel:unmanaged
+        {
+            return new SpanBitmap<TPixel>(_Pointer, _Info,_IsReadOnly);
+        }
     }
 }
