@@ -30,37 +30,6 @@ namespace InteropBitmaps
 
         #region As SpanBitmap
 
-        public static SpanBitmap AsSpanBitmap(this Image src)
-        {
-            if (src is Image<Alpha8> a8) return a8.AsSpanBitmap();
-            if (src is Image<Gray8> b8) return b8.AsSpanBitmap();
-            if (src is Image<Gray16> c8) return c8.AsSpanBitmap();
-
-            if (src is Image<Bgra4444> a16) return a16.AsSpanBitmap();
-            if (src is Image<Bgra5551> b16) return b16.AsSpanBitmap();
-            if (src is Image<Bgr565> c16) return c16.AsSpanBitmap();
-
-            if (src is Image<Rgb24> a24) return a24.AsSpanBitmap();
-            if (src is Image<Bgr24> b24) return b24.AsSpanBitmap();
-
-            if (src is Image<Rgba32> a32) return a32.AsSpanBitmap();
-            if (src is Image<Bgra32> b32) return b32.AsSpanBitmap();
-            if (src is Image<Argb32> c32) return c32.AsSpanBitmap();
-            if (src is Image<Rgba1010102> d32) return d32.AsSpanBitmap();
-
-            if (src is Image<Rgb48> a48) return a48.AsSpanBitmap();
-
-            if (src is Image<Rgba64> a64) return a64.AsSpanBitmap();
-
-            if (src is Image<HalfSingle> ah) return ah.AsSpanBitmap();
-            if (src is Image<HalfVector2> bh) return bh.AsSpanBitmap();
-            if (src is Image<HalfVector4> ch) return ch.AsSpanBitmap();
-
-            if (src is Image<RgbaVector> av) return av.AsSpanBitmap();
-
-            throw new NotImplementedException();
-        }
-
         public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this Image<TPixel> src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
@@ -93,28 +62,7 @@ namespace InteropBitmaps
             return binfo.PixelFormat.CreateImageSharp(binfo.Width, binfo.Height);
         }
 
-        public static Image CreateImageSharp(this PixelFormat fmt, int width, int height)
-        {
-            switch (fmt.PackedFormat)
-            {
-                case PixelFormat.Packed.GRAY8: return new Image<Gray8>(width, height);
-                case PixelFormat.Packed.GRAY16: return new Image<Gray16>(width, height);
-
-                case PixelFormat.Packed.ALPHA8: return new Image<Alpha8>(width, height);
-
-                case PixelFormat.Packed.BGR565: return new Image<Bgr565>(width, height);
-                case PixelFormat.Packed.BGRA4444: return new Image<Bgra4444>(width, height);
-
-                case PixelFormat.Packed.RGB24: return new Image<Rgb24>(width, height);
-                case PixelFormat.Packed.BGR24: return new Image<Bgr24>(width, height);
-
-                case PixelFormat.Packed.RGBA32: return new Image<Rgba32>(width, height);
-                case PixelFormat.Packed.BGRA32: return new Image<Bgra32>(width, height);
-                case PixelFormat.Packed.ARGB32: return new Image<Argb32>(width, height);
-
-                default: throw new NotImplementedException();
-            }
-        }
+        
 
         #endregion
     }

@@ -88,33 +88,9 @@ namespace InteropBitmaps
 
         #region API
 
-        public Image<TPixel> CloneToImageSharp()
-        {
-            var dst = new Image<TPixel>(_Bitmap.Width, _Bitmap.Height);
+        public Image<TPixel> CloneToImageSharp() { return _Implementation.CloneToImageSharp(_Bitmap); }
 
-            for (int y = 0; y < dst.Height; ++y)
-            {
-                var srcLine = _Bitmap.GetPixelsScanline(y);
-                var dstLine = dst.Frames[0].GetPixelRowSpan(y);
-                srcLine.CopyTo(dstLine);
-            }
-
-            return dst;
-        }
-
-        public void Mutate(Action<IImageProcessingContext> operation)
-        {
-            using (var tmp = CloneToImageSharp())
-            {
-                tmp.Mutate(operation);
-
-                // if size has changed, throw error.
-                if (tmp.Width != _Bitmap.Width || tmp.Height != _Bitmap.Height) throw new ArgumentException("Operations that resize the source image are not allowed.", nameof(operation));
-
-                // transfer pixels back to src.
-                _Bitmap.SetPixels(0, 0, tmp.AsSpanBitmap());
-            }
-        }
+        public void Mutate(Action<IImageProcessingContext> operation) { _Implementation.Mutate(_Bitmap, operation); }
 
         public MemoryBitmap<TPixel> Clone(Action<IImageProcessingContext> operation)
         {
@@ -126,10 +102,7 @@ namespace InteropBitmaps
             }
         }
 
-        public MemoryBitmap<TPixel> CloneResized(int width, int height)
-        {
-            return Clone(dc => dc.Resize(width, height));
-        }
+        public MemoryBitmap<TPixel> CloneResized(int width, int height) { return Clone(dc => dc.Resize(width, height)); }
 
         public void Save(string filePath)
         {
@@ -145,6 +118,13 @@ namespace InteropBitmaps
             {
                 return img.EvaluateBlurFactor();
             }
+        }
+
+        public void Draw(int dstx, int dsty, SpanBitmap<TPixel> other, float opacity)
+        {
+            var ops = default(TPixel).CreatePixelOperations();
+
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -104,6 +104,15 @@ namespace InteropBitmaps
         }
 
         #endregion
+
+        #region static
+
+        public static MemoryBitmap Load<TFactory>(string filePath) where TFactory: IMemoryBitmapFactory
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -171,5 +180,11 @@ namespace InteropBitmaps
         }
 
         #endregion
+    }
+
+
+    public interface IMemoryBitmapFactory
+    {
+        MemoryBitmap Load(System.IO.Stream s);
     }
 }

@@ -68,19 +68,19 @@ namespace InteropBitmaps
 
         public int Height => _Info.Height;
 
-        public (int Width, int Height) Size => _Info.Size;
-
         public int PixelSize => _Info.PixelSize;
 
         public PixelFormat PixelFormat => new PixelFormat(_Info.PixelFormat);
 
         public int ScanlineSize => _Info.ScanlineSize;
 
+        public BitmapBounds bounds => _Info.Bounds;
+
         #endregion
 
         #region API
-        
-        public SpanBitmap Slice(in InteropRectangle rect)
+
+        public SpanBitmap Slice(in BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);
 
@@ -231,15 +231,15 @@ namespace InteropBitmaps
 
         public int Height => _Info.Height;
 
-        public (int Width, int Height) Size => _Info.Size;
-
         public int PixelSize => _Info.PixelSize;
+
+        public BitmapBounds bounds => _Info.Bounds;
 
         #endregion
 
         #region API
 
-        public SpanBitmap<TPixel> Slice(in InteropRectangle rect)
+        public SpanBitmap<TPixel> Slice(in BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);
 

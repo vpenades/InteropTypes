@@ -4,8 +4,8 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    [System.Diagnostics.DebuggerDisplay("[{Width},{Height}]")]
-    public readonly struct BitmapInfo
+    [System.Diagnostics.DebuggerDisplay("{Width}x{Height}-{PixelFormat}")]
+    public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
         #region lifecycle        
 
@@ -41,6 +41,26 @@ namespace InteropBitmaps
         public readonly int ScanlineSize;
         public readonly PixelFormat PixelFormat;
 
+        public override int GetHashCode() { return Width.GetHashCode() ^ Height.GetHashCode() ^ PixelFormat.GetHashCode(); }
+
+        public static bool AreEqual(in BitmapInfo a, in BitmapInfo b)
+        {
+            if (a.Width != b.Width) return false;
+            if (a.Height != b.Height) return false;
+            if (a.PixelSize != b.PixelSize) return false;            
+            if (a.PixelFormat != b.PixelFormat) return false;
+            if (a.ScanlineSize != b.ScanlineSize) return false;
+            return true;
+        }
+
+        public bool Equals(BitmapInfo other) { return AreEqual(this, other); }
+
+        public override bool Equals(object obj) { return obj is BitmapInfo other ? AreEqual(this, other) : false; }
+
+        public static bool operator ==(in BitmapInfo a, in BitmapInfo b) { return AreEqual(a, b); }
+
+        public static bool operator !=(in BitmapInfo a, in BitmapInfo b) { return !AreEqual(a, b); }
+
         #endregion
 
         #region properties
@@ -50,13 +70,13 @@ namespace InteropBitmaps
 
         public (int Width, int Height) Size => (Width, Height);
 
-        public InteropRectangle Bounds => new InteropRectangle(0,0,Width, Height);
+        public BitmapBounds Bounds => new BitmapBounds(0,0,Width, Height);
 
         #endregion
 
         #region data
 
-        public (int Offset, BitmapInfo Info) Slice(in InteropRectangle rect)
+        public (int Offset, BitmapInfo Info) Slice(in BitmapBounds rect)
         {
             Guard.IsTrue(nameof(rect), Bounds.Contains(rect));
 

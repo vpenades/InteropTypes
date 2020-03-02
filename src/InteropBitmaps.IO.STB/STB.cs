@@ -1,6 +1,7 @@
 ﻿using System;
+using System.IO;
 
-namespace InteropBitmaps.IO
+namespace InteropBitmaps
 {
     /// <summary>
     /// 
@@ -44,9 +45,14 @@ namespace InteropBitmaps.IO
         {
             var binfo = image.GetBitmapInfo();
             return new SpanBitmap(image.Data, binfo);
-
         }
+    }
 
-
+    public sealed class STBFactory : IMemoryBitmapFactory
+    {
+        public MemoryBitmap Load(Stream s)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

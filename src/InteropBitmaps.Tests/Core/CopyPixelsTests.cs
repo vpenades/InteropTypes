@@ -17,11 +17,24 @@ namespace InteropBitmaps.Core
             var dst = new MemoryBitmap(16, 16, PixelFormat.Standard.GRAY8);
             var src = new MemoryBitmap(8, 8, PixelFormat.Standard.GRAY8);
 
+            src.Span.WritableSpan.Fill(50);
             dst.SetPixels(4, 4, src);
 
+            src.Span.WritableSpan.Fill(255);
             dst.SetPixels(-4, -4, src);
 
+            src.Span.WritableSpan.Fill(130);
+            dst.SetPixels(12, -4, src);
 
+            src.Span.WritableSpan.Fill(255);
+            dst.SetPixels(12, 12, src);
+
+            src.Span.WritableSpan.Fill(70);
+            dst.SetPixels(-4, 12, src);
+
+            dst.SetPixels(-50, 0, src);
+
+            dst.AttachToCurrentTest("Result.png");
         }
     }
 }

@@ -16,7 +16,7 @@ namespace InteropBitmaps
         Undefined1, Alpha1,
 
         // 4
-        Undefined4, Red4, Green4, Blue4, Alpha4,
+        Undefined4, Red4, Green4, Blue4, Alpha4, // PremulAlpha4
 
         // 5
         Undefined5, Red5, Green5, Blue5,
@@ -25,7 +25,7 @@ namespace InteropBitmaps
         Undefined6, Green6,
 
         // 8
-        Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8,
+        Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8, // PremulAlpha8
 
         // 16
         Undefined16, Index16, Gray16,

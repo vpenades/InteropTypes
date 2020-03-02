@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropBitmaps</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FaceRecognitionDotNet" Version="1.2.3.14" />
+    <PackageReference Include="SkiaSharp" Version="1.68.1.1" />
   </ItemGroup>
 
   <ItemGroup>

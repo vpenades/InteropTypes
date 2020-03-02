@@ -25,38 +25,14 @@ namespace InteropBitmaps
 
         public Bitmap CloneToGDI(bool allowCompatibleFormats = false)
         {
-            var pixFmt = _Bitmap.PixelFormat.ToGDIPixelFormat(allowCompatibleFormats);            
-
-            if (!allowCompatibleFormats && _Bitmap.PixelSize != pixFmt.GetPixelSize()) throw new ArgumentException(nameof(pixFmt));
-
-            var dst = new Bitmap(_Bitmap.Width, _Bitmap.Height, pixFmt);
-
-            dst.SetPixels(0, 0, _Bitmap);
-
-            return dst;
+            return _Implementation.CloneToGDI(_Bitmap, allowCompatibleFormats);
         }
 
-        public void Save(string filePath)
-        {
-            var finfo = new System.IO.FileInfo(filePath);
-            Save(finfo);
-        }
+        public void Save(string filePath) { _Implementation.Save(filePath, _Bitmap); }
 
-        public void Save(System.IO.FileInfo finfo)
-        {
-            using (var img = CloneToGDI(true))
-            {
-                img.Save(finfo.FullName);
-            }
-        }
+        public void Save(System.IO.FileInfo finfo) { _Implementation.Save(finfo, _Bitmap); }
 
-        public void Save(System.IO.FileInfo finfo, System.Drawing.Imaging.ImageFormat imgFmt)
-        {
-            using (var img = CloneToGDI(true))
-            {
-                img.Save(finfo.FullName, imgFmt);
-            }
-        }
+        public void Save(System.IO.FileInfo finfo, System.Drawing.Imaging.ImageFormat imgFmt) { _Implementation.Save(finfo, _Bitmap, imgFmt); }
 
         #endregion
     }

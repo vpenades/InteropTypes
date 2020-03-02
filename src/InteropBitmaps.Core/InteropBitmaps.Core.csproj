@@ -18,6 +18,25 @@
 
   <ItemGroup>    
     <PackageReference Include="System.Memory" Version="4.5.3" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <Compile Update="PixelConverters.Impl.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PixelConverters.Impl.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="PixelConverters.Impl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PixelConverters.Impl.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

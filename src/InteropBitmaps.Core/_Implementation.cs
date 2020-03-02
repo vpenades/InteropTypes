@@ -6,9 +6,9 @@ namespace InteropBitmaps
 {
     static class _Implementation
     {
-        public static SpanBitmap Crop(SpanBitmap src, InteropRectangle rect)
+        public static SpanBitmap Crop(SpanBitmap src, BitmapBounds rect)
         {
-            rect = InteropRectangle.Clamp(rect, (0, 0, src.Width, src.Height));
+            rect = BitmapBounds.Clamp(rect, src.bounds);
 
             if (rect.Width <= 0 || rect.Height <= 0) return default;
 
@@ -53,7 +53,6 @@ namespace InteropBitmaps
                     dstConverter.ConvertTo(dstRow, tmp);
                 }
             }
-
         }
     }
 }
