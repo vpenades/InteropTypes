@@ -79,19 +79,19 @@ namespace InteropBitmaps
         #endregion
 
         #region API
-
-        public SpanBitmap Slice(int x, int y, int width, int height)
+        
+        public SpanBitmap Slice(in InteropRectangle rect)
         {
-            var (offset, info) = _Info.Slice(x, y, width, height);
+            var (offset, info) = _Info.Slice(rect);
 
             if (_Writable.IsEmpty)
             {
-                var span = _Writable.Slice(offset, info.BitmapByteSize);
+                var span = _Readable.Slice(offset, info.BitmapByteSize);
                 return new SpanBitmap(span, info);
             }
             else
             {
-                var span = _Readable.Slice(offset, info.BitmapByteSize);
+                var span = _Writable.Slice(offset, info.BitmapByteSize);
                 return new SpanBitmap(span, info);
             }
         }
@@ -134,46 +134,9 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region Bulk API
+        #region Bulk API        
 
-        public void SetPixels(int dstX, int dstY, SpanBitmap src) { SetPixels(dstX, dstY, src, (0, 0, src.Width, src.Height)); }
-
-        public void SetPixels(int dstX, int dstY, SpanBitmap src, in (int x, int y, int w, int h) srcRect)
-        {
-            var xRect = srcRect.Clamp((0, 0, this.Width, this.Height));
-            if (xRect.w <= 0 || xRect.h <= 0) return;
-
-            dstX += xRect.x - srcRect.x;
-            dstY += xRect.y - srcRect.y;
-
-            if (this.PixelFormat == src.PixelFormat)
-            {
-                for (int y = 0; y < srcRect.h; ++y)
-                {
-                    var srcRow = src._Info.GetPixels(src._Readable, xRect.x, xRect.y + y, xRect.w);
-                    var dstRow = this._Info.UsePixels(this._Writable, dstX, dstY + y, xRect.w);
-
-                    srcRow.CopyTo(dstRow);
-                }
-            }
-            else
-            {
-                var srcConverter = _PixelConverters.GetConverter(src.PixelFormat);
-                var dstConverter = _PixelConverters.GetConverter(this.PixelFormat);
-
-                Span<_PixelBGRA32> tmp = stackalloc _PixelBGRA32[xRect.w];
-
-                for (int y = 0; y < srcRect.h; ++y)
-                {
-                    var srcRow = src._Info.GetPixels(src._Readable, xRect.x, xRect.y + y, xRect.w);
-                    var dstRow = this._Info.UsePixels(this._Writable, dstX, dstY + y, xRect.w);
-
-                    srcConverter.ConvertFrom(tmp, srcRow);
-                    dstConverter.ConvertTo(dstRow, tmp);
-                }
-            }
-
-        }
+        public void SetPixels(int dstX, int dstY, SpanBitmap src) { _Implementation.CopyPixels(this, dstX, dstY, src); }
 
         public MemoryBitmap ToMemoryBitmap() { return new MemoryBitmap(_Readable.ToArray(), _Info); }
 
@@ -276,18 +239,18 @@ namespace InteropBitmaps
 
         #region API
 
-        public SpanBitmap<TPixel> Slice(int x, int y, int width, int height)
+        public SpanBitmap<TPixel> Slice(in InteropRectangle rect)
         {
-            var (offset, info) = _Info.Slice(x, y, width, height);
+            var (offset, info) = _Info.Slice(rect);
 
             if (_Writable.IsEmpty)
             {
-                var span = _Writable.Slice(offset, info.BitmapByteSize);
+                var span = _Readable.Slice(offset, info.BitmapByteSize);
                 return new SpanBitmap<TPixel>(span, info);
             }
             else
             {
-                var span = _Readable.Slice(offset, info.BitmapByteSize);
+                var span = _Writable.Slice(offset, info.BitmapByteSize);
                 return new SpanBitmap<TPixel>(span, info);
             }
         }
@@ -316,50 +279,11 @@ namespace InteropBitmaps
         
         #endregion
 
-        #region API - Bulk operations
+        #region API - Bulk operations        
 
-        public void SetPixels(int x, int y, IBitmap<TPixel> src) { SetPixels(x, y, src, (0, 0, src.Width, src.Height)); }
-        
-        public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { SetPixels(dstX, dstY, src, (0, 0, src.Width, src.Height)); }
-
-        public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src, in (int x, int y, int w, int h) srcRect)
+        public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src)
         {
-            var scanlines = _GetScanlines(dstX, dstY, src.Size, srcRect);
-
-            if (scanlines.IsEmpty) return;
-
-            for (int y = 0; y < scanlines.Height; ++y)
-            {
-                var srcRow =  src.GetPixelsScanline(scanlines.SourceY + y).Slice(scanlines.SourceX, scanlines.Width);
-                var dstRow = this.UsePixelsScanline(scanlines.TargetY + y).Slice(scanlines.TargetX, scanlines.Width);
-
-                srcRow.CopyTo(dstRow);
-            }
-        }
-
-        public void SetPixels(int dstX, int dstY, IBitmap<TPixel> src, in (int x, int y, int w, int h) srcRect)
-        {
-            var scanlines = _GetScanlines(dstX, dstY, (src.Width, src.Height), srcRect);
-
-            if (scanlines.IsEmpty) return;
-
-            for (int y = 0; y < scanlines.Height; ++y)
-            {
-                for (int x = 0; x < scanlines.Width; ++x)
-                {
-                    var pixel = src.GetPixel(scanlines.SourceX + x, scanlines.SourceY + y);
-                    this.SetPixel(scanlines.TargetX + x, scanlines.TargetY + y, pixel);
-                }
-            }
-        }
-
-        private RectangleOverlap _GetScanlines(int dstX, int dstY, (int w, int h) srcSiz, (int x, int y, int w, int h) srcRect)
-        {
-            var scanlines = new RectangleOverlap();
-            scanlines.SetSourceSize(srcSiz);
-            scanlines.SetTargetSize(this.Size);
-            scanlines.SetTransfer((dstX, dstY), (srcRect.x, srcRect.y), (srcRect.w, srcRect.h));
-            return scanlines;
+            _Implementation.CopyPixels(this, dstX, dstY, src);
         }
 
         public unsafe SpanBitmap AsSpanBitmap()

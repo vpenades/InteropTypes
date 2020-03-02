@@ -4,8 +4,17 @@ using System.Text;
 
 namespace InteropBitmaps
 {
+    /// <summary>
+    /// Represents an <see cref="IntPtr"/> pointing to a bitmap in memory.
+    /// </summary>
+    /// <remarks>
+    /// This is the lowest level possible to handling bitmaps, so it is assumed a developer knows how to use it.
+    /// This structure just wraps the pointer; in order to access it, use <see cref="Span"/> or <see cref="OfType{TPixel}"/>.    
+    /// </remarks>
     public readonly struct PointerBitmap
     {
+        #region constructors
+
         public static implicit operator PointerBitmap((IntPtr,BitmapInfo) ptrbmp)
         {
             return new PointerBitmap(ptrbmp.Item1, ptrbmp.Item2);
@@ -18,9 +27,17 @@ namespace InteropBitmaps
             _IsReadOnly = isReadOnly;
         }
 
+        #endregion
+
+        #region data
+
         private readonly IntPtr _Pointer;
         private readonly BitmapInfo _Info;
         private readonly Boolean _IsReadOnly;
+
+        #endregion
+
+        #region properties
 
         public IntPtr Pointer => _Pointer;
         public BitmapInfo Info => _Info;
@@ -29,9 +46,16 @@ namespace InteropBitmaps
 
         public SpanBitmap Span => new SpanBitmap(_Pointer, _Info, _IsReadOnly);
 
-        public SpanBitmap<TPixel> AsSpanBitmap<TPixel>() where TPixel:unmanaged
+        #endregion
+
+        #region API
+
+        public SpanBitmap<TPixel> OfType<TPixel>()
+            where TPixel:unmanaged
         {
             return new SpanBitmap<TPixel>(_Pointer, _Info,_IsReadOnly);
         }
+
+        #endregion
     }
 }

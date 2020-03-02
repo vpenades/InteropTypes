@@ -79,6 +79,11 @@ namespace InteropBitmaps
         #endregion
 
         #region API
+
+        public void SetPixels(int dstX, int dstY, SpanBitmap src)
+        {
+            AsSpanBitmap().SetPixels(dstX, dstY, src);
+        }
         
         public Span<byte> UseBytesScanline(int y) { return _Info.UseScanline(_Data.Span, y); }
 

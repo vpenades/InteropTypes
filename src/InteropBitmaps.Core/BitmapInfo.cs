@@ -39,25 +39,30 @@ namespace InteropBitmaps
         public readonly int Height;
         public readonly int PixelSize;
         public readonly int ScanlineSize;
-        public readonly PixelFormat PixelFormat;        
+        public readonly PixelFormat PixelFormat;
 
         #endregion
 
         #region properties
 
-        public int BitmapByteSize => ScanlineSize * Height;
+        // under some circunstances, the last stride of the last row must not be accounted for.
+        public int BitmapByteSize => Height == 0 ? 0 : ScanlineSize * (Height - 1) + PixelSize * Width;
 
         public (int Width, int Height) Size => (Width, Height);
+
+        public InteropRectangle Bounds => new InteropRectangle(0,0,Width, Height);
 
         #endregion
 
         #region data
 
-        public (int Offset, BitmapInfo Info) Slice(int x, int y, int width, int height)
+        public (int Offset, BitmapInfo Info) Slice(in InteropRectangle rect)
         {
-            var offset = this.ScanlineSize * y + this.PixelSize * x;
+            Guard.IsTrue(nameof(rect), Bounds.Contains(rect));
 
-            var info = new BitmapInfo(width, height, this);
+            var offset = this.ScanlineSize * rect.X + this.PixelSize * rect.Y;
+
+            var info = new BitmapInfo(rect.Width, rect.Height, this);
 
             return (offset, info);
         }

@@ -39,7 +39,7 @@ namespace InteropBitmaps
         public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this System.Drawing.Imaging.BitmapData data)
             where TPixel: unmanaged
         {
-            return data.AsPointerBitmap().AsSpanBitmap<TPixel>();
+            return data.AsPointerBitmap().OfType<TPixel>();
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace InteropBitmaps
 
         public static void Mutate(this Bitmap bmp, Action<PointerBitmap> action)
         {
-            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
 
             System.Drawing.Imaging.BitmapData bits = null;
 
@@ -69,7 +69,7 @@ namespace InteropBitmaps
 
         public static void SetPixels(this Bitmap dst, int dstx, int dsty, SpanBitmap src)
         {
-            var rect = new Rectangle(0, 0, dst.Width, dst.Height);
+            var rect = new System.Drawing.Rectangle(0, 0, dst.Width, dst.Height);
 
             System.Drawing.Imaging.BitmapData dstbits = null;
 
@@ -87,7 +87,7 @@ namespace InteropBitmaps
 
         public static MemoryBitmap ToMemoryBitmap(this Bitmap bmp)
         {
-            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
 
             System.Drawing.Imaging.BitmapData bits = null;
 

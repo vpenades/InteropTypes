@@ -81,3 +81,6 @@ Other candidates:
 - PLPlot
 - Xing
 - FaceRecognitionDotNet
+- http://sharpdx.org/wiki/class-library-api/wic/
+
+https://docs.microsoft.com/es-es/windows/win32/wic/-wic-lh?redirectedfrom=MSDN

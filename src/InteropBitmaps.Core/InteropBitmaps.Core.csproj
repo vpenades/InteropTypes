@@ -10,6 +10,12 @@
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
 
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>InteropBitmaps.Tests</_Parameter1>
+    </AssemblyAttribute>    
+  </ItemGroup>
+
   <ItemGroup>    
     <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
