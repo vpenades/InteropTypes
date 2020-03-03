@@ -21,5 +21,12 @@ namespace InteropBitmaps
 
         TPixel GetPixel(int x, int y);
         void SetPixel(int x, int y, TPixel value);
-    }    
+    }
+
+
+    public interface ISpanLock : IDisposable
+    {
+        BitmapInfo Info { get; }
+        SpanBitmap Span { get; }
+    }
 }

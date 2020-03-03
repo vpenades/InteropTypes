@@ -24,9 +24,14 @@ namespace InteropBitmaps
 
         #region As SpanBitmap
 
+        public static BitmapInfo GetBitmapInfo(this System.Drawing.Imaging.BitmapData data)
+        {
+            return new BitmapInfo(data.Width, data.Height, data.PixelFormat.ToInteropPixelFormat(), data.Stride);
+        }
+
         public static PointerBitmap AsPointerBitmap(this System.Drawing.Imaging.BitmapData data)
         {
-            var info = new BitmapInfo(data.Width, data.Height, data.PixelFormat.ToInteropPixelFormat(), data.Stride);
+            var info = data.GetBitmapInfo();
 
             return new PointerBitmap(data.Scan0, info);
         }
@@ -44,6 +49,11 @@ namespace InteropBitmaps
 
         #endregion
 
+        public static ISpanLock LockSpanBitmap(this Bitmap bmp, bool readOnly = false)
+        {
+            return new SpanBitmapLock(bmp, readOnly);
+        }
+
         public static Bitmap CreateGDIBitmap(this BitmapInfo binfo)
         {
             return new Bitmap(binfo.Width, binfo.Height, binfo.PixelFormat.ToGDIPixelFormat());
@@ -51,7 +61,7 @@ namespace InteropBitmaps
 
         public static void Mutate(this Bitmap bmp, Action<PointerBitmap> action)
         {
-            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
+            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
             System.Drawing.Imaging.BitmapData bits = null;
 
@@ -63,25 +73,24 @@ namespace InteropBitmaps
             }
             finally
             {
-                if (bits != null) bmp.UnlockBits(bits);
+                bmp.UnlockBits(bits);
             }
         }
 
-        public static void SetPixels(this Bitmap dst, int dstx, int dsty, SpanBitmap src)
+        public static void SetPixels(this Bitmap dst, int dstx, int dsty, in SpanBitmap src)
         {
-            var rect = new System.Drawing.Rectangle(0, 0, dst.Width, dst.Height);
+            var rect = new Rectangle(0, 0, dst.Width, dst.Height);
 
             System.Drawing.Imaging.BitmapData dstbits = null;
 
             try
             {
-                dstbits = dst.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, dst.PixelFormat);
-
+                dstbits = dst.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, dst.PixelFormat);
                 dstbits.AsSpanBitmap().SetPixels(dstx, dsty, src);
             }
             finally
             {
-                if (dstbits != null) dst.UnlockBits(dstbits);
+                dst.UnlockBits(dstbits);
             }
         }
 

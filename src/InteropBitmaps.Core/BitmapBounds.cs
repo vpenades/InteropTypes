@@ -11,6 +11,7 @@ namespace InteropBitmaps
     /// The name of this structure is long and ugly on purpose, so it does not conflict
     /// with many other Rectangle definitions in other libraries:
     /// - System.Drawing.Rectangle (GDI)
+    /// - System.Drawing.RectangleF (GDI)
     /// - System.Windows.Rect (WIC)
     /// - System.Windows.Int32Rect (WIC)
     /// - Sixlabors.Primitives.Rectangle
