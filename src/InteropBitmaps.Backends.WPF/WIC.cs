@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace InteropBitmaps
 {
-    // https://github.com/dotnet/wpf
-    // https://github.com/dotnet/wpf/blob/master/src/Microsoft.DotNet.Wpf/src/PresentationCore/System/Windows/Media/Imaging/WriteableBitmap.cs    
+    
 
     /// <summary>
     ///  Windows Imaging Component (WIC)
@@ -18,29 +17,17 @@ namespace InteropBitmaps
 
         public static BitmapInfo GetBitmapInfo(this System.Windows.Media.Imaging.BitmapSource src)
         {
-            if (src == null) throw new ArgumentNullException();
-            if (src.IsDownloading) throw new NotImplementedException();
-
-            var byteStride = src is System.Windows.Media.Imaging.WriteableBitmap wbmp ? wbmp.BackBufferStride : 0;
-
-            var pfmt = src.Format.ToInteropFormat();
-            return new BitmapInfo(src.PixelWidth, src.PixelHeight, pfmt, byteStride);
+            return _Implementation.GetBitmapInfo(src);
         }        
 
         public static MemoryBitmap ToMemoryBitmap(this System.Windows.Media.Imaging.BitmapSource src)
         {
-            var binfo = src.GetBitmapInfo();
-
-            var dst = new MemoryBitmap(binfo);
-
-            src.CopyPixels(dst.ToArray(), binfo.ScanlineSize, 0);
-
-            return dst;            
+            return _Implementation.ToMemoryBitmap(src);
         }
 
         public static void Mutate(this System.Windows.Media.Imaging.WriteableBitmap bmp, Func<PointerBitmap, Boolean> onMutate)
         {
-            var pfmt = bmp.Format.ToInteropFormat();
+            var pfmt = _Implementation.ToInterop(bmp.Format);
 
             // // https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.writeablebitmap.adddirtyrect?view=netframework-4.8
 
@@ -70,15 +57,6 @@ namespace InteropBitmaps
         public static void SetPixels(this System.Windows.Media.Imaging.WriteableBitmap bmp, int dstX, int dstY, SpanBitmap spanSrc)
         {
             _Implementation.SetPixels(bmp, dstX, dstY, spanSrc);
-        }        
-
-
-        public static void SaveAsWMI(this SpanBitmap bmp, System.IO.Stream s,  System.Windows.Media.Imaging.BitmapEncoder encoder)
-        {
-
         }
-
-
-        
     }    
 }

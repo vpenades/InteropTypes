@@ -2,8 +2,6 @@
 
 namespace InteropBitmaps
 {
-
-    
     public static partial class OpenCvSharp4Toolkit
     {
         // https://github.com/shimat/opencvsharp/wiki/Accessing-Pixel
@@ -18,29 +16,15 @@ namespace InteropBitmaps
             return new OpenCvSharp4Adapter(bmp.AsSpanBitmap());
         }
 
-        public static unsafe SpanBitmap AsSpanBitmap(this OpenCvSharp.Mat src)
-        {
-            // src.IsContinuous = true; ??
-            // src.IsSubMatrix = false ??
-
-            var fmt = src.Type().ToInteropFormat();
-
-            var info = new BitmapInfo(src.Width, src.Height, fmt, (int)src.Step());
-
-            return new SpanBitmap(src.Data, info);
-        }
+        public static unsafe SpanBitmap AsSpanBitmap(this OpenCvSharp.Mat src) { return _Implementation.AsSpanBitmap(src); }
 
         public static unsafe SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this OpenCvSharp.Mat<TPixel> src)
             where TPixel : unmanaged
         {
-            var fmt = src.Type().ToInteropFormat();
-
-            var info = new BitmapInfo(src.Width, src.Height, fmt, (int)src.Step());
-
-            return new SpanBitmap<TPixel>(src.Data, info);
+            return _Implementation.AsSpanBitmap(src);
         }
 
-        public static unsafe OpenCvSharp.Mat<TPixel> CopyToOpenCvSharp<TPixel>(this SpanBitmap<TPixel> srcSpan)
+        public static unsafe OpenCvSharp.Mat<TPixel> CreateMat<TPixel>(this SpanBitmap<TPixel> srcSpan)
             where TPixel:unmanaged
         {
             var dst = new OpenCvSharp.Mat<TPixel>(srcSpan.Height, srcSpan.Width);
@@ -49,14 +33,14 @@ namespace InteropBitmaps
             return dst;            
         }
 
-        public static OpenCvSharp.Mat AsOpenCvMat(this in PointerBitmap src)
+        public static OpenCvSharp.Mat AsMat(this in PointerBitmap src)
         {
             var mtype = OpenCvSharp.MatType.CV_8UC(src.Info.PixelSize);
 
             return new OpenCvSharp.Mat(src.Info.Height, src.Info.Width, mtype, src.Pointer, src.Info.ScanlineSize);
         }
 
-        public static OpenCvSharp.Mat CreateOpenCvMat(this in BitmapInfo desc)
+        public static OpenCvSharp.Mat CreateMat(this in BitmapInfo desc)
         {
             var mtype = OpenCvSharp.MatType.CV_8UC(desc.PixelSize);
 

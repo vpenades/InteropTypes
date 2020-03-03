@@ -105,11 +105,24 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region static
+        #region CODECS IO
 
-        public static MemoryBitmap Load<TFactory>(string filePath) where TFactory: IMemoryBitmapFactory
+        public static MemoryBitmap Load(string filePath, IBitmapDecoding factory)
         {
-            throw new NotImplementedException();
+            using (var s = System.IO.File.OpenRead(filePath))
+            {
+                return factory.Read(s);
+            }
+        }
+
+        public void Save(string filePath, IBitmapEncoding factory)
+        {
+            var ext = System.IO.Path.GetExtension(filePath);
+
+            using (var s = System.IO.File.Create(filePath))
+            {
+                factory.Write(s, ext, this);
+            }
         }
 
         #endregion
@@ -183,8 +196,5 @@ namespace InteropBitmaps
     }
 
 
-    public interface IMemoryBitmapFactory
-    {
-        MemoryBitmap Load(System.IO.Stream s);
-    }
+    
 }

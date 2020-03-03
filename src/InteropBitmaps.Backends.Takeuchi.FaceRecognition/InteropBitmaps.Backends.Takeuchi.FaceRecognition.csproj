@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FaceRecognitionDotNet" Version="1.2.3.14" />
+    <PackageReference Include="FaceRecognitionDotNet" Version="1.2.3.13" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,11 +4,11 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    sealed class SpanBitmapLock : ISpanLock
+    sealed class BitmapLock : ISpanLock
     {
         #region lifecycle
 
-        public SpanBitmapLock(System.Drawing.Bitmap bmp, bool readOnly)
+        public BitmapLock(System.Drawing.Bitmap bmp, bool readOnly)
         {
             _Bitmap = bmp;
 
@@ -17,6 +17,8 @@ namespace InteropBitmaps
             var mode = readOnly ? System.Drawing.Imaging.ImageLockMode.ReadOnly : System.Drawing.Imaging.ImageLockMode.ReadWrite;
 
             _Bits = bmp.LockBits(rect, mode, bmp.PixelFormat);
+
+            _Info = _Bits.GetBitmapInfo();
             _IsReadOnly = readOnly;
         }
 
@@ -24,6 +26,7 @@ namespace InteropBitmaps
         {
             _Bitmap?.UnlockBits(_Bits);
             _Bitmap = null;
+            _Info = default;
             _Bits = null;
         }
 
@@ -33,15 +36,16 @@ namespace InteropBitmaps
 
         private System.Drawing.Bitmap _Bitmap;
         private System.Drawing.Imaging.BitmapData _Bits;
+        private BitmapInfo _Info;
         private bool _IsReadOnly;
 
         #endregion
 
         #region Properties
 
-        public BitmapInfo Info => _Bits.GetBitmapInfo();
+        public BitmapInfo Info => _Info;
 
-        public SpanBitmap Span => new SpanBitmap(_Bits.Scan0, Info, _IsReadOnly);
+        public SpanBitmap Span => new SpanBitmap(_Bits.Scan0, _Info, _IsReadOnly);
 
         #endregion
     }

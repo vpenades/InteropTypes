@@ -49,7 +49,7 @@ namespace InteropBitmaps
 
         private static unsafe void _Mutate(PointerBitmap bmp, Func<Mat, Mat> operation)
         {
-            using (var srcMat = bmp.AsOpenCvMat())
+            using (var srcMat = bmp.AsMat())
             {
                 using (var dstMat = operation(srcMat))
                 {
@@ -82,7 +82,7 @@ namespace InteropBitmaps
 
         private static unsafe MemoryBitmap _CloneMutated(PointerBitmap bmp, Func<Mat, Mat> operation)
         {
-            using (var srcMat = bmp.AsOpenCvMat())
+            using (var srcMat = bmp.AsMat())
             {
                 using (var dstMat = operation(srcMat))
                 {

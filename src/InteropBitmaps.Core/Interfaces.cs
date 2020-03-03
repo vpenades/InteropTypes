@@ -29,4 +29,15 @@ namespace InteropBitmaps
         BitmapInfo Info { get; }
         SpanBitmap Span { get; }
     }
+
+    public interface IBitmapDecoding
+    {
+        MemoryBitmap Read(System.IO.Stream s);
+        
+    }
+
+    public interface IBitmapEncoding
+    {
+        void Write(System.IO.Stream s, string formatExtension,  SpanBitmap bmp);
+    }
 }

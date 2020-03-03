@@ -20,7 +20,7 @@ namespace InteropBitmaps
             return path;
         }
 
-        public static void AttachToCurrentTest(this SixLabors.ImageSharp.Image image, string filePath)
+        public static void AttachToCurrentTest(this Image image, string filePath)
         {
             filePath = NUnit.Framework.TestContext.CurrentContext.OutputPath(filePath);
 
@@ -31,6 +31,8 @@ namespace InteropBitmaps
 
             NUnit.Framework.TestContext.AddTestAttachment(filePath);
         }
+
+        
 
         public static void AttachToCurrentTest(this MemoryBitmap bmp, string filePath)
         {
@@ -46,15 +48,19 @@ namespace InteropBitmaps
                 return $"{fp}.{extPrefix}{ext}";
             }
 
-            // try {
-                bmp.AsGDI().Save(_injectExt(filePath, "GDI"));
-                NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "GDI"));
-            // } catch { }
+            var f1 = _injectExt(filePath, "WPF");
+            bmp.Save(f1, new Codecs.WPFCodec()); NUnit.Framework.TestContext.AddTestAttachment(f1);
 
-            // try {
-                bmp.AsImageSharp().Save(_injectExt(filePath, "ImageSharp"));
-                NUnit.Framework.TestContext.AddTestAttachment(_injectExt(filePath, "ImageSharp"));
-            // } catch { }            
+            var f2 = _injectExt(filePath, "GDI");
+            bmp.Save(f2, new Codecs.GDICodec()); NUnit.Framework.TestContext.AddTestAttachment(f2);
+
+            var f3 = _injectExt(filePath, "ImageSharp");
+            bmp.Save(f3, new Codecs.ImageSharpCodec()); NUnit.Framework.TestContext.AddTestAttachment(f3);
+
+            var f4 = _injectExt(filePath, "SkiaSharp");
+            bmp.Save(f4, new Codecs.ImageSharpCodec()); NUnit.Framework.TestContext.AddTestAttachment(f4);
+
+            // TODO: it should compare saved files against bmp
         }
     }
 

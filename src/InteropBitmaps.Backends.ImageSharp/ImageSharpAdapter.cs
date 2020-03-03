@@ -28,33 +28,14 @@ namespace InteropBitmaps
 
         #region API
 
-        public Image ToImageSharp()
-        {
-            var dst = _Bitmap.PixelFormat.CreateImageSharp(_Bitmap.Width,_Bitmap.Height);
-
-            dst.AsSpanBitmap().SetPixels(0,0,_Bitmap);
-
-            return dst;
-        }
+        public Image ToImageSharp() { return _Implementation.CloneToImageSharp(_Bitmap); }
 
         public Image ToImageSharp<TPixel>() where TPixel:unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
         {
             if (typeof(TPixel) != _ImageSharpPixelType) throw new ArgumentException(nameof(TPixel));
 
-            var dst = _Bitmap.PixelFormat.CreateImageSharp(_Bitmap.Width, _Bitmap.Height);
-
-            dst.AsSpanBitmap().SetPixels(0, 0, _Bitmap);
-
-            return dst;
-        }
-
-        public void Save(string filePath)
-        {
-            using (var img = ToImageSharp())
-            {
-                img.Save(filePath);
-            }
-        }
+            return _Implementation.CloneToImageSharp(_Bitmap);
+        }        
 
         public double CalculateBlurFactor()
         {
@@ -102,15 +83,7 @@ namespace InteropBitmaps
             }
         }
 
-        public MemoryBitmap<TPixel> CloneResized(int width, int height) { return Clone(dc => dc.Resize(width, height)); }
-
-        public void Save(string filePath)
-        {
-            using (var img = CloneToImageSharp())
-            {
-                img.Save(filePath);
-            }
-        }
+        public MemoryBitmap<TPixel> CloneResized(int width, int height) { return Clone(dc => dc.Resize(width, height)); }        
 
         public double CalculateBlurFactor()
         {

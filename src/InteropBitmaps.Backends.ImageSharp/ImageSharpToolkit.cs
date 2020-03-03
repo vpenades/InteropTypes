@@ -60,9 +60,7 @@ namespace InteropBitmaps
         public static Image CreateImageSharp(this BitmapInfo binfo)
         {
             return binfo.PixelFormat.CreateImageSharp(binfo.Width, binfo.Height);
-        }
-
-        
+        }        
 
         #endregion
     }

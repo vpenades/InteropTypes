@@ -18,9 +18,7 @@ namespace InteropBitmaps.Backends
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var bitmap = new System.IO
-                .FileInfo(filePath)
-                .LoadMemoryBitmapFromGDI();
+            var bitmap = MemoryBitmap.Load(filePath, new Codecs.GDICodec());
 
             bitmap.AttachToCurrentTest("Result.png");
         }

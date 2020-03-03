@@ -51,7 +51,7 @@ namespace InteropBitmaps
 
         public static ISpanLock LockSpanBitmap(this Bitmap bmp, bool readOnly = false)
         {
-            return new SpanBitmapLock(bmp, readOnly);
+            return new BitmapLock(bmp, readOnly);
         }
 
         public static Bitmap CreateGDIBitmap(this BitmapInfo binfo)
@@ -96,7 +96,7 @@ namespace InteropBitmaps
 
         public static MemoryBitmap ToMemoryBitmap(this Bitmap bmp)
         {
-            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
+            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
             System.Drawing.Imaging.BitmapData bits = null;
 

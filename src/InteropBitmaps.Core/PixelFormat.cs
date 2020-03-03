@@ -69,6 +69,8 @@ namespace InteropBitmaps
             public const uint RGBA32 = B0 * (uint)PEF.Red8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Blue8 | B3 * (uint)PEF.Alpha8;
             public const uint BGRA32 = B0 * (uint)PEF.Blue8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Red8 | B3 * (uint)PEF.Alpha8;
             public const uint ARGB32 = B0 * (uint)PEF.Alpha8 | B1 * (uint)PEF.Red8 | B2 * (uint)PEF.Green8 | B3 * (uint)PEF.Blue8;
+
+            public const uint RGBA128F = B0 * (uint)PEF.Red32F | B1 * (uint)PEF.Green32F | B2 * (uint)PEF.Blue32F | B3 * (uint)PEF.Alpha32F;
         }
 
         public static class Standard
@@ -89,6 +91,8 @@ namespace InteropBitmaps
             public static readonly PixelFormat RGBA32 = new PixelFormat(Packed.RGBA32);
             public static readonly PixelFormat BGRA32 = new PixelFormat(Packed.BGRA32);
             public static readonly PixelFormat ARGB32 = new PixelFormat(Packed.ARGB32);
+
+            public static readonly PixelFormat RGBA128F = new PixelFormat(Packed.RGBA128F);
         }
 
         #endregion
