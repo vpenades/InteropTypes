@@ -23,6 +23,6 @@ namespace InteropBitmaps
             return _Implementation.GetPixelFormat<TPixel>();
         }
 
-        public static Type ToImageSharpPixelFormat(this PixelFormat fmt) { return _Implementation.ToImageSharpPixelFormat(fmt); }
+        public static Type ToImageSharpPixelFormat(this PixelFormat fmt) { return _Implementation.ToImageSharp(fmt); }
     }
 }

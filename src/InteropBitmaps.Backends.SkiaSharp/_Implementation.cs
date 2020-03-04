@@ -68,26 +68,30 @@ namespace InteropBitmaps
             return new PointerBitmap(ptr, binfo);
         }
 
-        public static SpanBitmap AsSpanBitmap(SkiaSharp.SKPixmap map)
+        public static SpanBitmap AsSpanBitmap(SkiaSharp.SKPixmap map, bool readOnly = false)
         {
+            var binfo = ToBitmapInfo(map.Info, map.RowBytes);
+
+            if (readOnly) return new SpanBitmap(map.GetPixelSpan(), binfo);
+
             var ptr = map.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();
 
-            var binfo = ToBitmapInfo(map.Info, map.RowBytes);
-
             return new SpanBitmap(ptr, binfo);
-        }
+        }        
 
-        public static SpanBitmap AsSpanBitmap(SkiaSharp.SKBitmap bmp)
+        public static SpanBitmap AsSpanBitmap(SkiaSharp.SKBitmap bmp, bool readOnly = false)
         {
+            var binfo = ToBitmapInfo(bmp.Info, bmp.RowBytes);
+
+            if (readOnly) return new SpanBitmap(bmp.GetPixelSpan(), binfo);
+
             var ptr = bmp.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();
 
-            var binfo = ToBitmapInfo(bmp.Info, bmp.RowBytes);
-
-            // bmp.NotifyPixelsChanged();
-
             return new SpanBitmap(ptr, binfo);
+
+            // should call bmp.NotifyPixelsChanged(); afterwards
         }
 
         #endregion

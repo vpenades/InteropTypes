@@ -28,13 +28,13 @@ namespace InteropBitmaps
 
         #region API
 
-        public Image ToImageSharp() { return _Implementation.CloneToImageSharp(_Bitmap); }
+        public Image ToImageSharp() { return _Implementation.ToImageSharp(_Bitmap); }
 
-        public Image ToImageSharp<TPixel>() where TPixel:unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
+        public Image<TPixel> ToImageSharp<TPixel>() where TPixel:unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
         {
             if (typeof(TPixel) != _ImageSharpPixelType) throw new ArgumentException(nameof(TPixel));
 
-            return _Implementation.CloneToImageSharp(_Bitmap);
+            return _Implementation.ToImageSharp<TPixel>(_Bitmap);
         }        
 
         public double CalculateBlurFactor()
@@ -69,7 +69,7 @@ namespace InteropBitmaps
 
         #region API
 
-        public Image<TPixel> CloneToImageSharp() { return _Implementation.CloneToImageSharp(_Bitmap); }
+        public Image<TPixel> CloneToImageSharp() { return _Implementation.ToImageSharp(_Bitmap); }
 
         public void Mutate(Action<IImageProcessingContext> operation) { _Implementation.Mutate(_Bitmap, operation); }
 

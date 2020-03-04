@@ -5,19 +5,18 @@ using System.Text;
 namespace InteropBitmaps
 {
     /// <summary>
-    /// Defines a rectangle.
+    /// Defines yet another rectangle structure.
     /// </summary>
     /// <remarks>
-    /// The name of this structure is long and ugly on purpose, so it does not conflict
-    /// with many other Rectangle definitions in other libraries:
-    /// - System.Drawing.Rectangle (GDI)
-    /// - System.Drawing.RectangleF (GDI)
-    /// - System.Windows.Rect (WIC)
-    /// - System.Windows.Int32Rect (WIC)
-    /// - Sixlabors.Primitives.Rectangle
-    /// - OpenCvSharp.Rect
-    /// - SkiaSharp.SKRectI
-    /// - Microsoft.Xna.Framework.Rectangle    
+    /// Pretty much every imaging library around defines some sort of Rectangle structure:    
+    /// - (GDI+) System.Drawing.Rectangle
+    /// - (GDI+) System.Drawing.RectangleF
+    /// - (WIC) System.Windows.Rect (WIC)
+    /// - (WIC)System.Windows.Int32Rect
+    /// - (ImageSharp) Sixlabors.Primitives.Rectangle
+    /// - (OpenCV) OpenCvSharp.Rect
+    /// - (Skia) SkiaSharp.SKRectI:
+    /// - (Monogame) Microsoft.Xna.Framework.Rectangle:
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{X},{Y} {Width}x{Height}")]
     public readonly struct BitmapBounds : IEquatable<BitmapBounds>
@@ -33,8 +32,8 @@ namespace InteropBitmaps
         {
             this.X = x;
             this.Y = y;
-            this.Width = w;
-            this.Height = h;
+            this.Width = Math.Max(0, w);
+            this.Height = Math.Max(0, h);
         }
 
         #endregion
@@ -74,7 +73,15 @@ namespace InteropBitmaps
         public (int X, int Y) Origin => (X, Y);
 
         public (int Width, int Height) Size => (Width, Height);
-        
+
+        public int Left => this.X;
+
+        public int Top => this.Y;
+
+        public int Right => this.X + this.Width;
+
+        public int Bottom => this.Y + this.Height;
+
         #endregion
 
         #region API

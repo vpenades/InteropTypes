@@ -82,6 +82,8 @@ namespace InteropBitmaps
 
             var offset = this.ScanlineSize * rect.X + this.PixelSize * rect.Y;
 
+            // todo: if (Rect.X &1 ^ Rect.Y &1) == 1, pixel format must call SwitchScanlineFormatOrder(
+
             var info = new BitmapInfo(rect.Width, rect.Height, this);
 
             return (offset, info);

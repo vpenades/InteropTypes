@@ -5,14 +5,38 @@ using System.Text;
 namespace InteropBitmaps
 {
     
-    struct _PixelBGRA32
+    readonly struct _PixelBGRA32
     {
+        #region constructors
+
+        public _PixelBGRA32(Byte blue, Byte green, Byte red, Byte alpha)
+        {
+            B = blue;
+            G = green;
+            R = red;
+            A = alpha;
+        }
+
+        public _PixelBGRA32(Byte blue, Byte green, Byte red)
+        {
+            B = blue;
+            G = green;
+            R = red;
+            A = 255;
+        }
+
+        #endregion
+
         #region DATA
 
-        public Byte B;
-        public Byte G;
-        public Byte R;
-        public Byte A;
+        public readonly Byte B;
+        public readonly Byte G;
+        public readonly Byte R;
+        public readonly Byte A;
+
+        const int RLuminanceWeight = 19562;
+        const int GLuminanceWeight = 38550;
+        const int BLuminanceWeight = 7424;
 
         #endregion
 
@@ -20,16 +44,18 @@ namespace InteropBitmaps
 
         public static _PixelBGRA32 FromGray8(ReadOnlySpan<Byte> src)
         {
-            return new _PixelBGRA32 { R = src[0], G = src[0], B = src[0], A = 255, };
+            return new _PixelBGRA32(src[0], src[0], src[0]);
         }
 
         public void ToGray8(Span<Byte> dst)
         {
-            int gray = R;
-            gray += G;
-            gray += B;
+            int gray = 0;
 
-            gray /= 3;
+            gray += RLuminanceWeight*(int)R;
+            gray += GLuminanceWeight*(int)G;
+            gray += BLuminanceWeight*(int)B;
+
+            gray >>= 16;
 
             dst[0] = (Byte)gray;
         }
@@ -40,18 +66,21 @@ namespace InteropBitmaps
 
         public static _PixelBGRA32 FromGray16(ReadOnlySpan<Byte> src)
         {
-            return new _PixelBGRA32 { R = src[1], G = src[1], B = src[1], A = 255, };
+            return new _PixelBGRA32(src[1], src[1], src[1]);
         }
 
         public void ToGray16(Span<Byte> dst)
         {
-            int gray = R;
-            gray += G;
-            gray += B;
+            int gray = 0;
 
-            gray /= 3;
+            gray += RLuminanceWeight * (int)R;
+            gray += GLuminanceWeight * (int)G;
+            gray += BLuminanceWeight * (int)B;
 
-            dst[0] = dst[1] = (Byte)gray;
+            gray >>= 8;
+
+            dst[0] = (Byte)(gray & 255);
+            dst[1] = (Byte)(gray >> 8);
         }
 
         #endregion
@@ -60,7 +89,7 @@ namespace InteropBitmaps
 
         public static _PixelBGRA32 FromRgb24(ReadOnlySpan<Byte> src)
         {
-            return new _PixelBGRA32 { R = src[0], G = src[1], B = src[2], A = 255, };
+            return new _PixelBGRA32(src[2], src[1], src[0]);
         }
 
         public void ToRgb24(Span<Byte> dst)
@@ -76,7 +105,7 @@ namespace InteropBitmaps
 
         public static _PixelBGRA32 FromBgr24(ReadOnlySpan<Byte> src)
         {
-            return new _PixelBGRA32 { B = src[0], G = src[1], R = src[2], A = 255, };
+            return new _PixelBGRA32(src[0], src[1], src[2]);
         }
 
         public void ToBgr24(Span<Byte> dst)
@@ -92,7 +121,7 @@ namespace InteropBitmaps
 
         public static _PixelBGRA32 FromRgba32(ReadOnlySpan<Byte> src)
         {
-            return new _PixelBGRA32 { R = src[0], G = src[1], B = src[2], A = src[3] };
+            return new _PixelBGRA32(src[2], src[1], src[0], src[3]);
         }
 
         public void ToRgba32(Span<Byte> dst)
@@ -109,7 +138,7 @@ namespace InteropBitmaps
 
         public static _PixelBGRA32 FromBgra32(ReadOnlySpan<Byte> src)
         {
-            return new _PixelBGRA32 { B = src[0], G = src[1], R = src[2], A = src[3] };
+            return new _PixelBGRA32(src[0], src[1], src[2], src[3]);
         }
 
         public void ToBgra32(Span<Byte> dst)
@@ -126,7 +155,7 @@ namespace InteropBitmaps
 
         public static _PixelBGRA32 FromArgb32(ReadOnlySpan<Byte> src)
         {
-            return new _PixelBGRA32 { A = src[0], R = src[1], G = src[2], B = src[3] };
+            return new _PixelBGRA32(src[3], src[2], src[1], src[0]);
         }
 
         public void ToArgb32(Span<Byte> dst)
@@ -138,7 +167,6 @@ namespace InteropBitmaps
         }
 
         #endregion
-
     }
 
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
@@ -177,7 +205,7 @@ namespace InteropBitmaps
 
         public interface ICopyConverter
         {
-            void Convert(Span<Byte> dst, Span<Byte> tmp, ReadOnlySpan<Byte> src);
+            void Convert(Span<Byte> dst, Span<Byte> tmp, ReadOnlySpan<Byte> src, int y);
         }
 
         readonly struct _RGBConverter : ICopyConverter
@@ -185,11 +213,11 @@ namespace InteropBitmaps
             private readonly IRGBConverter _SrcConverter;
             private readonly IRGBConverter _DstConverter;
 
-            public void Convert(Span<byte> dst, Span<byte> tmp, ReadOnlySpan<byte> src)
+            public void Convert(Span<byte> dst, Span<byte> tmp, ReadOnlySpan<byte> src, int y)
             {
                 var xtmp = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PixelBGRA32>(tmp);
-                _SrcConverter.ConvertFrom(xtmp, src);
-                _SrcConverter.ConvertTo(dst, xtmp);
+                _SrcConverter.ConvertFrom(xtmp, src, y);
+                _SrcConverter.ConvertTo(dst, y, xtmp);
             }
         }
 
@@ -199,8 +227,8 @@ namespace InteropBitmaps
 
         public interface IRGBConverter
         {
-            void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<Byte> src);
-            void ConvertTo(Span<Byte> dst, ReadOnlySpan<_PixelBGRA32> src);
+            void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<Byte> src, int srcY);
+            void ConvertTo(Span<Byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src);
         }
 
         public static IRGBConverter GetConverter(PixelFormat fmt)

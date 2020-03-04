@@ -44,6 +44,15 @@ namespace InteropBitmaps
             throw new NotImplementedException();
         }
 
+        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(Image<TPixel> src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
+            var pfmt = GetPixelFormat<TPixel>();
+
+            return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
+        }
+
         public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
         {
             switch (fmt.PackedFormat)
@@ -88,7 +97,7 @@ namespace InteropBitmaps
             throw new NotImplementedException();
         }
 
-        public static Type ToImageSharpPixelFormat(PixelFormat fmt)
+        public static Type ToImageSharp(PixelFormat fmt)
         {
             switch (fmt.PackedFormat)
             {
@@ -113,18 +122,26 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region clone
+        #region clone        
 
-        public static Image CloneToImageSharp(SpanBitmap src)
+        public static Image ToImageSharp(SpanBitmap src)
         {
             var dst = src.PixelFormat.CreateImageSharp(src.Width, src.Height);
 
             dst.AsSpanBitmap().SetPixels(0, 0, src);
 
             return dst;
-        }        
+        }
 
-        public static Image<TPixel> CloneToImageSharp<TPixel>(SpanBitmap<TPixel> src)
+        public static Image<TPixel> ToImageSharp<TPixel>(SpanBitmap src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            System.Diagnostics.Debug.Assert(ToImageSharp(src.PixelFormat) == typeof(TPixel));
+
+            return ToImageSharp(src.OfType<TPixel>());
+        }
+
+        public static Image<TPixel> ToImageSharp<TPixel>(SpanBitmap<TPixel> src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             var dst = new Image<TPixel>(src.Width, src.Height);
@@ -142,7 +159,7 @@ namespace InteropBitmaps
         public static void Mutate<TPixel>(SpanBitmap<TPixel> src, Action<IImageProcessingContext> operation)
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            using (var tmp = CloneToImageSharp(src))
+            using (var tmp = ToImageSharp(src))
             {
                 tmp.Mutate(operation);
 
@@ -150,7 +167,7 @@ namespace InteropBitmaps
                 if (tmp.Width != src.Width || tmp.Height != src.Height) throw new ArgumentException("Operations that resize the source image are not allowed.", nameof(operation));
 
                 // transfer pixels back to src.
-                src.SetPixels(0, 0, tmp.AsSpanBitmap());
+                src.SetPixels(0, 0, AsSpanBitmap(tmp));
             }
         }
 

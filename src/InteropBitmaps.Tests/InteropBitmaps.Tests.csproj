@@ -29,7 +29,7 @@
     <ProjectReference Include="..\InteropBitmaps.Backends.Takeuchi.OpenPose\InteropBitmaps.Backends.Takeuchi.OpenPose.csproj" />
     <ProjectReference Include="..\InteropBitmaps.Backends.WPF\InteropBitmaps.Backends.WPF.csproj" />
     <ProjectReference Include="..\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj" />
-    <ProjectReference Include="..\InteropBitmaps.IO.STB\InteropBitmaps.IO.STB.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.IO.STB\InteropBitmaps.Backends.STB.csproj" />
   </ItemGroup>
 
   <ItemGroup>

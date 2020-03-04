@@ -49,8 +49,8 @@ namespace InteropBitmaps
                     var srcRow = srcCrop.GetBytesScanline(y);
                     var dstRow = dstCrop.UseBytesScanline(y);
 
-                    srcConverter.ConvertFrom(tmp, srcRow);
-                    dstConverter.ConvertTo(dstRow, tmp);
+                    srcConverter.ConvertFrom(tmp, srcRow, y);
+                    dstConverter.ConvertTo(dstRow, y, tmp);
                 }
             }
         }

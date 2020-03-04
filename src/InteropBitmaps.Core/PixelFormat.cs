@@ -6,6 +6,11 @@ namespace InteropBitmaps
 {
     using PEF = ComponentFormat;
 
+
+    
+
+
+
     public enum ComponentFormat
     {
         // 0
@@ -159,7 +164,7 @@ namespace InteropBitmaps
                 case 16: return new PixelFormat(PEF.Undefined32, PEF.Undefined32, PEF.Undefined32, PEF.Undefined32);
                 default:throw new NotImplementedException();
             }
-        }
+        }        
 
         #endregion
 
@@ -203,6 +208,17 @@ namespace InteropBitmaps
         public PEF Element3 => (PEF)_Element3;
 
         public int ByteCount => _GetByteLength();
+
+        /// <summary>
+        /// Gets the pixel format used by the Odd scanlines.
+        /// </summary>
+        /// <remarks>
+        /// Some formats use a byte pattern where odd and even scanlines reverse the byte ordering.
+        /// </remarks>
+        public PixelFormat ScanlineOddFormat
+        {
+            get => this;
+        }
 
         #endregion
 

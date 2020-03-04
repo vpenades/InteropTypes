@@ -23,7 +23,7 @@ namespace InteropBitmaps.Codecs
 
             var encoder = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.FindEncoder(fmt);
 
-            using (var img = _Implementation.CloneToImageSharp(bmp))
+            using (var img = _Implementation.ToImageSharp(bmp))
             {
                 img.Save(s, encoder);
             }

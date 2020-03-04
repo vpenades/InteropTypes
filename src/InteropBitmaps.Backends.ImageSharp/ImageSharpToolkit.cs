@@ -26,36 +26,11 @@ namespace InteropBitmaps
             return new ImageSharpAdapter<TPixel>(bitmap);
         }
 
-        #endregion
-
-        #region As SpanBitmap
-
-        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this Image<TPixel> src)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
-
-            return new SpanBitmap<TPixel>(span, src.Width, src.Height, GetPixelFormat<TPixel>());
-        }
-
-        #endregion
+        #endregion        
 
         #region API
 
-        public static MemoryBitmap<TPixel> ToMemoryBitmap<TPixel>(this Image<TPixel> src)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            var dst = new MemoryBitmap<TPixel>(src.Width, src.Height, GetPixelFormat<TPixel>());
-
-            for (int y = 0; y < dst.Height; ++y)
-            {
-                var srcLine = src.Frames[0].GetPixelRowSpan(y);
-                var dstLine = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte,TPixel>(dst.UseBytesScanline(y));
-                srcLine.CopyTo(dstLine);
-            }
-
-            return dst;
-        }
+        
 
         public static Image CreateImageSharp(this BitmapInfo binfo)
         {

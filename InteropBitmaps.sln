@@ -22,9 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.Tak
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.WPF", "src\InteropBitmaps.Backends.WPF\InteropBitmaps.Backends.WPF.csproj", "{9120AFE7-EB78-4BDF-8427-229C89420B1A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.IO.STB", "src\InteropBitmaps.IO.STB\InteropBitmaps.IO.STB.csproj", "{9CA81805-301D-4BDD-9E92-133C9C4EB203}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.STB", "src\InteropBitmaps.IO.STB\InteropBitmaps.Backends.STB.csproj", "{9CA81805-301D-4BDD-9E92-133C9C4EB203}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropBitmaps.Backends.SkiaSharp", "src\InteropBitmaps.Backends.SkiaSharp\InteropBitmaps.Backends.SkiaSharp.csproj", "{D1B6A472-4873-40FD-BB8A-EBDE0851F07B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.SkiaSharp", "src\InteropBitmaps.Backends.SkiaSharp\InteropBitmaps.Backends.SkiaSharp.csproj", "{D1B6A472-4873-40FD-BB8A-EBDE0851F07B}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution

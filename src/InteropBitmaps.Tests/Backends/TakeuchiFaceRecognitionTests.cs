@@ -20,7 +20,7 @@ namespace InteropBitmaps.Backends
 
             var models = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\Models");
 
-            using (var faceRecog = new TakeuchiFaceDetector(models))
+            using (var faceRecog = new Detectors.TakeuchiFaceDetector(models))
             {
                 using (var image = SixLabors.ImageSharp.Image.Load(filePath))
                 {

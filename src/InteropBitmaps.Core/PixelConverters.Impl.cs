@@ -14,21 +14,23 @@ namespace InteropBitmaps
         {
             const int SIZE = 1;
 
-            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
             {
-                for (int i = 0; i < dst.Length; ++i)
+                while(dst.Length > 0)
                 {
-                    dst[i] = _PixelBGRA32.FromGray8(src);
+                    dst[0] = _PixelBGRA32.FromGray8(src);
                     src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
-                for (int i = 0; i < src.Length; ++i)
+                while(src.Length > 0)
                 {
-                    src[i].ToGray8(dst);
-                    dst = dst.Slice(SIZE);
+                    src[0].ToGray8(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
                 }
             }
         }
@@ -38,21 +40,23 @@ namespace InteropBitmaps
         {
             const int SIZE = 2;
 
-            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
             {
-                for (int i = 0; i < dst.Length; ++i)
+                while(dst.Length > 0)
                 {
-                    dst[i] = _PixelBGRA32.FromGray16(src);
+                    dst[0] = _PixelBGRA32.FromGray16(src);
                     src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
-                for (int i = 0; i < src.Length; ++i)
+                while(src.Length > 0)
                 {
-                    src[i].ToGray16(dst);
-                    dst = dst.Slice(SIZE);
+                    src[0].ToGray16(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
                 }
             }
         }
@@ -62,21 +66,23 @@ namespace InteropBitmaps
         {
             const int SIZE = 3;
 
-            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
             {
-                for (int i = 0; i < dst.Length; ++i)
+                while(dst.Length > 0)
                 {
-                    dst[i] = _PixelBGRA32.FromRgb24(src);
+                    dst[0] = _PixelBGRA32.FromRgb24(src);
                     src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
-                for (int i = 0; i < src.Length; ++i)
+                while(src.Length > 0)
                 {
-                    src[i].ToRgb24(dst);
-                    dst = dst.Slice(SIZE);
+                    src[0].ToRgb24(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
                 }
             }
         }
@@ -86,21 +92,23 @@ namespace InteropBitmaps
         {
             const int SIZE = 3;
 
-            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
             {
-                for (int i = 0; i < dst.Length; ++i)
+                while(dst.Length > 0)
                 {
-                    dst[i] = _PixelBGRA32.FromBgr24(src);
+                    dst[0] = _PixelBGRA32.FromBgr24(src);
                     src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
-                for (int i = 0; i < src.Length; ++i)
+                while(src.Length > 0)
                 {
-                    src[i].ToBgr24(dst);
-                    dst = dst.Slice(SIZE);
+                    src[0].ToBgr24(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
                 }
             }
         }
@@ -110,21 +118,23 @@ namespace InteropBitmaps
         {
             const int SIZE = 4;
 
-            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
             {
-                for (int i = 0; i < dst.Length; ++i)
+                while(dst.Length > 0)
                 {
-                    dst[i] = _PixelBGRA32.FromRgba32(src);
+                    dst[0] = _PixelBGRA32.FromRgba32(src);
                     src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
-                for (int i = 0; i < src.Length; ++i)
+                while(src.Length > 0)
                 {
-                    src[i].ToRgba32(dst);
-                    dst = dst.Slice(SIZE);
+                    src[0].ToRgba32(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
                 }
             }
         }
@@ -134,21 +144,23 @@ namespace InteropBitmaps
         {
             const int SIZE = 4;
 
-            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
             {
-                for (int i = 0; i < dst.Length; ++i)
+                while(dst.Length > 0)
                 {
-                    dst[i] = _PixelBGRA32.FromBgra32(src);
+                    dst[0] = _PixelBGRA32.FromBgra32(src);
                     src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
-                for (int i = 0; i < src.Length; ++i)
+                while(src.Length > 0)
                 {
-                    src[i].ToBgra32(dst);
-                    dst = dst.Slice(SIZE);
+                    src[0].ToBgra32(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
                 }
             }
         }
@@ -158,21 +170,23 @@ namespace InteropBitmaps
         {
             const int SIZE = 4;
 
-            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src)
+            public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
             {
-                for (int i = 0; i < dst.Length; ++i)
+                while(dst.Length > 0)
                 {
-                    dst[i] = _PixelBGRA32.FromArgb32(src);
+                    dst[0] = _PixelBGRA32.FromArgb32(src);
                     src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
                 }
             }
 
-            public void ConvertTo(Span<byte> dst, ReadOnlySpan<_PixelBGRA32> src)
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
-                for (int i = 0; i < src.Length; ++i)
+                while(src.Length > 0)
                 {
-                    src[i].ToArgb32(dst);
-                    dst = dst.Slice(SIZE);
+                    src[0].ToArgb32(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
                 }
             }
         }

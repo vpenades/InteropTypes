@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropBitmaps.Detectors
 {
     public sealed class TakeuchiFaceDetector : IDisposable
     {
@@ -36,11 +36,13 @@ namespace InteropBitmaps
 
         #region API
 
-        public FaceRecognitionDotNet.Location[] FindFaces(SpanBitmap bitmap)
+        public IEnumerable<BitmapBounds> FindFaces(SpanBitmap bitmap)
         {
             using (var img = _UseTempImage(bitmap))
             {
-                return _Recognizer.FaceLocations(img).ToArray();
+                return _Recognizer.FaceLocations(img)
+                    .ToArray()
+                    .Select(r => new BitmapBounds(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top));                    
             }            
         }
 
