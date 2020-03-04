@@ -60,6 +60,8 @@ namespace InteropBitmaps
 
         #region properties
 
+        public BitmapInfo Info => _Info;
+
         public Span<Byte> WritableSpan => _Writable;
 
         public ReadOnlySpan<Byte> ReadableSpan => _Readable;

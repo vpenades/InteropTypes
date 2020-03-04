@@ -50,19 +50,12 @@ namespace InteropBitmaps
 
         #endregion
 
+        #region Skia => Interop
 
-        public static BitmapInfo ToBitmapInfo(SkiaSharp.SKImageInfo info)
+        public static BitmapInfo ToBitmapInfo(SkiaSharp.SKImageInfo info, int rowBytes = 0)
         {
             var fmt = ToInterop(info.ColorType, info.AlphaType);
-
-            return new BitmapInfo(info.Width, info.Height, fmt, info.RowBytes);
-        }
-
-        public static SkiaSharp.SKImageInfo ToSkia(BitmapInfo binfo)
-        {
-            var (color, alpha) = ToSkia(binfo.PixelFormat);
-
-            return new SkiaSharp.SKImageInfo(binfo.Width, binfo.Height, color, alpha);
+            return new BitmapInfo(info.Width, info.Height, fmt, Math.Max(info.RowBytes, rowBytes));
         }
 
         public static PointerBitmap AsPointerBitmap(SkiaSharp.SKPixmap map)
@@ -70,7 +63,7 @@ namespace InteropBitmaps
             var ptr = map.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();
 
-            var binfo = ToBitmapInfo(map.Info);
+            var binfo = ToBitmapInfo(map.Info, map.RowBytes);
 
             return new PointerBitmap(ptr, binfo);
         }
@@ -80,7 +73,7 @@ namespace InteropBitmaps
             var ptr = map.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();
 
-            var binfo = ToBitmapInfo(map.Info);
+            var binfo = ToBitmapInfo(map.Info, map.RowBytes);
 
             return new SpanBitmap(ptr, binfo);
         }
@@ -90,24 +83,30 @@ namespace InteropBitmaps
             var ptr = bmp.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();
 
-            var binfo = ToBitmapInfo(bmp.Info);
+            var binfo = ToBitmapInfo(bmp.Info, bmp.RowBytes);
 
             // bmp.NotifyPixelsChanged();
 
             return new SpanBitmap(ptr, binfo);
         }
 
-       
+        #endregion
 
+        #region Interop => Skia
+
+        public static SkiaSharp.SKImageInfo ToSkia(BitmapInfo binfo)
+        {
+            var (color, alpha) = ToSkia(binfo.PixelFormat);
+
+            return new SkiaSharp.SKImageInfo(binfo.Width, binfo.Height, color, alpha);
+        }
         
-
         public static SkiaSharp.SKBitmap ToSKBitmap(SpanBitmap bmp)
         {
             var (color, alpha) = ToSkia(bmp.PixelFormat);
-
             var img = new SkiaSharp.SKBitmap(bmp.Width, bmp.Height, color, alpha);
 
-            var binfo = ToBitmapInfo(img.Info);
+            var binfo = ToBitmapInfo(img.Info, img.RowBytes);
 
             var ptr = img.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();            
@@ -123,30 +122,19 @@ namespace InteropBitmaps
 
         public static SkiaSharp.SKImage ToSKImage(SpanBitmap bmp)
         {
-            var (color, alpha) = ToSkia(bmp.PixelFormat);
-
-            var info = new SkiaSharp.SKImageInfo(bmp.Width, bmp.Height, color, alpha);
-
-            return SkiaSharp.SKImage.FromPixelCopy(info, bmp.ReadableSpan, bmp.ScanlineSize);
+            return SkiaSharp.SKImage.FromPixelCopy(ToSkia(bmp.Info), bmp.ReadableSpan, bmp.ScanlineSize);
         }
 
         public static SkiaSharp.SKImage ToSKImage(PointerBitmap bmp)
         {
-            var (color, alpha) = ToSkia(bmp.Info.PixelFormat);
-
-            var info = new SkiaSharp.SKImageInfo(bmp.Info.Width, bmp.Info.Height, color, alpha);
-
-            return SkiaSharp.SKImage.FromPixelCopy(info, bmp.Pointer, bmp.Info.ScanlineSize);
+            return SkiaSharp.SKImage.FromPixelCopy(ToSkia(bmp.Info), bmp.Pointer, bmp.Info.ScanlineSize);
         }
 
         public static SkiaSharp.SKImage AsSKImage(PointerBitmap bmp)
         {
-            var (color, alpha) = ToSkia(bmp.Info.PixelFormat);
-
-            var info = new SkiaSharp.SKImageInfo(bmp.Info.Width, bmp.Info.Height, color, alpha);
-
-            return SkiaSharp.SKImage.FromPixels(info, bmp.Pointer, bmp.Info.ScanlineSize);
+            return SkiaSharp.SKImage.FromPixels(ToSkia(bmp.Info), bmp.Pointer, bmp.Info.ScanlineSize);
         }
 
+        #endregion
     }
 }
