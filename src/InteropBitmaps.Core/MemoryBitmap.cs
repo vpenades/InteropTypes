@@ -107,21 +107,70 @@ namespace InteropBitmaps
 
         #region CODECS IO
 
-        public static MemoryBitmap Load(string filePath, IBitmapDecoding factory)
+        public static MemoryBitmap Read(System.IO.Stream s, params IBitmapDecoding[] factory)
         {
-            using (var s = System.IO.File.OpenRead(filePath))
+            Guard.NotNull(nameof(s), s);
+            Guard.IsTrue(nameof(s), s.CanRead);
+            Guard.GreaterThan(nameof(factory), factory.Length, 0);
+
+            if (!s.CanSeek && factory.Length > 1)
             {
-                return factory.Read(s);
+                using (var mem = new System.IO.MemoryStream())
+                {
+                    s.CopyTo(mem);
+                    mem.Position = 0;
+                    return Read(mem, factory);
+                }
             }
+
+            var startPos = s.Position;
+
+            foreach (var f in factory)
+            {
+                try
+                {                    
+                    return f.Read(s);                    
+                }
+                catch (NotSupportedException)
+                {
+                    if (s.CanSeek) s.Position = startPos;
+                }                
+            }
+
+            return null;
         }
 
-        public void Save(string filePath, IBitmapEncoding factory)
+        public static MemoryBitmap Load(string filePath, params IBitmapDecoding[] factory)
+        {
+            foreach (var f in factory)
+            {
+                try
+                {
+                    using (var s = System.IO.File.OpenRead(filePath))
+                    {
+                        return f.Read(s);
+                    }
+                }
+                catch (NotSupportedException) { }
+            }
+
+            return null;
+        }
+
+        public void Save(string filePath, params IBitmapEncoding[] factory)
         {
             var ext = System.IO.Path.GetExtension(filePath);
 
-            using (var s = System.IO.File.Create(filePath))
+            foreach (var f in factory)
             {
-                factory.Write(s, ext, this);
+                try
+                {
+                    using (var s = System.IO.File.Create(filePath))
+                    {
+                        f.Write(s, ext, this);
+                    }
+                }
+                catch (NotSupportedException) { }
             }
         }
 

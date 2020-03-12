@@ -5,6 +5,9 @@
     <RootNamespace>InteropBitmaps.IO</RootNamespace>
   </PropertyGroup>
 
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+
   <ItemGroup>
     <PackageReference Include="StbImageLib" Version="2.22.3" />
   </ItemGroup>

@@ -5,6 +5,9 @@
     <RootNamespace>InteropBitmaps</RootNamespace>
   </PropertyGroup>
 
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+
   <ItemGroup>
     <PackageReference Include="FaceRecognitionDotNet" Version="1.2.3.13" />
   </ItemGroup>
