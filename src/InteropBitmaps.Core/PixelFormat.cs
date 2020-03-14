@@ -6,11 +6,6 @@ namespace InteropBitmaps
 {
     using PEF = ComponentFormat;
 
-
-    
-
-
-
     public enum ComponentFormat
     {
         // 0
@@ -220,6 +215,17 @@ namespace InteropBitmaps
             get => this;
         }
 
+        public IEnumerable<PEF> Elements
+        {
+            get
+            {
+                yield return Element0;
+                yield return Element1;
+                yield return Element2;
+                yield return Element3;
+            }
+        }
+
         #endregion
 
         #region API
@@ -310,6 +316,29 @@ namespace InteropBitmaps
         #endregion
 
         #region static
+
+        public static bool IsAlpha(PEF pef)
+        {
+            switch (pef)
+            {
+                case PEF.Alpha1: return true;
+                case PEF.Alpha4: return true;
+                case PEF.Alpha8: return true;
+                case PEF.Alpha32F: return true;
+                default: return false;
+            }
+        }
+
+        public static bool IsGrey(PEF pef)
+        {
+            switch(pef)
+            {
+                case PEF.Gray8: return true;
+                case PEF.Gray16: return true;
+                case PEF.Gray32F: return true;
+                default: return false;
+            }
+        }
 
         public static void Convert(SpanBitmap dst, SpanBitmap src)
         {

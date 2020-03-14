@@ -148,6 +148,23 @@ namespace InteropBitmaps
             return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info);
         }
 
+        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
+        {
+            var ext = Codecs.CodecFactory.ParseFormat(filePath);
+
+            foreach (var f in factory)
+            {
+                try
+                {
+                    using (var s = System.IO.File.Create(filePath))
+                    {
+                        f.Write(s, ext, this);
+                    }
+                }
+                catch (Codecs.CodecException) { }
+            }
+        }
+
         #endregion        
     }
 
@@ -295,10 +312,15 @@ namespace InteropBitmaps
         
         public MemoryBitmap<TPixel> ToMemoryBitmap() { return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info); }
 
+        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
+        {
+            AsSpanBitmap().Save(filePath, factory);
+        }
+
         #endregion
 
         #region pixel enumerator
-        
+
         public PixelEnumerator GetPixelEnumerator() => new PixelEnumerator(this);
         
         public ref struct PixelEnumerator

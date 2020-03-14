@@ -16,23 +16,34 @@ namespace InteropBitmaps.Codecs
         [TestCase("Resources\\white.png")]
         public void LoadImage(string filePath)
         {
+            TestContext.CurrentContext.AttachShowDirLink();
+
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var codecs = new IBitmapDecoding[] { new GDICodec(), new WPFCodec(), new ImageSharpCodec(), new STBCodec(), new SkiaCodec() };
+            var codecs = new IBitmapDecoding[] { OpenCvCodec.Default, GDICodec.Default, WPFCodec.Default, ImageSharpCodec.Default, STBCodec.Default, SkiaCodec.Default };
 
-            foreach (var codec in codecs)
+            foreach (var decoder in codecs.OfType<IBitmapDecoding>())
             {
                 var sw = System.Diagnostics.Stopwatch.StartNew();
-                var bitmap = MemoryBitmap.Load(filePath, codec);
-                sw.Stop();                
+                var bitmap = MemoryBitmap.Load(filePath, decoder);
+                sw.Stop();
 
-                TestContext.WriteLine($"Loading {System.IO.Path.GetFileName(filePath)} with {codec} tool {sw.ElapsedTicks}");
+                TestContext.WriteLine($"Loading {System.IO.Path.GetFileName(filePath)} with {decoder} tool {sw.ElapsedMilliseconds}");                
 
-                var fname = $"{codec.GetType().Name}-To-.png";
-                bitmap.AttachToCurrentTest(fname);
+                foreach (var encoder in codecs.OfType<IBitmapEncoding>())
+                {
+                    // System.Diagnostics.Debug.Assert(!(decoder is WPFCodec && encoder is SkiaCodec));
 
-                fname = $"{codec.GetType().Name}-To-.jpg";
-                bitmap.AttachToCurrentTest(fname);
+                    var fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}.png";
+                    fname = TestContext.CurrentContext.GetTestResultPath(fname);
+                    bitmap.Save(fname, encoder);
+                    TestContext.AddTestAttachment(fname);
+
+                    fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}.jpg";
+                    fname = TestContext.CurrentContext.GetTestResultPath(fname);
+                    bitmap.Save(fname, encoder);
+                    TestContext.AddTestAttachment(fname);
+                }
             }
         }
 

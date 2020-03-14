@@ -12,38 +12,62 @@ namespace InteropBitmaps
     {
         #region pixel format
 
-        public static (SKIACOLOR Color, SKIAALPHA Alpha) ToSkia(PixelFormat fmt)
+        public static (SKIACOLOR Color, SKIAALPHA Alpha) ToSkia(PixelFormat fmt, bool allowCompatibleFormats = false)
         {
             switch (fmt)
             {
+                case INTEROPFMT.Packed.ALPHA8: return (SKIACOLOR.Alpha8, SKIAALPHA.Opaque);
                 case INTEROPFMT.Packed.GRAY8: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
 
                 case INTEROPFMT.Packed.BGR565: return (SKIACOLOR.Rgb565, SKIAALPHA.Opaque);
-
+                
                 case INTEROPFMT.Packed.RGBA32: return (SKIACOLOR.Rgba8888, SKIAALPHA.Unpremul);
                 case INTEROPFMT.Packed.BGRA32: return (SKIACOLOR.Bgra8888, SKIAALPHA.Unpremul);
             }
 
-            throw new NotImplementedException();
+            if (allowCompatibleFormats)
+            {
+                switch (fmt)
+                {
+                    case INTEROPFMT.Packed.BGR24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
+                    case INTEROPFMT.Packed.RGB24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
+                    case INTEROPFMT.Packed.GRAY16: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
+                }
+            }
+
+            throw new NotSupportedException();
         }
 
-        private static INTEROPFMT ToUnpremulInterop(SKIACOLOR color)
+        private static INTEROPFMT ToUnpremulInterop(SKIACOLOR color, bool allowCompatibleFormats = false)
         {
             switch (color)
             {
+                case SKIACOLOR.Alpha8: return INTEROPFMT.Standard.ALPHA8;
                 case SKIACOLOR.Gray8: return INTEROPFMT.Standard.GRAY8;
                 case SKIACOLOR.Rgba8888: return INTEROPFMT.Standard.RGBA32;
+                case SKIACOLOR.Rgb888x: return INTEROPFMT.Standard.RGBA32;
                 case SKIACOLOR.Bgra8888: return INTEROPFMT.Standard.BGRA32;
             }
-            throw new NotImplementedException();
+
+            if (allowCompatibleFormats)
+            {
+                switch(color)
+                {
+                    case SKIACOLOR.Argb4444: return INTEROPFMT.Standard.BGRA4444;
+                    case SKIACOLOR.Rgb565: return INTEROPFMT.Standard.BGR565;
+                    case SKIACOLOR.Rgb888x: return INTEROPFMT.Standard.RGB24;
+                }
+            }
+
+            throw new NotSupportedException();
         }
 
-        public static INTEROPFMT ToInterop(SKIACOLOR color, SKIAALPHA alpha)
+        public static INTEROPFMT ToInterop(SKIACOLOR color, SKIAALPHA alpha, bool allowCompatibleFormats = false)
         {
             switch(alpha)
             {
-                case SKIAALPHA.Opaque: return ToUnpremulInterop(color);
-                case SKIAALPHA.Unpremul: return ToUnpremulInterop(color);
+                case SKIAALPHA.Opaque: return ToUnpremulInterop(color, allowCompatibleFormats);
+                case SKIAALPHA.Unpremul: return ToUnpremulInterop(color, allowCompatibleFormats);
             }
             throw new NotImplementedException();
         }
@@ -98,9 +122,9 @@ namespace InteropBitmaps
 
         #region Interop => Skia
 
-        public static SkiaSharp.SKImageInfo ToSkia(BitmapInfo binfo)
+        public static SkiaSharp.SKImageInfo ToSkia(BitmapInfo binfo, bool allowCompatibleFormats = false)
         {
-            var (color, alpha) = ToSkia(binfo.PixelFormat);
+            var (color, alpha) = ToSkia(binfo.PixelFormat, allowCompatibleFormats);
 
             return new SkiaSharp.SKImageInfo(binfo.Width, binfo.Height, color, alpha);
         }
@@ -124,19 +148,35 @@ namespace InteropBitmaps
             return img;
         }
 
-        public static SkiaSharp.SKImage ToSKImage(SpanBitmap bmp)
-        {
-            return SkiaSharp.SKImage.FromPixelCopy(ToSkia(bmp.Info), bmp.ReadableSpan, bmp.ScanlineSize);
+        public static SkiaSharp.SKImage ToSKImage(SpanBitmap bmp, (SKIACOLOR Color, SKIAALPHA Alpha)? fmtOverride = null)
+        {            
+            var skinfo = fmtOverride.HasValue
+                ?
+                new SkiaSharp.SKImageInfo(bmp.Width,bmp.Height,fmtOverride.Value.Color,fmtOverride.Value.Alpha)
+                :
+                ToSkia(bmp.Info, true);
+
+            var img = SkiaSharp.SKImage.Create(skinfo);
+
+            var pix = img.PeekPixels();
+
+            AsSpanBitmap(pix).SetPixels(0,0,bmp);
+
+            return img;            
         }
 
         public static SkiaSharp.SKImage ToSKImage(PointerBitmap bmp)
         {
-            return SkiaSharp.SKImage.FromPixelCopy(ToSkia(bmp.Info), bmp.Pointer, bmp.Info.ScanlineSize);
+            var skinfo = ToSkia(bmp.Info, false);
+
+            return SkiaSharp.SKImage.FromPixelCopy(skinfo, bmp.Pointer, bmp.Info.ScanlineSize);
         }
 
         public static SkiaSharp.SKImage AsSKImage(PointerBitmap bmp)
         {
-            return SkiaSharp.SKImage.FromPixels(ToSkia(bmp.Info), bmp.Pointer, bmp.Info.ScanlineSize);
+            var skinfo = ToSkia(bmp.Info, false);
+
+            return SkiaSharp.SKImage.FromPixels(skinfo, bmp.Pointer, bmp.Info.ScanlineSize);
         }
 
         #endregion

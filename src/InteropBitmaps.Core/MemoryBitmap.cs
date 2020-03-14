@@ -107,7 +107,7 @@ namespace InteropBitmaps
 
         #region CODECS IO
 
-        public static MemoryBitmap Read(System.IO.Stream s, params IBitmapDecoding[] factory)
+        public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoding[] factory)
         {
             Guard.NotNull(nameof(s), s);
             Guard.IsTrue(nameof(s), s.CanRead);
@@ -131,7 +131,7 @@ namespace InteropBitmaps
                 {                    
                     return f.Read(s);                    
                 }
-                catch (NotSupportedException)
+                catch (Codecs.CodecException)
                 {
                     if (s.CanSeek) s.Position = startPos;
                 }                
@@ -140,7 +140,7 @@ namespace InteropBitmaps
             return null;
         }
 
-        public static MemoryBitmap Load(string filePath, params IBitmapDecoding[] factory)
+        public static MemoryBitmap Load(string filePath, params Codecs.IBitmapDecoding[] factory)
         {
             foreach (var f in factory)
             {
@@ -151,27 +151,15 @@ namespace InteropBitmaps
                         return f.Read(s);
                     }
                 }
-                catch (NotSupportedException) { }
+                catch (Codecs.CodecException) { }
             }
 
             return null;
         }
 
-        public void Save(string filePath, params IBitmapEncoding[] factory)
+        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
         {
-            var ext = System.IO.Path.GetExtension(filePath);
-
-            foreach (var f in factory)
-            {
-                try
-                {
-                    using (var s = System.IO.File.Create(filePath))
-                    {
-                        f.Write(s, ext, this);
-                    }
-                }
-                catch (NotSupportedException) { }
-            }
+            this.AsSpanBitmap().Save(filePath, factory);
         }
 
         #endregion

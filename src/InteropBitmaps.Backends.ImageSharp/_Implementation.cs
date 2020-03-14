@@ -15,31 +15,33 @@ namespace InteropBitmaps
 
         public static SpanBitmap AsSpanBitmap(Image src)
         {
-            if (src is Image<Alpha8> a8) return a8.AsSpanBitmap();
-            if (src is Image<Gray8> b8) return b8.AsSpanBitmap();
+            if (src == null) return default;
 
-            if (src is Image<Gray16> a16) return a16.AsSpanBitmap();
-            if (src is Image<Bgr565> b16) return b16.AsSpanBitmap();
-            if (src is Image<Bgra5551> c16) return c16.AsSpanBitmap();
-            if (src is Image<Bgra4444> d16) return d16.AsSpanBitmap();
+            if (src is Image<Alpha8> a8) return AsSpanBitmap(a8);
+            if (src is Image<Gray8> b8) return AsSpanBitmap(b8);
 
-            if (src is Image<Rgb24> a24) return a24.AsSpanBitmap();
-            if (src is Image<Bgr24> b24) return b24.AsSpanBitmap();
+            if (src is Image<Gray16> a16) return AsSpanBitmap(a16);
+            if (src is Image<Bgr565> b16) return AsSpanBitmap(b16);
+            if (src is Image<Bgra5551> c16) return AsSpanBitmap(c16);
+            if (src is Image<Bgra4444> d16) return AsSpanBitmap(d16);
 
-            if (src is Image<Rgba32> a32) return a32.AsSpanBitmap();
-            if (src is Image<Bgra32> b32) return b32.AsSpanBitmap();
-            if (src is Image<Argb32> c32) return c32.AsSpanBitmap();
-            if (src is Image<Rgba1010102> d32) return d32.AsSpanBitmap();
+            if (src is Image<Rgb24> a24) return AsSpanBitmap(a24);
+            if (src is Image<Bgr24> b24) return AsSpanBitmap(b24);
 
-            if (src is Image<Rgb48> a48) return a48.AsSpanBitmap();
+            if (src is Image<Rgba32> a32) return AsSpanBitmap(a32);
+            if (src is Image<Bgra32> b32) return AsSpanBitmap(b32);
+            if (src is Image<Argb32> c32) return AsSpanBitmap(c32);
+            if (src is Image<Rgba1010102> d32) return AsSpanBitmap(d32);
 
-            if (src is Image<Rgba64> a64) return a64.AsSpanBitmap();
+            if (src is Image<Rgb48> a48) return AsSpanBitmap(a48);
 
-            if (src is Image<HalfSingle> ah) return ah.AsSpanBitmap();
-            if (src is Image<HalfVector2> bh) return bh.AsSpanBitmap();
-            if (src is Image<HalfVector4> ch) return ch.AsSpanBitmap();
+            if (src is Image<Rgba64> a64) return AsSpanBitmap(a64);
 
-            if (src is Image<RgbaVector> av) return av.AsSpanBitmap();
+            if (src is Image<HalfSingle> ah) return AsSpanBitmap(ah);
+            if (src is Image<HalfVector2> bh) return AsSpanBitmap(bh);
+            if (src is Image<HalfVector4> ch) return AsSpanBitmap(ch);
+
+            if (src is Image<RgbaVector> av) return AsSpanBitmap(av);
 
             throw new NotImplementedException();
         }
@@ -47,6 +49,8 @@ namespace InteropBitmaps
         public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(Image<TPixel> src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
+            if (src == null) return default;
+
             var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
             var pfmt = GetPixelFormat<TPixel>();
 
@@ -79,8 +83,8 @@ namespace InteropBitmaps
         public static PixelFormat GetPixelFormat<TPixel>()
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            if (typeof(TPixel) == typeof(Gray8)) return PixelFormat.Standard.GRAY8;
             if (typeof(TPixel) == typeof(Alpha8)) return PixelFormat.Standard.ALPHA8;
+            if (typeof(TPixel) == typeof(Gray8)) return PixelFormat.Standard.GRAY8;            
 
             if (typeof(TPixel) == typeof(Gray16)) return PixelFormat.Standard.GRAY16;
             if (typeof(TPixel) == typeof(Bgr565)) return PixelFormat.Standard.BGR565;
@@ -103,8 +107,8 @@ namespace InteropBitmaps
             {
                 case PixelFormat.Packed.ALPHA8: return typeof(Alpha8);
                 case PixelFormat.Packed.GRAY8: return typeof(Gray8);
-                case PixelFormat.Packed.GRAY16: return typeof(Gray16);
 
+                case PixelFormat.Packed.GRAY16: return typeof(Gray16);
                 case PixelFormat.Packed.BGR565: return typeof(Bgr565);
                 case PixelFormat.Packed.BGRA5551: return typeof(Bgra5551);
                 case PixelFormat.Packed.BGRA4444: return typeof(Bgra4444);

@@ -18,7 +18,7 @@ namespace InteropBitmaps.Backends
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var bitmap = MemoryBitmap.Load(filePath, new Codecs.GDICodec());
+            var bitmap = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
 
             bitmap.AttachToCurrentTest("Result.png");
         }

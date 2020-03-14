@@ -7,8 +7,21 @@ using System.Threading.Tasks;
 
 namespace InteropBitmaps.Codecs
 {
+    [System.Diagnostics.DebuggerDisplay("WPF(WIC) Codec")]
     public sealed class WPFCodec : IBitmapDecoding, IBitmapEncoding
     {
+        #region lifecycle
+
+        static WPFCodec() { }
+
+        private WPFCodec() { }
+
+        private static readonly WPFCodec _Default = new WPFCodec();
+
+        public static WPFCodec Default => _Default;
+
+        #endregion
+
         public MemoryBitmap Read(Stream s)
         {
             var frame = System.Windows.Media.Imaging.BitmapFrame.Create(s, System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat, System.Windows.Media.Imaging.BitmapCacheOption.None);
@@ -16,9 +29,9 @@ namespace InteropBitmaps.Codecs
             return _Implementation.ToMemoryBitmap(frame);
         }
 
-        public void Write(Stream s, string formatExtension, SpanBitmap bmp)
+        public void Write(Stream s, CodecFormat format, SpanBitmap bmp)
         {
-            var encoder = CreateEncoder(formatExtension);            
+            var encoder = CreateEncoder(format);            
 
             var tmp = _Implementation.ToWritableBitmap(bmp);
 
@@ -29,19 +42,19 @@ namespace InteropBitmaps.Codecs
             encoder.Save(s);
         }
 
-        private static System.Windows.Media.Imaging.BitmapEncoder CreateEncoder(string fileExt)
+        private static System.Windows.Media.Imaging.BitmapEncoder CreateEncoder(CodecFormat format)
         {
-            if (fileExt.EndsWith("bmp", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.BmpBitmapEncoder();
-            if (fileExt.EndsWith("jpg", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.JpegBitmapEncoder();            
-            if (fileExt.EndsWith("png", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.PngBitmapEncoder();
-            if (fileExt.EndsWith("wmp", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.WmpBitmapEncoder();
-            if (fileExt.EndsWith("tif", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.TiffBitmapEncoder();            
-            if (fileExt.EndsWith("gif", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.GifBitmapEncoder();
+            // TODO: System.Windows.Media.Imaging.WmpBitmapEncoder()
 
-            if (fileExt.EndsWith("tiff", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.TiffBitmapEncoder();
-            if (fileExt.EndsWith("jpeg", StringComparison.OrdinalIgnoreCase)) return new System.Windows.Media.Imaging.JpegBitmapEncoder();
-
-            throw new NotImplementedException();
+            switch (format)
+            {
+                case CodecFormat.Bmp: return new System.Windows.Media.Imaging.BmpBitmapEncoder();
+                case CodecFormat.Jpeg: return new System.Windows.Media.Imaging.JpegBitmapEncoder();
+                case CodecFormat.Png: return new System.Windows.Media.Imaging.PngBitmapEncoder();
+                case CodecFormat.Gif: return new System.Windows.Media.Imaging.GifBitmapEncoder();
+                case CodecFormat.Tiff: return new System.Windows.Media.Imaging.TiffBitmapEncoder();
+                default: throw new CodecException();
+            }
         }
     }
 }

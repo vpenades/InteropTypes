@@ -17,7 +17,7 @@ namespace InteropBitmaps.Interop
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
             // load image using GDI
-            var bitmap = MemoryBitmap.Load(filePath, new Codecs.GDICodec());
+            var bitmap = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
 
             // Calculate blur factor using ImageSharp
             var blurfactor1 = bitmap
