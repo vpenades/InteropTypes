@@ -19,7 +19,7 @@ namespace InteropBitmaps.Interop
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
             
-            var membmp = OpenCvSharp4Toolkit.LoadMemoryBitmapFromOpenCvSharp4(new System.IO.FileInfo(filePath));
+            var membmp = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
 
             membmp.AttachToCurrentTest("Result.png");
 
@@ -51,7 +51,7 @@ namespace InteropBitmaps.Interop
                 return foot_seg_marker;
             }
 
-            img.AsSpanBitmap().AsOpenCVSharp().Mutate(_Process);
+            img.AsSpanBitmap().WithOpenCv().Apply(_Process);
             img.AttachToCurrentTest("result.png");
 
             // var img2 = img.AsSpanBitmap().AsOpenCVSharp().CloneMutated(_Process);

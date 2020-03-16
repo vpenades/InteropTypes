@@ -18,9 +18,7 @@ namespace InteropBitmaps.Backends
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var bitmap = new System.IO
-                .FileInfo(filePath)
-                .LoadMemoryBitmapFromOpenCvSharp4();
+            var bitmap = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
 
             bitmap.AttachToCurrentTest("Result.png");
         }

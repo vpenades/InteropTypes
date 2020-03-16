@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
 using INTEROPFMT = InteropBitmaps.PixelFormat;
+
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace InteropBitmaps
 {
@@ -12,7 +14,7 @@ namespace InteropBitmaps
     {
         #region pixel formats
 
-        public static PixelFormat ToInteropPixelFormat(GDIFMT fmt)
+        public static PixelFormat ToPixelFormat(GDIFMT fmt)
         {
             switch (fmt)
             {
@@ -37,7 +39,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static GDIFMT ToGDIPixelFormat(INTEROPFMT fmt, bool allowCompatibleFormats = false)
+        public static GDIFMT ToPixelFormat(INTEROPFMT fmt, bool allowCompatibleFormats)
         {
             switch (fmt)
             {
@@ -48,7 +50,7 @@ namespace InteropBitmaps
 
                 case INTEROPFMT.Packed.BGR24: return GDIFMT.Format24bppRgb;
 
-                case INTEROPFMT.Packed.BGRA32: return GDIFMT.Format32bppArgb;
+                case INTEROPFMT.Packed.BGRA32: return GDIFMT.Format32bppArgb;                    
             }
 
             if (allowCompatibleFormats)
@@ -66,77 +68,104 @@ namespace InteropBitmaps
                 }
             }
 
-            throw new NotImplementedException(fmt.ToString());
-        }
-
-        public static int GetPixelSize(GDIFMT fmt)
-        {
-            switch (fmt)
-            {
-                case GDIFMT.Format8bppIndexed: return 1;
-
-                case GDIFMT.Format16bppArgb1555: return 2;
-                case GDIFMT.Format16bppGrayScale: return 2;
-                case GDIFMT.Format16bppRgb555: return 2;
-                case GDIFMT.Format16bppRgb565: return 2;
-
-                case GDIFMT.Format24bppRgb: return 3;
-
-                case GDIFMT.Format32bppRgb: return 4;
-                case GDIFMT.Format32bppArgb: return 4;
-                case GDIFMT.Format32bppPArgb: return 4;
-
-                case GDIFMT.Format48bppRgb: return 6;
-
-                case GDIFMT.Format64bppArgb: return 8;
-                case GDIFMT.Format64bppPArgb: return 8;
-
-                default: throw new NotImplementedException();
-            }
+            return GDIFMT.Undefined;
         }        
 
         #endregion
 
         #region API
 
-        public static Bitmap CloneToGDI(SpanBitmap src, bool allowCompatibleFormats = false)
+        public static BitmapInfo GetBitmapInfo(System.Drawing.Imaging.BitmapData bits)
         {
-            var pixFmt = src.PixelFormat.ToGDIPixelFormat(allowCompatibleFormats);
+            var fmt = ToPixelFormat(bits.PixelFormat);
+            return new BitmapInfo(bits.Width, bits.Height, fmt, bits.Stride);
+        }
 
-            if (!allowCompatibleFormats && src.PixelSize != pixFmt.GetPixelSize()) throw new ArgumentException(nameof(pixFmt));
+        public static Bitmap WrapAsGDIBitmap(PointerBitmap src)
+        {
+            var fmt = ToPixelFormat(src.Info.PixelFormat, false);
+            if (fmt == GDIFMT.Undefined) throw new ArgumentException($"Invalid format {src.Info.PixelFormat}", nameof(src));
+            return new Bitmap(src.Info.Width, src.Info.Height, src.Info.ScanlineSize, fmt, src.Pointer);
+        }
 
-            var dst = new Bitmap(src.Width, src.Height, pixFmt);
+        public static Bitmap CloneToGDIBitmap(SpanBitmap src, bool allowCompatibleFormats, GDIFMT? fmtOverride = null)
+        {
+            if (!fmtOverride.HasValue)
+            {
+                fmtOverride = ToPixelFormat(src.PixelFormat, allowCompatibleFormats);
+                if (fmtOverride.Value == GDIFMT.Undefined) throw new ArgumentException(nameof(src));
+            }
+
+            var dst = new Bitmap(src.Width, src.Height, fmtOverride.Value);
 
             dst.SetPixels(0, 0, src);
 
             return dst;
         }
 
-        #endregion
-
-        #region SAVE
-
-        public static void Save(string filePath, SpanBitmap src)
+        public static MemoryBitmap CloneToMemoryBitmap(Image img, INTEROPFMT? fmtOverride = null)
         {
-            var finfo = new System.IO.FileInfo(filePath);
-            Save(finfo, src);
-        }
-
-        public static void Save(System.IO.FileInfo finfo, SpanBitmap src)
-        {
-            using (var img = CloneToGDI(src, true))
+            using (var bmp = new Bitmap(img))
             {
-                img.Save(finfo.FullName);
+                return CloneToMemoryBitmap(bmp, fmtOverride);
             }
         }
 
-        public static void Save(System.IO.FileInfo finfo, SpanBitmap src, System.Drawing.Imaging.ImageFormat imgFmt)
+        public static MemoryBitmap CloneToMemoryBitmap(Bitmap bmp, INTEROPFMT? fmtOverride = null)
         {
-            using (var img = CloneToGDI(src, true))
+            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+
+            System.Drawing.Imaging.BitmapData bits = null;
+
+            try
             {
-                img.Save(finfo.FullName, imgFmt);
+                bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
+
+                var span = bits.AsSpanBitmap();
+
+                return fmtOverride.HasValue ? span.ToMemoryBitmap(fmtOverride.Value) : span.ToMemoryBitmap();
+            }
+            finally
+            {
+                if (bits != null) bmp.UnlockBits(bits);
             }
         }
+
+        public static void Mutate(Bitmap bmp, Action<PointerBitmap> action)
+        {
+            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+
+            System.Drawing.Imaging.BitmapData bits = null;
+
+            try
+            {
+                bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmp.PixelFormat);
+
+                action(bits.AsPointerBitmap());
+            }
+            finally
+            {
+                bmp.UnlockBits(bits);
+            }
+        }
+
+        public static void SetPixels(Bitmap dst, int dstx, int dsty, in SpanBitmap src)
+        {
+            var rect = new Rectangle(0, 0, dst.Width, dst.Height);
+
+            System.Drawing.Imaging.BitmapData dstbits = null;
+
+            try
+            {
+                dstbits = dst.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, dst.PixelFormat);
+
+                dstbits.AsSpanBitmap().SetPixels(dstx, dsty, src);
+            }
+            finally
+            {
+                dst.UnlockBits(dstbits);
+            }
+        }        
 
         #endregion
     }

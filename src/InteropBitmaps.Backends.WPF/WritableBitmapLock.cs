@@ -53,7 +53,7 @@ namespace InteropBitmaps
 
         public BitmapInfo Info => _Pointer.Info;
 
-        public SpanBitmap Span => _Pointer.Span;
+        public SpanBitmap Span => _Pointer.Bitmap;
 
         #endregion
     }

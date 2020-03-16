@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StbImageLib
+namespace InteropBitmaps
 {
-    public static class InteropBitmapsExtensions
+    public static class STBSharpExtensions
     {
-        public static InteropBitmaps.SpanBitmap AsSpanBitmap(this ImageResult image)
+        public static SpanBitmap AsSpanBitmap(this StbImageLib.ImageResult image)
         {
-            return InteropBitmaps._Implementation.AsSpanBitmap(image);
+            return _Implementation.AsSpanBitmap(image);
         }
     }
 }

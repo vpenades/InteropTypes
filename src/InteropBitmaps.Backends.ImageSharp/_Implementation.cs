@@ -11,74 +11,7 @@ namespace InteropBitmaps
 {
     static class _Implementation
     {
-        #region pixel formats
-
-        public static SpanBitmap AsSpanBitmap(Image src)
-        {
-            if (src == null) return default;
-
-            if (src is Image<Alpha8> a8) return AsSpanBitmap(a8);
-            if (src is Image<Gray8> b8) return AsSpanBitmap(b8);
-
-            if (src is Image<Gray16> a16) return AsSpanBitmap(a16);
-            if (src is Image<Bgr565> b16) return AsSpanBitmap(b16);
-            if (src is Image<Bgra5551> c16) return AsSpanBitmap(c16);
-            if (src is Image<Bgra4444> d16) return AsSpanBitmap(d16);
-
-            if (src is Image<Rgb24> a24) return AsSpanBitmap(a24);
-            if (src is Image<Bgr24> b24) return AsSpanBitmap(b24);
-
-            if (src is Image<Rgba32> a32) return AsSpanBitmap(a32);
-            if (src is Image<Bgra32> b32) return AsSpanBitmap(b32);
-            if (src is Image<Argb32> c32) return AsSpanBitmap(c32);
-            if (src is Image<Rgba1010102> d32) return AsSpanBitmap(d32);
-
-            if (src is Image<Rgb48> a48) return AsSpanBitmap(a48);
-
-            if (src is Image<Rgba64> a64) return AsSpanBitmap(a64);
-
-            if (src is Image<HalfSingle> ah) return AsSpanBitmap(ah);
-            if (src is Image<HalfVector2> bh) return AsSpanBitmap(bh);
-            if (src is Image<HalfVector4> ch) return AsSpanBitmap(ch);
-
-            if (src is Image<RgbaVector> av) return AsSpanBitmap(av);
-
-            throw new NotImplementedException();
-        }
-
-        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(Image<TPixel> src)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            if (src == null) return default;
-
-            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
-            var pfmt = GetPixelFormat<TPixel>();
-
-            return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
-        }
-
-        public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
-        {
-            switch (fmt.PackedFormat)
-            {
-                case PixelFormat.Packed.ALPHA8: return new Image<Alpha8>(width, height);
-                case PixelFormat.Packed.GRAY8: return new Image<Gray8>(width, height);
-
-                case PixelFormat.Packed.GRAY16: return new Image<Gray16>(width, height);
-                case PixelFormat.Packed.BGR565: return new Image<Bgr565>(width, height);
-                case PixelFormat.Packed.BGRA5551: return new Image<Bgra5551>(width, height);
-                case PixelFormat.Packed.BGRA4444: return new Image<Bgra4444>(width, height);
-
-                case PixelFormat.Packed.RGB24: return new Image<Rgb24>(width, height);
-                case PixelFormat.Packed.BGR24: return new Image<Bgr24>(width, height);
-
-                case PixelFormat.Packed.RGBA32: return new Image<Rgba32>(width, height);
-                case PixelFormat.Packed.BGRA32: return new Image<Bgra32>(width, height);
-                case PixelFormat.Packed.ARGB32: return new Image<Argb32>(width, height);
-
-                default: throw new NotImplementedException();
-            }
-        }
+        #region pixel formats       
 
         public static PixelFormat GetPixelFormat<TPixel>()
             where TPixel : unmanaged, IPixel<TPixel>
@@ -101,7 +34,7 @@ namespace InteropBitmaps
             throw new NotImplementedException();
         }
 
-        public static Type ToImageSharp(PixelFormat fmt)
+        public static Type ToPixelFormat(PixelFormat fmt)
         {
             switch (fmt.PackedFormat)
             {
@@ -126,26 +59,93 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region clone        
+        #region API        
 
-        public static Image ToImageSharp(SpanBitmap src)
+        public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
         {
-            var dst = src.PixelFormat.CreateImageSharp(src.Width, src.Height);
+            switch (fmt.PackedFormat)
+            {
+                case PixelFormat.Packed.ALPHA8: return new Image<Alpha8>(width, height);
+                case PixelFormat.Packed.GRAY8: return new Image<Gray8>(width, height);
+
+                case PixelFormat.Packed.GRAY16: return new Image<Gray16>(width, height);
+                case PixelFormat.Packed.BGR565: return new Image<Bgr565>(width, height);
+                case PixelFormat.Packed.BGRA5551: return new Image<Bgra5551>(width, height);
+                case PixelFormat.Packed.BGRA4444: return new Image<Bgra4444>(width, height);
+
+                case PixelFormat.Packed.RGB24: return new Image<Rgb24>(width, height);
+                case PixelFormat.Packed.BGR24: return new Image<Bgr24>(width, height);
+
+                case PixelFormat.Packed.RGBA32: return new Image<Rgba32>(width, height);
+                case PixelFormat.Packed.BGRA32: return new Image<Bgra32>(width, height);
+                case PixelFormat.Packed.ARGB32: return new Image<Argb32>(width, height);
+
+                default: throw new NotImplementedException();
+            }
+        }
+
+        public static SpanBitmap WrapAsSpanBitmap(Image src)
+        {
+            if (src == null) return default;
+
+            if (src is Image<Alpha8> a8) return WrapAsSpanBitmap(a8);
+            if (src is Image<Gray8> b8) return WrapAsSpanBitmap(b8);
+
+            if (src is Image<Gray16> a16) return WrapAsSpanBitmap(a16);
+            if (src is Image<Bgr565> b16) return WrapAsSpanBitmap(b16);
+            if (src is Image<Bgra5551> c16) return WrapAsSpanBitmap(c16);
+            if (src is Image<Bgra4444> d16) return WrapAsSpanBitmap(d16);
+
+            if (src is Image<Rgb24> a24) return WrapAsSpanBitmap(a24);
+            if (src is Image<Bgr24> b24) return WrapAsSpanBitmap(b24);
+
+            if (src is Image<Rgba32> a32) return WrapAsSpanBitmap(a32);
+            if (src is Image<Bgra32> b32) return WrapAsSpanBitmap(b32);
+            if (src is Image<Argb32> c32) return WrapAsSpanBitmap(c32);
+            if (src is Image<Rgba1010102> d32) return WrapAsSpanBitmap(d32);
+
+            if (src is Image<Rgb48> a48) return WrapAsSpanBitmap(a48);
+
+            if (src is Image<Rgba64> a64) return WrapAsSpanBitmap(a64);
+
+            if (src is Image<HalfSingle> ah) return WrapAsSpanBitmap(ah);
+            if (src is Image<HalfVector2> bh) return WrapAsSpanBitmap(bh);
+            if (src is Image<HalfVector4> ch) return WrapAsSpanBitmap(ch);
+
+            if (src is Image<RgbaVector> av) return WrapAsSpanBitmap(av);
+
+            throw new NotImplementedException();
+        }
+
+        public static SpanBitmap<TPixel> WrapAsSpanBitmap<TPixel>(Image<TPixel> src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            if (src == null) return default;
+
+            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
+            var pfmt = GetPixelFormat<TPixel>();
+
+            return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
+        }
+
+        public static Image CloneToImageSharp(SpanBitmap src)
+        {
+            var dst = CreateImageSharp(src.PixelFormat, src.Width, src.Height);
 
             dst.AsSpanBitmap().SetPixels(0, 0, src);
 
             return dst;
         }
 
-        public static Image<TPixel> ToImageSharp<TPixel>(SpanBitmap src)
+        public static Image<TPixel> CloneToImageSharp<TPixel>(SpanBitmap src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            System.Diagnostics.Debug.Assert(ToImageSharp(src.PixelFormat) == typeof(TPixel));
+            System.Diagnostics.Debug.Assert(ToPixelFormat(src.PixelFormat) == typeof(TPixel));
 
-            return ToImageSharp(src.OfType<TPixel>());
+            return CloneToImageSharp(src.OfType<TPixel>());
         }
 
-        public static Image<TPixel> ToImageSharp<TPixel>(SpanBitmap<TPixel> src)
+        public static Image<TPixel> CloneToImageSharp<TPixel>(SpanBitmap<TPixel> src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             var dst = new Image<TPixel>(src.Width, src.Height);
@@ -163,7 +163,7 @@ namespace InteropBitmaps
         public static void Mutate<TPixel>(SpanBitmap<TPixel> src, Action<IImageProcessingContext> operation)
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            using (var tmp = ToImageSharp(src))
+            using (var tmp = CloneToImageSharp(src))
             {
                 tmp.Mutate(operation);
 
@@ -171,7 +171,7 @@ namespace InteropBitmaps
                 if (tmp.Width != src.Width || tmp.Height != src.Height) throw new ArgumentException("Operations that resize the source image are not allowed.", nameof(operation));
 
                 // transfer pixels back to src.
-                src.SetPixels(0, 0, AsSpanBitmap(tmp));
+                src.SetPixels(0, 0, WrapAsSpanBitmap(tmp));
             }
         }
 

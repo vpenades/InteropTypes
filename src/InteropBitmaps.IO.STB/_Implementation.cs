@@ -7,7 +7,7 @@ namespace InteropBitmaps
     /// <see href="https://github.com/StbSharp/StbImageLib"/>
     static class _Implementation
     {
-        public static PixelFormat ToInterop(StbImageLib.ColorComponents components, int bitsPerChannel)
+        public static PixelFormat ToPixelFormat(StbImageLib.ColorComponents components, int bitsPerChannel)
         {
             if (bitsPerChannel == 8)
             {
@@ -26,7 +26,7 @@ namespace InteropBitmaps
 
         public static BitmapInfo GetBitmapInfo(StbImageLib.ImageResult image)
         {
-            var fmt = ToInterop(image.ColorComponents, image.BitsPerChannel);
+            var fmt = ToPixelFormat(image.ColorComponents, image.BitsPerChannel);
 
             return new BitmapInfo(image.Width, image.Height, fmt);
         }

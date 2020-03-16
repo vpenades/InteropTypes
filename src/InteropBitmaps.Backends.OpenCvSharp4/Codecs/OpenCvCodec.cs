@@ -20,20 +20,27 @@ namespace InteropBitmaps.Codecs
 
         #endregion
 
-        public MemoryBitmap Read(Stream s)
+        public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
+            bitmap = null;
+
             using(var mat = OpenCvSharp.Mat.FromStream(s, OpenCvSharp.ImreadModes.AnyColor))
             {
-                return mat.AsSpanBitmap().ToMemoryBitmap();
+                if (mat.Cols == 0) return false;
+                bitmap = mat.AsSpanBitmap().ToMemoryBitmap();                
             }
+
+            return true;
         }
 
-        public void Write(Stream s, CodecFormat format, SpanBitmap bmp)
+        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
         {
-            using (var mat = bmp.AsOpenCVSharp().ToMat())
+            using (var mat = bmp.WithOpenCv().ToMat())
             {
                 mat.WriteToStream(s, $".{format.ToString().ToLower()}");
-            }                
+            }
+
+            return true;
         }
     }
 }

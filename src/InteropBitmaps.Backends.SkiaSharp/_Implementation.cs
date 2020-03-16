@@ -12,7 +12,7 @@ namespace InteropBitmaps
     {
         #region pixel format
 
-        public static (SKIACOLOR Color, SKIAALPHA Alpha) ToSkia(PixelFormat fmt, bool allowCompatibleFormats = false)
+        public static (SKIACOLOR Color, SKIAALPHA Alpha) ToPixelFormat(INTEROPFMT fmt, bool allowCompatibleFormats = false)
         {
             switch (fmt)
             {
@@ -35,10 +35,10 @@ namespace InteropBitmaps
                 }
             }
 
-            throw new NotSupportedException();
+            return (SKIACOLOR.Unknown, SKIAALPHA.Unknown);
         }
 
-        private static INTEROPFMT ToUnpremulInterop(SKIACOLOR color, bool allowCompatibleFormats = false)
+        private static INTEROPFMT ToPixelFormat(SKIACOLOR color, bool allowCompatibleFormats = false)
         {
             switch (color)
             {
@@ -62,12 +62,12 @@ namespace InteropBitmaps
             throw new NotSupportedException();
         }
 
-        public static INTEROPFMT ToInterop(SKIACOLOR color, SKIAALPHA alpha, bool allowCompatibleFormats = false)
+        public static INTEROPFMT ToPixelFormat(SKIACOLOR color, SKIAALPHA alpha, bool allowCompatibleFormats = false)
         {
             switch(alpha)
             {
-                case SKIAALPHA.Opaque: return ToUnpremulInterop(color, allowCompatibleFormats);
-                case SKIAALPHA.Unpremul: return ToUnpremulInterop(color, allowCompatibleFormats);
+                case SKIAALPHA.Opaque: return ToPixelFormat(color, allowCompatibleFormats);
+                case SKIAALPHA.Unpremul: return ToPixelFormat(color, allowCompatibleFormats);
             }
             throw new NotImplementedException();
         }
@@ -78,7 +78,7 @@ namespace InteropBitmaps
 
         public static BitmapInfo ToBitmapInfo(SkiaSharp.SKImageInfo info, int rowBytes = 0)
         {
-            var fmt = ToInterop(info.ColorType, info.AlphaType);
+            var fmt = ToPixelFormat(info.ColorType, info.AlphaType);
             return new BitmapInfo(info.Width, info.Height, fmt, Math.Max(info.RowBytes, rowBytes));
         }
 
@@ -124,14 +124,16 @@ namespace InteropBitmaps
 
         public static SkiaSharp.SKImageInfo ToSkia(BitmapInfo binfo, bool allowCompatibleFormats = false)
         {
-            var (color, alpha) = ToSkia(binfo.PixelFormat, allowCompatibleFormats);
+            var (color, alpha) = ToPixelFormat(binfo.PixelFormat, allowCompatibleFormats);
+            if (color == SKIACOLOR.Unknown) throw new ArgumentException(nameof(binfo));
+            if (alpha == SKIAALPHA.Unknown) throw new ArgumentException(nameof(binfo));
 
             return new SkiaSharp.SKImageInfo(binfo.Width, binfo.Height, color, alpha);
         }
         
         public static SkiaSharp.SKBitmap ToSKBitmap(SpanBitmap bmp)
         {
-            var (color, alpha) = ToSkia(bmp.PixelFormat);
+            var (color, alpha) = ToPixelFormat(bmp.PixelFormat);
             var img = new SkiaSharp.SKBitmap(bmp.Width, bmp.Height, color, alpha);
 
             var binfo = ToBitmapInfo(img.Info, img.RowBytes);

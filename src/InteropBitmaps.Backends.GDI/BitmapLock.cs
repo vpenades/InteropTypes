@@ -18,7 +18,7 @@ namespace InteropBitmaps
 
             _Bits = bmp.LockBits(rect, mode, bmp.PixelFormat);
 
-            _Info = _Bits.GetBitmapInfo();
+            _Info = _Implementation.GetBitmapInfo(_Bits);
             _IsReadOnly = readOnly;
         }
 

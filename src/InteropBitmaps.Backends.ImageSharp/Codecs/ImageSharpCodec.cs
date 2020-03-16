@@ -22,26 +22,38 @@ namespace InteropBitmaps.Codecs
 
         #region API
 
-        public MemoryBitmap Read(Stream s)
+        public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
-            using (var img = SixLabors.ImageSharp.Image.Load(s))
+            try
             {
-                return img.AsSpanBitmap().ToMemoryBitmap();
+                using (var img = SixLabors.ImageSharp.Image.Load(s))
+                {
+                    bitmap = img.AsSpanBitmap().ToMemoryBitmap();
+                }
+
+                return true;
+            }
+            catch(SixLabors.ImageSharp.UnknownImageFormatException)
+            {
+                bitmap = null;
+                return false;
             }
         }
 
-        public void Write(Stream s, CodecFormat format, SpanBitmap bmp)
+        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
         {
             var fmt = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.FindFormatByFileExtension(format.ToString().ToLower());
-            if (fmt == null) throw new CodecException();
+            if (fmt == null) return false;
 
             var encoder = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.FindEncoder(fmt);
-            if (encoder == null) throw new CodecException();
+            if (encoder == null) return false;
 
-            using (var img = _Implementation.ToImageSharp(bmp))
+            using (var img = _Implementation.CloneToImageSharp(bmp))
             {
                 img.Save(s, encoder);
             }
+
+            return true;
         }
 
         #endregion

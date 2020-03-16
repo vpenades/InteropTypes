@@ -43,10 +43,31 @@ namespace InteropBitmaps.Codecs
                     fname = TestContext.CurrentContext.GetTestResultPath(fname);
                     bitmap.Save(fname, encoder);
                     TestContext.AddTestAttachment(fname);
+
+                    fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}-Gray.jpg";
+                    fname = TestContext.CurrentContext.GetTestResultPath(fname);
+                    bitmap.AsSpanBitmap().ToMemoryBitmap(PixelFormat.Standard.GRAY8).Save(fname, encoder);
+                    TestContext.AddTestAttachment(fname);
                 }
             }
         }
 
-        
+
+        // [TestCase("Resources\\shannon.dds")]
+        [TestCase("Resources\\shannon.jpg")]
+        [TestCase("Resources\\shannon.tif")]        
+        [TestCase("Resources\\shannon.psd")]
+        [TestCase("Resources\\shannon.ico")]
+        [TestCase("Resources\\shannon.webp")]
+        public void LoadWithMultiCodec(string filePath)
+        {
+            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            
+            var img = MemoryBitmap.Load(filePath, Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
+
+            Assert.NotNull(img);
+            Assert.AreEqual(512, img.Width);
+            Assert.AreEqual(512, img.Height);
+        }
     }
 }

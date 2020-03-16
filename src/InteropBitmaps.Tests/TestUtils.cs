@@ -18,7 +18,12 @@ namespace InteropBitmaps
             // https://github.com/nunit/nunit/issues/1768#issuecomment-242454699
 
             var path = System.IO.Path.Combine(context.WorkDirectory, "TestsOutput", context.Test.ID);
+
+            System.IO.Directory.CreateDirectory(path);
+
             foreach (var part in parts) path = System.IO.Path.Combine(path, part);
+
+            
 
             return path;
         }
@@ -133,5 +138,10 @@ namespace InteropBitmaps
 
             return localLinkPath;
         }
+    }
+
+    public static class TestResources
+    {
+        public static string ShannonJpg => System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
     }
 }

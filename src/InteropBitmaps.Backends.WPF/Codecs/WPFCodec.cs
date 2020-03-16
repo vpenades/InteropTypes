@@ -22,24 +22,27 @@ namespace InteropBitmaps.Codecs
 
         #endregion
 
-        public MemoryBitmap Read(Stream s)
+        public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
             var frame = System.Windows.Media.Imaging.BitmapFrame.Create(s, System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat, System.Windows.Media.Imaging.BitmapCacheOption.None);
-             
-            return _Implementation.ToMemoryBitmap(frame);
+
+            bitmap = _Implementation.ToMemoryBitmap(frame);
+
+            return true;
         }
 
-        public void Write(Stream s, CodecFormat format, SpanBitmap bmp)
-        {
-            var encoder = CreateEncoder(format);            
+        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
+        {            
+            var encoder = CreateEncoder(format);
+            if (encoder == null) return false;
 
-            var tmp = _Implementation.ToWritableBitmap(bmp);
-
-            var frame = System.Windows.Media.Imaging.BitmapFrame.Create(tmp);
+            var writable = _Implementation.ToWritableBitmap(bmp);
+            var frame = System.Windows.Media.Imaging.BitmapFrame.Create(writable);
 
             encoder.Frames.Add(frame);
-
             encoder.Save(s);
+
+            return true;
         }
 
         private static System.Windows.Media.Imaging.BitmapEncoder CreateEncoder(CodecFormat format)
@@ -53,7 +56,7 @@ namespace InteropBitmaps.Codecs
                 case CodecFormat.Png: return new System.Windows.Media.Imaging.PngBitmapEncoder();
                 case CodecFormat.Gif: return new System.Windows.Media.Imaging.GifBitmapEncoder();
                 case CodecFormat.Tiff: return new System.Windows.Media.Imaging.TiffBitmapEncoder();
-                default: throw new CodecException();
+                default: return null;
             }
         }
     }

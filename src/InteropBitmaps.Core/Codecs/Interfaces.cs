@@ -9,12 +9,12 @@ namespace InteropBitmaps.Codecs
 
     public interface IBitmapDecoding
     {
-        MemoryBitmap Read(System.IO.Stream s);
+        bool TryRead(System.IO.Stream s, out MemoryBitmap bitmap);
     }
 
     public interface IBitmapEncoding
     {
-        void Write(System.IO.Stream s, CodecFormat format, SpanBitmap bmp);
+        bool TryWrite(System.IO.Stream s, CodecFormat format, SpanBitmap bmp);
     }
     
     public enum CodecFormat
@@ -31,10 +31,15 @@ namespace InteropBitmaps.Codecs
         Dng,
         Heif,
         Tiff,
+        Tga,
 
         Emf,
         Wmf,
         Wbmp,
         Webp,
+
+        Psd,
+
+
     }    
 }

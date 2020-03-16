@@ -38,7 +38,7 @@ namespace InteropBitmaps
 
                 var binfo = new BitmapInfo(bmp.PixelWidth, bmp.PixelHeight, pfmt, bmp.BackBufferStride);
 
-                var changed = onMutate((bmp.BackBuffer, binfo));
+                var changed = onMutate(new PointerBitmap(bmp.BackBuffer, binfo));
 
                 // Specify the area of the bitmap that changed.
                 if (changed)

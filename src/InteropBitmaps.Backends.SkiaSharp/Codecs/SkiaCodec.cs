@@ -23,8 +23,10 @@ namespace InteropBitmaps.Codecs
 
         // TODO: we should try to operate directly with SkiaSharp.SKCodec
 
-        public MemoryBitmap Read(Stream s)
+        public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
+            bitmap = null;
+
             /*
             using (var skc = SkiaSharp.SKCodec.Create(s))
             {
@@ -33,23 +35,34 @@ namespace InteropBitmaps.Codecs
 
             using (var img = SkiaSharp.SKBitmap.Decode(s))
             {
-                return _Implementation.AsSpanBitmap(img).ToMemoryBitmap();
+                if (img == null) return false;
+                bitmap = _Implementation.AsSpanBitmap(img).ToMemoryBitmap();
             }
+
+            return true;
         }
 
-        public void Write(Stream s, CodecFormat format, SpanBitmap bmp)
+        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
         {
-            var fmt = GetFormatFromExtension(format);
-
-            var clr = _Implementation.ToSkia(PixelFormat.Standard.RGBA32);            
-            if (bmp.PixelFormat.Elements.Any(item => PixelFormat.IsGrey(item))) clr = _Implementation.ToSkia(PixelFormat.Standard.GRAY8);
-
-            using (var skbmp = _Implementation.ToSKImage(bmp, clr))
+            try
             {
-                var data = skbmp.Encode(fmt, 95);
-                    
-                data.SaveTo(s);
+                var fmt = GetFormatFromExtension(format);
+
+                var clr = _Implementation.ToPixelFormat(PixelFormat.Standard.RGBA32);
+                if (bmp.PixelFormat.Elements.Any(item => PixelFormat.IsGrey(item))) clr = _Implementation.ToPixelFormat(PixelFormat.Standard.GRAY8);
+
+                if (clr.Color == SkiaSharp.SKColorType.Unknown) return false;
+
+                using (var skbmp = _Implementation.ToSKImage(bmp, clr))
+                {
+                    var data = skbmp.Encode(fmt, 95);
+
+                    data.SaveTo(s);
+                }
             }
+            catch (ArgumentException) { return false; }
+
+            return true;
         }
 
         private static SkiaSharp.SKEncodedImageFormat GetFormatFromExtension(CodecFormat xfmt)
@@ -68,7 +81,7 @@ namespace InteropBitmaps.Codecs
                 case CodecFormat.Png: return SkiaSharp.SKEncodedImageFormat.Png;
                 case CodecFormat.Wbmp: return SkiaSharp.SKEncodedImageFormat.Wbmp;
                 case CodecFormat.Webp: return SkiaSharp.SKEncodedImageFormat.Webp;
-                default: throw new CodecException();
+                default: throw new ArgumentException();
             }            
         }
     }

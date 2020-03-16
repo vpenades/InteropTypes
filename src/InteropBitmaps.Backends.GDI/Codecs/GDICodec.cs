@@ -20,22 +20,52 @@ namespace InteropBitmaps.Codecs
 
         #endregion
 
-        public MemoryBitmap Read(Stream s)
+        public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
-            using (var img = System.Drawing.Image.FromStream(s))
+            try
             {
-                return img.ToMemoryBitmap();
+                using (var img = System.Drawing.Image.FromStream(s))
+                {
+                    bitmap = _Implementation.CloneToMemoryBitmap(img);
+                }
+
+                return true;
+            }
+            catch(System.ArgumentException)
+            {
+                bitmap = null;
+                return false;
             }
         }
 
-        public void Write(Stream s, CodecFormat format, SpanBitmap bmp)
+        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
         {
             var fmt = GetFormatFromExtension(format);
+            if (fmt == null) return false;
 
-            using (var tmp = _Implementation.CloneToGDI(bmp, true))
+            var needsConversion = _Implementation.ToPixelFormat(bmp.PixelFormat, false) == System.Drawing.Imaging.PixelFormat.Undefined;
+
+            if (needsConversion)
             {
-                tmp.Save(s, fmt);
+                using(var tmp = _Implementation.CloneToGDIBitmap(bmp,true))
+                {
+                    tmp.Save(s, fmt);
+                }
             }
+            else
+            {
+                void _doSave(PointerBitmap ptr)
+                {
+                    using (var tmp = _Implementation.WrapAsGDIBitmap(ptr))
+                    {
+                        tmp.Save(s, fmt);
+                    }
+                }
+
+                bmp.PinReadableMemory(_doSave);
+            }           
+
+            return true;
         }
 
         private static System.Drawing.Imaging.ImageFormat GetFormatFromExtension(CodecFormat format)
@@ -52,7 +82,7 @@ namespace InteropBitmaps.Codecs
                 case CodecFormat.Bmp: return System.Drawing.Imaging.ImageFormat.Bmp;
                 case CodecFormat.Emf: return System.Drawing.Imaging.ImageFormat.Emf;
                 case CodecFormat.Wmf: return System.Drawing.Imaging.ImageFormat.Wmf;
-                default: throw new CodecException();
+                default: return null;
             }            
         }
     }
