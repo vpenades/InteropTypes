@@ -52,16 +52,22 @@ namespace InteropBitmaps.Interop
             // load an image with Sixlabors Imagesharp, notice we use BGRA32 because RGBA32 is NOT supported by GDI.
             var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(TestResources.ShannonJpg);
 
+            // slice the central region of the source image
+
+            var slice = img
+                .AsSpanBitmap()
+                .Slice((10, 10, img.Width - 20, img.Height - 20));
+
             // cast to OpenCV adapter to blur and find edges in the image.
 
-            img.AsSpanBitmap()
+            slice
                 .WithOpenCv()                
                 .ApplyBlur((4,4))
-                .ApplyCanny(100, 200);                
+                .ApplyCanny(100, 200);
 
             // cast to GDI Adapter to draw primitives.
 
-            img.AsSpanBitmap()
+            slice
                 .WithGDI()
                 .Draw
                 (dc =>
@@ -75,11 +81,13 @@ namespace InteropBitmaps.Interop
                     // draw a triangle
                     dc.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c });
                     // draw text
-                    dc.DrawString("Text drawn with GDI", f, System.Drawing.SystemBrushes.Window, new System.Drawing.PointF(5, 60));
+                    dc.DrawString("Text drawn with GDI", f, System.Drawing.Brushes.Yellow, new System.Drawing.PointF(5, 60));
                 }
-                );            
+                );
 
             img.AttachToCurrentTest("result.jpg");
+
+            img.Dispose();
         }
     }
 }
