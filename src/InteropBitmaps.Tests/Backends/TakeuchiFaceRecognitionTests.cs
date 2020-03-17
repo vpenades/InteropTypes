@@ -24,7 +24,11 @@ namespace InteropBitmaps.Backends
             {
                 using (var image = SixLabors.ImageSharp.Image.Load(filePath))
                 {
+                    var swatch = System.Diagnostics.Stopwatch.StartNew();
+
                     var result = faceRecog.FindFaces(image.AsSpanBitmap());
+
+                    TestContext.WriteLine($"{result.Count()} Faces detected in {swatch.ElapsedMilliseconds}ms");
 
                     foreach(var r in result)
                     {

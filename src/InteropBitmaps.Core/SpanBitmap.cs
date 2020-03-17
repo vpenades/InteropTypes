@@ -82,6 +82,11 @@ namespace InteropBitmaps
 
         #region API
 
+        /// <summary>
+        /// Crops the current <see cref="SpanBitmap"/> sharing the original source memory.
+        /// </summary>
+        /// <param name="rect">The region to crop.</param>
+        /// <returns>A <see cref="SpanBitmap"/> representing the cropped region.</returns>
         public SpanBitmap Slice(in BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);

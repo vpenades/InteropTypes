@@ -58,6 +58,11 @@ namespace InteropBitmaps
 
         #region API
 
+        /// <summary>
+        /// Casts this <see cref="PointerBitmap"/> to a <see cref="SpanBitmap{TPixel}"/>.
+        /// </summary>
+        /// <typeparam name="TPixel">The type to use for a single Pixel.</typeparam>
+        /// <returns>A <see cref="SpanBitmap{TPixel}"/> instance.</returns>
         public SpanBitmap<TPixel> OfType<TPixel>()
             where TPixel:unmanaged
         {
