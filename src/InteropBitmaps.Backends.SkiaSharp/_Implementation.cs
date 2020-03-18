@@ -185,9 +185,12 @@ namespace InteropBitmaps
         {
             var skinfo = ToSkia(bmp.Info, false);
 
-            var dst = new SkiaSharp.SKBitmap(skinfo, bmp.Info.ScanlineSize);
+            // var dst = new SkiaSharp.SKBitmap(skinfo, bmp.Info.ScanlineSize);
 
-            dst.SetPixels(bmp.Pointer);
+            var dst = new SkiaSharp.SKBitmap();
+            dst.InstallPixels(skinfo, bmp.Pointer, bmp.Info.ScanlineSize);
+
+            // dst.SetPixels(bmp.Pointer);
 
             return dst;
         }
