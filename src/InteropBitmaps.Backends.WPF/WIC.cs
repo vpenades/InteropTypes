@@ -11,7 +11,7 @@ namespace InteropBitmaps
     /// <summary>
     ///  Windows Imaging Component (WIC)
     /// </summary>
-    public static partial class WIC
+    public static partial class WPF
     {
         // BitmapSource -> WriteableBitmap, BitmapFrame, BitmapImage, CroppedBitmap, FormatConvertedBitmap,RenderTargetBitmap,TransformedBitmap        
 

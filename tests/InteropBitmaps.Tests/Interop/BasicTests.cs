@@ -85,6 +85,31 @@ namespace InteropBitmaps.Interop
                 }
                 );
 
+            // cast to SkiaSharp Adapter to draw primitives.
+
+            var paint1 = new SkiaSharp.SKPaint
+            {
+                TextSize = 64.0f,
+                IsAntialias = true,
+                Color = new SkiaSharp.SKColor(0, 0, 255),
+                Style = SkiaSharp.SKPaintStyle.Fill,
+                StrokeWidth = 20
+            };
+
+            SkiaSharpToolkit.WithSkiaSharp(slice)
+                .Draw
+                (canvas =>
+                {
+                    var p0 = new SkiaSharp.SKPoint(5, 120);
+                    var p1 = new SkiaSharp.SKPoint(250, 120);                                   
+
+                    canvas.DrawLine(p0, p1, paint1);
+                    canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), paint1);
+                }
+                );
+
+            paint1.Dispose();
+
             img.AttachToCurrentTest("result.jpg");
 
             img.Dispose();

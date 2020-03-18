@@ -13,6 +13,12 @@ namespace InteropBitmaps.Backends
     [Category("Detector Takeuchi")]
     public class TakeuchiFaceRecognitionTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
+        }
+
         [TestCase("Resources\\shannon.jpg")]        
         public void FaceRecognition(string filePath)
         {

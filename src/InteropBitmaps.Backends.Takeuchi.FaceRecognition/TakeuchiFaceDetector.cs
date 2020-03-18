@@ -13,6 +13,9 @@ namespace InteropBitmaps.Detectors
         {
             if (IntPtr.Size != 8) throw new ArgumentException("Expected x64 architecture");
 
+            if (!System.IO.File.Exists(System.IO.Path.Combine(modelsDirectoryPath, "dlib_face_recognition_resnet_model_v1.dat"))) throw new ArgumentException("Model files not found");
+
+
             _Recognizer = FaceRecognitionDotNet.FaceRecognition.Create(modelsDirectoryPath);
             _Images = new System.Threading.ThreadLocal<CachedImage>( ()=> new CachedImage() );
         }

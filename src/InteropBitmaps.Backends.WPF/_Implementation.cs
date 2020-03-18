@@ -15,10 +15,80 @@ using WIC_FRAME = System.Windows.Media.Imaging.BitmapFrame;
 using INTEROPFMT = InteropBitmaps.PixelFormat;
 
 namespace InteropBitmaps
-{
-    
+{    
     static class _Implementation
     {
+        #region pixel formats
+
+        public static INTEROPFMT ToInterop(System.Windows.Media.PixelFormat fmt)
+        {
+            // if (fmt == System.Windows.Media.PixelFormats.Default) return PixelFormat.GetUndefinedOfSize(fmt.BitsPerPixel / 8);
+
+            if (fmt == System.Windows.Media.PixelFormats.Gray8) return INTEROPFMT.Standard.GRAY8;
+
+            if (fmt == System.Windows.Media.PixelFormats.Gray16) return INTEROPFMT.Standard.GRAY16;
+            if (fmt == System.Windows.Media.PixelFormats.Bgr555) return INTEROPFMT.Standard.BGRA5551;
+            if (fmt == System.Windows.Media.PixelFormats.Bgr565) return INTEROPFMT.Standard.BGR565;
+
+            if (fmt == System.Windows.Media.PixelFormats.Bgr24) return INTEROPFMT.Standard.BGR24;
+            if (fmt == System.Windows.Media.PixelFormats.Rgb24) return INTEROPFMT.Standard.RGB24;
+
+            if (fmt == System.Windows.Media.PixelFormats.Bgr32) return INTEROPFMT.Standard.BGRA32;
+            if (fmt == System.Windows.Media.PixelFormats.Bgra32) return INTEROPFMT.Standard.BGRA32;
+
+
+            if (fmt == System.Windows.Media.PixelFormats.Rgba128Float) return INTEROPFMT.Standard.RGBA128F;
+
+            throw new NotImplementedException();
+        }
+
+        public static System.Windows.Media.PixelFormat ToPixelFormat(INTEROPFMT fmt)
+        {
+            switch (fmt.PackedFormat)
+            {
+                case INTEROPFMT.Packed.GRAY8: return System.Windows.Media.PixelFormats.Gray8;
+                case INTEROPFMT.Packed.GRAY16: return System.Windows.Media.PixelFormats.Gray16;
+
+                case INTEROPFMT.Packed.BGRA5551: return System.Windows.Media.PixelFormats.Bgr555;
+                case INTEROPFMT.Packed.BGR565: return System.Windows.Media.PixelFormats.Bgr565;
+
+                case INTEROPFMT.Packed.BGR24: return System.Windows.Media.PixelFormats.Bgr24;
+                case INTEROPFMT.Packed.RGB24: return System.Windows.Media.PixelFormats.Rgb24;
+
+                case INTEROPFMT.Packed.BGRA32: return System.Windows.Media.PixelFormats.Bgra32;
+
+                case INTEROPFMT.Packed.RGBA128F: return System.Windows.Media.PixelFormats.Rgba128Float;
+
+                default: throw new NotImplementedException();
+            }
+        }
+
+        public static System.Windows.Media.PixelFormat ToBestMatch(INTEROPFMT fmt)
+        {
+            switch (fmt.PackedFormat)
+            {
+                case INTEROPFMT.Packed.GRAY8: return System.Windows.Media.PixelFormats.Gray8;
+                case INTEROPFMT.Packed.GRAY16: return System.Windows.Media.PixelFormats.Gray16;
+
+                case INTEROPFMT.Packed.BGRA4444: return System.Windows.Media.PixelFormats.Bgra32;
+                case INTEROPFMT.Packed.BGRA5551: return System.Windows.Media.PixelFormats.Bgra32;
+                case INTEROPFMT.Packed.BGR565: return System.Windows.Media.PixelFormats.Bgr24;
+
+                case INTEROPFMT.Packed.BGR24: return System.Windows.Media.PixelFormats.Bgr24;
+                case INTEROPFMT.Packed.RGB24: return System.Windows.Media.PixelFormats.Rgb24;
+
+                case INTEROPFMT.Packed.BGRA32: return System.Windows.Media.PixelFormats.Bgra32;
+                case INTEROPFMT.Packed.RGBA32: return System.Windows.Media.PixelFormats.Bgra32;
+                case INTEROPFMT.Packed.ARGB32: return System.Windows.Media.PixelFormats.Bgra32;
+
+                case INTEROPFMT.Packed.RGBA128F: return System.Windows.Media.PixelFormats.Rgba128Float;
+
+                default: throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
         #region blit
 
         public static BitmapInfo GetBitmapInfo(WIC_READABLE src)
@@ -85,77 +155,6 @@ namespace InteropBitmaps
             return dst;
         }
 
-        #endregion
-
-        #region pixel formats
-
-        public static INTEROPFMT ToInterop(System.Windows.Media.PixelFormat fmt)
-        {
-            // if (fmt == System.Windows.Media.PixelFormats.Default) return PixelFormat.GetUndefinedOfSize(fmt.BitsPerPixel / 8);
-
-            if (fmt == System.Windows.Media.PixelFormats.Gray8) return INTEROPFMT.Standard.GRAY8;
-
-            if (fmt == System.Windows.Media.PixelFormats.Gray16) return INTEROPFMT.Standard.GRAY16;
-            if (fmt == System.Windows.Media.PixelFormats.Bgr555) return INTEROPFMT.Standard.BGRA5551;
-            if (fmt == System.Windows.Media.PixelFormats.Bgr565) return INTEROPFMT.Standard.BGR565;
-
-            if (fmt == System.Windows.Media.PixelFormats.Bgr24) return INTEROPFMT.Standard.BGR24;
-            if (fmt == System.Windows.Media.PixelFormats.Rgb24) return INTEROPFMT.Standard.RGB24;
-
-            if (fmt == System.Windows.Media.PixelFormats.Bgr32) return INTEROPFMT.Standard.BGRA32;
-            if (fmt == System.Windows.Media.PixelFormats.Bgra32) return INTEROPFMT.Standard.BGRA32;
-
-
-            if (fmt == System.Windows.Media.PixelFormats.Rgba128Float) return INTEROPFMT.Standard.RGBA128F;
-
-            throw new NotImplementedException();
-        }
-
-        public static System.Windows.Media.PixelFormat ToPixelFormat(INTEROPFMT fmt)
-        {
-            switch (fmt.PackedFormat)
-            {
-                case INTEROPFMT.Packed.GRAY8: return System.Windows.Media.PixelFormats.Gray8;
-                case INTEROPFMT.Packed.GRAY16: return System.Windows.Media.PixelFormats.Gray16;
-
-                case INTEROPFMT.Packed.BGRA5551: return System.Windows.Media.PixelFormats.Bgr555;
-                case INTEROPFMT.Packed.BGR565: return System.Windows.Media.PixelFormats.Bgr565;
-
-                case INTEROPFMT.Packed.BGR24: return System.Windows.Media.PixelFormats.Bgr24;
-                case INTEROPFMT.Packed.RGB24: return System.Windows.Media.PixelFormats.Rgb24;                
-
-                case INTEROPFMT.Packed.BGRA32: return System.Windows.Media.PixelFormats.Bgra32;
-
-                case INTEROPFMT.Packed.RGBA128F: return System.Windows.Media.PixelFormats.Rgba128Float;
-
-                default: throw new NotImplementedException();
-            }
-        }
-
-        public static System.Windows.Media.PixelFormat ToBestMatch(INTEROPFMT fmt)
-        {
-            switch (fmt.PackedFormat)
-            {
-                case INTEROPFMT.Packed.GRAY8: return System.Windows.Media.PixelFormats.Gray8;
-                case INTEROPFMT.Packed.GRAY16: return System.Windows.Media.PixelFormats.Gray16;
-
-                case INTEROPFMT.Packed.BGRA4444: return System.Windows.Media.PixelFormats.Bgra32;
-                case INTEROPFMT.Packed.BGRA5551: return System.Windows.Media.PixelFormats.Bgra32;
-                case INTEROPFMT.Packed.BGR565: return System.Windows.Media.PixelFormats.Bgr24;
-
-                case INTEROPFMT.Packed.BGR24: return System.Windows.Media.PixelFormats.Bgr24;
-                case INTEROPFMT.Packed.RGB24: return System.Windows.Media.PixelFormats.Rgb24;
-
-                case INTEROPFMT.Packed.BGRA32: return System.Windows.Media.PixelFormats.Bgra32;
-                case INTEROPFMT.Packed.RGBA32: return System.Windows.Media.PixelFormats.Bgra32;
-                case INTEROPFMT.Packed.ARGB32: return System.Windows.Media.PixelFormats.Bgra32;
-
-                case INTEROPFMT.Packed.RGBA128F: return System.Windows.Media.PixelFormats.Rgba128Float;
-
-                default: throw new NotImplementedException();
-            }
-        }
-
-        #endregion        
+        #endregion          
     }
 }

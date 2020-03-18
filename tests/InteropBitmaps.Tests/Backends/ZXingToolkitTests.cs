@@ -16,6 +16,12 @@ namespace InteropBitmaps.Backends
     [Category("Detector ZXing")]
     public class ZXingToolkitTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
+        }
+
         [TestCase("Resources\\QRCode.png", "http://tecnohotelnews.com/")]
         [TestCase("Resources\\glyphs_printed.jpg", null)]
         [TestCase("Resources\\ios-11-camera-qr-code-scan.jpg", "WIFI:T:WPA2;S:iMore;P:iMore12345678;;")]

@@ -11,6 +11,12 @@ namespace InteropBitmaps.Codecs
     [Category("Codecs")]
     public class LoadAndSaveTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
+        }
+
         [TestCase("Resources\\shannon.jpg")]
         [TestCase("Resources\\diagram.jpg")]
         [TestCase("Resources\\white.png")]

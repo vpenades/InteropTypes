@@ -11,6 +11,12 @@ namespace InteropBitmaps.Backends
     [Category("Backends WPF")]
     public class WpfMediaTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
+        }
+
         [TestCase("Resources\\diagram.jpg")]
         [TestCase("Resources\\white.png")]
         [TestCase("Resources\\shannon.jpg")]
