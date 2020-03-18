@@ -47,7 +47,7 @@ namespace InteropBitmaps.Interop
 
 
         [Test]
-        public void DrawGDIPrimitives()
+        public void DrawPrimitivesWithMultipleAdapters()
         {
             // load an image with Sixlabors Imagesharp, notice we use BGRA32 because RGBA32 is NOT supported by GDI.
             var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(TestResources.ShannonJpg);
@@ -87,7 +87,7 @@ namespace InteropBitmaps.Interop
 
             // cast to SkiaSharp Adapter to draw primitives.
 
-            var paint1 = new SkiaSharp.SKPaint
+            var skiaPaint = new SkiaSharp.SKPaint
             {
                 TextSize = 64.0f,
                 IsAntialias = true,
@@ -96,19 +96,22 @@ namespace InteropBitmaps.Interop
                 StrokeWidth = 20
             };
 
-            SkiaSharpToolkit.WithSkiaSharp(slice)
+            slice
+                .WithSkiaSharp()
                 .Draw
                 (canvas =>
                 {
                     var p0 = new SkiaSharp.SKPoint(5, 120);
                     var p1 = new SkiaSharp.SKPoint(250, 120);                                   
 
-                    canvas.DrawLine(p0, p1, paint1);
-                    canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), paint1);
+                    canvas.DrawLine(p0, p1, skiaPaint);
+                    canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), skiaPaint);
                 }
                 );
 
-            paint1.Dispose();
+            skiaPaint.Dispose();
+
+            // save the result back with ImageSharp
 
             img.AttachToCurrentTest("result.jpg");
 
