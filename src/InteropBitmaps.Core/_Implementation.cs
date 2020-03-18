@@ -25,6 +25,7 @@ namespace InteropBitmaps
 
             if (dstCrop.Width <= 0 || dstCrop.Height <= 0) return;
 
+            // no conversion required
             if (dstCrop.PixelFormat == srcCrop.PixelFormat)
             {
                 for (int y = 0; y < dstCrop.Height; ++y)
@@ -37,6 +38,8 @@ namespace InteropBitmaps
                     srcRow.CopyTo(dstRow);
                 }
             }
+
+            // conversion required
             else
             {
                 var srcConverter = _PixelConverters.GetConverter(srcCrop.PixelFormat);

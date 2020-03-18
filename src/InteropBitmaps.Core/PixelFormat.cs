@@ -8,29 +8,29 @@ namespace InteropBitmaps
 
     public enum ComponentFormat
     {
-        // 0
+        // 0 bits
         Empty = 0,
         // DepthMillimetres, DepthCentimetres, DepthMetres
 
-        // 1
+        // 1 bit
         Undefined1, Alpha1,
 
-        // 4
+        // 4 bits
         Undefined4, Red4, Green4, Blue4, Alpha4, // PremulAlpha4
 
-        // 5
+        // 5 bits
         Undefined5, Red5, Green5, Blue5,
 
-        // 6
+        // 6 bits
         Undefined6, Green6,
 
-        // 8
+        // 8 bits
         Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8, // PremulAlpha8
 
-        // 16
+        // 16 bits
         Undefined16, Index16, Gray16,
 
-        // 32
+        // 32 bits
         Undefined32, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
     }
 
@@ -41,6 +41,10 @@ namespace InteropBitmaps
     {
         #region constants
         
+        /// <summary>
+        /// Predefined pixel formats encoded as const UInt32 values,
+        /// which makes them suitable for switch blocks.
+        /// </summary>
         public static class Packed
         {
             private const uint B0 = 1;
@@ -73,6 +77,9 @@ namespace InteropBitmaps
             public const uint RGBA128F = B0 * (uint)PEF.Red32F | B1 * (uint)PEF.Green32F | B2 * (uint)PEF.Blue32F | B3 * (uint)PEF.Alpha32F;
         }
 
+        /// <summary>
+        /// Predefined pixel formats, mirroring <see cref="Packed"/> definitions.
+        /// </summary>
         public static class Standard
         {
             public static readonly PixelFormat Empty = new PixelFormat(Packed.Empty);

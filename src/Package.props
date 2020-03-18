@@ -5,7 +5,9 @@
     
     <Authors>Vicente Penades</Authors>
     <Copyright>Copyright (c) 2020 Vicente Penades</Copyright>
-    <Description>A collection of low level Bitmap types to help interact with in-memory bitmaps and third party libraries.</Description>
+    <Description>      
+      A collection of low level Bitmap types that wrap memory pointers, Spans and byte arrays.
+    </Description>
     
     <RepositoryUrl>https://github.com/vpenades/InteropBitmaps</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

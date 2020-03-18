@@ -12,7 +12,7 @@ namespace InteropBitmaps
     /// - (GDI+) System.Drawing.Rectangle
     /// - (GDI+) System.Drawing.RectangleF
     /// - (WIC) System.Windows.Rect (WIC)
-    /// - (WIC)System.Windows.Int32Rect
+    /// - (WIC) System.Windows.Int32Rect
     /// - (ImageSharp) Sixlabors.Primitives.Rectangle
     /// - (OpenCV) OpenCvSharp.Rect
     /// - (Skia) SkiaSharp.SKRectI:
