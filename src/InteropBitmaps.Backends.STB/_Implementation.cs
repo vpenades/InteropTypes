@@ -13,7 +13,7 @@ namespace InteropBitmaps
             {
                 switch (components)
                 {
-                    case StbImageLib.ColorComponents.Grey: return PixelFormat.Standard.GRAY8;
+                    case StbImageLib.ColorComponents.Grey: return PixelFormat.Standard.Gray8;
                     //case StbImageLib.ColorComponents.GreyAlpha:;
                     case StbImageLib.ColorComponents.RedGreenBlue: return PixelFormat.Standard.RGB24;
                     case StbImageLib.ColorComponents.RedGreenBlueAlpha: return PixelFormat.Standard.RGBA32;

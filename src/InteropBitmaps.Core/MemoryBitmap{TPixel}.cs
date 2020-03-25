@@ -39,7 +39,7 @@ namespace InteropBitmaps
 
         #region properties
 
-        public new SpanBitmap<TPixel> Span => new SpanBitmap<TPixel>(this.Buffer.Span, this.Info);
+        public new SpanBitmap<TPixel> Span => new SpanBitmap<TPixel>(this.Memory.Span, this.Info);
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace InteropBitmaps
 
         public void SetPixel(int x, int y, TPixel value) { UsePixelsScanline(y)[x] = value; }
 
-        public new SpanBitmap<TPixel> AsSpanBitmap() { return new SpanBitmap<TPixel>(Buffer.Span, this.Info); }
+        public new SpanBitmap<TPixel> AsSpanBitmap() { return new SpanBitmap<TPixel>(Memory.Span, this.Info); }
 
         public IEnumerable<(int X, int Y, TPixel Pixel)> EnumeratePixels()
         {

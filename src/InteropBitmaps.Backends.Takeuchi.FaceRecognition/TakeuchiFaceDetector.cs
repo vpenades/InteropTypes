@@ -88,12 +88,23 @@ namespace InteropBitmaps.Detectors
                     return;
                 }
 
-                PixelFormat.Convert(dst, src);                
+                dst.SetPixels(0, 0, src);
+
+                // PixelFormat.Convert(dst, src);                
             }
 
             public FaceRecognitionDotNet.Image CreateClient()
             {
-                return FaceRecognitionDotNet.FaceRecognition.LoadImage(_Bitmap.ToArray(), _Bitmap.Height, _Bitmap.Width, _Bitmap.PixelSize);
+                // TODO: check bitmap is continuous
+
+                if (_Bitmap.TryGetBuffer(out ArraySegment<Byte> buffer))
+                {
+                    if (buffer.Offset != 0) throw new InvalidOperationException();
+
+                    return FaceRecognitionDotNet.FaceRecognition.LoadImage(buffer.Array, _Bitmap.Height, _Bitmap.Width, _Bitmap.PixelSize);
+                }
+
+                throw new NotSupportedException();                
             }
         }
 

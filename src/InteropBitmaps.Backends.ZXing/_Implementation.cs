@@ -14,8 +14,8 @@ namespace InteropBitmaps
         {
             switch (enc.PackedFormat)
             {
-                case PixelFormat.Packed.GRAY8: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
-                case PixelFormat.Packed.GRAY16: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
+                case PixelFormat.Packed.Gray8: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
+                case PixelFormat.Packed.Gray16: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
 
                 case PixelFormat.Packed.BGR565: return ZXing.RGBLuminanceSource.BitmapFormat.RGB565; // notice that colors here are inverted                
 

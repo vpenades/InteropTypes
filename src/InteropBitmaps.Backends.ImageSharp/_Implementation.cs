@@ -16,10 +16,10 @@ namespace InteropBitmaps
         public static PixelFormat GetPixelFormat<TPixel>()
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            if (typeof(TPixel) == typeof(Alpha8)) return PixelFormat.Standard.ALPHA8;
-            if (typeof(TPixel) == typeof(Gray8)) return PixelFormat.Standard.GRAY8;            
+            if (typeof(TPixel) == typeof(Alpha8)) return PixelFormat.Standard.Alpha8;
+            if (typeof(TPixel) == typeof(Gray8)) return PixelFormat.Standard.Gray8;            
 
-            if (typeof(TPixel) == typeof(Gray16)) return PixelFormat.Standard.GRAY16;
+            if (typeof(TPixel) == typeof(Gray16)) return PixelFormat.Standard.Gray16;
             if (typeof(TPixel) == typeof(Bgr565)) return PixelFormat.Standard.BGR565;
             if (typeof(TPixel) == typeof(Bgra5551)) return PixelFormat.Standard.BGRA5551;
             if (typeof(TPixel) == typeof(Bgra4444)) return PixelFormat.Standard.BGRA4444;
@@ -38,10 +38,10 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case PixelFormat.Packed.ALPHA8: return typeof(Alpha8);
-                case PixelFormat.Packed.GRAY8: return typeof(Gray8);
+                case PixelFormat.Packed.Alpha8: return typeof(Alpha8);
+                case PixelFormat.Packed.Gray8: return typeof(Gray8);
 
-                case PixelFormat.Packed.GRAY16: return typeof(Gray16);
+                case PixelFormat.Packed.Gray16: return typeof(Gray16);
                 case PixelFormat.Packed.BGR565: return typeof(Bgr565);
                 case PixelFormat.Packed.BGRA5551: return typeof(Bgra5551);
                 case PixelFormat.Packed.BGRA4444: return typeof(Bgra4444);
@@ -65,10 +65,10 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case PixelFormat.Packed.ALPHA8: return new Image<Alpha8>(width, height);
-                case PixelFormat.Packed.GRAY8: return new Image<Gray8>(width, height);
+                case PixelFormat.Packed.Alpha8: return new Image<Alpha8>(width, height);
+                case PixelFormat.Packed.Gray8: return new Image<Gray8>(width, height);
 
-                case PixelFormat.Packed.GRAY16: return new Image<Gray16>(width, height);
+                case PixelFormat.Packed.Gray16: return new Image<Gray16>(width, height);
                 case PixelFormat.Packed.BGR565: return new Image<Bgr565>(width, height);
                 case PixelFormat.Packed.BGRA5551: return new Image<Bgra5551>(width, height);
                 case PixelFormat.Packed.BGRA4444: return new Image<Bgra4444>(width, height);

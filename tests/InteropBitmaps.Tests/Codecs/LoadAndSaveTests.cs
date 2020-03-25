@@ -52,7 +52,7 @@ namespace InteropBitmaps.Codecs
 
                     fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}-Gray.jpg";
                     fname = TestContext.CurrentContext.GetTestResultPath(fname);
-                    bitmap.AsSpanBitmap().ToMemoryBitmap(PixelFormat.Standard.GRAY8).Save(fname, encoder);
+                    bitmap.AsSpanBitmap().ToMemoryBitmap(PixelFormat.Standard.Gray8).Save(fname, encoder);
                     TestContext.AddTestAttachment(fname);
                 }
             }

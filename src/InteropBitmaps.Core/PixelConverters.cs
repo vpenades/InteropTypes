@@ -233,9 +233,10 @@ namespace InteropBitmaps
 
         public static IRGBConverter GetConverter(PixelFormat fmt)
         {
-            if (fmt == PixelFormat.Standard.GRAY8) return new _CvtGray8();
+            if (fmt == PixelFormat.Standard.Gray8) return new _CvtGray8();
 
-            if (fmt == PixelFormat.Standard.GRAY16) return new _CvtGray16();
+            if (fmt == PixelFormat.Standard.Gray16) return new _CvtGray16();
+            if (fmt == PixelFormat.Standard.DepthMM16) return new _CvtGray16();
 
             if (fmt == PixelFormat.Standard.RGB24) return new _CvtRgb24();
             if (fmt == PixelFormat.Standard.BGR24) return new _CvtBgr24();

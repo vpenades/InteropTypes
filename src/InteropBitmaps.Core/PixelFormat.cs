@@ -28,7 +28,7 @@ namespace InteropBitmaps
         Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8, // PremulAlpha8
 
         // 16 bits
-        Undefined16, Index16, Gray16,
+        Undefined16, Index16, Gray16, DepthMM16,
 
         // 32 bits
         Undefined32, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
@@ -59,13 +59,15 @@ namespace InteropBitmaps
             public const uint X24 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8 | B2 * (uint)PEF.Undefined8;
             public const uint X32 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8 | B2 * (uint)PEF.Undefined8 | B3 * (uint)PEF.Undefined8;
 
-            public const uint GRAY8 = B0 * (uint)PEF.Gray8;
-            public const uint ALPHA8 = B0 * (uint)PEF.Alpha8;
+            public const uint Gray8 = B0 * (uint)PEF.Gray8;
+            public const uint Alpha8 = B0 * (uint)PEF.Alpha8;
 
-            public const uint GRAY16 = B0 * (uint)PEF.Gray16;
+            public const uint Gray16 = B0 * (uint)PEF.Gray16;
             public const uint BGR565 = B0 * (uint)PEF.Blue5 | B1 * (uint)PEF.Green6 | B2 * (uint)PEF.Red5;
             public const uint BGRA4444 = B0 * (uint)PEF.Blue4 | B1 * (uint)PEF.Green4 | B2 * (uint)PEF.Red4 | B3 * (uint)PEF.Alpha4;
             public const uint BGRA5551 = B0 * (uint)PEF.Blue5 | B1 * (uint)PEF.Green5 | B2 * (uint)PEF.Red5 | B3 * (uint)PEF.Alpha1;
+            public const uint DepthMM16 = B0 * (uint)PEF.DepthMM16;
+
 
             public const uint RGB24 = B0 * (uint)PEF.Red8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Blue8;
             public const uint BGR24 = B0 * (uint)PEF.Blue8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Red8;
@@ -84,13 +86,14 @@ namespace InteropBitmaps
         {
             public static readonly PixelFormat Empty = new PixelFormat(Packed.Empty);
 
-            public static readonly PixelFormat GRAY8 = new PixelFormat(Packed.GRAY8);
-            public static readonly PixelFormat ALPHA8 = new PixelFormat(Packed.ALPHA8);
+            public static readonly PixelFormat Gray8 = new PixelFormat(Packed.Gray8);
+            public static readonly PixelFormat Alpha8 = new PixelFormat(Packed.Alpha8);
 
-            public static readonly PixelFormat GRAY16 = new PixelFormat(Packed.GRAY16);
+            public static readonly PixelFormat Gray16 = new PixelFormat(Packed.Gray16);
             public static readonly PixelFormat BGR565 = new PixelFormat(Packed.BGR565);
             public static readonly PixelFormat BGRA4444 = new PixelFormat(Packed.BGRA4444);
             public static readonly PixelFormat BGRA5551 = new PixelFormat(Packed.BGRA5551);
+            public static readonly PixelFormat DepthMM16 = new PixelFormat(Packed.DepthMM16);
 
             public static readonly PixelFormat RGB24 = new PixelFormat(Packed.RGB24);
             public static readonly PixelFormat BGR24 = new PixelFormat(Packed.BGR24);
@@ -286,6 +289,7 @@ namespace InteropBitmaps
 
                 case PEF.Index16:
                 case PEF.Gray16:
+                case PEF.DepthMM16:
                 case PEF.Undefined16: return 16;
 
                 case PEF.Gray32F:
@@ -377,6 +381,8 @@ namespace InteropBitmaps
 
                     dstRow = dstRow.Slice(dst.PixelSize);
                     srcRow = srcRow.Slice(src.PixelSize);
+
+                    throw new NotImplementedException();
                 }
             }
         }

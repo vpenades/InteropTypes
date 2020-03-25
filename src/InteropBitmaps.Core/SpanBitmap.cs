@@ -121,7 +121,7 @@ namespace InteropBitmaps
 
         public unsafe void PinReadableMemory(Action<PointerBitmap> onPin)
         {
-            if (_Writable.Length == 0) throw new InvalidOperationException();
+            if (_Writable.Length == 0) throw new InvalidOperationException();            
 
             fixed (byte* ptr = &_Readable.GetPinnableReference())
             {
@@ -142,6 +142,16 @@ namespace InteropBitmaps
                 return onPin(ptrBmp);
             }
         }
+
+        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Utf8String.Experimental/tests/System/MemoryTests.cs
+
+            /*
+        public unsafe void Pin()
+        {
+            System.Runtime.InteropServices.GCHandle.Alloc(_Writable.GetPinnableReference());
+        }*/
+
+
 
         public unsafe SpanBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged

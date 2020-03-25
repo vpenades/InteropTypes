@@ -16,8 +16,8 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case INTEROPFMT.Packed.ALPHA8: return (SKIACOLOR.Alpha8, SKIAALPHA.Opaque);
-                case INTEROPFMT.Packed.GRAY8: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
+                case INTEROPFMT.Packed.Alpha8: return (SKIACOLOR.Alpha8, SKIAALPHA.Opaque);
+                case INTEROPFMT.Packed.Gray8: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
 
                 case INTEROPFMT.Packed.BGR565: return (SKIACOLOR.Rgb565, SKIAALPHA.Opaque);
                 
@@ -31,7 +31,7 @@ namespace InteropBitmaps
                 {
                     case INTEROPFMT.Packed.BGR24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
                     case INTEROPFMT.Packed.RGB24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
-                    case INTEROPFMT.Packed.GRAY16: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
+                    case INTEROPFMT.Packed.Gray16: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
                 }
             }
 
@@ -42,8 +42,8 @@ namespace InteropBitmaps
         {
             switch (color)
             {
-                case SKIACOLOR.Alpha8: return INTEROPFMT.Standard.ALPHA8;
-                case SKIACOLOR.Gray8: return INTEROPFMT.Standard.GRAY8;
+                case SKIACOLOR.Alpha8: return INTEROPFMT.Standard.Alpha8;
+                case SKIACOLOR.Gray8: return INTEROPFMT.Standard.Gray8;
                 case SKIACOLOR.Rgba8888: return INTEROPFMT.Standard.RGBA32;
                 case SKIACOLOR.Rgb888x: return INTEROPFMT.Standard.RGBA32;
                 case SKIACOLOR.Bgra8888: return INTEROPFMT.Standard.BGRA32;

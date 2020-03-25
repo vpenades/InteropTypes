@@ -24,9 +24,9 @@ namespace InteropBitmaps
         {
             // if (fmt == System.Windows.Media.PixelFormats.Default) return PixelFormat.GetUndefinedOfSize(fmt.BitsPerPixel / 8);
 
-            if (fmt == System.Windows.Media.PixelFormats.Gray8) return INTEROPFMT.Standard.GRAY8;
+            if (fmt == System.Windows.Media.PixelFormats.Gray8) return INTEROPFMT.Standard.Gray8;
 
-            if (fmt == System.Windows.Media.PixelFormats.Gray16) return INTEROPFMT.Standard.GRAY16;
+            if (fmt == System.Windows.Media.PixelFormats.Gray16) return INTEROPFMT.Standard.Gray16;
             if (fmt == System.Windows.Media.PixelFormats.Bgr555) return INTEROPFMT.Standard.BGRA5551;
             if (fmt == System.Windows.Media.PixelFormats.Bgr565) return INTEROPFMT.Standard.BGR565;
 
@@ -46,8 +46,8 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case INTEROPFMT.Packed.GRAY8: return System.Windows.Media.PixelFormats.Gray8;
-                case INTEROPFMT.Packed.GRAY16: return System.Windows.Media.PixelFormats.Gray16;
+                case INTEROPFMT.Packed.Gray8: return System.Windows.Media.PixelFormats.Gray8;
+                case INTEROPFMT.Packed.Gray16: return System.Windows.Media.PixelFormats.Gray16;
 
                 case INTEROPFMT.Packed.BGRA5551: return System.Windows.Media.PixelFormats.Bgr555;
                 case INTEROPFMT.Packed.BGR565: return System.Windows.Media.PixelFormats.Bgr565;
@@ -67,8 +67,8 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case INTEROPFMT.Packed.GRAY8: return System.Windows.Media.PixelFormats.Gray8;
-                case INTEROPFMT.Packed.GRAY16: return System.Windows.Media.PixelFormats.Gray16;
+                case INTEROPFMT.Packed.Gray8: return System.Windows.Media.PixelFormats.Gray8;
+                case INTEROPFMT.Packed.Gray16: return System.Windows.Media.PixelFormats.Gray16;
 
                 case INTEROPFMT.Packed.BGRA4444: return System.Windows.Media.PixelFormats.Bgra32;
                 case INTEROPFMT.Packed.BGRA5551: return System.Windows.Media.PixelFormats.Bgra32;

@@ -14,8 +14,8 @@ namespace InteropBitmaps.Core
         [Test]
         public void CropAndCopyPixels()
         {
-            var dst = new MemoryBitmap(16, 16, PixelFormat.Standard.GRAY8);
-            var src = new MemoryBitmap(8, 8, PixelFormat.Standard.GRAY8);
+            var dst = new MemoryBitmap(16, 16, PixelFormat.Standard.Gray8);
+            var src = new MemoryBitmap(8, 8, PixelFormat.Standard.Gray8);
 
             src.Span.WritableSpan.Fill(50);
             dst.SetPixels(4, 4, src);

@@ -22,7 +22,7 @@ namespace InteropBitmaps
 
         public static Adapters.ImageSharpAdapter<TPixel> WithImageSharp<TPixel>(this MemoryBitmap<TPixel> bitmap)
             where TPixel : unmanaged, IPixel<TPixel>
-        { return new Adapters.ImageSharpAdapter<TPixel>(bitmap); }        
+        { return new Adapters.ImageSharpAdapter<TPixel>(bitmap); }
 
         #endregion
 

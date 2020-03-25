@@ -15,7 +15,7 @@ Unlike most imaging libraries around, InteropBitmaps does not provide a
 memory allocation strategy and simply wraps the memory already allocated
 by others.
 
-This feature makes InteropBitmaps a very convenient library to interop with
+This feature makes InteropBitmaps specially suited to interop with
 image adquisition APIs, or exchanging bitmap objects between imaging libraries
 avoiding memory allocations or expensive bitmap conversions.
 

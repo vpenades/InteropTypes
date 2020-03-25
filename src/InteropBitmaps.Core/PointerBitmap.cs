@@ -69,6 +69,12 @@ namespace InteropBitmaps
             return new SpanBitmap<TPixel>(_Pointer, _Info,_IsReadOnly);
         }
 
+        private System.Buffers.MemoryManager<T> CreateManager<T>()
+            where T:unmanaged
+        {
+            return new MemoryManagers.UnmanagedMemoryManager<T>(_Pointer, _Info.BitmapByteSize);
+        }
+
         #endregion
     }
 }

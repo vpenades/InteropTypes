@@ -18,9 +18,9 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case GDIFMT.Format8bppIndexed: return INTEROPFMT.Standard.GRAY8;
+                case GDIFMT.Format8bppIndexed: return INTEROPFMT.Standard.Gray8;
 
-                case GDIFMT.Format16bppGrayScale: return INTEROPFMT.Standard.GRAY16;
+                case GDIFMT.Format16bppGrayScale: return INTEROPFMT.Standard.Gray16;
                 case GDIFMT.Format16bppRgb565: return INTEROPFMT.Standard.BGR565;
                 case GDIFMT.Format16bppRgb555: return INTEROPFMT.Standard.BGRA5551;
                 case GDIFMT.Format16bppArgb1555: return INTEROPFMT.Standard.BGRA5551;
@@ -43,7 +43,7 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case INTEROPFMT.Packed.GRAY16: return GDIFMT.Format16bppGrayScale;
+                case INTEROPFMT.Packed.Gray16: return GDIFMT.Format16bppGrayScale;
 
                 case INTEROPFMT.Packed.BGR565: return GDIFMT.Format16bppRgb565;
                 case INTEROPFMT.Packed.BGRA5551: return GDIFMT.Format16bppArgb1555;
@@ -57,7 +57,7 @@ namespace InteropBitmaps
             {
                 switch (fmt)
                 {
-                    case INTEROPFMT.Packed.GRAY8: // return GDIFMT.Format16bppGrayScale;                   
+                    case INTEROPFMT.Packed.Gray8: // return GDIFMT.Format16bppGrayScale;                   
 
                     case INTEROPFMT.Packed.RGB24: return GDIFMT.Format24bppRgb;
 
