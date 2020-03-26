@@ -9,8 +9,7 @@ namespace InteropBitmaps
     public enum ComponentFormat
     {
         // 0 bits
-        Empty = 0,
-        // DepthMillimetres, DepthCentimetres, DepthMetres
+        Empty = 0,        
 
         // 1 bit
         Undefined1, Alpha1,
@@ -28,7 +27,7 @@ namespace InteropBitmaps
         Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8, // PremulAlpha8
 
         // 16 bits
-        Undefined16, Index16, Gray16, DepthMM16,
+        Undefined16, Index16, Gray16, Red16, Green16, Blue16, DepthMM16,
 
         // 32 bits
         Undefined32, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
@@ -53,12 +52,7 @@ namespace InteropBitmaps
             private const uint B3 = 256 * 256 * 256;
 
             public const uint Empty = (uint)PEF.Empty;
-
-            public const uint X8 = B0 * (uint)PEF.Undefined8;
-            public const uint X16 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8;
-            public const uint X24 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8 | B2 * (uint)PEF.Undefined8;
-            public const uint X32 = B0 * (uint)PEF.Undefined8 | B1 * (uint)PEF.Undefined8 | B2 * (uint)PEF.Undefined8 | B3 * (uint)PEF.Undefined8;
-
+            
             public const uint Gray8 = B0 * (uint)PEF.Gray8;
             public const uint Alpha8 = B0 * (uint)PEF.Alpha8;
 
@@ -67,7 +61,6 @@ namespace InteropBitmaps
             public const uint BGRA4444 = B0 * (uint)PEF.Blue4 | B1 * (uint)PEF.Green4 | B2 * (uint)PEF.Red4 | B3 * (uint)PEF.Alpha4;
             public const uint BGRA5551 = B0 * (uint)PEF.Blue5 | B1 * (uint)PEF.Green5 | B2 * (uint)PEF.Red5 | B3 * (uint)PEF.Alpha1;
             public const uint DepthMM16 = B0 * (uint)PEF.DepthMM16;
-
 
             public const uint RGB24 = B0 * (uint)PEF.Red8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Blue8;
             public const uint BGR24 = B0 * (uint)PEF.Blue8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Red8;
@@ -289,6 +282,9 @@ namespace InteropBitmaps
 
                 case PEF.Index16:
                 case PEF.Gray16:
+                case PEF.Red16:
+                case PEF.Green16:
+                case PEF.Blue16:
                 case PEF.DepthMM16:
                 case PEF.Undefined16: return 16;
 

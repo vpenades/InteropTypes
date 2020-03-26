@@ -24,7 +24,7 @@ namespace InteropBitmaps
     }
 
 
-    public interface ISpanLock : IDisposable
+    public interface ISpanBitmapLock : IDisposable
     {
         BitmapInfo Info { get; }
         SpanBitmap Span { get; }

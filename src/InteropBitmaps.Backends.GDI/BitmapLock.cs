@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    sealed class BitmapLock : ISpanLock
+    sealed class BitmapLock : ISpanBitmapLock
     {
         #region lifecycle
 

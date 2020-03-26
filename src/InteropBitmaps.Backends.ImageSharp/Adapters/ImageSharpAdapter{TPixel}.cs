@@ -14,7 +14,7 @@ namespace InteropBitmaps.Adapters
     /// </summary>
     /// <typeparam name="TPixel"></typeparam>
     public readonly ref struct ImageSharpAdapter<TPixel>
-    where TPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
+    where TPixel : unmanaged, IPixel<TPixel>
     {
         #region constructor
 

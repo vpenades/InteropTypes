@@ -36,6 +36,8 @@ namespace InteropBitmaps
             if (fmt == System.Windows.Media.PixelFormats.Bgr32) return INTEROPFMT.Standard.BGRA32;
             if (fmt == System.Windows.Media.PixelFormats.Bgra32) return INTEROPFMT.Standard.BGRA32;
 
+            if (fmt == System.Windows.Media.PixelFormats.Pbgra32) return INTEROPFMT.Standard.BGRA32; // NOT RIGHT
+
 
             if (fmt == System.Windows.Media.PixelFormats.Rgba128Float) return INTEROPFMT.Standard.RGBA128F;
 
@@ -140,7 +142,7 @@ namespace InteropBitmaps
 
             var dst = new MemoryBitmap(binfo);
 
-            src.CopyPixels(dst.ToArray(), binfo.ScanlineSize, 0);
+            src.CopyPixels(dst.ToArray(), binfo.ScanlineByteSize, 0);
 
             return dst;
         }
@@ -154,6 +156,8 @@ namespace InteropBitmaps
 
             return dst;
         }
+
+        
 
         #endregion          
     }

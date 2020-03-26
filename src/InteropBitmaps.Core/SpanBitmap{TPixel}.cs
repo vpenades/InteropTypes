@@ -86,7 +86,7 @@ namespace InteropBitmaps
 
         public int Height => _Info.Height;
 
-        public int PixelSize => _Info.PixelSize;
+        public int PixelSize => _Info.PixelByteSize;
 
         public BitmapBounds bounds => _Info.Bounds;
 

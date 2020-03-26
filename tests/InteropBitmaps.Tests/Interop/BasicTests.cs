@@ -56,7 +56,7 @@ namespace InteropBitmaps.Interop
 
             var slice = img
                 .AsSpanBitmap()
-                .Slice((10, 10, img.Width - 20, img.Height - 20));
+                .Slice((10, 10, img.Width - 20, img.Height - 20)); // crop the source image with a 10 pixels margin
 
             // cast to OpenCV adapter to blur and find edges in the image.
 
@@ -70,8 +70,7 @@ namespace InteropBitmaps.Interop
             slice
                 .WithGDI()
                 .Draw
-                (dc =>
-                {
+                ( dc => {
                     var a = new System.Drawing.Point(5, 5);
                     var b = new System.Drawing.Point(50, 50);
                     var c = new System.Drawing.Point(5, 50);
@@ -82,34 +81,53 @@ namespace InteropBitmaps.Interop
                     dc.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c });
                     // draw text
                     dc.DrawString("Text drawn with GDI", f, System.Drawing.Brushes.Yellow, new System.Drawing.PointF(5, 60));
-                }
-                );
+                } );
 
-            // cast to SkiaSharp Adapter to draw primitives.
-
-            var skiaPaint = new SkiaSharp.SKPaint
-            {
-                TextSize = 64.0f,
-                IsAntialias = true,
-                Color = new SkiaSharp.SKColor(0, 0, 255),
-                Style = SkiaSharp.SKPaintStyle.Fill,
-                StrokeWidth = 20
-            };
+            // cast to SkiaSharp Adapter to draw primitives.            
 
             slice
                 .WithSkiaSharp()
                 .Draw
-                (canvas =>
-                {
+                ( canvas => {
                     var p0 = new SkiaSharp.SKPoint(5, 120);
-                    var p1 = new SkiaSharp.SKPoint(250, 120);                                   
+                    var p1 = new SkiaSharp.SKPoint(250, 120);
+
+                    using var skiaPaint = new SkiaSharp.SKPaint
+                    {
+                        TextSize = 64.0f, IsAntialias = true, StrokeWidth = 20,
+                        Color = new SkiaSharp.SKColor(0, 0, 255),
+                        Style = SkiaSharp.SKPaintStyle.Fill                        
+                    };
 
                     canvas.DrawLine(p0, p1, skiaPaint);
-                    canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), skiaPaint);
-                }
-                );
+                    canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), skiaPaint);                    
+                } );
 
-            skiaPaint.Dispose();
+            // cast to imagesharp Adapter to draw primitives
+
+            slice
+                .WithImageSharp()
+                .Mutate
+                ( ipc=> {
+
+                    ipc.FillPolygon(SixLabors.ImageSharp.Color.Green, (5, 250), (50, 250), (5, 300));
+
+                } );
+
+
+
+            // wpf
+
+            /* not working yet
+            slice
+                .WithWPF()
+                .Draw
+                (dc =>
+                {
+                    dc.DrawEllipse(System.Windows.Media.Brushes.Red, null, new System.Windows.Point(5, 5), 10, 10);
+                    dc.DrawEllipse(System.Windows.Media.Brushes.Blue, null, new System.Windows.Point(50, 50), 100, 100);
+                }
+                );*/
 
             // save the result back with ImageSharp
 

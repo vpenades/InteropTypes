@@ -60,8 +60,8 @@ namespace InteropBitmaps
 
         public int Width => _Info.Width;
         public int Height => _Info.Height;
-        public int PixelSize => _Info.PixelSize;
-        public int ScanlineSize => _Info.ScanlineSize;
+        public int PixelSize => _Info.PixelByteSize;
+        public int ScanlineSize => _Info.ScanlineByteSize;
 
         public PixelFormat PixelFormat => new PixelFormat(_Info.PixelFormat);
 

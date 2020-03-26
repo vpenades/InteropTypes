@@ -70,11 +70,11 @@ namespace InteropBitmaps
 
         public int Height => _Info.Height;
 
-        public int PixelSize => _Info.PixelSize;
+        public int PixelSize => _Info.PixelByteSize;
 
         public PixelFormat PixelFormat => new PixelFormat(_Info.PixelFormat);
 
-        public int ScanlineSize => _Info.ScanlineSize;
+        public int ScanlineSize => _Info.ScanlineByteSize;
 
         public BitmapBounds bounds => _Info.Bounds;
 

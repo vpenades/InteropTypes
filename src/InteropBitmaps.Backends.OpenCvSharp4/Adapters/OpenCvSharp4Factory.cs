@@ -16,7 +16,7 @@ namespace InteropBitmaps.Adapters
 
         public OpenCvSharp.Mat CreateMat()
         {
-            var mtype = OpenCvSharp.MatType.CV_8UC(_Info.PixelSize);
+            var mtype = OpenCvSharp.MatType.CV_8UC(_Info.PixelByteSize);
 
             return new OpenCvSharp.Mat(_Info.Height, _Info.Width, mtype);
         }

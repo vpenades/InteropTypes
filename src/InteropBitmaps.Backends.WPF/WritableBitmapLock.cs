@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InteropBitmaps
 {
-    sealed class WritableBitmapLock : ISpanLock
+    sealed class WritableBitmapLock : ISpanBitmapLock
     {
         #region lifecycle
 

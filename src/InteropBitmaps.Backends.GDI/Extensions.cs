@@ -54,7 +54,7 @@ namespace InteropBitmaps
 
         #region API        
 
-        public static ISpanLock LockSpanBitmap(this Bitmap bmp, bool readOnly = false)
+        public static ISpanBitmapLock LockSpanBitmap(this Bitmap bmp, bool readOnly = false)
         {
             return new BitmapLock(bmp, readOnly);
         }

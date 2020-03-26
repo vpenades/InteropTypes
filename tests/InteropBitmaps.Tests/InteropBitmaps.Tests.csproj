@@ -4,6 +4,7 @@
     <TargetFramework>net471</TargetFramework>
     <RootNamespace>InteropBitmaps</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>  
 
   <ItemGroup>
