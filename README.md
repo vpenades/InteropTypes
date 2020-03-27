@@ -4,7 +4,7 @@ An experimental, proof of concept, low level library to exchange bitmaps
 between imaging libraries.
 
 There's already a good number of great imaging libraries around, some
-of them are general purpose, while others have specific uses cases,
+of them are general purpose, while others solve specific problems,
 but certainly, there's no imaging library that fits all needs, so in
 many cases, developers are forced to use multiple imaging libraries
 concurrently.
@@ -14,17 +14,17 @@ GPU textures, or client bitmaps like GDI or WIC,
 that typically use unmanaged memory to store bitmaps, and forces
 developers to write cumbersome and sometimes dangerous code.
 
-Exchanging bitmaps between libraries is a challenge, and InteropBitmaps
+Exchanging bitmaps between libraries is a challenge, and __InteropBitmaps__
 is an attempt to solve this issue by providing a number of low level
-bitmap types that can be instantiated on existing memory:
+bitmap types that can be instantiated over existing memory:
 
 |Memory type|Bitmap type|
 |-|-|
-|IntPtr|PointerBitmap|
-|Span&lt;T&gt;|SpanBitmap and SpanBitmap&lt;T&gt;|
-|Memory&lt;T&gt;|MemoryBitmap and MemoryBitmap&lt;T&gt;|
+|`IntPtr`|`PointerBitmap`|
+|`Span<Byte>`|`SpanBitmap`, `SpanBitmap<TPixel>`|
+|`Memory<Byte>`|`MemoryBitmap`, `MemoryBitmap<TPixel>`|
 
-These types simply wrap previously existing memory, and provide mechanims
+These types simply wrap previously existing memory, and provide mechanisms
 to access bitmap data in a safer way.
 
 ### Backends
