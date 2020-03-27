@@ -49,12 +49,12 @@ namespace InteropBitmaps.Detectors
             }            
         }
 
-        public void FindLandmarks(SpanBitmap bitmap)
+        public IDictionary<FaceRecognitionDotNet.FacePart, IEnumerable<FaceRecognitionDotNet.Point>>[] FindLandmarks(SpanBitmap bitmap)
         {
             using (var img = _UseTempImage(bitmap))
             {
-                var locs = _Recognizer.FaceLocations(img);
-                var lnds = _Recognizer.FaceLandmark(img,locs).ToArray();               
+                return _Recognizer.FaceLandmark(img, null)
+                    .ToArray();
             }
         }
 
@@ -95,7 +95,7 @@ namespace InteropBitmaps.Detectors
 
             public FaceRecognitionDotNet.Image CreateClient()
             {
-                // TODO: check bitmap is continuous
+                // TODO: check if bitmap is continuous
 
                 if (_Bitmap.TryGetBuffer(out ArraySegment<Byte> buffer))
                 {

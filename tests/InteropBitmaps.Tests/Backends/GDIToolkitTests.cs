@@ -8,8 +8,8 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("Backends GDI")]
-    public class GDIToolkitTests
+    [Category("Backends")]
+    public class GDITests
     {
         [TestCase("Resources\\shannon.jpg")]
         [TestCase("Resources\\diagram.jpg")]
@@ -22,5 +22,7 @@ namespace InteropBitmaps.Backends
 
             bitmap.AttachToCurrentTest("Result.png");
         }
+
+        
     }
 }

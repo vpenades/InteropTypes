@@ -79,7 +79,7 @@ namespace InteropBitmaps
         {            
             _Data = Memory<Byte>.Empty;
             _Info = default;
-        }
+        }        
 
         public void SetPixels(int dstX, int dstY, SpanBitmap src)
         {

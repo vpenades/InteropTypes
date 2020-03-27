@@ -247,7 +247,7 @@ namespace InteropBitmaps
             return c / 8;
         }
 
-        private static int _GetBitLen(PEF pef)
+        internal static int _GetBitLen(PEF pef)
         {
             // an alternative to the switch is to have a lookup table
 
@@ -295,11 +295,11 @@ namespace InteropBitmaps
                 case PEF.Alpha32F:
                 case PEF.Undefined32: return 32;
 
-                default: throw new NotImplementedException();
+                default: throw new NotImplementedException($"Not implemented:{pef}");
             }
         }
 
-        private int _FindByteIndex(PEF pef)
+        private int _FindIndex(PEF pef)
         {
             if (Element0 == pef) return 0;
             if (Element1 == pef) return 1;
@@ -357,7 +357,7 @@ namespace InteropBitmaps
             for (int i = 0; i < byteIndices.Length; ++i)
             {
                 var c = dst.PixelFormat._GetComponentAt(i);
-                var idx = src.PixelFormat._FindByteIndex(c);
+                var idx = src.PixelFormat._FindIndex(c);
                 if (idx < 0) throw new ArgumentException(nameof(src));
                 byteIndices[i] = idx;
             }            

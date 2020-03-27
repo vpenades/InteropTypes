@@ -38,16 +38,16 @@ namespace InteropBitmaps.Adapters
         
         public MemoryBitmap ToResizedMemoryBitmap(int width, int height)
         {
-            return _Bitmap.PinReadableMemory<MemoryBitmap>(ptr => _Resize(width,height,ptr) );
+            return _Bitmap.PinReadableMemory(ptr => _Resize(ptr, width, height));
         }
 
-        private static MemoryBitmap _Resize(int width, int height, PointerBitmap ptr)
+        private static MemoryBitmap _Resize(PointerBitmap src, int width, int height)
         {
-            using (var src = _Implementation.WrapAsGDIBitmap(ptr))
+            using (var wsrc = _Implementation.WrapAsGDIBitmap(src))
             {
-                using (var dst = new Bitmap(src, new Size(width, height)))
+                using (var dst = new Bitmap(wsrc, width, height))
                 {
-                    return dst.ToMemoryBitmap(ptr.Info.PixelFormat);
+                    return dst.ToMemoryBitmap(src.Info.PixelFormat);
                 }
             }
         }

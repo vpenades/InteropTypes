@@ -10,8 +10,8 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("Detector Takeuchi")]
-    public class TakeuchiFaceRecognitionTests
+    [Category("Computer Vision")]
+    public class TakeuchiTests
     {
         [SetUp]
         public void SetUp()
@@ -31,14 +31,28 @@ namespace InteropBitmaps.Backends
                 using (var image = SixLabors.ImageSharp.Image.Load(filePath))
                 {
                     var swatch = System.Diagnostics.Stopwatch.StartNew();
+                    var bounds = faceRecog.FindFaces(image.AsSpanBitmap());
+                    TestContext.WriteLine($"{bounds.Count()} Faces detected in {swatch.ElapsedMilliseconds}ms");
 
-                    var result = faceRecog.FindFaces(image.AsSpanBitmap());
-
-                    TestContext.WriteLine($"{result.Count()} Faces detected in {swatch.ElapsedMilliseconds}ms");
-
-                    foreach(var r in result)
+                    foreach (var r in bounds)
                     {
                         image.Mutate(dc => dc.DrawPolygon(SixLabors.ImageSharp.Color.Red, 2, (r.Left, r.Top), (r.Right, r.Top), (r.Right, r.Bottom), (r.Left, r.Bottom)));
+                    }
+
+                    swatch.Restart();
+                    var features = faceRecog.FindLandmarks(image.AsSpanBitmap());
+                    TestContext.WriteLine($"{bounds.Count()} Features detected in {swatch.ElapsedMilliseconds}ms");
+
+                    foreach (var r in features)
+                    {
+                        foreach(var cluster in r)
+                        {
+                            var points = cluster.Value
+                                .Select(item => new SixLabors.Primitives.PointF(item.X, item.Y))
+                                .ToArray();
+
+                            image.Mutate(dc => dc.DrawLines(SixLabors.ImageSharp.Color.Blue, 2, points));
+                        }                        
                     }
 
                     image.AttachToCurrentTest("Result.png");

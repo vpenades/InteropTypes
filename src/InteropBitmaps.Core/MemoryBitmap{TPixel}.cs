@@ -43,12 +43,17 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region API
+        #region API        
 
         private Span<TPixel> UsePixelsScanline(int y)
         {
             var rowBytes = UseBytesScanline(y);
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(rowBytes);
+        }
+
+        public void SetPixels(TPixel value)
+        {
+            AsSpanBitmapOfType<TPixel>().SetPixels(value);
         }
 
         public TPixel GetPixel(int x, int y) { return UsePixelsScanline(y)[x]; }

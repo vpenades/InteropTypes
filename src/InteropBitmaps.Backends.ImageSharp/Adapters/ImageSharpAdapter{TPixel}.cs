@@ -18,8 +18,10 @@ namespace InteropBitmaps.Adapters
     {
         #region constructor
 
-        public ImageSharpAdapter(SpanBitmap<TPixel> bmp) { _Bitmap = bmp; }
+        public ImageSharpAdapter(SpanBitmap bmp) { _Bitmap = bmp.OfType<TPixel>(); }
 
+        public ImageSharpAdapter(SpanBitmap<TPixel> bmp) { _Bitmap = bmp; }
+        
         #endregion
 
         #region data
@@ -30,13 +32,13 @@ namespace InteropBitmaps.Adapters
 
         #region API
 
-        public Image<TPixel> CloneToImageSharp() { return _Implementation.CloneToImageSharp(_Bitmap); }
+        public Image<TPixel> CloneToImage() { return _Implementation.CloneToImageSharp(_Bitmap); }
 
         public void Mutate(Action<IImageProcessingContext> operation) { _Implementation.Mutate(_Bitmap, operation); }
 
         public MemoryBitmap<TPixel> Clone(Action<IImageProcessingContext> operation)
         {
-            using (var tmp = CloneToImageSharp())
+            using (var tmp = CloneToImage())
             {
                 tmp.Mutate(operation);
 
@@ -44,11 +46,13 @@ namespace InteropBitmaps.Adapters
             }
         }
 
-        public MemoryBitmap<TPixel> CloneResized(int width, int height) { return Clone(dc => dc.Resize(width, height)); }
+        public MemoryBitmap<TPixel> ToResizedMemoryBitmap(int width, int height) { return Clone(dc => dc.Resize(width, height)); }
+
+        public MemoryBitmap ToResizedMemoryBitmap(ResizeOptions options) { return Clone(dc => dc.Resize(options)); }
 
         public double CalculateBlurFactor()
         {
-            using (var img = CloneToImageSharp())
+            using (var img = CloneToImage())
             {
                 return img.EvaluateBlurFactor();
             }

@@ -18,9 +18,34 @@ namespace InteropBitmaps
 
 
         [Test]
-        public void PixelFormatEnumeration()
+        public void ComponentFormatEnumeration()
         {
             Assert.AreEqual(0, (int)ComponentFormat.Empty);
+
+            var values = Enum.GetValues(typeof(ComponentFormat))
+                .Cast<ComponentFormat>()
+                .ToArray();
+
+            foreach(var c in values)
+            {
+                var name = c.ToString();
+
+                var len = PixelFormat._GetBitLen(c);
+
+                if (c == ComponentFormat.Empty) Assert.AreEqual(0, len);
+                else Assert.Greater(len, 0);
+
+                if (name.EndsWith("1")) Assert.AreEqual(1, len);
+                if (name.EndsWith("4")) Assert.AreEqual(4, len);
+                if (name.EndsWith("5")) Assert.AreEqual(5, len);
+                if (name.EndsWith("8")) Assert.AreEqual(8, len);
+
+                if (name.EndsWith("16")) Assert.AreEqual(16, len);
+                else if (name.EndsWith("6")) Assert.AreEqual(6, len);
+
+                if (name.EndsWith("32")) Assert.AreEqual(32, len);
+                if (name.EndsWith("32F")) Assert.AreEqual(32, len);
+            }
 
             // todo: check the index of any "bit" group is less than the next group.
         }

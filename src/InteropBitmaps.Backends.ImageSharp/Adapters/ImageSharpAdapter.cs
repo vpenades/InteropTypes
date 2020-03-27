@@ -30,22 +30,43 @@ namespace InteropBitmaps.Adapters
 
         #region API
 
-        public Image CloneToImageSharp() { return _Implementation.CloneToImageSharp(_Bitmap); }
+        private ImageSharpAdapter<TPixel> OfType<TPixel>()
+            where TPixel : unmanaged, IPixel<TPixel>
+        { return new ImageSharpAdapter<TPixel>(_Bitmap); }
 
-        public Image<TPixel> CloneToImageSharp<TPixel>() where TPixel:unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
+
+        public Image CloneToImage() { return _Implementation.CloneToImageSharp(_Bitmap); }            
+
+        public Image<TPixel> CloneToImage<TPixel>() where TPixel:unmanaged, IPixel<TPixel>
         {
-            if (typeof(TPixel) != _ImageSharpPixelType) throw new ArgumentException(nameof(TPixel));
+            if (typeof(TPixel) == _ImageSharpPixelType) return _Implementation.CloneToImageSharp<TPixel>(_Bitmap);
 
-            return _Implementation.CloneToImageSharp<TPixel>(_Bitmap);
+            return _Implementation.CloneToImageSharp(_Bitmap).CloneAs<TPixel>();
         }        
 
         public double CalculateBlurFactor()
         {
-            using (var img = CloneToImageSharp())
+            using (var img = CloneToImage())
             {
                 return img.EvaluateBlurFactor();
             }
         }
+
+        public void Mutate(Action<IImageProcessingContext> operation) { _Implementation.Mutate(_Bitmap, operation); }
+
+        public MemoryBitmap Clone(Action<IImageProcessingContext> operation)
+        {
+            using (var tmp = CloneToImage())
+            {
+                tmp.Mutate(operation);
+
+                return tmp.AsSpanBitmap().ToMemoryBitmap();
+            }
+        }
+
+        public MemoryBitmap ToResizedMemoryBitmap(int width, int height) { return Clone(dc => dc.Resize(width, height)); }
+
+        public MemoryBitmap ToResizedMemoryBitmap(ResizeOptions options) { return Clone(dc => dc.Resize(options)); }
 
         #endregion
     }    

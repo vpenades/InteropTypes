@@ -8,8 +8,8 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("Backends ImageSharp")]
-    public class ImageSharpToolkitTests
+    [Category("Backends")]
+    public class ImageSharpTests
     {
         [SetUp]
         public void SetUp()

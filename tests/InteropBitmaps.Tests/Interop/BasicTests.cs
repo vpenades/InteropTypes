@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Interop
 {
-    [Category("Backends GDI")]
+    [Category("Backends")]
     public class BasicTests
     {
         [TestCase("Resources\\shannon.jpg")]        
@@ -113,8 +113,6 @@ namespace InteropBitmaps.Interop
                     ipc.FillPolygon(SixLabors.ImageSharp.Color.Green, (5, 250), (50, 250), (5, 300));
 
                 } );
-
-
 
             // wpf
 

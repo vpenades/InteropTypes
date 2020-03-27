@@ -75,5 +75,22 @@ namespace InteropBitmaps.Codecs
             Assert.AreEqual(512, img.Width);
             Assert.AreEqual(512, img.Height);
         }
+
+
+
+        [Test]
+        public void LoadWebpToImageSharp()
+        {
+            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.webp");
+
+            // load a bitmap with SkiaSharp, which is known to support WEBP.
+            var mem = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
+
+            // create an ImageSharp copy
+            var img = mem.WithImageSharp().CloneToImage();
+
+            // save imagesharp
+            img.AttachToCurrentTest("ImageSharp.png");
+        }
     }
 }

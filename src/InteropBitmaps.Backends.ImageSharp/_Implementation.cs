@@ -122,8 +122,10 @@ namespace InteropBitmaps
         {
             if (src == null) return default;
 
-            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());
             var pfmt = GetPixelFormat<TPixel>();
+
+            // We assume ImageSharp guarantees that memory is continuous.
+            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());            
 
             return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
         }
@@ -159,9 +161,8 @@ namespace InteropBitmaps
 
             return dst;
         }
-
-        public static void Mutate<TPixel>(SpanBitmap<TPixel> src, Action<IImageProcessingContext> operation)
-            where TPixel : unmanaged, IPixel<TPixel>
+        
+        public static void Mutate(SpanBitmap src, Action<IImageProcessingContext> operation)            
         {
             using (var tmp = CloneToImageSharp(src))
             {

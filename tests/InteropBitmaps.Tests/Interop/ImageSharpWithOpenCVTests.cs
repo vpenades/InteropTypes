@@ -10,7 +10,7 @@ using SixLabors.ImageSharp;
 
 namespace InteropBitmaps.Interop
 {
-    [Category("Bakends ImageSharp + OpenCV")]
+    [Category("Backends")]
     public class ImageSharpWithOpenCVTests
     {
         [TestCase("Resources\\shannon.jpg")]

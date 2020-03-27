@@ -163,10 +163,41 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region Bulk API        
+        #region Bulk API
 
-        public void SetPixels(int dstX, int dstY, SpanBitmap src) { _Implementation.CopyPixels(this, dstX, dstY, src); }        
+        /// <summary>
+        /// Fills all the pixels of this bitmap with <paramref name="value"/>.
+        /// </summary>
+        /// <typeparam name="TPixel">The pixel type. Must be compatible with <see cref="SpanBitmap.PixelFormat"/>.</typeparam>
+        /// <param name="value">The value to fill.</param>
+        public void SetPixels<TPixel>(TPixel value)
+            where TPixel : unmanaged
+        {
+            OfType<TPixel>().SetPixels(value);
+        }
 
+        /// <summary>
+        /// Blits the pixels of <paramref name="src"/> to this <see cref="SpanBitmap"/> at the <paramref name="dstX"/> and <paramref name="dstY"/> coordinates.
+        /// </summary>
+        /// <param name="dstX">The destination X position in this <see cref="SpanBitmap"/>.</param>
+        /// <param name="dstY">The destination Y position in this <see cref="SpanBitmap"/>.</param>
+        /// <param name="src">The source <see cref="SpanBitmap"/>.</param>
+        /// <remarks>
+        /// If possible, <paramref name="src"/> must have the same <see cref="PixelFormat"/> than this <see cref="SpanBitmap"/>.
+        /// If formats do not match, a few, commonly used pixel formats are supported for pixel conversion.
+        /// </remarks>
+        public void SetPixels(int dstX, int dstY, SpanBitmap src)
+        {
+            Guard.IsTrue("this", !_Writable.IsEmpty);
+
+            _Implementation.CopyPixels(this, dstX, dstY, src);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MemoryBitmap"/> copy from this <see cref="SpanBitmap"/>.
+        /// </summary>
+        /// <param name="fmtOverride">Format override.</param>
+        /// <returns>A new <see cref="MemoryBitmap"/>.</returns>
         public MemoryBitmap ToMemoryBitmap(PixelFormat? fmtOverride = null)
         {
             if (!fmtOverride.HasValue) return new MemoryBitmap(_Readable.ToArray(), _Info);

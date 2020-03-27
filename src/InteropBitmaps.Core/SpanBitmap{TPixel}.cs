@@ -136,8 +136,28 @@ namespace InteropBitmaps
 
         #region API - Bulk operations        
 
+        public void SetPixels(TPixel value)
+        {            
+            Guard.IsTrue("this", !_Writable.IsEmpty);
+
+            if (_Info.IsContinuous)
+            {
+                var dst = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(_Writable);
+                dst.Fill(value);
+                return;
+            }
+
+            for (int y = 0; y < _Info.Height; ++y)
+            {
+                var dst = UsePixelsScanline(y);
+                dst.Fill(value);
+            }
+        }
+
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src)
         {
+            Guard.IsTrue("this", !_Writable.IsEmpty);
+
             _Implementation.CopyPixels(this, dstX, dstY, src);
         }
 

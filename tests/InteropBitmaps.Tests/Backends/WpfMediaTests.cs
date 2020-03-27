@@ -8,8 +8,8 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("Backends WPF")]
-    public class WpfMediaTests
+    [Category("Backends")]
+    public class WPFTests
     {
         [SetUp]
         public void SetUp()

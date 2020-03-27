@@ -8,8 +8,8 @@ using NUnit.Framework;
 
 namespace InteropBitmaps.Backends
 {
-    [Category("Backends OpenCV")]
-    public class OpenCvSharp4ToolkitTests
+    [Category("Backends")]
+    public class OpenCvTests
     {
         [SetUp]
         public void SetUp()
