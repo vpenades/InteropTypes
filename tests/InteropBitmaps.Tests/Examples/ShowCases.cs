@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+
 using NUnit.Framework;
 
 namespace InteropBitmaps.Examples
@@ -32,6 +35,15 @@ namespace InteropBitmaps.Examples
             bmp
                 .WithGDI()
                 .Draw(dc => dc.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c }));
+
+
+            // try cast to ImageSharp and draw a polygon.
+            // notice that this operation will only work if
+            // MemoryBitmap's internal buffer is continuous.
+            using (var img = bmp.TryWrapAsImageSharp())
+            {
+                img.Mutate(ipc => ipc.DrawPolygon(SixLabors.ImageSharp.Color.Blue, 2, (50, 5), (50, 50), (5, 5)));
+            }                
 
             // Use Imagesharp to save to PNG
             bmp.AttachToCurrentTest("shannon.png");

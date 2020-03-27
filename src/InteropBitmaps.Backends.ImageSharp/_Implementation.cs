@@ -57,9 +57,45 @@ namespace InteropBitmaps
             }
         }
 
+        public static Image TryWrapImageSharp(this MemoryBitmap src)
+        {
+            var pixType = ToPixelFormat(src.PixelFormat);
+
+            if (pixType == typeof(Alpha8)) return TryWrapImageSharp<Alpha8>(src);
+            if (pixType == typeof(Gray8)) return TryWrapImageSharp<Gray8>(src);
+
+            if (pixType == typeof(Gray16)) return TryWrapImageSharp<Gray16>(src);
+            if (pixType == typeof(Bgr565)) return TryWrapImageSharp<Bgr565>(src);
+            if (pixType == typeof(Bgra5551)) return TryWrapImageSharp<Bgra5551>(src);
+            if (pixType == typeof(Bgra4444)) return TryWrapImageSharp<Bgra4444>(src);
+
+            if (pixType == typeof(Bgr24)) return TryWrapImageSharp<Bgr24>(src);
+            if (pixType == typeof(Rgb24)) return TryWrapImageSharp<Rgb24>(src);
+
+            if (pixType == typeof(Argb32)) return TryWrapImageSharp<Argb32>(src);
+            if (pixType == typeof(Bgra32)) return TryWrapImageSharp<Bgra32>(src);
+            if (pixType == typeof(Rgba32)) return TryWrapImageSharp<Rgba32>(src);
+
+            throw new NotImplementedException();
+        }
+
+
         #endregion
 
-        #region API        
+        #region API      
+
+        public static Image<TPixel> TryWrapImageSharp<TPixel>(this MemoryBitmap src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            if (!src.Info.IsContinuous) return null;
+
+            var pixType = ToPixelFormat(src.PixelFormat);
+            if (pixType != typeof(TPixel)) throw new ArgumentException(nameof(src.PixelFormat));
+
+            var memMngr = new Adapters.CastMemoryManager<Byte, TPixel>(src.Memory);
+
+            return Image<TPixel>.WrapMemory(memMngr, src.Width, src.Height);
+        }
 
         public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
         {

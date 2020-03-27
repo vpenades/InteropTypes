@@ -45,6 +45,21 @@ namespace InteropBitmaps
             return AsSpanBitmap(src).ToMemoryBitmap();
         }
 
-        #endregion        
+        #endregion
+
+        #region extras
+
+        public static Image<TPixel> TryWrapAsImageSharp<TPixel>(this MemoryBitmap<TPixel> src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            return _Implementation.TryWrapImageSharp<TPixel>(src);
+        }
+
+        public static Image TryWrapAsImageSharp(this MemoryBitmap src)            
+        {
+            return _Implementation.TryWrapImageSharp(src);
+        }        
+
+        #endregion
     }
 }

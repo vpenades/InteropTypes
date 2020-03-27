@@ -65,7 +65,7 @@ namespace InteropBitmaps
 
         public PixelFormat PixelFormat => new PixelFormat(_Info.PixelFormat);
 
-        protected BitmapInfo Info => _Info;
+        public BitmapInfo Info => _Info;
 
         public Memory<Byte> Memory => _Data;
 

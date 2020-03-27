@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 // https://github.com/dotnet/wpf/blob/master/src/Microsoft.DotNet.Wpf/src/PresentationCore/System/Windows/Media/Imaging/WriteableBitmap.cs    
 
 // SharpDX uses WIC directly:
-    http://sharpdx.org/wiki/class-library-api/wic/
-    https://docs.microsoft.com/es-es/windows/win32/wic/-wic-lh?redirectedfrom=MSDN
+// http://sharpdx.org/wiki/class-library-api/wic/
+// https://docs.microsoft.com/es-es/windows/win32/wic/-wic-lh?redirectedfrom=MSDN
 
 using WIC_WRITABLE = System.Windows.Media.Imaging.WriteableBitmap;
 using WIC_READABLE = System.Windows.Media.Imaging.BitmapSource;
