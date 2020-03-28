@@ -35,7 +35,7 @@ namespace InteropBitmaps.Codecs
             }
             catch(SixLabors.ImageSharp.UnknownImageFormatException)
             {
-                bitmap = null;
+                bitmap = default;
                 return false;
             }
         }

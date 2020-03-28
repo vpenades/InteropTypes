@@ -146,7 +146,7 @@ namespace InteropBitmaps
 
             var dst = new MemoryBitmap(binfo);
 
-            src.CopyPixels(dst.ToArray(), binfo.ScanlineByteSize, 0);
+            src.CopyPixels(dst.ToByteArray(), binfo.ScanlineByteSize, 0);
 
             return dst;
         }

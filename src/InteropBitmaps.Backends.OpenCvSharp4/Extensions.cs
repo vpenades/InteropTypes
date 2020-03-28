@@ -6,17 +6,22 @@ namespace InteropBitmaps
     {
         #region WithOpenCv
 
-        public static Adapters.OpenCvSharp4Adapter WithOpenCv(this MemoryBitmap bmp) { return new Adapters.OpenCvSharp4Adapter(bmp); }
+        public static Adapters.OpenCvSharp4SpanAdapter WithOpenCv(this MemoryBitmap bmp) { return new Adapters.OpenCvSharp4SpanAdapter(bmp); }
 
-        public static Adapters.OpenCvSharp4Adapter WithOpenCv(this SpanBitmap bmp) { return new Adapters.OpenCvSharp4Adapter(bmp); }
+        public static Adapters.OpenCvSharp4SpanAdapter WithOpenCv(this SpanBitmap bmp) { return new Adapters.OpenCvSharp4SpanAdapter(bmp); }
 
-        public static Adapters.OpenCvSharp4Adapter WithOpenCv<TPixel>(this SpanBitmap<TPixel> bmp)
+        public static Adapters.OpenCvSharp4SpanAdapter WithOpenCv<TPixel>(this SpanBitmap<TPixel> bmp)
             where TPixel : unmanaged
-        { return new Adapters.OpenCvSharp4Adapter(bmp.AsSpanBitmap()); }
+        { return new Adapters.OpenCvSharp4SpanAdapter(bmp.AsSpanBitmap()); }
 
-        public static Adapters.OpenCvSharp4Adapter WithOpenCv<TPixel>(this MemoryBitmap<TPixel> bmp)
+        public static Adapters.OpenCvSharp4SpanAdapter WithOpenCv<TPixel>(this MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged
-        { return new Adapters.OpenCvSharp4Adapter(bmp.AsSpanBitmap()); }
+        { return new Adapters.OpenCvSharp4SpanAdapter(bmp.AsSpanBitmap()); }
+
+        public static Adapters.OpenCvSharp4MemoryAdapter UsingOpenCv(this MemoryBitmap bmp)
+        {
+            return new Adapters.OpenCvSharp4MemoryAdapter(bmp);
+        }
 
         #endregion
 

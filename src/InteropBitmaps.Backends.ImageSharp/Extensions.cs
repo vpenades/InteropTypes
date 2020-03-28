@@ -12,17 +12,17 @@ namespace InteropBitmaps
 
         public static Adapters.ImageSharpFactory WithImageSharp(this BitmapInfo binfo) { return new Adapters.ImageSharpFactory(binfo); }
 
-        public static Adapters.ImageSharpAdapter WithImageSharp(this SpanBitmap bitmap) { return new Adapters.ImageSharpAdapter(bitmap); }
+        public static Adapters.ImageSharpSpanAdapter WithImageSharp(this SpanBitmap bitmap) { return new Adapters.ImageSharpSpanAdapter(bitmap); }        
 
-        public static Adapters.ImageSharpAdapter WithImageSharp(this MemoryBitmap bitmap) { return new Adapters.ImageSharpAdapter(bitmap.AsSpanBitmap()); }
-
-        public static Adapters.ImageSharpAdapter<TPixel> WithImageSharp<TPixel>(this SpanBitmap<TPixel> bitmap)
+        public static Adapters.ImageSharpSpanAdapter<TPixel> WithImageSharp<TPixel>(this SpanBitmap<TPixel> bitmap)
             where TPixel : unmanaged, IPixel<TPixel>
-        { return new Adapters.ImageSharpAdapter<TPixel>(bitmap); }
+        { return new Adapters.ImageSharpSpanAdapter<TPixel>(bitmap); }        
 
-        public static Adapters.ImageSharpAdapter<TPixel> WithImageSharp<TPixel>(this MemoryBitmap<TPixel> bitmap)
+        public static Adapters.ImageSharpMemoryAdapter UsingImageSharp(this MemoryBitmap bmp) { return new Adapters.ImageSharpMemoryAdapter(bmp); }
+
+        public static Adapters.ImageSharpMemoryAdapter<TPixel> UsingImageSharp<TPixel>(this MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged, IPixel<TPixel>
-        { return new Adapters.ImageSharpAdapter<TPixel>(bitmap); }
+        { return new Adapters.ImageSharpMemoryAdapter<TPixel>(bmp); }
 
         #endregion
 

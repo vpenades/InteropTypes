@@ -11,12 +11,9 @@ namespace InteropBitmaps
     /// Known Derived classes: <see cref="MemoryBitmap{TPixel}"/>
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("Bitmap[{Width},{Height}]")]
-    public class MemoryBitmap
+    public readonly struct MemoryBitmap
     {
-        #region lifecycle
-
-        public static implicit operator SpanBitmap(MemoryBitmap bmp) { return bmp.AsSpanBitmap(); }
-
+        #region lifecycle        
         public MemoryBitmap(in BitmapInfo info)
             : this(new byte[info.BitmapByteSize], info)
         {            
@@ -30,7 +27,7 @@ namespace InteropBitmaps
 
         public MemoryBitmap(Memory<Byte> data, in BitmapInfo info)
         {
-            _Info = info;            
+            _Info = info;
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
@@ -51,70 +48,67 @@ namespace InteropBitmaps
 
         #region data
         
-        private Memory<Byte> _Data;        
-        private BitmapInfo _Info;
+        private readonly Memory<Byte> _Data;        
+        private readonly BitmapInfo _Info;
 
         #endregion
 
         #region properties
+        public BitmapInfo Info => _Info;
+        public Memory<Byte> Memory => _Data;
 
+        public bool IsEmpty => _Info.IsEmpty;
         public int Width => _Info.Width;
         public int Height => _Info.Height;
         public int PixelSize => _Info.PixelByteSize;
         public int ScanlineSize => _Info.ScanlineByteSize;
-
-        public PixelFormat PixelFormat => new PixelFormat(_Info.PixelFormat);
-
-        public BitmapInfo Info => _Info;
-
-        public Memory<Byte> Memory => _Data;
-
-        public SpanBitmap Span => new SpanBitmap(_Data.Span, _Info);
+        public PixelFormat PixelFormat => _Info.PixelFormat;
 
         #endregion
 
-        #region API
+        #region API - Buffers
 
-        protected void DisposeBuffers()
-        {            
-            _Data = Memory<Byte>.Empty;
-            _Info = default;
-        }        
+        public Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged { return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory; }
 
-        public void SetPixels(int dstX, int dstY, SpanBitmap src)
-        {
-            AsSpanBitmap().SetPixels(dstX, dstY, src);
-        }
-        
         public Span<byte> UseBytesScanline(int y) { return _Info.UseScanline(_Data.Span, y); }
-
-        public SpanBitmap AsSpanBitmap() { return new SpanBitmap(_Data.Span, _Info); }
-        
-        public unsafe SpanBitmap<TPixel> AsSpanBitmapOfType<TPixel>()
-            where TPixel : unmanaged
-        { return new SpanBitmap<TPixel>(_Data.Span, _Info); }
-
-        public unsafe MemoryBitmap<TPixel> OfType<TPixel>()
-            where TPixel : unmanaged
-        { return new MemoryBitmap<TPixel>(_Data, _Info); }        
-
-        public Memory<T> MemoryOfType<T>()
-            where T:unmanaged
-        { return new MemoryManagers.CastMemoryManager<Byte, T>(_Data).Memory; }
-
 
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);
-        }
+        }        
 
-        public Byte[] ToArray()
+        public Byte[] ToByteArray()
         {
             if (TryGetBuffer(out ArraySegment<Byte> array) && array.Offset == 0 && array.Array.Length == _Info.BitmapByteSize) return array.Array;
-            
-            return _Data.ToArray();            
+
+            return _Data.ToArray();
         }
 
+        #endregion
+
+        #region API - Cast
+
+        public static implicit operator SpanBitmap(MemoryBitmap bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
+
+        public SpanBitmap AsSpanBitmap() { return this; }        
+
+        public unsafe MemoryBitmap<TPixel> OfType<TPixel>()
+            where TPixel : unmanaged
+        { return new MemoryBitmap<TPixel>(_Data, _Info); }
+
+        #endregion
+
+        #region API - Pixel Ops
+        
+        public void SetPixels(int dstX, int dstY, SpanBitmap src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }        
+
+        public MemoryBitmap Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = _Info.Slice(rect);
+            var memory = this._Data.Slice(offset, info.BitmapByteSize);
+            return new MemoryBitmap(memory, info);
+        }
+        
         #endregion
 
         #region CODECS IO

@@ -21,7 +21,7 @@ namespace InteropBitmaps.Codecs
         #region API
         public bool TryRead(System.IO.Stream s, out MemoryBitmap bitmap)
         {
-            bitmap = null;
+            bitmap = default;
 
             try
             {

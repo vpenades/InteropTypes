@@ -57,7 +57,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static Image TryWrapImageSharp(this MemoryBitmap src)
+        public static Image TryWrapImageSharp(MemoryBitmap src)
         {
             var pixType = ToPixelFormat(src.PixelFormat);
 
@@ -87,6 +87,7 @@ namespace InteropBitmaps
         public static Image<TPixel> TryWrapImageSharp<TPixel>(this MemoryBitmap src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
+            // ImageSharp does not support non-continuous pixel rows.
             if (!src.Info.IsContinuous) return null;
 
             var pixType = ToPixelFormat(src.PixelFormat);

@@ -38,9 +38,20 @@ namespace InteropBitmaps
             SixLabors.ImageSharp.ImageExtensions.Save(image, filePath);
 
             NUnit.Framework.TestContext.AddTestAttachment(filePath);
-        }        
+        }
 
         public static void AttachToCurrentTest(this MemoryBitmap bmp, string filePath)
+        {
+            bmp.AsSpanBitmap().AttachToCurrentTest(filePath);
+        }
+
+        public static void AttachToCurrentTest<TPixel>(this MemoryBitmap<TPixel> bmp, string filePath)
+            where TPixel:unmanaged
+        {
+            bmp.AsSpanBitmap().AsSpanBitmap().AttachToCurrentTest(filePath);
+        }
+
+        public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath)
         {
             filePath = NUnit.Framework.TestContext.CurrentContext.GetTestResultPath(filePath);
 

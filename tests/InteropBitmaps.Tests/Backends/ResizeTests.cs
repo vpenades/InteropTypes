@@ -16,7 +16,9 @@ namespace InteropBitmaps.Backends
         {
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
 
-            var bitmap = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
+            var bitmap = MemoryBitmap
+                .Load(filePath, Codecs.SkiaCodec.Default)
+                .AsSpanBitmap();
 
             bitmap
                 .WithGDI()

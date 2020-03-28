@@ -65,6 +65,8 @@ namespace InteropBitmaps
 
         #region properties
 
+        public bool IsEmpty => (Width * Height * PixelByteSize) == 0;
+
         // under some circunstances, the last stride of the last row must not be accounted for.
         public int BitmapByteSize => Height == 0 ? 0 : ScanlineByteSize * (Height - 1) + PixelByteSize * Width;
 

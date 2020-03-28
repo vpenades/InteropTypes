@@ -12,17 +12,19 @@ namespace InteropBitmaps
 
         public static Adapters.GDIFactory WithGDI(this BitmapInfo binfo) { return new Adapters.GDIFactory(binfo); }
 
-        public static Adapters.GDIAdapter WithGDI(this SpanBitmap bmp) { return new Adapters.GDIAdapter(bmp); }
+        public static Adapters.GDISpanAdapter WithGDI(this SpanBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }
 
-        public static Adapters.GDIAdapter WithGDI(this MemoryBitmap bmp) { return new Adapters.GDIAdapter(bmp); }
+        public static Adapters.GDISpanAdapter WithGDI(this MemoryBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }
 
-        public static Adapters.GDIAdapter WithGDI<TPixel>(this SpanBitmap<TPixel> bmp)
+        public static Adapters.GDISpanAdapter WithGDI<TPixel>(this SpanBitmap<TPixel> bmp)
             where TPixel : unmanaged
-        { return new Adapters.GDIAdapter(bmp.AsSpanBitmap()); }
+        { return new Adapters.GDISpanAdapter(bmp.AsSpanBitmap()); }
 
-        public static Adapters.GDIAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp)
+        public static Adapters.GDISpanAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged
-        { return new Adapters.GDIAdapter(bmp.AsSpanBitmap()); }        
+        { return new Adapters.GDISpanAdapter(bmp.AsSpanBitmap()); }
+
+        public static Adapters.GDIMemoryAdapter UsingGDI(this MemoryBitmap bmp) { return new Adapters.GDIMemoryAdapter(bmp); }
 
         #endregion
 

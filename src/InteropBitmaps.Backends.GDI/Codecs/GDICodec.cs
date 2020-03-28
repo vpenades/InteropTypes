@@ -33,7 +33,7 @@ namespace InteropBitmaps.Codecs
             }
             catch(System.ArgumentException)
             {
-                bitmap = null;
+                bitmap = default;
                 return false;
             }
         }

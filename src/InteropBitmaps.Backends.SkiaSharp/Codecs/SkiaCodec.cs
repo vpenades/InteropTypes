@@ -25,7 +25,7 @@ namespace InteropBitmaps.Codecs
 
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
-            bitmap = null;
+            bitmap = default;
 
             /*
             using (var skc = SkiaSharp.SKCodec.Create(s))

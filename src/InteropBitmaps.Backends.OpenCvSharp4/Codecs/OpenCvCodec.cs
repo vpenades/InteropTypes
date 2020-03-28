@@ -22,7 +22,7 @@ namespace InteropBitmaps.Codecs
 
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
-            bitmap = null;
+            bitmap = default;
 
             using(var mat = OpenCvSharp.Mat.FromStream(s, OpenCvSharp.ImreadModes.AnyColor))
             {

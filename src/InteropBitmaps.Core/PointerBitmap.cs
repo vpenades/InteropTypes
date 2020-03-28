@@ -15,6 +15,13 @@ namespace InteropBitmaps
     {
         #region constructors        
 
+        public unsafe PointerBitmap(System.Buffers.MemoryHandle ptr, BitmapInfo info, bool isReadOnly = false)
+        {
+            _Pointer = new IntPtr(ptr.Pointer);
+            _Info = info;
+            _IsReadOnly = isReadOnly;
+        }
+
         public PointerBitmap(IntPtr ptr, BitmapInfo info, bool isReadOnly = false)
         {
             _Pointer = ptr;
@@ -57,6 +64,15 @@ namespace InteropBitmaps
         #endregion
 
         #region API
+
+        public PointerBitmap Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = Info.Slice(rect);
+
+            var ptr = IntPtr.Add(this.Pointer, offset);
+
+            return new PointerBitmap(ptr, info);
+        }
 
         /// <summary>
         /// Casts this <see cref="PointerBitmap"/> to a <see cref="SpanBitmap{TPixel}"/>.

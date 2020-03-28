@@ -4,11 +4,11 @@ using System.Text;
 
 namespace InteropBitmaps.Adapters
 {
-    public readonly ref struct SkiaAdapter
+    public readonly ref struct SkiaSpanAdapter
     {
         #region constructor
 
-        public SkiaAdapter(SpanBitmap bmp) { _Bitmap = bmp; }
+        public SkiaSpanAdapter(SpanBitmap bmp) { _Bitmap = bmp; }
 
         #endregion
 

@@ -75,7 +75,7 @@ namespace InteropBitmaps.Detectors
 
             public void Update(SpanBitmap src)
             {
-                if (_Bitmap == null || _Bitmap.Width != src.Width || _Bitmap.Height != src.Height)
+                if (_Bitmap.IsEmpty || _Bitmap.Width != src.Width || _Bitmap.Height != src.Height)
                 {
                     _Bitmap = new MemoryBitmap(src.Width, src.Height, PixelFormat.Standard.RGB24);
                 }

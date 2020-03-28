@@ -86,11 +86,10 @@ namespace InteropBitmaps.Codecs
             // load a bitmap with SkiaSharp, which is known to support WEBP.
             var mem = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
 
-            // create an ImageSharp copy
-            var img = mem.WithImageSharp().CloneToImage();
-
-            // save imagesharp
-            img.AttachToCurrentTest("ImageSharp.png");
+            using(var proxy = mem.UsingImageSharp())
+            {
+                proxy.Image.AttachToCurrentTest("ImageSharp.png");
+            }            
         }
     }
 }

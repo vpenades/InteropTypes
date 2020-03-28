@@ -23,30 +23,82 @@ namespace InteropBitmaps.Examples
             var bmp = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
 
             // Use OpenCV to resize the image:
+            /*
             bmp = bmp
                 .WithOpenCv()
-                .ToResizedMemoryBitmap(55, 55, OpenCvSharp.InterpolationFlags.Lanczos4);
+                .ToResizedMemoryBitmap(50, 50, OpenCvSharp.InterpolationFlags.Lanczos4);
+                */
 
-            // Use GDI to draw a triangle:
-            var a = new System.Drawing.Point(5, 5);
-            var b = new System.Drawing.Point(50, 50);
-            var c = new System.Drawing.Point(5, 50);
-
-            bmp
-                .WithGDI()
-                .Draw(dc => dc.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c }));
-
-
-            // try cast to ImageSharp and draw a polygon.
-            // notice that this operation will only work if
-            // MemoryBitmap's internal buffer is continuous.
-            using (var img = bmp.TryWrapAsImageSharp())
+            using (var proxy = bmp.UsingOpenCv())
             {
-                img.Mutate(ipc => ipc.DrawPolygon(SixLabors.ImageSharp.Color.Blue, 2, (50, 5), (50, 50), (5, 5)));
-            }                
+                proxy.Mat.Circle(new OpenCvSharp.Point(150, 150), 35, OpenCvSharp.Scalar.Red, 10);
+
+                // proxy.Mat.Blur(new OpenCvSharp.Size(4, 4));
+                // OpenCvSharp.Cv2.Blur(proxy.Mat, proxy.Mat, new OpenCvSharp.Size(4, 4));                
+            }            
+
+            using (var proxy = bmp.UsingGDI())
+            {
+                // Use GDI to draw a triangle:
+                var a = new System.Drawing.Point(5, 5);
+                var b = new System.Drawing.Point(50, 50);
+                var c = new System.Drawing.Point(5, 50);
+
+                proxy.Canvas.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c });
+            }
+
+            using(var proxy = bmp.UsingImageSharp())
+            {
+                proxy.Image.Mutate(ipc => ipc.DrawPolygon(SixLabors.ImageSharp.Color.Blue, 2, (50, 5), (50, 50), (5, 5)));
+            }
+
+            using(var proxy = bmp.UsingSkiaSharp())
+            {
+                var p0 = new SkiaSharp.SKPoint(5, 25);
+                var p1 = new SkiaSharp.SKPoint(45, 25);
+
+                using var skiaPaint = new SkiaSharp.SKPaint
+                {
+                    TextSize = 64.0f,
+                    IsAntialias = true,
+                    StrokeWidth = 20,
+                    Color = new SkiaSharp.SKColor(0, 255, 0),
+                    Style = SkiaSharp.SKPaintStyle.Fill
+                };
+
+                proxy.Canvas.DrawLine(p0, p1, skiaPaint);
+                proxy.Canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), skiaPaint);
+            }
 
             // Use Imagesharp to save to PNG
             bmp.AttachToCurrentTest("shannon.png");
+        }
+
+        [Test]
+        public void Example2()
+        {
+            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.webp");
+
+            // Use SkiaSharp to load a WEBP image:
+            var bmp = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
+            
+            // Use OpenCV to resize the image:
+            var span = bmp
+                .WithOpenCv()
+                .ToResizedMemoryBitmap(50, 50, OpenCvSharp.InterpolationFlags.Lanczos4)
+                .AsSpanBitmap();
+
+            // Use GDI to draw a triangle:
+            var a = new System.Drawing.Point(5, 5);
+            var b = new System.Drawing.Point(45, 45);
+            var c = new System.Drawing.Point(5, 45);
+
+            span
+                .WithGDI()
+                .Draw(dc => dc.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c }));            
+
+            // Use Imagesharp to save to PNG
+            span.AttachToCurrentTest("shannon.png");
         }
     }
 }
