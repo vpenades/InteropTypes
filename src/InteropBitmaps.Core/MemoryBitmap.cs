@@ -5,19 +5,14 @@ using System.Text;
 namespace InteropBitmaps
 {
     /// <summary>
-    /// Defines a Bitmap in managed memory
-    /// </summary>
-    /// <remarks>
-    /// Known Derived classes: <see cref="MemoryBitmap{TPixel}"/>
-    /// </remarks>
-    [System.Diagnostics.DebuggerDisplay("Bitmap[{Width},{Height}]")]
+    /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
+    /// </summary>    
+    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
     public readonly struct MemoryBitmap
     {
         #region lifecycle        
         public MemoryBitmap(in BitmapInfo info)
-            : this(new byte[info.BitmapByteSize], info)
-        {            
-        }
+            : this(new byte[info.BitmapByteSize], info) { }
 
         public MemoryBitmap(Byte[] array, in BitmapInfo info)
         {
@@ -47,9 +42,9 @@ namespace InteropBitmaps
         #endregion
 
         #region data
-        
-        private readonly Memory<Byte> _Data;        
+
         private readonly BitmapInfo _Info;
+        private readonly Memory<Byte> _Data;
 
         #endregion
 
@@ -90,7 +85,7 @@ namespace InteropBitmaps
 
         public static implicit operator SpanBitmap(MemoryBitmap bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
 
-        public SpanBitmap AsSpanBitmap() { return this; }        
+        public SpanBitmap AsSpanBitmap() { return this; }
 
         public unsafe MemoryBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged
@@ -111,7 +106,7 @@ namespace InteropBitmaps
         
         #endregion
 
-        #region CODECS IO
+        #region API - IO
 
         public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoding[] factory)
         {

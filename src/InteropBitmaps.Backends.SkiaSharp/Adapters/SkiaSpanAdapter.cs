@@ -22,7 +22,7 @@ namespace InteropBitmaps.Adapters
 
         public void Draw(Action<SkiaSharp.SKCanvas> onDraw)
         {
-            _Bitmap.PinWritableMemory(ptr => _OnDraw(ptr, onDraw));
+            _Bitmap.PinWritablePointer(ptr => _OnDraw(ptr, onDraw));
             
         }
 

@@ -39,7 +39,7 @@ namespace InteropBitmaps.Adapters
 
         #region data        
 
-        private MemoryBitmap<TPixel> _SourceBitmap;
+        private MemoryBitmap _SourceBitmap;
         private SixLabors.ImageSharp.Image<TPixel> _ProxyImage;
 
         #endregion

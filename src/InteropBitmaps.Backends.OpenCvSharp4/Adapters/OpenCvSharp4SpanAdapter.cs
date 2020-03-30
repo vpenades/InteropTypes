@@ -27,7 +27,7 @@ namespace InteropBitmaps.Adapters
 
         public unsafe void Apply(Func<Mat, Mat> context)
         {
-            _Bitmap.PinWritableMemory(bmp => _Apply(bmp, context));
+            _Bitmap.PinWritablePointer(bmp => _Apply(bmp, context));
         }        
 
         private static unsafe void _Apply(PointerBitmap bmp, Func<Mat, Mat> operation)
@@ -63,7 +63,7 @@ namespace InteropBitmaps.Adapters
 
         public MemoryBitmap ToResizedMemoryBitmap(int width, int height, InterpolationFlags flags = InterpolationFlags.Linear)
         {
-            return _Bitmap.PinReadableMemory(ptr => _Resize(ptr, width, height, flags));
+            return _Bitmap.PinReadablePointer(ptr => _Resize(ptr, width, height, flags));
         }
 
         private static MemoryBitmap _Resize(PointerBitmap src, int width, int height, InterpolationFlags flags)

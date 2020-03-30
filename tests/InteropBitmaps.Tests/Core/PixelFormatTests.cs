@@ -16,6 +16,11 @@ namespace InteropBitmaps
         private static readonly ComponentFormat[] _Bits5 = new[] { ComponentFormat.Red5, ComponentFormat.Green5, ComponentFormat.Blue5, ComponentFormat.Undefined5 };
         private static readonly ComponentFormat[] _Bits6 = new[] { ComponentFormat.Green6, ComponentFormat.Undefined6 };
 
+        [Test]
+        public void TestPixelFormatStructure()
+        {
+            Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat)));
+        }
 
         [Test]
         public void ComponentFormatEnumeration()

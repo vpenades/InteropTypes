@@ -12,19 +12,24 @@ namespace InteropBitmaps
 
         public static Adapters.GDIFactory WithGDI(this BitmapInfo binfo) { return new Adapters.GDIFactory(binfo); }
 
-        public static Adapters.GDISpanAdapter WithGDI(this SpanBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }
+        public static Adapters.GDISpanAdapter WithGDI(this SpanBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }        
 
-        public static Adapters.GDISpanAdapter WithGDI(this MemoryBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }
-
-        public static Adapters.GDISpanAdapter WithGDI<TPixel>(this SpanBitmap<TPixel> bmp)
-            where TPixel : unmanaged
+        public static Adapters.GDISpanAdapter WithGDI<TPixel>(this SpanBitmap<TPixel> bmp) where TPixel : unmanaged
         { return new Adapters.GDISpanAdapter(bmp.AsSpanBitmap()); }
-
-        public static Adapters.GDISpanAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp)
-            where TPixel : unmanaged
-        { return new Adapters.GDISpanAdapter(bmp.AsSpanBitmap()); }
-
+        
         public static Adapters.GDIMemoryAdapter UsingGDI(this MemoryBitmap bmp) { return new Adapters.GDIMemoryAdapter(bmp); }
+
+        public static Adapters.GDIMemoryAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp) where TPixel : unmanaged
+        { return new Adapters.GDIMemoryAdapter(bmp); }
+
+        #endregion
+
+        #region As MemoryBitmap
+
+        public static IMemoryBitmapOwner UsingMemoryBitmap(this Bitmap bmp)
+        {
+            return new Adapters.GDIMemoryManager(bmp);
+        }
 
         #endregion
 
@@ -43,23 +48,18 @@ namespace InteropBitmaps
 
         public static SpanBitmap AsSpanBitmap(this GDIPTR data)
         {
-            return data.AsPointerBitmap().Bitmap;
+            return data.AsPointerBitmap();
         }
 
         public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this GDIPTR data)
             where TPixel: unmanaged
         {
-            return data.AsPointerBitmap().OfType<TPixel>();
+            return data.AsPointerBitmap().AsSPanBitmapOfType<TPixel>();
         }
 
         #endregion        
 
-        #region API        
-
-        public static ISpanBitmapLock LockSpanBitmap(this Bitmap bmp, bool readOnly = false)
-        {
-            return new BitmapLock(bmp, readOnly);
-        }
+        #region API
         
         public static void Mutate(this Bitmap bmp, Action<PointerBitmap> action)
         {

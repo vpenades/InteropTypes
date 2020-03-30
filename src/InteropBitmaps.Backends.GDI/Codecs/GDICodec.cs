@@ -62,7 +62,7 @@ namespace InteropBitmaps.Codecs
                     }
                 }
 
-                bmp.PinReadableMemory(_doSave);
+                bmp.PinReadablePointer(_doSave);
             }           
 
             return true;

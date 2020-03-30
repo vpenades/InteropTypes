@@ -34,12 +34,36 @@ namespace InteropBitmaps
     }
 
     // TODO: Rename to PixelEncoding
-    [System.Diagnostics.DebuggerDisplay("{Element0}-{Element1}-{Element2}-{Element3}")]
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplay(),nq}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
     public readonly struct PixelFormat : IEquatable<PixelFormat>
     {
+        #region debug
+
+        internal string _GetDebuggerDisplay()
+        {
+            switch(this.PackedFormat)
+            {
+                case Packed.Alpha8:return "A8";
+
+                case Packed.Gray8: return "Gray8";
+                case Packed.Gray16: return "Gray16";
+
+                case Packed.RGB24: return "RGB24";
+                case Packed.BGR24: return "BGR24";
+
+                case Packed.ARGB32:return "ARGB32";
+                case Packed.RGBA32: return "RGBA32";
+                case Packed.BGRA32: return "BGRA32";
+            }
+
+            return $"{Element0}-{Element1}-{Element2}-{Element3}";
+        }
+
+        #endregion
+
         #region constants
-        
+
         /// <summary>
         /// Predefined pixel formats encoded as const UInt32 values,
         /// which makes them suitable for switch blocks.
@@ -323,6 +347,21 @@ namespace InteropBitmaps
         #endregion
 
         #region static
+
+        public static bool IsUndefined(PEF pef)
+        {
+            switch (pef)
+            {
+                case PEF.Undefined1: return true;
+                case PEF.Undefined4: return true;
+                case PEF.Undefined5: return true;
+                case PEF.Undefined6: return true;
+                case PEF.Undefined8: return true;
+                case PEF.Undefined16: return true;
+                case PEF.Undefined32: return true;
+                default: return false;
+            }
+        }
 
         public static bool IsAlpha(PEF pef)
         {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    [System.Diagnostics.DebuggerDisplay("{Width}x{Height}-{PixelFormat}")]
+    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
     public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
         #region lifecycle        

@@ -5,9 +5,9 @@ using System.Text;
 namespace InteropBitmaps
 {
     /// <summary>
-    /// Defines a Bitmap in managed memory
+    /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Bitmap[{Width},{Height}]")]
+    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
     public readonly struct MemoryBitmap<TPixel> : IBitmap<TPixel> where TPixel : unmanaged
     {
         #region lifecycle
@@ -48,8 +48,8 @@ namespace InteropBitmaps
 
         #region data
 
-        private readonly Memory<Byte> _Data;
         private readonly BitmapInfo _Info;
+        private readonly Memory<Byte> _Data;        
 
         #endregion
 
@@ -134,18 +134,16 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region CODECS IO
+        #region API - IO
 
         public static MemoryBitmap<TPixel> Read(System.IO.Stream s, params Codecs.IBitmapDecoding[] factory)
         {
-            var bmp = MemoryBitmap.Read(s, factory);
-            return new MemoryBitmap<TPixel>(bmp.Memory, bmp.Info);
+            return MemoryBitmap.Read(s, factory).OfType<TPixel>();
         }
 
         public static MemoryBitmap<TPixel> Load(string filePath, params Codecs.IBitmapDecoding[] factory)
         {
-            var bmp = MemoryBitmap.Load(filePath, factory);
-            return new MemoryBitmap<TPixel>(bmp.Memory, bmp.Info);
+            return MemoryBitmap.Load(filePath, factory).OfType<TPixel>();
         }
 
         public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)

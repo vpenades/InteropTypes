@@ -49,7 +49,7 @@ namespace InteropBitmaps.Adapters
 
             var fmt = _Exact;            
 
-            _Bitmap.PinWritableMemory(ptr => _Draw(ptr, fmt, onDraw));
+            _Bitmap.PinWritablePointer(ptr => _Draw(ptr, fmt, onDraw));
         }
 
         private static void _Draw(PointerBitmap ptr, System.Windows.Media.PixelFormat fmt, Action<System.Windows.Media.DrawingContext> onDraw)

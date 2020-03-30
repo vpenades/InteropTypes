@@ -11,8 +11,8 @@ namespace InteropBitmaps
     /// Pretty much every imaging library around defines some sort of Rectangle structure:    
     /// - (GDI+) System.Drawing.Rectangle
     /// - (GDI+) System.Drawing.RectangleF
-    /// - (WIC) System.Windows.Rect (WIC)
-    /// - (WIC) System.Windows.Int32Rect
+    /// - (WPF) System.Windows.Rect (WPF)
+    /// - (WPF) System.Windows.Int32Rect
     /// - (ImageSharp) Sixlabors.Primitives.Rectangle
     /// - (OpenCV) OpenCvSharp.Rect
     /// - (Skia) SkiaSharp.SKRectI:

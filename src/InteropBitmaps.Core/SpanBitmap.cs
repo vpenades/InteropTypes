@@ -5,9 +5,9 @@ using System.Text;
 namespace InteropBitmaps
 {
     /// <summary>
-    /// Represents a Bitmap wrapped around a span of bytes.
+    /// Represents a Bitmap wrapped around a <see cref="Span{Byte}"/>
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Bitmap[{Width},{Height}]")]
+    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
     public readonly ref struct SpanBitmap
     {
         #region lifecycle
@@ -46,15 +46,15 @@ namespace InteropBitmaps
             _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
             _Readable = data.Slice(0, _Info.BitmapByteSize);
             _Writable = null;
-        }        
-        
+        }
+
         #endregion
 
         #region data
 
-        private readonly ReadOnlySpan<Byte>     _Readable;
-        private readonly Span<Byte>             _Writable;
-        private readonly BitmapInfo             _Info;
+        private readonly BitmapInfo _Info;
+        private readonly Span<Byte> _Writable;
+        private readonly ReadOnlySpan<Byte> _Readable;        
 
         #endregion
 
@@ -72,7 +72,7 @@ namespace InteropBitmaps
 
         public int PixelSize => _Info.PixelByteSize;
 
-        public PixelFormat PixelFormat => new PixelFormat(_Info.PixelFormat);
+        public PixelFormat PixelFormat => _Info.PixelFormat;
 
         public int ScanlineSize => _Info.ScanlineByteSize;
 
@@ -80,7 +80,77 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region API
+        #region API - Buffers
+
+        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable, y); }
+
+        public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
+
+        #endregion
+
+        #region API - Cast
+
+        public unsafe void PinWritablePointer(Action<PointerBitmap> onPin)
+        {
+            if (_Writable.IsEmpty) throw new InvalidOperationException();
+
+            fixed (byte* ptr = &_Writable.GetPinnableReference())
+            {
+                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info);
+
+                onPin(ptrBmp);
+            }
+        }
+
+        public unsafe void PinReadablePointer(Action<PointerBitmap> onPin)
+        {
+            if (_Readable.IsEmpty) throw new InvalidOperationException();
+
+            fixed (byte* ptr = &_Readable.GetPinnableReference())
+            {
+                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info, true);
+
+                onPin(ptrBmp);
+            }
+        }
+
+        public unsafe TResult PinReadablePointer<TResult>(Func<PointerBitmap, TResult> onPin)
+        {
+            if (_Readable.IsEmpty) throw new InvalidOperationException();
+
+            fixed (byte* ptr = &_Readable.GetPinnableReference())
+            {
+                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info, true);
+
+                return onPin(ptrBmp);
+            }
+        }        
+
+        public unsafe SpanBitmap<TPixel> OfType<TPixel>()
+            where TPixel : unmanaged
+        {
+            Guard.IsValidPixelFormat<TPixel>(_Info);
+
+            return _Writable.IsEmpty ? new SpanBitmap<TPixel>(_Readable, _Info) : new SpanBitmap<TPixel>(_Writable, _Info);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MemoryBitmap"/> copy from this <see cref="SpanBitmap"/>.
+        /// </summary>
+        /// <param name="fmtOverride">Format override.</param>
+        /// <returns>A new <see cref="MemoryBitmap"/>.</returns>
+        public MemoryBitmap ToMemoryBitmap(PixelFormat? fmtOverride = null)
+        {
+            if (!fmtOverride.HasValue) return new MemoryBitmap(_Readable.ToArray(), _Info);
+
+            var dst = new MemoryBitmap(this.Width, this.Height, fmtOverride.Value);
+            dst.SetPixels(0, 0, this);
+            return dst;
+        }
+
+        #endregion
+
+        #region API - Pixel Ops
 
         /// <summary>
         /// Crops the current <see cref="SpanBitmap"/> sharing the original source memory.
@@ -101,69 +171,7 @@ namespace InteropBitmaps
                 var span = _Writable.Slice(offset, info.BitmapByteSize);
                 return new SpanBitmap(span, info);
             }
-        }
-
-        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable, y); }
-
-        public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
-
-        public unsafe void PinWritableMemory(Action<PointerBitmap> onPin)
-        {
-            if (_Writable.Length == 0) throw new InvalidOperationException();
-
-            fixed (byte* ptr = &_Writable.GetPinnableReference())
-            {
-                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info);
-
-                onPin(ptrBmp);
-            }
-        }
-
-        public unsafe void PinReadableMemory(Action<PointerBitmap> onPin)
-        {
-            if (_Writable.Length == 0) throw new InvalidOperationException();            
-
-            fixed (byte* ptr = &_Readable.GetPinnableReference())
-            {
-                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info, true);
-
-                onPin(ptrBmp);
-            }
-        }
-
-        public unsafe TResult PinReadableMemory<TResult>(Func<PointerBitmap, TResult> onPin)
-        {
-            if (_Writable.Length == 0) throw new InvalidOperationException();
-
-            fixed (byte* ptr = &_Readable.GetPinnableReference())
-            {
-                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info, true);
-
-                return onPin(ptrBmp);
-            }
-        }
-
-        // https://github.com/dotnet/runtime/blob/master/src/libraries/System.Utf8String.Experimental/tests/System/MemoryTests.cs
-
-            /*
-        public unsafe void Pin()
-        {
-            System.Runtime.InteropServices.GCHandle.Alloc(_Writable.GetPinnableReference());
-        }*/
-
-
-
-        public unsafe SpanBitmap<TPixel> OfType<TPixel>()
-            where TPixel : unmanaged
-        {
-            Guard.IsValidPixelFormat<TPixel>(_Info);
-
-            return _Writable.IsEmpty ? new SpanBitmap<TPixel>(_Readable, _Info) : new SpanBitmap<TPixel>(_Writable, _Info);
-        }
-
-        #endregion
-
-        #region Bulk API
+        }       
 
         /// <summary>
         /// Fills all the pixels of this bitmap with <paramref name="value"/>.
@@ -191,21 +199,11 @@ namespace InteropBitmaps
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
-        }
+        }        
 
-        /// <summary>
-        /// Creates a <see cref="MemoryBitmap"/> copy from this <see cref="SpanBitmap"/>.
-        /// </summary>
-        /// <param name="fmtOverride">Format override.</param>
-        /// <returns>A new <see cref="MemoryBitmap"/>.</returns>
-        public MemoryBitmap ToMemoryBitmap(PixelFormat? fmtOverride = null)
-        {
-            if (!fmtOverride.HasValue) return new MemoryBitmap(_Readable.ToArray(), _Info);
+        #endregion
 
-            var dst = new MemoryBitmap(this.Width, this.Height, fmtOverride.Value);
-            dst.SetPixels(0, 0, this);
-            return dst;
-        }
+        #region API - IO
 
         public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
         {

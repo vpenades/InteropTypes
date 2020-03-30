@@ -23,12 +23,11 @@ namespace InteropBitmaps
         void SetPixel(int x, int y, TPixel value);
     }
 
-
-    public interface ISpanBitmapLock : IDisposable
+    /// <summary>
+    /// Represents an object that promises a <see cref="MemoryBitmap"/> and controls its life cycle.
+    /// </summary>
+    public interface IMemoryBitmapOwner : IDisposable
     {
-        BitmapInfo Info { get; }
-        SpanBitmap Span { get; }
-    }
-
-    
+        MemoryBitmap Bitmap { get; }
+    }    
 }

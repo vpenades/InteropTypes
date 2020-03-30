@@ -38,7 +38,7 @@ namespace InteropBitmaps.Adapters
         
         public MemoryBitmap ToResizedMemoryBitmap(int width, int height)
         {
-            return _Bitmap.PinReadableMemory(ptr => _Resize(ptr, width, height));
+            return _Bitmap.PinReadablePointer(ptr => _Resize(ptr, width, height));
         }
 
         private static MemoryBitmap _Resize(PointerBitmap src, int width, int height)
@@ -54,7 +54,7 @@ namespace InteropBitmaps.Adapters
 
         public void Draw(Action<System.Drawing.Graphics> onDraw)
         {
-            _Bitmap.PinWritableMemory(ptr => _Draw(ptr, onDraw));
+            _Bitmap.PinWritablePointer(ptr => _Draw(ptr, onDraw));
         }
 
         private static void _Draw(PointerBitmap ptr, Action<System.Drawing.Graphics> onDraw)

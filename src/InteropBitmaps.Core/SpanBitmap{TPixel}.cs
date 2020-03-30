@@ -5,15 +5,12 @@ using System.Text;
 namespace InteropBitmaps
 {
     /// <summary>
-    /// Represents a Bitmap wrapped around a span of bytes.
+    /// Represents a Bitmap wrapped around a <see cref="Span{Byte}"/>
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("Bitmap[{Width},{Height}]")]
-    public readonly ref struct SpanBitmap<TPixel>
-        where TPixel : unmanaged
+    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
+    public readonly ref struct SpanBitmap<TPixel> where TPixel : unmanaged
     {
         #region lifecycle        
-
-        public static implicit operator SpanBitmap(SpanBitmap<TPixel> other) { return other.AsSpanBitmap(); }
 
         public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
         {
@@ -70,13 +67,15 @@ namespace InteropBitmaps
 
         #region data
 
-        private readonly ReadOnlySpan<Byte> _Readable;
-        private readonly Span<Byte> _Writable;
         private readonly BitmapInfo _Info;
+        private readonly Span<Byte> _Writable;
+        private readonly ReadOnlySpan<Byte> _Readable;        
 
         #endregion
 
         #region properties
+
+        public BitmapInfo Info => _Info;
 
         public Span<Byte> WritableSpan => _Writable;
 
@@ -88,27 +87,15 @@ namespace InteropBitmaps
 
         public int PixelSize => _Info.PixelByteSize;
 
+        public PixelFormat PixelFormat => _Info.PixelFormat;
+
+        public int ScanlineSize => _Info.ScanlineByteSize;
+
         public BitmapBounds bounds => _Info.Bounds;
 
         #endregion
 
-        #region API
-
-        public SpanBitmap<TPixel> Slice(in BitmapBounds rect)
-        {
-            var (offset, info) = _Info.Slice(rect);
-
-            if (_Writable.IsEmpty)
-            {
-                var span = _Readable.Slice(offset, info.BitmapByteSize);
-                return new SpanBitmap<TPixel>(span, info);
-            }
-            else
-            {
-                var span = _Writable.Slice(offset, info.BitmapByteSize);
-                return new SpanBitmap<TPixel>(span, info);
-            }
-        }
+        #region API - Buffers
 
         public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable, y); }
 
@@ -128,13 +115,52 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(rowBytes);
         }
 
-        public TPixel GetPixel(int x, int y) { return GetPixelsScanline(y)[x]; }
+        #endregion
 
-        public void SetPixel(int x, int y, TPixel value) { UsePixelsScanline(y)[x] = value; }
+        #region API - Cast
+
+        public static implicit operator SpanBitmap(SpanBitmap<TPixel> other)
+        {
+            return other._Writable.IsEmpty ? new SpanBitmap(other._Readable, other._Info) : new SpanBitmap(other._Writable, other._Info);
+        }
+
+        public unsafe SpanBitmap AsSpanBitmap()
+        {
+            return _Writable.IsEmpty ? new SpanBitmap(_Readable, _Info) : new SpanBitmap(_Writable, _Info);
+        }
+        
+        public MemoryBitmap<TPixel> ToMemoryBitmap(PixelFormat? fmtOverride = null)
+        {
+            if (!fmtOverride.HasValue) return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info);
+
+            var dst = new MemoryBitmap<TPixel>(this.Width, this.Height, fmtOverride.Value);
+            dst.SetPixels(0, 0, this);
+            return dst;
+        }
 
         #endregion
 
-        #region API - Bulk operations        
+        #region API - Pixel Ops
+
+        public SpanBitmap<TPixel> Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = _Info.Slice(rect);
+
+            if (_Writable.IsEmpty)
+            {
+                var span = _Readable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap<TPixel>(span, info);
+            }
+            else
+            {
+                var span = _Writable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap<TPixel>(span, info);
+            }
+        }        
+
+        public TPixel GetPixel(int x, int y) { return GetPixelsScanline(y)[x]; }
+
+        public void SetPixel(int x, int y, TPixel value) { UsePixelsScanline(y)[x] = value; }           
 
         public void SetPixels(TPixel value)
         {            
@@ -160,22 +186,6 @@ namespace InteropBitmaps
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
         }
-
-        public unsafe SpanBitmap AsSpanBitmap()
-        {
-            return _Writable.IsEmpty ? new SpanBitmap(_Readable, _Info) : new SpanBitmap(_Writable, _Info);
-        }
-
-        public MemoryBitmap<TPixel> ToMemoryBitmap() { return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info); }
-
-        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
-        {
-            AsSpanBitmap().Save(filePath, factory);
-        }
-
-        #endregion
-
-        #region pixel enumerator
 
         public PixelEnumerator GetPixelEnumerator() => new PixelEnumerator(this);
 
@@ -217,6 +227,15 @@ namespace InteropBitmaps
             }
 
             public ref readonly TPixel Current => ref _Line[_indexX];
+        }
+        
+        #endregion
+
+        #region API - IO
+
+        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
+        {
+            AsSpanBitmap().Save(filePath, factory);
         }
 
         #endregion
