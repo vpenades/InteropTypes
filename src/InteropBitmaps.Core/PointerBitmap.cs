@@ -55,19 +55,21 @@ namespace InteropBitmaps
         /// <summary>
         /// Gets a value indicating whether this instance is read-only.
         /// </summary>
-        public Boolean IsReadOnly => _IsReadOnly;        
+        public Boolean IsReadOnly => _IsReadOnly;
 
-        #endregion
+        public int Width => _Info.Width;
 
-        #region API - Buffers
+        public int Height => _Info.Height;
 
-        private System.Buffers.MemoryManager<T> CreateManager<T>()
-            where T : unmanaged
-        {
-            return new MemoryManagers.UnmanagedMemoryManager<T>(_Pointer, _Info.BitmapByteSize);
-        }
+        public int PixelSize => _Info.PixelByteSize;
 
-        #endregion
+        public PixelFormat PixelFormat => _Info.PixelFormat;
+
+        public int ScanlineSize => _Info.ScanlineByteSize;
+
+        public BitmapBounds bounds => _Info.Bounds;
+
+        #endregion        
 
         #region API - Cast
 
@@ -86,6 +88,19 @@ namespace InteropBitmaps
             return new SpanBitmap<TPixel>(_Pointer, _Info, _IsReadOnly);
         }
 
+        public IMemoryBitmapOwner UsingMemoryBitmap()
+        {
+            return new _MemoryManager(this);
+        }
+
+        public System.Buffers.IMemoryOwner<TPixel> UsingMemory<TPixel>()
+            where TPixel:unmanaged
+        {
+            Guard.IsValidPixelFormat<TPixel>(this.Info);
+
+            return new MemoryManagers.UnmanagedMemoryManager<TPixel>(this.Pointer, this.Info.BitmapByteSize);
+        }
+            
         #endregion
 
         #region API - Pixel Ops
@@ -97,7 +112,19 @@ namespace InteropBitmaps
             var ptr = IntPtr.Add(this.Pointer, offset);
 
             return new PointerBitmap(ptr, info);
-        }        
+        }
+
+        #endregion
+
+        #region nested types
+
+        sealed unsafe class _MemoryManager : MemoryManagers.BitmapMemoryManager
+        {
+            public _MemoryManager(PointerBitmap bmp)
+            {
+                Initialize(bmp);
+            }
+        }
 
         #endregion
     }

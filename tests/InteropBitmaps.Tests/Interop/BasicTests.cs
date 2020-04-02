@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps.Interop
+namespace InteropBitmaps
 {
     [Category("Backends")]
     public class BasicTests
@@ -134,6 +134,33 @@ namespace InteropBitmaps.Interop
             img.AttachToCurrentTest("result.jpg");
 
             img.Dispose();
+        }
+
+
+        [Test]
+        public void DrawMemoryAsImageSharp()
+        {
+            var mem = MemoryBitmap.Load(TestResources.ShannonJpg, Codecs.GDICodec.Default);
+
+            var img = mem.TryUsingAsImageSharp();
+
+            img.AttachToCurrentTest("result.png");
+
+            img.Dispose();            
+        }
+
+        [Test]
+        public void DrawGDIAsImageSharp()
+        {
+            using var gdi = System.Drawing.Image.FromFile(TestResources.ShannonJpg);
+
+            using var bmp = new System.Drawing.Bitmap(gdi);
+
+            using var ptr = bmp.UsingPointerBitmap();
+
+            using var img = ptr.Bitmap.TryUsingImageSharp<SixLabors.ImageSharp.PixelFormats.Bgra32>();            
+
+            img.AttachToCurrentTest("result.png");
         }
     }
 }

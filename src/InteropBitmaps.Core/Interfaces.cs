@@ -28,6 +28,19 @@ namespace InteropBitmaps
     /// </summary>
     public interface IMemoryBitmapOwner : IDisposable
     {
+        /// <summary>
+        /// Gets the <see cref="MemoryBitmap"/> owned by this instance.
+        /// If this <see cref="IMemoryBitmapOwner"/> is disposed, the <see cref="Bitmap"/> will no longet be valid.
+        /// </summary>
         MemoryBitmap Bitmap { get; }
-    }    
+    }
+
+    public interface IPointerBitmapOwner : IDisposable
+    {
+        /// <summary>
+        /// Gets the <see cref="PointerBitmap"/> owned by this instance.
+        /// If this <see cref="IPointerBitmapOwner"/> is disposed, the <see cref="Bitmap"/> will no longet be valid.
+        /// </summary>
+        PointerBitmap Bitmap { get; }
+    }
 }

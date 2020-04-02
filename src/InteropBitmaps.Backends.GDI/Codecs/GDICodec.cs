@@ -20,6 +20,8 @@ namespace InteropBitmaps.Codecs
 
         #endregion
 
+        #region API
+
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
             try
@@ -47,7 +49,7 @@ namespace InteropBitmaps.Codecs
 
             if (needsConversion)
             {
-                using(var tmp = _Implementation.CloneToGDIBitmap(bmp,true))
+                using (var tmp = _Implementation.CloneToGDIBitmap(bmp, true))
                 {
                     tmp.Save(s, fmt);
                 }
@@ -85,5 +87,7 @@ namespace InteropBitmaps.Codecs
                 default: return null;
             }            
         }
+
+        #endregion
     }
 }

@@ -26,6 +26,11 @@ namespace InteropBitmaps
 
         #region As MemoryBitmap
 
+        public static IPointerBitmapOwner UsingPointerBitmap(this Bitmap bmp)
+        {
+            return new Adapters.GDIMemoryManager(bmp);
+        }
+
         public static IMemoryBitmapOwner UsingMemoryBitmap(this Bitmap bmp)
         {
             return new Adapters.GDIMemoryManager(bmp);

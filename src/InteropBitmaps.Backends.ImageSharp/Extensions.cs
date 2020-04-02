@@ -54,11 +54,21 @@ namespace InteropBitmaps
         {
             return _Implementation.TryWrapImageSharp<TPixel>(src);
         }
-
-        public static Image TryWrapAsImageSharp(this MemoryBitmap src)            
+        
+        public static Image TryUsingAsImageSharp(this MemoryBitmap src)            
         {
             return _Implementation.TryWrapImageSharp(src);
-        }        
+        }
+        
+        public static Image<TPixel> TryUsingImageSharp<TPixel>(this PointerBitmap src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            if (!src.Info.IsContinuous) return null;
+
+            var m = src.UsingMemory<TPixel>();
+
+            return Image.WrapMemory(m, src.Width, src.Height); // We assume here that Image<Tpixel> will dispose IMemoryOwner<T> when disposed.
+        }
 
         #endregion
     }

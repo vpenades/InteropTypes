@@ -7,7 +7,10 @@ namespace InteropBitmaps.MemoryManagers
     /// <summary>
     /// Helper class that wraps a <see cref="PointerBitmap"/> to expose it as a <see cref="MemoryBitmap"/>
     /// </summary>
-    public abstract unsafe class BitmapMemoryManager : System.Buffers.MemoryManager<Byte>, IMemoryBitmapOwner
+    public abstract unsafe class BitmapMemoryManager
+        : System.Buffers.MemoryManager<Byte>
+        , IMemoryBitmapOwner
+        , IPointerBitmapOwner
     {
         #region lifecycle
 
@@ -32,9 +35,11 @@ namespace InteropBitmaps.MemoryManagers
 
         #endregion
 
-        #region properties
+        #region properties        
 
-        public MemoryBitmap Bitmap => new MemoryBitmap(this.Memory, _PointerBitmap.Info);
+        PointerBitmap IPointerBitmapOwner.Bitmap => _PointerBitmap;
+
+        MemoryBitmap IMemoryBitmapOwner.Bitmap => new MemoryBitmap(this.Memory, _PointerBitmap.Info);
 
         #endregion
 

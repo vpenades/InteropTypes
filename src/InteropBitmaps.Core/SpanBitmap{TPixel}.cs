@@ -228,10 +228,15 @@ namespace InteropBitmaps
 
             public ref readonly TPixel Current => ref _Line[_indexX];
         }
-        
+
         #endregion
 
         #region API - IO
+
+        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
+        {
+            AsSpanBitmap().Write(stream, format, factory);
+        }
 
         public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
         {

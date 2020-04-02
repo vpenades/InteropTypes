@@ -205,15 +205,27 @@ namespace InteropBitmaps
 
         #region API - IO
 
+        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
+        {
+            var position = stream.Position;
+
+            foreach (var f in factory)
+            {
+                if (stream.Position != null) throw new InvalidOperationException("incompatible codecs must not write to the stream.");
+
+                if (f.TryWrite(stream, format, this)) return;                
+            }
+        }
+
         public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
         {
-            var ext = Codecs.CodecFactory.ParseFormat(filePath);
+            var fmt = Codecs.CodecFactory.ParseFormat(filePath);
 
             foreach (var f in factory)
             {                
                 using (var s = System.IO.File.Create(filePath))
                 {
-                    if (f.TryWrite(s, ext, this)) return;
+                    if (f.TryWrite(s, fmt, this)) return;
                 }
             }
 

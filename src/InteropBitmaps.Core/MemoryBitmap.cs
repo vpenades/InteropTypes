@@ -153,6 +153,11 @@ namespace InteropBitmaps
             this.AsSpanBitmap().Save(filePath, factory);
         }
 
+        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
+        {
+            this.AsSpanBitmap().Write(stream, format, factory);
+        }
+
         #endregion        
     }    
 }

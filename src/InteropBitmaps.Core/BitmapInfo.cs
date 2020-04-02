@@ -4,6 +4,9 @@ using System.Text;
 
 namespace InteropBitmaps
 {
+    /// <summary>
+    /// Represents the width, height and pixel format of a bitmap.
+    /// </summary>
     [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
     public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
@@ -17,29 +20,50 @@ namespace InteropBitmaps
 
             Width = width;
             Height = height;
-            PixelByteSize = pixelSize;
-            PixelFormat = pixelFormat;
             ScanlineByteSize = scanlineSize > 0 ? scanlineSize : width * pixelSize;
-        }
 
+            PixelFormat = pixelFormat;
+            PixelByteSize = pixelSize;            
+        }
+        
         private BitmapInfo(int width, int height, in BitmapInfo other)
         {
             Width = width;
             Height = height;
-            PixelByteSize = other.PixelByteSize;
-            PixelFormat = other.PixelFormat;
             ScanlineByteSize = other.ScanlineByteSize;
+
+            PixelFormat = other.PixelFormat;
+            PixelByteSize = other.PixelByteSize;                        
         }
 
         #endregion
 
         #region data
 
+        /// <summary>
+        /// Width of the bitmap, in pixels.
+        /// </summary>
         public readonly int Width;
-        public readonly int Height;
-        public readonly int PixelByteSize;
+
+        /// <summary>
+        /// Height of the bitmap, in pixels.
+        /// </summary>
+        public readonly int Height;        
+
+        /// <summary>
+        /// Number of bytes to advance from the beginning of one row to the next.
+        /// </summary>
         public readonly int ScanlineByteSize;
+
+        /// <summary>
+        /// format of the pixel.
+        /// </summary>
         public readonly PixelFormat PixelFormat;
+
+        /// <summary>
+        /// Byte size of a single pixel.
+        /// </summary>
+        public readonly int PixelByteSize;
 
         public override int GetHashCode() { return Width.GetHashCode() ^ Height.GetHashCode() ^ PixelFormat.GetHashCode(); }
 
@@ -67,11 +91,22 @@ namespace InteropBitmaps
 
         public bool IsEmpty => (Width * Height * PixelByteSize) == 0;
 
-        // under some circunstances, the last stride of the last row must not be accounted for.
+        /// <summary>
+        /// Gets the number of bytes required to store a bitmap.
+        /// </summary>
+        /// <remarks>
+        /// When using a byte stride, the last row does not need a tailing stride.
+        /// </remarks>        
         public int BitmapByteSize => Height == 0 ? 0 : ScanlineByteSize * (Height - 1) + PixelByteSize * Width;
 
+        /// <summary>
+        /// Gets the size of the bitmap, in pixels.
+        /// </summary>
         public (int Width, int Height) Size => (Width, Height);
 
+        /// <summary>
+        /// Gets a <see cref="BitmapBounds"/> with the dimensions of the bitmap.
+        /// </summary>
         public BitmapBounds Bounds => new BitmapBounds(0,0,Width, Height);
 
         /// <summary>
