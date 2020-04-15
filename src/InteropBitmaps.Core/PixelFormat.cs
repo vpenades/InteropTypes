@@ -253,22 +253,34 @@ namespace InteropBitmaps
             }
         }
 
+        public int MaxElementBitLength
+        {
+            get
+            {
+                var l = _GetBitLen(Element0);
+                l = Math.Max(l, _GetBitLen(Element1));
+                l = Math.Max(l, _GetBitLen(Element2));
+                l = Math.Max(l, _GetBitLen(Element3));
+                return l;
+            }
+        }
+
         #endregion
 
         #region API
 
         private int _GetByteLength()
         {
-            int c = 0;
-            c += _GetBitLen(Element0);
-            c += _GetBitLen(Element1);
-            c += _GetBitLen(Element2);
-            c += _GetBitLen(Element3);
+            int l = 0;
+            l += _GetBitLen(Element0);
+            l += _GetBitLen(Element1);
+            l += _GetBitLen(Element2);
+            l += _GetBitLen(Element3);
 
-            if (c == 0) throw new InvalidOperationException("Format must not have a zero length");
-            if ((c & 7) != 0) throw new InvalidOperationException("Format must have a length multiple of 8");
+            if (l == 0) throw new InvalidOperationException("Format must not have a zero length");
+            if ((l & 7) != 0) throw new InvalidOperationException("Format must have a length multiple of 8");
 
-            return c / 8;
+            return l / 8;
         }
 
         internal static int _GetBitLen(PEF pef)

@@ -8,7 +8,7 @@ namespace InteropBitmaps
 {
     public static partial class ImageSharpToolkit
     {
-        #region WithImageSharp
+        #region Imagesharp facade
 
         public static Adapters.ImageSharpFactory WithImageSharp(this BitmapInfo binfo) { return new Adapters.ImageSharpFactory(binfo); }
 
@@ -23,6 +23,16 @@ namespace InteropBitmaps
         public static Adapters.ImageSharpMemoryAdapter<TPixel> UsingImageSharp<TPixel>(this MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged, IPixel<TPixel>
         { return new Adapters.ImageSharpMemoryAdapter<TPixel>(bmp); }
+
+        #endregion
+
+        #region As MemoryBitmap
+
+        public static IMemoryBitmapOwner UsingMemoryBitmap<TPixel>(this Image<TPixel> src, bool owned = false)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            return new Adapters.ImageSharpMemoryManager<TPixel>(src, owned);
+        }
 
         #endregion
 

@@ -40,11 +40,31 @@ namespace InteropBitmaps
                 }
             }
 
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.From<#= pixelType#>(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
             public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src)
             {
                 while(src.Length > 0)
                 {
                     src[0].To<#= pixelType#>(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).To<#= pixelType#>(dst);
                     src = src.Slice(1);
                     dst = dst.Slice(SIZE);                    
                 }

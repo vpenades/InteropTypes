@@ -23,34 +23,41 @@ namespace InteropBitmaps.Adapters
 
         #region API        
 
-        public void Update(ref Bitmap bmp)
+        public void UpdateOrCreate(ref Bitmap bmp)
         {
-            // TODO: check compatible
+            // todo: if size of format don't match, dispose and rebuild.
 
-            if (bmp == null) bmp = CloneToGDI(true);
+            if (bmp == null) bmp = ToBitmap(true);
             else bmp.SetPixels(0, 0, _Bitmap);
         }
 
-        public Bitmap CloneToGDI(bool allowCompatibleFormats = false)
+        public Bitmap ToBitmap(bool allowCompatibleFormats = false)
         {
             return _Implementation.CloneToGDIBitmap(_Bitmap, allowCompatibleFormats);
-        }    
-        
-        public MemoryBitmap ToResizedMemoryBitmap(int width, int height)
-        {
-            return _Bitmap.PinReadablePointer(ptr => _Resize(ptr, width, height));
         }
 
-        private static MemoryBitmap _Resize(PointerBitmap src, int width, int height)
+        public Bitmap ToResizedBitmap(int width, int height)
         {
-            using (var wsrc = _Implementation.WrapAsGDIBitmap(src))
+            Bitmap _resize(PointerBitmap src)
             {
-                using (var dst = new Bitmap(wsrc, width, height))
+                using (var wsrc = _Implementation.WrapAsGDIBitmap(src))
                 {
-                    return dst.ToMemoryBitmap(src.Info.PixelFormat);
+                    return new Bitmap(wsrc, width, height);
                 }
             }
+
+            return _Bitmap.PinReadablePointer(_resize);
         }
+
+        public MemoryBitmap ToResizedMemoryBitmap(int width, int height)
+        {
+            using (var tmp = ToResizedBitmap(width, height))
+            {
+                return tmp.ToMemoryBitmap();
+            }
+        }
+
+        
 
         public void Draw(Action<System.Drawing.Graphics> onDraw)
         {

@@ -158,8 +158,8 @@ namespace InteropBitmaps
 
             using var ptr = bmp.UsingPointerBitmap();
 
-            using var img = ptr.Bitmap.TryUsingImageSharp<SixLabors.ImageSharp.PixelFormats.Bgra32>();            
-
+            using var img = ptr.Bitmap.TryUsingImageSharp<SixLabors.ImageSharp.PixelFormats.Bgra32>();
+            
             img.AttachToCurrentTest("result.png");
         }
     }

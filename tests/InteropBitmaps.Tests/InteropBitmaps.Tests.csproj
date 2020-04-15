@@ -28,7 +28,6 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropBitmaps.Backends.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropBitmaps.Backends.SkiaSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.Takeuchi.FaceRecognition\InteropBitmaps.Backends.Takeuchi.FaceRecognition.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.Takeuchi.OpenPose\InteropBitmaps.Backends.Takeuchi.OpenPose.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropBitmaps.Backends.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />

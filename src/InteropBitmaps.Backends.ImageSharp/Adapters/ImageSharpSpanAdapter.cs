@@ -48,7 +48,7 @@ namespace InteropBitmaps.Adapters
         {
             using (var img = CloneToImage())
             {
-                return img.EvaluateBlurFactor();
+                return img.GetBlurLevel();
             }
         }
 

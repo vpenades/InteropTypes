@@ -9,6 +9,21 @@ namespace InteropBitmaps
     {
         #region constructors
 
+        public static implicit operator System.Numerics.Vector4(_PixelBGRA32 value)
+        {
+            return new System.Numerics.Vector4(value.R, value.G, value.B, value.A) / 255f;
+        }
+        
+        public _PixelBGRA32(System.Numerics.Vector4 rgba)
+        {
+            rgba *= 255f;
+
+            R = (Byte)(rgba.X);
+            G = (Byte)(rgba.Y);
+            B = (Byte)(rgba.Z);
+            A = (Byte)(rgba.W);
+        }
+
         public _PixelBGRA32(Byte blue, Byte green, Byte red, Byte alpha)
         {
             B = blue;
@@ -34,9 +49,9 @@ namespace InteropBitmaps
         public readonly Byte R;
         public readonly Byte A;
 
-        const int RLuminanceWeight = 19562;
-        const int GLuminanceWeight = 38550;
-        const int BLuminanceWeight = 7424;
+        const uint RLuminanceWeight = 19562;
+        const uint GLuminanceWeight = 38550;
+        const uint BLuminanceWeight = 7424;
 
         #endregion
 
@@ -49,11 +64,11 @@ namespace InteropBitmaps
 
         public void ToGray8(Span<Byte> dst)
         {
-            int gray = 0;
+            uint gray = 0;
 
-            gray += RLuminanceWeight*(int)R;
-            gray += GLuminanceWeight*(int)G;
-            gray += BLuminanceWeight*(int)B;
+            gray += RLuminanceWeight*(uint)R;
+            gray += GLuminanceWeight*(uint)G;
+            gray += BLuminanceWeight*(uint)B;
 
             gray >>= 16;
 
@@ -71,11 +86,11 @@ namespace InteropBitmaps
 
         public void ToGray16(Span<Byte> dst)
         {
-            int gray = 0;
+            uint gray = 0;
 
-            gray += RLuminanceWeight * (int)R;
-            gray += GLuminanceWeight * (int)G;
-            gray += BLuminanceWeight * (int)B;
+            gray += RLuminanceWeight * (uint)R;
+            gray += GLuminanceWeight * (uint)G;
+            gray += BLuminanceWeight * (uint)B;
 
             gray >>= 8;
 
@@ -167,30 +182,100 @@ namespace InteropBitmaps
         }
 
         #endregion
+
+        #region PRGB32
+
+        public static _PixelBGRA32 FromPrgb32(ReadOnlySpan<Byte> src)
+        {
+            var A = (int)src[0];
+            if (A == 0) return default;            
+
+            int r = (int)src[1] * 255 / (int)A;
+            int g = (int)src[2] * 255 / (int)A;
+            int b = (int)src[3] * 255 / (int)A;            
+
+            return new _PixelBGRA32((Byte)b, (Byte)g, (Byte)r, src[0]);
+        }
+        
+        public void ToPrgb32(Span<Byte> dst)
+        {            
+            int a = A;
+            int r = R;
+            int g = G;
+            int b = B;
+
+            r = r * a / 255;
+            g = g * a / 255;
+            b = b * a / 255;
+
+            dst[0] = A;
+            dst[1] = (Byte)r;
+            dst[2] = (Byte)g;
+            dst[3] = (Byte)b;         
+        }
+
+        #endregion
     }
 
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
+    
     struct _PixelBGRA64
     {
-        [System.Runtime.InteropServices.FieldOffset(0)]
-        public Byte BL;
-        [System.Runtime.InteropServices.FieldOffset(1)]
-        public Byte BH;
+        #region constructors
 
-        [System.Runtime.InteropServices.FieldOffset(2)]
-        public Byte GL;
-        [System.Runtime.InteropServices.FieldOffset(3)]
-        public Byte GH;
+        public _PixelBGRA64(UInt16 blue, UInt16 green, UInt16 red, UInt16 alpha)
+        {
+            B = blue;
+            G = green;
+            R = red;
+            A = alpha;
+        }
 
-        [System.Runtime.InteropServices.FieldOffset(4)]
-        public Byte RL;
-        [System.Runtime.InteropServices.FieldOffset(5)]
-        public Byte RH;
+        public _PixelBGRA64(UInt16 blue, UInt16 green, UInt16 red)
+        {
+            B = blue;
+            G = green;
+            R = red;
+            A = 65535;
+        }
 
-        [System.Runtime.InteropServices.FieldOffset(6)]
-        public Byte AL;
-        [System.Runtime.InteropServices.FieldOffset(7)]
-        public Byte AH;
+        #endregion
+
+        #region data
+        
+        public UInt16 B;
+        public UInt16 G;
+        public UInt16 R;
+        public UInt16 A;        
+
+        const uint RLuminanceWeight = 19562;
+        const uint GLuminanceWeight = 38550;
+        const uint BLuminanceWeight = 7424;
+        
+        #endregion
+
+        #region Gray8
+
+        public static _PixelBGRA64 FromGray8(ReadOnlySpan<Byte> src)
+        {
+            uint v = src[0];
+            var vv = (ushort)(v * 256 + v);
+            return new _PixelBGRA64(vv, vv, vv);
+        }
+
+        public void ToGray8(Span<Byte> dst)
+        {
+            uint gray = 0;
+
+            gray += RLuminanceWeight * (uint)R;
+            gray += GLuminanceWeight * (uint)G;
+            gray += BLuminanceWeight * (uint)B;
+
+            gray >>= 24;
+
+            dst[0] = (Byte)gray;
+        }
+
+        #endregion
     }
 
     static partial class _PixelConverters
@@ -210,8 +295,8 @@ namespace InteropBitmaps
 
         readonly struct _RGBConverter : ICopyConverter
         {
-            private readonly IRGBConverter _SrcConverter;
-            private readonly IRGBConverter _DstConverter;
+            private readonly IBGRA32Converter _SrcConverter;
+            private readonly IBGRA32Converter _DstConverter;
 
             public void Convert(Span<byte> dst, Span<byte> tmp, ReadOnlySpan<byte> src, int y)
             {
@@ -225,13 +310,16 @@ namespace InteropBitmaps
 
         #region static API
 
-        public interface IRGBConverter
+        public interface IBGRA32Converter
         {
             void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<Byte> src, int srcY);
             void ConvertTo(Span<Byte> dst,int dstY, ReadOnlySpan<_PixelBGRA32> src);
+
+            void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<Byte> src, int srcY);
+            void ConvertTo(Span<Byte> dst, int dstY, ReadOnlySpan<System.Numerics.Vector4> src);
         }
 
-        public static IRGBConverter GetConverter(PixelFormat fmt)
+        public static IBGRA32Converter GetConverter(PixelFormat fmt)
         {
             if (fmt == PixelFormat.Standard.Gray8) return new _CvtGray8();
 

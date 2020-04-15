@@ -10,11 +10,21 @@ namespace InteropBitmaps
     {
     
     
-        private struct _CvtGray8 : IRGBConverter
+        private struct _CvtGray8 : IBGRA32Converter
         {
             const int SIZE = 1;
 
             public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.FromGray8(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
             {
                 while(dst.Length > 0)
                 {
@@ -33,14 +43,34 @@ namespace InteropBitmaps
                     dst = dst.Slice(SIZE);                    
                 }
             }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).ToGray8(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
         }
 
     
-        private struct _CvtGray16 : IRGBConverter
+        private struct _CvtGray16 : IBGRA32Converter
         {
             const int SIZE = 2;
 
             public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.FromGray16(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
             {
                 while(dst.Length > 0)
                 {
@@ -59,14 +89,34 @@ namespace InteropBitmaps
                     dst = dst.Slice(SIZE);                    
                 }
             }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).ToGray16(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
         }
 
     
-        private struct _CvtRgb24 : IRGBConverter
+        private struct _CvtRgb24 : IBGRA32Converter
         {
             const int SIZE = 3;
 
             public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.FromRgb24(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
             {
                 while(dst.Length > 0)
                 {
@@ -85,14 +135,34 @@ namespace InteropBitmaps
                     dst = dst.Slice(SIZE);                    
                 }
             }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).ToRgb24(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
         }
 
     
-        private struct _CvtBgr24 : IRGBConverter
+        private struct _CvtBgr24 : IBGRA32Converter
         {
             const int SIZE = 3;
 
             public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.FromBgr24(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
             {
                 while(dst.Length > 0)
                 {
@@ -111,14 +181,34 @@ namespace InteropBitmaps
                     dst = dst.Slice(SIZE);                    
                 }
             }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).ToBgr24(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
         }
 
     
-        private struct _CvtRgba32 : IRGBConverter
+        private struct _CvtRgba32 : IBGRA32Converter
         {
             const int SIZE = 4;
 
             public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.FromRgba32(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
             {
                 while(dst.Length > 0)
                 {
@@ -137,14 +227,34 @@ namespace InteropBitmaps
                     dst = dst.Slice(SIZE);                    
                 }
             }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).ToRgba32(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
         }
 
     
-        private struct _CvtBgra32 : IRGBConverter
+        private struct _CvtBgra32 : IBGRA32Converter
         {
             const int SIZE = 4;
 
             public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.FromBgra32(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
             {
                 while(dst.Length > 0)
                 {
@@ -163,14 +273,34 @@ namespace InteropBitmaps
                     dst = dst.Slice(SIZE);                    
                 }
             }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).ToBgra32(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
         }
 
     
-        private struct _CvtArgb32 : IRGBConverter
+        private struct _CvtArgb32 : IBGRA32Converter
         {
             const int SIZE = 4;
 
             public void ConvertFrom(Span<_PixelBGRA32> dst, ReadOnlySpan<byte> src, int srcY)
+            {
+                while(dst.Length > 0)
+                {
+                    dst[0] = _PixelBGRA32.FromArgb32(src);
+                    src = src.Slice(SIZE);
+                    dst = dst.Slice(1);                    
+                }
+            }
+
+            public void ConvertFrom(Span<System.Numerics.Vector4> dst, ReadOnlySpan<byte> src, int srcY)
             {
                 while(dst.Length > 0)
                 {
@@ -185,6 +315,16 @@ namespace InteropBitmaps
                 while(src.Length > 0)
                 {
                     src[0].ToArgb32(dst);
+                    src = src.Slice(1);
+                    dst = dst.Slice(SIZE);                    
+                }
+            }
+
+            public void ConvertTo(Span<byte> dst,int dstY, ReadOnlySpan<System.Numerics.Vector4> src)
+            {
+                while(src.Length > 0)
+                {
+                    new _PixelBGRA32(src[0]).ToArgb32(dst);
                     src = src.Slice(1);
                     dst = dst.Slice(SIZE);                    
                 }

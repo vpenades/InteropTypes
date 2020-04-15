@@ -92,38 +92,20 @@ namespace InteropBitmaps
 
         public unsafe void PinWritablePointer(Action<PointerBitmap> onPin)
         {
-            if (_Writable.IsEmpty) throw new InvalidOperationException();
-
-            fixed (byte* ptr = &_Writable.GetPinnableReference())
-            {
-                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info);
-
-                onPin(ptrBmp);
-            }
+            Guard.IsFalse(nameof(SpanBitmap), _Writable.IsEmpty);            
+            SpanBitmapImpl.PinWritablePointer(_Writable, _Info, onPin);
         }
 
         public unsafe void PinReadablePointer(Action<PointerBitmap> onPin)
         {
-            if (_Readable.IsEmpty) throw new InvalidOperationException();
-
-            fixed (byte* ptr = &_Readable.GetPinnableReference())
-            {
-                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info, true);
-
-                onPin(ptrBmp);
-            }
+            Guard.IsFalse(nameof(SpanBitmap), _Readable.IsEmpty);
+            SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
         }
 
         public unsafe TResult PinReadablePointer<TResult>(Func<PointerBitmap, TResult> onPin)
         {
-            if (_Readable.IsEmpty) throw new InvalidOperationException();
-
-            fixed (byte* ptr = &_Readable.GetPinnableReference())
-            {
-                var ptrBmp = new PointerBitmap(new IntPtr(ptr), _Info, true);
-
-                return onPin(ptrBmp);
-            }
+            Guard.IsFalse(nameof(SpanBitmap), _Readable.IsEmpty);
+            return SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
         }        
 
         public unsafe SpanBitmap<TPixel> OfType<TPixel>()
@@ -211,7 +193,7 @@ namespace InteropBitmaps
 
             foreach (var f in factory)
             {
-                if (stream.Position != null) throw new InvalidOperationException("incompatible codecs must not write to the stream.");
+                if (stream.Position != position) throw new InvalidOperationException("incompatible codecs must not write to the stream.");
 
                 if (f.TryWrite(stream, format, this)) return;                
             }

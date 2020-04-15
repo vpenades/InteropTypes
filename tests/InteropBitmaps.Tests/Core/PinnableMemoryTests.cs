@@ -9,7 +9,6 @@ using NUnit.Framework;
 namespace InteropBitmaps.Core
 {
     public class PinnableMemoryTests
-    {
-        
+    {        
     }
 }

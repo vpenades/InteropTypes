@@ -8,7 +8,7 @@ namespace InteropBitmaps
     /// <see href="https://github.com/dotnet/runtime/tree/master/src/libraries/System.Drawing.Common"/>
     public static partial class GDIToolkit
     {
-        #region WithGDI
+        #region GDI facade
 
         public static Adapters.GDIFactory WithGDI(this BitmapInfo binfo) { return new Adapters.GDIFactory(binfo); }
 
@@ -20,7 +20,7 @@ namespace InteropBitmaps
         public static Adapters.GDIMemoryAdapter UsingGDI(this MemoryBitmap bmp) { return new Adapters.GDIMemoryAdapter(bmp); }
 
         public static Adapters.GDIMemoryAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp) where TPixel : unmanaged
-        { return new Adapters.GDIMemoryAdapter(bmp); }
+        { return new Adapters.GDIMemoryAdapter(bmp); }        
 
         #endregion
 

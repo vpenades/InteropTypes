@@ -100,5 +100,43 @@ namespace InteropBitmaps.Examples
             // Use Imagesharp to save to PNG
             span.AttachToCurrentTest("shannon.png");
         }
+
+        [Test(Description ="Simple conversion From ImageSharp to System.Drawing")]
+        public void Example3()
+        {
+            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+
+            using var image = SixLabors.ImageSharp.Image.Load<Bgra32>(filePath);
+
+            // direct conversion.
+
+            using var bitmap = image
+                .AsSpanBitmap()             // Wrap ImageSharp as SpanBitmap.
+                .WithGDI()                  // Get the System.Drawing API for this SpanBitmap.
+                .ToBitmap();                // create System.Drawing.Bitmap copy.
+
+            bitmap.AttachToCurrentTest("result.jpg");
+
+            // resized conversion.
+
+            using var resized = image
+                .AsSpanBitmap()             // Wrap ImageSharp as SpanBitmap.
+                .WithGDI()                  // Get the System.Drawing API for this SpanBitmap.
+                .ToResizedBitmap(32,32);    // create a resized System.Drawing.Bitmap copy.
+
+            resized.AttachToCurrentTest("resized.jpg");
+
+            // using MemoryBitmap facade.            
+
+            using var memory = image.UsingMemoryBitmap(); // using imagesharp image as a MemoryBitmap.
+
+                using var gdi = memory.Bitmap.UsingGDI(); // using memoryBitmap as a System.Drawing.Bitmap
+
+                    gdi.Canvas
+                        .DrawLine(System.Drawing.Pens.Red, new System.Drawing.Point(2, 2), new System.Drawing.Point(500, 500));
+
+                    gdi.Bitmap.AttachToCurrentTest("drawn.jpg");
+
+        }
     }
 }

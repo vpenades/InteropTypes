@@ -43,7 +43,7 @@ namespace InteropBitmaps
                 .StandardDeviation();
         }
 
-        public static Double EvaluateBlurFactor(this Image img)
+        public static Double GetBlurLevel(this Image img)
         {
             // https://github.com/justadudewhohacks/opencv4nodejs/issues/448#issuecomment-436341650
 

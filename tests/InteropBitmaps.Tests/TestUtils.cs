@@ -40,6 +40,13 @@ namespace InteropBitmaps
             NUnit.Framework.TestContext.AddTestAttachment(filePath);
         }
 
+        public static void AttachToCurrentTest(this System.Drawing.Bitmap image, string filePath)
+        {
+            using var owner = image.UsingMemoryBitmap();
+
+            owner.Bitmap.AttachToCurrentTest(filePath);
+        }
+
         public static void AttachToCurrentTest(this MemoryBitmap bmp, string filePath)
         {
             bmp.AsSpanBitmap().AttachToCurrentTest(filePath);
