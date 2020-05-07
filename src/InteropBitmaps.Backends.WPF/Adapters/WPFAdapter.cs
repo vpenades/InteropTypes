@@ -28,12 +28,20 @@ namespace InteropBitmaps.Adapters
 
         #region API        
 
-        public void Update(ref WriteableBitmap bmp)
+        public bool CreateOrUpdate(ref WriteableBitmap dst, bool allowCompatibleFormats = true)
         {
-            // TODO: check compatible
+            if (dst != null && _Bitmap.Info != dst.GetBitmapInfo())
+            {
+                if (!allowCompatibleFormats) dst = null;
+                else
+                {
+                    var expected = _Implementation.ToBestMatch(_Bitmap.Info.PixelFormat);
+                    if (expected != dst.Format) dst = null;
+                }                
+            }
 
-            if (bmp == null) bmp = CloneToWritableBitmap(true);
-            else bmp.SetPixels(0, 0, _Bitmap);
+            if (dst == null) { dst = CloneToWritableBitmap(allowCompatibleFormats); return true; }
+            else { dst.SetPixels(0, 0, _Bitmap); return false; }
         }
 
         public WriteableBitmap CloneToWritableBitmap(bool allowCompatibleFormats = false)
@@ -58,7 +66,7 @@ namespace InteropBitmaps.Adapters
             // https://social.msdn.microsoft.com/Forums/vstudio/en-US/84299fec-94a1-49a1-b3bc-ec48b8bdf04f/getting-a-drawingcontext-for-a-writeablebitmap?forum=wpf
             // https://stackoverflow.com/questions/7250282/how-to-draw-directly-on-bitmap-bitmapsource-writeablebitmap-in-wpf
 
-            var src = BitmapSource.Create(ptr.Info.Width, ptr.Info.Height, 96, 96, fmt, null, ptr.Pointer, ptr.Info.BitmapByteSize, ptr.Info.ScanlineByteSize);
+            var src = BitmapSource.Create(ptr.Info.Width, ptr.Info.Height, 96, 96, fmt, null, ptr.Pointer, ptr.Info.BitmapByteSize, ptr.Info.StepByteSize);
 
             var dv = new System.Windows.Media.DrawingVisual();
             var dc = dv.RenderOpen();
@@ -77,7 +85,7 @@ namespace InteropBitmaps.Adapters
 
             // ptr.Bitmap.SetPixels(0, 0, rt.ToMemoryBitmap());            
 
-            rt.CopyPixels(System.Windows.Int32Rect.Empty, ptr.Pointer, ptr.Info.BitmapByteSize, ptr.Info.ScanlineByteSize);
+            rt.CopyPixels(System.Windows.Int32Rect.Empty, ptr.Pointer, ptr.Info.BitmapByteSize, ptr.Info.StepByteSize);
         }
 
         #endregion

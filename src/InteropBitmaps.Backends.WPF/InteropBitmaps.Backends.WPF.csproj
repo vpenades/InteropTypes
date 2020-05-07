@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net471</TargetFrameworks>
     <RootNamespace>InteropBitmaps</RootNamespace>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <Import Project="..\Package.props" />
@@ -12,9 +13,11 @@
     <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
   </ItemGroup>
 
+  <!--
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
+  -->
 
 </Project>

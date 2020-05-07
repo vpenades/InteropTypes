@@ -9,4 +9,7 @@ echo Building 1.0.0-%VERSIONSUFFIX%
 
 dotnet build -c:Release --version-suffix %VERSIONSUFFIX% /p:Authors=vpenades ..\InteropBitmaps.sln
 
+md Packages
+
+
 pause

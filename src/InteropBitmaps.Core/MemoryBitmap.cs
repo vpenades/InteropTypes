@@ -26,16 +26,16 @@ namespace InteropBitmaps
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        public MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             var bytes = new byte[_Info.BitmapByteSize];            
             _Data = bytes;
         }        
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);            
+            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);            
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
@@ -55,8 +55,8 @@ namespace InteropBitmaps
         public bool IsEmpty => _Info.IsEmpty;
         public int Width => _Info.Width;
         public int Height => _Info.Height;
-        public int PixelSize => _Info.PixelByteSize;
-        public int ScanlineSize => _Info.ScanlineByteSize;
+        public int PixelByteSize => _Info.PixelByteSize;
+        public int StepByteSize => _Info.StepByteSize;
         public PixelFormat PixelFormat => _Info.PixelFormat;
 
         #endregion
@@ -102,6 +102,14 @@ namespace InteropBitmaps
             var (offset, info) = _Info.Slice(rect);
             var memory = this._Data.Slice(offset, info.BitmapByteSize);
             return new MemoryBitmap(memory, info);
+        }
+
+        public static bool CreateOrUpdate(ref MemoryBitmap dst, SpanBitmap src)
+        {
+            if (dst.Info == src.Info) { dst.SetPixels(0, 0, src); return false; }
+
+            dst = src.ToMemoryBitmap();
+            return true;            
         }
         
         #endregion
@@ -156,7 +164,7 @@ namespace InteropBitmaps
         public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
         {
             this.AsSpanBitmap().Write(stream, format, factory);
-        }
+        }        
 
         #endregion        
     }    

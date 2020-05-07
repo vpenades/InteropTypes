@@ -23,6 +23,16 @@ namespace InteropBitmaps
     {
         #region constructor
 
+        public static implicit operator BitmapBounds(in System.Drawing.Rectangle rect)
+        {
+            return new BitmapBounds(rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
+        public static implicit operator System.Drawing.Rectangle(in BitmapBounds rect)
+        {
+            return new BitmapBounds(rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
         public static implicit operator BitmapBounds(in (int x, int y, int w, int h) rect)
         {
             return new BitmapBounds(rect.x, rect.y, rect.w, rect.h);

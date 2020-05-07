@@ -5,7 +5,7 @@ using System.Text;
 namespace InteropBitmaps
 {
     /// <summary>
-    /// Represents a Bitmap wrapped around a <see cref="Span{Byte}"/>
+    /// Represents a Bitmap backed by a <see cref="Span{Byte}"/>
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
     public readonly ref struct SpanBitmap
@@ -35,15 +35,15 @@ namespace InteropBitmaps
             _Writable = null;
         }
 
-        public SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        public SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Readable = data.Slice(0, _Info.BitmapByteSize);
             _Writable = null;
         }
@@ -74,7 +74,7 @@ namespace InteropBitmaps
 
         public PixelFormat PixelFormat => _Info.PixelFormat;
 
-        public int ScanlineSize => _Info.ScanlineByteSize;
+        public int StepByteSize => _Info.StepByteSize;
 
         public BitmapBounds bounds => _Info.Bounds;
 

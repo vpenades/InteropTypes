@@ -67,7 +67,7 @@ namespace InteropBitmaps
         {
             var mtype = OpenCvSharp.MatType.CV_8UC(src.Info.PixelByteSize);
 
-            return new OpenCvSharp.Mat(src.Info.Height, src.Info.Width, mtype, src.Pointer, src.Info.ScanlineByteSize);
+            return new OpenCvSharp.Mat(src.Info.Height, src.Info.Width, mtype, src.Pointer, src.Info.StepByteSize);
         }
 
 

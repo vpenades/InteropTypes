@@ -25,6 +25,10 @@ namespace InteropBitmaps
         [Test]
         public void ComponentFormatEnumeration()
         {
+            #if DEBUG // requires debug mode
+
+            // PixelFormat._GetBitLen(c);
+
             Assert.AreEqual(0, (int)ComponentFormat.Empty);
 
             var values = Enum.GetValues(typeof(ComponentFormat))
@@ -51,6 +55,8 @@ namespace InteropBitmaps
                 if (name.EndsWith("32")) Assert.AreEqual(32, len);
                 if (name.EndsWith("32F")) Assert.AreEqual(32, len);
             }
+
+            #endif
 
             // todo: check the index of any "bit" group is less than the next group.
         }

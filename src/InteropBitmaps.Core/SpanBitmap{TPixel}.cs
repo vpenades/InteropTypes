@@ -89,7 +89,7 @@ namespace InteropBitmaps
 
         public PixelFormat PixelFormat => _Info.PixelFormat;
 
-        public int ScanlineSize => _Info.ScanlineByteSize;
+        public int StepByteSize => _Info.StepByteSize;
 
         public BitmapBounds bounds => _Info.Bounds;
 
@@ -203,6 +203,20 @@ namespace InteropBitmaps
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
+        }
+
+        public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)
+            where TSrcPixel: unmanaged
+        {
+            _Implementation.ApplyPixels(this, dstX, dstY, src, pixelFunc);
+        }
+
+        public MemoryBitmap<TDstPixel> ToMemoryBitmap<TDstPixel>(PixelFormat fmt, Converter<TPixel, TDstPixel> pixelConverter)
+            where TDstPixel:unmanaged
+        {
+            var dst = new MemoryBitmap<TDstPixel>(this.Width, this.Height, fmt);
+            dst.ApplyPixels(0, 0, this, (a, b) => pixelConverter(b));
+            return dst;
         }
 
         public PixelEnumerator GetPixelEnumerator() => new PixelEnumerator(this);

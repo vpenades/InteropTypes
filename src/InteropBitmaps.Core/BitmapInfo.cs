@@ -12,25 +12,25 @@ namespace InteropBitmaps
     {
         #region lifecycle        
 
-        public BitmapInfo(int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
+        public BitmapInfo(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
-            var pixelSize = pixelFormat.ByteCount;
+            var pixelByteSize = pixelFormat.ByteCount;
 
-            Guard.BitmapRect(width, height, pixelSize, scanlineSize);
+            Guard.BitmapRect(width, height, pixelByteSize, stepByteSize);
 
             Width = width;
             Height = height;
-            ScanlineByteSize = scanlineSize > 0 ? scanlineSize : width * pixelSize;
+            StepByteSize = stepByteSize > 0 ? stepByteSize : width * pixelByteSize;
 
             PixelFormat = pixelFormat;
-            PixelByteSize = pixelSize;            
+            PixelByteSize = pixelByteSize;            
         }
         
         private BitmapInfo(int width, int height, in BitmapInfo other)
         {
             Width = width;
             Height = height;
-            ScanlineByteSize = other.ScanlineByteSize;
+            StepByteSize = other.StepByteSize;
 
             PixelFormat = other.PixelFormat;
             PixelByteSize = other.PixelByteSize;                        
@@ -53,7 +53,7 @@ namespace InteropBitmaps
         /// <summary>
         /// Number of bytes to advance from the beginning of one row to the next.
         /// </summary>
-        public readonly int ScanlineByteSize;
+        public readonly int StepByteSize;
 
         /// <summary>
         /// format of the pixel.
@@ -73,7 +73,7 @@ namespace InteropBitmaps
             if (a.Height != b.Height) return false;
             if (a.PixelByteSize != b.PixelByteSize) return false;            
             if (a.PixelFormat != b.PixelFormat) return false;
-            if (a.ScanlineByteSize != b.ScanlineByteSize) return false;
+            if (a.StepByteSize != b.StepByteSize) return false;
             return true;
         }
 
@@ -97,7 +97,7 @@ namespace InteropBitmaps
         /// <remarks>
         /// When using a byte stride, the last row does not need a tailing stride.
         /// </remarks>        
-        public int BitmapByteSize => Height == 0 ? 0 : ScanlineByteSize * (Height - 1) + PixelByteSize * Width;
+        public int BitmapByteSize => Height == 0 ? 0 : StepByteSize * (Height - 1) + PixelByteSize * Width;
 
         /// <summary>
         /// Gets the size of the bitmap, in pixels.
@@ -112,7 +112,7 @@ namespace InteropBitmaps
         /// <summary>
         /// Gets a value indicating whether the buffer can be accessed continuously.
         /// </summary>
-        public bool IsContinuous => Width * PixelByteSize == ScanlineByteSize;
+        public bool IsContinuous => Width * PixelByteSize == StepByteSize;
 
         #endregion
 
@@ -122,7 +122,7 @@ namespace InteropBitmaps
         {
             Guard.IsTrue(nameof(rect), Bounds.Contains(rect));
 
-            var offset = this.ScanlineByteSize * rect.X + this.PixelByteSize * rect.Y;
+            var offset = this.StepByteSize * rect.Y + this.PixelByteSize * rect.X;
 
             // todo: if (Rect.X &1 ^ Rect.Y &1) == 1, pixel format must call SwitchScanlineFormatOrder(
 
@@ -133,32 +133,32 @@ namespace InteropBitmaps
 
         public Span<Byte> UseScanline(Span<Byte> bitmap, int y)
         {
-            return bitmap.Slice(y * ScanlineByteSize, Width * PixelByteSize);
+            return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }
 
         public ReadOnlySpan<Byte> GetScanline(ReadOnlySpan<Byte> bitmap, int y)
         {
-            return bitmap.Slice(y * ScanlineByteSize, Width * PixelByteSize);
+            return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }
 
         public Span<Byte> UsePixel(Span<Byte> bitmap, int x, int y)
         {
-            return bitmap.Slice(y * ScanlineByteSize + x * PixelByteSize, PixelByteSize);
+            return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize);
         }
 
         public Span<Byte> UsePixels(Span<Byte> bitmap, int x, int y, int pixelCount)
         {
-            return bitmap.Slice(y * ScanlineByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
+            return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
         }
 
         public ReadOnlySpan<Byte> GetPixel(ReadOnlySpan<Byte> bitmap, int x, int y)
         {
-            return bitmap.Slice(y * ScanlineByteSize + x * PixelByteSize, PixelByteSize);
+            return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize);
         }
 
         public ReadOnlySpan<Byte> GetPixels(ReadOnlySpan<Byte> bitmap, int x, int y, int pixelCount)
         {
-            return bitmap.Slice(y * ScanlineByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
+            return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
         }
 
         #endregion

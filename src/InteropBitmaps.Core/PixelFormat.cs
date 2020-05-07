@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace InteropBitmaps
@@ -27,7 +28,7 @@ namespace InteropBitmaps
         Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8, // PremulAlpha8
 
         // 16 bits
-        Undefined16, Index16, Gray16, Red16, Green16, Blue16, DepthMM16,
+        Undefined16, Index16, Gray16, Red16, Green16, Blue16, Alpha16, DepthMM16,
 
         // 32 bits
         Undefined32, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
@@ -70,30 +71,30 @@ namespace InteropBitmaps
         /// </summary>
         public static class Packed
         {
-            private const uint B0 = 1;
-            private const uint B1 = 256;
-            private const uint B2 = 256 * 256;
-            private const uint B3 = 256 * 256 * 256;
+            private const uint SHIFT0 = 1;
+            private const uint SHIFT1 = 256;
+            private const uint SHIFT2 = 256 * 256;
+            private const uint SHIFT3 = 256 * 256 * 256;
 
             public const uint Empty = (uint)PEF.Empty;
             
-            public const uint Gray8 = B0 * (uint)PEF.Gray8;
-            public const uint Alpha8 = B0 * (uint)PEF.Alpha8;
+            public const uint Gray8 = SHIFT0 * (uint)PEF.Gray8;
+            public const uint Alpha8 = SHIFT0 * (uint)PEF.Alpha8;
 
-            public const uint Gray16 = B0 * (uint)PEF.Gray16;
-            public const uint BGR565 = B0 * (uint)PEF.Blue5 | B1 * (uint)PEF.Green6 | B2 * (uint)PEF.Red5;
-            public const uint BGRA4444 = B0 * (uint)PEF.Blue4 | B1 * (uint)PEF.Green4 | B2 * (uint)PEF.Red4 | B3 * (uint)PEF.Alpha4;
-            public const uint BGRA5551 = B0 * (uint)PEF.Blue5 | B1 * (uint)PEF.Green5 | B2 * (uint)PEF.Red5 | B3 * (uint)PEF.Alpha1;
-            public const uint DepthMM16 = B0 * (uint)PEF.DepthMM16;
+            public const uint Gray16 = SHIFT0 * (uint)PEF.Gray16;
+            public const uint BGR565 = SHIFT0 * (uint)PEF.Blue5 | SHIFT1 * (uint)PEF.Green6 | SHIFT2 * (uint)PEF.Red5;
+            public const uint BGRA4444 = SHIFT0 * (uint)PEF.Blue4 | SHIFT1 * (uint)PEF.Green4 | SHIFT2 * (uint)PEF.Red4 | SHIFT3 * (uint)PEF.Alpha4;
+            public const uint BGRA5551 = SHIFT0 * (uint)PEF.Blue5 | SHIFT1 * (uint)PEF.Green5 | SHIFT2 * (uint)PEF.Red5 | SHIFT3 * (uint)PEF.Alpha1;
+            public const uint DepthMM16 = SHIFT0 * (uint)PEF.DepthMM16;
 
-            public const uint RGB24 = B0 * (uint)PEF.Red8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Blue8;
-            public const uint BGR24 = B0 * (uint)PEF.Blue8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Red8;
+            public const uint RGB24 = SHIFT0 * (uint)PEF.Red8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Blue8;
+            public const uint BGR24 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8;
 
-            public const uint RGBA32 = B0 * (uint)PEF.Red8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Blue8 | B3 * (uint)PEF.Alpha8;
-            public const uint BGRA32 = B0 * (uint)PEF.Blue8 | B1 * (uint)PEF.Green8 | B2 * (uint)PEF.Red8 | B3 * (uint)PEF.Alpha8;
-            public const uint ARGB32 = B0 * (uint)PEF.Alpha8 | B1 * (uint)PEF.Red8 | B2 * (uint)PEF.Green8 | B3 * (uint)PEF.Blue8;
+            public const uint RGBA32 = SHIFT0 * (uint)PEF.Red8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Blue8 | SHIFT3 * (uint)PEF.Alpha8;
+            public const uint BGRA32 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8 | SHIFT3 * (uint)PEF.Alpha8;
+            public const uint ARGB32 = SHIFT0 * (uint)PEF.Alpha8 | SHIFT1 * (uint)PEF.Red8 | SHIFT2 * (uint)PEF.Green8 | SHIFT3 * (uint)PEF.Blue8;
 
-            public const uint RGBA128F = B0 * (uint)PEF.Red32F | B1 * (uint)PEF.Green32F | B2 * (uint)PEF.Blue32F | B3 * (uint)PEF.Alpha32F;
+            public const uint RGBA128F = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F | SHIFT3 * (uint)PEF.Alpha32F;
         }
 
         /// <summary>
@@ -186,7 +187,33 @@ namespace InteropBitmaps
                 case 16: return new PixelFormat(PEF.Undefined32, PEF.Undefined32, PEF.Undefined32, PEF.Undefined32);
                 default:throw new NotImplementedException();
             }
-        }        
+        }
+
+        public static PixelFormat GetFromDepthAndChannels(Type depth, int channels)
+        {
+            if (depth == typeof(Byte))
+            {
+                if (channels == 1) return Standard.Gray8;
+                if (channels == 3) return Standard.BGR24;
+                if (channels == 4) return Standard.BGRA32;
+            }
+
+            if (depth == typeof(ushort))
+            {
+                if (channels == 1) return Standard.Gray16;
+                if (channels == 3) return new PixelFormat(PEF.Blue16, PEF.Green16, PEF.Red16);
+                if (channels == 4) return new PixelFormat(PEF.Blue16, PEF.Green16, PEF.Red16, PEF.Alpha16);
+            }
+
+            if (depth == typeof(Single))
+            {
+                if (channels == 1) return new PixelFormat(PEF.Gray32F);
+                if (channels == 3) return new PixelFormat(PEF.Blue32F,PEF.Green32F,PEF.Red32F);
+                if (channels == 4) return new PixelFormat(PEF.Blue32F, PEF.Green32F, PEF.Red32F, PEF.Alpha32F);
+            }
+
+            throw new NotImplementedException();
+        }
 
         #endregion
 
@@ -321,6 +348,7 @@ namespace InteropBitmaps
                 case PEF.Red16:
                 case PEF.Green16:
                 case PEF.Blue16:
+                case PEF.Alpha16:
                 case PEF.DepthMM16:
                 case PEF.Undefined16: return 16;
 
@@ -382,6 +410,7 @@ namespace InteropBitmaps
                 case PEF.Alpha1: return true;
                 case PEF.Alpha4: return true;
                 case PEF.Alpha8: return true;
+                case PEF.Alpha16: return true;
                 case PEF.Alpha32F: return true;
                 default: return false;
             }

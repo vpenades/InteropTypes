@@ -22,9 +22,9 @@ namespace InteropBitmaps
 
         public MemoryBitmap(int width, int height) : this(width, height, PixelFormat.GetUndefined<TPixel>()) { }
 
-        public unsafe MemoryBitmap(int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)            
+        public unsafe MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
 
             Guard.IsValidPixelFormat<TPixel>(_Info);
 
@@ -32,12 +32,12 @@ namespace InteropBitmaps
             _Data = bytes;
         }        
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, int scanlineSize = 0)
-            : this(data, width, height, PixelFormat.GetUndefined<TPixel>(), scanlineSize) { }
+        public MemoryBitmap(Memory<Byte> data, int width, int height, int stepByteSize = 0)
+            : this(data, width, height, PixelFormat.GetUndefined<TPixel>(), stepByteSize) { }
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)            
+        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
+            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
 
             Guard.IsValidPixelFormat<TPixel>(_Info);
 
@@ -61,7 +61,7 @@ namespace InteropBitmaps
         public int Width => _Info.Width;
         public int Height => _Info.Height;
         public int PixelSize => _Info.PixelByteSize;
-        public int ScanlineSize => _Info.ScanlineByteSize;
+        public int StepByteSize => _Info.StepByteSize;
         public PixelFormat PixelFormat => _Info.PixelFormat;
 
         #endregion
@@ -109,6 +109,12 @@ namespace InteropBitmaps
         public void SetPixels(TPixel value) { AsSpanBitmap().SetPixels(value); }
 
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }
+
+        public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel, TSrcPixel, TPixel> pixelFunc)
+            where TSrcPixel:unmanaged
+        {
+            AsSpanBitmap().ApplyPixels(dstX, dstY, src, pixelFunc);
+        }
 
         public MemoryBitmap<TPixel> Slice(in BitmapBounds rect)
         {

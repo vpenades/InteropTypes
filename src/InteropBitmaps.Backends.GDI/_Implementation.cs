@@ -85,7 +85,7 @@ namespace InteropBitmaps
         {
             var fmt = ToPixelFormat(src.Info.PixelFormat, false);
             if (fmt == GDIFMT.Undefined) throw new ArgumentException($"Invalid format {src.Info.PixelFormat}", nameof(src));
-            return new Bitmap(src.Info.Width, src.Info.Height, src.Info.ScanlineByteSize, fmt, src.Pointer);
+            return new Bitmap(src.Info.Width, src.Info.Height, src.Info.StepByteSize, fmt, src.Pointer);
         }
 
         public static Bitmap CloneToGDIBitmap(SpanBitmap src, bool allowCompatibleFormats, GDIFMT? fmtOverride = null)

@@ -5,7 +5,7 @@ using System.Text;
 namespace InteropBitmaps
 {
     /// <summary>
-    /// Represents a Bitmap wrapped around a <see cref="IntPtr"/>
+    /// Represents a Bitmap backed by a native <see cref="IntPtr"/> memory pointer.
     /// </summary>
     /// <remarks>
     /// This is the lowest possible level bitmap representation, so it is assumed a developer knows how to use it.
@@ -18,6 +18,8 @@ namespace InteropBitmaps
 
         public unsafe PointerBitmap(System.Buffers.MemoryHandle ptr, BitmapInfo info, bool isReadOnly = false)
         {
+            if (ptr.Pointer == null) throw new ArgumentNullException(nameof(ptr));
+
             _Pointer = new IntPtr(ptr.Pointer);
             _Info = info;
             _IsReadOnly = isReadOnly;
@@ -25,6 +27,8 @@ namespace InteropBitmaps
 
         public PointerBitmap(IntPtr ptr, BitmapInfo info, bool isReadOnly = false)
         {
+            if (ptr == IntPtr.Zero) throw new ArgumentNullException(nameof(ptr));
+
             _Pointer = ptr;
             _Info = info;
             _IsReadOnly = isReadOnly;
@@ -57,6 +61,8 @@ namespace InteropBitmaps
         /// </summary>
         public Boolean IsReadOnly => _IsReadOnly;
 
+        public Boolean IsEmpty => Pointer == IntPtr.Zero || _Info.IsEmpty;
+
         public int Width => _Info.Width;
 
         public int Height => _Info.Height;
@@ -65,7 +71,7 @@ namespace InteropBitmaps
 
         public PixelFormat PixelFormat => _Info.PixelFormat;
 
-        public int ScanlineSize => _Info.ScanlineByteSize;
+        public int StepByteSize => _Info.StepByteSize;
 
         public BitmapBounds bounds => _Info.Bounds;
 
@@ -111,7 +117,7 @@ namespace InteropBitmaps
 
             var ptr = IntPtr.Add(this.Pointer, offset);
 
-            return new PointerBitmap(ptr, info);
+            return new PointerBitmap(ptr, info, this.IsReadOnly);
         }
 
         #endregion

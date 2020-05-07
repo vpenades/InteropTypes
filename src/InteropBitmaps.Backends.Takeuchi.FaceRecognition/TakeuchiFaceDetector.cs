@@ -101,7 +101,7 @@ namespace InteropBitmaps.Detectors
                 {
                     if (buffer.Offset != 0) throw new InvalidOperationException();
 
-                    return FaceRecognitionDotNet.FaceRecognition.LoadImage(buffer.Array, _Bitmap.Height, _Bitmap.Width, _Bitmap.PixelSize);
+                    return FaceRecognitionDotNet.FaceRecognition.LoadImage(buffer.Array, _Bitmap.Height, _Bitmap.Width, _Bitmap.PixelByteSize);
                 }
 
                 throw new NotSupportedException();                
