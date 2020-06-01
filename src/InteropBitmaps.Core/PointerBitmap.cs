@@ -56,6 +56,8 @@ namespace InteropBitmaps
         /// </summary>
         public BitmapInfo Info => _Info;
 
+        public int ByteSize => _Info.BitmapByteSize;
+
         /// <summary>
         /// Gets a value indicating whether this instance is read-only.
         /// </summary>

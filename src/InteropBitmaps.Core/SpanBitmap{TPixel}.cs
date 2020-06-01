@@ -205,6 +205,8 @@ namespace InteropBitmaps
             _Implementation.CopyPixels(this, dstX, dstY, src);
         }
 
+        public void FitPixels(SpanBitmap<TPixel> src) { _Implementation.FitPixelsNearest(this, src); }
+
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)
             where TSrcPixel: unmanaged
         {

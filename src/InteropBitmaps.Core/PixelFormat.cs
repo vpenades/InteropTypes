@@ -384,6 +384,41 @@ namespace InteropBitmaps
             }
         }
 
+        public Type GetDepthType()
+        {
+            var e0Len = _GetBitLen(Element0);
+            var e1Len = _GetBitLen(Element1); if (e1Len != 0 && e1Len != e0Len) return null;
+            var e2Len = _GetBitLen(Element2); if (e2Len != 0 && e2Len != e0Len) return null;
+            var e3Len = _GetBitLen(Element3); if (e3Len != 0 && e3Len != e0Len) return null;
+
+            if (e0Len == 8) return typeof(Byte);
+            if (e0Len == 16) return typeof(UInt16);
+            if (e0Len == 32) return typeof(Single);
+
+            return null;
+        }
+
+        public (Type Depth, int Channels) GetDepthTypeAndChannels()
+        {
+            int ch = 1;
+
+            var len = _GetBitLen(Element0);
+            var next = _GetBitLen(Element1);
+            if (next != 0) { if (next == len) ++ch; else return (null, 0); }
+
+            next = _GetBitLen(Element2);
+            if (next != 0) { if (next == len) ++ch; else return (null, 0); }
+
+            next = _GetBitLen(Element3);
+            if (next != 0) { if (next == len) ++ch; else return (null, 0); }
+
+            if (len == 8) return (typeof(Byte), ch);
+            if (len == 16) return (typeof(UInt16), ch);
+            if (len == 32) return (typeof(Single), ch);
+
+            return (null, 0);
+        }
+
         #endregion
 
         #region static
