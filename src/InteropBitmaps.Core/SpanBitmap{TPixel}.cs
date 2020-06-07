@@ -142,7 +142,14 @@ namespace InteropBitmaps
             return other._Writable.IsEmpty ? new SpanBitmap(other._Readable, other._Info) : new SpanBitmap(other._Writable, other._Info);
         }
 
-        public unsafe SpanBitmap AsSpanBitmap()
+        /// <summary>
+        /// Returns a pixel typeless <see cref="SpanBitmap"/>.
+        /// </summary>
+        /// <returns>A <see cref="SpanBitmap"/></returns>
+        /// <remarks>
+        /// This is the opposite operation of <see cref="SpanBitmap.OfType{TPixel}"/>
+        /// </remarks>
+        public unsafe SpanBitmap AsTypeless()
         {
             return _Writable.IsEmpty ? new SpanBitmap(_Readable, _Info) : new SpanBitmap(_Writable, _Info);
         }
@@ -269,12 +276,12 @@ namespace InteropBitmaps
 
         public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
         {
-            AsSpanBitmap().Write(stream, format, factory);
+            AsTypeless().Write(stream, format, factory);
         }
 
         public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
         {
-            AsSpanBitmap().Save(filePath, factory);
+            AsTypeless().Save(filePath, factory);
         }
 
         #endregion

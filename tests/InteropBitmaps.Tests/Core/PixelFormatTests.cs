@@ -8,17 +8,22 @@ using NUnit.Framework;
 
 namespace InteropBitmaps
 {
+    using PEF = ElementFormat.Identifier;
+
     [Category("Core")]
     public class PixelFormatTests
     {
-        private static readonly ComponentFormat[] _Bits1 = new[] { ComponentFormat.Alpha1, ComponentFormat.Undefined1 };
-        private static readonly ComponentFormat[] _Bits4 = new[] { ComponentFormat.Alpha4, ComponentFormat.Red4, ComponentFormat.Green4, ComponentFormat.Blue4, ComponentFormat.Undefined4 };
-        private static readonly ComponentFormat[] _Bits5 = new[] { ComponentFormat.Red5, ComponentFormat.Green5, ComponentFormat.Blue5, ComponentFormat.Undefined5 };
-        private static readonly ComponentFormat[] _Bits6 = new[] { ComponentFormat.Green6, ComponentFormat.Undefined6 };
+        private static readonly PEF[] _Bits1 = new[] { PEF.Undefined1, PEF.Alpha1 };
+        private static readonly PEF[] _Bits4 = new[] { PEF.Undefined4, PEF.Alpha4, PEF.Red4, PEF.Green4, PEF.Blue4 };
+        private static readonly PEF[] _Bits5 = new[] { PEF.Undefined5, PEF.Red5, PEF.Green5, PEF.Blue5 };
+        private static readonly PEF[] _Bits6 = new[] { PEF.Undefined6, PEF.Green6 };
 
         [Test]
         public void TestPixelFormatStructure()
         {
+            Assert.AreEqual(PEF.Empty, default(ElementFormat).Id);
+
+            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(ElementFormat)));
             Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat)));
         }
 
@@ -29,19 +34,19 @@ namespace InteropBitmaps
 
             // PixelFormat._GetBitLen(c);
 
-            Assert.AreEqual(0, (int)ComponentFormat.Empty);
+            Assert.AreEqual(0, (int)PEF.Empty);
 
-            var values = Enum.GetValues(typeof(ComponentFormat))
-                .Cast<ComponentFormat>()
+            var values = Enum.GetValues(typeof(PEF))
+                .Cast<PEF>()
                 .ToArray();
 
             foreach(var c in values)
             {
                 var name = c.ToString();
 
-                var len = PixelFormat._GetBitLen(c);
+                var len = new ElementFormat(c).BitCount;
 
-                if (c == ComponentFormat.Empty) Assert.AreEqual(0, len);
+                if (c == PEF.Empty) Assert.AreEqual(0, len);
                 else Assert.Greater(len, 0);
 
                 if (name.EndsWith("1")) Assert.AreEqual(1, len);

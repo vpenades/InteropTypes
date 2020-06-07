@@ -31,7 +31,7 @@ namespace InteropBitmaps.Adapters
                         .AsSpanBitmap();
 
                     _Image.AsSpanBitmap()
-                        .AsSpanBitmap()
+                        .AsTypeless()
                         .SetPixels(0, 0, src);
                 }
 

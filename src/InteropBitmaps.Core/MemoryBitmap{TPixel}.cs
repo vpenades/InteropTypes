@@ -10,6 +10,15 @@ namespace InteropBitmaps
     [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
     public readonly struct MemoryBitmap<TPixel> : IBitmap<TPixel> where TPixel : unmanaged
     {
+        #region debug
+
+        internal ReadOnlySpan<TPixel> _Row0 => AsSpanBitmap().GetPixelsScanline(0);
+        internal ReadOnlySpan<TPixel> _Row1 => AsSpanBitmap().GetPixelsScanline(1);
+        internal ReadOnlySpan<TPixel> _Row2 => AsSpanBitmap().GetPixelsScanline(2);
+        internal ReadOnlySpan<TPixel> _Row3 => AsSpanBitmap().GetPixelsScanline(3);
+
+        #endregion
+
         #region lifecycle
 
         public MemoryBitmap(Memory<Byte> data, in BitmapInfo info)
@@ -102,6 +111,8 @@ namespace InteropBitmaps
 
         public SpanBitmap<TPixel> AsSpanBitmap() { return this; }
 
+        public MemoryBitmap AsTypeless() { return new MemoryBitmap(this._Data, this._Info); }
+
         #endregion
 
         #region API - Pixel Ops
@@ -136,7 +147,15 @@ namespace InteropBitmaps
                     yield return (x, y, GetPixel(x, y));
                 }
             }
-        }        
+        }
+
+        public static bool CreateOrUpdate(ref MemoryBitmap<TPixel> dst, SpanBitmap<TPixel> src)
+        {
+            if (dst.Info == src.Info) { dst.SetPixels(0, 0, src); return false; }
+
+            dst = src.ToMemoryBitmap();
+            return true;
+        }
 
         #endregion
 

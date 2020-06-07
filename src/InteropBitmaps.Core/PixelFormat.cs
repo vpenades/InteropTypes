@@ -1,51 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
+using System.Numerics;
 using System.Text;
 
 namespace InteropBitmaps
 {
-    using PEF = ComponentFormat;
-
-    public enum ComponentFormat
-    {
-        // 0 bits
-        Empty = 0,        
-
-        // 1 bit
-        Undefined1, Alpha1,
-
-        // 4 bits
-        Undefined4, Red4, Green4, Blue4, Alpha4, // PremulAlpha4
-
-        // 5 bits
-        Undefined5, Red5, Green5, Blue5,
-
-        // 6 bits
-        Undefined6, Green6,
-
-        // 8 bits
-        Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8, // PremulAlpha8
-
-        // 16 bits
-        Undefined16, Index16, Gray16, Red16, Green16, Blue16, Alpha16, DepthMM16,
-
-        // 32 bits
-        Undefined32, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
-    }
+    using PEF = ElementFormat.Identifier;
 
     // TODO: Rename to PixelEncoding
     [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplay(),nq}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-    public readonly struct PixelFormat : IEquatable<PixelFormat>
+    public readonly partial struct PixelFormat : IEquatable<PixelFormat>
     {
         #region debug
 
         internal string _GetDebuggerDisplay()
         {
-            switch(this.PackedFormat)
+            switch (this.PackedFormat)
             {
-                case Packed.Alpha8:return "A8";
+                case Packed.Alpha8: return "A8";
 
                 case Packed.Gray8: return "Gray8";
                 case Packed.Gray16: return "Gray16";
@@ -53,12 +28,17 @@ namespace InteropBitmaps
                 case Packed.RGB24: return "RGB24";
                 case Packed.BGR24: return "BGR24";
 
-                case Packed.ARGB32:return "ARGB32";
+                case Packed.ARGB32: return "ARGB32";
                 case Packed.RGBA32: return "RGBA32";
                 case Packed.BGRA32: return "BGRA32";
             }
 
-            return $"{Element0}-{Element1}-{Element2}-{Element3}";
+            var elements = Elements
+                .Where(item => item.Id != PEF.Empty)
+                .Select(item => item.Id);                
+
+            return string.Join("-", elements);
+            
         }
 
         #endregion
@@ -94,7 +74,13 @@ namespace InteropBitmaps
             public const uint BGRA32 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8 | SHIFT3 * (uint)PEF.Alpha8;
             public const uint ARGB32 = SHIFT0 * (uint)PEF.Alpha8 | SHIFT1 * (uint)PEF.Red8 | SHIFT2 * (uint)PEF.Green8 | SHIFT3 * (uint)PEF.Blue8;
 
+            public const uint Gray32F = SHIFT0 * (uint)PEF.Gray32F;
+
+            public const uint BGR96F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F;
+
             public const uint RGBA128F = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F | SHIFT3 * (uint)PEF.Alpha32F;
+
+            public const uint BGRA128F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F | SHIFT3 * (uint)PEF.Alpha32F;
         }
 
         /// <summary>
@@ -120,7 +106,13 @@ namespace InteropBitmaps
             public static readonly PixelFormat BGRA32 = new PixelFormat(Packed.BGRA32);
             public static readonly PixelFormat ARGB32 = new PixelFormat(Packed.ARGB32);
 
+            public static readonly PixelFormat Gray32F = new PixelFormat(Packed.Gray32F);
+
+            public static readonly PixelFormat BGR96F = new PixelFormat(Packed.BGR96F);
+
             public static readonly PixelFormat RGBA128F = new PixelFormat(Packed.RGBA128F);
+
+            public static readonly PixelFormat BGRA128F = new PixelFormat(Packed.BGRA128F);
         }
 
         #endregion
@@ -141,7 +133,9 @@ namespace InteropBitmaps
         {
             PackedFormat = 0;
             _Element0 = (Byte)e0;
-            _Element1 = _Element2 = _Element3 = (Byte)ComponentFormat.Empty;
+            _Element1 = _Element2 = _Element3 = (Byte)PEF.Empty;
+
+            _Validate();
         }
 
         public PixelFormat(PEF e0, PEF e1)
@@ -149,16 +143,20 @@ namespace InteropBitmaps
             PackedFormat = 0;
             _Element0 = (Byte)e0;
             _Element1 = (Byte)e1;
-            _Element2 = _Element3 = (Byte)ComponentFormat.Empty;
+            _Element2 = _Element3 = (Byte)PEF.Empty;
+
+            _Validate();
         }
 
-        public PixelFormat(PEF e0, PEF e1, ComponentFormat e2)
+        public PixelFormat(PEF e0, PEF e1, PEF e2)
         {
             PackedFormat = 0;
             _Element0 = (Byte)e0;
             _Element1 = (Byte)e1;
             _Element2 = (Byte)e2;
-            _Element3 = (Byte)ComponentFormat.Empty;
+            _Element3 = (Byte)PEF.Empty;
+
+            _Validate();
         }
 
         public PixelFormat(PEF e0, PEF e1, PEF e2, PEF e3)
@@ -168,10 +166,31 @@ namespace InteropBitmaps
             _Element1 = (Byte)e1;
             _Element2 = (Byte)e2;
             _Element3 = (Byte)e3;
+
+            _Validate();
+        }
+
+        private void _Validate()
+        {
+            int l = 0;
+            l += Element0.BitCount;
+            l += Element1.BitCount;
+            l += Element2.BitCount;
+            l += Element3.BitCount;
+
+            if (l == 0) throw new InvalidOperationException("Format must not have a zero length");
+            if ((l & 7) != 0) throw new InvalidOperationException("Format must have a length multiple of 8");
         }
 
         public static unsafe PixelFormat GetUndefined<TPixel>() where TPixel:unmanaged
         {
+            var tp = typeof(TPixel);
+
+            if (tp == typeof(float)) return new PixelFormat(PEF.Undefined32F);
+            if (tp == typeof(Vector2)) return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F);
+            if (tp == typeof(Vector3)) return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
+            if (tp == typeof(Vector4)) return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
+
             return GetUndefinedOfSize(sizeof(TPixel));
         }
 
@@ -184,7 +203,8 @@ namespace InteropBitmaps
                 case 3: return new PixelFormat(PEF.Undefined8, PEF.Undefined8, PEF.Undefined8);
                 case 4: return new PixelFormat(PEF.Undefined8, PEF.Undefined8, PEF.Undefined8, PEF.Undefined8);
                 case 8: return new PixelFormat(PEF.Undefined16, PEF.Undefined16, PEF.Undefined16, PEF.Undefined16);
-                case 16: return new PixelFormat(PEF.Undefined32, PEF.Undefined32, PEF.Undefined32, PEF.Undefined32);
+                case 12: return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
+                case 16: return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
                 default:throw new NotImplementedException();
             }
         }
@@ -198,7 +218,7 @@ namespace InteropBitmaps
                 if (channels == 4) return Standard.BGRA32;
             }
 
-            if (depth == typeof(ushort))
+            if (depth == typeof(UInt16))
             {
                 if (channels == 1) return Standard.Gray16;
                 if (channels == 3) return new PixelFormat(PEF.Blue16, PEF.Green16, PEF.Red16);
@@ -207,9 +227,9 @@ namespace InteropBitmaps
 
             if (depth == typeof(Single))
             {
-                if (channels == 1) return new PixelFormat(PEF.Gray32F);
-                if (channels == 3) return new PixelFormat(PEF.Blue32F,PEF.Green32F,PEF.Red32F);
-                if (channels == 4) return new PixelFormat(PEF.Blue32F, PEF.Green32F, PEF.Red32F, PEF.Alpha32F);
+                if (channels == 1) return Standard.Gray32F;
+                if (channels == 3) return Standard.BGR96F;
+                if (channels == 4) return Standard.BGRA128F;
             }
 
             throw new NotImplementedException();
@@ -236,7 +256,7 @@ namespace InteropBitmaps
 
         public override int GetHashCode() { return PackedFormat.GetHashCode(); }
 
-        public override bool Equals(object obj) { return obj is PixelFormat other ? this.Equals(other) : false; }
+        public override bool Equals(object obj) { return obj is PixelFormat other && this.Equals(other); }
 
         public bool Equals(PixelFormat other) { return this.PackedFormat == other.PackedFormat; }
 
@@ -248,13 +268,13 @@ namespace InteropBitmaps
 
         #region properties
 
-        public PEF Element0 => (PEF)_Element0;
+        public ElementFormat Element0 => new ElementFormat(_Element0);
 
-        public PEF Element1 => (PEF)_Element1;
+        public ElementFormat Element1 => new ElementFormat(_Element1);
 
-        public PEF Element2 => (PEF)_Element2;
+        public ElementFormat Element2 => new ElementFormat(_Element2);
 
-        public PEF Element3 => (PEF)_Element3;
+        public ElementFormat Element3 => new ElementFormat(_Element3);
 
         public int ByteCount => _GetByteLength();
 
@@ -269,7 +289,7 @@ namespace InteropBitmaps
             get => this;
         }
 
-        public IEnumerable<PEF> Elements
+        public IEnumerable<ElementFormat> Elements
         {
             get
             {
@@ -284,10 +304,10 @@ namespace InteropBitmaps
         {
             get
             {
-                var l = _GetBitLen(Element0);
-                l = Math.Max(l, _GetBitLen(Element1));
-                l = Math.Max(l, _GetBitLen(Element2));
-                l = Math.Max(l, _GetBitLen(Element3));
+                var l = Element0.BitCount;
+                l = Math.Max(l, Element1.BitCount);
+                l = Math.Max(l, Element2.BitCount);
+                l = Math.Max(l, Element3.BitCount);
                 return l;
             }
         }
@@ -299,80 +319,23 @@ namespace InteropBitmaps
         private int _GetByteLength()
         {
             int l = 0;
-            l += _GetBitLen(Element0);
-            l += _GetBitLen(Element1);
-            l += _GetBitLen(Element2);
-            l += _GetBitLen(Element3);
-
-            if (l == 0) throw new InvalidOperationException("Format must not have a zero length");
-            if ((l & 7) != 0) throw new InvalidOperationException("Format must have a length multiple of 8");
-
+            l += Element0.BitCount;
+            l += Element1.BitCount;
+            l += Element2.BitCount;
+            l += Element3.BitCount;
             return l / 8;
-        }
-
-        internal static int _GetBitLen(PEF pef)
-        {
-            // an alternative to the switch is to have a lookup table
-
-            switch(pef)
-            {
-                case PEF.Empty: return 0;
-
-                case PEF.Alpha1:
-                case PEF.Undefined1: return 1;
-
-                case PEF.Red4:
-                case PEF.Green4:
-                case PEF.Blue4:
-                case PEF.Alpha4:
-                case PEF.Undefined4: return 4;
-
-                case PEF.Red5:
-                case PEF.Green5:
-                case PEF.Blue5:
-                case PEF.Undefined5: return 5;
-
-                case PEF.Green6:
-                case PEF.Undefined6: return 6;
-
-                case PEF.Index8:
-                case PEF.Alpha8:
-                case PEF.Gray8:
-                case PEF.Red8:
-                case PEF.Green8:
-                case PEF.Blue8:
-                case PEF.Undefined8: return 8;
-
-                case PEF.Index16:
-                case PEF.Gray16:
-                case PEF.Red16:
-                case PEF.Green16:
-                case PEF.Blue16:
-                case PEF.Alpha16:
-                case PEF.DepthMM16:
-                case PEF.Undefined16: return 16;
-
-                case PEF.Gray32F:
-                case PEF.Red32F:
-                case PEF.Green32F:
-                case PEF.Blue32F:
-                case PEF.Alpha32F:
-                case PEF.Undefined32: return 32;
-
-                default: throw new NotImplementedException($"Not implemented:{pef}");
-            }
-        }
+        }        
 
         private int _FindIndex(PEF pef)
         {
-            if (Element0 == pef) return 0;
-            if (Element1 == pef) return 1;
-            if (Element2 == pef) return 2;
-            if (Element3 == pef) return 3;
+            if (Element0.Id == pef) return 0;
+            if (Element1.Id == pef) return 1;
+            if (Element2.Id == pef) return 2;
+            if (Element3.Id == pef) return 3;
             return -1;
         }
 
-        private PEF _GetComponentAt(int byteIndex)
+        private ElementFormat _GetComponentAt(int byteIndex)
         {
             switch(byteIndex)
             {
@@ -386,10 +349,10 @@ namespace InteropBitmaps
 
         public Type GetDepthType()
         {
-            var e0Len = _GetBitLen(Element0);
-            var e1Len = _GetBitLen(Element1); if (e1Len != 0 && e1Len != e0Len) return null;
-            var e2Len = _GetBitLen(Element2); if (e2Len != 0 && e2Len != e0Len) return null;
-            var e3Len = _GetBitLen(Element3); if (e3Len != 0 && e3Len != e0Len) return null;
+            var e0Len = Element0.BitCount;
+            var e1Len = Element1.BitCount; if (e1Len != 0 && e1Len != e0Len) return null;
+            var e2Len = Element2.BitCount; if (e2Len != 0 && e2Len != e0Len) return null;
+            var e3Len = Element3.BitCount; if (e3Len != 0 && e3Len != e0Len) return null;
 
             if (e0Len == 8) return typeof(Byte);
             if (e0Len == 16) return typeof(UInt16);
@@ -402,14 +365,14 @@ namespace InteropBitmaps
         {
             int ch = 1;
 
-            var len = _GetBitLen(Element0);
-            var next = _GetBitLen(Element1);
+            var len = Element0.BitCount;
+            var next = Element1.BitCount;
             if (next != 0) { if (next == len) ++ch; else return (null, 0); }
 
-            next = _GetBitLen(Element2);
+            next = Element2.BitCount;
             if (next != 0) { if (next == len) ++ch; else return (null, 0); }
 
-            next = _GetBitLen(Element3);
+            next = Element3.BitCount;
             if (next != 0) { if (next == len) ++ch; else return (null, 0); }
 
             if (len == 8) return (typeof(Byte), ch);
@@ -421,46 +384,7 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region static
-
-        public static bool IsUndefined(PEF pef)
-        {
-            switch (pef)
-            {
-                case PEF.Undefined1: return true;
-                case PEF.Undefined4: return true;
-                case PEF.Undefined5: return true;
-                case PEF.Undefined6: return true;
-                case PEF.Undefined8: return true;
-                case PEF.Undefined16: return true;
-                case PEF.Undefined32: return true;
-                default: return false;
-            }
-        }
-
-        public static bool IsAlpha(PEF pef)
-        {
-            switch (pef)
-            {
-                case PEF.Alpha1: return true;
-                case PEF.Alpha4: return true;
-                case PEF.Alpha8: return true;
-                case PEF.Alpha16: return true;
-                case PEF.Alpha32F: return true;
-                default: return false;
-            }
-        }
-
-        public static bool IsGrey(PEF pef)
-        {
-            switch(pef)
-            {
-                case PEF.Gray8: return true;
-                case PEF.Gray16: return true;
-                case PEF.Gray32F: return true;
-                default: return false;
-            }
-        }
+        #region static        
 
         public static void Convert(SpanBitmap dst, SpanBitmap src)
         {

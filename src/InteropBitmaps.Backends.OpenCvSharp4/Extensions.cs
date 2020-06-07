@@ -12,7 +12,7 @@ namespace InteropBitmaps
 
         public static Adapters.OpenCvSharp4SpanAdapter WithOpenCv<TPixel>(this SpanBitmap<TPixel> bmp)
             where TPixel : unmanaged
-        { return new Adapters.OpenCvSharp4SpanAdapter(bmp.AsSpanBitmap()); }
+        { return new Adapters.OpenCvSharp4SpanAdapter(bmp.AsTypeless()); }
 
         public static Adapters.OpenCvSharp4SpanAdapter WithOpenCv<TPixel>(this MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged

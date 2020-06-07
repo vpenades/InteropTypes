@@ -48,7 +48,7 @@ namespace InteropBitmaps.Backends
                         foreach(var cluster in r)
                         {
                             var points = cluster.Value
-                                .Select(item => new SixLabors.Primitives.PointF(item.X, item.Y))
+                                .Select(item => new SixLabors.Primitives.PointF(item.Point.X, item.Point.Y))
                                 .ToArray();
 
                             image.Mutate(dc => dc.DrawLines(SixLabors.ImageSharp.Color.Blue, 2, points));

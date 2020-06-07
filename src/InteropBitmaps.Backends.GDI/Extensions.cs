@@ -15,7 +15,7 @@ namespace InteropBitmaps
         public static Adapters.GDISpanAdapter WithGDI(this SpanBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }        
 
         public static Adapters.GDISpanAdapter WithGDI<TPixel>(this SpanBitmap<TPixel> bmp) where TPixel : unmanaged
-        { return new Adapters.GDISpanAdapter(bmp.AsSpanBitmap()); }
+        { return new Adapters.GDISpanAdapter(bmp.AsTypeless()); }
         
         public static Adapters.GDIMemoryAdapter UsingGDI(this MemoryBitmap bmp) { return new Adapters.GDIMemoryAdapter(bmp); }
 

@@ -49,7 +49,7 @@ namespace InteropBitmaps.Detectors
             }            
         }
 
-        public IDictionary<FaceRecognitionDotNet.FacePart, IEnumerable<FaceRecognitionDotNet.Point>>[] FindLandmarks(SpanBitmap bitmap)
+        public IDictionary<FaceRecognitionDotNet.FacePart, IEnumerable<FaceRecognitionDotNet.FacePoint>>[] FindLandmarks(SpanBitmap bitmap)
         {
             using (var img = _UseTempImage(bitmap))
             {
@@ -101,7 +101,7 @@ namespace InteropBitmaps.Detectors
                 {
                     if (buffer.Offset != 0) throw new InvalidOperationException();
 
-                    return FaceRecognitionDotNet.FaceRecognition.LoadImage(buffer.Array, _Bitmap.Height, _Bitmap.Width, _Bitmap.PixelByteSize);
+                    return FaceRecognitionDotNet.FaceRecognition.LoadImage(buffer.Array, _Bitmap.Height, _Bitmap.Width, _Bitmap.StepByteSize, FaceRecognitionDotNet.Mode.Rgb);
                 }
 
                 throw new NotSupportedException();                

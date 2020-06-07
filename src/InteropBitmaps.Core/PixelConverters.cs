@@ -100,6 +100,36 @@ namespace InteropBitmaps
 
         #endregion
 
+        #region Gray32F
+
+        public static _PixelBGRA32 FromGray32F(ReadOnlySpan<Byte> src)
+        {
+            var val = System.Runtime.InteropServices.MemoryMarshal.Read<float>(src);
+
+            var r = (int)val * 255;
+            if (r > 255) r = 255;
+            if (r < 0) r = 0;
+
+            return new _PixelBGRA32((Byte)r, (Byte)r, (Byte)r);
+        }
+
+        public void ToGray32F(Span<Byte> dst)
+        {
+            uint gray = 0;
+
+            gray += RLuminanceWeight * (uint)R;
+            gray += GLuminanceWeight * (uint)G;
+            gray += BLuminanceWeight * (uint)B;
+
+            gray >>= 8;
+
+            var val = (float)gray / 65536.0f;
+
+            System.Runtime.InteropServices.MemoryMarshal.Write<float>(dst, ref val);
+        }
+
+        #endregion
+
         #region RGB24
 
         public static _PixelBGRA32 FromRgb24(ReadOnlySpan<Byte> src)

@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropBitmaps.NUnit", "src\InteropBitmaps.NUnit\InteropBitmaps.NUnit.csproj", "{2D2FFE85-0690-43C4-883C-39C2BCDC3968}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{9C5BACF5-66B9-4F15-80AD-DF4CE139333E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C5BACF5-66B9-4F15-80AD-DF4CE139333E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C5BACF5-66B9-4F15-80AD-DF4CE139333E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D2FFE85-0690-43C4-883C-39C2BCDC3968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D2FFE85-0690-43C4-883C-39C2BCDC3968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D2FFE85-0690-43C4-883C-39C2BCDC3968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D2FFE85-0690-43C4-883C-39C2BCDC3968}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{D1B6A472-4873-40FD-BB8A-EBDE0851F07B} = {329DAC85-E2C7-430F-9B8C-598298D0CFB8}
 		{9C5BACF5-66B9-4F15-80AD-DF4CE139333E} = {88681588-D801-4956-ACA7-ADE65AF158A7}
 		{329DAC85-E2C7-430F-9B8C-598298D0CFB8} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
+		{2D2FFE85-0690-43C4-883C-39C2BCDC3968} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

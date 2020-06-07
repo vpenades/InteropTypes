@@ -55,7 +55,7 @@ namespace InteropBitmaps
         public static void AttachToCurrentTest<TPixel>(this MemoryBitmap<TPixel> bmp, string filePath)
             where TPixel:unmanaged
         {
-            bmp.AsSpanBitmap().AsSpanBitmap().AttachToCurrentTest(filePath);
+            bmp.AsSpanBitmap().AsTypeless().AttachToCurrentTest(filePath);
         }
 
         public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath)

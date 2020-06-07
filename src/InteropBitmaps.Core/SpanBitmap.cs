@@ -8,7 +8,7 @@ namespace InteropBitmaps
     /// Represents a Bitmap backed by a <see cref="Span{Byte}"/>
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
-    public readonly ref struct SpanBitmap
+    public readonly ref partial struct SpanBitmap
     {
         #region lifecycle
         
@@ -106,8 +106,16 @@ namespace InteropBitmaps
         {
             Guard.IsFalse(nameof(SpanBitmap), _Readable.IsEmpty);
             return SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
-        }        
+        }
 
+        /// <summary>
+        /// Returns a pixel specific <see cref="SpanBitmap{TPixel}"/>.
+        /// </summary>
+        /// <typeparam name="TPixel">The pixel type.</typeparam>        
+        /// <returns>A <see cref="SpanBitmap{TPixel}"/></returns>
+        /// <remarks>
+        /// This is the opposite operation of <see cref="SpanBitmap{TPixel}.AsTypeless"/>
+        /// </remarks>
         public unsafe SpanBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged
         {
