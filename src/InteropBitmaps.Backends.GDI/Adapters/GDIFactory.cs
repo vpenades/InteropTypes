@@ -7,6 +7,8 @@ namespace InteropBitmaps.Adapters
 {
     public readonly struct GDIFactory
     {
+        #region lifecycle
+
         internal GDIFactory(BitmapInfo binfo)
         {
             _Info = binfo;
@@ -14,9 +16,17 @@ namespace InteropBitmaps.Adapters
             _Compatible = _Implementation.ToPixelFormat(_Info.PixelFormat, true);
         }
 
+        #endregion
+
+        #region data
+
         private readonly BitmapInfo _Info;
         private readonly System.Drawing.Imaging.PixelFormat _Exact;
         private readonly System.Drawing.Imaging.PixelFormat _Compatible;
+
+        #endregion
+
+        #region API
 
         public Bitmap CreateBitmap()
         {
@@ -26,7 +36,7 @@ namespace InteropBitmaps.Adapters
             return new Bitmap(_Info.Width, _Info.Height, fmt);
         }
 
-        public void CreateOrUpdate(ref Bitmap bmp)
+        public void CopyTo(ref Bitmap bmp)
         {
             if (!IsExact(bmp)) { bmp?.Dispose(); bmp = null; }
 
@@ -41,5 +51,7 @@ namespace InteropBitmaps.Adapters
             if (bmp.PixelFormat != _Exact) return false;
             return true;
         }
+
+        #endregion
     }
 }

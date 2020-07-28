@@ -7,7 +7,7 @@ namespace InteropBitmaps
 {
     partial struct SpanBitmap
     {
-        public static (float min, float max) MinMax(SpanBitmap<float> src)
+        public static (Single Min, Single Max) MinMax(SpanBitmap<float> src)
         {
             var min = float.PositiveInfinity;
             var max = float.NegativeInfinity;            
@@ -25,12 +25,52 @@ namespace InteropBitmaps
             return (min, max);
         }
 
+        public static (Vector3 Min, Vector3 Max) MinMax(SpanBitmap<Vector3> src)
+        {
+            var min = new Vector3(float.PositiveInfinity);
+            var max = new Vector3(float.NegativeInfinity);
+
+            for (int y = 0; y < src.Height; ++y)
+            {
+                var srcRow = src.GetPixelsScanline(y);
+
+                for(int x=0; x < srcRow.Length; ++x)
+                {
+                    var p = srcRow[x];
+                    min = Vector3.Min(min, p);
+                    max = Vector3.Max(max, p);
+                }
+            }
+
+            return (min, max);
+        }
+
+        public static (Vector4 Min, Vector4 Max) MinMax(SpanBitmap<Vector4> src)
+        {
+            var min = new Vector4(float.PositiveInfinity);
+            var max = new Vector4(float.NegativeInfinity);
+
+            for (int y = 0; y < src.Height; ++y)
+            {
+                var srcRow = src.GetPixelsScanline(y);
+
+                for (int x = 0; x < srcRow.Length; ++x)
+                {
+                    var p = srcRow[x];
+                    min = Vector4.Min(min, p);
+                    max = Vector4.Max(max, p);
+                }
+            }
+
+            return (min, max);
+        }
+
         public static void CopyPixels(SpanBitmap<Byte> src, SpanBitmap<Single> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
 
             System.Diagnostics.Debug.Assert(dst.Width == src.Width);
-            System.Diagnostics.Debug.Assert(dst.Height == src.Height);
+            System.Diagnostics.Debug.Assert(dst.Height == src.Height);            
 
             for(int y=0; y < dst.Height; ++y)
             {
@@ -84,14 +124,29 @@ namespace InteropBitmaps
             {
                 Guard.AreTheSame(nameof(dst.Info.PixelFormat), dst.Info.PixelFormat.GetDepthType(), typeof(Byte));
 
-                for (int y = 0; y < dst.Height; ++y)
+                if (range.min == 0 && range.max == 255)
                 {
-                    var srcRow = src.GetPixelsScanline(y);
-                    var dstRow = dst.UseBytesScanline(y);
+                    for (int y = 0; y < dst.Height; ++y)
+                    {
+                        var srcRow = src.GetPixelsScanline(y);
+                        var dstRow = dst.UseBytesScanline(y);
 
-                    var srcFFF = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(srcRow);                    
+                        var srcFFF = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(srcRow);
 
-                    _SpanFloatOps.CopyPixels(srcFFF, dstRow, transform, range);
+                        _SpanFloatOps.CopyPixels(srcFFF, dstRow, transform);
+                    }
+                }
+                else
+                {
+                    for (int y = 0; y < dst.Height; ++y)
+                    {
+                        var srcRow = src.GetPixelsScanline(y);
+                        var dstRow = dst.UseBytesScanline(y);
+
+                        var srcFFF = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(srcRow);
+
+                        _SpanFloatOps.CopyPixels(srcFFF, dstRow, transform, range);
+                    }
                 }
 
                 return;
@@ -99,6 +154,52 @@ namespace InteropBitmaps
 
             throw new NotImplementedException();
         }          
+
+        public static void SplitPixels(SpanBitmap<Vector3> src, SpanBitmap<Single> dstB, SpanBitmap<Single> dstG, SpanBitmap<Single> dstR)
+        {
+            if (src.PixelFormat.Element0.IsBlue)
+            {
+                for (int y = 0; y < src.Height; ++y)
+                {
+                    var srcRow = src.GetPixelsScanline(y);
+                    var dstRowX = dstB.UsePixelsScanline(y);
+                    var dstRowY = dstG.UsePixelsScanline(y);
+                    var dstRowZ = dstR.UsePixelsScanline(y);
+
+                    for (int x = 0; x < srcRow.Length; ++x)
+                    {
+                        var bgr = srcRow[x];
+                        dstRowX[x] = bgr.X;
+                        dstRowY[x] = bgr.Y;
+                        dstRowZ[x] = bgr.Z;
+                    }
+                }
+            }
+
+            if (src.PixelFormat.Element0.IsRed)
+            {
+                for (int y = 0; y < src.Height; ++y)
+                {
+                    var srcRow = src.GetPixelsScanline(y);
+                    var dstRowX = dstR.UsePixelsScanline(y);
+                    var dstRowY = dstG.UsePixelsScanline(y);
+                    var dstRowZ = dstB.UsePixelsScanline(y);
+
+                    for (int x = 0; x < srcRow.Length; ++x)
+                    {
+                        var bgr = srcRow[x];
+                        dstRowX[x] = bgr.X;
+                        dstRowY[x] = bgr.Y;
+                        dstRowZ[x] = bgr.Z;
+                    }
+                }
+            }
+        }
+
+        public static void FitPixels(SpanBitmap src, SpanBitmap dst, (Single offset, Single scale) transform)
+        {
+            Processing._BilinearResizeImplementation.FitPixels(src, dst, transform);
+        }
 
         public static bool ArePixelsEqual(SpanBitmap a, SpanBitmap b)
         {
@@ -137,7 +238,7 @@ namespace InteropBitmaps
             throw new NotImplementedException();
         }
 
-        public static void ApplyAddMultiply(SpanBitmap<float> target, float add, float multiply)
+        public static void ApplyAddMultiply(SpanBitmap<Single> target, Single add, Single multiply)
         {
             for (int y = 0; y < target.Height; ++y)
             {
@@ -146,7 +247,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void ApplyMultiplyAndAdd(SpanBitmap<float> target, float multiply, float add)
+        public static void ApplyMultiplyAndAdd(SpanBitmap<Single> target, Single multiply, Single add)
         {
             for (int y = 0; y < target.Height; ++y)
             {
@@ -155,7 +256,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void ApplyAddMultiply(SpanBitmap<Vector3> target, float add, float multiply)
+        public static void ApplyAddMultiply(SpanBitmap<Vector3> target, Single add, Single multiply)
         {
             for (int y = 0; y < target.Height; ++y)
             {
@@ -165,7 +266,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void ApplyMultiplyAndAdd(SpanBitmap<Vector3> target, float multiply, float add)
+        public static void ApplyMultiplyAndAdd(SpanBitmap<Vector3> target, Single multiply, Single add)
         {
             for (int y = 0; y < target.Height; ++y)
             {
@@ -175,17 +276,17 @@ namespace InteropBitmaps
             }
         }
 
-        public static void ApplyAddMultiply(SpanBitmap<Vector4> target, float add, float multiply)
+        public static void ApplyAddMultiply(SpanBitmap<Vector4> target, Single add, Single multiply)
         {
             for (int y = 0; y < target.Height; ++y)
             {
                 var row = target.UsePixelsScanline(y);
-                var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, float>(row);
+                var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, Single>(row);
                 _SpanFloatOps.AddAndMultiply(fRow, add, multiply);
             }
         }
 
-        public static void ApplyMultiplyAndAdd(SpanBitmap<Vector4> target, float multiply, float add)
+        public static void ApplyMultiplyAndAdd(SpanBitmap<Vector4> target, Single multiply, Single add)
         {
             for (int y = 0; y < target.Height; ++y)
             {

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-using INTEROPFMT = InteropBitmaps.PixelFormat;
+using INTEROPFMT = InteropBitmaps.Pixel.Format;
 using SKIACOLOR = SkiaSharp.SKColorType;
 using SKIAALPHA = SkiaSharp.SKAlphaType;
+
+using STDPIXEL = InteropBitmaps.Pixel.Standard;
 
 namespace InteropBitmaps
 {
@@ -16,22 +18,22 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case INTEROPFMT.Packed.Alpha8: return (SKIACOLOR.Alpha8, SKIAALPHA.Opaque);
-                case INTEROPFMT.Packed.Gray8: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
+                case Pixel.Packed.Alpha8: return (SKIACOLOR.Alpha8, SKIAALPHA.Opaque);
+                case Pixel.Packed.Gray8: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
 
-                case INTEROPFMT.Packed.BGR565: return (SKIACOLOR.Rgb565, SKIAALPHA.Opaque);
+                case Pixel.Packed.BGR565: return (SKIACOLOR.Rgb565, SKIAALPHA.Opaque);
                 
-                case INTEROPFMT.Packed.RGBA32: return (SKIACOLOR.Rgba8888, SKIAALPHA.Unpremul);
-                case INTEROPFMT.Packed.BGRA32: return (SKIACOLOR.Bgra8888, SKIAALPHA.Unpremul);
+                case Pixel.Packed.RGBA32: return (SKIACOLOR.Rgba8888, SKIAALPHA.Unpremul);
+                case Pixel.Packed.BGRA32: return (SKIACOLOR.Bgra8888, SKIAALPHA.Unpremul);
             }
 
             if (allowCompatibleFormats)
             {
                 switch (fmt)
                 {
-                    case INTEROPFMT.Packed.BGR24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
-                    case INTEROPFMT.Packed.RGB24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
-                    case INTEROPFMT.Packed.Gray16: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
+                    case Pixel.Packed.BGR24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
+                    case Pixel.Packed.RGB24: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
+                    case Pixel.Packed.Gray16: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
                 }
             }
 
@@ -42,20 +44,20 @@ namespace InteropBitmaps
         {
             switch (color)
             {
-                case SKIACOLOR.Alpha8: return INTEROPFMT.Standard.Alpha8;
-                case SKIACOLOR.Gray8: return INTEROPFMT.Standard.Gray8;
-                case SKIACOLOR.Rgba8888: return INTEROPFMT.Standard.RGBA32;
-                case SKIACOLOR.Rgb888x: return INTEROPFMT.Standard.RGBA32;
-                case SKIACOLOR.Bgra8888: return INTEROPFMT.Standard.BGRA32;
+                case SKIACOLOR.Alpha8: return STDPIXEL.Alpha8;
+                case SKIACOLOR.Gray8: return STDPIXEL.Gray8;
+                case SKIACOLOR.Rgba8888: return STDPIXEL.RGBA32;
+                case SKIACOLOR.Rgb888x: return STDPIXEL.RGBA32;
+                case SKIACOLOR.Bgra8888: return STDPIXEL.BGRA32;
             }
 
             if (allowCompatibleFormats)
             {
                 switch(color)
                 {
-                    case SKIACOLOR.Argb4444: return INTEROPFMT.Standard.BGRA4444;
-                    case SKIACOLOR.Rgb565: return INTEROPFMT.Standard.BGR565;
-                    case SKIACOLOR.Rgb888x: return INTEROPFMT.Standard.RGB24;
+                    case SKIACOLOR.Argb4444: return STDPIXEL.BGRA4444;
+                    case SKIACOLOR.Rgb565: return STDPIXEL.BGR565;
+                    case SKIACOLOR.Rgb888x: return STDPIXEL.RGB24;
                 }
             }
 

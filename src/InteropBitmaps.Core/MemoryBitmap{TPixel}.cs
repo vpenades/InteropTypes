@@ -7,7 +7,8 @@ namespace InteropBitmaps
     /// <summary>
     /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
+    [System.Diagnostics.DebuggerDisplay("{Info._DebuggerDisplay(),nq}")]
+    [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
     public readonly struct MemoryBitmap<TPixel> : IBitmap<TPixel> where TPixel : unmanaged
     {
         #region debug
@@ -21,6 +22,14 @@ namespace InteropBitmaps
 
         #region lifecycle
 
+        public MemoryBitmap(in BitmapInfo info)
+        {
+            Guard.IsValidPixelFormat<TPixel>(info);
+
+            _Info = info;
+            _Data = new Byte[info.BitmapByteSize];
+        }
+
         public MemoryBitmap(Memory<Byte> data, in BitmapInfo info)
         {
             Guard.IsValidPixelFormat<TPixel>(info);
@@ -29,9 +38,9 @@ namespace InteropBitmaps
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height) : this(width, height, PixelFormat.GetUndefined<TPixel>()) { }
+        public MemoryBitmap(int width, int height) : this(width, height, Pixel.Format.GetUndefined<TPixel>()) { }
 
-        public unsafe MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
+        public unsafe MemoryBitmap(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)            
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
 
@@ -42,9 +51,9 @@ namespace InteropBitmaps
         }        
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, int stepByteSize = 0)
-            : this(data, width, height, PixelFormat.GetUndefined<TPixel>(), stepByteSize) { }
+            : this(data, width, height, Pixel.Format.GetUndefined<TPixel>(), stepByteSize) { }
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
+        public MemoryBitmap(Memory<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)            
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
 
@@ -58,7 +67,9 @@ namespace InteropBitmaps
         #region data
 
         private readonly BitmapInfo _Info;
-        private readonly Memory<Byte> _Data;        
+        private readonly Memory<Byte> _Data;
+
+        public override int GetHashCode() { return _Implementation.CalculateHashCode(_Data.Span, _Info); }
 
         #endregion
 
@@ -71,7 +82,7 @@ namespace InteropBitmaps
         public int Height => _Info.Height;
         public int PixelSize => _Info.PixelByteSize;
         public int StepByteSize => _Info.StepByteSize;
-        public PixelFormat PixelFormat => _Info.PixelFormat;
+        public Pixel.Format PixelFormat => _Info.PixelFormat;
 
         #endregion
 
@@ -147,15 +158,7 @@ namespace InteropBitmaps
                     yield return (x, y, GetPixel(x, y));
                 }
             }
-        }
-
-        public static bool CreateOrUpdate(ref MemoryBitmap<TPixel> dst, SpanBitmap<TPixel> src)
-        {
-            if (dst.Info == src.Info) { dst.SetPixels(0, 0, src); return false; }
-
-            dst = src.ToMemoryBitmap();
-            return true;
-        }
+        }        
 
         #endregion
 

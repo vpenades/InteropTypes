@@ -76,12 +76,12 @@ namespace InteropBitmaps
             _Implementation.SetPixels(dst, dstx, dsty, src);
         }        
 
-        public static MemoryBitmap ToMemoryBitmap(this Bitmap bmp, PixelFormat? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this Bitmap bmp, Pixel.Format? fmtOverride = null)
         {
             return _Implementation.CloneToMemoryBitmap(bmp, fmtOverride);
         }        
 
-        public static MemoryBitmap ToMemoryBitmap(this Image img, PixelFormat? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this Image img, Pixel.Format? fmtOverride = null)
         {
             using (var bmp = new Bitmap(img))
             {
@@ -89,17 +89,27 @@ namespace InteropBitmaps
             }
         }
 
-        public static MemoryBitmap ToMemoryBitmap(this TextureBrush brush, PixelFormat? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this TextureBrush brush, Pixel.Format? fmtOverride = null)
         {
             return ToMemoryBitmap(brush.Image, fmtOverride);
         }        
 
-        public static MemoryBitmap ToMemoryBitmap(this Icon icon, PixelFormat? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this Icon icon, Pixel.Format? fmtOverride = null)
         {
             using (var bmp = icon.ToBitmap())
             {
                 return _Implementation.CloneToMemoryBitmap(bmp, fmtOverride);
             }
+        }
+
+        public static Bitmap UsingAsGDIBitmap(this PointerBitmap bmp)
+        {
+            return _Implementation.WrapAsGDIBitmap(bmp);
+        }
+
+        public static Bitmap ToGDIBitmap(this MemoryBitmap bmp)
+        {
+            return _Implementation.CloneToGDIBitmap(bmp.AsSpanBitmap(),true);
         }
 
         #endregion

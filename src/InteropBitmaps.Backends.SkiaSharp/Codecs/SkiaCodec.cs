@@ -48,8 +48,8 @@ namespace InteropBitmaps.Codecs
             {
                 var fmt = GetFormatFromExtension(format);
 
-                var clr = _Implementation.ToPixelFormat(PixelFormat.Standard.RGBA32);
-                if (bmp.PixelFormat.Elements.Any(item => item.IsGrey)) clr = _Implementation.ToPixelFormat(PixelFormat.Standard.Gray8);
+                var clr = _Implementation.ToPixelFormat(Pixel.Standard.RGBA32);
+                if (bmp.PixelFormat.Elements.Any(item => item.IsGrey)) clr = _Implementation.ToPixelFormat(Pixel.Standard.Gray8);
 
                 if (clr.Color == SkiaSharp.SKColorType.Unknown) return false;
 

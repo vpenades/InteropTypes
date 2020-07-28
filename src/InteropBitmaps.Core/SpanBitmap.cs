@@ -7,7 +7,8 @@ namespace InteropBitmaps
     /// <summary>
     /// Represents a Bitmap backed by a <see cref="Span{Byte}"/>
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
+    [System.Diagnostics.DebuggerDisplay("{Info._DebuggerDisplay(),nq}")]
+    [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
     public readonly ref partial struct SpanBitmap
     {
         #region lifecycle
@@ -35,17 +36,28 @@ namespace InteropBitmaps
             _Writable = null;
         }
 
-        public SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+        public SpanBitmap(Span<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Readable = data.Slice(0, _Info.BitmapByteSize);
             _Writable = null;
+        }
+
+        public SpanBitmap Clone(ref Byte[] recyclableBuffer)
+        {            
+            if (recyclableBuffer == null || recyclableBuffer.Length < this.Info.BitmapByteSize) recyclableBuffer = new byte[this.Info.BitmapByteSize];
+
+            var other = new SpanBitmap(recyclableBuffer, this.Info);
+
+            other.SetPixels(0, 0, this);
+
+            return other;
         }
 
         #endregion
@@ -54,7 +66,9 @@ namespace InteropBitmaps
 
         private readonly BitmapInfo _Info;
         private readonly Span<Byte> _Writable;
-        private readonly ReadOnlySpan<Byte> _Readable;        
+        private readonly ReadOnlySpan<Byte> _Readable;
+
+        public override int GetHashCode() { return _Implementation.CalculateHashCode(_Readable, _Info); }
 
         #endregion
 
@@ -72,7 +86,7 @@ namespace InteropBitmaps
 
         public int PixelSize => _Info.PixelByteSize;
 
-        public PixelFormat PixelFormat => _Info.PixelFormat;
+        public Pixel.Format PixelFormat => _Info.PixelFormat;
 
         public int StepByteSize => _Info.StepByteSize;
 
@@ -129,7 +143,7 @@ namespace InteropBitmaps
         /// </summary>
         /// <param name="fmtOverride">Format override.</param>
         /// <returns>A new <see cref="MemoryBitmap"/>.</returns>
-        public MemoryBitmap ToMemoryBitmap(PixelFormat? fmtOverride = null)
+        public MemoryBitmap ToMemoryBitmap(Pixel.Format? fmtOverride = null)
         {
             if (!fmtOverride.HasValue) return new MemoryBitmap(_Readable.ToArray(), _Info);
 
@@ -190,6 +204,22 @@ namespace InteropBitmaps
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
         }        
+
+        public void CopyTo(ref MemoryBitmap other)
+        {
+            if (!this.Info.Equals(other.Info)) other = new MemoryBitmap(this.Info);
+
+            other.SetPixels(0, 0, this);
+        }
+
+        public void CopyTo(ref BitmapInfo otherInfo, ref Byte[] otherData)
+        {
+            if (!this.Info.Equals(otherInfo)) otherInfo = this.Info;
+
+            if (otherData == null || otherData.Length < otherInfo.BitmapByteSize) otherData = new byte[this.Info.BitmapByteSize];
+
+            new SpanBitmap(otherData,otherInfo).SetPixels(0, 0, this);
+        }
 
         #endregion
 

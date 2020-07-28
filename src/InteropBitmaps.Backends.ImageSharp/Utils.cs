@@ -13,10 +13,10 @@ namespace InteropBitmaps
 {
     static class _Utils
     {
-        #region statistics (OpenCV like methods)
+        #region statistics (OpenCV like methods)        
 
         public static IEnumerable<(int X, int Y, TPixel Pixel)> EnumeratePixels<TPixel>(this Image<TPixel> image)
-            where TPixel: struct, IPixel<TPixel>
+            where TPixel: unmanaged, IPixel<TPixel>
         {
             for(int y=0; y < image.Height; ++y)
             {
@@ -27,7 +27,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static Double StandardDeviation(this Image<Gray8> image)
+        public static Double StandardDeviation(this Image<L8> image)
         {
             return image                
                 .EnumeratePixels()
@@ -35,7 +35,7 @@ namespace InteropBitmaps
                 .StandardDeviation();
         }
 
-        public static Double StandardDeviation(this Image<Gray16> image)
+        public static Double StandardDeviation(this Image<L16> image)
         {
             return image                
                 .EnumeratePixels()
@@ -48,7 +48,7 @@ namespace InteropBitmaps
             // https://github.com/justadudewhohacks/opencv4nodejs/issues/448#issuecomment-436341650
 
             // Convert to gray
-            using (var gray = img.CloneAs<Gray16>())
+            using (var gray = img.CloneAs<L16>())
             {
                 // Detect blurry level
                 var laplacian = new SixLabors.ImageSharp.Processing.Processors.Convolution.Laplacian3x3Processor(false);

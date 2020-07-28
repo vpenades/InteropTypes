@@ -10,21 +10,21 @@ namespace InteropBitmaps
     /// <see href="https://github.com/micjahn/ZXing.Net"/>
     class _Implementation
     {
-        public static ZXing.RGBLuminanceSource.BitmapFormat ToZXing(PixelFormat enc)
+        public static ZXing.RGBLuminanceSource.BitmapFormat ToZXing(Pixel.Format enc)
         {
             switch (enc.PackedFormat)
             {
-                case PixelFormat.Packed.Gray8: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
-                case PixelFormat.Packed.Gray16: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
+                case Pixel.Packed.Gray8: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
+                case Pixel.Packed.Gray16: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
 
-                case PixelFormat.Packed.BGR565: return ZXing.RGBLuminanceSource.BitmapFormat.RGB565; // notice that colors here are inverted                
+                case Pixel.Packed.BGR565: return ZXing.RGBLuminanceSource.BitmapFormat.RGB565; // notice that colors here are inverted                
 
-                case PixelFormat.Packed.RGB24: return ZXing.RGBLuminanceSource.BitmapFormat.RGB24;
-                case PixelFormat.Packed.BGR24: return ZXing.RGBLuminanceSource.BitmapFormat.BGR24;
+                case Pixel.Packed.RGB24: return ZXing.RGBLuminanceSource.BitmapFormat.RGB24;
+                case Pixel.Packed.BGR24: return ZXing.RGBLuminanceSource.BitmapFormat.BGR24;
 
-                case PixelFormat.Packed.RGBA32: return ZXing.RGBLuminanceSource.BitmapFormat.RGBA32;
-                case PixelFormat.Packed.BGRA32: return ZXing.RGBLuminanceSource.BitmapFormat.BGRA32;
-                case PixelFormat.Packed.ARGB32: return ZXing.RGBLuminanceSource.BitmapFormat.ARGB32;
+                case Pixel.Packed.RGBA32: return ZXing.RGBLuminanceSource.BitmapFormat.RGBA32;
+                case Pixel.Packed.BGRA32: return ZXing.RGBLuminanceSource.BitmapFormat.BGRA32;
+                case Pixel.Packed.ARGB32: return ZXing.RGBLuminanceSource.BitmapFormat.ARGB32;
 
                 default: return ZXing.RGBLuminanceSource.BitmapFormat.Unknown;
             }

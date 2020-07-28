@@ -131,5 +131,28 @@ namespace InteropBitmaps
                 }
             }
         }
+
+
+        public static int CalculateHashCode(ReadOnlySpan<Byte> data, in BitmapInfo info)
+        {
+            if (info.IsEmpty) return 0;
+
+            System.Diagnostics.Debug.Assert(data.Length == info.BitmapByteSize);
+
+            var longs = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, ulong>(data.Slice(0, data.Length & ~3));
+
+            var step = (2 * longs.Length) / (info.Width + info.Height);
+            if (step < 1) step = 1;
+
+            ulong h = 0;
+
+            for (int i = 0; i < longs.Length; i += step)
+            {
+                h += longs[i];
+                h *= 17;
+            }
+
+            return h.GetHashCode();
+        }
     }
 }

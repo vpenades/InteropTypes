@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace InteropBitmaps
 {
@@ -8,24 +10,17 @@ namespace InteropBitmaps
     /// <summary>
     /// Defines a WPF <see cref="System.Windows.Media.Imaging.BitmapSource"/> based bitmap that can be updated from any thread.
     /// </summary>
-    public class WPFClientBitmap : System.ComponentModel.INotifyPropertyChanged
+    public class WPFClientBitmap : DispatcherObject, System.ComponentModel.INotifyPropertyChanged
     {
-        // TODO: this should be used as a WPF control too! as an Image control
-
         // TODO: this must be a visual collection so we can add/remove layers
 
         #region lifecycle
         
-        public WPFClientBitmap(System.Windows.Threading.Dispatcher dispatcher = null)
-        {
-            _Dispatcher = dispatcher;
-        }
+        public WPFClientBitmap() { }
 
         #endregion
 
-        #region data
-
-        private System.Windows.Threading.Dispatcher _Dispatcher;
+        #region data        
 
         private readonly object _BackBufferLock = new object();
         private MemoryBitmap _BackBuffer;
@@ -44,24 +39,19 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region API
-
-        protected bool CheckAccess() { return (_Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher).CheckAccess(); }
-
-        protected void VerifyAccess() { (_Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher).VerifyAccess(); }
+        #region API        
 
         public void Update(SpanBitmap src)
         {
-            var dsp = _Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher;
-            
-            if (!dsp.CheckAccess())
+            if (!this.CheckAccess())
             {
                 // Create an internal copy
-                lock (_BackBufferLock) { MemoryBitmap.CreateOrUpdate(ref _BackBuffer, src); }
+                lock (_BackBufferLock) { src.CopyTo(ref _BackBuffer); }
 
                 // And invoke the update in the UI thread.
-                try { dsp.Invoke(_UpdateFromBackBuffer); }
-                // When the app closes and the Dispatcher is shutdown any of these DispatcherOperations
+                try { this.Dispatcher.Invoke(_UpdateFromBackBuffer); }
+
+                // When the app closes and the Dispatcher has shut down any of these DispatcherOperations
                 // still in the queue are aborted and throw the TaskCanceledException.
                 catch (System.Threading.Tasks.TaskCanceledException) { }
 
@@ -75,7 +65,7 @@ namespace InteropBitmaps
         {
             VerifyAccess();
 
-            if (src.WithWPF().CreateOrUpdate(ref _FrontBuffer))
+            if (src.WithWPF().CopyTo(ref _FrontBuffer))
             {
                 PropertyChanged?.Invoke(this, _FrontBufferChanged);
             }
@@ -85,17 +75,17 @@ namespace InteropBitmaps
         {
             VerifyAccess();
 
-            bool notify = false;
+            bool recycled = false;
 
             lock (_BackBufferLock)
             {
                 var src = _BackBuffer.AsSpanBitmap();
-                notify = src.WithWPF().CreateOrUpdate(ref _FrontBuffer);                
+                recycled = src.WithWPF().CopyTo(ref _FrontBuffer);                
             }
 
-            if (notify) PropertyChanged?.Invoke(this, _FrontBufferChanged);
+            if (recycled) PropertyChanged?.Invoke(this, _FrontBufferChanged);
         }
 
         #endregion
-    }
+    }    
 }

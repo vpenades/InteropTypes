@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace InteropBitmaps
@@ -7,12 +8,23 @@ namespace InteropBitmaps
     /// <summary>
     /// Represents the width, height and pixel format of a bitmap.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
+    [System.Diagnostics.DebuggerDisplay("{_DebuggerDisplay(),nq}")]
     public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
-        #region lifecycle        
+        #region debug
 
-        public BitmapInfo(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+        internal string _DebuggerDisplay() { return $"{PixelFormat}×{Width}×{Height}"; }
+
+        #endregion
+
+        #region lifecycle     
+
+        public static implicit operator BitmapInfo((int w, int h, Pixel.Format fmt) binfo)
+        {
+            return new BitmapInfo(binfo.w, binfo.h, binfo.fmt);
+        }
+
+        public BitmapInfo(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
         {
             var pixelByteSize = pixelFormat.ByteCount;
 
@@ -58,14 +70,19 @@ namespace InteropBitmaps
         /// <summary>
         /// format of the pixel.
         /// </summary>
-        public readonly PixelFormat PixelFormat;
+        public readonly Pixel.Format PixelFormat;
 
         /// <summary>
         /// Byte size of a single pixel.
         /// </summary>
         public readonly int PixelByteSize;
 
-        public override int GetHashCode() { return Width.GetHashCode() ^ Height.GetHashCode() ^ PixelFormat.GetHashCode(); }
+        public override int GetHashCode()
+        {
+            // PixelFormat should be irrelevant
+
+            return Width.GetHashCode() ^ Height.GetHashCode() ^ PixelFormat.GetHashCode();
+        }
 
         public static bool AreEqual(in BitmapInfo a, in BitmapInfo b)
         {
@@ -113,6 +130,8 @@ namespace InteropBitmaps
         /// Gets a value indicating whether the buffer can be accessed continuously.
         /// </summary>
         public bool IsContinuous => Width * PixelByteSize == StepByteSize;
+
+        public (int Width, int Height, Pixel.Format Format) Layout => (Width, Height, PixelFormat);
 
         #endregion
 

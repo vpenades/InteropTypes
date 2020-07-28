@@ -28,9 +28,19 @@ namespace InteropBitmaps
             return new BitmapBounds(rect.X, rect.Y, rect.Width, rect.Height);
         }
 
+        public static implicit operator BitmapBounds(in System.Drawing.RectangleF rect)
+        {
+            return System.Drawing.Rectangle.Truncate(rect);
+        }
+
         public static implicit operator System.Drawing.Rectangle(in BitmapBounds rect)
         {
-            return new BitmapBounds(rect.X, rect.Y, rect.Width, rect.Height);
+            return new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
+        public static implicit operator System.Drawing.RectangleF(in BitmapBounds rect)
+        {
+            return new System.Drawing.RectangleF(rect.X, rect.Y, rect.Width, rect.Height);
         }
 
         public static implicit operator BitmapBounds(in (int x, int y, int w, int h) rect)
@@ -107,18 +117,18 @@ namespace InteropBitmaps
             return true;
         }
 
-        public static BitmapBounds Clamp(in BitmapBounds value, in BitmapBounds clamp)
+        public static BitmapBounds Clamp(in BitmapBounds value, in BitmapBounds limits)
         {
             var x = value.X;
             var y = value.Y;
             var w = value.Width;
             var h = value.Height;
 
-            if (x < clamp.X) { w -= (clamp.X - x); x = clamp.X; }
-            if (y < clamp.Y) { h -= (clamp.Y - y); y = clamp.Y; }
+            if (x < limits.X) { w -= (limits.X - x); x = limits.X; }
+            if (y < limits.Y) { h -= (limits.Y - y); y = limits.Y; }
 
-            if (x + w > clamp.X + clamp.Width) w -= (x + w) - (clamp.X + clamp.Width);
-            if (y + h > clamp.Y + clamp.Height) h -= (y + h) - (clamp.Y + clamp.Height);
+            if (x + w > limits.X + limits.Width) w -= (x + w) - (limits.X + limits.Width);
+            if (y + h > limits.Y + limits.Height) h -= (y + h) - (limits.Y + limits.Height);
 
             if (w < 0) w = 0;
             if (h < 0) h = 0;
@@ -127,5 +137,17 @@ namespace InteropBitmaps
         }
 
         #endregion
-    }    
+
+        #region nested types
+
+        public enum Anchor
+        {
+            Undefined
+            , TopLeft, Top, TopRight
+            , Left, Center, Right
+            , BottomLeft, Bottom, BottomRight
+        }
+
+        #endregion
+    }
 }

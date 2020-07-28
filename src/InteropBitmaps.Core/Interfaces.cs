@@ -17,7 +17,7 @@ namespace InteropBitmaps
         int Width { get; }
         int Height { get; }
 
-        PixelFormat PixelFormat { get; }
+        Pixel.Format PixelFormat { get; }
 
         TPixel GetPixel(int x, int y);
         void SetPixel(int x, int y, TPixel value);

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
-using INTEROPFMT = InteropBitmaps.PixelFormat;
+using INTEROPFMT = InteropBitmaps.Pixel.Format;
+using STDPIXEL = InteropBitmaps.Pixel.Standard;
+using PACKPIXEL = InteropBitmaps.Pixel.Packed;
 
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -14,21 +16,21 @@ namespace InteropBitmaps
     {
         #region pixel formats
 
-        public static PixelFormat ToPixelFormat(GDIFMT fmt)
+        public static INTEROPFMT ToPixelFormat(GDIFMT fmt)
         {
             switch (fmt)
             {
-                case GDIFMT.Format8bppIndexed: return INTEROPFMT.Standard.Gray8;
+                case GDIFMT.Format8bppIndexed: return STDPIXEL.Gray8;
 
-                case GDIFMT.Format16bppGrayScale: return INTEROPFMT.Standard.Gray16;
-                case GDIFMT.Format16bppRgb565: return INTEROPFMT.Standard.BGR565;
-                case GDIFMT.Format16bppRgb555: return INTEROPFMT.Standard.BGRA5551;
-                case GDIFMT.Format16bppArgb1555: return INTEROPFMT.Standard.BGRA5551;
+                case GDIFMT.Format16bppGrayScale: return STDPIXEL.Gray16;
+                case GDIFMT.Format16bppRgb565: return STDPIXEL.BGR565;
+                case GDIFMT.Format16bppRgb555: return STDPIXEL.BGRA5551;
+                case GDIFMT.Format16bppArgb1555: return STDPIXEL.BGRA5551;
 
-                case GDIFMT.Format24bppRgb: return INTEROPFMT.Standard.BGR24;
+                case GDIFMT.Format24bppRgb: return STDPIXEL.BGR24;
 
-                case GDIFMT.Format32bppRgb: return INTEROPFMT.Standard.BGRA32;
-                case GDIFMT.Format32bppArgb: return INTEROPFMT.Standard.BGRA32;
+                case GDIFMT.Format32bppRgb: return STDPIXEL.BGRA32;
+                case GDIFMT.Format32bppArgb: return STDPIXEL.BGRA32;
 
                 case GDIFMT.PAlpha:
                 case GDIFMT.Format32bppPArgb:
@@ -43,26 +45,26 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case INTEROPFMT.Packed.Gray16: return GDIFMT.Format16bppGrayScale;
+                case PACKPIXEL.Gray16: return GDIFMT.Format16bppGrayScale;
 
-                case INTEROPFMT.Packed.BGR565: return GDIFMT.Format16bppRgb565;
-                case INTEROPFMT.Packed.BGRA5551: return GDIFMT.Format16bppArgb1555;
+                case PACKPIXEL.BGR565: return GDIFMT.Format16bppRgb565;
+                case PACKPIXEL.BGRA5551: return GDIFMT.Format16bppArgb1555;
 
-                case INTEROPFMT.Packed.BGR24: return GDIFMT.Format24bppRgb;
+                case PACKPIXEL.BGR24: return GDIFMT.Format24bppRgb;
 
-                case INTEROPFMT.Packed.BGRA32: return GDIFMT.Format32bppArgb;                    
+                case PACKPIXEL.BGRA32: return GDIFMT.Format32bppArgb;                    
             }
 
             if (allowCompatibleFormats)
             {
                 switch (fmt)
                 {
-                    case INTEROPFMT.Packed.Gray8: // return GDIFMT.Format16bppGrayScale;                   
+                    case PACKPIXEL.Gray8: // return GDIFMT.Format16bppGrayScale;                   
 
-                    case INTEROPFMT.Packed.RGB24: return GDIFMT.Format24bppRgb;
+                    case PACKPIXEL.RGB24: return GDIFMT.Format24bppRgb;
 
-                    case INTEROPFMT.Packed.RGBA32: return GDIFMT.Format32bppArgb;
-                    case INTEROPFMT.Packed.ARGB32: return GDIFMT.Format32bppArgb;
+                    case PACKPIXEL.RGBA32: return GDIFMT.Format32bppArgb;
+                    case PACKPIXEL.ARGB32: return GDIFMT.Format32bppArgb;
 
                     default: throw new NotImplementedException(fmt.ToString());
                 }
@@ -83,8 +85,12 @@ namespace InteropBitmaps
 
         public static Bitmap WrapAsGDIBitmap(PointerBitmap src)
         {
+            if (src.IsEmpty) return null;
             var fmt = ToPixelFormat(src.Info.PixelFormat, false);
             if (fmt == GDIFMT.Undefined) throw new ArgumentException($"Invalid format {src.Info.PixelFormat}", nameof(src));
+
+            if ((src.Info.StepByteSize & 3) != 0) throw new ArgumentException($"Must be multiple of 4 but found {src.Info.StepByteSize}", nameof(src.Info.StepByteSize));
+
             return new Bitmap(src.Info.Width, src.Info.Height, src.Info.StepByteSize, fmt, src.Pointer);
         }
 

@@ -7,7 +7,8 @@ namespace InteropBitmaps
     /// <summary>
     /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
     /// </summary>    
-    [System.Diagnostics.DebuggerDisplay("{PixelFormat} {Width}x{Height}")]
+    [System.Diagnostics.DebuggerDisplay("{Info._DebuggerDisplay(),nq}")]
+    [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
     public readonly struct MemoryBitmap
     {
         #region lifecycle        
@@ -26,16 +27,16 @@ namespace InteropBitmaps
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+        public MemoryBitmap(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             var bytes = new byte[_Info.BitmapByteSize];            
             _Data = bytes;
         }        
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+        public MemoryBitmap(Memory<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);            
+            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
@@ -45,6 +46,8 @@ namespace InteropBitmaps
 
         private readonly BitmapInfo _Info;
         private readonly Memory<Byte> _Data;
+
+        public override int GetHashCode() { return _Implementation.CalculateHashCode(_Data.Span, _Info); }
 
         #endregion
 
@@ -57,7 +60,7 @@ namespace InteropBitmaps
         public int Height => _Info.Height;
         public int PixelByteSize => _Info.PixelByteSize;
         public int StepByteSize => _Info.StepByteSize;
-        public PixelFormat PixelFormat => _Info.PixelFormat;
+        public Pixel.Format PixelFormat => _Info.PixelFormat;
 
         #endregion
 
@@ -102,15 +105,7 @@ namespace InteropBitmaps
             var (offset, info) = _Info.Slice(rect);
             var memory = this._Data.Slice(offset, info.BitmapByteSize);
             return new MemoryBitmap(memory, info);
-        }
-
-        public static bool CreateOrUpdate(ref MemoryBitmap dst, SpanBitmap src)
-        {
-            if (dst.Info == src.Info) { dst.SetPixels(0, 0, src); return false; }
-
-            dst = src.ToMemoryBitmap();
-            return true;            
-        }
+        }        
         
         #endregion
 

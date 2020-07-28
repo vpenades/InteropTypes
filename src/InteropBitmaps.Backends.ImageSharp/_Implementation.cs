@@ -7,51 +7,54 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
+using STDPIXEL = InteropBitmaps.Pixel.Standard;
+using PACKPIXEL = InteropBitmaps.Pixel.Packed;
+
 namespace InteropBitmaps
 {
     static class _Implementation
     {
         #region pixel formats       
 
-        public static PixelFormat GetPixelFormat<TPixel>()
+        public static Pixel.Format GetPixelFormat<TPixel>()
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            if (typeof(TPixel) == typeof(Alpha8)) return PixelFormat.Standard.Alpha8;
-            if (typeof(TPixel) == typeof(Gray8)) return PixelFormat.Standard.Gray8;            
+            if (typeof(TPixel) == typeof(A8)) return STDPIXEL.Alpha8;
+            if (typeof(TPixel) == typeof(L8)) return STDPIXEL.Gray8;            
 
-            if (typeof(TPixel) == typeof(Gray16)) return PixelFormat.Standard.Gray16;
-            if (typeof(TPixel) == typeof(Bgr565)) return PixelFormat.Standard.BGR565;
-            if (typeof(TPixel) == typeof(Bgra5551)) return PixelFormat.Standard.BGRA5551;
-            if (typeof(TPixel) == typeof(Bgra4444)) return PixelFormat.Standard.BGRA4444;
+            if (typeof(TPixel) == typeof(L16)) return STDPIXEL.Gray16;
+            if (typeof(TPixel) == typeof(Bgr565)) return STDPIXEL.BGR565;
+            if (typeof(TPixel) == typeof(Bgra5551)) return STDPIXEL.BGRA5551;
+            if (typeof(TPixel) == typeof(Bgra4444)) return STDPIXEL.BGRA4444;
 
-            if (typeof(TPixel) == typeof(Bgr24)) return PixelFormat.Standard.BGR24;
-            if (typeof(TPixel) == typeof(Rgb24)) return PixelFormat.Standard.RGB24;
+            if (typeof(TPixel) == typeof(Bgr24)) return STDPIXEL.BGR24;
+            if (typeof(TPixel) == typeof(Rgb24)) return STDPIXEL.RGB24;
 
-            if (typeof(TPixel) == typeof(Argb32)) return PixelFormat.Standard.ARGB32;
-            if (typeof(TPixel) == typeof(Bgra32)) return PixelFormat.Standard.BGRA32;
-            if (typeof(TPixel) == typeof(Rgba32)) return PixelFormat.Standard.RGBA32;
+            if (typeof(TPixel) == typeof(Argb32)) return STDPIXEL.ARGB32;
+            if (typeof(TPixel) == typeof(Bgra32)) return STDPIXEL.BGRA32;
+            if (typeof(TPixel) == typeof(Rgba32)) return STDPIXEL.RGBA32;
 
             throw new NotImplementedException();
         }
 
-        public static Type ToPixelFormat(PixelFormat fmt)
+        public static Type ToPixelFormat(Pixel.Format fmt)
         {
             switch (fmt.PackedFormat)
             {
-                case PixelFormat.Packed.Alpha8: return typeof(Alpha8);
-                case PixelFormat.Packed.Gray8: return typeof(Gray8);
+                case PACKPIXEL.Alpha8: return typeof(A8);
+                case PACKPIXEL.Gray8: return typeof(L8);
 
-                case PixelFormat.Packed.Gray16: return typeof(Gray16);
-                case PixelFormat.Packed.BGR565: return typeof(Bgr565);
-                case PixelFormat.Packed.BGRA5551: return typeof(Bgra5551);
-                case PixelFormat.Packed.BGRA4444: return typeof(Bgra4444);
+                case PACKPIXEL.Gray16: return typeof(L16);
+                case PACKPIXEL.BGR565: return typeof(Bgr565);
+                case PACKPIXEL.BGRA5551: return typeof(Bgra5551);
+                case PACKPIXEL.BGRA4444: return typeof(Bgra4444);
 
-                case PixelFormat.Packed.RGB24: return typeof(Rgb24);
-                case PixelFormat.Packed.BGR24: return typeof(Bgr24);
+                case PACKPIXEL.RGB24: return typeof(Rgb24);
+                case PACKPIXEL.BGR24: return typeof(Bgr24);
 
-                case PixelFormat.Packed.RGBA32: return typeof(Rgba32);
-                case PixelFormat.Packed.BGRA32: return typeof(Bgra32);
-                case PixelFormat.Packed.ARGB32: return typeof(Argb32);
+                case PACKPIXEL.RGBA32: return typeof(Rgba32);
+                case PACKPIXEL.BGRA32: return typeof(Bgra32);
+                case PACKPIXEL.ARGB32: return typeof(Argb32);
 
                 default: throw new NotImplementedException();
             }
@@ -61,10 +64,10 @@ namespace InteropBitmaps
         {
             var pixType = ToPixelFormat(src.PixelFormat);
 
-            if (pixType == typeof(Alpha8)) return TryWrapImageSharp<Alpha8>(src);
-            if (pixType == typeof(Gray8)) return TryWrapImageSharp<Gray8>(src);
+            if (pixType == typeof(A8)) return TryWrapImageSharp<A8>(src);
+            if (pixType == typeof(L8)) return TryWrapImageSharp<L8>(src);
 
-            if (pixType == typeof(Gray16)) return TryWrapImageSharp<Gray16>(src);
+            if (pixType == typeof(L16)) return TryWrapImageSharp<L16>(src);
             if (pixType == typeof(Bgr565)) return TryWrapImageSharp<Bgr565>(src);
             if (pixType == typeof(Bgra5551)) return TryWrapImageSharp<Bgra5551>(src);
             if (pixType == typeof(Bgra4444)) return TryWrapImageSharp<Bgra4444>(src);
@@ -98,24 +101,24 @@ namespace InteropBitmaps
             return Image<TPixel>.WrapMemory(memMngr, src.Width, src.Height);
         }
 
-        public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
+        public static Image CreateImageSharp(Pixel.Format fmt, int width, int height)
         {
             switch (fmt.PackedFormat)
             {
-                case PixelFormat.Packed.Alpha8: return new Image<Alpha8>(width, height);
-                case PixelFormat.Packed.Gray8: return new Image<Gray8>(width, height);
+                case PACKPIXEL.Alpha8: return new Image<A8>(width, height);
+                case PACKPIXEL.Gray8: return new Image<L8>(width, height);
 
-                case PixelFormat.Packed.Gray16: return new Image<Gray16>(width, height);
-                case PixelFormat.Packed.BGR565: return new Image<Bgr565>(width, height);
-                case PixelFormat.Packed.BGRA5551: return new Image<Bgra5551>(width, height);
-                case PixelFormat.Packed.BGRA4444: return new Image<Bgra4444>(width, height);
+                case PACKPIXEL.Gray16: return new Image<L16>(width, height);
+                case PACKPIXEL.BGR565: return new Image<Bgr565>(width, height);
+                case PACKPIXEL.BGRA5551: return new Image<Bgra5551>(width, height);
+                case PACKPIXEL.BGRA4444: return new Image<Bgra4444>(width, height);
 
-                case PixelFormat.Packed.RGB24: return new Image<Rgb24>(width, height);
-                case PixelFormat.Packed.BGR24: return new Image<Bgr24>(width, height);
+                case PACKPIXEL.RGB24: return new Image<Rgb24>(width, height);
+                case PACKPIXEL.BGR24: return new Image<Bgr24>(width, height);
 
-                case PixelFormat.Packed.RGBA32: return new Image<Rgba32>(width, height);
-                case PixelFormat.Packed.BGRA32: return new Image<Bgra32>(width, height);
-                case PixelFormat.Packed.ARGB32: return new Image<Argb32>(width, height);
+                case PACKPIXEL.RGBA32: return new Image<Rgba32>(width, height);
+                case PACKPIXEL.BGRA32: return new Image<Bgra32>(width, height);
+                case PACKPIXEL.ARGB32: return new Image<Argb32>(width, height);
 
                 default: throw new NotImplementedException();
             }
@@ -125,10 +128,10 @@ namespace InteropBitmaps
         {
             if (src == null) return default;
 
-            if (src is Image<Alpha8> a8) return WrapAsSpanBitmap(a8);
-            if (src is Image<Gray8> b8) return WrapAsSpanBitmap(b8);
+            if (src is Image<A8> a8) return WrapAsSpanBitmap(a8);
+            if (src is Image<L8> b8) return WrapAsSpanBitmap(b8);
 
-            if (src is Image<Gray16> a16) return WrapAsSpanBitmap(a16);
+            if (src is Image<L16> a16) return WrapAsSpanBitmap(a16);
             if (src is Image<Bgr565> b16) return WrapAsSpanBitmap(b16);
             if (src is Image<Bgra5551> c16) return WrapAsSpanBitmap(c16);
             if (src is Image<Bgra4444> d16) return WrapAsSpanBitmap(d16);
@@ -161,10 +164,15 @@ namespace InteropBitmaps
 
             var pfmt = GetPixelFormat<TPixel>();
 
-            // We assume ImageSharp guarantees that memory is continuous.
-            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(src.GetPixelSpan());            
+            if (src.TryGetSinglePixelSpan(out Span<TPixel> srcSpan))
+            {
+                // We assume ImageSharp guarantees that memory is continuous.
+                var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan);
 
-            return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
+                return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
+            }
+
+            throw new NotSupportedException();
         }
 
         public static Image CloneToImageSharp(SpanBitmap src)

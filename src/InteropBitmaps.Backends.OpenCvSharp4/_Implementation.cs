@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
+using STDPIXEL = InteropBitmaps.Pixel.Standard;
+
 namespace InteropBitmaps
 {
     static class _Implementation
     {
         // https://github.com/shimat/opencvsharp/wiki/Accessing-Pixel
 
-        public static PixelFormat ToPixelFormat(OpenCvSharp.MatType fmt)
+        public static Pixel.Format ToPixelFormat(OpenCvSharp.MatType fmt)
         {
             if (fmt.IsInteger)
             {
-                if (fmt == OpenCvSharp.MatType.CV_8UC1) return PixelFormat.Standard.Gray8;
-                if (fmt == OpenCvSharp.MatType.CV_16UC1) return PixelFormat.Standard.Gray16;
+                if (fmt == OpenCvSharp.MatType.CV_8UC1) return STDPIXEL.Gray8;
+                if (fmt == OpenCvSharp.MatType.CV_16UC1) return STDPIXEL.Gray16;
 
-                if (fmt == OpenCvSharp.MatType.CV_8UC3) return PixelFormat.Standard.BGR24;
-                if (fmt == OpenCvSharp.MatType.CV_8UC4) return PixelFormat.Standard.BGRA32;
+                if (fmt == OpenCvSharp.MatType.CV_8UC3) return STDPIXEL.BGR24;
+                if (fmt == OpenCvSharp.MatType.CV_8UC4) return STDPIXEL.BGRA32;
             }
 
             throw new NotImplementedException();

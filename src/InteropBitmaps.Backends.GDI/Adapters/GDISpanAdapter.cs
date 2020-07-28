@@ -21,11 +21,26 @@ namespace InteropBitmaps.Adapters
 
         #endregion
 
-        #region API        
+        #region API
 
-        public void UpdateOrCreate(ref Bitmap bmp)
+        private bool IsCompatibleWith(Bitmap bmp, bool allowCompatibleFormats)
         {
-            // todo: if size of format don't match, dispose and rebuild.
+            if (bmp == null) return false;
+            if (bmp.Width != _Bitmap.Info.Width) return false;
+            if (bmp.Height != _Bitmap.Info.Height) return false;
+
+            var fmt = _Implementation.ToPixelFormat(_Bitmap.Info.PixelFormat, allowCompatibleFormats);
+
+            return bmp.PixelFormat == fmt;
+        }
+
+        public void CopyTo(ref Bitmap bmp)
+        {
+            if (!IsCompatibleWith(bmp, false))
+            {
+                bmp?.Dispose();
+                bmp = null;
+            }
 
             if (bmp == null) bmp = ToBitmap(true);
             else bmp.SetPixels(0, 0, _Bitmap);

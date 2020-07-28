@@ -5,6 +5,8 @@ using System.Text;
 
 namespace InteropBitmaps
 {
+    // TODO: implement https://devblogs.microsoft.com/dotnet/hardware-intrinsics-in-net-core/
+
     static class _SpanFloatOps
     {
         private static Span<Vector4> ToVector4(Span<Single> span)
@@ -18,6 +20,8 @@ namespace InteropBitmaps
             var fourCount = span.Length & ~3;
             return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, fourCount));
         }
+
+        
 
         public static Single Min(ReadOnlySpan<Single> span)
         {
@@ -81,7 +85,7 @@ namespace InteropBitmaps
             return max;
         }
 
-        public static (Single min, Single max) MinMax(ReadOnlySpan<Single> span)
+        public static (Single Min, Single Max) MinMax(ReadOnlySpan<Single> span)
         {
             var vectSpan = ToVector4(span);
             var (fourMin, fourMax) = MinMax(vectSpan);
@@ -106,7 +110,7 @@ namespace InteropBitmaps
             return (min, max);
         }
 
-        public static (Vector4 min, Vector4 max) MinMax(ReadOnlySpan<Vector4> span)
+        public static (Vector4 Min, Vector4 Max) MinMax(ReadOnlySpan<Vector4> span)
         {
             var min = new Vector4(float.PositiveInfinity);
             var max = new Vector4(float.NegativeInfinity);
@@ -164,6 +168,70 @@ namespace InteropBitmaps
             }
         }
 
+        public static void CopyPixels(ReadOnlySpan<Single> src, Span<Byte> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
+        {
+            Guard.AreEqual(nameof(dst), dst.Length, src.Length);
+            
+            var srcVec = System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(src.Slice(0, dst.Length & ~3));
+
+            var minVec = new Vector4(range.min);
+            var maxVec = new Vector4(range.max);
+            var offVec = new Vector4(transform.offset);
+
+            for (int x = 0; x < srcVec.Length; ++x)
+            {
+                var v = (offVec + srcVec[x]) * transform.scale;
+
+                v = Vector4.Max(v, minVec);
+                v = Vector4.Min(v, maxVec);
+
+                var i = x * 4;
+
+                dst[i + 0] = (Byte)v.X;
+                dst[i + 1] = (Byte)v.Y;
+                dst[i + 2] = (Byte)v.Z;
+                dst[i + 3] = (Byte)v.W;
+            }
+
+            for (int x = srcVec.Length * 4; x < dst.Length; ++x)
+            {
+                var v = (transform.offset + src[x]) * transform.scale;
+
+                if (v < range.min) v = range.min;
+                if (v > range.max) v = range.max;
+
+                dst[x] = (Byte)v;
+            }
+        }
+
+        public static void CopyPixels(ReadOnlySpan<Single> src, Span<Byte> dst, (Single offset, Single scale) transform)
+        {
+            Guard.AreEqual(nameof(dst), dst.Length, src.Length);
+
+            var srcVec = System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(src.Slice(0, dst.Length & ~3));
+            
+            var offVec = new Vector4(transform.offset);
+
+            for (int x = 0; x < srcVec.Length; ++x)
+            {
+                var v = (offVec + srcVec[x]) * transform.scale;
+                
+                var i = x * 4;
+
+                dst[i + 0] = (Byte)v.X;
+                dst[i + 1] = (Byte)v.Y;
+                dst[i + 2] = (Byte)v.Z;
+                dst[i + 3] = (Byte)v.W;
+            }
+
+            for (int x = srcVec.Length * 4; x < dst.Length; ++x)
+            {
+                var v = (transform.offset + src[x]) * transform.scale;                
+
+                dst[x] = (Byte)v;
+            }
+        }
+
         public static void CopyPixels(ReadOnlySpan<Byte> src, Span<Single> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
             Guard.AreEqual(nameof(dst), dst.Length, src.Length);
@@ -197,41 +265,27 @@ namespace InteropBitmaps
             }
         }
 
-        public static void CopyPixels(ReadOnlySpan<Single> src, Span<Byte> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
+        public static void CopyPixels(ReadOnlySpan<Byte> src, Span<Single> dst, (Single offset, Single scale) transform)
         {
             Guard.AreEqual(nameof(dst), dst.Length, src.Length);
 
-            var srcVec = System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(src.Slice(0, dst.Length & ~3));
-
-            var minVec = new Vector4(range.min);
-            var maxVec = new Vector4(range.max);
+            var dstVec = System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(dst.Slice(0, dst.Length & ~3));            
             var offVec = new Vector4(transform.offset);
 
-            for (int x = 0; x < srcVec.Length; ++x)
+            for (int x = 0; x < dstVec.Length; ++x)
             {
-                var v = (offVec + srcVec[x]) * transform.scale;
-
-                v = Vector4.Max(v, minVec);
-                v = Vector4.Min(v, maxVec);
-
                 var i = x * 4;
 
-                dst[i + 0] = (Byte)v.X;
-                dst[i + 1] = (Byte)v.Y;
-                dst[i + 2] = (Byte)v.Z;
-                dst[i + 3] = (Byte)v.W;
+                dstVec[x] = (offVec + new Vector4(src[i + 0], src[i + 1], src[i + 2], src[i + 3])) * transform.scale;
             }
 
-            for (int x = srcVec.Length * 4; x < dst.Length; ++x)
+            for (int x = dstVec.Length * 4; x < dst.Length; ++x)
             {
-                var v = (transform.offset + src[x]) + transform.scale;
-
-                if (v < range.min) v = range.min;
-                if (v > range.max) v = range.max;
-
-                dst[x] = (Byte)v;
+                dst[x] = (transform.offset + src[x]) * transform.scale;
             }
         }
+
+
 
         public static bool SequenceEqual(ReadOnlySpan<float> a, ReadOnlySpan<float> b)
         {
@@ -245,7 +299,7 @@ namespace InteropBitmaps
                 if (av[i] != bv[i]) return false;
             }
 
-            for (int i = av.Length*4; i < a.Length; ++i)
+            for (int i = av.Length * 4; i < a.Length; ++i)
             {
                 if (a[i] != b[i]) return false;
             }
@@ -267,6 +321,58 @@ namespace InteropBitmaps
             for (int i = vectSpan.Length * 4; i < span.Length; ++i)
             {
                 span[i] = Math.Max(Math.Min(span[i], max), min);
+            }
+        }
+
+
+        public static void LerpArray<T>(ReadOnlySpan<T> left, ReadOnlySpan<T> right, float amount, Span<T> dst)
+            where T:unmanaged
+        {
+            LerpArray
+                (System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(left)
+                , System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(right)
+                , amount
+                , System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(dst)
+                );
+
+        }
+
+        public static void LerpArray(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<float> dst)
+        {
+            var l = ToVector4(left);
+            var r = ToVector4(right);
+            var d = ToVector4(dst);
+
+            for(int i=0; i < d.Length; ++i)
+            {
+                d[i] = Vector4.Lerp(l[i], r[i], amount);
+            }
+
+            for (int i = d.Length * 4; i < dst.Length; ++i)
+            {
+                dst[i] = left[i] * (1 - amount) + right[i] * amount;
+            }
+        }
+
+        public static void LerpArray(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<Byte> dst)
+        {
+            var l = ToVector4(left);
+            var r = ToVector4(right);
+            var d = dst.Length / 4;
+
+            for (int i = 0; i < d; ++i)
+            {
+                var v = Vector4.Lerp(l[i], r[i], amount);
+
+                dst[i * 4 + 0] = (Byte)v.X;
+                dst[i * 4 + 1] = (Byte)v.Y;
+                dst[i * 4 + 2] = (Byte)v.Z;
+                dst[i * 4 + 3] = (Byte)v.W;
+            }
+
+            for (int i = d * 4; i < dst.Length; ++i)
+            {
+                dst[i] = (Byte)(left[i] * (1 - amount) + right[i] * amount);
             }
         }
     }

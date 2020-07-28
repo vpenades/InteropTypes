@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
+using STDPIXEL = InteropBitmaps.Pixel.Standard;
+
 namespace InteropBitmaps
 {
     /// <see href="https://github.com/StbSharp/StbImageLib"/>
     static class _Implementation
     {
-        public static PixelFormat ToPixelFormat(StbImageLib.ColorComponents components, int bitsPerChannel)
+        public static Pixel.Format ToPixelFormat(StbImageLib.ColorComponents components, int bitsPerChannel)
         {
             if (bitsPerChannel == 8)
             {
                 switch (components)
                 {
-                    case StbImageLib.ColorComponents.Grey: return PixelFormat.Standard.Gray8;
+                    case StbImageLib.ColorComponents.Grey: return STDPIXEL.Gray8;
                     //case StbImageLib.ColorComponents.GreyAlpha:;
-                    case StbImageLib.ColorComponents.RedGreenBlue: return PixelFormat.Standard.RGB24;
-                    case StbImageLib.ColorComponents.RedGreenBlueAlpha: return PixelFormat.Standard.RGBA32;
+                    case StbImageLib.ColorComponents.RedGreenBlue: return STDPIXEL.RGB24;
+                    case StbImageLib.ColorComponents.RedGreenBlueAlpha: return STDPIXEL.RGBA32;
                     default: throw new NotImplementedException();
                 }
             }

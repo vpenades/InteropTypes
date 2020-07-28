@@ -349,19 +349,19 @@ namespace InteropBitmaps
             void ConvertTo(Span<Byte> dst, int dstY, ReadOnlySpan<System.Numerics.Vector4> src);
         }
 
-        public static IBGRA32Converter GetConverter(PixelFormat fmt)
+        public static IBGRA32Converter GetConverter(Pixel.Format fmt)
         {
-            if (fmt == PixelFormat.Standard.Gray8) return new _CvtGray8();
+            if (fmt == Pixel.Standard.Gray8) return new _CvtGray8();
 
-            if (fmt == PixelFormat.Standard.Gray16) return new _CvtGray16();
-            if (fmt == PixelFormat.Standard.DepthMM16) return new _CvtGray16();
+            if (fmt == Pixel.Standard.Gray16) return new _CvtGray16();
+            if (fmt == Pixel.Standard.DepthMM16) return new _CvtGray16();
 
-            if (fmt == PixelFormat.Standard.RGB24) return new _CvtRgb24();
-            if (fmt == PixelFormat.Standard.BGR24) return new _CvtBgr24();
+            if (fmt == Pixel.Standard.RGB24) return new _CvtRgb24();
+            if (fmt == Pixel.Standard.BGR24) return new _CvtBgr24();
 
-            if (fmt == PixelFormat.Standard.BGRA32) return new _CvtBgra32();
-            if (fmt == PixelFormat.Standard.ARGB32) return new _CvtArgb32();
-            if (fmt == PixelFormat.Standard.RGBA32) return new _CvtRgba32();
+            if (fmt == Pixel.Standard.BGRA32) return new _CvtBgra32();
+            if (fmt == Pixel.Standard.ARGB32) return new _CvtArgb32();
+            if (fmt == Pixel.Standard.RGBA32) return new _CvtRgba32();
 
             throw new NotImplementedException();
         }

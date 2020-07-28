@@ -11,7 +11,7 @@ namespace InteropBitmaps
     /// This is the lowest possible level bitmap representation, so it is assumed a developer knows how to use it.
     /// This structure just wraps the pointer; in order to access it, use <see cref="AsSpanBitmap"/> or <see cref="AsSPanBitmapOfType{TPixel}"/>.    
     /// </remarks>
-    [System.Diagnostics.DebuggerDisplay("{Pointer} {Info.PixelFormat} {Info.Width}x{Info.Height}")]
+    [System.Diagnostics.DebuggerDisplay("{Pointer} {Info._DebuggerDisplay(),nq}")]
     public readonly struct PointerBitmap
     {
         #region constructors        
@@ -71,7 +71,7 @@ namespace InteropBitmaps
 
         public int PixelSize => _Info.PixelByteSize;
 
-        public PixelFormat PixelFormat => _Info.PixelFormat;
+        public Pixel.Format PixelFormat => _Info.PixelFormat;
 
         public int StepByteSize => _Info.StepByteSize;
 
@@ -120,6 +120,22 @@ namespace InteropBitmaps
             var ptr = IntPtr.Add(this.Pointer, offset);
 
             return new PointerBitmap(ptr, info, this.IsReadOnly);
+        }
+
+        public void CopyTo(ref MemoryBitmap other)
+        {
+            if (!this.Info.Equals(other.Info)) other = new MemoryBitmap(this.Info);
+
+            other.SetPixels(0, 0, this);
+        }
+
+        public void CopyTo(ref BitmapInfo otherInfo, ref Byte[] otherData)
+        {
+            if (!this.Info.Equals(otherInfo)) otherInfo = this.Info;
+
+            if (otherData == null || otherData.Length < otherInfo.BitmapByteSize) otherData = new byte[this.Info.BitmapByteSize];
+
+            new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
         }
 
         #endregion

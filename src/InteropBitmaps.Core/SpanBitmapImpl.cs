@@ -30,6 +30,18 @@ namespace InteropBitmaps
             }
         }
 
+        public static unsafe void PinTransferPointers(SpanBitmap src, SpanBitmap dst, Action<PointerBitmap, PointerBitmap> onPin)
+        {
+            fixed (byte* srcPtr = &src.ReadableSpan.GetPinnableReference())
+            fixed (byte* dstPtr = &dst.WritableSpan.GetPinnableReference())
+            {
+                var srcBmp = new PointerBitmap(new IntPtr(srcPtr), src.Info, true);
+                var dstBmp = new PointerBitmap(new IntPtr(dstPtr), dst.Info, false);
+
+                onPin(srcBmp, dstBmp);
+            }
+        }
+
         public static unsafe TResult PinReadablePointer<TResult>(ReadOnlySpan<Byte> readable, in BitmapInfo binfo, Func<PointerBitmap, TResult> onPin)
         {
             if (readable.IsEmpty) throw new InvalidOperationException();
