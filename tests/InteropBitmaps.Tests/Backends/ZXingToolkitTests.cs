@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Processing;
 
-using POINT = SixLabors.Primitives.PointF;
+using POINT = SixLabors.ImageSharp.PointF;
 
 namespace InteropBitmaps.Backends
 {

@@ -13,16 +13,17 @@
 
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.3.0.20200524" />
-    <PackageReference Include="SkiaSharp" Version="1.68.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.4.0.20200725" />
+    <PackageReference Include="SkiaSharp" Version="2.80.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropBitmaps.Backends.FFmpeg.AutoGen.csproj" />    
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropBitmaps.Backends.OpenCvSharp4.csproj" />

@@ -98,7 +98,7 @@ namespace InteropBitmaps.Examples
                 .Draw(dc => dc.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c }));            
 
             // Use Imagesharp to save to PNG
-            span.AttachToCurrentTest("shannon.png");
+            span.AttachToCurrentTestAll("shannon.png");
         }
 
         [Test(Description ="Simple conversion From ImageSharp to System.Drawing")]

@@ -18,7 +18,7 @@ namespace InteropBitmaps
         [Test]
         public void CreateMemoryBitmap()
         {
-            var m1 = new MemoryBitmap<UInt32>(16, 16, PixelFormat.Standard.RGBA32);
+            var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.Standard.RGBA32);
             m1.SetPixels(0xff406040);
 
             m1.AttachToCurrentTest("result.png");
@@ -27,8 +27,8 @@ namespace InteropBitmaps
         [Test]
         public void SetPixels()
         {
-            var dst = new MemoryBitmap<Byte>(16, 16, PixelFormat.Standard.Gray8);
-            var src = new MemoryBitmap<Byte>(8, 8, PixelFormat.Standard.Gray8);
+            var dst = new MemoryBitmap<Byte>(16, 16, Pixel.Standard.Gray8);
+            var src = new MemoryBitmap<Byte>(8, 8, Pixel.Standard.Gray8);
 
             src.SetPixels(50);
             dst.SetPixels(4, 4, src);
@@ -58,9 +58,9 @@ namespace InteropBitmaps
 
             src.SetPixels(1);
 
-            var minmax = SpanBitmap.MinMax(src);
-            Assert.AreEqual(minmax.min, 1);
-            Assert.AreEqual(minmax.max, 1);
+            var (min, max) = SpanBitmap.MinMax(src);
+            Assert.AreEqual(min, 1);
+            Assert.AreEqual(max, 1);
 
             SpanBitmap.CopyPixels(src, dst, (0,128), (0, 255));
             Assert.IsTrue(dst.EnumeratePixels().All(p => p.Pixel == 128));
@@ -76,7 +76,7 @@ namespace InteropBitmaps
         public void CopyRGBPixels()
         {
             var src = new MemoryBitmap<Vector3>(177, 177).Slice((10, 10, 150, 150));
-            var dst = new MemoryBitmap<PixelBGR>(177, 177).Slice((10, 10, 150, 150));
+            var dst = new MemoryBitmap<PixelBGR>(177, 177).Slice((10, 10, 150, 150));            
 
             src.SetPixels(Vector3.One);
 
@@ -94,9 +94,15 @@ namespace InteropBitmaps
             Assert.IsTrue(SpanBitmap.ArePixelsEqual(dst, dst));
         }
 
+        [System.Diagnostics.DebuggerDisplay("{ToString(),nq}")]
         [StructLayout(LayoutKind.Sequential)]
         struct PixelBGR : IEquatable<PixelBGR>
         {
+            public override string ToString()
+            {
+                return $"<{B:X2} {G:X2} {R:X2}>";
+            }
+
             public PixelBGR(Byte gray) { R = G = B = gray; }
 
             public Byte B;
@@ -109,7 +115,7 @@ namespace InteropBitmaps
                 if (this.G != other.G) return false;
                 if (this.R != other.R) return false;
                 return true;
-            }
+            }            
         }
     }
 }

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>InteropBitmaps</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>        
+    <PackageReference Include="FFmpeg.AutoGen" Version="4.3.0.1" />
+    <PackageReference Include="FFmpeg.Nightly" Version="20200821.0.0" GeneratePathProperty="true" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(PkgFFmpeg_Nightly)\build\native\bin\Win32\**" LinkBase="FFmpegAutoGen\win-x86" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="$(PkgFFmpeg_Nightly)\build\native\bin\x64\**" LinkBase="FFmpegAutoGen\win-x64" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>  
+
+</Project>

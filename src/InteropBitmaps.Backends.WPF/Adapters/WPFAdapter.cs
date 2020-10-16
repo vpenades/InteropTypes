@@ -26,18 +26,27 @@ namespace InteropBitmaps.Adapters
 
         #endregion
 
+        #region properties
+
+        public SpanBitmap Source => _Bitmap;
+
+        #endregion
+
         #region API        
 
         public bool CopyTo(ref WriteableBitmap dst, bool allowCompatibleFormats = true)
         {
-            if (dst != null && _Bitmap.Info != dst.GetBitmapInfo())
+            var dstHdr = dst?.GetBitmapInfo() ?? default;
+
+            if (dst != null && _Bitmap.Info != dstHdr)
             {
-                if (!allowCompatibleFormats) dst = null;
+                if (!allowCompatibleFormats || dstHdr.Size != _Bitmap.Info.Size) dst = null;
                 else
                 {
                     var expected = _Implementation.ToBestMatch(_Bitmap.Info.PixelFormat);
                     if (expected != dst.Format) dst = null;
-                }                
+                }
+                
             }
 
             if (dst == null) { dst = CloneToWritableBitmap(allowCompatibleFormats); return true; }

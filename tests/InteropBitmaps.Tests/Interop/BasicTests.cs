@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
+using SixLabors.ImageSharp.Drawing.Processing;
+
 namespace InteropBitmaps
 {
     [Category("Backends")]
@@ -44,7 +46,7 @@ namespace InteropBitmaps
 
             TestContext.WriteLine($"{filePath} => {blurfactor1}, {blurfactor2}, {blurfactor3}");
 
-            bitmap.AttachToCurrentTest("final.png");
+            bitmap.AttachToCurrentTestAll("final.png");
         }
 
 
@@ -55,20 +57,17 @@ namespace InteropBitmaps
             var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(TestResources.ShannonJpg);
 
             // slice the central region of the source image
-
             var slice = img
                 .AsSpanBitmap()
                 .Slice((10, 10, img.Width - 20, img.Height - 20)); // crop the source image with a 10 pixels margin
 
             // cast to OpenCV adapter to blur and find edges in the image.
-
             slice
                 .WithOpenCv()                
                 .ApplyBlur((4,4))
                 .ApplyCanny(100, 200);
 
             // cast to GDI Adapter to draw primitives.
-
             slice
                 .WithGDI()
                 .Draw
@@ -80,13 +79,12 @@ namespace InteropBitmaps
                     var f = new System.Drawing.Font("arial", 30);
 
                     // draw a triangle
-                    dc.DrawPolygon(System.Drawing.Pens.Red, new[] { a, b, c });
+                    dc.DrawPolygon(System.Drawing.Pens.Yellow, new[] { a, b, c });
                     // draw text
-                    dc.DrawString("Text drawn with GDI", f, System.Drawing.Brushes.Yellow, new System.Drawing.PointF(5, 60));
+                    dc.DrawString("GDI Text", f, System.Drawing.Brushes.Yellow, new System.Drawing.PointF(5, 60));
                 } );
 
-            // cast to SkiaSharp Adapter to draw primitives.            
-
+            // cast to SkiaSharp Adapter to draw primitives.
             slice
                 .WithSkiaSharp()
                 .Draw
@@ -102,18 +100,17 @@ namespace InteropBitmaps
                     };
 
                     canvas.DrawLine(p0, p1, skiaPaint);
-                    canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), skiaPaint);                    
+                    canvas.DrawText("SkiaSharp Text", new SkiaSharp.SKPoint(5, 200), skiaPaint);                    
                 } );
 
             // cast to imagesharp Adapter to draw primitives
-
             slice
                 .WithImageSharp()
                 .Mutate
                 ( ipc=> {
-
+                    
                     ipc.FillPolygon(SixLabors.ImageSharp.Color.Green, (5, 250), (50, 250), (5, 300));
-
+                    ipc.DrawText("ImageSharp Text", SixLabors.Fonts.SystemFonts.CreateFont("Arial", 40), SixLabors.ImageSharp.Color.Green, new SixLabors.ImageSharp.PointF(80, 250));
                 } );
 
             // wpf

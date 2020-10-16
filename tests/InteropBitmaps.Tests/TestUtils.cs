@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Processing;
+
+using POINTF = SixLabors.ImageSharp.PointF;
 
 namespace InteropBitmaps
 {
@@ -30,14 +33,14 @@ namespace InteropBitmaps
 
         public static void AttachToCurrentTest(this Image image, string filePath)
         {
-            filePath = NUnit.Framework.TestContext.CurrentContext.GetTestResultPath(filePath);
+            filePath = TestContext.CurrentContext.GetTestResultPath(filePath);
 
             var dirPath = System.IO.Path.GetDirectoryName(filePath);
             System.IO.Directory.CreateDirectory(dirPath);
 
-            SixLabors.ImageSharp.ImageExtensions.Save(image, filePath);
+            ImageExtensions.Save(image, filePath);
 
-            NUnit.Framework.TestContext.AddTestAttachment(filePath);
+            TestContext.AddTestAttachment(filePath);
         }
 
         public static void AttachToCurrentTest(this System.Drawing.Bitmap image, string filePath)
@@ -49,21 +52,31 @@ namespace InteropBitmaps
 
         public static void AttachToCurrentTest(this MemoryBitmap bmp, string filePath)
         {
-            bmp.AsSpanBitmap().AttachToCurrentTest(filePath);
+            bmp.AsSpanBitmap().AttachToCurrentTestAll(filePath);
         }
 
         public static void AttachToCurrentTest<TPixel>(this MemoryBitmap<TPixel> bmp, string filePath)
             where TPixel:unmanaged
         {
-            bmp.AsSpanBitmap().AsTypeless().AttachToCurrentTest(filePath);
+            bmp.AsSpanBitmap().AsTypeless().AttachToCurrentTestAll(filePath);
         }
 
-        public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath)
+        public static void AttachToCurrentTestAll(this SpanBitmap bmp, string filePath)
         {
-            filePath = NUnit.Framework.TestContext.CurrentContext.GetTestResultPath(filePath);
+            filePath = TestContext.CurrentContext.GetTestResultPath(filePath);
 
             var dirPath = System.IO.Path.GetDirectoryName(filePath);
             System.IO.Directory.CreateDirectory(dirPath);
+
+
+            if (bmp.PixelFormat == Pixel.Standard.BGR96F)
+            {
+                var tmp = new MemoryBitmap(bmp.Width, bmp.Height, Pixel.Standard.BGR24);
+
+                SpanBitmap.CopyPixels(bmp.OfType<System.Numerics.Vector3>(), tmp, (0, 1), (0,255));
+
+                bmp = tmp;
+            }
 
             string _injectExt(string fp, string extPrefix)
             {
@@ -73,21 +86,50 @@ namespace InteropBitmaps
             }
 
             var f1 = _injectExt(filePath, "WPF");
-            bmp.Save(f1, Codecs.WPFCodec.Default); NUnit.Framework.TestContext.AddTestAttachment(f1);
+            bmp.Save(f1, Codecs.WPFCodec.Default); TestContext.AddTestAttachment(f1);
 
             var f2 = _injectExt(filePath, "GDI");
-            bmp.Save(f2, Codecs.GDICodec.Default); NUnit.Framework.TestContext.AddTestAttachment(f2);
+            bmp.Save(f2, Codecs.GDICodec.Default); TestContext.AddTestAttachment(f2);
 
             var f3 = _injectExt(filePath, "ImageSharp");
-            bmp.Save(f3, Codecs.ImageSharpCodec.Default); NUnit.Framework.TestContext.AddTestAttachment(f3);
+            bmp.Save(f3, Codecs.ImageSharpCodec.Default); TestContext.AddTestAttachment(f3);
 
             var f4 = _injectExt(filePath, "SkiaSharp");
-            bmp.Save(f4, Codecs.SkiaCodec.Default); NUnit.Framework.TestContext.AddTestAttachment(f4);
+            bmp.Save(f4, Codecs.SkiaCodec.Default); TestContext.AddTestAttachment(f4);
 
             var f5 = _injectExt(filePath, "OpenCvSharp");
-            bmp.Save(f5, Codecs.OpenCvCodec.Default); NUnit.Framework.TestContext.AddTestAttachment(f5);
+            bmp.Save(f5, Codecs.OpenCvCodec.Default); TestContext.AddTestAttachment(f5);
 
             // TODO: it should compare saved files against bmp
+        }
+
+        public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath)
+        {
+            filePath = TestContext.CurrentContext.GetTestResultPath(filePath);
+
+            var dirPath = System.IO.Path.GetDirectoryName(filePath);
+            System.IO.Directory.CreateDirectory(dirPath);            
+            
+            bmp.Save(filePath, Codecs.WPFCodec.Default);
+            TestContext.AddTestAttachment(filePath);
+        }
+
+        public static string AttachToCurrentTest(this IEnumerable<PointerBitmap> frames, string videoPath)
+        {
+            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
+            Codecs.FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
+            TestContext.AddTestAttachment(videoPath);
+
+            return videoPath;
+
+        }
+
+        public static void AttachToCurrentTest(this IEnumerable<(PointerBitmap bmp, long pts)> frames, string videoPath)
+        {
+            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
+            Codecs.FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
+            TestContext.AddTestAttachment(videoPath);
+
         }
     }
 
@@ -95,7 +137,9 @@ namespace InteropBitmaps
     {
         public static IImageProcessingContext FillPolygon(this IImageProcessingContext source, Color color, params (float,float)[] points)
         {
-            var ppp = points.Select(item => new SixLabors.Primitives.PointF(item.Item1, item.Item2)).ToArray();
+            var ppp = points
+                .Select(item => new POINTF(item.Item1, item.Item2))
+                .ToArray();            
 
             return source.FillPolygon(color, ppp);
         }
@@ -103,7 +147,7 @@ namespace InteropBitmaps
         public static IImageProcessingContext DrawPolygon(this IImageProcessingContext source, Color color, float thickness, params (float, float)[] points)
         {
             var ppp = points
-                .Select(item => new SixLabors.Primitives.PointF(item.Item1, item.Item2))
+                .Select(item => new POINTF(item.Item1, item.Item2))
                 .ToArray();
 
             return source.DrawPolygon(color, thickness, ppp);

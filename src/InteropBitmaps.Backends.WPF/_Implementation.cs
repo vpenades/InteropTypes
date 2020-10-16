@@ -113,36 +113,24 @@ namespace InteropBitmaps
             return new BitmapInfo(src.PixelWidth, src.PixelHeight, pfmt, byteStride);
         }
 
-        public static void SetPixels(WIC_WRITABLE bmp, int dstX, int dstY, SpanBitmap spanSrc)
+        public static void SetPixels(WIC_WRITABLE dstBmp, int dstX, int dstY, SpanBitmap srcSpan)
         {
             // https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.writeablebitmap.adddirtyrect?view=netframework-4.8
 
-            var pfmt = ToInterop(bmp.Format);
+            srcSpan.PinReadablePointer(ptr => SetPixels(dstBmp, dstX, dstY, ptr));
+        }
 
-            try
-            {
-                // Reserve the back buffer for updates.
-                bmp.TryLock(System.Windows.Duration.Forever);
+        public static void SetPixels(WIC_WRITABLE dstBmp, int dstX, int dstY, PointerBitmap srcPtr)
+        {
+            if (dstX < 0) throw new ArgumentOutOfRangeException(nameof(dstX));
+            if (dstY < 0) throw new ArgumentOutOfRangeException(nameof(dstY));
+            if (dstX + srcPtr.Width > dstBmp.PixelWidth) throw new ArgumentOutOfRangeException(nameof(srcPtr.Width));
+            if (dstY + srcPtr.Height > dstBmp.PixelHeight) throw new ArgumentOutOfRangeException(nameof(srcPtr.Height));            
+            if (srcPtr.PixelFormat != ToInterop(dstBmp.Format)) throw new ArgumentException(nameof(srcPtr.PixelFormat));
 
-                var binfo = new BitmapInfo(bmp.PixelWidth, bmp.PixelHeight, pfmt, bmp.BackBufferStride);
-                var spanDst = new SpanBitmap(bmp.BackBuffer, binfo);
+            var rect = new System.Windows.Int32Rect(dstX, dstY, dstBmp.PixelWidth, dstBmp.PixelHeight);
 
-                spanDst.SetPixels(dstX, dstY, spanSrc);
-
-                var changed = true;
-
-                // Specify the area of the bitmap that changed.
-                if (changed)
-                {
-                    var rect = new System.Windows.Int32Rect(0, 0, bmp.PixelWidth, bmp.PixelHeight);
-                    bmp.AddDirtyRect(rect);
-                }
-            }
-            finally
-            {
-                // Release the back buffer and make it available for display.
-                bmp.Unlock();
-            }
+            dstBmp.WritePixels(rect, srcPtr.Pointer, srcPtr.Info.BitmapByteSize, srcPtr.Info.StepByteSize);
         }
 
         public static MemoryBitmap ToMemoryBitmap(WIC_READABLE src)

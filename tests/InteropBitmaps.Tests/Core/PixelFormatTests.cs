@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace InteropBitmaps
 {
-    using PEF = ElementFormat.Identifier;
+    using PEF = Pixel.ElementID;
 
     [Category("Core")]
     public class PixelFormatTests
@@ -21,10 +21,10 @@ namespace InteropBitmaps
         [Test]
         public void TestPixelFormatStructure()
         {
-            Assert.AreEqual(PEF.Empty, default(ElementFormat).Id);
+            Assert.AreEqual(PEF.Empty, default(Pixel.Element).Id);
 
-            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(ElementFormat)));
-            Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat)));
+            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Pixel.Element)));
+            Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Pixel.Format)));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace InteropBitmaps
             {
                 var name = c.ToString();
 
-                var len = new ElementFormat(c).BitCount;
+                var len = new Pixel.Element(c).BitCount;
 
                 if (c == PEF.Empty) Assert.AreEqual(0, len);
                 else Assert.Greater(len, 0);

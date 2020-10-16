@@ -205,20 +205,36 @@ namespace InteropBitmaps
             _Implementation.CopyPixels(this, dstX, dstY, src);
         }        
 
-        public void CopyTo(ref MemoryBitmap other)
+        public bool CopyTo(ref MemoryBitmap other)
         {
-            if (!this.Info.Equals(other.Info)) other = new MemoryBitmap(this.Info);
+            var refreshed = false;
+
+            if (!this.Info.Equals(other.Info))
+            {
+                other = new MemoryBitmap(this.Info);
+                refreshed = true;
+            }
 
             other.SetPixels(0, 0, this);
+
+            return refreshed;
         }
 
-        public void CopyTo(ref BitmapInfo otherInfo, ref Byte[] otherData)
+        public bool CopyTo(ref BitmapInfo otherInfo, ref Byte[] otherData)
         {
             if (!this.Info.Equals(otherInfo)) otherInfo = this.Info;
 
-            if (otherData == null || otherData.Length < otherInfo.BitmapByteSize) otherData = new byte[this.Info.BitmapByteSize];
+            var refreshed = false;
+
+            if (otherData == null || otherData.Length < otherInfo.BitmapByteSize)
+            {
+                otherData = new byte[this.Info.BitmapByteSize];
+                refreshed = true;
+            }
 
             new SpanBitmap(otherData,otherInfo).SetPixels(0, 0, this);
+
+            return refreshed;
         }
 
         #endregion
