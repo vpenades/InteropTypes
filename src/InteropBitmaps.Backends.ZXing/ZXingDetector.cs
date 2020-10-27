@@ -10,7 +10,7 @@ namespace InteropBitmaps.Detectors
 
         public ZXingDetector()
         {
-            _Reader = new ZXing.BarcodeReader();
+            _Reader = new ZXing.BarcodeReaderGeneric();
             _Reader.Options.PureBarcode = false;
             _Reader.Options.Hints.Add(ZXing.DecodeHintType.TRY_HARDER, true);
             _Reader.Options.PossibleFormats = new ZXing.BarcodeFormat[] { ZXing.BarcodeFormat.QR_CODE };
@@ -21,7 +21,7 @@ namespace InteropBitmaps.Detectors
 
         #region data
 
-        private ZXing.BarcodeReader _Reader;
+        private ZXing.BarcodeReaderGeneric _Reader;
 
         private Byte[] _Buffer = null;
 

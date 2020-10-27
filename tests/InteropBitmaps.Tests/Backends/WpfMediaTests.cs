@@ -34,43 +34,7 @@ namespace InteropBitmaps.Backends
             memory.AttachToCurrentTest("Result.png");
 
             var writable = new System.Windows.Media.Imaging.WriteableBitmap(image);
-        }
-
-        [Test]
-        public void TestCopyToCroppedBitmap()
-        {
-            CroppedBitmap dst = null;
-
-            new MemoryBitmap<Byte>(256, 256, Pixel.Standard.Gray8)
-                .AsSpanBitmap()
-                .WithWPF()
-                .CopyTo(ref dst);
-            Assert.NotNull(dst);
-            Assert.AreEqual(typeof(WriteableBitmap), dst.Source.GetType());
-            Assert.AreEqual(256, dst.PixelWidth);
-            Assert.AreEqual(256, dst.PixelHeight);
-
-            var dstWrt = dst.Source as WriteableBitmap;            
-
-            new MemoryBitmap<Byte>(128, 128, Pixel.Standard.Gray8)
-                .AsSpanBitmap()
-                .WithWPF()
-                .CopyTo(ref dst);
-            Assert.NotNull(dst);
-            Assert.AreEqual(typeof(WriteableBitmap), dst.Source.GetType());
-            Assert.AreEqual(128, dst.PixelWidth);
-            Assert.AreEqual(128, dst.PixelHeight);
-            Assert.IsTrue(object.ReferenceEquals(dstWrt, dst.Source), "CroppedBitmap must reuse WritableBitmap when shrinking");
-
-            new MemoryBitmap<Byte>(512, 512, Pixel.Standard.Gray8)
-                .AsSpanBitmap()
-                .WithWPF()
-                .CopyTo(ref dst);
-            Assert.NotNull(dst);
-            Assert.AreEqual(typeof(WriteableBitmap), dst.Source.GetType());
-            Assert.AreEqual(512, dst.PixelWidth);
-            Assert.AreEqual(512, dst.PixelHeight);
-        }
+        }        
 
         [Test]
         public void TestCopyWritableBitmap()

@@ -18,7 +18,7 @@ namespace InteropBitmaps
         [Test]
         public void CreateMemoryBitmap()
         {
-            var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.Standard.RGBA32);
+            var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.Standard.BGRA32);
             m1.SetPixels(0xff406040);
 
             m1.AttachToCurrentTest("result.png");

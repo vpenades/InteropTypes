@@ -109,7 +109,7 @@ namespace InteropBitmaps
 
             var byteStride = src is WIC_WRITABLE wbmp ? wbmp.BackBufferStride : 0;
 
-            var pfmt = _Implementation.ToInterop(src.Format);
+            var pfmt = ToInterop(src.Format);
             return new BitmapInfo(src.PixelWidth, src.PixelHeight, pfmt, byteStride);
         }
 

@@ -38,8 +38,13 @@ namespace InteropBitmaps.Codecs
 
             var videoFramesSource = new RawVideoPipeSource(frameSeq);
 
-            var arguments = FFMpegArguments.FromPipe(videoFramesSource);
-            foreach (var arg in inputArguments) arguments.WithArgument(arg);
+            void _addArgs(FFMpegArgumentOptions ops)
+            {
+                foreach (var arg in inputArguments) ops.WithArgument(arg);
+            }            
+
+            var arguments = FFMpegArguments.FromPipeInput(videoFramesSource, _addArgs);
+            
 
             var processor = arguments.OutputToFile(outFile);
             

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FFMpegCore" Version="2.2.6" />
+    <PackageReference Include="FFMpegCore" Version="3.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />    
   </ItemGroup>  
 

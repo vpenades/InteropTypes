@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="StbImageLib" Version="2.22.3" />
+    <PackageReference Include="StbImageWriteSharp" Version="1.13.5" />
   </ItemGroup>
 
   <ItemGroup>

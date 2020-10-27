@@ -11,7 +11,7 @@ namespace InteropBitmaps
 
         public static ZXing.Result ScanAndDecodeQRCode(this SpanBitmap src)
         {
-            var reader = new ZXing.BarcodeReader();
+            var reader = new ZXing.BarcodeReaderGeneric();
             reader.Options.PureBarcode = false;
             reader.Options.Hints.Add(ZXing.DecodeHintType.TRY_HARDER, true);
             reader.Options.PossibleFormats = new ZXing.BarcodeFormat[] { ZXing.BarcodeFormat.QR_CODE };

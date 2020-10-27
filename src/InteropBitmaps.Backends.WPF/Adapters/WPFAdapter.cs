@@ -45,58 +45,11 @@ namespace InteropBitmaps.Adapters
                 {
                     var expected = _Implementation.ToBestMatch(_Bitmap.Info.PixelFormat);
                     if (expected != dst.Format) dst = null;
-                }
-                
+                }                
             }
 
             if (dst == null) { dst = CloneToWritableBitmap(allowCompatibleFormats); return true; }
             else { dst.SetPixels(0, 0, _Bitmap); return false; }
-        }
-
-        public bool CopyTo(ref CroppedBitmap dst, bool allowCompatibleFormats = true)
-        {
-            // CroppedBitmap implements the ISupportInitialize interface to optimize initialization on multiple properties.
-            // Property changes can occur only during object initialization.
-            // Call BeginInit to signal that initialization has begun and EndInit to signal that initialization has completed.
-            // AFTER INITIALIZATION, PROPERTY CHANGES ARE IGNORED.
-
-            // update writeable bitmap
-            
-            var dstWrt = dst?.Source as WriteableBitmap;
-            var dstRct = dst?.SourceRect ?? System.Windows.Int32Rect.Empty;
-
-            if (dstWrt != null)
-            {
-                var dstInfo = dst.GetBitmapInfo();
-                if (dstInfo.Width < _Bitmap.Width) dstWrt = null;
-                if (dstInfo.Height < _Bitmap.Height) dstWrt = null;
-                if (dstInfo.PixelFormat != _Bitmap.PixelFormat)
-                {
-                    if (!allowCompatibleFormats) dstWrt = null;
-                    else
-                    {
-                        var expected = _Implementation.ToBestMatch(_Bitmap.Info.PixelFormat);
-                        if (expected != dst.Format) dstWrt = null;
-                    }
-                }
-            }            
-
-            if (dstWrt == null) dstWrt = _Implementation.ToWritableBitmap(_Bitmap.Info);
-
-            dstWrt.SetPixels(0, 0, _Bitmap);
-
-            dstRct = new System.Windows.Int32Rect(0, 0, _Bitmap.Width, _Bitmap.Height);            
-
-            if (dst != null)
-            {
-                if (!Object.ReferenceEquals(dst.Source, dstWrt)) dst = null;
-                if (dst != null && dst.SourceRect != dstRct) dst = null;
-            }
-
-            if (dst != null) return false;
-            
-            dst = new CroppedBitmap(dstWrt, dstRct);
-            return true;            
         }        
 
         public WriteableBitmap CloneToWritableBitmap(bool allowCompatibleFormats = false)
