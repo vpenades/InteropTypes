@@ -6,13 +6,13 @@
     <Authors>Vicente Penades</Authors>
     <Copyright>Copyright (c) 2020 Vicente Penades</Copyright>
     <Description>      
-      A collection of low level Bitmap types that wrap memory pointers, Spans and byte arrays.
+      A collection of low level interop types that wrap memory pointers, Spans and byte arrays.
     </Description>
     
     <RepositoryUrl>https://github.com/vpenades/InteropBitmaps</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     
-    <PackageTags>C# glTF 3D</PackageTags>
+    <PackageTags>C# Imaging Bitmaps Interop</PackageTags>
     <PackageProjectUrl>https://github.com/vpenades/InteropBitmaps</PackageProjectUrl>    
     <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     

@@ -7,31 +7,43 @@ namespace InteropBitmaps
 {
     // TODO: implement https://devblogs.microsoft.com/dotnet/hardware-intrinsics-in-net-core/
 
-    static class _SpanFloatOps
+    static class _SpanSingleExtensions
     {
-        private static Span<Vector4> ToVector4(Span<Single> span)
+        private static Span<Vector4> _ToVector4(Span<Single> span)
         {
             var fourCount = span.Length & ~3;
             return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, fourCount));
         }
 
-        private static ReadOnlySpan<Vector4> ToVector4(ReadOnlySpan<Single> span)
+        private static ReadOnlySpan<Vector4> _ToVector4(ReadOnlySpan<Single> span)
         {
             var fourCount = span.Length & ~3;
             return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, fourCount));
         }
 
-        
+        private static Single _Min(Single a, Single b, Single c, Single d)
+        {
+            var min = a;
+            if (min > b) min = b;
+            if (min > c) min = c;
+            if (min > d) min = d;
+            return min;
+        }
+
+        private static Single _Max(Single a, Single b, Single c, Single d)
+        {
+            var min = a;
+            if (min < b) min = b;
+            if (min < c) min = c;
+            if (min < d) min = d;
+            return min;
+        }
 
         public static Single Min(ReadOnlySpan<Single> span)
         {
-            var vectSpan = ToVector4(span);
+            var vectSpan = _ToVector4(span);
             var fourMin = Min(vectSpan);
-
-            var min = fourMin.X;
-            if (min > fourMin.Y) min = fourMin.Y;
-            if (min > fourMin.Z) min = fourMin.Z;
-            if (min > fourMin.W) min = fourMin.W;
+            var min = _Min(fourMin.X, fourMin.Y, fourMin.Z, fourMin.W);
 
             for (int i = vectSpan.Length * 4; i < span.Length; ++i)
             {
@@ -44,13 +56,9 @@ namespace InteropBitmaps
 
         public static Single Max(ReadOnlySpan<Single> span)
         {
-            var vectSpan = ToVector4(span);
+            var vectSpan = _ToVector4(span);
             var fourMax = Max(vectSpan);
-
-            var max = fourMax.X;
-            if (max < fourMax.Y) max = fourMax.Y;
-            if (max < fourMax.Z) max = fourMax.Z;
-            if (max < fourMax.W) max = fourMax.W;
+            var max = _Max(fourMax.X, fourMax.Y, fourMax.Z, fourMax.W);
 
             for (int i = vectSpan.Length * 4; i < span.Length; ++i)
             {
@@ -87,18 +95,10 @@ namespace InteropBitmaps
 
         public static (Single Min, Single Max) MinMax(ReadOnlySpan<Single> span)
         {
-            var vectSpan = ToVector4(span);
+            var vectSpan = _ToVector4(span);
             var (fourMin, fourMax) = MinMax(vectSpan);
-
-            var min = fourMin.X;
-            if (min > fourMin.Y) min = fourMin.Y;
-            if (min > fourMin.Z) min = fourMin.Z;
-            if (min > fourMin.W) min = fourMin.W;
-
-            var max = fourMax.X;
-            if (max < fourMax.Y) max = fourMax.Y;
-            if (max < fourMax.Z) max = fourMax.Z;
-            if (max < fourMax.W) max = fourMax.W;
+            var min = _Min(fourMin.X, fourMin.Y, fourMin.Z, fourMin.W);
+            var max = _Max(fourMax.X, fourMax.Y, fourMax.Z, fourMax.W);
 
             for (int i = vectSpan.Length * 4; i < span.Length; ++i)
             {
@@ -132,7 +132,7 @@ namespace InteropBitmaps
 
         public static void MultiplyAndAdd(Span<Single> span, Single mul, Single add)
         {
-            var vectSpan = ToVector4(span);
+            var vectSpan = _ToVector4(span);
             var vectMul = new Vector4(mul);
             var vectAdd = new Vector4(add);
 
@@ -151,7 +151,7 @@ namespace InteropBitmaps
 
         public static void AddAndMultiply(Span<Single> span, Single add, Single mul)
         {
-            var vectSpan = ToVector4(span);
+            var vectSpan = _ToVector4(span);
             var vectMul = new Vector4(mul);
             var vectAdd = new Vector4(add);
 
@@ -289,10 +289,12 @@ namespace InteropBitmaps
 
         public static bool SequenceEqual(ReadOnlySpan<float> a, ReadOnlySpan<float> b)
         {
+            // We could use a.SequenceEqual, but we could not benefit from vectorized comparison (Proof needed!)
+
             if (a.Length != b.Length) return false;
 
-            var av = ToVector4(a);
-            var bv = ToVector4(b);
+            var av = _ToVector4(a);
+            var bv = _ToVector4(b);
 
             for(int i=0; i < av.Length; ++i)
             {
@@ -307,9 +309,9 @@ namespace InteropBitmaps
             return true;
         }
 
-        public static void Clamp(Span<Single> span, Single min, Single max)
+        public static void ApplyClamp(Span<Single> span, Single min, Single max)
         {
-            var vectSpan = ToVector4(span);
+            var vectSpan = _ToVector4(span);
             var vectMin = new Vector4(min);
             var vectMax = new Vector4(max);
 
@@ -339,9 +341,9 @@ namespace InteropBitmaps
 
         public static void LerpArray(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<float> dst)
         {
-            var l = ToVector4(left);
-            var r = ToVector4(right);
-            var d = ToVector4(dst);
+            var l = _ToVector4(left);
+            var r = _ToVector4(right);
+            var d = _ToVector4(dst);
 
             for(int i=0; i < d.Length; ++i)
             {
@@ -356,8 +358,8 @@ namespace InteropBitmaps
 
         public static void LerpArray(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<Byte> dst)
         {
-            var l = ToVector4(left);
-            var r = ToVector4(right);
+            var l = _ToVector4(left);
+            var r = _ToVector4(right);
             var d = dst.Length / 4;
 
             for (int i = 0; i < d; ++i)

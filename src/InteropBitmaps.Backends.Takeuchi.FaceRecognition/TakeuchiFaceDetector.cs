@@ -77,7 +77,7 @@ namespace InteropBitmaps.Detectors
             {
                 if (_Bitmap.IsEmpty || _Bitmap.Width != src.Width || _Bitmap.Height != src.Height)
                 {
-                    _Bitmap = new MemoryBitmap(src.Width, src.Height, Pixel.Standard.RGB24);
+                    _Bitmap = new MemoryBitmap(src.Width, src.Height, Pixel.RGB24.Format);
                 }
 
                 var dst = _Bitmap.AsSpanBitmap();

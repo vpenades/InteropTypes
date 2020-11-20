@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
+using SIZE = System.Drawing.Size;
+using POINT = System.Drawing.Point;
+
 namespace InteropBitmaps
 {
     /// <summary>
@@ -9,7 +12,8 @@ namespace InteropBitmaps
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Info._DebuggerDisplay(),nq}")]
     [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
-    public readonly struct MemoryBitmap<TPixel> : IBitmap<TPixel> where TPixel : unmanaged
+    public readonly struct MemoryBitmap<TPixel>
+        : IBitmap<TPixel> where TPixel : unmanaged        
     {
         #region debug
 
@@ -76,10 +80,10 @@ namespace InteropBitmaps
         #region properties
         public BitmapInfo Info => _Info;
         public Memory<Byte> Memory => _Data;
-
         public bool IsEmpty => _Info.IsEmpty;
         public int Width => _Info.Width;
         public int Height => _Info.Height;
+        public SIZE Size => _Info.Size;
         public int PixelSize => _Info.PixelByteSize;
         public int StepByteSize => _Info.StepByteSize;
         public Pixel.Format PixelFormat => _Info.PixelFormat;
@@ -126,7 +130,7 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region API - Pixel Ops
+        #region API - Pixel Ops        
 
         public void SetPixels(TPixel value) { AsSpanBitmap().SetPixels(value); }
 
@@ -147,15 +151,21 @@ namespace InteropBitmaps
         
         public TPixel GetPixel(int x, int y) { return UsePixelsScanline(y)[x]; }
 
-        public void SetPixel(int x, int y, TPixel value) { UsePixelsScanline(y)[x] = value; }        
+        public void SetPixel(int x, int y, TPixel value) { UsePixelsScanline(y)[x] = value; }
 
-        public IEnumerable<(int X, int Y, TPixel Pixel)> EnumeratePixels()
+        public TPixel GetPixel(POINT point) { return UsePixelsScanline(point.Y)[point.X]; }
+
+        public void SetPixel(POINT point, TPixel value) { UsePixelsScanline(point.Y)[point.X] = value; }
+
+        public IEnumerable<(POINT Location, TPixel Pixel)> EnumeratePixels()
         {
             for (int y = 0; y < Height; ++y)
             {
                 for (int x = 0; x < Width; ++x)
                 {
-                    yield return (x, y, GetPixel(x, y));
+                    var p = new POINT(x, y);
+
+                    yield return (p, GetPixel(p));
                 }
             }
         }        

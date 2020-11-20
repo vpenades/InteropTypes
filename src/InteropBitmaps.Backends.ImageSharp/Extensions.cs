@@ -76,8 +76,9 @@ namespace InteropBitmaps
             if (!src.Info.IsContinuous) return null;
 
             var m = src.UsingMemory<TPixel>();
+            var s = src.Size;
 
-            return Image.WrapMemory(m, src.Width, src.Height); // We assume here that Image<Tpixel> will dispose IMemoryOwner<T> when disposed.
+            return Image.WrapMemory(m, s.Width, s.Height); // We assume here that Image<Tpixel> will dispose IMemoryOwner<T> when disposed.
         }
 
         #endregion

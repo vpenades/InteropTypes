@@ -39,11 +39,11 @@ namespace InteropBitmaps.Backends
         [Test]
         public void TestCopyWritableBitmap()
         {
-            var src256 = new MemoryBitmap<Byte>(256, 256, Pixel.Standard.Gray8)
+            var src256 = new MemoryBitmap<Byte>(256, 256, Pixel.Luminance8.Format)
                 .AsSpanBitmap()
                 .WithWPF();            
 
-            var src512 = new MemoryBitmap<Byte>(512, 512, Pixel.Standard.Gray8)
+            var src512 = new MemoryBitmap<Byte>(512, 512, Pixel.Luminance8.Format)
                 .AsSpanBitmap()
                 .WithWPF();           
 

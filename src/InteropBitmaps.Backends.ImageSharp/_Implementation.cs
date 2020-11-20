@@ -7,9 +7,6 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-using STDPIXEL = InteropBitmaps.Pixel.Standard;
-using PACKPIXEL = InteropBitmaps.Pixel.Packed;
-
 namespace InteropBitmaps
 {
     static class _Implementation
@@ -19,20 +16,20 @@ namespace InteropBitmaps
         public static Pixel.Format GetPixelFormat<TPixel>()
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            if (typeof(TPixel) == typeof(A8)) return STDPIXEL.Alpha8;
-            if (typeof(TPixel) == typeof(L8)) return STDPIXEL.Gray8;            
+            if (typeof(TPixel) == typeof(A8)) return Pixel.Alpha8.Format;
+            if (typeof(TPixel) == typeof(L8)) return Pixel.Luminance8.Format;            
 
-            if (typeof(TPixel) == typeof(L16)) return STDPIXEL.Gray16;
-            if (typeof(TPixel) == typeof(Bgr565)) return STDPIXEL.BGR565;
-            if (typeof(TPixel) == typeof(Bgra5551)) return STDPIXEL.BGRA5551;
-            if (typeof(TPixel) == typeof(Bgra4444)) return STDPIXEL.BGRA4444;
+            if (typeof(TPixel) == typeof(L16)) return Pixel.Luminance16.Format;
+            if (typeof(TPixel) == typeof(Bgr565)) return Pixel.BGR565.Format;
+            if (typeof(TPixel) == typeof(Bgra5551)) return Pixel.BGRA5551.Format;
+            if (typeof(TPixel) == typeof(Bgra4444)) return Pixel.BGRA4444.Format;
 
-            if (typeof(TPixel) == typeof(Bgr24)) return STDPIXEL.BGR24;
-            if (typeof(TPixel) == typeof(Rgb24)) return STDPIXEL.RGB24;
+            if (typeof(TPixel) == typeof(Bgr24)) return Pixel.BGR24.Format;
+            if (typeof(TPixel) == typeof(Rgb24)) return Pixel.RGB24.Format;
 
-            if (typeof(TPixel) == typeof(Argb32)) return STDPIXEL.ARGB32;
-            if (typeof(TPixel) == typeof(Bgra32)) return STDPIXEL.BGRA32;
-            if (typeof(TPixel) == typeof(Rgba32)) return STDPIXEL.RGBA32;
+            if (typeof(TPixel) == typeof(Argb32)) return Pixel.ARGB32.Format;
+            if (typeof(TPixel) == typeof(Bgra32)) return Pixel.BGRA32.Format;
+            if (typeof(TPixel) == typeof(Rgba32)) return Pixel.RGBA32.Format;
 
             throw new NotImplementedException();
         }
@@ -41,20 +38,20 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case PACKPIXEL.Alpha8: return typeof(A8);
-                case PACKPIXEL.Gray8: return typeof(L8);
+                case Pixel.Alpha8.Code: return typeof(A8);
+                case Pixel.Luminance8.Code: return typeof(L8);
 
-                case PACKPIXEL.Gray16: return typeof(L16);
-                case PACKPIXEL.BGR565: return typeof(Bgr565);
-                case PACKPIXEL.BGRA5551: return typeof(Bgra5551);
-                case PACKPIXEL.BGRA4444: return typeof(Bgra4444);
+                case Pixel.Luminance16.Code: return typeof(L16);
+                case Pixel.BGR565.Code: return typeof(Bgr565);
+                case Pixel.BGRA5551.Code: return typeof(Bgra5551);
+                case Pixel.BGRA4444.Code: return typeof(Bgra4444);
 
-                case PACKPIXEL.RGB24: return typeof(Rgb24);
-                case PACKPIXEL.BGR24: return typeof(Bgr24);
+                case Pixel.RGB24.Code: return typeof(Rgb24);
+                case Pixel.BGR24.Code: return typeof(Bgr24);
 
-                case PACKPIXEL.RGBA32: return typeof(Rgba32);
-                case PACKPIXEL.BGRA32: return typeof(Bgra32);
-                case PACKPIXEL.ARGB32: return typeof(Argb32);
+                case Pixel.RGBA32.Code: return typeof(Rgba32);
+                case Pixel.BGRA32.Code: return typeof(Bgra32);
+                case Pixel.ARGB32.Code: return typeof(Argb32);
 
                 default: throw new NotImplementedException();
             }
@@ -105,20 +102,20 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case PACKPIXEL.Alpha8: return new Image<A8>(width, height);
-                case PACKPIXEL.Gray8: return new Image<L8>(width, height);
+                case Pixel.Alpha8.Code: return new Image<A8>(width, height);
+                case Pixel.Luminance8.Code: return new Image<L8>(width, height);
 
-                case PACKPIXEL.Gray16: return new Image<L16>(width, height);
-                case PACKPIXEL.BGR565: return new Image<Bgr565>(width, height);
-                case PACKPIXEL.BGRA5551: return new Image<Bgra5551>(width, height);
-                case PACKPIXEL.BGRA4444: return new Image<Bgra4444>(width, height);
+                case Pixel.Luminance16.Code: return new Image<L16>(width, height);
+                case Pixel.BGR565.Code: return new Image<Bgr565>(width, height);
+                case Pixel.BGRA5551.Code: return new Image<Bgra5551>(width, height);
+                case Pixel.BGRA4444.Code: return new Image<Bgra4444>(width, height);
 
-                case PACKPIXEL.RGB24: return new Image<Rgb24>(width, height);
-                case PACKPIXEL.BGR24: return new Image<Bgr24>(width, height);
+                case Pixel.RGB24.Code: return new Image<Rgb24>(width, height);
+                case Pixel.BGR24.Code: return new Image<Bgr24>(width, height);
 
-                case PACKPIXEL.RGBA32: return new Image<Rgba32>(width, height);
-                case PACKPIXEL.BGRA32: return new Image<Bgra32>(width, height);
-                case PACKPIXEL.ARGB32: return new Image<Argb32>(width, height);
+                case Pixel.RGBA32.Code: return new Image<Rgba32>(width, height);
+                case Pixel.BGRA32.Code: return new Image<Bgra32>(width, height);
+                case Pixel.ARGB32.Code: return new Image<Argb32>(width, height);
 
                 default: throw new NotImplementedException();
             }

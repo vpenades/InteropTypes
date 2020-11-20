@@ -19,9 +19,6 @@ using WIC_FORMATS = System.Windows.Media.PixelFormats;
 
 using INTEROPFMT = InteropBitmaps.Pixel.Format;
 
-using STDPIXEL = InteropBitmaps.Pixel.Standard;
-using PACKPIXEL = InteropBitmaps.Pixel.Packed;
-
 namespace InteropBitmaps
 {    
     static class _Implementation
@@ -32,22 +29,22 @@ namespace InteropBitmaps
         {
             // if (fmt == WIC_FORMATS.Default) return PixelFormat.GetUndefinedOfSize(fmt.BitsPerPixel / 8);
 
-            if (fmt == WIC_FORMATS.Gray8) return STDPIXEL.Gray8;
+            if (fmt == WIC_FORMATS.Gray8) return Pixel.Luminance8.Format;
 
-            if (fmt == WIC_FORMATS.Gray16) return STDPIXEL.Gray16;
-            if (fmt == WIC_FORMATS.Bgr555) return STDPIXEL.BGRA5551;
-            if (fmt == WIC_FORMATS.Bgr565) return STDPIXEL.BGR565;
+            if (fmt == WIC_FORMATS.Gray16) return Pixel.Luminance16.Format;
+            if (fmt == WIC_FORMATS.Bgr555) return Pixel.BGRA5551.Format;
+            if (fmt == WIC_FORMATS.Bgr565) return Pixel.BGR565.Format;
 
-            if (fmt == WIC_FORMATS.Bgr24) return STDPIXEL.BGR24;
-            if (fmt == WIC_FORMATS.Rgb24) return STDPIXEL.RGB24;
+            if (fmt == WIC_FORMATS.Bgr24) return Pixel.BGR24.Format;
+            if (fmt == WIC_FORMATS.Rgb24) return Pixel.RGB24.Format;
 
-            if (fmt == WIC_FORMATS.Bgr32) return STDPIXEL.BGRA32;
-            if (fmt == WIC_FORMATS.Bgra32) return STDPIXEL.BGRA32;
+            if (fmt == WIC_FORMATS.Bgr32) return Pixel.BGRA32.Format;
+            if (fmt == WIC_FORMATS.Bgra32) return Pixel.BGRA32.Format;
 
-            if (fmt == WIC_FORMATS.Pbgra32) return STDPIXEL.BGRA32; // NOT RIGHT
+            if (fmt == WIC_FORMATS.Pbgra32) return Pixel.BGRA32.Format; // NOT RIGHT
 
 
-            if (fmt == WIC_FORMATS.Rgba128Float) return STDPIXEL.RGBA128F;
+            if (fmt == WIC_FORMATS.Rgba128Float) return Pixel.VectorRGBA.Format;
 
             throw new NotImplementedException();
         }
@@ -56,18 +53,18 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case PACKPIXEL.Gray8: return WIC_FORMATS.Gray8;
-                case PACKPIXEL.Gray16: return WIC_FORMATS.Gray16;
+                case Pixel.Luminance8.Code: return WIC_FORMATS.Gray8;
+                case Pixel.Luminance16.Code: return WIC_FORMATS.Gray16;
 
-                case PACKPIXEL.BGRA5551: return WIC_FORMATS.Bgr555;
-                case PACKPIXEL.BGR565: return WIC_FORMATS.Bgr565;
+                case Pixel.BGRA5551.Code: return WIC_FORMATS.Bgr555;
+                case Pixel.BGR565.Code: return WIC_FORMATS.Bgr565;
 
-                case PACKPIXEL.BGR24: return WIC_FORMATS.Bgr24;
-                case PACKPIXEL.RGB24: return WIC_FORMATS.Rgb24;
+                case Pixel.BGR24.Code: return WIC_FORMATS.Bgr24;
+                case Pixel.RGB24.Code: return WIC_FORMATS.Rgb24;
 
-                case PACKPIXEL.BGRA32: return WIC_FORMATS.Bgra32;
+                case Pixel.BGRA32.Code: return WIC_FORMATS.Bgra32;
 
-                case PACKPIXEL.RGBA128F: return WIC_FORMATS.Rgba128Float;
+                case Pixel.VectorRGBA.Code: return WIC_FORMATS.Rgba128Float;
 
                 default: throw new NotImplementedException();
             }
@@ -77,22 +74,23 @@ namespace InteropBitmaps
         {
             switch (fmt.PackedFormat)
             {
-                case PACKPIXEL.Gray8: return WIC_FORMATS.Gray8;
-                case PACKPIXEL.Gray16: return WIC_FORMATS.Gray16;
+                case Pixel.Luminance8.Code: return WIC_FORMATS.Gray8;
+                case Pixel.Luminance16.Code: return WIC_FORMATS.Gray16;
 
-                case PACKPIXEL.BGRA4444: return WIC_FORMATS.Bgra32;
-                case PACKPIXEL.BGRA5551: return WIC_FORMATS.Bgra32;
-                case PACKPIXEL.BGR565: return WIC_FORMATS.Bgr24;
+                case Pixel.BGRA4444.Code: return WIC_FORMATS.Bgra32;
+                case Pixel.BGRA5551.Code: return WIC_FORMATS.Bgra32;
+                case Pixel.BGR565.Code: return WIC_FORMATS.Bgr24;
 
-                case PACKPIXEL.BGR24: return WIC_FORMATS.Bgr24;
-                case PACKPIXEL.RGB24: return WIC_FORMATS.Rgb24;
+                case Pixel.BGR24.Code: return WIC_FORMATS.Bgr24;
+                case Pixel.RGB24.Code: return WIC_FORMATS.Rgb24;
 
-                case PACKPIXEL.BGRA32: return WIC_FORMATS.Bgra32;
-                case PACKPIXEL.RGBA32: return WIC_FORMATS.Bgra32;
-                case PACKPIXEL.ARGB32: return WIC_FORMATS.Bgra32;
+                case Pixel.BGRA32.Code: return WIC_FORMATS.Bgra32;
+                case Pixel.RGBA32.Code: return WIC_FORMATS.Bgra32;
+                case Pixel.ARGB32.Code: return WIC_FORMATS.Bgra32;
 
-                case PACKPIXEL.BGR96F: return WIC_FORMATS.Rgba128Float;
-                case PACKPIXEL.RGBA128F: return WIC_FORMATS.Rgba128Float;
+                case Pixel.VectorBGR.Code: return WIC_FORMATS.Rgba128Float;
+                case Pixel.VectorBGRA.Code: return WIC_FORMATS.Rgba128Float;
+                case Pixel.VectorRGBA.Code: return WIC_FORMATS.Rgba128Float;
 
                 default: throw new NotImplementedException();
             }
@@ -125,12 +123,33 @@ namespace InteropBitmaps
             if (dstX < 0) throw new ArgumentOutOfRangeException(nameof(dstX));
             if (dstY < 0) throw new ArgumentOutOfRangeException(nameof(dstY));
             if (dstX + srcPtr.Width > dstBmp.PixelWidth) throw new ArgumentOutOfRangeException(nameof(srcPtr.Width));
-            if (dstY + srcPtr.Height > dstBmp.PixelHeight) throw new ArgumentOutOfRangeException(nameof(srcPtr.Height));            
-            if (srcPtr.PixelFormat != ToInterop(dstBmp.Format)) throw new ArgumentException(nameof(srcPtr.PixelFormat));
+            if (dstY + srcPtr.Height > dstBmp.PixelHeight) throw new ArgumentOutOfRangeException(nameof(srcPtr.Height));
 
-            var rect = new System.Windows.Int32Rect(dstX, dstY, dstBmp.PixelWidth, dstBmp.PixelHeight);
+            if (srcPtr.PixelFormat == ToInterop(dstBmp.Format))
+            {
+                var rect = new System.Windows.Int32Rect(dstX, dstY, dstBmp.PixelWidth, dstBmp.PixelHeight);
 
-            dstBmp.WritePixels(rect, srcPtr.Pointer, srcPtr.Info.BitmapByteSize, srcPtr.Info.StepByteSize);
+                dstBmp.WritePixels(rect, srcPtr.Pointer, srcPtr.Info.BitmapByteSize, srcPtr.Info.StepByteSize);
+                return;
+            }
+            
+            try
+            {
+                dstBmp.Lock();
+
+                var fmt = ToInterop(dstBmp.Format);
+                var nfo = new BitmapInfo(dstBmp.PixelWidth, dstBmp.PixelHeight, fmt, dstBmp.BackBufferStride);
+                var dstPtr = new PointerBitmap(dstBmp.BackBuffer, nfo);
+
+                dstPtr.AsSpanBitmap().SetPixels(0, 0, srcPtr.AsSpanBitmap());
+
+            }
+            finally
+            {
+                dstBmp.Unlock();
+            }
+
+            
         }
 
         public static MemoryBitmap ToMemoryBitmap(WIC_READABLE src)
@@ -148,7 +167,7 @@ namespace InteropBitmaps
         {
             var fmt = ToBestMatch(info.PixelFormat);
 
-            return  new WIC_WRITABLE(info.Width, info.Height, 96, 96, fmt, null);
+            return new WIC_WRITABLE(info.Width, info.Height, 96, 96, fmt, null);
         }
 
         public static WIC_WRITABLE ToWritableBitmap(SpanBitmap src)
@@ -156,9 +175,7 @@ namespace InteropBitmaps
             var dst = ToWritableBitmap(src.Info);            
             dst.SetPixels(0, 0, src);
             return dst;
-        }
-
-        
+        }        
 
         #endregion          
     }

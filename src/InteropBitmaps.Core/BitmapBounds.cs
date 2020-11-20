@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
+using XY = System.Numerics.Vector2;
+using SIZE = System.Drawing.Size;
+using POINT = System.Drawing.Point;
+using RECTI = System.Drawing.Rectangle;
+using RECTS = System.Drawing.RectangleF;
+
 namespace InteropBitmaps
 {
     /// <summary>
@@ -9,8 +15,8 @@ namespace InteropBitmaps
     /// </summary>
     /// <remarks>
     /// Pretty much every imaging library around defines some sort of Rectangle structure:    
-    /// - (GDI+) System.Drawing.Rectangle
-    /// - (GDI+) System.Drawing.RectangleF
+    /// - (GDI+) <see cref="System.Drawing.Rectangle"/> <see href="https://github.com/dotnet/runtime/blob/master/src/libraries/System.Drawing.Primitives/src/System/Drawing/Rectangle.cs"/>
+    /// - (GDI+) <see cref="System.Drawing.RectangleF"/>
     /// - (WPF) System.Windows.Rect (WPF)
     /// - (WPF) System.Windows.Int32Rect
     /// - (ImageSharp) Sixlabors.Primitives.Rectangle
@@ -23,37 +29,80 @@ namespace InteropBitmaps
     {
         #region constructor
 
-        public static implicit operator BitmapBounds(in System.Drawing.Rectangle rect)
+        public static BitmapBounds Ceiling(RECTS value)
         {
-            return new BitmapBounds(rect.X, rect.Y, rect.Width, rect.Height);
-        }
-
-        public static implicit operator BitmapBounds(in System.Drawing.RectangleF rect)
-        {
-            return System.Drawing.Rectangle.Truncate(rect);
-        }
-
-        public static implicit operator System.Drawing.Rectangle(in BitmapBounds rect)
-        {
-            return new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
-        }
-
-        public static implicit operator System.Drawing.RectangleF(in BitmapBounds rect)
-        {
-            return new System.Drawing.RectangleF(rect.X, rect.Y, rect.Width, rect.Height);
-        }
-
-        public static implicit operator BitmapBounds(in (int x, int y, int w, int h) rect)
-        {
-            return new BitmapBounds(rect.x, rect.y, rect.w, rect.h);
+            unchecked
+            {
+                return new BitmapBounds(
+                    (int)Math.Ceiling(value.X),
+                    (int)Math.Ceiling(value.Y),
+                    (int)Math.Ceiling(value.Width),
+                    (int)Math.Ceiling(value.Height));
+            }
         }
         
+        public static BitmapBounds Truncate(RECTS value)
+        {
+            unchecked
+            {
+                return new BitmapBounds(
+                    (int)value.X,
+                    (int)value.Y,
+                    (int)value.Width,
+                    (int)value.Height);
+            }
+        }
+        
+        public static BitmapBounds Round(RECTS value)
+        {
+            unchecked
+            {
+                return new BitmapBounds(
+                    (int)Math.Round(value.X),
+                    (int)Math.Round(value.Y),
+                    (int)Math.Round(value.Width),
+                    (int)Math.Round(value.Height));
+            }
+        }
+
         public BitmapBounds(int x, int y,int w,int h)
         {
             this.X = x;
             this.Y = y;
             this.Width = Math.Max(0, w);
             this.Height = Math.Max(0, h);
+        }
+
+        public BitmapBounds(POINT origin, SIZE size)
+        {
+            this.X = origin.X;
+            this.Y = origin.Y;
+            this.Width = Math.Max(0, size.Width);
+            this.Height = Math.Max(0, size.Height);
+        }
+
+        #endregion
+
+        #region operators
+
+        public static implicit operator BitmapBounds(in RECTI rect)
+        {
+            return new BitmapBounds(rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
+        public static implicit operator BitmapBounds(in (POINT Location, SIZE Size) rect)
+        {
+            return new BitmapBounds(rect.Location, rect.Size);
+        }
+
+        public static implicit operator BitmapBounds(in (int x, int y, int w, int h) rect)
+        {
+            return new BitmapBounds(rect.x, rect.y, rect.w, rect.h);
+        }
+
+        public static implicit operator RECTI(in BitmapBounds rect)
+        {
+            return new RECTI(rect.X, rect.Y, rect.Width, rect.Height);
         }
 
         #endregion
@@ -88,19 +137,22 @@ namespace InteropBitmaps
 
         #region properties
 
+        /// <summary>
+        /// Gets the area of this object, in pixels
+        /// </summary>
         public int Area => Width * Height;
 
-        public (int X, int Y) Origin => (X, Y);
+        public POINT Location => new POINT(X, Y);
 
-        public (int Width, int Height) Size => (Width, Height);
+        public SIZE Size => new SIZE(Width, Height);
 
         public int Left => this.X;
 
         public int Top => this.Y;
 
-        public int Right => this.X + this.Width;
+        public int Right => unchecked(this.X + this.Width);
 
-        public int Bottom => this.Y + this.Height;
+        public int Bottom => unchecked(this.Y + this.Height);
 
         #endregion
 
@@ -117,23 +169,90 @@ namespace InteropBitmaps
             return true;
         }
 
-        public static BitmapBounds Clamp(in BitmapBounds value, in BitmapBounds limits)
+        /// <summary>
+        /// Gets this instance clipped by <paramref name="clip"/>.
+        /// </summary>
+        /// <param name="clip">The clipping <see cref="BitmapBounds"/>.</param>
+        /// <returns>A new <see cref="BitmapBounds"/> that is fully contained within <paramref name="clip"/>.</returns>
+        public BitmapBounds Clipped(in BitmapBounds clip) { return _Clip(this, clip); }
+
+        /// <summary>
+        /// Clips <paramref name="rect"/> by <paramref name="clip"/>.
+        /// </summary>
+        /// <param name="rect">The <see cref="BitmapBounds"/> to clip.</param>
+        /// <param name="clip">The clipping <see cref="BitmapBounds"/>.</param>
+        /// <returns>A new <see cref="BitmapBounds"/> that is fully contained within <paramref name="clip"/>.</returns>
+        private static BitmapBounds _Clip(in BitmapBounds rect, in BitmapBounds clip)
         {
-            var x = value.X;
-            var y = value.Y;
-            var w = value.Width;
-            var h = value.Height;
+            var x = rect.X;
+            var y = rect.Y;
+            var w = rect.Width;
+            var h = rect.Height;
 
-            if (x < limits.X) { w -= (limits.X - x); x = limits.X; }
-            if (y < limits.Y) { h -= (limits.Y - y); y = limits.Y; }
+            if (x < clip.X) { w -= (clip.X - x); x = clip.X; }
+            if (y < clip.Y) { h -= (clip.Y - y); y = clip.Y; }
 
-            if (x + w > limits.X + limits.Width) w -= (x + w) - (limits.X + limits.Width);
-            if (y + h > limits.Y + limits.Height) h -= (y + h) - (limits.Y + limits.Height);
+            if (x + w > clip.X + clip.Width) w -= (x + w) - (clip.X + clip.Width);
+            if (y + h > clip.Y + clip.Height) h -= (y + h) - (clip.Y + clip.Height);
 
             if (w < 0) w = 0;
             if (h < 0) h = 0;
 
             return new BitmapBounds(x, y, w, h);
+        }        
+
+        public override string ToString()
+        {
+            return "{" + $"X={X},Y={Y},Width={Width},Height={Height}" + "}";
+        }
+
+        #endregion
+
+        #region System.Drawing Static API
+
+        public static RECTI Clip(in RECTI rect, in RECTI clip)
+        {
+            var x = rect.X;
+            var y = rect.Y;
+            var w = rect.Width;
+            var h = rect.Height;
+
+            if (x < clip.X) { w -= (clip.X - x); x = clip.X; }
+            if (y < clip.Y) { h -= (clip.Y - y); y = clip.Y; }
+
+            if (x + w > clip.X + clip.Width) w -= (x + w) - (clip.X + clip.Width);
+            if (y + h > clip.Y + clip.Height) h -= (y + h) - (clip.Y + clip.Height);
+
+            if (w < 0) w = 0;
+            if (h < 0) h = 0;
+
+            return new RECTI(x, y, w, h);
+        }
+
+        public static RECTS Clip(in RECTS rect, in RECTS clip)
+        {
+            var x = rect.X;
+            var y = rect.Y;
+            var w = rect.Width;
+            var h = rect.Height;
+
+            if (x < clip.X) { w -= (clip.X - x); x = clip.X; }
+            if (y < clip.Y) { h -= (clip.Y - y); y = clip.Y; }
+
+            if (x + w > clip.X + clip.Width) w -= (x + w) - (clip.X + clip.Width);
+            if (y + h > clip.Y + clip.Height) h -= (y + h) - (clip.Y + clip.Height);
+
+            if (w < 0) w = 0;
+            if (h < 0) h = 0;
+
+            return new RECTS(x, y, w, h);
+        }
+
+        public static RECTS Lerp(in RECTS left, in RECTS right, Single amount)
+        {
+            var l = XY.Lerp(new XY(left.X, left.Y), new XY(right.X, right.Y), amount);
+            var s = XY.Lerp(new XY(left.Width, left.Height), new XY(right.Width, right.Height), amount);
+            return new RECTS(l.X, l.Y, s.X, s.Y);
         }
 
         #endregion

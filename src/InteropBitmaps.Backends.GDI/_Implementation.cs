@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
 using INTEROPFMT = InteropBitmaps.Pixel.Format;
-using STDPIXEL = InteropBitmaps.Pixel.Standard;
-using PACKPIXEL = InteropBitmaps.Pixel.Packed;
-
-using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace InteropBitmaps
 {
@@ -20,17 +16,17 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case GDIFMT.Format8bppIndexed: return STDPIXEL.Gray8;
+                case GDIFMT.Format8bppIndexed: return Pixel.Luminance8.Format;
 
-                case GDIFMT.Format16bppGrayScale: return STDPIXEL.Gray16;
-                case GDIFMT.Format16bppRgb565: return STDPIXEL.BGR565;
-                case GDIFMT.Format16bppRgb555: return STDPIXEL.BGRA5551;
-                case GDIFMT.Format16bppArgb1555: return STDPIXEL.BGRA5551;
+                case GDIFMT.Format16bppGrayScale: return Pixel.Luminance16.Format;
+                case GDIFMT.Format16bppRgb565: return Pixel.BGR565.Format;
+                case GDIFMT.Format16bppRgb555: return Pixel.BGRA5551.Format;
+                case GDIFMT.Format16bppArgb1555: return Pixel.BGRA5551.Format;
 
-                case GDIFMT.Format24bppRgb: return STDPIXEL.BGR24;
+                case GDIFMT.Format24bppRgb: return Pixel.BGR24.Format;
 
-                case GDIFMT.Format32bppRgb: return STDPIXEL.BGRA32;
-                case GDIFMT.Format32bppArgb: return STDPIXEL.BGRA32;
+                case GDIFMT.Format32bppRgb: return Pixel.BGRA32.Format;
+                case GDIFMT.Format32bppArgb: return Pixel.BGRA32.Format;
 
                 case GDIFMT.PAlpha:
                 case GDIFMT.Format32bppPArgb:
@@ -45,26 +41,26 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case PACKPIXEL.Gray16: return GDIFMT.Format16bppGrayScale;
+                case Pixel.Luminance16.Code: return GDIFMT.Format16bppGrayScale;
 
-                case PACKPIXEL.BGR565: return GDIFMT.Format16bppRgb565;
-                case PACKPIXEL.BGRA5551: return GDIFMT.Format16bppArgb1555;
+                case Pixel.BGR565.Code: return GDIFMT.Format16bppRgb565;
+                case Pixel.BGRA5551.Code: return GDIFMT.Format16bppArgb1555;
 
-                case PACKPIXEL.BGR24: return GDIFMT.Format24bppRgb;
+                case Pixel.BGR24.Code: return GDIFMT.Format24bppRgb;
 
-                case PACKPIXEL.BGRA32: return GDIFMT.Format32bppArgb;                    
+                case Pixel.BGRA32.Code: return GDIFMT.Format32bppArgb;                    
             }
 
             if (allowCompatibleFormats)
             {
                 switch (fmt)
                 {
-                    case PACKPIXEL.Gray8: // return GDIFMT.Format16bppGrayScale;                   
+                    case Pixel.Luminance8.Code: // return GDIFMT.Format16bppGrayScale;                   
 
-                    case PACKPIXEL.RGB24: return GDIFMT.Format24bppRgb;
+                    case Pixel.RGB24.Code: return GDIFMT.Format24bppRgb;
 
-                    case PACKPIXEL.RGBA32: return GDIFMT.Format32bppArgb;
-                    case PACKPIXEL.ARGB32: return GDIFMT.Format32bppArgb;
+                    case Pixel.RGBA32.Code: return GDIFMT.Format32bppArgb;
+                    case Pixel.ARGB32.Code: return GDIFMT.Format32bppArgb;
 
                     default: throw new NotImplementedException(fmt.ToString());
                 }

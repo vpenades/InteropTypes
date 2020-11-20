@@ -21,7 +21,7 @@ namespace InteropBitmaps.Codecs
 
         public static unsafe PointerBitmap AsPointerBitmap(AVFrame frame)
         {
-            var binfo = new BitmapInfo(frame.width, frame.height, Pixel.Standard.BGR24, frame.linesize[0]);
+            var binfo = new BitmapInfo(frame.width, frame.height, Pixel.BGR24.Format, frame.linesize[0]);
             return new PointerBitmap((IntPtr)frame.data[0], binfo, true);
         }
 

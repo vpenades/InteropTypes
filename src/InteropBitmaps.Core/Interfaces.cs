@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
+using SIZE = System.Drawing.Size;
+using POINT = System.Drawing.Point;
+
 namespace InteropBitmaps
 {
     /// <summary>
@@ -14,14 +17,13 @@ namespace InteropBitmaps
     public interface IBitmap<TPixel>
         where TPixel : unmanaged
     {
-        int Width { get; }
-        int Height { get; }
-
         Pixel.Format PixelFormat { get; }
 
-        TPixel GetPixel(int x, int y);
-        void SetPixel(int x, int y, TPixel value);
-    }
+        SIZE Size { get; }        
+
+        TPixel GetPixel(POINT point);
+        void SetPixel(POINT point, TPixel value);
+    }    
 
     /// <summary>
     /// Represents an object that promises a <see cref="MemoryBitmap"/> and controls its life cycle.

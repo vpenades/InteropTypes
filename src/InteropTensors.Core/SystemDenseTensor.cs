@@ -51,11 +51,6 @@ namespace InteropTensors
             return _Tensor.Clone() as DenseTensor<T>;
         }
 
-        public void FitPixels(SpanBitmap src, TensorImageSettings mis)
-        {
-            throw new NotImplementedException();
-        }
-
         public SpanBitmap AsSpanBitmap() { return _Implementation.GetSpanBitmap(this); }
 
         #endregion

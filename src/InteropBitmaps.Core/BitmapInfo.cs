@@ -3,14 +3,23 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using SIZE = System.Drawing.Size;
+using POINT = System.Drawing.Point;
+using RECTI = System.Drawing.Rectangle;
+
 namespace InteropBitmaps
 {
+    using WSPAN = Span<Byte>;
+    using RSPAN = ReadOnlySpan<Byte>;
+
     /// <summary>
     /// Represents the width, height and pixel format of a bitmap.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{_DebuggerDisplay(),nq}")]
     public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
+        // Todo: Maybe a better name for this struct is BitmapLayout
+
         #region debug
 
         internal string _DebuggerDisplay() { return $"{PixelFormat}×{Width}×{Height}"; }
@@ -19,11 +28,19 @@ namespace InteropBitmaps
 
         #region lifecycle     
 
+        public static implicit operator BitmapInfo((SIZE s, Pixel.Format fmt) binfo)
+        {
+            return new BitmapInfo(binfo.s, binfo.fmt);
+        }
+
         public static implicit operator BitmapInfo((int w, int h, Pixel.Format fmt) binfo)
         {
             return new BitmapInfo(binfo.w, binfo.h, binfo.fmt);
         }
 
+        public BitmapInfo(SIZE size, Pixel.Format pixelFormat, int stepByteSize = 0)
+            : this(size.Width,size.Height,pixelFormat,stepByteSize) { }
+        
         public BitmapInfo(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
         {
             var pixelByteSize = pixelFormat.ByteCount;
@@ -51,7 +68,7 @@ namespace InteropBitmaps
         #endregion
 
         #region data
-
+        
         /// <summary>
         /// Width of the bitmap, in pixels.
         /// </summary>
@@ -106,6 +123,9 @@ namespace InteropBitmaps
 
         #region properties
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
         public bool IsEmpty => (Width * Height * PixelByteSize) == 0;
 
         /// <summary>
@@ -117,21 +137,26 @@ namespace InteropBitmaps
         public int BitmapByteSize => Height == 0 ? 0 : StepByteSize * (Height - 1) + PixelByteSize * Width;
 
         /// <summary>
-        /// Gets the size of the bitmap, in pixels.
+        /// Gets the <see cref="SIZE"/> of the bitmap, in pixels.
         /// </summary>
-        public (int Width, int Height) Size => (Width, Height);
+        public SIZE Size => new SIZE(Width, Height);
 
         /// <summary>
-        /// Gets a <see cref="BitmapBounds"/> with the dimensions of the bitmap.
+        /// Gets the <see cref="RECTI"/> of the bitmap, in pixels.
         /// </summary>
-        public BitmapBounds Bounds => new BitmapBounds(0,0,Width, Height);
+        public RECTI Rect => new RECTI(0, 0, Width, Height);
+
+        /// <summary>
+        /// Gets the <see cref="BitmapBounds"/> of this bitmap, in pixels.
+        /// </summary>
+        public BitmapBounds Bounds => new BitmapBounds(0, 0, Width, Height);
 
         /// <summary>
         /// Gets a value indicating whether the buffer can be accessed continuously.
         /// </summary>
         public bool IsContinuous => Width * PixelByteSize == StepByteSize;
 
-        public (int Width, int Height, Pixel.Format Format) Layout => (Width, Height, PixelFormat);
+        public (SIZE Size, Pixel.Format Format) Layout => (Size, PixelFormat);
 
         #endregion
 
@@ -150,33 +175,37 @@ namespace InteropBitmaps
             return (offset, info);
         }
 
-        public Span<Byte> UseScanline(Span<Byte> bitmap, int y)
+        public WSPAN UseScanline(WSPAN bitmap, int y)
         {
             return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }
 
-        public ReadOnlySpan<Byte> GetScanline(ReadOnlySpan<Byte> bitmap, int y)
+        public RSPAN GetScanline(RSPAN bitmap, int y)
         {
             return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }
 
-        public Span<Byte> UsePixel(Span<Byte> bitmap, int x, int y)
+        public WSPAN UsePixel(WSPAN bitmap, int x, int y)
         {
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize);
         }
 
-        public Span<Byte> UsePixels(Span<Byte> bitmap, int x, int y, int pixelCount)
+        public WSPAN UsePixels(WSPAN bitmap, int x, int y, int pixelCount)
         {
+            if (pixelCount - x > Width) throw new ArgumentOutOfRangeException(nameof(pixelCount));
+
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
         }
 
-        public ReadOnlySpan<Byte> GetPixel(ReadOnlySpan<Byte> bitmap, int x, int y)
+        public RSPAN GetPixel(RSPAN bitmap, int x, int y)
         {
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize);
         }
 
-        public ReadOnlySpan<Byte> GetPixels(ReadOnlySpan<Byte> bitmap, int x, int y, int pixelCount)
+        public RSPAN GetPixels(RSPAN bitmap, int x, int y, int pixelCount)
         {
+            if (pixelCount - x > Width) throw new ArgumentOutOfRangeException(nameof(pixelCount));
+
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
         }
 

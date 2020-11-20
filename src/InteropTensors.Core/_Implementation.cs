@@ -62,7 +62,7 @@ namespace InteropTensors
             if (dims[2] != 3) return false;
 
             var data = System.Runtime.InteropServices.MemoryMarshal.Cast<float, byte>(src.Span);
-            bmp = new SpanBitmap<Vector3>(data, dims[1], dims[0], Pixel.Standard.BGR96F);
+            bmp = new SpanBitmap<Vector3>(data, dims[1], dims[0], Pixel.VectorBGR.Format);
             return true;
         }
         
@@ -75,7 +75,7 @@ namespace InteropTensors
         {
             var midPixel = new Single[tensor.Dimensions[2]];
 
-            var memory = new MemoryBitmap<Vector3>(tensor.Dimensions[1], tensor.Dimensions[0], Pixel.Standard.BGR96F);
+            var memory = new MemoryBitmap<Vector3>(tensor.Dimensions[1], tensor.Dimensions[0], Pixel.VectorBGR.Format);
 
             for (int y = 0; y < tensor.Dimensions[0]; ++y)
             {
@@ -97,8 +97,8 @@ namespace InteropTensors
             if (bgrSrc.PixelSize != 3) throw new ArgumentException(nameof(bgrSrc));
 
             Span<Vector3> vSrc = stackalloc Vector3[bgrSrc.Width];
-            Span<Vector3> vDst0 = stackalloc Vector3[dst.BitmapWidth];
-            Span<Vector3> vDst1 = stackalloc Vector3[dst.BitmapWidth];
+            Span<Vector3> vDst0 = stackalloc Vector3[dst.BitmapSize.Width];
+            Span<Vector3> vDst1 = stackalloc Vector3[dst.BitmapSize.Width];
 
             // expand bgrSrc bytes to vSrc (use V4s)
             // bilinear interpolate vSrc over vDst1 along X
@@ -108,10 +108,10 @@ namespace InteropTensors
         static void FitPixels(SpanBitmap<_bgr> src, SpanTensor2<Vector3> dst, float offset, float scale)
         {
             Span<Vector3> vSrc = stackalloc Vector3[src.Width];
-            Span<Vector3> vDst0 = stackalloc Vector3[dst.BitmapWidth];
-            Span<Vector3> vDst1 = stackalloc Vector3[dst.BitmapWidth];
+            Span<Vector3> vDst0 = stackalloc Vector3[dst.BitmapSize.Width];
+            Span<Vector3> vDst1 = stackalloc Vector3[dst.BitmapSize.Width];
 
-            for(int dsty=0; dsty < dst.BitmapHeight; ++dsty)
+            for(int dsty=0; dsty < dst.BitmapSize.Height; ++dsty)
             {
                 var srcRow = src.GetPixelsScanline(dsty);
                 for (int i = 0; i < vSrc.Length; ++i) vSrc[i] = srcRow[i].ToVector3();
@@ -152,8 +152,7 @@ namespace InteropTensors
 
         public static void SetGrayPixels(SpanTensor2<Single> dst, PointerBitmap src, Single offset, Single scale)
         {
-            if (src.Width != dst.BitmapWidth) throw new ArgumentException(nameof(dst.BitmapWidth));
-            if (src.Height != dst.BitmapHeight) throw new ArgumentException(nameof(dst.BitmapHeight));
+            if (src.Size != dst.BitmapSize) throw new ArgumentException(nameof(dst.BitmapSize));
 
             var dstSpan = dst.AsSpanBitmap();
             var srcSpan = src.AsSpanBitmap();

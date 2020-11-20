@@ -5,12 +5,14 @@ using System.Text;
 
 using InteropBitmaps;
 
+using SIZE = System.Drawing.Size;
+
 namespace InteropTensors
 {
     partial struct SpanTensor2<T>
     {
-        public int BitmapWidth => this._Dimensions.Dim1;
-        public int BitmapHeight => this._Dimensions.Dim0;
+
+        public SIZE BitmapSize => new SIZE(this._Dimensions.Dim1, this._Dimensions.Dim0);
 
         public Span<T> GetRowSpan(int y)
         {
@@ -19,15 +21,15 @@ namespace InteropTensors
 
         public SpanBitmap<T> AsSpanBitmap(Pixel.Format fmt)
         {
-            return new SpanBitmap<T>(this._Buffer, BitmapWidth, BitmapHeight, fmt);
+            return new SpanBitmap<T>(this._Buffer, BitmapSize.Width, BitmapSize.Height, fmt);
         }
 
         public unsafe SpanBitmap<T> AsSpanBitmap()
         {
             var l = sizeof(T);
 
-            if (l == 1) return AsSpanBitmap(Pixel.Standard.Gray8);
-            if (l == 3) return AsSpanBitmap(Pixel.Standard.BGR24);
+            if (l == 1) return AsSpanBitmap(Pixel.Luminance8.Format);
+            if (l == 3) return AsSpanBitmap(Pixel.BGR24.Format);
 
             if (typeof(T) == typeof(Single)) return AsSpanBitmap(Pixel.Format.GetFromDepthAndChannels(typeof(float), 1));
             if (typeof(T) == typeof(Vector2)) return AsSpanBitmap(Pixel.Format.GetFromDepthAndChannels(typeof(float), 2));
@@ -35,8 +37,6 @@ namespace InteropTensors
             if (typeof(T) == typeof(Vector4)) return AsSpanBitmap(Pixel.Format.GetFromDepthAndChannels(typeof(float), 4));
 
             throw new NotImplementedException();
-        }
-
-        
+        }        
     }
 }

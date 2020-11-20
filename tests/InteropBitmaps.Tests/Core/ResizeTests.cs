@@ -16,7 +16,7 @@ namespace InteropBitmaps.Core
         public void ResizeTest1()
         {
             var src = LoadShannonImage();
-            var dst = new MemoryBitmap(333, 333, Pixel.Standard.BGR24 , 1000);
+            var dst = new MemoryBitmap(333, 333, Pixel.BGR24.Format , 1000);
 
             SpanBitmap.FitPixels(src, dst, (0, 1));
 
@@ -37,7 +37,7 @@ namespace InteropBitmaps.Core
             // load a bitmap with SkiaSharp, which is known to support WEBP.
             var mem = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
 
-            var mem2 = new MemoryBitmap(mem.Width, mem.Height, Pixel.Standard.BGR24);
+            var mem2 = new MemoryBitmap(mem.Width, mem.Height, Pixel.BGR24.Format);
             mem2.SetPixels(0, 0, mem);
 
             return mem2;

@@ -6,9 +6,21 @@ namespace InteropBitmaps
 {
     static class _Implementation
     {
+        public static Span<T> OfType<T>(this Span<Byte> span)
+            where T:unmanaged
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, T>(span);
+        }
+
+        public static ReadOnlySpan<T> OfType<T>(this ReadOnlySpan<Byte> span)
+            where T : unmanaged
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, T>(span);
+        }
+
         public static SpanBitmap Crop(SpanBitmap src, BitmapBounds rect)
         {
-            rect = BitmapBounds.Clamp(rect, src.bounds);
+            rect = rect.Clipped(src.bounds);
             if (rect.Width <= 0 || rect.Height <= 0) return default;
             return src.Slice(rect);
         }
@@ -16,7 +28,7 @@ namespace InteropBitmaps
         public static SpanBitmap<TPixel> Crop<TPixel>(SpanBitmap<TPixel> src, BitmapBounds rect)
             where TPixel : unmanaged
         {
-            rect = BitmapBounds.Clamp(rect, src.bounds);
+            rect = rect.Clipped(src.bounds);
             if (rect.Width <= 0 || rect.Height <= 0) return default;
             return src.Slice(rect);
         }
@@ -48,19 +60,12 @@ namespace InteropBitmaps
             // conversion required
             else
             {
-                var srcConverter = _PixelConverters.GetConverter(srcCrop.PixelFormat);
-                var dstConverter = _PixelConverters.GetConverter(dstCrop.PixelFormat);
-
-                Span<_PixelBGRA32> tmp = stackalloc _PixelBGRA32[dstCrop.Width];
-
                 for (int y = 0; y < dstCrop.Height; ++y)
                 {
                     var srcRow = srcCrop.GetBytesScanline(y);
                     var dstRow = dstCrop.UseBytesScanline(y);
-
-                    srcConverter.ConvertFrom(tmp, srcRow, y);
-                    dstConverter.ConvertTo(dstRow, y, tmp);
-                }
+                    Pixel.ConvertPixels(dstRow, dstCrop.PixelFormat, srcRow, srcCrop.PixelFormat);
+                }                
             }
         }
 
@@ -135,23 +140,36 @@ namespace InteropBitmaps
 
         public static int CalculateHashCode(ReadOnlySpan<Byte> data, in BitmapInfo info)
         {
-            if (info.IsEmpty) return 0;
+            if (info.IsEmpty) return 0;            
 
             System.Diagnostics.Debug.Assert(data.Length == info.BitmapByteSize);
 
-            var longs = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, ulong>(data.Slice(0, data.Length & ~3));
+            // if the bytestride exceeds the actual row size, the region outside the
+            // bitmap is not accounted for the hash.
 
-            var step = (2 * longs.Length) / (info.Width + info.Height);
-            if (step < 1) step = 1;
+            int rowSize = info.Width * info.PixelByteSize;
+            int x = 0;
+            int y = 0;
+            int step = 1;
+            int count = 0;
 
             ulong h = 0;
 
-            for (int i = 0; i < longs.Length; i += step)
+            while ((x + y) < data.Length)
             {
-                h += longs[i];
-                h *= 17;
-            }
+                h <<= 2;
+                h += data[x + y];
 
+                x += step;
+                while(x > rowSize)
+                {
+                    x -= rowSize;
+                    y += info.StepByteSize;
+                }
+
+                ++count; if (count > 5) { count = 0; step += 2; }
+            }
+            
             return h.GetHashCode();
         }
     }

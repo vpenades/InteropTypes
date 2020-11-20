@@ -18,7 +18,7 @@ namespace InteropBitmaps
         [Test]
         public void CreateMemoryBitmap()
         {
-            var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.Standard.BGRA32);
+            var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.BGRA32.Format);
             m1.SetPixels(0xff406040);
 
             m1.AttachToCurrentTest("result.png");
@@ -27,8 +27,8 @@ namespace InteropBitmaps
         [Test]
         public void SetPixels()
         {
-            var dst = new MemoryBitmap<Byte>(16, 16, Pixel.Standard.Gray8);
-            var src = new MemoryBitmap<Byte>(8, 8, Pixel.Standard.Gray8);
+            var dst = new MemoryBitmap<Byte>(16, 16, Pixel.Luminance8.Format);
+            var src = new MemoryBitmap<Byte>(8, 8, Pixel.Luminance8.Format);
 
             src.SetPixels(50);
             dst.SetPixels(4, 4, src);

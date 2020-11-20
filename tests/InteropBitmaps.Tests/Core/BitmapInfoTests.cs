@@ -15,8 +15,8 @@ namespace InteropBitmaps.Core
         public void CheckBitmapInfoEquality()
         {
             // Should these two be considered 'Equal' ?   The stride is essentially a "technicality" from the point of view of the content.
-            var a = new BitmapInfo(10, 10, Pixel.Standard.Alpha8);
-            var b = new BitmapInfo(10, 10, Pixel.Standard.Alpha8, 15);
+            var a = new BitmapInfo(10, 10, Pixel.Alpha8.Format);
+            var b = new BitmapInfo(10, 10, Pixel.Alpha8.Format, 15);
 
             // having the same hash code does not mean they're equal.
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());

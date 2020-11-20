@@ -129,7 +129,7 @@ namespace InteropTensors
             var src = tensor.CreateGrayBitmap(pixelFunc);
             var (min, max) = SpanBitmap.MinMax(src);
 
-            var dst = new MemoryBitmap<Byte>(src.Width, src.Height, Pixel.Standard.Gray8);
+            var dst = new MemoryBitmap<Byte>(src.Width, src.Height, Pixel.Luminance8.Format);
 
             SpanBitmap.CopyPixels(src, dst, (-min, 255.0f / (max - min)), (0, 255));
 
@@ -175,7 +175,7 @@ namespace InteropTensors
             var channel = tensor.CreateGrayBitmap(pixel => pixel.Sum());
             var (min, max) = SpanBitmap.MinMax(channel);
 
-            var gray = new MemoryBitmap<Byte>(channel.Width, channel.Height, Pixel.Standard.Gray8);
+            var gray = new MemoryBitmap<Byte>(channel.Width, channel.Height, Pixel.Luminance8.Format);
             SpanBitmap.CopyPixels(channel, gray, (-min, 255.0f / (max - min)), (0, 255));
 
             return gray;
@@ -186,7 +186,7 @@ namespace InteropTensors
         {
             var channel = tensor.CreateBGRBitmap(pixel => new Vector3(pixel[0],pixel[1],pixel[2]));            
 
-            var bgr = new MemoryBitmap(channel.Width, channel.Height, Pixel.Standard.BGR24);
+            var bgr = new MemoryBitmap(channel.Width, channel.Height, Pixel.BGR24.Format);
             SpanBitmap.CopyPixels(channel, bgr, (0,255), (0, 255));
 
             return bgr;

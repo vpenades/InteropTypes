@@ -14,17 +14,17 @@ namespace InteropBitmaps
         {
             switch (enc.PackedFormat)
             {
-                case Pixel.Packed.Gray8: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
-                case Pixel.Packed.Gray16: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
+                case Pixel.Luminance8.Code: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
+                case Pixel.Luminance16.Code: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;
 
-                case Pixel.Packed.BGR565: return ZXing.RGBLuminanceSource.BitmapFormat.RGB565; // notice that colors here are inverted                
+                case Pixel.BGR565.Code: return ZXing.RGBLuminanceSource.BitmapFormat.RGB565; // notice that colors here are inverted                
 
-                case Pixel.Packed.RGB24: return ZXing.RGBLuminanceSource.BitmapFormat.RGB24;
-                case Pixel.Packed.BGR24: return ZXing.RGBLuminanceSource.BitmapFormat.BGR24;
+                case Pixel.RGB24.Code: return ZXing.RGBLuminanceSource.BitmapFormat.RGB24;
+                case Pixel.BGR24.Code: return ZXing.RGBLuminanceSource.BitmapFormat.BGR24;
 
-                case Pixel.Packed.RGBA32: return ZXing.RGBLuminanceSource.BitmapFormat.RGBA32;
-                case Pixel.Packed.BGRA32: return ZXing.RGBLuminanceSource.BitmapFormat.BGRA32;
-                case Pixel.Packed.ARGB32: return ZXing.RGBLuminanceSource.BitmapFormat.ARGB32;
+                case Pixel.RGBA32.Code: return ZXing.RGBLuminanceSource.BitmapFormat.RGBA32;
+                case Pixel.BGRA32.Code: return ZXing.RGBLuminanceSource.BitmapFormat.BGRA32;
+                case Pixel.ARGB32.Code: return ZXing.RGBLuminanceSource.BitmapFormat.ARGB32;
 
                 default: return ZXing.RGBLuminanceSource.BitmapFormat.Unknown;
             }

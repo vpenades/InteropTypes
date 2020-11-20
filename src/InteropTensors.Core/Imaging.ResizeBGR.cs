@@ -11,21 +11,21 @@ namespace InteropTensors
     {
         public static void Resize(SpanTensor2<Vector3> src, SpanTensor2<Vector3> dst, float offset = 0, float scale = 1)
         {
-            Span<float> wx = stackalloc float[src.BitmapWidth * 2];
-            Span<float> wy = stackalloc float[src.BitmapHeight * 2];
+            Span<float> wx = stackalloc float[src.BitmapSize.Width * 2];
+            Span<float> wy = stackalloc float[src.BitmapSize.Height * 2];
 
-            var context = new _ResizeBGR(wx, wy, dst.BitmapWidth, dst.BitmapHeight);
+            var context = new _ResizeBGR(wx, wy, dst.BitmapSize);
 
             context._Shrink(src, dst, offset, scale);
         }
 
-        public _ResizeBGR(Span<float> srcWeightX, Span<float> srcWeightY, int dstW, int dstH)
+        public _ResizeBGR(Span<float> srcWeightX, Span<float> srcWeightY, System.Drawing.Size dstS)
         {
             _SrcWeightsX = srcWeightX;
             _SrcWeightsY = srcWeightY;
 
-            _SetupShrinkWeights(_SrcWeightsX, srcWeightX.Length / 2, dstW);
-            _SetupShrinkWeights(_SrcWeightsY, srcWeightY.Length / 2, dstH);
+            _SetupShrinkWeights(_SrcWeightsX, srcWeightX.Length / 2, dstS.Width);
+            _SetupShrinkWeights(_SrcWeightsY, srcWeightY.Length / 2, dstS.Height);
         }
         
         // how much weight has every src column over the final dst column
@@ -36,13 +36,13 @@ namespace InteropTensors
 
         private void _Shrink(SpanTensor2<Vector3> src, SpanTensor2<Vector3> dst, float offset = 0, float scale = 1)
         {
-            if (src.BitmapWidth != _SrcWeightsX.Length) throw new ArgumentException(nameof(src.BitmapWidth));
-            if (src.BitmapHeight != _SrcWeightsY.Length) throw new ArgumentException(nameof(src.BitmapHeight));
+            if (src.BitmapSize.Width != _SrcWeightsX.Length) throw new ArgumentException(nameof(src.BitmapSize));
+            if (src.BitmapSize.Height != _SrcWeightsY.Length) throw new ArgumentException(nameof(src.BitmapSize));
 
-            var stepy = 65536 * dst.BitmapHeight / src.BitmapHeight;
+            var stepy = 65536 * dst.BitmapSize.Height / src.BitmapSize.Height;
             var lasty = -1;
 
-            for (int srcy=0; srcy < src.BitmapHeight; ++srcy)
+            for (int srcy=0; srcy < src.BitmapSize.Height; ++srcy)
             {
                 var dsty = srcy * stepy / 65536;
 

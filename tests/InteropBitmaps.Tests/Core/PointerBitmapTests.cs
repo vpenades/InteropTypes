@@ -33,7 +33,7 @@ namespace InteropBitmaps.Core
                 Assert.AreEqual(0, ptrSpan.GetPixel(1, 1));
             }
 
-            var bmp = new MemoryBitmap<int>(4, 4, Pixel.Standard.ARGB32);
+            var bmp = new MemoryBitmap<int>(4, 4, Pixel.ARGB32.Format);
 
             bmp.SetPixels(int.MaxValue);
             bmp.Slice((1, 1, 2, 2)).SetPixels(0);

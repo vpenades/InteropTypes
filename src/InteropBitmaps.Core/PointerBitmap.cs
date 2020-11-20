@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Transactions;
 
+using SIZE = System.Drawing.Size;
+
 namespace InteropBitmaps
 {
     /// <summary>
@@ -53,7 +55,7 @@ namespace InteropBitmaps
         public IntPtr Pointer => _Pointer;
 
         /// <summary>
-        /// Gets the structural information of the bitmap; Width, Height, PixelFormat, etc.
+        /// Gets the layout information of the bitmap; Width, Height, PixelFormat, etc.
         /// </summary>
         public BitmapInfo Info => _Info;
 
@@ -65,6 +67,8 @@ namespace InteropBitmaps
         public Boolean IsReadOnly => _IsReadOnly;
 
         public Boolean IsEmpty => Pointer == IntPtr.Zero || _Info.IsEmpty;
+
+        public SIZE Size => _Info.Size;
 
         public int Width => _Info.Width;
 

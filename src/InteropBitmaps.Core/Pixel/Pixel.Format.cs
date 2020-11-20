@@ -7,7 +7,7 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    using PEF = Pixel.ElementID;
+    using PEF = Pixel.Format.ElementID;
 
     partial class Pixel
     {
@@ -22,17 +22,17 @@ namespace InteropBitmaps
             {
                 switch (this.PackedFormat)
                 {
-                    case Packed.Alpha8: return "A8";
+                    case Alpha8.Code: return "A8";
 
-                    case Packed.Gray8: return "Gray8";
-                    case Packed.Gray16: return "Gray16";
+                    case Luminance8.Code: return "L8";
+                    case Luminance16.Code: return "L16";
 
-                    case Packed.RGB24: return "RGB24";
-                    case Packed.BGR24: return "BGR24";
+                    case RGB24.Code: return "RGB24";
+                    case BGR24.Code: return "BGR24";
 
-                    case Packed.ARGB32: return "ARGB32";
-                    case Packed.RGBA32: return "RGBA32";
-                    case Packed.BGRA32: return "BGRA32";
+                    case ARGB32.Code: return "ARGB32";
+                    case RGBA32.Code: return "RGBA32";
+                    case BGRA32.Code: return "BGRA32";
                 }
 
                 var elements = Elements
@@ -141,14 +141,14 @@ namespace InteropBitmaps
             {
                 if (depth == typeof(Byte))
                 {
-                    if (channels == 1) return Standard.Gray8;
-                    if (channels == 3) return Standard.BGR24;
-                    if (channels == 4) return Standard.BGRA32;
+                    if (channels == 1) return Luminance8.Format;
+                    if (channels == 3) return BGR24.Format;
+                    if (channels == 4) return BGRA32.Format;
                 }
 
                 if (depth == typeof(UInt16))
                 {
-                    if (channels == 1) return Standard.Gray16;
+                    if (channels == 1) return Luminance16.Format;
                     if (channels == 3) return new Format(PEF.Blue16, PEF.Green16, PEF.Red16);
                     if (channels == 4) return new Format(PEF.Blue16, PEF.Green16, PEF.Red16, PEF.Alpha16);
                 }
@@ -156,8 +156,8 @@ namespace InteropBitmaps
                 if (depth == typeof(Single))
                 {
                     if (channels == 1) return Standard.Gray32F;
-                    if (channels == 3) return Standard.BGR96F;
-                    if (channels == 4) return Standard.BGRA128F;
+                    if (channels == 3) return VectorBGR.Format;
+                    if (channels == 4) return VectorBGRA.Format;
                 }
 
                 throw new NotImplementedException();

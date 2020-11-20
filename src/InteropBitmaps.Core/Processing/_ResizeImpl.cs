@@ -13,44 +13,67 @@ namespace InteropBitmaps.Processing
     {
         public static void FitPixels(SpanBitmap src, SpanBitmap dst, (float offset, float scale) transform)
         {
-            if (src.PixelFormat == Pixel.Standard.BGR24)
-            {                
-                if (dst.PixelFormat == Pixel.Standard.BGR24) { _FitPixels(src.OfType<_BGR24>(), dst.OfType<_BGR24>(), transform); return; }
-                if (dst.PixelFormat == Pixel.Standard.BGR96F) { _FitPixels(src.OfType<_BGR24>(), dst.OfType<Vector3>(), transform); return; }
+            if (dst.PixelFormat == Pixel.BGR24.Format)
+            {
+                var dstX = dst.OfType<Pixel.BGR24>();
+
+                switch (src.PixelFormat.PackedFormat)
+                {
+                    case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;                    
+                    case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
+                    case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
+                    case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
+                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
+                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
+                }
             }
 
-            if (src.PixelFormat == Pixel.Standard.RGB24)
+            if (dst.PixelFormat == Pixel.RGB24.Format)
             {
-                if (dst.PixelFormat == Pixel.Standard.RGB24) { _FitPixels(src.OfType<_BGR24>(), dst.OfType<_BGR24>(), transform); return; }                
+                var dstX = dst.OfType<Pixel.RGB24>();
+
+                switch (src.PixelFormat.PackedFormat)
+                {
+                    case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
+                    case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
+                    case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
+                    case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
+                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
+                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
+                }
+            }
+
+            if (dst.PixelFormat == Pixel.VectorBGR.Format)
+            {
+                var dstX = dst.OfType<Pixel.VectorBGR>();
+
+                switch (src.PixelFormat.PackedFormat)
+                {
+                    case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
+                    case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
+                    case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
+                    case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
+                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
+                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
+                }
             }
 
             throw new NotImplementedException();
-        }
+        }       
 
-        private static void _FitPixels(SpanBitmap<_BGR24> src, SpanBitmap<Vector3> dst, (float offset, float scale) transform)
-        {
-            var (colPairs, rowPairs) = _BilinearSampleSource.Create(src.Info,dst.Info);
-
-            var rowContext = new _RowBlendKernel(src, colPairs, transform);
-
-            for (int dstY=0; dstY < dst.Height; ++dstY)
-            {
-                var rowPair = rowPairs.AsSpan()[dstY];               
-
-                var r0 = rowContext.GetResizedRow(rowPair.IndexLeft);  // top row to blend
-                var r1 = rowContext.GetResizedRow(rowPair.IndexRight); // bottom row to blend
-
-                var dstRow = dst.UsePixelsScanline(dstY);
-
-                _SpanFloatOps.LerpArray(r0, r1, rowPair.Amount, dstRow);
-            }
-        }
-
-        private static void _FitPixels(SpanBitmap<_BGR24> src, SpanBitmap<_BGR24> dst, (float offset, float scale) transform)
+        private static void _FitPixels3<TSrcPixel,TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)
+            where TSrcPixel : unmanaged, Pixel.IConvertible
+            where TDstPixel : unmanaged, Pixel.IFactory<TDstPixel>
         {
             var (colPairs, rowPairs) = _BilinearSampleSource.Create(src.Info, dst.Info);
 
-            var rowContext = new _RowBlendKernel(src, colPairs, transform);
+            var rowContext = new _RowBlendKernel3<TSrcPixel>(src, colPairs, transform);
 
             for (int dstY = 0; dstY < dst.Height; ++dstY)
             {
@@ -61,27 +84,15 @@ namespace InteropBitmaps.Processing
 
                 var dstRow = dst.UsePixelsScanline(dstY);
 
-                var r0f = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(r0);
-                var r1f = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(r1);
-                var dstRowB = System.Runtime.InteropServices.MemoryMarshal.Cast<_BGR24, Byte>(dstRow);
-
-                _SpanFloatOps.LerpArray(r0f, r1f, rowPair.Amount, dstRowB);
+                Pixel.LerpArray(r0, r1, rowPair.Amount, dstRow);                
             }
         }
-
-
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-        struct _BGR24
-        {
-            public Byte Blue;
-            public Byte Green;
-            public Byte Red;
-        }
+        
 
         /// <summary>
         /// Takes an input <see cref="SpanBitmap"/> and exposes its rows, resized according to a <see cref="_BilinearSampleSource"/> table.
         /// </summary>
-        ref struct _RowBlendKernel
+        ref struct _RowBlendKernel3<TSrcPixel> where TSrcPixel : unmanaged, Pixel.IConvertible
         {
             #region constructor
 
@@ -100,7 +111,7 @@ namespace InteropBitmaps.Processing
                 return (src,dst0,dst1);
             }
 
-            public _RowBlendKernel(SpanBitmap srcBitmap, ReadOnlySpan<_BilinearSampleSource> pairs, (float offset, float scale) transform)
+            public _RowBlendKernel3(SpanBitmap<TSrcPixel> srcBitmap, ReadOnlySpan<_BilinearSampleSource> pairs, (float offset, float scale) transform)
             {
                 var (srcRow, dstRow0, dstRow1) = _CreateCache(srcBitmap.Width, pairs.Length);
 
@@ -119,7 +130,7 @@ namespace InteropBitmaps.Processing
 
             #region data
 
-            private readonly SpanBitmap _Source;
+            private readonly SpanBitmap<TSrcPixel> _Source;
             private readonly ReadOnlySpan<_BilinearSampleSource> _Pairs;
             private readonly Span<Vector3> _Temp;
             private readonly Span<Vector3> _Row0;
@@ -136,9 +147,14 @@ namespace InteropBitmaps.Processing
 
             private Span<Vector3> _GetSourceRow(int idx)
             {
-                var srcRow = _Source.GetBytesScanline(idx);
-                var dstRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(_Temp);
-                _SpanFloatOps.CopyPixels(srcRow, dstRow, _Transform);
+                var srcRow = _Source.GetPixelsScanline(idx);
+                var dstRow = _Temp;
+
+                for(int i=0; i < srcRow.Length; ++i)
+                {
+                    var pixel = srcRow[i].ToVectorRGBA().RGBA;
+                    dstRow[i] = new Vector3(pixel.X, pixel.Y, pixel.Z);
+                }                
 
                 return _Temp;
             }

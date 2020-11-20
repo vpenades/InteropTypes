@@ -69,9 +69,9 @@ namespace InteropBitmaps
             System.IO.Directory.CreateDirectory(dirPath);
 
 
-            if (bmp.PixelFormat == Pixel.Standard.BGR96F)
+            if (bmp.PixelFormat == Pixel.VectorBGR.Format)
             {
-                var tmp = new MemoryBitmap(bmp.Width, bmp.Height, Pixel.Standard.BGR24);
+                var tmp = new MemoryBitmap(bmp.Width, bmp.Height, Pixel.BGR24.Format);
 
                 SpanBitmap.CopyPixels(bmp.OfType<System.Numerics.Vector3>(), tmp, (0, 1), (0,255));
 

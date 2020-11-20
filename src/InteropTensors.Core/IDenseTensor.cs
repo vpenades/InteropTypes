@@ -9,26 +9,22 @@ using InteropBitmaps;
 
 namespace InteropTensors
 {
-    
+    public interface IDenseTensor
+    {
+        String Name { get; }
+        ReadOnlySpan<int> Dimensions { get; }
+    }
 
     /// <summary>
     /// Wraps a dense tensor; implemented by <see cref="SystemDenseTensor{T}"/> and <see cref="INativeDenseTensor{T}"/>
     /// </summary>
     /// <typeparam name="T">The element type.</typeparam>
     /// <see href="https://github.com/dotnet/runtime/issues/28867"/>
-    public interface IDenseTensor<T>
+    public interface IDenseTensor<T> : IDenseTensor
         where T:unmanaged
-    {
-        String Name { get; }
-
-        ReadOnlySpan<int> Dimensions { get; }
-        
+    {          
         Span<T> Span { get; }
-
-        
-        DenseTensor<T> ToDenseTensor();
-
-        void FitPixels(SpanBitmap src, TensorImageSettings mis);
+        DenseTensor<T> ToDenseTensor();        
     }
 
     public interface INativeDenseTensor<T> : IDenseTensor<T>, IDisposable
@@ -36,10 +32,12 @@ namespace InteropTensors
     {
         IntPtr DataPointer { get; }
 
-        int ByteSize { get; }
+        int ByteSize { get; }        
+    }
 
-        void FitPixels(PointerBitmap src, TensorImageSettings mis);
-
-        void SetPixels(PointerBitmap src, Matrix3x2 transform, TensorImageSettings mis);
+    public interface IInputImageTensor : IDenseTensor
+    {
+        void FitPixels(PointerBitmap src);
+        void SetPixels(PointerBitmap src, Matrix3x2 transform);
     }
 }

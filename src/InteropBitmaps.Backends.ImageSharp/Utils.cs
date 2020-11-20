@@ -9,20 +9,24 @@ using SixLabors.ImageSharp.Processing;
 
 using MathNet.Numerics.Statistics;
 
+using POINT = System.Drawing.Point;
+
 namespace InteropBitmaps
 {
     static class _Utils
     {
         #region statistics (OpenCV like methods)        
 
-        public static IEnumerable<(int X, int Y, TPixel Pixel)> EnumeratePixels<TPixel>(this Image<TPixel> image)
+        public static IEnumerable<(POINT Location, TPixel Pixel)> EnumeratePixels<TPixel>(this Image<TPixel> image)
             where TPixel: unmanaged, IPixel<TPixel>
         {
             for(int y=0; y < image.Height; ++y)
             {
                 for (int x = 0; x < image.Height; ++x)
                 {
-                    yield return (x, y, image[x, y]);
+                    var l = new POINT(x, y);
+
+                    yield return (l, image[x, y]);
                 }
             }
         }
