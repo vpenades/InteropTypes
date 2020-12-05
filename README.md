@@ -1,3 +1,7 @@
+## InteropTypes
+
+A collection of loosely coupled types that can be used to translate data between libraries.
+
 ## InteropBitmaps
 
 An experimental, proof of concept, low level library to exchange bitmaps
