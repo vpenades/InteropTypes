@@ -8,7 +8,7 @@ namespace InteropBitmaps
     /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
     /// </summary>    
     [System.Diagnostics.DebuggerDisplay("{Info._DebuggerDisplay(),nq}")]
-    [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
+    // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
     public readonly struct MemoryBitmap
     {
         #region lifecycle        
