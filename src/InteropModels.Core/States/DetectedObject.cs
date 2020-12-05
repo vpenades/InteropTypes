@@ -43,5 +43,16 @@ namespace InteropModels
 
             return clone;
         }
+
+        public DetectedObject Mirror(float width)
+        {
+            var clone = this;
+
+            var rf = clone.Rect;
+            rf.X = width - rf.X - rf.Width;
+            clone.Rect = rf;
+
+            return clone;
+        }
     }
 }

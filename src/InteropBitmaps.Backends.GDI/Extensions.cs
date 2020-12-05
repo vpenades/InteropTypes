@@ -59,7 +59,7 @@ namespace InteropBitmaps
         public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this GDIPTR data)
             where TPixel: unmanaged
         {
-            return data.AsPointerBitmap().AsSPanBitmapOfType<TPixel>();
+            return data.AsPointerBitmap().AsSpanBitmapOfType<TPixel>();
         }
 
         #endregion        

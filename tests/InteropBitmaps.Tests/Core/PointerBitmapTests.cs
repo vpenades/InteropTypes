@@ -25,7 +25,7 @@ namespace InteropBitmaps.Core
                 Assert.AreEqual(2, ptr.Height);
                 Assert.AreEqual(16, ptr.StepByteSize);
 
-                var ptrSpan = ptr.AsSPanBitmapOfType<int>();
+                var ptrSpan = ptr.AsSpanBitmapOfType<int>();
 
                 Assert.AreEqual(0, ptrSpan.GetPixel(0, 0));
                 Assert.AreEqual(0, ptrSpan.GetPixel(1, 0));

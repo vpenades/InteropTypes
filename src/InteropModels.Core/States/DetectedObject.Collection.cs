@@ -4,7 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 using XY = System.Numerics.Vector2;
 
@@ -17,68 +16,39 @@ namespace InteropModels
 {
     partial struct DetectedObject
     {
-        private sealed class DebugViewProxy
-        {
-            public DebugViewProxy(View v) { _View = v; }
-
-            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-            private View _View;
-
-            public String Name => _View.Current.Name;
-            public Score Score => _View.Current.Score;
-
-            public RECTF Rectangle => _View.Current.Rect;            
-
-            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.RootHidden)]
-            public View[] Z_Children => _View.Children.ToArray();
-        }
-
-        [System.Diagnostics.DebuggerDisplay("{Current.Name} {Current.Score} {Current.Rect}")]
-        [System.Diagnostics.DebuggerTypeProxy(typeof(DebugViewProxy))]
-        public readonly struct View
-        {
-            internal View(Collection c, int i) { _Source = c; _Index = i; }
-
-            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-            private readonly Collection _Source;
-
-            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-            internal readonly int _Index;
-
-
-            public DetectedObject Current => _Source.Objects[_Index];
-
-            public IEnumerable<View> Children
-            {
-                get
-                {
-                    for (int i = 0; i < _Source.Objects.Count; ++i)
-                    {
-                        var o = _Source.Objects[i];
-                        if (o.ParentIndex == _Index) yield return new View(_Source, i);
-                    }
-                }
-            }
-        }
-
         public class Collection : DisplayPrimitive.ISource
         {
             #region lifecycle
 
             public Collection() { }
 
+            public Collection(SizeF frameSize)
+            {
+                _FrameSize = frameSize;                
+            }
+
+            public void CopyTo(ref Collection dst)
+            {
+                if (dst == null) dst = new Collection();
+                dst.Overwrite(this);
+            }
+
             #endregion
 
             #region data
+
+            private SizeF _FrameSize;            
 
             [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             private readonly List<DetectedObject> _Objects = new List<DetectedObject>();
 
             [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-            private readonly List<(int, int)> _DisplayLineIndices = new List<(int, int)>();
+            private readonly List<(int, int)> _DisplayLineIndices = new List<(int, int)>();            
 
-            public void Overwrite(Collection other)
+            private void Overwrite(Collection other)
             {
+                _FrameSize = other._FrameSize;                
+
                 _Objects.Clear();
                 _DisplayLineIndices.Clear();
 
@@ -90,6 +60,8 @@ namespace InteropModels
 
             #region properties
 
+            public SizeF FrameSize => _FrameSize;
+            
             public IReadOnlyList<DetectedObject> Objects => _Objects;
 
             public IEnumerable<View> Roots
@@ -106,13 +78,57 @@ namespace InteropModels
 
             #endregion
 
-            #region API
+            #region API - management
 
             public void Clear()
             {
                 _Objects.Clear();
                 _DisplayLineIndices.Clear();
             }
+
+            public void SetFrameSize(InferenceInput input)
+            {
+                SetFrameSize(input.Image.Width, input.Image.Height);
+            }
+
+            public void SetFrameSize(int width, int height)
+            {
+                if (_Objects.Count > 0 || _DisplayLineIndices.Count > 0) throw new InvalidOperationException("Frame Can only be set when collection is empty");
+
+                _FrameSize = new SizeF(width, height);
+            }
+
+            public void ChangeResolutionTo(XY to)
+            {
+                ChangeResolution(new XY(_FrameSize.Width, _FrameSize.Height), to);
+            }
+
+            public void ChangeResolution(XY from, XY to)
+            {
+                if (from.X != 0 && from.Y != 0 && from != to)
+                {
+                    var scale = to / from;
+
+                    for (int i = 0; i < _Objects.Count; ++i)
+                    {
+                        _Objects[i] = _Objects[i].Scaled(scale);
+                    }
+                }
+
+                _FrameSize = new SizeF(to.X, to.Y);
+            }
+
+            public void Mirror()
+            {
+                for (int i = 0; i < _Objects.Count; ++i)
+                {
+                    _Objects[i] = _Objects[i].Mirror(_FrameSize.Width);
+                }
+            }
+
+            #endregion
+
+            #region API - Add
 
             public void Add(Collection other, int parentIdx = -1)
             {
@@ -255,22 +271,31 @@ namespace InteropModels
             }
 
 
-            public void AddDisplayLine(int indexA, int indexB)
-            {
-                _DisplayLineIndices.Add((indexA, indexB));
-            }
+            public void AddDisplayLine(int indexA, int indexB) { _DisplayLineIndices.Add((indexA, indexB)); }            
+                 
 
-            public void ChangeResolution(XY from, XY to)
-            {
-                var scale = to / from;
+            #endregion
 
-                for(int i=0; i < _Objects.Count; ++i)
+            #region API - Display
+
+            public IEnumerable<DisplayPrimitive> GetDisplayPrimitives() { return GetDisplayPrimitives(false); }
+
+            public IEnumerable<DisplayPrimitive> GetDisplayPrimitives(bool mirrored)
+            {
+                var xform = Matrix3x2.Identity;
+
+                if (mirrored)
                 {
-                    _Objects[i] = _Objects[i].Scaled(scale);
-                }
+                    var w = _FrameSize.Width;
+                    // if w == 0 get bounds
+
+                    xform = Matrix3x2.CreateScale(-1, 1) * Matrix3x2.CreateTranslation(w, 0);
+                }                
+
+                return GetDisplayPrimitives(xform);
             }
 
-            public IEnumerable<DisplayPrimitive> GetDisplayPrimitives()
+            public IEnumerable<DisplayPrimitive> GetDisplayPrimitives(Matrix3x2 xform)
             {
                 foreach (var r in _Objects)
                 {
@@ -278,7 +303,7 @@ namespace InteropModels
 
                     var color = _GetColor(r.Name);
 
-                    yield return DisplayPrimitive.Rect(color, rr.Location, rr.Size);
+                    foreach (var prim in DisplayPrimitive.Rect(color, rr.Location, rr.Size, xform)) yield return prim;
 
                     if (r.Area < 8 * 8) continue;
                     if (!r.Score.IsValid) continue;
@@ -290,7 +315,7 @@ namespace InteropModels
                     float s = r.Score.Value * (float)rr.Height;
                     y -= s;
 
-                    yield return DisplayPrimitive.Rect(COLOR.Green, x, y, 2, s);
+                    yield return DisplayPrimitive.Line(COLOR.Green, (x, y), (x, y + s));                    
                 }
 
                 foreach(var l in _DisplayLineIndices)
@@ -300,7 +325,6 @@ namespace InteropModels
 
                     yield return DisplayPrimitive.Line(COLOR.Green, a, b);
                 }
-
 
                 int row = 0;
 

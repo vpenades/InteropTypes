@@ -42,5 +42,42 @@ namespace InteropBitmaps.Core
 
             return mem2;
         }
+
+        [Test]
+        public void TestFlip()
+        {
+            var src = LoadShannonImage();
+            src.AttachToCurrentTest("input.png");
+
+            src.AsSpanBitmap().ApplyMirror(true, false);
+            src.AttachToCurrentTest("horizontalFlip.png");
+
+            src.AsSpanBitmap().ApplyMirror(false, true);
+            src.AttachToCurrentTest("VerticalFlip.png");
+        }
+
+        [TestCase(1920, 1080, false, true, false)]
+        [TestCase(1920, 1080, false, false, true)]
+        [TestCase(1920, 1080, false, true, true)]
+        [TestCase(1920, 1080, true, true, false)]
+        [TestCase(1920, 1080, true, false, true)]
+        [TestCase(1920, 1080, true, true, true)]
+        public void TestFlipPerformance(int w, int h, bool multiThread, bool hflip, bool vflip)
+        {
+            var bmp = new MemoryBitmap<Pixel.RGB24>(w, h).AsSpanBitmap();
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            for(int r=0; r < 1000; ++r)
+            {
+                bmp.ApplyMirror(hflip, vflip, multiThread);
+            }
+
+            watch.Stop();
+
+            var ms = watch.ElapsedMilliseconds / 1000f;
+
+            TestContext.WriteLine($"{w}x{h} HFlip:{hflip} VFlip:{vflip} {ms}ms");
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace InteropBitmaps
     /// </summary>
     /// <remarks>
     /// This is the lowest possible level bitmap representation, so it is assumed a developer knows how to use it.
-    /// This structure just wraps the pointer; in order to access it, use <see cref="AsSpanBitmap"/> or <see cref="AsSPanBitmapOfType{TPixel}"/>.    
+    /// This structure just wraps the pointer; in order to access it, use <see cref="AsSpanBitmap"/> or <see cref="AsSpanBitmapOfType{TPixel}"/>.    
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Pointer} {Info._DebuggerDisplay(),nq}")]
     public readonly struct PointerBitmap
@@ -95,7 +95,7 @@ namespace InteropBitmaps
         /// </summary>
         /// <typeparam name="TPixel">The type to use for a single Pixel.</typeparam>
         /// <returns>A <see cref="SpanBitmap{TPixel}"/> instance.</returns>
-        public SpanBitmap<TPixel> AsSPanBitmapOfType<TPixel>()
+        public SpanBitmap<TPixel> AsSpanBitmapOfType<TPixel>()
             where TPixel : unmanaged
         {
             return new SpanBitmap<TPixel>(_Pointer, _Info, _IsReadOnly);
@@ -157,6 +157,45 @@ namespace InteropBitmaps
             new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
 
             return refreshed;
+        }
+
+
+        internal void _HorizontalFlip(bool useMultiThreading = true)
+        {
+            switch (this.PixelFormat.ByteCount)
+            {
+                case 1: _HorizontalFlip<Byte>(this, useMultiThreading); return;
+                case 2: _HorizontalFlip<ushort>(this, useMultiThreading); return;
+                case 3: _HorizontalFlip<Pixel.RGB24>(this, useMultiThreading); return;
+                case 4: _HorizontalFlip<uint>(this, useMultiThreading); return;
+                case 8: _HorizontalFlip<ulong>(this, useMultiThreading); return;
+                case 12: _HorizontalFlip<System.Numerics.Vector3>(this, useMultiThreading); return;
+                case 16: _HorizontalFlip<System.Numerics.Vector4>(this, useMultiThreading); return;
+            }
+
+            throw new InvalidOperationException($"Unsupported pixel size: {this.PixelFormat.ByteCount}");
+        }        
+
+        private static void _HorizontalFlip<TPixel>(PointerBitmap ptrBmp, bool useMultiThreading = true)
+            where TPixel:unmanaged
+        {
+            if (!useMultiThreading)
+            {
+                ptrBmp.AsSpanBitmapOfType<TPixel>()._HorizontalFlipRows(0,ptrBmp.Height);
+                return;
+            }
+
+            const int threads = 4;            
+
+            void _hflip(int idx)
+            {
+                var bmp = ptrBmp.AsSpanBitmapOfType<TPixel>();
+                int y0 = bmp.Height * (idx + 0) / threads;
+                int y1 = bmp.Height * (idx + 1) / threads;
+                bmp._HorizontalFlipRows(y0, y1);
+            }
+
+            System.Threading.Tasks.Parallel.For(0, threads, _hflip);
         }
 
         #endregion

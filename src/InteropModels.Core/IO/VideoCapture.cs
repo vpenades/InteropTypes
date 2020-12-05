@@ -6,6 +6,9 @@ using InteropBitmaps;
 
 namespace InteropModels.IO
 {
+    /// <summary>
+    /// Represents the base class for an object or device able to stream a sequence of video frames.
+    /// </summary>
     public abstract class VideoCaptureDevice : IDisposable, VideoCaptureFrame.ISource
     {
         #region lifecycle
@@ -21,42 +24,71 @@ namespace InteropModels.IO
             return _ReflectionUtils.CreateDefaultCaptureDevice();
         }
 
-        #endregion
-
-        #region API
-
         public abstract void Dispose();
-        public abstract void Start();        
-        public abstract void Pause();
-
-        protected abstract bool GetMirrorHorizontal();
-
-        protected void RaiseFrameReceived(PointerBitmap bmp)
-        {
-            var time = FrameTime.Now;
-
-            if (!_IsMirroredHorizontal.HasValue) _IsMirroredHorizontal = GetMirrorHorizontal();
-
-            var evt = new VideoCaptureFrame();
-            evt.Bitmap = bmp;
-            evt.TimeStamp = time;
-
-            evt.Source = this;            
-
-            OnFrameReceived?.Invoke(this, evt);
-
-            _FPS.AddFrame();
-        }
 
         #endregion
 
         #region data
 
-        private readonly FrameRateCounter _FPS = new FrameRateCounter();
+        private readonly FrameRateCounter _FPS = new FrameRateCounter();        
 
-        internal bool? _IsMirroredHorizontal;
+        private VideoCaptureFrame _CurrentFrame;
 
         #endregion
+
+        #region API
+
+        /// <summary>
+        /// Starts or resumes the underlaying device.
+        /// </summary>
+        public void Start()
+        {
+            StartDevice();
+        }
+
+        /// <summary>
+        /// Pauses the underlaying device.
+        /// </summary>
+        public void Pause()
+        {
+            PauseDevice();
+        }
+
+        /// <summary>
+        /// Starts or resumes the underlaying device.
+        /// </summary>
+        protected abstract void StartDevice();
+
+        /// <summary>
+        /// Pauses the underlaying device.
+        /// </summary>
+        protected abstract void PauseDevice();
+
+        /// <summary>
+        /// Called once
+        /// </summary>
+        /// <returns></returns>
+        protected abstract VideoCaptureFrame CreateFrameContainer();
+
+        /// <summary>
+        /// Called by the underlaying device when it receives a new capture bitmap,
+        /// it broadcasts an <see cref="VideoCaptureFrame"/> at <see cref="OnFrameReceived"/>.
+        /// </summary>
+        /// <param name="bmp"></param>
+        protected void RaiseFrameReceived(PointerBitmap bmp)
+        {
+            var time = FrameTime.Now;
+            _FPS.AddFrame();
+
+            if (_CurrentFrame == null) _CurrentFrame = CreateFrameContainer();
+
+            _CurrentFrame._TimeStamp = time;
+            _CurrentFrame._Bitmap = bmp;            
+
+            OnFrameReceived?.Invoke(this, _CurrentFrame);
+        }
+
+        #endregion        
 
         #region properties
 
@@ -69,56 +101,101 @@ namespace InteropModels.IO
 
     public class VideoCaptureFrame : EventArgs
     {
-        // todo: add horizontal mirroring info.
-        // todo: add intrinsics info.        
-
+        #region lifecycle
+        
+        /// <summary>
+        /// Used mostly for testing
+        /// </summary>        
         public static implicit operator VideoCaptureFrame((PointerBitmap b, FrameTime t) frame)
         {
             return new VideoCaptureFrame(frame.b, frame.t);
         }
 
+        /// <summary>
+        /// Used mostly for testing
+        /// </summary>        
         public static implicit operator VideoCaptureFrame((PointerBitmap b, TimeSpan t) frame)
         {
             return new VideoCaptureFrame(frame.b, new FrameTime(frame.t));
         }
 
-        public VideoCaptureFrame() { }
+        protected VideoCaptureFrame(VideoCaptureDevice device) { _Device = device; }
 
-        public VideoCaptureFrame(PointerBitmap bmp, FrameTime ts)
+        private VideoCaptureFrame(PointerBitmap bmp, FrameTime ts)
         {
-            Bitmap = bmp;
-            TimeStamp = ts;
+            _Device = null;
+            _Bitmap = bmp;
+            _TimeStamp = ts;
         }
 
-        public FrameTime TimeStamp { get; internal set; }
-        public PointerBitmap Bitmap { get; internal set; }        
+        #endregion
 
-        public VideoCaptureDevice Source { get; internal set; }
+        #region data
 
-        public bool IsMirroredHorizontal => Source?._IsMirroredHorizontal ?? true;
+        private readonly VideoCaptureDevice _Device;
 
-        public VideoCaptureFrame Slice(BitmapBounds bounds)
+        internal FrameTime _TimeStamp;
+
+        internal PointerBitmap _Bitmap;        
+
+        #endregion
+
+        #region properties
+
+        public FrameTime TimeStamp => _TimeStamp;
+        public PointerBitmap Bitmap => _Bitmap;
+        public VideoCaptureDevice Device => _Device;
+
+        #endregion
+
+        #region API        
+        
+        public Cropped Crop(BitmapBounds bounds)
         {
-            bounds = bounds.Clipped((System.Drawing.Point.Empty, this.Bitmap.Size));
-
-            if (bounds.Area == 0) return new VideoCaptureFrame
-            {
-                Bitmap = default
-             ,
-                TimeStamp = this.TimeStamp
-            };
-
-            return new VideoCaptureFrame
-            {
-                Bitmap = this.Bitmap.Slice(bounds)
-            ,
-                TimeStamp = this.TimeStamp
-            };
+            return new Cropped(this, bounds);
         }
+
+        #endregion
+
+        #region nested types
+
+        // todo: ICameraIntrinsics
+        // todo: ICameraExtrinsics  : imu, accelerometer, etc        
 
         public interface ISource
         {
             event EventHandler<VideoCaptureFrame> OnFrameReceived;
         }
+
+        public readonly struct Cropped
+        {
+            public Cropped(VideoCaptureFrame frame, BitmapBounds bounds)
+            {
+                Source = frame;
+                Bounds = bounds;
+            }
+
+            public readonly VideoCaptureFrame Source;
+            public readonly BitmapBounds Bounds;
+
+            public FrameTime TimeStamp => Source.TimeStamp;
+
+            /// <summary>
+            /// The cropped bitmap
+            /// </summary>
+            public PointerBitmap Bitmap => Source.Bitmap.Slice(Bounds);
+
+            /// <summary>
+            /// gets a cropped region of the current crop.
+            /// </summary>
+            /// <param name="bounds">The region to crop</param>
+            /// <returns>A new cropped region</returns>
+            public Cropped Crop(BitmapBounds bounds)
+            {
+                return new Cropped(Source, Bounds.Clipped(bounds));
+            }
+        }
+
+        #endregion
     }
 }

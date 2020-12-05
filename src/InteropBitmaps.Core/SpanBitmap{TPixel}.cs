@@ -264,6 +264,49 @@ namespace InteropBitmaps
             return true;
         }
 
+        public void ApplyMirror(bool horizontal, bool vertical, bool useMultiThreading = true)
+        {
+            // OpenCV implementation here:
+            // https://github.com/opencv/opencv/blob/2155296a135ba6819b35a1eb2e48a11e71df7363/modules/core/src/copy.cpp#L598
+
+            if (vertical)
+            {
+                var rl = this.Info.Width * this.Info.PixelByteSize;
+
+                Span<Byte> tmp = stackalloc byte[rl];
+
+                var mid = this.Height / 2;
+
+                for (int i = 0; i < mid; ++i)
+                {
+                    var top = this.UseBytesScanline(i);
+                    var down = this.UseBytesScanline(this.Height - 1 - i);
+
+                    // swap rows
+                    top.CopyTo(tmp);
+                    down.CopyTo(top);
+                    tmp.CopyTo(down);
+                }
+            }
+
+            if (horizontal)
+            {
+                if (!useMultiThreading) _HorizontalFlipRows(0, this.Height);
+                else PinWritablePointer(ptr => ptr._HorizontalFlip(true));
+            }
+        }        
+
+        internal void _HorizontalFlipRows(int y0, int y1)
+        {
+            for (int i = y0; i < y1; ++i)
+            {
+                // Reverse code is a plain loop
+                // https://github.com/dotnet/corert/blob/c6af4cfc8b625851b91823d9be746c4f7abdc667/src/System.Private.CoreLib/shared/System/MemoryExtensions.cs#L1138
+
+                this.UsePixelsScanline(i).Reverse();
+            }
+        }
+
         public PixelEnumerator GetPixelEnumerator() => new PixelEnumerator(this);        
 
         #endregion

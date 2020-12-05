@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>    
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>InteropModels</RootNamespace>    
   </PropertyGroup>
 
   <Import Project="..\Package.props" />

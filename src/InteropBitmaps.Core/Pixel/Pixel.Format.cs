@@ -20,27 +20,14 @@ namespace InteropBitmaps
 
             internal string _GetDebuggerDisplay()
             {
-                switch (this.PackedFormat)
-                {
-                    case Alpha8.Code: return "A8";
-
-                    case Luminance8.Code: return "L8";
-                    case Luminance16.Code: return "L16";
-
-                    case RGB24.Code: return "RGB24";
-                    case BGR24.Code: return "BGR24";
-
-                    case ARGB32.Code: return "ARGB32";
-                    case RGBA32.Code: return "RGBA32";
-                    case BGRA32.Code: return "BGRA32";
-                }
+                var ptype = GetDefaultPixelType();
+                if (ptype != null) return ptype.Name;
 
                 var elements = Elements
                     .Where(item => item.Id != PEF.Empty)
                     .Select(item => item.Id);
 
                 return string.Join("-", elements);
-
             }
 
             #endregion            
@@ -308,6 +295,35 @@ namespace InteropBitmaps
                 if (len == 32) return (typeof(Single), ch);
 
                 return (null, 0);
+            }
+
+            public Type GetDefaultPixelType()
+            {
+                switch(PackedFormat)
+                {
+                    case Alpha8.Code: return typeof(Alpha8);
+
+                    case Luminance8.Code: return typeof(Luminance8);
+                    case Luminance16.Code: return typeof(Luminance16);
+                    case StdLuminance.Code: return typeof(StdLuminance);
+
+                    case BGR565.Code: return typeof(BGR565);
+                    case BGRA5551.Code: return typeof(BGRA5551);
+                    case BGRA4444.Code: return typeof(BGRA4444);
+
+                    case BGR24.Code: return typeof(BGR24);
+                    case RGB24.Code: return typeof(RGB24);
+
+                    case BGRA32.Code: return typeof(BGRA32);
+                    case RGBA32.Code: return typeof(RGBA32);
+                    case ARGB32.Code: return typeof(ARGB32);
+
+                    case VectorBGR.Code: return typeof(VectorBGR);
+                    case VectorBGRA.Code: return typeof(VectorBGRA);
+                    case VectorRGBA.Code: return typeof(VectorRGBA);
+                }
+
+                return null;
             }
 
             #endregion

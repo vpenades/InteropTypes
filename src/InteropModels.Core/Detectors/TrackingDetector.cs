@@ -135,7 +135,7 @@ namespace InteropModels
 
             if (_BroadTracked.Count == 0)
             {
-                var seeds = new DetectedObject.Collection();
+                var seeds = new DetectedObject.Collection(new SizeF(input.Image.Width,input.Image.Height));                
                 _BroadDetector.Inference(seeds, input, inputWindow);
 
                 var tracked = seeds.Objects
@@ -163,6 +163,7 @@ namespace InteropModels
                 var broadRect = Rectangle.Round(_NarrowDetector.GetNextDetectionWindow(o._DetectionT1.Value, o._DetectionT0));
 
                 _NarrowTracked.Clear();
+                _NarrowTracked.SetFrameSize(input);
                 _NarrowDetector.Inference(_NarrowTracked, input, broadRect);
 
                 var item = _NarrowTracked

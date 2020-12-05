@@ -16,7 +16,7 @@ namespace InteropBitmaps
             where T : unmanaged
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, T>(span);
-        }
+        }        
 
         public static SpanBitmap Crop(SpanBitmap src, BitmapBounds rect)
         {
