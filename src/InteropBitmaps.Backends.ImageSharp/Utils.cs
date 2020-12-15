@@ -55,7 +55,7 @@ namespace InteropBitmaps
             using (var gray = img.CloneAs<L16>())
             {
                 // Detect blurry level
-                var laplacian = new SixLabors.ImageSharp.Processing.Processors.Convolution.Laplacian3x3Processor(false);
+                var laplacian = new SixLabors.ImageSharp.Processing.Processors.Convolution.EdgeDetectorProcessor(KnownEdgeDetectorKernels.Laplacian3x3, false);
                 gray.Mutate(laplacian);
 
                 // Get the standard deviation

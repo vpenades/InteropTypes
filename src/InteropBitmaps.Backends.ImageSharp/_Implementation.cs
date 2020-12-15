@@ -196,7 +196,7 @@ namespace InteropBitmaps
 
             for (int y = 0; y < dst.Height; ++y)
             {
-                var srcLine = src.GetPixelsScanline(y);
+                var srcLine = src.GetScanlinePixels(y);
                 var dstLine = dst.Frames[0].GetPixelRowSpan(y);
                 srcLine.CopyTo(dstLine);
             }

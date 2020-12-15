@@ -15,6 +15,8 @@ namespace InteropBitmaps
         
         public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
         {
+            Guard.NotNull(nameof(data), data);
+
             _Info = info;
 
             var span = new Span<Byte>(data.ToPointer(), info.BitmapByteSize);
@@ -96,9 +98,11 @@ namespace InteropBitmaps
 
         #region API - Buffers
 
-        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable, y); }
+        [Obsolete] public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanlineBytes(_Readable, y); }
+        [Obsolete] public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanlineBytes(_Writable, y); }
 
-        public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
+        public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }
+        public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }
 
         #endregion
 

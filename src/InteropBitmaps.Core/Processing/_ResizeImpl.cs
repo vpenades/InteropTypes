@@ -82,7 +82,7 @@ namespace InteropBitmaps.Processing
                 var r0 = rowContext.GetResizedRow(rowPair.IndexLeft);  // top row to blend
                 var r1 = rowContext.GetResizedRow(rowPair.IndexRight); // bottom row to blend
 
-                var dstRow = dst.UsePixelsScanline(dstY);
+                var dstRow = dst.UseScanlinePixels(dstY);
 
                 Pixel.LerpArray(r0, r1, rowPair.Amount, dstRow);                
             }
@@ -147,7 +147,7 @@ namespace InteropBitmaps.Processing
 
             private Span<Vector3> _GetSourceRow(int idx)
             {
-                var srcRow = _Source.GetPixelsScanline(idx);
+                var srcRow = _Source.GetScanlinePixels(idx);
                 var dstRow = _Temp;
 
                 for(int i=0; i < srcRow.Length; ++i)

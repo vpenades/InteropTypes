@@ -48,8 +48,8 @@ namespace InteropBitmaps
             {
                 for (int y = 0; y < dstCrop.Height; ++y)
                 {
-                    var srcRow = srcCrop.GetBytesScanline(y);
-                    var dstRow = dstCrop.UseBytesScanline(y);
+                    var srcRow = srcCrop.GetScanlineBytes(y);
+                    var dstRow = dstCrop.UseScanlineBytes(y);
 
                     System.Diagnostics.Debug.Assert(srcRow.Length == srcRow.Length);
 
@@ -62,8 +62,8 @@ namespace InteropBitmaps
             {
                 for (int y = 0; y < dstCrop.Height; ++y)
                 {
-                    var srcRow = srcCrop.GetBytesScanline(y);
-                    var dstRow = dstCrop.UseBytesScanline(y);
+                    var srcRow = srcCrop.GetScanlineBytes(y);
+                    var dstRow = dstCrop.UseScanlineBytes(y);
                     Pixel.ConvertPixels(dstRow, dstCrop.PixelFormat, srcRow, srcCrop.PixelFormat);
                 }                
             }
@@ -83,8 +83,8 @@ namespace InteropBitmaps
 
             for (int y = 0; y < dstCrop.Height; ++y)
             {
-                var srcRow = srcCrop.UsePixelsScanline(y);
-                var dstRow = dstCrop.UsePixelsScanline(y);
+                var srcRow = srcCrop.UseScanlinePixels(y);
+                var dstRow = dstCrop.UseScanlinePixels(y);
 
                 System.Diagnostics.Debug.Assert(srcRow.Length == srcRow.Length);
 

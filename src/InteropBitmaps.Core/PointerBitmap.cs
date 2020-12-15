@@ -84,6 +84,22 @@ namespace InteropBitmaps
 
         #endregion        
 
+        #region API - Buffers
+        public unsafe Span<byte> UseScanlineBytes(int y)
+        {
+            if (_Pointer == IntPtr.Zero) throw new InvalidOperationException();
+            var span = new Span<Byte>(_Pointer.ToPointer(), _Info.BitmapByteSize);
+            return _Info.UseScanlineBytes(span, y);
+        }
+        public unsafe ReadOnlySpan<byte> GetScanlineBytes(int y)
+        {
+            if (_Pointer == IntPtr.Zero) throw new InvalidOperationException();
+            var span = new Span<Byte>(_Pointer.ToPointer(), _Info.BitmapByteSize);
+            return _Info.GetScanlineBytes(span, y);
+        }
+
+        #endregion
+
         #region API - Cast
 
         public static implicit operator SpanBitmap(PointerBitmap bmp) { return new SpanBitmap(bmp._Pointer, bmp._Info); }

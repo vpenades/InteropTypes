@@ -175,14 +175,28 @@ namespace InteropBitmaps
             return (offset, info);
         }
 
-        public WSPAN UseScanline(WSPAN bitmap, int y)
+        public WSPAN UseScanlineBytes(WSPAN bitmap, int y)
         {
             return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }
 
-        public RSPAN GetScanline(RSPAN bitmap, int y)
+        public Span<TPixel> UseScanlinePixels<TPixel>(WSPAN bitmap, int y)
+            where TPixel : unmanaged
+        {
+            var scanline = bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(scanline);
+        }
+
+        public RSPAN GetScanlineBytes(RSPAN bitmap, int y)
         {
             return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
+        }
+
+        public ReadOnlySpan<TPixel> GetScanlinePixels<TPixel>(RSPAN bitmap, int y)
+            where TPixel : unmanaged
+        {
+            var scanline = bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(scanline);
         }
 
         public WSPAN UsePixel(WSPAN bitmap, int x, int y)
@@ -207,6 +221,36 @@ namespace InteropBitmaps
             if (pixelCount - x > Width) throw new ArgumentOutOfRangeException(nameof(pixelCount));
 
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
+        }
+
+        #endregion
+
+        #region factory
+
+        public bool CreateBitmap(ref SpanBitmap bmp)
+        {
+            if (bmp.Info != this) { bmp = new SpanBitmap(new Byte[this.BitmapByteSize], this); return true; }
+            return false;
+        }
+
+        public bool CreateBitmap<T>(ref SpanBitmap<T> bmp)
+            where T : unmanaged
+        {
+            if (bmp.Info != this) { bmp = new SpanBitmap<T>(new Byte[this.BitmapByteSize], this); return true; }
+            return false;
+        }
+
+        public bool CreateBitmap(ref MemoryBitmap bmp)
+        {
+            if (bmp.Info != this) { bmp = new MemoryBitmap(this); return true; }
+            return false;
+        }
+
+        public bool CreateBitmap<T>(ref MemoryBitmap<T> bmp)
+            where T:unmanaged
+        {
+            if (bmp.Info != this) { bmp = new MemoryBitmap<T>(this); return true; }
+            return false;
         }
 
         #endregion

@@ -17,10 +17,10 @@ namespace InteropBitmaps
     {
         #region debug
 
-        internal ReadOnlySpan<TPixel> _Row0 => AsSpanBitmap().GetPixelsScanline(0);
-        internal ReadOnlySpan<TPixel> _Row1 => AsSpanBitmap().GetPixelsScanline(1);
-        internal ReadOnlySpan<TPixel> _Row2 => AsSpanBitmap().GetPixelsScanline(2);
-        internal ReadOnlySpan<TPixel> _Row3 => AsSpanBitmap().GetPixelsScanline(3);
+        internal ReadOnlySpan<TPixel> _Row0 => AsSpanBitmap().GetScanlinePixels(0);
+        internal ReadOnlySpan<TPixel> _Row1 => AsSpanBitmap().GetScanlinePixels(1);
+        internal ReadOnlySpan<TPixel> _Row2 => AsSpanBitmap().GetScanlinePixels(2);
+        internal ReadOnlySpan<TPixel> _Row3 => AsSpanBitmap().GetScanlinePixels(3);
 
         #endregion
 
@@ -72,7 +72,6 @@ namespace InteropBitmaps
 
         private readonly BitmapInfo _Info;
         private readonly Memory<Byte> _Data;
-
         public override int GetHashCode() { return _Implementation.CalculateHashCode(_Data.Span, _Info); }
 
         #endregion
@@ -91,16 +90,16 @@ namespace InteropBitmaps
         #endregion
 
         #region API - Buffers
+        [Obsolete] public Span<byte> UseBytesScanline(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+        [Obsolete] public Span<TPixel> UsePixelsScanline(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
 
         public Memory<TPixel> GetPixelMemory() { return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory; }
 
-        public Span<byte> UseBytesScanline(int y) { return _Info.UseScanline(_Data.Span, y); }
+        public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+        public Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
 
-        private Span<TPixel> UsePixelsScanline(int y)
-        {
-            var rowBytes = UseBytesScanline(y);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(rowBytes);
-        }
+        public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
+        public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Data.Span, y); }
 
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
@@ -149,13 +148,13 @@ namespace InteropBitmaps
             return new MemoryBitmap<TPixel>(memory, info);
         }        
         
-        public TPixel GetPixel(int x, int y) { return UsePixelsScanline(y)[x]; }
+        public TPixel GetPixel(int x, int y) { return UseScanlinePixels(y)[x]; }
 
-        public void SetPixel(int x, int y, TPixel value) { UsePixelsScanline(y)[x] = value; }
+        public void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
 
-        public TPixel GetPixel(POINT point) { return UsePixelsScanline(point.Y)[point.X]; }
+        public TPixel GetPixel(POINT point) { return UseScanlinePixels(point.Y)[point.X]; }
 
-        public void SetPixel(POINT point, TPixel value) { UsePixelsScanline(point.Y)[point.X] = value; }
+        public void SetPixel(POINT point, TPixel value) { UseScanlinePixels(point.Y)[point.X] = value; }
 
         public IEnumerable<(POINT Location, TPixel Pixel)> EnumeratePixels()
         {

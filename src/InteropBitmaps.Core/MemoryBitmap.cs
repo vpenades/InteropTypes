@@ -65,10 +65,13 @@ namespace InteropBitmaps
         #endregion
 
         #region API - Buffers
+        [Obsolete] public Span<byte> UseBytesScanline(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
 
         public Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged { return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory; }
 
-        public Span<byte> UseBytesScanline(int y) { return _Info.UseScanline(_Data.Span, y); }
+
+        public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+        public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
 
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {

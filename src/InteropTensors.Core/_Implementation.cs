@@ -113,7 +113,7 @@ namespace InteropTensors
 
             for(int dsty=0; dsty < dst.BitmapSize.Height; ++dsty)
             {
-                var srcRow = src.GetPixelsScanline(dsty);
+                var srcRow = src.GetScanlinePixels(dsty);
                 for (int i = 0; i < vSrc.Length; ++i) vSrc[i] = srcRow[i].ToVector3();
 
                 Lerp(vSrc, vDst1);

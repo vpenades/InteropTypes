@@ -16,6 +16,7 @@ namespace InteropBitmaps
 
         public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
         {
+            Guard.NotNull(nameof(data), data);
             Guard.IsValidPixelFormat<TPixel>(info);
 
             _Info = info;
@@ -101,23 +102,16 @@ namespace InteropBitmaps
 
         #region API - Buffers
 
-        public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanline(_Readable, y); }
+        [Obsolete] public ReadOnlySpan<Byte> GetBytesScanline(int y) { return _Info.GetScanlineBytes(_Readable, y); }
+        [Obsolete] public ReadOnlySpan<TPixel> GetPixelsScanline(int y) { return _Info.GetScanlinePixels<TPixel>(_Readable, y); }
+        [Obsolete] public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanlineBytes(_Writable, y); }
+        [Obsolete] public Span<TPixel> UsePixelsScanline(int y) { return _Info.UseScanlinePixels<TPixel>(_Writable, y); }
 
-        public Span<Byte> UseBytesScanline(int y) { return _Info.UseScanline(_Writable, y); }
-
-        public ReadOnlySpan<TPixel> GetPixelsScanline(int y)
-        {
-            var rowBytes = _Info.GetScanline(_Readable, y);
-
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(rowBytes);
-        }
-
-        public Span<TPixel> UsePixelsScanline(int y)
-        {
-            var rowBytes = _Info.UseScanline(_Writable, y);
-
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(rowBytes);
-        }
+        
+        public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }        
+        public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Readable, y); }        
+        public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }        
+        public Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Writable, y); }
 
         #endregion
 
@@ -187,9 +181,9 @@ namespace InteropBitmaps
             }
         }        
 
-        public TPixel GetPixel(int x, int y) { return GetPixelsScanline(y)[x]; }
+        public TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
 
-        public void SetPixel(int x, int y, TPixel value) { UsePixelsScanline(y)[x] = value; }           
+        public void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }           
 
         public void SetPixels(TPixel value)
         {            
@@ -204,7 +198,7 @@ namespace InteropBitmaps
 
             for (int y = 0; y < _Info.Height; ++y)
             {
-                var dst = UsePixelsScanline(y);
+                var dst = UseScanlinePixels(y);
                 dst.Fill(value);
             }
         }
@@ -279,8 +273,8 @@ namespace InteropBitmaps
 
                 for (int i = 0; i < mid; ++i)
                 {
-                    var top = this.UseBytesScanline(i);
-                    var down = this.UseBytesScanline(this.Height - 1 - i);
+                    var top = this.UseScanlineBytes(i);
+                    var down = this.UseScanlineBytes(this.Height - 1 - i);
 
                     // swap rows
                     top.CopyTo(tmp);
@@ -303,7 +297,7 @@ namespace InteropBitmaps
                 // Reverse code is a plain loop
                 // https://github.com/dotnet/corert/blob/c6af4cfc8b625851b91823d9be746c4f7abdc667/src/System.Private.CoreLib/shared/System/MemoryExtensions.cs#L1138
 
-                this.UsePixelsScanline(i).Reverse();
+                this.UseScanlinePixels(i).Reverse();
             }
         }
 
@@ -339,7 +333,7 @@ namespace InteropBitmaps
                 _Span = span;
                 _IndexX = -1;
                 _IndexY = 0;
-                _Line = span.GetPixelsScanline(_IndexY);
+                _Line = span.GetScanlinePixels(_IndexY);
             }
 
             public bool MoveNext()
@@ -357,7 +351,7 @@ namespace InteropBitmaps
                 if (y < _Span.Height)
                 {
                     _IndexY = y;
-                    _Line = _Span.GetPixelsScanline(_IndexY);
+                    _Line = _Span.GetScanlinePixels(_IndexY);
                     return true;
                 }
 
@@ -386,7 +380,7 @@ namespace InteropBitmaps
                 if (y < _Span.Height)
                 {
                     _IndexY = y;
-                    _Line = _Span.GetPixelsScanline(_IndexY);
+                    _Line = _Span.GetScanlinePixels(_IndexY);
                     return true;
                 }
 

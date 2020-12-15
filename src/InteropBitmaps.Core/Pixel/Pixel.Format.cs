@@ -347,8 +347,8 @@ namespace InteropBitmaps
 
                 for (int y = 0; y < dst.Height; ++y)
                 {
-                    var dstRow = dst.UseBytesScanline(y);
-                    var srcRow = src.GetBytesScanline(y);
+                    var dstRow = dst.UseScanlineBytes(y);
+                    var srcRow = src.GetScanlineBytes(y);
 
                     for (int x = 0; x < dst.Width; ++x)
                     {

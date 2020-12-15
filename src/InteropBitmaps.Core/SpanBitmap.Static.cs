@@ -14,7 +14,7 @@ namespace InteropBitmaps
 
             for (int y = 0; y < src.Height; ++y)
             {
-                var srcRow = src.GetPixelsScanline(y);
+                var srcRow = src.GetScanlinePixels(y);
                 
                 var (rMin, rMax) = _SpanSingleExtensions.MinMax(srcRow);
 
@@ -32,7 +32,7 @@ namespace InteropBitmaps
 
             for (int y = 0; y < src.Height; ++y)
             {
-                var srcRow = src.GetPixelsScanline(y);
+                var srcRow = src.GetScanlinePixels(y);
 
                 for(int x=0; x < srcRow.Length; ++x)
                 {
@@ -52,7 +52,7 @@ namespace InteropBitmaps
 
             for (int y = 0; y < src.Height; ++y)
             {
-                var srcRow = src.GetPixelsScanline(y);
+                var srcRow = src.GetScanlinePixels(y);
 
                 for (int x = 0; x < srcRow.Length; ++x)
                 {
@@ -74,8 +74,8 @@ namespace InteropBitmaps
 
             for(int y=0; y < dst.Height; ++y)
             {
-                var srcRow = src.GetPixelsScanline(y);
-                var dstRow = dst.UsePixelsScanline(y);
+                var srcRow = src.GetScanlinePixels(y);
+                var dstRow = dst.UseScanlinePixels(y);
                 _SpanSingleExtensions.CopyPixels(srcRow, dstRow, transform, range);
             }
         }
@@ -86,8 +86,8 @@ namespace InteropBitmaps
 
             for (int y = 0; y < dst.Height; ++y)
             {
-                var srcRow = src.GetPixelsScanline(y);
-                var dstRow = dst.UsePixelsScanline(y);
+                var srcRow = src.GetScanlinePixels(y);
+                var dstRow = dst.UseScanlinePixels(y);
                 _SpanSingleExtensions.CopyPixels(srcRow, dstRow, transform, range);
             }
         }
@@ -102,8 +102,8 @@ namespace InteropBitmaps
 
                 for (int y = 0; y < dst.Height; ++y)
                 {
-                    var srcRow = src.GetBytesScanline(y);
-                    var dstRow = dst.UsePixelsScanline(y);
+                    var srcRow = src.GetScanlineBytes(y);
+                    var dstRow = dst.UseScanlinePixels(y);
                     
                     var dstFFF = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(dstRow);
 
@@ -128,8 +128,8 @@ namespace InteropBitmaps
                 {
                     for (int y = 0; y < dst.Height; ++y)
                     {
-                        var srcRow = src.GetPixelsScanline(y);
-                        var dstRow = dst.UseBytesScanline(y);
+                        var srcRow = src.GetScanlinePixels(y);
+                        var dstRow = dst.UseScanlineBytes(y);
 
                         var srcFFF = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(srcRow);
 
@@ -140,8 +140,8 @@ namespace InteropBitmaps
                 {
                     for (int y = 0; y < dst.Height; ++y)
                     {
-                        var srcRow = src.GetPixelsScanline(y);
-                        var dstRow = dst.UseBytesScanline(y);
+                        var srcRow = src.GetScanlinePixels(y);
+                        var dstRow = dst.UseScanlineBytes(y);
 
                         var srcFFF = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(srcRow);
 
@@ -161,10 +161,10 @@ namespace InteropBitmaps
             {
                 for (int y = 0; y < src.Height; ++y)
                 {
-                    var srcRow = src.GetPixelsScanline(y);
-                    var dstRowX = dstB.UsePixelsScanline(y);
-                    var dstRowY = dstG.UsePixelsScanline(y);
-                    var dstRowZ = dstR.UsePixelsScanline(y);
+                    var srcRow = src.GetScanlinePixels(y);
+                    var dstRowX = dstB.UseScanlinePixels(y);
+                    var dstRowY = dstG.UseScanlinePixels(y);
+                    var dstRowZ = dstR.UseScanlinePixels(y);
 
                     for (int x = 0; x < srcRow.Length; ++x)
                     {
@@ -180,10 +180,10 @@ namespace InteropBitmaps
             {
                 for (int y = 0; y < src.Height; ++y)
                 {
-                    var srcRow = src.GetPixelsScanline(y);
-                    var dstRowX = dstR.UsePixelsScanline(y);
-                    var dstRowY = dstG.UsePixelsScanline(y);
-                    var dstRowZ = dstB.UsePixelsScanline(y);
+                    var srcRow = src.GetScanlinePixels(y);
+                    var dstRowX = dstR.UseScanlinePixels(y);
+                    var dstRowY = dstG.UseScanlinePixels(y);
+                    var dstRowZ = dstB.UseScanlinePixels(y);
 
                     for (int x = 0; x < srcRow.Length; ++x)
                     {
@@ -212,8 +212,8 @@ namespace InteropBitmaps
 
                 for (int y = 0; y < a.Height; ++y)
                 {
-                    var aRow = a.UseBytesScanline(y);
-                    var bRow = b.UseBytesScanline(y);
+                    var aRow = a.UseScanlineBytes(y);
+                    var bRow = b.UseScanlineBytes(y);
                     var aFlt = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, float>(aRow);
                     var bFlt = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, float>(bRow);
                     if (!_SpanSingleExtensions.SequenceEqual(aFlt, bFlt)) return false;
@@ -225,8 +225,8 @@ namespace InteropBitmaps
             {
                 for (int y = 0; y < a.Height; ++y)
                 {
-                    var aRow = a.UseBytesScanline(y);
-                    var bRow = b.UseBytesScanline(y);
+                    var aRow = a.UseScanlineBytes(y);
+                    var bRow = b.UseScanlineBytes(y);
 
                     if (!aRow.SequenceEqual(bRow)) return false;
                 }
@@ -242,7 +242,7 @@ namespace InteropBitmaps
         {
             for (int y = 0; y < target.Height; ++y)
             {
-                var row = target.UsePixelsScanline(y);
+                var row = target.UseScanlinePixels(y);
                 _SpanSingleExtensions.AddAndMultiply(row, add, multiply);
             }
         }
@@ -251,7 +251,7 @@ namespace InteropBitmaps
         {
             for (int y = 0; y < target.Height; ++y)
             {
-                var row = target.UsePixelsScanline(y);
+                var row = target.UseScanlinePixels(y);
                 _SpanSingleExtensions.MultiplyAndAdd(row, multiply, add);
             }
         }
@@ -260,7 +260,7 @@ namespace InteropBitmaps
         {
             for (int y = 0; y < target.Height; ++y)
             {
-                var row = target.UsePixelsScanline(y);
+                var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
                 _SpanSingleExtensions.AddAndMultiply(fRow, add, multiply);
             }
@@ -270,7 +270,7 @@ namespace InteropBitmaps
         {
             for (int y = 0; y < target.Height; ++y)
             {
-                var row = target.UsePixelsScanline(y);
+                var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
                 _SpanSingleExtensions.MultiplyAndAdd(fRow, multiply, add);
             }
@@ -280,7 +280,7 @@ namespace InteropBitmaps
         {
             for (int y = 0; y < target.Height; ++y)
             {
-                var row = target.UsePixelsScanline(y);
+                var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, Single>(row);
                 _SpanSingleExtensions.AddAndMultiply(fRow, add, multiply);
             }
@@ -290,7 +290,7 @@ namespace InteropBitmaps
         {
             for (int y = 0; y < target.Height; ++y)
             {
-                var row = target.UsePixelsScanline(y);
+                var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, float>(row);
                 _SpanSingleExtensions.MultiplyAndAdd(fRow, multiply, add);
             }
