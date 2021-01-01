@@ -94,7 +94,7 @@ namespace InteropTensors
 
         public static void FitPixels(SpanBitmap bgrSrc, SpanTensor2<Vector3> dst, float offset, float scale)
         {
-            if (bgrSrc.PixelSize != 3) throw new ArgumentException(nameof(bgrSrc));
+            if (bgrSrc.PixelByteSize != 3) throw new ArgumentException(nameof(bgrSrc));
 
             Span<Vector3> vSrc = stackalloc Vector3[bgrSrc.Width];
             Span<Vector3> vDst0 = stackalloc Vector3[dst.BitmapSize.Width];

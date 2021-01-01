@@ -35,7 +35,7 @@ namespace InteropBitmaps
             var fmt = ToZXing(src.PixelFormat);
             if (fmt == ZXing.RGBLuminanceSource.BitmapFormat.Unknown) return null;
 
-            var len = src.Width * src.Height * src.PixelSize;
+            var len = src.Width * src.Height * src.PixelByteSize;
 
             if (persistentBuffer == null || persistentBuffer.Length != len) persistentBuffer = new byte[len];
 

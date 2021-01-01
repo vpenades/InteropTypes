@@ -67,7 +67,7 @@ namespace InteropModels
             if (window.Value.Width == 0) return default;
             if (window.Value.Height == 0) return default;
 
-            var r = InteropBitmaps.BitmapBounds.Clip(window.Value, Image.bounds);
+            var r = InteropBitmaps.BitmapBounds.Clip(window.Value, Image.Bounds);
             if (r.Width * r.Height == 0) return default;
 
             window = r;

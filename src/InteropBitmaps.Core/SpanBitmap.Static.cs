@@ -96,7 +96,7 @@ namespace InteropBitmaps
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
 
-            if (src.PixelSize == 3)
+            if (src.PixelByteSize == 3)
             {
                 Guard.AreTheSame(nameof(dst.Info.PixelFormat), dst.Info.PixelFormat.GetDepthType(), typeof(Byte));
 
@@ -120,7 +120,7 @@ namespace InteropBitmaps
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
 
-            if (dst.PixelSize == 3)
+            if (dst.PixelByteSize == 3)
             {
                 Guard.AreTheSame(nameof(dst.Info.PixelFormat), dst.Info.PixelFormat.GetDepthType(), typeof(Byte));
 
@@ -208,7 +208,7 @@ namespace InteropBitmaps
 
             if (a.Info.PixelFormat.GetDepthType() == typeof(float))
             {
-                Guard.AreEqual(nameof(a.Info.PixelFormat), a.PixelSize & 3, 0);
+                Guard.AreEqual(nameof(a.Info.PixelFormat), a.PixelByteSize & 3, 0);
 
                 for (int y = 0; y < a.Height; ++y)
                 {

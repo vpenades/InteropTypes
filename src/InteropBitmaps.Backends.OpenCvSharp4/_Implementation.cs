@@ -46,7 +46,7 @@ namespace InteropBitmaps
 
         public static OpenCvSharp.Mat CloneToMat(SpanBitmap src)
         {
-            var mtype = OpenCvSharp.MatType.CV_8UC(src.PixelSize);
+            var mtype = OpenCvSharp.MatType.CV_8UC(src.PixelByteSize);
 
             var dst = new OpenCvSharp.Mat(src.Height, src.Width, mtype);
             dst.AsSpanBitmap().SetPixels(0, 0, src);

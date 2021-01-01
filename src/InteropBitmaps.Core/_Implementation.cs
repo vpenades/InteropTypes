@@ -20,7 +20,7 @@ namespace InteropBitmaps
 
         public static SpanBitmap Crop(SpanBitmap src, BitmapBounds rect)
         {
-            rect = rect.Clipped(src.bounds);
+            rect = rect.Clipped(src.Bounds);
             if (rect.Width <= 0 || rect.Height <= 0) return default;
             return src.Slice(rect);
         }
@@ -28,7 +28,7 @@ namespace InteropBitmaps
         public static SpanBitmap<TPixel> Crop<TPixel>(SpanBitmap<TPixel> src, BitmapBounds rect)
             where TPixel : unmanaged
         {
-            rect = rect.Clipped(src.bounds);
+            rect = rect.Clipped(src.Bounds);
             if (rect.Width <= 0 || rect.Height <= 0) return default;
             return src.Slice(rect);
         }

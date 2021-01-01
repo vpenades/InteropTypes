@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
+using SIZE = System.Drawing.Size;
+using POINT = System.Drawing.Point;
+
 namespace InteropBitmaps
 {
     /// <summary>
@@ -44,32 +47,73 @@ namespace InteropBitmaps
 
         #region data
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly BitmapInfo _Info;
-        private readonly Memory<Byte> _Data;
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        private readonly Memory<Byte> _Data;
         public override int GetHashCode() { return _Implementation.CalculateHashCode(_Data.Span, _Info); }
 
         #endregion
 
         #region properties
-        public BitmapInfo Info => _Info;
+
         public Memory<Byte> Memory => _Data;
 
-        public bool IsEmpty => _Info.IsEmpty;
-        public int Width => _Info.Width;
-        public int Height => _Info.Height;
-        public int PixelByteSize => _Info.PixelByteSize;
-        public int StepByteSize => _Info.StepByteSize;
-        public Pixel.Format PixelFormat => _Info.PixelFormat;
+        public bool IsEmpty => _Info.IsEmpty || _Data.IsEmpty;
 
         #endregion
 
+        #region properties - Info
+
+        /// <summary>
+        /// Gets the layout information of the bitmap; Width, Height, PixelFormat, etc.
+        /// </summary>
+        public BitmapInfo Info => _Info;
+
+        /// <summary>
+        /// Gets the pixel format of the bitmap.
+        /// </summary>
+        public Pixel.Format PixelFormat => _Info.PixelFormat;
+
+        /// <summary>
+        /// Gets the size of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public SIZE Size => _Info.Size;
+
+        /// <summary>
+        /// Gets the width of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public int Width => _Info.Width;
+
+        /// <summary>
+        /// Gets the height of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public int Height => _Info.Height;
+
+        /// <summary>
+        /// Gets the size of a single pixel, in bytes.
+        /// </summary>
+        public int PixelByteSize => _Info.PixelByteSize;
+
+        /// <summary>
+        /// Gets the number of bytes required to jump from one row to the next, in bytes. This is also known as the ByteStride.
+        /// </summary>
+        public int StepByteSize => _Info.StepByteSize;
+
+        /// <summary>
+        /// Gets the bounds of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public BitmapBounds Bounds => _Info.Bounds;
+
+        #endregion        
+
         #region API - Buffers
-        [Obsolete] public Span<byte> UseBytesScanline(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
-
         public Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged { return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory; }
-
-
         public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
         public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
 

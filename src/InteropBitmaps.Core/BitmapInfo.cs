@@ -18,11 +18,11 @@ namespace InteropBitmaps
     [System.Diagnostics.DebuggerDisplay("{_DebuggerDisplay(),nq}")]
     public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
-        // Todo: Maybe a better name for this struct is BitmapLayout
+        // Todo: Maybe a better name for this struct is BitmapDesc or BitmapLayout
 
         #region debug
 
-        internal string _DebuggerDisplay() { return $"{PixelFormat}×{Width}×{Height}"; }
+        internal string _DebuggerDisplay() { return $"{PixelFormat._GetDebuggerDisplay()}×{Width}×{Height}"; }
 
         #endregion
 
@@ -72,11 +72,13 @@ namespace InteropBitmaps
         /// <summary>
         /// Width of the bitmap, in pixels.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public readonly int Width;
 
         /// <summary>
         /// Height of the bitmap, in pixels.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public readonly int Height;        
 
         /// <summary>

@@ -154,18 +154,23 @@ namespace InteropBitmaps
 
             #region data
 
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             [System.Runtime.InteropServices.FieldOffset(0)]
             public readonly UInt32 PackedFormat;
 
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             [System.Runtime.InteropServices.FieldOffset(0)]
             private readonly Byte _Element0;
 
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             [System.Runtime.InteropServices.FieldOffset(1)]
             private readonly Byte _Element1;
 
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             [System.Runtime.InteropServices.FieldOffset(2)]
             private readonly Byte _Element2;
 
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             [System.Runtime.InteropServices.FieldOffset(3)]
             private readonly Byte _Element3;
 
@@ -204,6 +209,7 @@ namespace InteropBitmaps
                 get => this;
             }
 
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             public IEnumerable<Element> Elements
             {
                 get
@@ -215,6 +221,9 @@ namespace InteropBitmaps
                 }
             }
 
+            /// <summary>
+            /// Gets the number of bits used by the largest element in the format.
+            /// </summary>
             public int MaxElementBitLength
             {
                 get
@@ -335,7 +344,7 @@ namespace InteropBitmaps
                 Guard.AreEqual(nameof(src), dst.Width, src.Width);
                 Guard.AreEqual(nameof(src), dst.Height, src.Height);
 
-                var byteIndices = new int[dst.PixelSize];
+                var byteIndices = new int[dst.PixelByteSize];
 
                 for (int i = 0; i < byteIndices.Length; ++i)
                 {
@@ -358,8 +367,8 @@ namespace InteropBitmaps
                             dstRow[z] = srcRow[idx];
                         }
 
-                        dstRow = dstRow.Slice(dst.PixelSize);
-                        srcRow = srcRow.Slice(src.PixelSize);
+                        dstRow = dstRow.Slice(dst.PixelByteSize);
+                        srcRow = srcRow.Slice(src.PixelByteSize);
 
                         throw new NotImplementedException();
                     }

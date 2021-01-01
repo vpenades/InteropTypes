@@ -41,8 +41,13 @@ namespace InteropBitmaps
 
         #region data
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly IntPtr _Pointer;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly BitmapInfo _Info;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly Boolean _IsReadOnly;
 
         #endregion
@@ -54,11 +59,6 @@ namespace InteropBitmaps
         /// </summary>
         public IntPtr Pointer => _Pointer;
 
-        /// <summary>
-        /// Gets the layout information of the bitmap; Width, Height, PixelFormat, etc.
-        /// </summary>
-        public BitmapInfo Info => _Info;
-
         public int ByteSize => _Info.BitmapByteSize;
 
         /// <summary>
@@ -68,19 +68,53 @@ namespace InteropBitmaps
 
         public Boolean IsEmpty => Pointer == IntPtr.Zero || _Info.IsEmpty;
 
-        public SIZE Size => _Info.Size;
+        #endregion
 
-        public int Width => _Info.Width;
+        #region properties - Info
 
-        public int Height => _Info.Height;
+        /// <summary>
+        /// Gets the layout information of the bitmap; Width, Height, PixelFormat, etc.
+        /// </summary>
+        public BitmapInfo Info => _Info;
 
-        public int PixelSize => _Info.PixelByteSize;
-
+        /// <summary>
+        /// Gets the pixel format of the bitmap.
+        /// </summary>
         public Pixel.Format PixelFormat => _Info.PixelFormat;
 
+        /// <summary>
+        /// Gets the size of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public SIZE Size => _Info.Size;
+
+        /// <summary>
+        /// Gets the width of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public int Width => _Info.Width;
+
+        /// <summary>
+        /// Gets the height of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public int Height => _Info.Height;
+
+        /// <summary>
+        /// Gets the size of a single pixel, in bytes.
+        /// </summary>
+        public int PixelByteSize => _Info.PixelByteSize;
+
+        /// <summary>
+        /// Gets the number of bytes required to jump from one row to the next, in bytes. This is also known as the ByteStride.
+        /// </summary>
         public int StepByteSize => _Info.StepByteSize;
 
-        public BitmapBounds bounds => _Info.Bounds;
+        /// <summary>
+        /// Gets the bounds of the bitmap, in pixels.
+        /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public BitmapBounds Bounds => _Info.Bounds;
 
         #endregion        
 
