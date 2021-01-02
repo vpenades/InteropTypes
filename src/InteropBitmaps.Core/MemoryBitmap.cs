@@ -113,10 +113,20 @@ namespace InteropBitmaps
         #endregion        
 
         #region API - Buffers
-        public Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged { return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory; }
+
         public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
         public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
 
+        public Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged
+        {
+            return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory;
+        }
+        
+        /// <summary>
+        /// Gets the underlaying byte array, as long as the backing <see cref="Memory"/> was constructed from an <see cref="Array"/>.
+        /// </summary>
+        /// <param name="segment">The underlaying memory <see cref="Array"/></param>
+        /// <returns>true if the operation succeeded.</returns>
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);

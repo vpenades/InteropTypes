@@ -29,7 +29,7 @@ namespace InteropBitmaps
                 var xsrc = src.Slice(0, blockSize * srcLen);
                 var xdst = dst.Slice(0, blockSize * dstLen);
 
-                ConvertPixels(block, xsrc, srcFmt);
+                ConvertPixels(block.Slice(0,blockSize), xsrc, srcFmt);
                 ConvertPixels(xdst, dstFmt, block);
 
                 src = src.Slice(xsrc.Length);

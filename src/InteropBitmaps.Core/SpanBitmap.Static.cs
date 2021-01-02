@@ -295,5 +295,7 @@ namespace InteropBitmaps
                 _SpanSingleExtensions.MultiplyAndAdd(fRow, multiply, add);
             }
         }
+
+        
     }
 }

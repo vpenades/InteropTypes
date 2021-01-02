@@ -136,7 +136,6 @@ namespace InteropBitmaps
         #endregion        
 
         #region API - Buffers
-        public Memory<TPixel> GetPixelMemory() { return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory; }
 
         public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
         public Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
@@ -144,6 +143,12 @@ namespace InteropBitmaps
         public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
         public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Data.Span, y); }
 
+
+        public Memory<TPixel> GetPixelMemory()
+        {
+            return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory;
+        }
+        
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);

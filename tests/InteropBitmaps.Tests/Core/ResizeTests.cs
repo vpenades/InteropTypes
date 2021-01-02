@@ -12,11 +12,12 @@ namespace InteropBitmaps.Core
     [Category("Core")]
     public class ResizeTests
     {
-        [Test]
-        public void ResizeTest1()
+        [TestCase(333)]
+        [TestCase(2021)]
+        public void ResizeTest1(int dstSize)
         {
             var src = LoadShannonImage();
-            var dst = new MemoryBitmap(333, 333, Pixel.BGR24.Format , 1000);
+            var dst = new MemoryBitmap(dstSize, dstSize, Pixel.BGR24.Format , dstSize * 3 + 17);
 
             SpanBitmap.FitPixels(src, dst, (0, 1));
 
@@ -27,7 +28,7 @@ namespace InteropBitmaps.Core
             TestContext.WriteLine($"{elapsed.Milliseconds}ms {elapsed.Ticks}ticks");
 
             src.AttachToCurrentTest("input.png");
-            dst.AttachToCurrentTest("output.png");
+            dst.AttachToCurrentTest($"output_{dstSize}.png");
         }
 
         private static MemoryBitmap LoadShannonImage()

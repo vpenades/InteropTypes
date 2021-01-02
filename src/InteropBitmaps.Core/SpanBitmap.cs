@@ -281,19 +281,8 @@ namespace InteropBitmaps
 
         public void ApplyMirror(bool horizontal, bool vertical, bool multiThread = true)
         {
-            switch(this.PixelFormat.ByteCount)
-            {
-                case 1: this.OfType<Byte>().ApplyMirror(horizontal, vertical, multiThread); return;
-                case 2: this.OfType<UInt16>().ApplyMirror(horizontal, vertical, multiThread); return;
-                case 3: this.OfType<Pixel.RGB24>().ApplyMirror(horizontal, vertical, multiThread); return;
-                case 4: this.OfType<UInt32>().ApplyMirror(horizontal, vertical, multiThread); return;
-                case 8: this.OfType<UInt64>().ApplyMirror(horizontal, vertical, multiThread); return;
-                case 12: this.OfType<System.Numerics.Vector3>().ApplyMirror(horizontal, vertical, multiThread); return;
-                case 16: this.OfType<System.Numerics.Vector4>().ApplyMirror(horizontal, vertical, multiThread); return;
-            }
-
-            throw new InvalidOperationException($"Unsupported pixel size: {this.PixelFormat.ByteCount}");
-        }        
+            Processing._MirrorImplementation.ApplyMirror(this, horizontal, vertical, multiThread);
+        }
 
         #endregion
 

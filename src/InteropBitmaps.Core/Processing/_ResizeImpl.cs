@@ -7,10 +7,35 @@ using System.Text;
 namespace InteropBitmaps.Processing
 {
     
+    static class _NearestResizeImplementation
+    {
+        public static void FitPixelsNearest<TPixel>(SpanBitmap<TPixel> dst, SpanBitmap<TPixel> src)
+            where TPixel : unmanaged
+        {
+            // TODO: cannot run in parallel because src & dst cannot be passed to lambdas
+            //       we would need to pin and use PointerBitmaps
+
+            for (int y = 0; y < dst.Height; ++y)
+            {
+                var yy = y * src.Height / dst.Height;
+
+                for (int x = 0; x < dst.Height; ++x)
+                {
+                    var xx = x * src.Width / dst.Width;
+
+                    var p = src.GetPixel(xx, yy);
+
+                    dst.SetPixel(x, y, p);
+                }
+            }
+        }
+    }
 
 
     static class _BilinearResizeImplementation
     {
+        #region API
+
         public static void FitPixels(SpanBitmap src, SpanBitmap dst, (float offset, float scale) transform)
         {
             if (dst.PixelFormat == Pixel.BGR24.Format)
@@ -64,7 +89,9 @@ namespace InteropBitmaps.Processing
                 }
             }
 
-            throw new NotImplementedException();
+            // TODO: for pixels with alpha support, alpha premultiplication should be required.
+
+            throw new NotImplementedException($"{dst.PixelFormat._GetDebuggerDisplay()} format not inplemented on {nameof(dst)}.");
         }       
 
         private static void _FitPixels3<TSrcPixel,TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)
@@ -87,7 +114,10 @@ namespace InteropBitmaps.Processing
                 Pixel.LerpArray(r0, r1, rowPair.Amount, dstRow);                
             }
         }
-        
+
+        #endregion
+
+        #region nested types
 
         /// <summary>
         /// Takes an input <see cref="SpanBitmap"/> and exposes its rows, resized according to a <see cref="_BilinearSampleSource"/> table.
@@ -190,16 +220,17 @@ namespace InteropBitmaps.Processing
         }
 
         /// <summary>
-        /// defines two pixels from a bitmap row
+        /// Creates an equivalence table to map a source and destination set of pixels,
+        /// so there's two weighted source pixels for every destination pixel.
         /// </summary>
         /// <example>
         /// pair = table[x];
         /// dstRow[x] = Lerp( srcRow[pair.<see cref="IndexLeft"/>], srcRow[pair.<see cref="IndexRight"/>], pair.<see cref="Amount"/>);
         /// </example>
         [System.Diagnostics.DebuggerDisplay("{IndexLeft} < {Amount} > {IndexRight}")]
-        struct _BilinearSampleSource
+        readonly struct _BilinearSampleSource
         {
-            #region constructor
+            #region static methods
 
             [ThreadStatic]
             private static _BilinearSampleSource[] _BSPairs;
@@ -232,12 +263,7 @@ namespace InteropBitmaps.Processing
 
                 for(int i=0; i < dstPairs.Length; ++i)
                 {
-                    dstPairs[i] = new _BilinearSampleSource
-                    {
-                        IndexLeft = i,
-                        IndexRight = i,
-                        Amount = 0
-                    };
+                    dstPairs[i] = new _BilinearSampleSource(i, i, 0);
                 }
 
             }
@@ -297,12 +323,7 @@ namespace InteropBitmaps.Processing
 
                     System.Diagnostics.Debug.Assert(amount >= 0 && amount <= 1);
 
-                    dstPairs[i] = new _BilinearSampleSource
-                    {
-                        IndexLeft = idx0,
-                        IndexRight = idx1,
-                        Amount = amount
-                    };
+                    dstPairs[i] = new _BilinearSampleSource(idx0, idx1, amount);
                 }
             }
 
@@ -329,25 +350,31 @@ namespace InteropBitmaps.Processing
                     {
                         idx1 += 1; if (idx1 >= srcLen) idx1 = srcLen - 1;
                         amount -= 0.5f;
-                    }                    
-                    
+                    }
 
-                    dstPairs[i] = new _BilinearSampleSource
-                    {
-                        IndexLeft = idx0,
-                        IndexRight = idx1,
-                        Amount = amount
-                    };
+
+                    dstPairs[i] = new _BilinearSampleSource(idx0, idx1, amount);                    
                 }
+            }
+
+            #endregion
+
+            #region constructor
+
+            private _BilinearSampleSource(int left, int right, float amount)
+            {
+                IndexLeft = left;
+                IndexRight = right;
+                Amount = amount;
             }
 
             #endregion
 
             #region data
 
-            public int IndexLeft; // index of the first pixel in source
-            public int IndexRight; // index of the second pixel in source
-            public float Amount;  // LERP amount between first and second source pixels.
+            public readonly int IndexLeft; // index of the first pixel in source
+            public readonly int IndexRight; // index of the second pixel in source
+            public readonly float Amount;  // LERP amount between first and second source pixels.
 
             #endregion
 
@@ -415,5 +442,7 @@ namespace InteropBitmaps.Processing
 
             #endregion
         }
+
+        #endregion
     }
 }
