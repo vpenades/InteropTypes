@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 
 using XY = System.Numerics.Vector2;
+using POINT = InteropDrawing.Point2;
 
 using SCORE = InteropModels.Score;
 using RECTI = System.Drawing.Rectangle;
@@ -190,14 +191,14 @@ namespace InteropModels
 
 
 
-            public int AddPoint(DisplayVector2 point, String name, int idx = -1)
+            public int AddPoint(POINT point, String name, int idx = -1)
             {
                 return AddPoint(point, SCORE.Ok, name, idx);
             }
 
-            public int AddPoint(DisplayVector2 point, SCORE confidence, String name, int idx = -1)
+            public int AddPoint(POINT point, SCORE confidence, String name, int idx = -1)
             {
-                var rect = point.ToCenteredRectangle(0);
+                var rect = point.ToGDIRectangleOffCenter(0);
                 return AddObject(rect, confidence, name, idx);
             }
 
@@ -323,7 +324,7 @@ namespace InteropModels
                     var a = _Objects[l.Item1].Rect;
                     var b = _Objects[l.Item2].Rect;
 
-                    yield return DisplayPrimitive.Line(COLOR.Green, a, b);
+                    yield return DisplayPrimitive.Line(COLOR.Green, POINT.Center(a), POINT.Center(b));
                 }
 
                 int row = 0;

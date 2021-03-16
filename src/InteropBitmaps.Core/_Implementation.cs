@@ -36,35 +36,40 @@ namespace InteropBitmaps
         public static void CopyPixels(SpanBitmap dst, int dstX, int dstY, SpanBitmap src)
         {
             var dstCrop = Crop(dst, (+dstX, +dstY, src.Width, src.Height));
-            var srcCrop = Crop(src, (-dstX, -dstY, dst.Width, dst.Height));
+            var srcCrop = Crop(src, (-dstX, -dstY, dst.Width, dst.Height));            
 
             System.Diagnostics.Debug.Assert(dstCrop.Width == srcCrop.Width);
             System.Diagnostics.Debug.Assert(dstCrop.Height == srcCrop.Height);
 
-            if (dstCrop.Width <= 0 || dstCrop.Height <= 0) return;
+            if (dstCrop.Width <= 0 || dstCrop.Height <= 0) return; // nothing to copy
 
-            // no conversion required
+            System.Diagnostics.Debug.Assert(srcCrop.StepByteSize == src.StepByteSize);
+            System.Diagnostics.Debug.Assert(dstCrop.StepByteSize == dst.StepByteSize);
+            
             if (dstCrop.PixelFormat == srcCrop.PixelFormat)
+            // no conversion required
             {
                 for (int y = 0; y < dstCrop.Height; ++y)
                 {
                     var srcRow = srcCrop.GetScanlineBytes(y);
                     var dstRow = dstCrop.UseScanlineBytes(y);
 
-                    System.Diagnostics.Debug.Assert(srcRow.Length == srcRow.Length);
+                    System.Diagnostics.Debug.Assert(srcRow.Length == dstRow.Length);
 
                     srcRow.CopyTo(dstRow);
-                }
-            }
-
-            // conversion required
+                }                
+            }            
+            
             else
+            // conversion required
             {
+                var converter = Pixel.GetConverter(srcCrop.PixelFormat, dstCrop.PixelFormat);
+
                 for (int y = 0; y < dstCrop.Height; ++y)
                 {
                     var srcRow = srcCrop.GetScanlineBytes(y);
                     var dstRow = dstCrop.UseScanlineBytes(y);
-                    Pixel.ConvertPixels(dstRow, dstCrop.PixelFormat, srcRow, srcCrop.PixelFormat);
+                    converter(srcRow, dstRow);
                 }                
             }
         }

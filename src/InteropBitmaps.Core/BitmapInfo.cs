@@ -16,6 +16,7 @@ namespace InteropBitmaps
     /// Represents the width, height and pixel format of a bitmap.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{_DebuggerDisplay(),nq}")]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
         // Todo: Maybe a better name for this struct is BitmapDesc or BitmapLayout
@@ -26,7 +27,7 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region lifecycle     
+        #region constructor helpers
 
         public static implicit operator BitmapInfo((SIZE s, Pixel.Format fmt) binfo)
         {
@@ -37,6 +38,23 @@ namespace InteropBitmaps
         {
             return new BitmapInfo(binfo.w, binfo.h, binfo.fmt);
         }
+
+        public BitmapInfo WithPixelFormat(Pixel.Format format) { return new BitmapInfo(this.Width, this.Height, format, this.StepByteSize); }
+
+        public BitmapInfo WithPixelFormat<TPixel>() where TPixel:unmanaged
+        {
+            var fmt = Pixel.Format.TryIdentifyPixel<TPixel>();
+            return this.WithPixelFormat(fmt);
+        }
+
+        public BitmapInfo WithSize(int width, int height, int stepByteSize = 0)
+        {
+            return new BitmapInfo(width, height, this.PixelFormat, stepByteSize);
+        }        
+
+        #endregion
+
+        #region constructors
 
         public BitmapInfo(SIZE size, Pixel.Format pixelFormat, int stepByteSize = 0)
             : this(size.Width,size.Height,pixelFormat,stepByteSize) { }
@@ -54,21 +72,11 @@ namespace InteropBitmaps
             PixelFormat = pixelFormat;
             PixelByteSize = pixelByteSize;            
         }
-        
-        private BitmapInfo(int width, int height, in BitmapInfo other)
-        {
-            Width = width;
-            Height = height;
-            StepByteSize = other.StepByteSize;
-
-            PixelFormat = other.PixelFormat;
-            PixelByteSize = other.PixelByteSize;                        
-        }
 
         #endregion
 
         #region data
-        
+
         /// <summary>
         /// Width of the bitmap, in pixels.
         /// </summary>
@@ -162,7 +170,16 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region data
+        #region API
+
+        public bool Contains(int x, int y)
+        {
+            if (x < 0) return false;
+            if (y < 0) return false;
+            if (x >= Width) return false;
+            if (y >= Height) return false;
+            return true;
+        }
 
         public (int Offset, BitmapInfo Info) Slice(in BitmapBounds rect)
         {
@@ -172,7 +189,9 @@ namespace InteropBitmaps
 
             // todo: if (Rect.X &1 ^ Rect.Y &1) == 1, pixel format must call SwitchScanlineFormatOrder(
 
-            var info = new BitmapInfo(rect.Width, rect.Height, this);
+            var info = this.WithSize(rect.Width, rect.Height, this.StepByteSize);
+
+            System.Diagnostics.Debug.Assert(this.StepByteSize == info.StepByteSize);
 
             return (offset, info);
         }
@@ -228,6 +247,18 @@ namespace InteropBitmaps
         #endregion
 
         #region factory
+
+        public unsafe bool IsCompatiblePixel<TPixel>() where TPixel:unmanaged
+        {
+            if (sizeof(TPixel) != this.PixelByteSize)
+            {
+                return false;
+            }
+
+            var tformat = Pixel.Format.TryIdentifyPixel<TPixel>();
+
+            return this.PixelFormat == tformat;
+        }
 
         public bool CreateBitmap(ref SpanBitmap bmp)
         {

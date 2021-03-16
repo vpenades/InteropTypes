@@ -9,6 +9,7 @@
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
 
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
@@ -17,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
     <ProjectReference Include="..\InteropTensors.Core\InteropTensors.Core.csproj" />
   </ItemGroup>
 

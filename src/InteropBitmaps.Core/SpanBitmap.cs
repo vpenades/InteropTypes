@@ -264,9 +264,13 @@ namespace InteropBitmaps
 
         public bool CopyTo(ref BitmapInfo otherInfo, ref Byte[] otherData)
         {
-            if (!this.Info.Equals(otherInfo)) otherInfo = this.Info;
-
             var refreshed = false;
+
+            if (!this.Info.Equals(otherInfo))
+            {
+                otherInfo = this.Info;
+                refreshed = true;
+            }            
 
             if (otherData == null || otherData.Length < otherInfo.BitmapByteSize)
             {
@@ -274,11 +278,56 @@ namespace InteropBitmaps
                 refreshed = true;
             }
 
-            new SpanBitmap(otherData,otherInfo).SetPixels(0, 0, this);
+            new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
 
             return refreshed;
         }
 
+        public bool CopyTo<TPixel>(ref MemoryBitmap<TPixel> dst)
+            where TPixel : unmanaged
+        {
+            var newFormat = dst.PixelFormat.IsDefined
+                ? dst.PixelFormat
+                : Pixel.Format.TryIdentifyPixel<TPixel>();
+
+            var newInfo = this.Info.WithPixelFormat(newFormat);
+
+            var refreshed = false;
+
+            if (!dst.Info.Equals(newInfo))
+            {
+                dst = new MemoryBitmap<TPixel>(newInfo);
+                refreshed = true;
+            }
+
+            dst.AsSpanBitmap().AsTypeless().SetPixels(0, 0, this);
+
+            return refreshed;
+        }
+
+        public bool CopyTo(ref MemoryBitmap dst, Pixel.Format format)
+        {
+            var newInfo = this.Info.WithPixelFormat(format);
+
+            var refreshed = false;
+
+            if (!dst.Info.Equals(newInfo))
+            {
+                dst = new MemoryBitmap(newInfo);
+                refreshed = true;
+            }
+
+            dst.AsSpanBitmap().SetPixels(0, 0, this);
+
+            return refreshed;
+        }
+
+        /// <summary>
+        /// Flips the pixels horizontally, vertically, or both, in place.
+        /// </summary>
+        /// <param name="horizontal"></param>
+        /// <param name="vertical"></param>
+        /// <param name="multiThread"></param>
         public void ApplyMirror(bool horizontal, bool vertical, bool multiThread = true)
         {
             Processing._MirrorImplementation.ApplyMirror(this, horizontal, vertical, multiThread);

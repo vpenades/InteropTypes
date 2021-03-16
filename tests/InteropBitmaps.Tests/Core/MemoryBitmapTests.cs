@@ -25,6 +25,22 @@ namespace InteropBitmaps
         }
 
         [Test]
+        public void CopyPixelsWithStride()
+        {
+            var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.BGRA32.Format);            
+            m1.SetPixel(0, 0, 0xff00ff00);
+            m1.SetPixel(0, 1, 0xffff00ff);
+
+            var m2 = new MemoryBitmap<UInt32>(16, 16, Pixel.BGRA32.Format, 17 * 4);
+            m2.SetPixels(0, 0, m1);
+
+            m2.AttachToCurrentTest("result.png");
+
+            Assert.AreEqual(0xff00ff00, m2.GetPixel(0, 0));
+            Assert.AreEqual(0xffff00ff, m2.GetPixel(0, 1));            
+        }
+
+        [Test]
         public void SetPixels()
         {
             var dst = new MemoryBitmap<Byte>(16, 16, Pixel.Luminance8.Format);

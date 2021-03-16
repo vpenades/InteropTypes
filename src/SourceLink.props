@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<!-- https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/ -->
+
+<PropertyGroup Condition=" '$(Configuration)' == 'Release*' ">
+   <Deterministic>true</Deterministic>
+   <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+</PropertyGroup>
+
+<PropertyGroup Condition=" '$(Configuration)' == 'Release*' ">    
+
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType>embedded</DebugType>
+</PropertyGroup>
+
+<ItemGroup Condition=" '$(Configuration)' == 'Release*' ">
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+</ItemGroup>
+	
+</Project>

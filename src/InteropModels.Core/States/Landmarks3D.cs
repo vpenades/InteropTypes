@@ -96,16 +96,7 @@ namespace InteropModels
             _Score = (0,false);
             _OuterBounds = null;
             _InnerBounds = null;
-        }
-
-        public IEnumerable<DISPRIM> GetDisplayPrimitives()
-        {
-            if (_DisplayFunc == null) return Enumerable.Empty<DISPRIM>();
-
-            return _DisplayFunc(this);
-        }
-
-        public void SetDisplayFunc(Func<Landmarks3D, IEnumerable<DISPRIM>> f) { _DisplayFunc = f; }
+        }        
 
         public void SetLandmarks(Score score)
         {
@@ -160,6 +151,24 @@ namespace InteropModels
             TransformBy(xform);
 
         }
+
+        #endregion
+
+        #region drawing
+
+        public void DrawTo(InteropDrawing.IDrawing2D dc)
+        {
+            DISPRIM.Draw(dc, GetDisplayPrimitives());
+        }
+
+        public IEnumerable<DISPRIM> GetDisplayPrimitives()
+        {
+            if (_DisplayFunc == null) return Enumerable.Empty<DISPRIM>();
+
+            return _DisplayFunc(this);
+        }
+
+        public void SetDisplayFunc(Func<Landmarks3D, IEnumerable<DISPRIM>> f) { _DisplayFunc = f; }
 
         #endregion
     }

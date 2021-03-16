@@ -40,7 +40,11 @@ namespace InteropBitmaps
                 .Cast<PEF>()
                 .ToArray();
 
-            foreach(var c in values)
+            // all values of ElementId must be contained within 0 and 255 to fit in 1 byte
+            Assert.LessOrEqual(0, values.Select(item => (int)item).Min());
+            Assert.GreaterOrEqual(255, values.Select(item => (int)item).Max());
+
+            foreach (var c in values)
             {
                 var name = c.ToString();
 
@@ -65,5 +69,69 @@ namespace InteropBitmaps
 
             // todo: check the index of any "bit" group is less than the next group.
         }
+
+        [Test]
+        public void ConversionTest()
+        {
+            ConversionTest<Pixel.BGR24, Pixel.BGR24>();
+            ConversionTest<Pixel.BGR24, Pixel.BGRA32>();
+            ConversionTest<Pixel.BGR24, Pixel.RGBA32>();
+            ConversionTest<Pixel.BGR24, Pixel.ARGB32>();
+
+            ConversionTest<Pixel.BGRA32, Pixel.BGR24>();
+            ConversionTest<Pixel.BGRA32, Pixel.BGRA32>();
+            ConversionTest<Pixel.BGRA32, Pixel.RGBA32>();
+            ConversionTest<Pixel.BGRA32, Pixel.ARGB32>();
+
+            ConversionTest<Pixel.RGBA32, Pixel.BGR24>();
+            ConversionTest<Pixel.RGBA32, Pixel.BGRA32>();
+            ConversionTest<Pixel.RGBA32, Pixel.RGBA32>();
+            ConversionTest<Pixel.RGBA32, Pixel.ARGB32>();
+
+            ConversionTest<Pixel.ARGB32, Pixel.BGR24>();
+            ConversionTest<Pixel.ARGB32, Pixel.BGRA32>();
+            ConversionTest<Pixel.ARGB32, Pixel.RGBA32>();
+            ConversionTest<Pixel.ARGB32, Pixel.ARGB32>();
+
+
+        }
+
+
+        public void ConversionTest<TSrcPixel,TDstPixel>()
+            where TSrcPixel : unmanaged, Pixel.IFactory<TSrcPixel>
+            where TDstPixel : unmanaged, Pixel.IFactory<TDstPixel>
+        {
+            var srcFmt = Pixel.Format.TryIdentifyPixel<TSrcPixel>();
+            var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();
+
+            var src = new TSrcPixel[5];
+            var dst = new TDstPixel[5];
+            var cvt = Pixel.GetConverter(srcFmt,dstFmt);
+
+            for(int i=0; i < 5; ++i)
+            {
+                src[i] = default(TSrcPixel).From(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
+            }
+
+            cvt.Invoke
+                (
+                System.Runtime.InteropServices.MemoryMarshal.Cast<TSrcPixel, Byte>(src),
+                System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, Byte>(dst));
+
+            for(int i=0; i < 5; ++i)
+            {
+                var srcP = src[i].ToBGRA32();
+                var dstP = dst[i].ToBGRA32();
+
+                if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
+                {
+                    srcP = new Pixel.BGRA32(srcP.R, srcP.G, srcP.B, 256);
+                    dstP = new Pixel.BGRA32(dstP.R, dstP.G, dstP.B, 256);
+                }
+
+                Assert.AreEqual(srcP, dstP);
+            }
+        }
+
     }
 }

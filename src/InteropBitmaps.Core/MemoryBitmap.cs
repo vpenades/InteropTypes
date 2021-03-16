@@ -162,8 +162,8 @@ namespace InteropBitmaps
             var (offset, info) = _Info.Slice(rect);
             var memory = this._Data.Slice(offset, info.BitmapByteSize);
             return new MemoryBitmap(memory, info);
-        }        
-        
+        }
+
         #endregion
 
         #region API - IO

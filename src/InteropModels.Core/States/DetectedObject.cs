@@ -19,7 +19,11 @@ namespace InteropModels
         public String Name;
         public SCORE Score;
         public RectangleF Rect;
-        
+
+        #endregion
+
+        #region properties
+
         public float Area => Rect.Width * Rect.Height;
 
         public bool Exists => Name != null;
@@ -27,6 +31,8 @@ namespace InteropModels
         public Vector2 Center => new Vector2(Rect.X, Rect.Y) + new Vector2(Rect.Width, Rect.Height) * 0.5f;
 
         #endregion
+
+        #region API
 
         public DetectedObject Scaled(Vector2 scale)
         {
@@ -54,5 +60,7 @@ namespace InteropModels
 
             return clone;
         }
+
+        #endregion
     }
 }

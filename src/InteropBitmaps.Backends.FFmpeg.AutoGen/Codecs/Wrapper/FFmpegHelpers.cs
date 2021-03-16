@@ -30,10 +30,15 @@ namespace InteropBitmaps.Codecs
             return message;
         }
 
-        public static int ThrowExceptionIfError(this int error)
+        public static int ThrowExceptionIfError(this int result)
         {
-            if (error < 0) throw new ApplicationException(av_strerror(error));
-            return error;
+            if (result >= 0) return result;
+
+            var errMsg = av_strerror(result);
+
+            if (errMsg == "No such file or directory") throw new System.IO.FileNotFoundException();
+
+            throw new ApplicationException(errMsg);            
         }
     }
 }

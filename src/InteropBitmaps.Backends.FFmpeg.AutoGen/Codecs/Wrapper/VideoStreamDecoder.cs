@@ -14,6 +14,8 @@ namespace InteropBitmaps.Codecs
 
         public VideoStreamDecoder(string url, AVHWDeviceType HWDeviceType = AVHWDeviceType.AV_HWDEVICE_TYPE_NONE)
         {
+            if (!System.IO.File.Exists(url)) throw new System.IO.FileNotFoundException(url);
+
             _pFormatContext = ffmpeg.avformat_alloc_context();
             _receivedFrame = ffmpeg.av_frame_alloc();
             var pFormatContext = _pFormatContext;

@@ -46,7 +46,7 @@ namespace InteropBitmaps
 
             #region API
 
-            public BGRA32 ToBGRA32() { return new BGRA32(0, 0, 0, A); }
+            public BGRA32 ToBGRA32() { return new BGRA32((Byte)0, (Byte)0, (Byte)0, A); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
             Alpha8 IFactory<Alpha8>.From(BGRA32 color) { return new Alpha8(color.A); }
             Alpha8 IFactory<Alpha8>.From(VectorRGBA color) { return new Alpha8((Byte)(color.A * 255f)); }
@@ -248,7 +248,7 @@ namespace InteropBitmaps
 
             #region API
 
-            public BGRA32 ToBGRA32() { return new BGRA32((Byte)R, (Byte)G, (Byte)B, 255); }            
+            public BGRA32 ToBGRA32() { return new BGRA32((Byte)R, (Byte)G, (Byte)B, (Byte)255); }            
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
 
             BGR565 IFactory<BGR565>.From(BGRA32 color) { return new BGR565(color.R, color.G, color.B); }
@@ -402,6 +402,22 @@ namespace InteropBitmaps
                 A = alpha;
             }
 
+            public BGRA32(int red, int green, int blue, int alpha = 255)
+            {
+                B = (byte)blue;
+                G = (byte)green;
+                R = (byte)red;
+                A = (byte)alpha;
+            }
+
+            public BGRA32(BGR24 bgr)
+            {
+                B = bgr.B;
+                G = bgr.G;
+                R = bgr.R;
+                A = 255;
+            }
+
             #endregion
 
             #region data
@@ -548,6 +564,20 @@ namespace InteropBitmaps
                 R = (Byte)v.X;
                 G = (Byte)v.Y;
                 B = (Byte)v.Z;
+            }
+
+            public BGR24(RGBA32 rgba)
+            {
+                R = rgba.R;
+                G = rgba.G;
+                B = rgba.B;
+            }
+
+            public BGR24(BGRA32 bgra)
+            {
+                R = bgra.R;
+                G = bgra.G;
+                B = bgra.B;
             }
 
             public BGR24(Byte red, Byte green, Byte blue) { B = blue; G = green; R = red; }

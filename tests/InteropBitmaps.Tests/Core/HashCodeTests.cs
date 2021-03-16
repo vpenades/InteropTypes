@@ -17,7 +17,10 @@ namespace InteropBitmaps.Core
         public void TestHashCodes()
         {
             var gray = new MemoryBitmap<Byte>(256, 256, Pixel.Luminance8.Format);
+            Assert.AreEqual(256, gray.Info.StepByteSize);
             var grayWithStride = new MemoryBitmap<Byte>(256, 256, Pixel.Luminance8.Format, 320);
+            Assert.AreEqual(320, grayWithStride.Info.StepByteSize);
+
 
             var rnd = new Random(117);
             for(int i=0; i < 256*256; ++i)

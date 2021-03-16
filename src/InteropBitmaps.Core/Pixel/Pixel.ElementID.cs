@@ -5,7 +5,7 @@ using System.Text;
 namespace InteropBitmaps
 {
     partial class Pixel
-    {
+    {        
         partial struct Format
         {
             public enum ElementID

@@ -14,6 +14,8 @@ using POINTF = System.Drawing.PointF;
 using SIZEI = System.Drawing.Size;
 using SIZEF = System.Drawing.SizeF;
 
+using POINT = InteropDrawing.Point2;
+
 namespace InteropModels
 {
 	[DebuggerDisplay("{GetShapeType()}")]
@@ -21,14 +23,14 @@ namespace InteropModels
 	{
 		#region lifecycle
 
-		public static DisplayPrimitive Point(Color color, DisplayVector2 a, int size)
+		public static DisplayPrimitive Point(Color color, POINT a, int size)
 		{
 			var num = 0.5f * (float)size;
 			var value = new RectangleF(a.X - num, a.Y - num, num, num);
 			return new DisplayPrimitive(color, Rectangle.Round(value));
 		}
 
-		public static DisplayPrimitive Line(Color color, DisplayVector2 a, DisplayVector2 b)
+		public static DisplayPrimitive Line(Color color, POINT a, POINT b)
 		{
 			return new DisplayPrimitive(color, a, b)
 			{
@@ -36,10 +38,10 @@ namespace InteropModels
 			};
 		}
 
-		public static DisplayPrimitive RectFromPoints(Color color, params DisplayVector2[] points)
+		public static DisplayPrimitive RectFromPoints(Color color, params POINT[] points)
 		{
 			var (min, max) = points
-				.Select(item => item.ToVector2())
+				.Select(item => item.ToNumerics())
 				.MinMax();
 
 			var size = max - min;
@@ -58,27 +60,27 @@ namespace InteropModels
 			return new DisplayPrimitive(color, new RectangleF(x, y, w, h));
 		}
 
-		public static DisplayPrimitive Rect(Color color, DisplayVector2 tl, DisplayVector2 wh)
+		public static DisplayPrimitive Rect(Color color, POINT tl, POINT wh)
 		{
-			var rect = new RectangleF(tl.ToPoint(), wh.ToSize());
+			var rect = new RectangleF(tl.ToGDIPoint(), wh.ToGDISize());
 			return new DisplayPrimitive(color, rect);
 		}
 
 
-		public static IEnumerable<DisplayPrimitive> Rect(Color color, DisplayVector2 tl, DisplayVector2 wh, Matrix3x2 xform)
+		public static IEnumerable<DisplayPrimitive> Rect(Color color, POINT tl, POINT wh, Matrix3x2 xform)
 		{
 			if (xform.M12 == 0f && xform.M21 == 0f)
 			{
-				tl = DisplayVector2.Transform(tl, xform);
-				wh = DisplayVector2.Transform(wh, xform);
+				tl = POINT.Transform(tl, xform);
+				wh = POINT.Transform(wh, xform);
 				yield return Rect(color, tl, wh);
 				yield break;
 			}
 
-			var displayVector = DisplayVector2.Transform(tl.X, tl.Y, xform);
-			var displayVector2 = DisplayVector2.Transform(tl.X + wh.X, tl.Y, xform);
-			var displayVector3 = DisplayVector2.Transform(tl.X + wh.X, tl.Y + wh.Y, xform);
-			var displayVector4 = DisplayVector2.Transform(tl.X, tl.Y + wh.Y, xform);
+			var displayVector = POINT.Transform(tl.X, tl.Y, xform);
+			var displayVector2 = POINT.Transform(tl.X + wh.X, tl.Y, xform);
+			var displayVector3 = POINT.Transform(tl.X + wh.X, tl.Y + wh.Y, xform);
+			var displayVector4 = POINT.Transform(tl.X, tl.Y + wh.Y, xform);
 
 			yield return Line(color, displayVector, displayVector2);
 			yield return Line(color, displayVector2, displayVector3);
@@ -87,14 +89,14 @@ namespace InteropModels
 			yield break;
 		}
 
-		public static DisplayPrimitive Write(Color color, DisplayVector2 p, string text, float size)
+		public static DisplayPrimitive Write(Color color, POINT p, string text, float size)
 		{
 			var result = Rect(color, p.X, p.Y, 1f, size);
 			result.TextLine = text;
 			return result;
 		}
 
-		private DisplayPrimitive(Color color, DisplayVector2 a, DisplayVector2 b)
+		private DisplayPrimitive(Color color, POINT a, POINT b)
 		{
 			IsLine = true;
 			A = a;
@@ -120,9 +122,9 @@ namespace InteropModels
 
         private bool IsLine;
 
-		public DisplayVector2 A;
+		public POINT A;
 
-		public DisplayVector2 B;
+		public POINT B;
 
 		public Color Color;
 
@@ -142,14 +144,50 @@ namespace InteropModels
 		public RectangleF AsRectangle()
 		{
 			if (IsLine) throw new InvalidOperationException();
-			return new RectangleF(A.ToPoint(), (B.ToVector2() - A.ToVector2()).ToSize());
+			return new RectangleF(A.ToGDIPoint(), (B.ToNumerics() - A.ToNumerics()).ToSize());
 		}
 
 		public (POINTF A, POINTF B) AsLine()
 		{
 			if (!IsLine) throw new InvalidOperationException();
-			return (A.ToPoint(), B.ToPoint());
+			return (A.ToGDIPoint(), B.ToGDIPoint());
 		}
+
+		public static void Draw(InteropDrawing.IDrawing2D dc, IEnumerable<DisplayPrimitive> primitives, float fontsize = 1, bool fontflip = false)
+        {
+			foreach(var primitive in primitives)
+            {
+				switch(primitive.GetShapeType())
+                {
+					case Shape.Point:
+                        {
+							InteropDrawing.Toolkit.DrawCircle(dc, primitive.A, 1, primitive.Color);
+							break;
+                        }
+
+					case Shape.Line:
+                        {
+							var l = primitive.AsLine();
+							InteropDrawing.Toolkit.DrawLine(dc, l.A, l.B, 1, primitive.Color);
+							break;
+                        }
+					case Shape.Rectangle:
+                        {
+							var r = primitive.AsRectangle();
+							InteropDrawing.Toolkit.DrawRectangle(dc, r.Location, r.Size, primitive.Color);
+							break;
+                        }
+					case Shape.Text:
+                        {
+							var style = new InteropDrawing.FontStyle(primitive.Color);
+							if (fontflip) style = style.With(InteropDrawing.FontAlignStyle.FlipVertical);
+
+							InteropDrawing.Toolkit.DrawFont(dc, primitive.A, fontsize, primitive.TextLine, style);
+							break;
+                        }
+                }
+            }
+        }
 
 		#endregion
 

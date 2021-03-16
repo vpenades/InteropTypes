@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
+
+  <ItemGroup>
+    <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0021" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+  </ItemGroup>
+
+</Project>

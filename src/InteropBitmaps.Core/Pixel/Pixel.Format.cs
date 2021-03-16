@@ -34,16 +34,22 @@ namespace InteropBitmaps
 
             #region constructors
 
-            public static implicit operator UInt32(Format fmt) { return fmt.PackedFormat; }
+            public static implicit operator UInt32(Format fmt) { return fmt.PackedFormat; }            
 
-            //public static implicit operator PixelFormat(UInt32 fmt) { return new PixelFormat(fmt); }
-
+            /// <summary>
+            /// Creates a new <see cref="Format"/> from a packed value.
+            /// </summary>
+            /// <param name="packedFormat">a raw packed value.</param>
             public Format(UInt32 packedFormat)
             {
                 _Element0 = _Element1 = _Element2 = _Element3 = 0;
                 PackedFormat = packedFormat;
             }
 
+            /// <summary>
+            /// Creates a new <see cref="Format"/> with one <see cref="PEF"/> channel.
+            /// </summary>
+            /// <param name="e0">The first channel format.</param>
             public Format(PEF e0)
             {
                 PackedFormat = 0;
@@ -53,6 +59,11 @@ namespace InteropBitmaps
                 _Validate();
             }
 
+            /// <summary>
+            /// Creates a new <see cref="Format"/> with two <see cref="PEF"/> channels.
+            /// </summary>
+            /// <param name="e0">The first channel format.</param>
+            /// <param name="e1">The second channel format.</param>
             public Format(PEF e0, PEF e1)
             {
                 PackedFormat = 0;
@@ -63,6 +74,12 @@ namespace InteropBitmaps
                 _Validate();
             }
 
+            /// <summary>
+            /// Creates a new <see cref="Format"/> with three <see cref="PEF"/> channels.
+            /// </summary>
+            /// <param name="e0">The first channel format.</param>
+            /// <param name="e1">The second channel format.</param>
+            /// <param name="e2">The third channel format.</param>
             public Format(PEF e0, PEF e1, PEF e2)
             {
                 PackedFormat = 0;
@@ -74,6 +91,13 @@ namespace InteropBitmaps
                 _Validate();
             }
 
+            /// <summary>
+            /// Creates a new <see cref="Format"/> with four <see cref="PEF"/> channels.
+            /// </summary>
+            /// <param name="e0">The first channel format.</param>
+            /// <param name="e1">The second channel format.</param>
+            /// <param name="e2">The third channel format.</param>
+            /// <param name="e3">The fourth channel format.</param>
             public Format(PEF e0, PEF e1, PEF e2, PEF e3)
             {
                 PackedFormat = 0;
@@ -148,6 +172,44 @@ namespace InteropBitmaps
                 }
 
                 throw new NotImplementedException();
+            }
+
+            public static unsafe Format TryIdentifyPixel<TPixel>() where TPixel:unmanaged
+            {
+                int byteSize = sizeof(TPixel);
+
+                switch(byteSize)
+                {
+                    case 1:
+                        if (typeof(TPixel) == typeof(Alpha8)) return Alpha8.Format;
+                        if (typeof(TPixel) == typeof(Luminance8)) return Luminance8.Format;
+                        break;
+                    case 2:
+                        if (typeof(TPixel) == typeof(BGR565)) return BGR565.Format;
+                        if (typeof(TPixel) == typeof(BGRA4444)) return BGRA4444.Format;
+                        if (typeof(TPixel) == typeof(BGRA5551)) return BGRA5551.Format;
+                        if (typeof(TPixel) == typeof(Luminance16)) return Luminance16.Format;
+                        break;
+                    case 3:
+                        if (typeof(TPixel) == typeof(BGR24)) return BGR24.Format;
+                        if (typeof(TPixel) == typeof(RGB24)) return RGB24.Format;
+                        break;
+                    case 4:
+                        if (typeof(TPixel) == typeof(BGRA32)) return BGRA32.Format;
+                        if (typeof(TPixel) == typeof(RGBA32)) return RGBA32.Format;
+                        if (typeof(TPixel) == typeof(ARGB32)) return ARGB32.Format;
+                        if (typeof(TPixel) == typeof(StdLuminance)) return StdLuminance.Format;
+                        break;
+                    case 24:
+                        if (typeof(TPixel) == typeof(VectorBGR)) return VectorBGR.Format;
+                        break;
+                    case 32:
+                        if (typeof(TPixel) == typeof(VectorBGRA)) return VectorBGRA.Format;
+                        if (typeof(TPixel) == typeof(VectorRGBA)) return VectorRGBA.Format;
+                        break;
+                }
+
+                return GetUndefined<TPixel>();
             }
 
             #endregion
@@ -235,6 +297,25 @@ namespace InteropBitmaps
                     return l;
                 }
             }
+
+            /// <summary>
+            /// Gets a value indicating whether this format is non empty
+            /// and all defined channels are not of "undefined type"
+            /// </summary>
+            public bool IsDefined
+            {
+                get
+                {
+                    if (PackedFormat == 0) return false;
+                    if (_Element0 > 0 && Element0.IsUndefined) return false;
+                    if (_Element1 > 0 && Element1.IsUndefined) return false;
+                    if (_Element2 > 0 && Element2.IsUndefined) return false;
+                    if (_Element3 > 0 && Element3.IsUndefined) return false;
+                    return true;
+                }
+            }
+
+            public bool HasAlpha => Element0.IsAlpha | Element1.IsAlpha | Element2.IsAlpha | Element3.IsAlpha;
 
             #endregion
 

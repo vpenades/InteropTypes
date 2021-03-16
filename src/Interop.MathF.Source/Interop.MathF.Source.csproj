@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoBuild>true</NoBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoWarn>CS8021</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ContentTargetFolders>contentFiles</ContentTargetFolders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="*.cs.pp" />
+    <Compile Remove="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="*.cs.pp">
+      <PackagePath>$(ContentTargetFolders)\cs\netstandard2.0</PackagePath>
+      <BuildAction>Compile</BuildAction>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="*.cs">
+      <PackagePath>$(ContentTargetFolders)\cs\netstandard2.0</PackagePath>
+      <BuildAction>Compile</BuildAction>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>

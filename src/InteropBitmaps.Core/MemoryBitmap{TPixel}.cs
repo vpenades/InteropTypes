@@ -42,7 +42,7 @@ namespace InteropBitmaps
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height) : this(width, height, Pixel.Format.GetUndefined<TPixel>()) { }
+        public MemoryBitmap(int width, int height) : this(width, height, Pixel.Format.TryIdentifyPixel<TPixel>()) { }
 
         public unsafe MemoryBitmap(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)            
         {
@@ -223,18 +223,30 @@ namespace InteropBitmaps
 
         public static MemoryBitmap<TPixel> Read(System.IO.Stream s, params Codecs.IBitmapDecoding[] factory)
         {
-            return MemoryBitmap.Read(s, factory).OfType<TPixel>();
+            var raw = MemoryBitmap.Read(s, factory);
+            if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
+
+            var fmt = raw.Info.WithPixelFormat<TPixel>();
+            var dst = new MemoryBitmap<TPixel>(fmt);
+            dst.AsTypeless().SetPixels(0, 0, raw);
+            return dst;
         }
 
         public static MemoryBitmap<TPixel> Load(string filePath, params Codecs.IBitmapDecoding[] factory)
         {
-            return MemoryBitmap.Load(filePath, factory).OfType<TPixel>();
+            var raw = MemoryBitmap.Load(filePath, factory);
+            if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
+
+            var fmt = raw.Info.WithPixelFormat<TPixel>();
+            var dst = new MemoryBitmap<TPixel>(fmt);
+            dst.AsTypeless().SetPixels(0, 0, raw);
+            return dst;
         }
 
         public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
         {
             this.AsSpanBitmap().Save(filePath, factory);
-        }
+        }        
 
         #endregion
     }

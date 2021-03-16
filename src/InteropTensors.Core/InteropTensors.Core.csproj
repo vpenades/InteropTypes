@@ -9,6 +9,7 @@
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
 
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
@@ -24,7 +25,7 @@
     <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
   </ItemGroup>  
   
-  <!-- Template -->
+  <!-- Templates -->
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
@@ -76,8 +77,6 @@
       <LastGenOutput>TensorIndicesX.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>    
-  </ItemGroup>
-
-  
+  </ItemGroup>  
 
 </Project>

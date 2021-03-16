@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>    
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>    
     <RootNamespace>InteropBitmaps</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -9,6 +9,7 @@
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
 
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

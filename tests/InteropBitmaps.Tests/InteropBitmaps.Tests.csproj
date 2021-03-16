@@ -6,20 +6,24 @@
     <RootNamespace>InteropBitmaps</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>8.0</LangVersion>
-  </PropertyGroup>  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resources\**" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>  
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="nunit" Version="3.13.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.1.20201229" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.1.20210210" />
     <PackageReference Include="SkiaSharp" Version="2.80.2" />
   </ItemGroup>
 
@@ -29,10 +33,10 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropBitmaps.Backends.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropBitmaps.Backends.SkiaSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.Takeuchi.FaceRecognition\InteropBitmaps.Backends.Takeuchi.FaceRecognition.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropBitmaps.Backends.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropBitmaps.Drawing.csproj" />
   </ItemGroup>
 
   <ItemGroup>

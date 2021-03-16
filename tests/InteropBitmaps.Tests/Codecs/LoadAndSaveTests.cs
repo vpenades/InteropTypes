@@ -76,7 +76,25 @@ namespace InteropBitmaps.Codecs
             Assert.AreEqual(512, img.Height);
         }
 
+        // [TestCase("Resources\\shannon.dds")]
+        [TestCase("Resources\\shannon.jpg")]
+        [TestCase("Resources\\shannon.tif")]
+        [TestCase("Resources\\shannon.psd")]
+        [TestCase("Resources\\shannon.ico")]
+        [TestCase("Resources\\shannon.webp")]
+        public void LoadWithConversion(string filePath)
+        {
+            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
+            var bgr = MemoryBitmap<Pixel.BGR24>.Load(filePath, Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
+            Assert.NotNull(bgr);
+
+            var rgb = MemoryBitmap<Pixel.BGR24>.Load(filePath, Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
+            Assert.NotNull(rgb);
+
+            Assert.AreEqual(512, bgr.Width);
+            Assert.AreEqual(512, bgr.Height);
+        }
 
         [Test]
         public void LoadWebpToImageSharp()
