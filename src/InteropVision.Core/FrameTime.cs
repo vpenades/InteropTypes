@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropModels
+namespace InteropVision
 {
     /// <summary>
     /// Represents an instant in time, expressed as a Delta Time from a base time initialized at startup.

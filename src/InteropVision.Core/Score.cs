@@ -6,22 +6,21 @@ using System.Text;
 
 using InteropTensors;
 
-namespace InteropModels
+namespace InteropVision
 {
     /// <summary>
     /// Represents the output score of an inference.
-    /// </summary>
-    /// <remarks>
-    /// Most inference models return a "score" that can be used to determine whether the output result
-    /// can be considered valid or not. The meaning of the score depends on each model and there's no
-    /// standard, with some models using a Sigmoid value, while others using completely arbitrary scales.
-    /// Also, the threshold for every score is also defined by every model. So this structure defines
-    /// both the raw output score, and whether it passed the thresold.
-    /// </remarks>
-    [System.Diagnostics.DebuggerDisplay("{Value} {IsValid}")]
+    /// </summary>    
+    [System.Diagnostics.DebuggerDisplay("{IsValid?✅:❎} {Value}")]
     public readonly struct Score : IComparable<Score>
     {
-        #region constructor        
+        #region constructor
+
+        public Score(bool isValid)
+        {            
+            IsValid = isValid;
+            Value = IsValid ? 1 : 0;
+        }
 
         public Score(float value, bool isValid)
         {            
@@ -43,23 +42,48 @@ namespace InteropModels
 
         #region data
 
+        /// <summary>
+        /// Arbitrary score value.
+        /// </summary>
+        /// <remarks>
+        /// Most inference models return a "score" that can be used to determine whether the output result
+        /// can be considered valid or not. The meaning of the score depends on each model and there's no
+        /// standard, with some models using a Sigmoid value, while others using completely arbitrary scales.
+        /// Also, the threshold for every score is also defined by every model. So this structure defines
+        /// both the raw output score, and whether it passed the thresold.
+        /// </remarks>
         public readonly float Value;
+
+        /// <summary>
+        /// A value indicating whether the score is considered valid or not.
+        /// </summary>
         public readonly bool IsValid;
 
-        public static readonly Score Zero = (1, false);
+        public static readonly Score Zero = (0, false);
+
         public static readonly Score Ok = (1, true);
 
         #endregion
 
         #region properties
 
-        public float Sigmoid => Value.Sigmoid();
+        /// <summary>
+        /// Gets the sigmoid of <see cref="Value"/>.
+        /// </summary>
+        public float ValueSigmoid => Sigmoid(Value);
 
         #endregion
 
         #region API
 
         public int CompareTo(Score other) { return this.Value.CompareTo(other.Value); }
+
+        #endregion
+
+        #region static API
+
+        public static float Sigmoid(float value) { return (float)(1 / (1 + Math.Exp(-value))); }
+        public static double Sigmoid(double value) { return 1 / (1 + Math.Exp(-value)); }
 
         #endregion
 

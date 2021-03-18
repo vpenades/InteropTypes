@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace InteropModels
+namespace InteropVision
 {
     static class _ReflectionUtils
     {

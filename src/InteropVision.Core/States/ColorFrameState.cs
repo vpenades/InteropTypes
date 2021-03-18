@@ -3,9 +3,9 @@ using System.Numerics;
 
 using InteropBitmaps;
 
-using DISPRIM = InteropModels.DisplayPrimitive;
+using DISPRIM = InteropVision.DisplayPrimitive;
 
-namespace InteropModels
+namespace InteropVision
 {
     public partial class ColorFrameState : DISPRIM.IBitmapSource
     {

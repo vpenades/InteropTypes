@@ -4,9 +4,9 @@ using System.Text;
 
 using InteropBitmaps;
 
-using DISPRIM = InteropModels.DisplayPrimitive;
+using DISPRIM = InteropVision.DisplayPrimitive;
 
-namespace InteropModels
+namespace InteropVision
 {
     public partial class DepthFrameState : DISPRIM.IBitmapSource
     {

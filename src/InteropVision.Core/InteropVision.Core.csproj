@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <RootNamespace>InteropModels</RootNamespace>    
+    <RootNamespace>InteropVision</RootNamespace>    
   </PropertyGroup>
 
   <Import Project="..\Package.props" />

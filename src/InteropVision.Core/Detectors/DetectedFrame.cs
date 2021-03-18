@@ -2,30 +2,30 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
-using System.Text;
 
-using InteropTensors;
+using RECTI = System.Drawing.Rectangle;
+using RECTF = System.Drawing.RectangleF;
 
-namespace InteropModels
+namespace InteropVision
 {
     [System.Diagnostics.DebuggerDisplay("T:{Time} S:{Score} Area:{Region.Width*Region.Height}")]
     public struct DetectedFrame
     {
         #region constructors
 
-        public static implicit operator DetectedFrame(Rectangle rect)
+        public static implicit operator DetectedFrame(RECTI rect)
         {
             return new DetectedFrame(rect, FrameTime.Now, Score.Ok);
         }
 
-        public DetectedFrame(RectangleF r, FrameTime t, Score s)
+        public DetectedFrame(RECTF r, FrameTime t, Score s)
         {
             Region = r;
             Time = t;
             Score = s;
         }
 
-        public DetectedFrame(RectangleF r, float rs, FrameTime t, Score s)
+        public DetectedFrame(RECTF r, float rs, FrameTime t, Score s)
         {
             Region = r;
             Time = t;
@@ -38,7 +38,7 @@ namespace InteropModels
 
         #region data
 
-        public RectangleF Region;
+        public RECTF Region;
         public FrameTime Time;
         public Score Score;        
 
@@ -66,17 +66,17 @@ namespace InteropModels
             return cc / (float)dt.TotalSeconds;
         }
 
-        public static RectangleF GetNextDetectionWindow(DetectedFrame t, float scaleFactor)
+        public static RECTF GetNextDetectionWindow(DetectedFrame t, float scaleFactor)
         {
             var c = t.Center;
             var ss = new Vector2(t.MaxSize * scaleFactor);
 
             c -= ss * 0.5f;
 
-            return new RectangleF(c.ToPoint(), ss.ToSize());
+            return new RECTF(c.ToPoint(), ss.ToSize());
         }
 
-        public static RectangleF GetNextDetectionWindow(DetectedFrame t0, DetectedFrame t1, float scaleFactor)
+        public static RECTF GetNextDetectionWindow(DetectedFrame t0, DetectedFrame t1, float scaleFactor)
         {
             var ctr0 = t1.Center;
             var siz0 = t1.MaxSize;
@@ -95,7 +95,7 @@ namespace InteropModels
 
             sss *= scaleFactor;
             ccc -= sss * 0.5f;
-            return new RectangleF(ccc.ToPoint(), sss.ToSize());
+            return new RECTF(ccc.ToPoint(), sss.ToSize());
         }
 
         public static void RemoveOverlapping(IList<DetectedFrame> frames)
@@ -107,7 +107,7 @@ namespace InteropModels
                     var ii = frames[i];
                     var jj = frames[j];
 
-                    var overlap = RectangleF.Intersect(ii.Region, jj.Region);
+                    var overlap = RECTF.Intersect(ii.Region, jj.Region);
                     if (overlap.IsEmpty) continue;
 
                     if (ii.Score < jj.Score) { frames.RemoveAt(i); break; }

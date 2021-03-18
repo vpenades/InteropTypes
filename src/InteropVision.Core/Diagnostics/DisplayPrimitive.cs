@@ -16,7 +16,7 @@ using SIZEF = System.Drawing.SizeF;
 
 using POINT = InteropDrawing.Point2;
 
-namespace InteropModels
+namespace InteropVision
 {
 	[DebuggerDisplay("{GetShapeType()}")]
 	public struct DisplayPrimitive

@@ -4,7 +4,7 @@ using System.Text;
 
 using InteropBitmaps;
 
-namespace InteropModels.IO
+namespace InteropVision.IO
 {
     /// <summary>
     /// Represents the base class for an object or device able to stream a sequence of video frames.

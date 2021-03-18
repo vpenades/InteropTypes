@@ -8,7 +8,7 @@ using InteropBitmaps;
 
 using InteropTensors;
 
-namespace InteropModels
+namespace InteropVision
 {
     public static partial class _Extensions
     {

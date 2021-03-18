@@ -9,12 +9,11 @@ using XYZ = System.Numerics.Vector3;
 using RECT = System.Drawing.Rectangle;
 using RECTF = System.Drawing.RectangleF;
 
-namespace InteropModels
+namespace InteropVision
 {
     public static partial class _Extensions
     {
-        public static float Sigmoid(this float value) { return (float)(1 / (1 + Math.Exp(-value))); }
-        public static double Sigmoid(this double value) { return 1 / (1 + Math.Exp(-value)); }
+        
 
         public static XY SelectXY(this XYZ v) { return new XY(v.X, v.Y); }
 

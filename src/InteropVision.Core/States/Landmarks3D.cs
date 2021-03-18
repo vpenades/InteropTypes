@@ -10,10 +10,10 @@ using InteropTensors;
 using XY = System.Numerics.Vector2;
 using XYZ = System.Numerics.Vector3;
 
-using DISPRIM = InteropModels.DisplayPrimitive;
+using DISPRIM = InteropVision.DisplayPrimitive;
 
 
-namespace InteropModels
+namespace InteropVision
 {
     public class Landmarks3D : DISPRIM.ISource
     {

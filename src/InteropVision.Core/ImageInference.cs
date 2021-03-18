@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
-
-using RECT = System.Drawing.Rectangle;
 using System.Numerics;
 
-namespace InteropModels
+using RECT = System.Drawing.Rectangle;
+
+
+namespace InteropVision
 {
     /// <summary>
     /// Represents the input image for an inference engine.

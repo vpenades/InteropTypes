@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using InteropBitmaps;
+
 using InteropTensors;
 
-namespace InteropModels
+namespace InteropVision
 {
-    public delegate IModelGraph ModelReadCallback(string name, Byte[] data, TensorImageSettings? settings);    
-
-    
+    public delegate IModelGraph ModelReadCallback(string name, Byte[] data, TensorImageSettings? settings);
 
     public interface IModelGraph : IDisposable
     {

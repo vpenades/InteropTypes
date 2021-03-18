@@ -18,7 +18,7 @@ using RECTF = System.Drawing.RectangleF;
 
 using XY = System.Numerics.Vector2;
 
-namespace InteropModels
+namespace InteropVision
 {
     public static partial class Extensions
     {

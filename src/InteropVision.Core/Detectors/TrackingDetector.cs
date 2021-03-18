@@ -9,7 +9,7 @@ using System.Text;
 using InteropBitmaps;
 using InteropTensors;
 
-namespace InteropModels
+namespace InteropVision
 {    
     /// <summary>
     /// Combines a broad and a narrow detector.

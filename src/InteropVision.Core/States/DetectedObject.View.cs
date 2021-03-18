@@ -6,12 +6,12 @@ using System.Numerics;
 
 using XY = System.Numerics.Vector2;
 
-using SCORE = InteropModels.Score;
+using SCORE = InteropVision.Score;
 using RECTI = System.Drawing.Rectangle;
 using RECTF = System.Drawing.RectangleF;
 using COLOR = System.Drawing.Color;
 
-namespace InteropModels
+namespace InteropVision
 {
     partial struct DetectedObject
     {
