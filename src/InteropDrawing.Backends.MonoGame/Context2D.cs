@@ -75,8 +75,10 @@ namespace InteropDrawing.Backends
 
         #region API
 
-        public Texture2D FetchTexture(string imagePath)
+        public Texture2D FetchTexture(Object imageSource)
         {
+            var imagePath = imageSource as string;
+
             if (_Textures.TryGetValue(imagePath, out Texture2D tex)) return tex;
 
             using (var s = System.IO.File.OpenRead(imagePath))

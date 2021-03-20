@@ -5,13 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Numerics;
 
-using InteropTensors;
-
-using XY = System.Numerics.Vector2;
 using XYZ = System.Numerics.Vector3;
 
 using DISPRIM = InteropVision.DisplayPrimitive;
-
 
 namespace InteropVision
 {
@@ -48,6 +44,10 @@ namespace InteropVision
 
         public IReadOnlyList<XYZ> Landmarks => _Landmarks ?? Array.Empty<XYZ>();
 
+        /// <summary>
+        /// Represents the bounds of the landmarks defined by <see cref="_InnerIndices"/>.<br/>
+        /// Otherwise, it's the same as OuterBounds.
+        /// </summary>
         public RectangleF InnerBounds
         {
             get
@@ -71,6 +71,9 @@ namespace InteropVision
             }
         }
 
+        /// <summary>
+        /// Represents the landmarks bounds in the XY Axis.
+        /// </summary>
         public RectangleF OuterBounds
         {
             get

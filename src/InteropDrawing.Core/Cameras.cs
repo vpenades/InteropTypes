@@ -204,10 +204,6 @@ namespace InteropDrawing
 
         public static CameraProjection3D CreateOrtho(SIZE viewport, Matrix4x4 camMatrix)
         {
-
-
-
-
             // create world-to-view transform
             Matrix4x4.Invert(camMatrix, out Matrix4x4 viewMatrix);
 
@@ -242,20 +238,7 @@ namespace InteropDrawing
             return new CameraProjection3D(projFunc, frustumNearPlane);
         }
 
-        public static CameraProjection3D Create(Transforms.ProjectPointCallback projfunc, XYZ cameraPosition, XYZ cameraAdvancePosition)
-        {
-            var direction = XYZ.Normalize(cameraAdvancePosition - cameraPosition);
-            var plane = new PLANE(direction, -XYZ.Dot(direction, cameraPosition));
-
-            return Create(projfunc, plane);
-        }
-
-        public static CameraProjection3D Create(Transforms.ProjectPointCallback projfunc, PLANE frustumNearPlane)
-        {
-            if (projfunc == null) return null;
-            return new CameraProjection3D(projfunc, frustumNearPlane);
-        }
-
+        
         private CameraProjection3D(Transforms.ProjectPointCallback proj, PLANE np)
         {
             _ProjFunc = proj;

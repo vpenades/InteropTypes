@@ -135,13 +135,16 @@ namespace InteropDrawing
     {
         public _Model2DProxy(Model2D src) : base(src._Commands) { ImmutableKey = src.ImmutableKey; }
 
-        public object ImmutableKey {get;}
+        public object ImmutableKey { get; }
     }
 
     /// <summary>
+    /// Represents the version key of a <see cref="Model2D"/>.
+    /// </summary>
+    /// <remarks>
     /// Stores computationally expensive resources of a given version of a <see cref="Model3D"/>
     /// and also serves as <see cref="Model3D.ImmutableKey"/> underlaying object.
-    /// </summary>
+    /// </remarks>
     sealed class Model2DVersionKey
     {
         #region constructor

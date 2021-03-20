@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using System.Numerics;
 
-using XY = System.Numerics.Vector2;
-
-using SCORE = InteropVision.Score;
-using RECTI = System.Drawing.Rectangle;
 using RECTF = System.Drawing.RectangleF;
-using COLOR = System.Drawing.Color;
 
 namespace InteropVision
 {

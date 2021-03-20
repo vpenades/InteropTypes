@@ -8,20 +8,19 @@ namespace InteropVision
     /// Represents an instant in time, expressed as a Delta Time from a base time initialized at startup.
     /// </summary>
     /// <remarks>
-    /// <see cref="FrameTime"/> is essentially the same as <see cref="DateTime"/> but with the precission of a <see cref="TimeSpan"/>
+    /// <see cref="FrameTime"/> is essentially the same as <see cref="DateTime"/>
+    /// but with the precission of a <see cref="TimeSpan"/>
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{RelativeTime}")]
     public readonly struct FrameTime
     {
         #region static        
 
-        public FrameTime(TimeSpan relative) { RelativeTime = relative; }        
-
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private static System.Diagnostics.Stopwatch _Timer;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        private static DateTime _BaseTime;        
+        private static DateTime _BaseTimeUTC;        
 
         private static void _EnsureRunning()
         {
@@ -33,7 +32,19 @@ namespace InteropVision
             _Timer.Restart();
             var b = DateTime.UtcNow;
 
-            _BaseTime = a + new TimeSpan((b - a).Ticks / 2);
+            _BaseTimeUTC = a + new TimeSpan((b - a).Ticks / 2);
+        }
+
+        #endregion
+
+        #region constructor
+
+        public FrameTime(TimeSpan relative) { RelativeTime = relative; }
+
+        public FrameTime(DateTime absolute)
+        {
+            _EnsureRunning();
+            RelativeTime = absolute.ToUniversalTime() - _BaseTimeUTC;
         }
 
         #endregion
@@ -59,12 +70,17 @@ namespace InteropVision
         #region data
 
         public readonly TimeSpan RelativeTime;        
+
+        /// <inheritdoc />        
         public override int GetHashCode() => RelativeTime.GetHashCode();
 
         #endregion
 
         #region properties
 
+        /// <summary>
+        /// Gets current the current time.        
+        /// </summary>
         public static FrameTime Now
         {
             get
@@ -77,19 +93,19 @@ namespace InteropVision
         /// <summary>
         /// Time Origin, in UTC
         /// </summary>
-        public static DateTime BaseTime
+        public static DateTime BaseTimeUTC
         {
             get
             {
                 _EnsureRunning();
-                return _BaseTime;
+                return _BaseTimeUTC;
             }
         }
 
         /// <summary>
         /// Time in UTC
         /// </summary>
-        public DateTime AbsoluteTime => BaseTime + RelativeTime;
+        public DateTime AbsoluteTimeUTC => BaseTimeUTC + RelativeTime;
 
         #endregion
     }

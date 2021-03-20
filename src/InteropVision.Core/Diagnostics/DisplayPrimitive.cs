@@ -7,13 +7,6 @@ using System.Numerics;
 
 using InteropBitmaps;
 
-using XY = System.Numerics.Vector2;
-using XYZ = System.Numerics.Vector3;
-using POINTI = System.Drawing.Point;
-using POINTF = System.Drawing.PointF;
-using SIZEI = System.Drawing.Size;
-using SIZEF = System.Drawing.SizeF;
-
 using POINT = InteropDrawing.Point2;
 
 namespace InteropVision
@@ -147,10 +140,10 @@ namespace InteropVision
 			return new RectangleF(A.ToGDIPoint(), (B.ToNumerics() - A.ToNumerics()).ToSize());
 		}
 
-		public (POINTF A, POINTF B) AsLine()
+		public (POINT A, POINT B) AsLine()
 		{
 			if (!IsLine) throw new InvalidOperationException();
-			return (A.ToGDIPoint(), B.ToGDIPoint());
+			return (A, B);
 		}
 
 		public static void Draw(InteropDrawing.IDrawing2D dc, IEnumerable<DisplayPrimitive> primitives, float fontsize = 1, bool fontflip = false)

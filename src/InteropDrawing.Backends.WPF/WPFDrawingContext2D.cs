@@ -39,7 +39,7 @@ namespace InteropDrawing.Backends
 
         private readonly Dictionary<Int32, System.Windows.Media.SolidColorBrush> _BrushesCache = new Dictionary<Int32, System.Windows.Media.SolidColorBrush>();
 
-        private readonly Dictionary<string, System.Windows.Media.Imaging.BitmapSource> _ImagesCache = new Dictionary<string, System.Windows.Media.Imaging.BitmapSource>();
+        private readonly Dictionary<Object, System.Windows.Media.Imaging.BitmapSource> _ImagesCache = new Dictionary<Object, System.Windows.Media.Imaging.BitmapSource>();
 
         #endregion
 
@@ -78,11 +78,13 @@ namespace InteropDrawing.Backends
             return pen;
         }        
 
-        private System.Windows.Media.Imaging.BitmapSource _UseImage(string filePath)
+        private System.Windows.Media.Imaging.BitmapSource _UseImage(object imageKey)
         {
-            if (_ImagesCache.TryGetValue(filePath, out System.Windows.Media.Imaging.BitmapSource image)) return image;
+            if (_ImagesCache.TryGetValue(imageKey, out System.Windows.Media.Imaging.BitmapSource image)) return image;
 
-            using (var s = System.IO.File.OpenRead(filePath))
+            var imagePath = imageKey as String;
+
+            using (var s = System.IO.File.OpenRead(imagePath))
             {
                 if (true)
                 {
@@ -102,7 +104,7 @@ namespace InteropDrawing.Backends
 
             image.Freeze();
 
-            _ImagesCache[filePath] = image;
+            _ImagesCache[imageKey] = image;
 
             return image;            
         }

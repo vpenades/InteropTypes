@@ -8,12 +8,18 @@ namespace InteropDrawing.Transforms
 {
     /// <summary>
     /// Creates a transformation that renders 3D content over a <see cref="IDrawing2D"/> surface.
-    /// Keep in mind that direct calls to this <see cref="IDrawing3D"/> will render the primitives
-    /// directly to to the underlaying <see cref="IDrawing2D"/> surface. So if we need to render
-    /// the primitives from back to front, it's better to render the scene in two steps:
-    /// - Draw the 3D scene to a temporary <see cref="Model3D"/>
-    /// - Render the temporary <see cref="Model3D"/> using <see cref="DrawScene(Model3D, bool)"/>    
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Direct calls to this <see cref="IDrawing3D"/> will render the primitives directly to the<br/>
+    /// underlaying <see cref="IDrawing2D"/> surface. So if we need to render the primitives<br/>
+    /// from back to front, it's better to render the scene in two steps:
+    /// <list type="number">
+    /// <item>Draw the 3D scene to a temporary <see cref="Model3D"/></item>
+    /// <item>Render the temporary <see cref="Model3D"/> using <see cref="DrawScene(Model3D, bool)"/></item>
+    /// </list>
+    /// </para>
+    /// </remarks>
     class PerspectiveTransform : IDrawing3D
     {
         #region lifecycle

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace InteropVision.IO
 {
+    /// <summary>
+    /// Helper Frame Rate counter.
+    /// </summary>
     [System.Diagnostics.DebuggerDisplay("Fps:{FrameRate}")]
     public class FrameRateCounter
     {

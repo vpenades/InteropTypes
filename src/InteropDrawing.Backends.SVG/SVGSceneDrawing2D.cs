@@ -47,32 +47,34 @@ namespace InteropDrawing.Backends
         private bool _CanRenderBitmaps;
 
         private readonly Dictionary<Int32, BRUSH> _Brushes = new Dictionary<Int32, BRUSH>();
-        private readonly Dictionary<string, IMAGE> _Images = new Dictionary<string, IMAGE>();
+        private readonly Dictionary<Object, IMAGE> _Images = new Dictionary<Object, IMAGE>();
 
         #endregion
 
         #region resources        
 
-        private BRUSH _UseBrush(COLOR color)
+        private BRUSH _UseBrush(COLOR colorKey)
         {
-            var key = color.ToArgb();
+            var key = colorKey.ToArgb();
 
             if (_Brushes.TryGetValue(key, out BRUSH b)) return b;
 
-            b = new System.Drawing.SolidBrush(color);
+            b = new System.Drawing.SolidBrush(colorKey);
 
             _Brushes[key] = b;
 
             return b;
         }
 
-        private IMAGE _UseImage(string key)
+        private IMAGE _UseImage(object imageKey)
         {
-            if (_Images.TryGetValue(key, out IMAGE b)) return b;
+            if (_Images.TryGetValue(imageKey, out IMAGE b)) return b;
 
-            b = IMAGE.FromFile(key); // make a lambda for it
+            var imagePath = imageKey as String;
 
-            _Images[key] = b;
+            b = IMAGE.FromFile(imagePath); // make a lambda for it
+
+            _Images[imageKey] = b;
 
             return b;
         }

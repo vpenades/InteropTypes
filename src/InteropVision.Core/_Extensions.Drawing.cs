@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using System.Numerics;
 
 // these types are defined in NeStandard2 by default, and available through System.Drawing.Primitives.
 // why these types are also available in System.Drawing.Common is a mistery...
@@ -20,6 +19,7 @@ using XY = System.Numerics.Vector2;
 
 namespace InteropVision
 {
+    [Obsolete]
     public static partial class Extensions
     {
         public static XY ToVector2(this POINTI point) { return new XY(point.X, point.Y); }

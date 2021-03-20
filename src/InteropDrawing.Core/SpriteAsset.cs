@@ -5,9 +5,12 @@ using System.Text;
 namespace InteropDrawing
 {
     /// <summary>
-    /// A graphic resource defined as a bitmap source and a region within that bitmap that can be
-    /// used to display small bitmaps or "sprites" using <see cref="ISpritesDrawing2D"/>
+    /// Represents a graphic resource defined as a bitmap source and a region within that bitmap.
     /// </summary>
+    /// <remarks>
+    /// <see cref="SpriteAsset"/> is part of <see cref="SpriteStyle"/>, which can be used with<br/>
+    /// <see cref="IDrawing2D.DrawSprite(in System.Numerics.Matrix3x2, in SpriteStyle)"/>.
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Source} ({Left}, {Top}) ({Width}, {Height}) Scale:{Scale}")]
     public sealed class SpriteAsset
     {
@@ -58,14 +61,14 @@ namespace InteropDrawing
         #region data
 
         /// <summary>
-        /// The source asset that contains the <see cref="SpriteAsset"/>; it can be an image path, a resource, etc
+        /// Is, references, or points to the actual bitmap.
         /// </summary>
         /// <remarks>
-        /// Source should be an object
-        /// if source is System.IO.FileInfo then it should load the file
-        /// string should be reserved to lambdas
+        /// This property can be cast to different data types depending on the context:<br/>
+        /// If it's a <see cref="String"/> or a <see cref="System.IO.FileInfo"/> it can point<br/>
+        /// to an image in the file system. Or, if it's a raw bitmap, it can be used directly.
         /// </remarks>
-        public string Source { get; private set; }
+        public Object Source { get; private set; }
 
         /// <summary>
         /// Gets the Left pixel coordinate within the <see cref="Source"/> asset.
@@ -109,12 +112,15 @@ namespace InteropDrawing
 
         #region properties
 
+        /// <summary>
+        /// Gets a value indicating whether this asset can be rendered.
+        /// </summary>
         public bool IsVisible
         {
             get
             {
-                if (this.Scale == 0) return false;
-                if (string.IsNullOrWhiteSpace(Source)) return false;
+                if (this.Source == null) return false;
+                if (this.Scale == 0) return false;                
                 if (this.Width == 0 || this.Height == 0) return false;
                 return true;
             }

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 
 using COLOR = System.Drawing.Color;
-using XY = System.ValueTuple<float, float>;
-using XYZ = System.ValueTuple<float, float, float>;
 using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
 using VECTOR4 = System.Numerics.Vector4;

@@ -13,8 +13,6 @@ namespace InteropVision
 {
     public static partial class _Extensions
     {
-        
-
         public static XY SelectXY(this XYZ v) { return new XY(v.X, v.Y); }
 
         public static (XYZ min, XYZ max) MinMax(this IEnumerable<XYZ> points)

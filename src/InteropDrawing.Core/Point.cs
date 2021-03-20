@@ -13,6 +13,12 @@ using VECTOR3 = System.Numerics.Vector3;
 
 namespace InteropDrawing
 {
+    /// <summary>
+    /// Represents a vector with two single-precision floating-point values.
+    /// </summary>
+    /// <remarks>
+    /// Equivalent to <b>(float,float)</b> <see cref="VECTOR2"/>, <see cref="GDIPOINTF"/> and <see cref="GDISIZEF"/>.
+    /// </remarks>
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [System.Diagnostics.DebuggerDisplay("{X} {Y}")]
     public struct Point2
@@ -132,6 +138,12 @@ namespace InteropDrawing
         #endregion
     }
 
+    /// <summary>
+    /// Represents a vector with three single-precision floating-point values.
+    /// </summary>
+    /// <remarks>
+    /// Equivalent to <b>(float,float, float)</b> and <see cref="VECTOR3"/>.
+    /// </remarks>
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [System.Diagnostics.DebuggerDisplay("{X} {Y} {Z}")]
     public struct Point3
@@ -184,6 +196,9 @@ namespace InteropDrawing
         #endregion
 
         #region API
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3 Normalized() { return VECTOR3.Normalize(new VECTOR3(X, Y, Z)); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2 SelectXY() { return new Point2(X, Y); }

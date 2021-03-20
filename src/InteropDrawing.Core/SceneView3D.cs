@@ -21,7 +21,7 @@ namespace InteropDrawing
             return new SceneView3D { _CameraMatrix = xform };
         }
 
-        public SceneView3D WithSceneBounds((Vector3 Min, Vector3 Max) bounds)
+        public SceneView3D WithSceneBounds((Point3 Min, Point3 Max) bounds)
         {
             this.SetSceneBounds(bounds);
             return this;
@@ -40,7 +40,7 @@ namespace InteropDrawing
         private Matrix4x4? _CameraMatrix;
         private Vector3? _CameraPosition;
 
-        private (Vector3 Min, Vector3 Max)? _SceneBounds;
+        private (Point3 Min, Point3 Max)? _SceneBounds;
 
         // When Positive: Perspective Vertical FOV in radians
         // When Negative: Ortographic Vertical Scale
@@ -118,7 +118,7 @@ namespace InteropDrawing
             _ImmutableKey = null;
         }
 
-        public void SetSceneBounds((Vector3 Min, Vector3 Max) bounds)
+        public void SetSceneBounds((Point3 Min, Point3 Max) bounds)
         {
             _SceneBounds = bounds;
             _ImmutableKey = null;
@@ -164,13 +164,13 @@ namespace InteropDrawing
             return Matrix4x4.Identity;
         }
 
-        private Matrix4x4 _GetLookingCamera(Vector3 campos)
+        private Matrix4x4 _GetLookingCamera(Point3 campos)
         {
             var sceneCenter = _SceneBounds.HasValue ? (_SceneBounds.Value.Max - _SceneBounds.Value.Min) * 0.5f : Vector3.Zero;
-            return Matrix4x4.CreateWorld(campos, Vector3.Normalize(sceneCenter - campos), Vector3.UnitY);
+            return Matrix4x4.CreateWorld(campos.ToNumerics(), (sceneCenter - campos).Normalized().ToNumerics(), Vector3.UnitY);
         }
 
-        private static Matrix4x4 _GetOptimalCamera(Vector3 min, Vector3 max)
+        private static Matrix4x4 _GetOptimalCamera(Point3 min, Point3 max)
         {
             var center = (min + max) * 0.5f;
             var size = (max - min);
@@ -187,7 +187,7 @@ namespace InteropDrawing
 
             var forward = -Vector3.Normalize(new Vector3(rx, ry, rz));
 
-            return Matrix4x4.CreateWorld(center - forward * distance, forward, Vector3.UnitY);
+            return Matrix4x4.CreateWorld((center - forward * distance).ToNumerics(), forward, Vector3.UnitY);
         }
 
         #endregion        

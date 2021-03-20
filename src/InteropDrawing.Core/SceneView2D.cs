@@ -16,7 +16,7 @@ namespace InteropDrawing
             return new SceneView2D { _CameraMatrix = xform };            
         }
 
-        public SceneView2D WithSceneBounds((Vector2 Min, Vector2 Max) bounds)
+        public SceneView2D WithSceneBounds((Point2 Min, Point2 Max) bounds)
         {
             this.SetSceneBounds(bounds);
             return this;
@@ -34,7 +34,7 @@ namespace InteropDrawing
 
         private Matrix3x2? _CameraMatrix;
 
-        private (Vector2 Min, Vector2 Max)? _SceneBounds;        
+        private (Point2 Min, Point2 Max)? _SceneBounds;        
 
         private Object _ImmutableKey;
 
@@ -84,7 +84,7 @@ namespace InteropDrawing
 
         public void Invalidate() { _ImmutableKey = null; }
 
-        public void SetSceneBounds((Vector2 Min, Vector2 Max) bounds)
+        public void SetSceneBounds((Point2 Min, Point2 Max) bounds)
         {
             this._SceneBounds = bounds;
             this._ImmutableKey = null;
@@ -135,12 +135,12 @@ namespace InteropDrawing
             return Matrix3x2.Identity;
         }
 
-        protected static Matrix3x2 GetOptimalCamera(Vector2 min, Vector2 max)
+        protected static Matrix3x2 GetOptimalCamera(Point2 min, Point2 max)
         {
             // camera located at the center of the scene.
 
             var center = (min + max) * 0.5f;
-            return Matrix3x2.CreateTranslation(center);
+            return Matrix3x2.CreateTranslation(center.ToNumerics());
         }
 
         #endregion        

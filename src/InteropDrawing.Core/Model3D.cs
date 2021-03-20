@@ -12,6 +12,7 @@ namespace InteropDrawing
     /// <summary>
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IDrawing3D"/> target.
     /// </summary>
+    [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
     public class Model3D : IDrawing3D, IPseudoImmutable
     {
         #region data
@@ -164,10 +165,20 @@ namespace InteropDrawing
         #endregion
     }
 
+    sealed class _Model3DProxy : _CommandStream3D_DebuggerProxy
+    {
+        public _Model3DProxy(Model3D src) : base(src._Commands) { ImmutableKey = src.ImmutableKey; }
+
+        public object ImmutableKey { get; }
+    }
+
     /// <summary>
+    /// Represents the version key of a <see cref="Model3D"/>.
+    /// </summary>
+    /// <remarks>
     /// Stores computationally expensive resources of a given version of a <see cref="Model3D"/>
     /// and also serves as <see cref="Model3D.ImmutableKey"/> underlaying object.
-    /// </summary>
+    /// </remarks>
     sealed class Model3DVersionKey
     {
         #region constructor

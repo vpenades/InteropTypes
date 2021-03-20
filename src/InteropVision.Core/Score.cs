@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-using InteropTensors;
-
 namespace InteropVision
 {
     /// <summary>
