@@ -93,7 +93,7 @@ namespace InteropDrawing
 
         #region drawing        
 
-        public static void DrawSurface(this IDrawing3D dc, SurfaceStyle brush, params Point3[] points)
+        public static void DrawSurface(this ISurfaceDrawing3D dc, SurfaceStyle brush, params Point3[] points)
         {
             dc.DrawSurface(points, brush);
         }        
@@ -256,9 +256,9 @@ namespace InteropDrawing
 
         #endregion
 
-        #region surface drawing
+        #region primitive decomposition
 
-        public static void DrawCylinderAsSurfaces(this IDrawing3D dc, Point3 a, Single diameterA, Point3 b, Single diameterB, int divisions, LineStyle brush)
+        public static void DrawCylinderAsSurfaces(this ISurfaceDrawing3D dc, Point3 a, Single diameterA, Point3 b, Single diameterB, int divisions, LineStyle brush)
         {
             var outr = Math.Abs(brush.Style.OutlineWidth);
 
@@ -298,7 +298,7 @@ namespace InteropDrawing
             }
         }
 
-        public static void DrawSphereAsSurfaces(this IDrawing3D dc, Point3 center, Single diameter, int lod, ColorStyle brush)
+        public static void DrawSphereAsSurfaces(this ISurfaceDrawing3D dc, Point3 center, Single diameter, int lod, ColorStyle brush)
         {
             lod = lod.Clamp(1, 5); // more than 5 lods will create way too many polygons
 
@@ -333,7 +333,7 @@ namespace InteropDrawing
 
         #region internals
 
-        private static void _DrawCylinderInternal(this IDrawing3D dc, VECTOR3 a, Single aradius, VECTOR3 b, Single bradius, int divisions, COLOR color, bool flipFaces, LineCapStyle startCap, LineCapStyle endCap)
+        private static void _DrawCylinderInternal(this ISurfaceDrawing3D dc, VECTOR3 a, Single aradius, VECTOR3 b, Single bradius, int divisions, COLOR color, bool flipFaces, LineCapStyle startCap, LineCapStyle endCap)
         {
             if (aradius < 0.0001f && bradius < 0.0001f)
             {
@@ -419,7 +419,7 @@ namespace InteropDrawing
             return MathF.Sqrt(circleArea * 2 / divisions * k);
         }
 
-        private static void _DrawCylinderCap(IDrawing3D dc, SurfaceStyle brush, LineCapStyle cap, VECTOR3 center, VECTOR3 axis, Span<Point3> corners)
+        private static void _DrawCylinderCap(ISurfaceDrawing3D dc, SurfaceStyle brush, LineCapStyle cap, VECTOR3 center, VECTOR3 axis, Span<Point3> corners)
         {
             switch (cap)
             {

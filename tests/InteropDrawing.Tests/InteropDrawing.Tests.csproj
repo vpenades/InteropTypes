@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.GLTF\InteropDrawing.Backends.GLTF.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropDrawing.Backends.MonoGame.csproj" />
+    <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropDrawing.Backends.Plotly.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.WPF\InteropDrawing.Backends.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Core\InteropDrawing.Core.csproj" />

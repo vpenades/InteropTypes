@@ -63,6 +63,7 @@ namespace InteropDrawing
                 srcScene.DrawTo(new Transforms.PlaneClip3D(dstScene, new Plane(Vector3.UnitX, i)));
 
                 dstScene.AttachToCurrentTest($"{sceneName}_{i}.glb");
+                dstScene.AttachToCurrentTest($"{sceneName}_{i}.html");
             }
         }
 
@@ -156,9 +157,9 @@ namespace InteropDrawing
         [TestCase("Thunderbird1")]
         public void TestRender3DSceneToBitmap(string sceneName)
         {
-            var path = TestContext.CurrentContext.GetFilePath($"{sceneName}.png");
-
             var scene = SceneFactory.CreateScene3D(sceneName);
+
+            var path = TestContext.CurrentContext.GetFilePath($"{sceneName}.png");
 
             Backends.WPFDrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
 
@@ -176,6 +177,7 @@ namespace InteropDrawing
             scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, -10), SceneFactory.CreateScene3D(sceneName));
             scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, 0), SceneFactory.CreateScene3D(sceneName));
             scene.AttachToCurrentTest("scene.glb");
+            scene.AttachToCurrentTest("scene.html");
 
             using (var dc = renderTarget.OpenDrawingContext())
             {

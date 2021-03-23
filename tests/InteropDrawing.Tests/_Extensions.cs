@@ -69,11 +69,20 @@ namespace InteropDrawing
                 */
             }
 
+            if (filePath.ToLower().EndsWith(".html"))
+            {
+                var html = Backends.PlotlyDocumentBuilder.ConvertToHtml(batch);
+                System.IO.File.WriteAllText(filePath, html);
+                NUnit.Framework.TestContext.AddTestAttachment(filePath);
+            }
+
             if (filePath.ToLower().EndsWith(".gltf") || filePath.ToLower().EndsWith(".glb") || filePath.ToLower().EndsWith(".obj"))
             {
-                var context = Backends.GLTFSceneDrawing3D.Create();
-                batch.DrawTo(context);
-                context.Save(filePath);
+                Backends.GltfSceneBuilder
+                    .Convert(batch)
+                    .ToGltf2()
+                    .Save(filePath);
+                
                 NUnit.Framework.TestContext.AddTestAttachment(filePath);
                 return;
             }

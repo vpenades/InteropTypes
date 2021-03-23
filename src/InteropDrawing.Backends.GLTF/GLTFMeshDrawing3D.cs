@@ -16,13 +16,13 @@ namespace InteropDrawing.Backends
     /// <summary>
     /// Wraps a <see cref="MESHBUILDER"/> with <see cref="IDrawing3D"/>.
     /// </summary>
-    public class GLTFMeshDrawing3D : IDrawing3D
+    public class GltfMeshDrawing3D : IDrawing3D
     {
         #region data
 
-        private MESHBUILDER _Mesh = new MESHBUILDER();        
+        private MESHBUILDER _Mesh;        
 
-        private readonly Dictionary<GLTFSolidMaterial, SharpGLTF.Materials.MaterialBuilder> _Materials = new Dictionary<GLTFSolidMaterial, SharpGLTF.Materials.MaterialBuilder>();
+        private readonly Dictionary<GltfSolidMaterial, SharpGLTF.Materials.MaterialBuilder> _Materials = new Dictionary<GltfSolidMaterial, SharpGLTF.Materials.MaterialBuilder>();
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace InteropDrawing.Backends
         /// <summary>
         /// true if the mesh is empty.
         /// </summary>
-        public bool IsEmpty => !_Mesh.Primitives.Any(item => item.Vertices.Count > 0);
+        public bool IsEmpty => _Mesh == null || !_Mesh.Primitives.Any(item => item.Vertices.Count > 0);
 
         /// <summary>
         /// Gets or sets the quality of Cylinders
@@ -51,6 +51,8 @@ namespace InteropDrawing.Backends
         #endregion
 
         #region API
+
+        public void Clear() { _Mesh = null; }
 
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
         {
@@ -92,7 +94,9 @@ namespace InteropDrawing.Backends
 
         private void _DrawSurface(ReadOnlySpan<POINT3> vertices, COLOR color, Boolean doubleSided)
         {
-            var material = UseMaterial(color, doubleSided);
+            if (_Mesh == null) _Mesh = new MESHBUILDER();
+
+            var material = _UseMaterial(color, doubleSided);
             var prim = _Mesh.UsePrimitive(material);
 
             var a = new VERTEXBUILDER(vertices[0].ToNumerics());
@@ -117,7 +121,9 @@ namespace InteropDrawing.Backends
 
         private void _DrawLine(POINT3 a, POINT3 b, COLOR color)
         {
-            var material = UseMaterial(color, false);
+            if (_Mesh == null) _Mesh = new MESHBUILDER();
+
+            var material = _UseMaterial(color, false);
 
             var prim = _Mesh.UsePrimitive(material, 2);
 
@@ -127,9 +133,9 @@ namespace InteropDrawing.Backends
             prim.AddLine(aa, bb);
         }
 
-        private SharpGLTF.Materials.MaterialBuilder UseMaterial(COLOR color, bool doubleSided)
+        private SharpGLTF.Materials.MaterialBuilder _UseMaterial(COLOR color, bool doubleSided)
         {
-            var mkey = new GLTFSolidMaterial(color, doubleSided);
+            var mkey = new GltfSolidMaterial(color, doubleSided);
 
             if (!_Materials.TryGetValue(mkey, out SharpGLTF.Materials.MaterialBuilder material))
             {

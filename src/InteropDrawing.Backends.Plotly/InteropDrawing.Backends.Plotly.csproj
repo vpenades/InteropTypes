@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>InteropDrawing.Backends</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Plotly.Sharp" Version="0.0.8196" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+  </ItemGroup>
+
+</Project>

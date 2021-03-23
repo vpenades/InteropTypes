@@ -8,9 +8,9 @@ using COLOR = System.Drawing.Color;
 namespace InteropDrawing.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{Color} {DoubleSided}")]
-    struct GLTFSolidMaterial : IEquatable<GLTFSolidMaterial>
+    struct GltfSolidMaterial : IEquatable<GltfSolidMaterial>
     {
-        public GLTFSolidMaterial(COLOR color, bool doubleSided)
+        public GltfSolidMaterial(COLOR color, bool doubleSided)
         {
             Color = new Vector4(color.R, color.G, color.B, color.A) / 255f;
             DoubleSided = doubleSided;
@@ -19,7 +19,7 @@ namespace InteropDrawing.Backends
         public Vector4 Color;
         public Boolean DoubleSided;
 
-        public bool Equals(GLTFSolidMaterial other)
+        public bool Equals(GltfSolidMaterial other)
         {
             if (this.Color != other.Color) return false;
             if (this.DoubleSided != other.DoubleSided) return false;

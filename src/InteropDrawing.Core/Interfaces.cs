@@ -62,9 +62,9 @@ namespace InteropDrawing
 
     public delegate void Drawing2DAction(IDrawing2D context, Point2 viewport);
 
-    public interface ICanvasDrawingContext2D : IDrawing2D, IDisposable { }
+    public interface IDrawingContext2D : IDrawing2D, IDisposable { }
 
-    public interface ICanvasDrawingContext3D : IDrawing3D, IDisposable { }
+    public interface IDrawingContext3D : IDrawing3D, IDisposable { }
 
     public interface ISceneViewport2D
     {

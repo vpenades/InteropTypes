@@ -5,35 +5,32 @@ using System.Linq;
 
 using SharpGLTF.Schema2;
 
+using MESHBUILDER = SharpGLTF.Geometry.IMeshBuilder<SharpGLTF.Materials.MaterialBuilder>;
+
 namespace InteropDrawing.Backends
 {
-    public class GLTFSceneDrawing3D : IDrawing3D
+    public class GltfSceneBuilder
     {
-        #region factory
-        public static GLTFSceneDrawing3D Create() { return new GLTFSceneDrawing3D(); }        
+        #region factory       
 
         public static SharpGLTF.Scenes.SceneBuilder Convert(Model3D srcModel, GLTFWriteSettings? settings = null)
         {
-            var dst = Create();
-            srcModel.DrawTo(dst);
+            var dst = new GltfSceneBuilder();
+
+            using(var dc = dst.CreateDrawing3DContext())
+            {
+                srcModel.DrawTo(dc);
+            }
+            
             return dst.ToSceneBuilder(settings);
         }
 
-        #endregion
-
-        #region lifecycle
-        private GLTFSceneDrawing3D() { }
-
-        #endregion
+        #endregion        
 
         #region data
 
-        private readonly List<GLTFMeshDrawing3D> _Meshes = new List<GLTFMeshDrawing3D>();
-
-        private GLTFMeshDrawing3D _CurrentMesh;        
-
-        private readonly Model3D _Bounds = new Model3D();
-
+        private readonly List<(MESHBUILDER Mesh,Matrix4x4 Transform)> _Meshes = new List<(MESHBUILDER, Matrix4x4)>();        
+        
         private CameraView3D? _Camera;
 
         #endregion
@@ -52,76 +49,23 @@ namespace InteropDrawing.Backends
 
         #endregion
 
-        #region Drawing API        
+        #region Drawing API
 
-        private GLTFMeshDrawing3D _GetCurrent()
+        public IDrawingContext3D CreateDrawing3DContext()
         {
-            if (_CurrentMesh == null) _CurrentMesh = _CreateMesh();
-            return _CurrentMesh;
+            return new _GltfDrawing3DContext(this, Matrix4x4.Identity);
         }
 
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public IDrawingContext3D CreateDrawing3DContext(Matrix4x4 transform)
         {
-            _GetCurrent().DrawAsset(transform, asset, brush);
-            _Bounds.DrawAsset(transform, asset, brush);
+            return new _GltfDrawing3DContext(this, transform);
         }
 
-        public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
+        internal void _AddMesh(MESHBUILDER mesh, Matrix4x4 xform)
         {
-            _GetCurrent().DrawSegment(a, b, diameter, brush);
-            _Bounds.DrawSegment(a, b, diameter, brush);
-        }        
-
-        public void DrawSphere(Point3 center, Single diameter, ColorStyle brush)
-        {
-            _GetCurrent().DrawSphere(center, diameter, brush);
-            _Bounds.DrawSphere(center, diameter, brush);
-        }
-
-        public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
-        {
-            _GetCurrent().DrawSurface(vertices, brush);
-            _Bounds.DrawSurface(vertices, brush);
-        }
-
-        #endregion
-
-        #region API
-
-        private GLTFMeshDrawing3D _CreateMesh()
-        {
-            var mesh = new GLTFMeshDrawing3D();
-            mesh.CylinderLOD = this.CylinderLOD;
-            mesh.SphereLOD = this.SphereLOD;
-
-            return mesh;
-        }
-
-        public void Clear()
-        {
-            _Meshes.Clear();
-            _CurrentMesh = null;
-        }
-
-        public void Flush()
-        {
-            if (_CurrentMesh == null) return;
-
-            if (!_CurrentMesh.IsEmpty) _Meshes.Add(_CurrentMesh);
-
-            _CurrentMesh = null;
-        }
-
-        public void AddMesh(Matrix4x4 xform, Model3D model)
-        {
-            CreateMesh().DrawAsset(xform, model);
-        }
-
-        public GLTFMeshDrawing3D CreateMesh()
-        {
-            var mesh = _CreateMesh();
-            _Meshes.Add(mesh);
-            return mesh;
+            if (mesh == null) return;
+            if (mesh.Primitives.Count == 0) return;
+            _Meshes.Add((mesh, xform));
         }
 
         public void SetCamera(CameraView3D camera) { _Camera = camera; }
@@ -136,9 +80,7 @@ namespace InteropDrawing.Backends
 
             // add meshes
 
-            foreach (var m in _Meshes.Where(item => !item.IsEmpty)) scene.AddRigidMesh(m.Mesh, Matrix4x4.Identity);
-
-            if (!_CurrentMesh?.IsEmpty ?? false) scene.AddRigidMesh(_CurrentMesh.Mesh, Matrix4x4.Identity);
+            foreach (var m in _Meshes) scene.AddRigidMesh(m.Mesh, m.Transform);            
 
             // add camera
 
@@ -170,7 +112,7 @@ namespace InteropDrawing.Backends
 
                 if ((settings?.CameraSize ?? 0) > 0)
                 {
-                    var camMesh = new GLTFMeshDrawing3D();
+                    var camMesh = new GltfMeshDrawing3D();
                     vcam.DrawTo(camMesh, settings.Value.CameraSize.Value);
 
                     scene.AddRigidMesh(camMesh.Mesh, camNode);
@@ -209,8 +151,35 @@ namespace InteropDrawing.Backends
         #endregion
     }
 
+
+    sealed class _GltfDrawing3DContext : GltfMeshDrawing3D , IDrawingContext3D
+    {
+        public _GltfDrawing3DContext(GltfSceneBuilder owner, Matrix4x4 xform)
+        {
+            _Owner = owner;
+            _Transform = xform;
+        }
+
+        public void Dispose()
+        {
+            if (_Owner != null)
+            {
+                if (!this.IsEmpty) _Owner._AddMesh(this.Mesh, this._Transform);
+                this.Clear();
+            }
+
+            _Owner = null;            
+        }        
+
+        private GltfSceneBuilder _Owner;
+        private Matrix4x4 _Transform;
+    }
+
     public struct GLTFWriteSettings
     {
+        /// <summary>
+        /// If defined it will add the current camera to the scene as a visible mesh.
+        /// </summary>
         public float? CameraSize;
     }
 }

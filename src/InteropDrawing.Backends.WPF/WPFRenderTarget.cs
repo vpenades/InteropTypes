@@ -28,7 +28,7 @@ namespace InteropDrawing.Backends
 
         #region API        
 
-        public ICanvasDrawingContext2D OpenDrawingContext()
+        public IDrawingContext2D OpenDrawingContext()
         {
             return new _DrawingContext(_RenderTarget);
         }
@@ -61,7 +61,7 @@ namespace InteropDrawing.Backends
 
         #region nested types
 
-        class _DrawingContext : WPFDrawingContext2D, ICanvasDrawingContext2D
+        class _DrawingContext : WPFDrawingContext2D, IDrawingContext2D
         {
             #region lifecycle
 
