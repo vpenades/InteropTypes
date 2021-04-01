@@ -147,7 +147,7 @@ namespace InteropDrawing
                 dc.DrawSprite(Matrix3x2.Identity, tiles);
             }
 
-            var path = TestContext.CurrentContext.GetFilePath("testrender1.png");
+            var path = TestContext.CurrentContext.UseFilePath("testrender1.png");
 
             renderTarget.SaveToPNG(path);
             TestContext.AddTestAttachment(path);
@@ -159,7 +159,7 @@ namespace InteropDrawing
         {
             var scene = SceneFactory.CreateScene3D(sceneName);
 
-            var path = TestContext.CurrentContext.GetFilePath($"{sceneName}.png");
+            var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
 
             Backends.WPFDrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
 
@@ -185,7 +185,7 @@ namespace InteropDrawing
                 perspective.DrawScene(scene);
             }
 
-            var path = TestContext.CurrentContext.GetFilePath($"{sceneName}.png");
+            var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
 
             renderTarget.SaveToPNG(path);
             TestContext.AddTestAttachment(path);
@@ -224,7 +224,7 @@ namespace InteropDrawing
 
                 var document = svg.ToSVGContent();
 
-                var path = TestContext.CurrentContext.GetFilePath("document.svg");
+                var path = TestContext.CurrentContext.UseFilePath("document.svg");
 
                 System.IO.File.WriteAllText(path, document);
                 TestContext.AddTestAttachment(path);
@@ -243,7 +243,7 @@ namespace InteropDrawing
 
                 var document = svg.ToSVGContent();
 
-                var path = TestContext.CurrentContext.GetFilePath("document.svg");
+                var path = TestContext.CurrentContext.UseFilePath("document.svg");
 
                 System.IO.File.WriteAllText(path, document);
                 TestContext.AddTestAttachment(path);
@@ -261,7 +261,7 @@ namespace InteropDrawing
                 DrawDirectVsPolygon(dc);
             }
 
-            var path = TestContext.CurrentContext.GetFilePath("referenceWPF.png");
+            var path = TestContext.CurrentContext.UseFilePath("referenceWPF.png");
             renderTarget.SaveToPNG(path);
             TestContext.AddTestAttachment(path);
         }

@@ -49,7 +49,7 @@ namespace InteropBitmaps
                 .AttachToCurrentTest(filePath);
         }
 
-        public static void AttachToCurrentTest<TPixel>(this SpanBitmap<TPixel> bmp, string filePath, params Codecs.IBitmapEncoding[] encoders)
+        public static void AttachToCurrentTest<TPixel>(this SpanBitmap<TPixel> bmp, string filePath, params Codecs.IBitmapEncoder[] encoders)
             where TPixel:unmanaged
         {
             bmp
@@ -57,7 +57,7 @@ namespace InteropBitmaps
                 .AttachToCurrentTest(filePath, encoders);
         }
 
-        public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath, params Codecs.IBitmapEncoding[] encoders)
+        public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath, params Codecs.IBitmapEncoder[] encoders)
         {
             filePath = UseTestOutputFilePath(filePath);            
 

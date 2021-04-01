@@ -26,9 +26,9 @@ namespace InteropBitmaps.Codecs
 
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var codecs = new IBitmapDecoding[] { OpenCvCodec.Default, GDICodec.Default, WPFCodec.Default, ImageSharpCodec.Default, STBCodec.Default, SkiaCodec.Default };
+            var codecs = new IBitmapDecoder[] { OpenCvCodec.Default, GDICodec.Default, WPFCodec.Default, ImageSharpCodec.Default, STBCodec.Default, SkiaCodec.Default };
 
-            foreach (var decoder in codecs.OfType<IBitmapDecoding>())
+            foreach (var decoder in codecs.OfType<IBitmapDecoder>())
             {
                 var sw = System.Diagnostics.Stopwatch.StartNew();
                 var bitmap = MemoryBitmap.Load(filePath, decoder);
@@ -36,7 +36,7 @@ namespace InteropBitmaps.Codecs
 
                 TestContext.WriteLine($"Loading {System.IO.Path.GetFileName(filePath)} with {decoder} tool {sw.ElapsedMilliseconds}");                
 
-                foreach (var encoder in codecs.OfType<IBitmapEncoding>())
+                foreach (var encoder in codecs.OfType<IBitmapEncoder>())
                 {
                     // System.Diagnostics.Debug.Assert(!(decoder is WPFCodec && encoder is SkiaCodec));
 

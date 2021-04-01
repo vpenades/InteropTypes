@@ -98,8 +98,8 @@ namespace InteropBitmaps
 
 
         public void ConversionTest<TSrcPixel,TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IFactory<TSrcPixel>
-            where TDstPixel : unmanaged, Pixel.IFactory<TDstPixel>
+            where TSrcPixel : unmanaged, Pixel.IPixelReflection<TSrcPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelReflection<TDstPixel>
         {
             var srcFmt = Pixel.Format.TryIdentifyPixel<TSrcPixel>();
             var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();

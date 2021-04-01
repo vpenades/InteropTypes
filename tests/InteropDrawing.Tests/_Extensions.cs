@@ -6,7 +6,7 @@ namespace InteropDrawing
 {
     static class _Extensions
     {
-        public static string GetFilePath(this NUnit.Framework.TestContext context, string fileName)
+        public static string UseFilePath(this NUnit.Framework.TestContext context, string fileName)
         {
             if (System.IO.Path.IsPathRooted(fileName)) return fileName;
 
@@ -17,9 +17,16 @@ namespace InteropDrawing
             return System.IO.Path.Combine(dir, $"{context.Test.ID}_{fileName}");
         }
 
+        public static void Attach<T>(this NUnit.Framework.TestContext context, string fileName, T value, Action<string,T> saveCallback)
+        {
+            fileName = context.UseFilePath(fileName);
+            saveCallback(fileName, value);
+            NUnit.Framework.TestContext.AddTestAttachment(fileName);
+        }
+
         public static void AttachToCurrentTest(this Model2D batch, string filePath)
         {
-            filePath = NUnit.Framework.TestContext.CurrentContext.GetFilePath(filePath);
+            filePath = NUnit.Framework.TestContext.CurrentContext.UseFilePath(filePath);
 
             if (filePath.ToLower().EndsWith(".svg"))
             {
@@ -53,7 +60,7 @@ namespace InteropDrawing
         
         public static void AttachToCurrentTest(this Model3D batch, string filePath)
         {
-            filePath = NUnit.Framework.TestContext.CurrentContext.GetFilePath(filePath);
+            filePath = NUnit.Framework.TestContext.CurrentContext.UseFilePath(filePath);
 
             if (filePath.ToLower().EndsWith(".stl"))
             {
@@ -102,7 +109,7 @@ namespace InteropDrawing
 
         public static void AttachShowDirLink(this NUnit.Framework.TestContext context)
         {
-            var dirPath = System.IO.Path.GetDirectoryName(context.GetFilePath("hello.txt"));
+            var dirPath = System.IO.Path.GetDirectoryName(context.UseFilePath("hello.txt"));
 
             context.AttachFileLink("📂 Show Directory", dirPath);
         }
@@ -117,7 +124,7 @@ namespace InteropDrawing
             sb.AppendLine("IconFile=" + icon);
 
             linkPath = System.IO.Path.ChangeExtension(linkPath, ".url");
-            linkPath = context.GetFilePath(linkPath);
+            linkPath = context.UseFilePath(linkPath);
 
             System.IO.File.WriteAllText(linkPath, sb.ToString());
 

@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing.SVG
+namespace InteropDrawing.Backends.SVG
 {
     [Category("InteropDrawing SVG")]
     public class TestScene
@@ -15,7 +15,7 @@ namespace InteropDrawing.SVG
         [Test]
         public void TestSVG()
         {
-            using (var svg = Backends.SVGSceneDrawing2D.CreateGraphic())
+            using (var svg = SVGSceneDrawing2D.CreateGraphic())
             {
                 svg.DrawLine((0, 0), (100, 100), 2, (COLOR.SkyBlue, LineCapStyle.Round, LineCapStyle.Triangle));
 
@@ -25,7 +25,7 @@ namespace InteropDrawing.SVG
 
                 var document = svg.ToSVGContent();
 
-                var path = TestContext.CurrentContext.GetFilePath("document.svg");
+                var path = TestContext.CurrentContext.UseFilePath("document.svg");
 
                 System.IO.File.WriteAllText(path, document);
                 TestContext.AddTestAttachment(path);
@@ -44,7 +44,7 @@ namespace InteropDrawing.SVG
 
             var document = svg.ToSVGContent();
 
-            var path = TestContext.CurrentContext.GetFilePath("document.svg");
+            var path = TestContext.CurrentContext.UseFilePath("document.svg");
 
             System.IO.File.WriteAllText(path, document);
             TestContext.AddTestAttachment(path);

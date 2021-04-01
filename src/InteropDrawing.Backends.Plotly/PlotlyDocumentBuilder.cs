@@ -5,6 +5,7 @@ using Plotly;
 using Plotly.Types;
 
 using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
+using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
 
 
 namespace InteropDrawing.Backends
@@ -22,7 +23,7 @@ namespace InteropDrawing.Backends
         {
             var dst = new PlotlyDocumentBuilder();
 
-            using (var dc = dst.CreateDrawing3DContext())
+            using (var dc = dst.CreateScene3DContext())
             {
                 srcModel.DrawTo(dc);
             }
@@ -34,22 +35,47 @@ namespace InteropDrawing.Backends
 
         #region data
 
-        private readonly List<TRACES> _Traces = new List<TRACES>();        
+        private readonly List<TRACES> _Traces = new List<TRACES>();
+        private readonly List<SHAPES> _Shapes = new List<SHAPES>();
 
         #endregion
 
         #region API
 
-        public IDrawingContext3D CreateDrawing3DContext() { return new _PlotlyDrawing3DContext(this); }
+        /// <summary>
+        /// Creates a new <see cref="IDrawingContext2D"/> context optimized for data sets.
+        /// </summary>
+        /// <returns></returns>
+        public IDrawingContext2D CreateTraces2DContext() { return new _PlotlyDrawing2DTracesContext(this); }
 
-        public Box<IPlotProperty> ToPlotProperties() { return Plot.traces(_Traces.ToArray()); }
+        // <summary>
+        /// Creates a new <see cref="IDrawingContext2D"/> context optimized for vector graphics.
+        /// </summary>
+        /// <returns></returns>
+        public IDrawingContext2D CreateShapes2DContext() { return new _PlotlyDrawing2DShapesContext(this); }
 
-        public Plot ToPlot()
+        /// <summary>
+        /// Creates a new <see cref="IDrawingContext3D"/> context optimized for 3D Scenes.
+        /// </summary>
+        /// <returns></returns>
+        public IDrawingContext3D CreateScene3DContext() { return new _PlotlyDrawing3DContext(this); }
+
+        public Box<IPlotProperty> ToPlotProperties()
         {
-            var plot = ToPlotProperties();
-            var layout = _CreateLayoutProperties();
+            return Plot.traces(_Traces.ToArray());
+        }
+        
+        public Plot ToPlot(Box<IPlotProperty> layout = null)
+        {
+            var plots = new List<Box<IPlotProperty>>();
 
-            var document = new Plot(plot, layout);
+            plots.Add(ToPlotProperties());            
+
+            if (layout == null) layout = _CreateLayoutProperties();            
+
+            plots.Add(layout);
+
+            var document = new Plot(plots.ToArray());
             return document;
         }
 
@@ -75,13 +101,22 @@ namespace InteropDrawing.Backends
             _Traces.Add(trace);
         }
 
-        private static Box<IPlotProperty> _CreateLayoutProperties()
+        internal void AppendShape(SHAPES shape)
+        {
+            if (shape == null) return;            
+            _Shapes.Add(shape);
+        }
+
+        private Box<IPlotProperty> _CreateLayoutProperties()
         {
             var xaxis = Scene.xaxis(Xaxis.color("red"));
             var yaxis = Scene.yaxis(Yaxis.color("green"));
             var zaxis = Scene.zaxis(Zaxis.color("blue"));
             var camera = Camera.up(Up.x(0), Up.y(1), Up.z(0));
             var scene = Layout.scene(Scene.Aspectmode.data(), Scene.camera(camera), xaxis, yaxis, zaxis);
+            var shapes = Layout.shapes(_Shapes.ToArray());
+
+            
 
             return Plot.layout
                 (Layout.autosize(true)
@@ -91,7 +126,8 @@ namespace InteropDrawing.Backends
                 // , Layout.margin(Margin.pad(5))                    
                 // , Layout.margin(Margin.t(5), Margin.b(5))                    
                 , scene
-                );
+                , shapes                
+                );            
         }        
 
         #endregion

@@ -26,20 +26,20 @@ namespace InteropDrawing.Backends
             }
         }
 
-        public TRACES ToTrace()
+        public IEnumerable<TRACES> ToTraces()
         {
-            if (_Triangles.Count == 0) return null;
+            if (_Triangles.Count == 0) yield break;
 
-            var xtris = _Triangles.Select(tri => (new PlotlyVertex(tri.A), new PlotlyVertex(tri.B), new PlotlyVertex(tri.C), tri.Color));
+            var xgroups = _Triangles
+                .Select(tri => (new Plotly.PlotlyVertex(tri.A), new Plotly.PlotlyVertex(tri.B), new Plotly.PlotlyVertex(tri.C), tri.Color))
+                .GroupBy(item => item.Color.A);
 
-            return PlotlyVertex.CreateTrace(xtris, GetPlotlyColor);
-        }
+            foreach(var xtris in xgroups)
+            {
+                var opacity = (float)xtris.Key / 255f;
 
-        private static int GetPlotlyColor(System.Drawing.Color color)
-        {
-            var ccc = color.R * 65536 + color.G * 256 + color.B;
-
-            return (int)ccc;
-        }
+                yield return Plotly.TracesFactory.Mesh3D(xtris, Plotly._Extensions.ToPlotlyIntegerRGB, opacity);
+            }            
+        }        
     }
 }

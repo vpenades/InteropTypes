@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
+using Plotly;
 
 namespace InteropDrawing.Backends
 {
@@ -16,9 +17,10 @@ namespace InteropDrawing.Backends
         {
             if (_Content != null)
             {
-                var trace = _Content.ToTrace();
-
-                _Owner.AppendTrace(trace);
+                foreach(var trace in _Content.ToTraces())
+                {
+                    _Owner.AppendTrace(trace);
+                }
             }
 
             _Content = null;
@@ -42,7 +44,7 @@ namespace InteropDrawing.Backends
             if (asset is Model3D model3) model3.DrawTo(this.CreateTransformed3D(transform));
         }
 
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)
+        public void DrawSegment(Point3 a, Point3 b, float diameter, InteropDrawing.LineStyle style)
         {
             if (_Content == null) throw new ObjectDisposedException(nameof(_Content));
 
@@ -56,7 +58,7 @@ namespace InteropDrawing.Backends
 
         public void DrawSphere(Point3 center, float diameter, ColorStyle style)
         {
-            if (_Content == null) throw new ObjectDisposedException(nameof(_Content));
+            if (_Content == null) throw new ObjectDisposedException(nameof(_Content));            
 
             if (style.HasFill)
             {
