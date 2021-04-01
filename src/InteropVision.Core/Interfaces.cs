@@ -43,6 +43,12 @@ namespace InteropVision
     {
         IDenseTensor GetInputTensor(int idx);
 
+        /// <summary>
+        /// Gets an existing tensor.
+        /// </summary>
+        /// <typeparam name="T">The tensor's element type.</typeparam>
+        /// <param name="idx">The tens</param>
+        /// <returns></returns>
         IDenseTensor<T> GetInputTensor<T>(int idx) where T : unmanaged;        
 
         IDenseTensor<T> UseInputTensor<T>(int idx, params int[] dims) where T : unmanaged;        
@@ -59,8 +65,15 @@ namespace InteropVision
     /// </summary>
     /// <remarks>
     /// Optionally implemented by <see cref="IModelSession"/> objects.
-    /// </remarks>
-    /// <typeparam name="T">The output type.</typeparam>
+    /// </remarks>    
+    public interface IImageInference<TImage, TResult> : IDisposable
+        where TResult:class
+    {
+        void Inference(TResult result, InferenceInput<TImage> input, Rectangle? inputWindow = null);
+    }
+
+
+    [Obsolete("Use IImageInference<TImage, TResult>")]
     public interface IImageInference<T> : IDisposable
     {
         void Inference(T result, InferenceInput input, Rectangle? inputWindow = null);

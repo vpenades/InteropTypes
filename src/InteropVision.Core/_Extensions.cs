@@ -5,13 +5,39 @@ using System.Reflection;
 using System.Text;
 
 using InteropBitmaps;
-
 using InteropTensors;
+
+using RECT = System.Drawing.Rectangle;
 
 namespace InteropVision
 {
     public static partial class _Extensions
     {
+        public static PointerBitmap GetWindow(this InferenceInput<PointerBitmap> input, ref RECT? window)
+        {
+            if (input.Image.IsEmpty) return default;
+
+            if (!window.HasValue)
+            {
+                window = new RECT(System.Drawing.Point.Empty, input.Image.Size);
+                return input.Image;
+            }
+
+            if (window.Value.Width == 0) return default;
+            if (window.Value.Height == 0) return default;
+
+            var r = BitmapBounds.Clip(window.Value, input.Image.Bounds);
+            if (r.Width * r.Height == 0) return default;
+
+            window = r;
+
+            var tmp = input.Image.Slice(window.Value);
+
+            System.Diagnostics.Debug.Assert(tmp.Size == window.Value.Size);
+
+            return tmp;
+        }
+
         public static void FitInputImage(this IModelSession session, PointerBitmap bmp)
         {
             if (session.GetInputTensor(0) is IInputImageTensor inputImage)

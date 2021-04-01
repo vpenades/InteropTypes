@@ -69,6 +69,9 @@ namespace InteropVision
 
         #region data
 
+        /// <summary>
+        /// Time relative to <see cref="BaseTimeUTC"/>
+        /// </summary>
         public readonly TimeSpan RelativeTime;        
 
         /// <inheritdoc />        

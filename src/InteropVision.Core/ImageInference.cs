@@ -12,7 +12,66 @@ namespace InteropVision
     /// <summary>
     /// Represents the input image for an inference engine.
     /// </summary>
-    public class InferenceInput
+    [System.Diagnostics.DebuggerDisplay("{Time.RelativeTime}")]
+    public class InferenceInput<TImage>
+    {
+        #region constructor
+
+        public static implicit operator InferenceInput<TImage>(TImage frameImage)
+        {
+            return new InferenceInput<TImage>(frameImage);
+        }
+
+        public static implicit operator InferenceInput<TImage>((TImage Image, TimeSpan Time) frame)
+        {
+            return new InferenceInput<TImage>(frame.Image, new FrameTime(frame.Time));
+        }
+
+        public static implicit operator InferenceInput<TImage>((TImage Image, FrameTime Time) frame)
+        {
+            return new InferenceInput<TImage>(frame.Image, frame.Time);
+        }
+
+        public InferenceInput(TImage frameImage)
+        {
+            Image = frameImage;
+            Time = FrameTime.Now;
+        }
+
+        public InferenceInput(TImage frameImage, FrameTime frameTime)
+        {
+            Image = frameImage;
+            Time = frameTime;
+        }
+
+        #endregion
+
+        #region data
+        public FrameTime Time { get; private set; }
+        public TImage Image { get; private set; }        
+
+        #endregion
+
+        #region API
+
+        public void Update(TImage frameImage)
+        {
+            Time = FrameTime.Now;
+            Image = frameImage;            
+        }
+
+        public void Update(TImage frameImage, FrameTime frameTime)
+        {
+            Time = frameTime;
+            Image = frameImage;
+        }
+
+        #endregion
+    }
+
+    /// <inheritdoc/>
+    [System.Diagnostics.DebuggerDisplay("{Time.RelativeTime}: {Image.Info.ToDebuggerDisplayString(),nq}")]
+    public class InferenceInput : InferenceInput<InteropBitmaps.PointerBitmap>
     {
         #region constructor
 
@@ -32,55 +91,12 @@ namespace InteropVision
         }
 
         public InferenceInput(InteropBitmaps.PointerBitmap sourceImage)
-        {
-            Image = sourceImage;            
-            Time = FrameTime.Now;
-        }
+            : base(sourceImage) { }
 
         public InferenceInput(InteropBitmaps.PointerBitmap sourceImage, FrameTime t)
-        {
-            Image = sourceImage;            
-            Time = t;
-        }
+            : base(sourceImage, t) { }
 
-        #endregion
-
-        #region data
-
-        public InteropBitmaps.PointerBitmap Image { get; private set; }        
-
-        public FrameTime Time { get; private set; }
-
-        #endregion
-
-        #region API
-
-        public InteropBitmaps.PointerBitmap GetWindow(ref RECT? window)
-        {
-            if (Image.IsEmpty) return default;
-
-            if (!window.HasValue)
-            {
-                window = new RECT(Point.Empty, Image.Size);
-                return Image;
-            }
-
-            if (window.Value.Width == 0) return default;
-            if (window.Value.Height == 0) return default;
-
-            var r = InteropBitmaps.BitmapBounds.Clip(window.Value, Image.Bounds);
-            if (r.Width * r.Height == 0) return default;
-
-            window = r;
-
-            var tmp = Image.Slice(window.Value);
-
-            System.Diagnostics.Debug.Assert(tmp.Size == window.Value.Size);
-
-            return tmp;
-        }
-
-        #endregion
+        #endregion                
     }
 
     [System.Diagnostics.DebuggerDisplay("{_Model}")]
