@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace InteropBitmaps.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("WPF(WIC) Codec")]
-    public sealed class WPFCodec : IBitmapDecoding, IBitmapEncoding
+    public sealed class WPFCodec : IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle
 
@@ -22,6 +22,7 @@ namespace InteropBitmaps.Codecs
 
         #endregion
 
+        /// <inheritdoc/>
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
             var frame = System.Windows.Media.Imaging.BitmapFrame.Create(s, System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat, System.Windows.Media.Imaging.BitmapCacheOption.None);
@@ -31,7 +32,8 @@ namespace InteropBitmaps.Codecs
             return true;
         }
 
-        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
+        /// <inheritdoc/>
+        public bool TryWrite(Lazy<Stream> stream, CodecFormat format, SpanBitmap bmp)
         {            
             var encoder = CreateEncoder(format);
             if (encoder == null) return false;
@@ -40,7 +42,7 @@ namespace InteropBitmaps.Codecs
             var frame = System.Windows.Media.Imaging.BitmapFrame.Create(writable);
 
             encoder.Frames.Add(frame);
-            encoder.Save(s);
+            encoder.Save(stream.Value);
 
             return true;
         }

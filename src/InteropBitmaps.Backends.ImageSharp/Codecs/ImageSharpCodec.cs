@@ -6,7 +6,7 @@ using System.Text;
 namespace InteropBitmaps.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("ImageSharp Codec")]
-    public sealed class ImageSharpCodec : IBitmapDecoding, IBitmapEncoding
+    public sealed class ImageSharpCodec : IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle
 
@@ -22,6 +22,7 @@ namespace InteropBitmaps.Codecs
 
         #region API
 
+        /// <inheritdoc/>
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
             try
@@ -40,7 +41,8 @@ namespace InteropBitmaps.Codecs
             }
         }
 
-        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
+        /// <inheritdoc/>
+        public bool TryWrite(Lazy<Stream> stream, CodecFormat format, SpanBitmap bmp)
         {
             var fmt = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.FindFormatByFileExtension(format.ToString().ToLower());
             if (fmt == null) return false;
@@ -50,7 +52,7 @@ namespace InteropBitmaps.Codecs
 
             using (var img = _Implementation.CloneToImageSharp(bmp))
             {
-                img.Save(s, encoder);
+                img.Save(stream.Value, encoder);
             }
 
             return true;

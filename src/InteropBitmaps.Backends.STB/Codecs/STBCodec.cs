@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropBitmaps.Codecs
 {
-    public class STBCodec : IBitmapDecoding
+    public class STBCodec : IBitmapDecoder
     {
         #region lifecycle
 
@@ -19,6 +19,8 @@ namespace InteropBitmaps.Codecs
         #endregion
 
         #region API
+
+        /// <inheritdoc/>
         public bool TryRead(System.IO.Stream s, out MemoryBitmap bitmap)
         {
             bitmap = default;

@@ -7,7 +7,7 @@ using System.Text;
 namespace InteropBitmaps.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("SkiaSharp Codec")]
-    public class SkiaCodec: IBitmapDecoding, IBitmapEncoding
+    public class SkiaCodec: IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle
 
@@ -23,6 +23,7 @@ namespace InteropBitmaps.Codecs
 
         // TODO: we should try to operate directly with SkiaSharp.SKCodec
 
+        /// <inheritdoc/>
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
             bitmap = default;
@@ -42,7 +43,8 @@ namespace InteropBitmaps.Codecs
             return true;
         }
 
-        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
+        /// <inheritdoc/>
+        public bool TryWrite(Lazy<Stream> stream, CodecFormat format, SpanBitmap bmp)
         {
             try
             {
@@ -57,7 +59,7 @@ namespace InteropBitmaps.Codecs
                 {
                     var data = skbmp.Encode(fmt, 95);
 
-                    data.SaveTo(s);
+                    data.SaveTo(stream.Value);
                 }
             }
             catch (ArgumentException) { return false; }

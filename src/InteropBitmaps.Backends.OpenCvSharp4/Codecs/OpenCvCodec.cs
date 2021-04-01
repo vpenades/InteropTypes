@@ -6,7 +6,7 @@ using System.Text;
 namespace InteropBitmaps.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("OpenCvSharp Codec")]
-    public sealed class OpenCvCodec : IBitmapDecoding, IBitmapEncoding
+    public sealed class OpenCvCodec : IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle
 
@@ -20,6 +20,7 @@ namespace InteropBitmaps.Codecs
 
         #endregion
 
+        /// <inheritdoc/>
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
             bitmap = default;
@@ -33,11 +34,12 @@ namespace InteropBitmaps.Codecs
             return true;
         }
 
-        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
+        /// <inheritdoc/>
+        public bool TryWrite(Lazy<Stream> stream, CodecFormat format, SpanBitmap bmp)
         {
             using (var mat = bmp.WithOpenCv().ToMat())
             {
-                mat.WriteToStream(s, $".{format.ToString().ToLower()}");
+                mat.WriteToStream(stream.Value, $".{format.ToString().ToLower()}");
             }
 
             return true;
