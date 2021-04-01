@@ -168,52 +168,25 @@ namespace InteropBitmaps
 
         #region API - IO
 
-        public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoding[] factory)
+        public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
         {
-            Guard.NotNull(nameof(s), s);
-            Guard.IsTrue(nameof(s), s.CanRead);
-            Guard.GreaterThan(nameof(factory), factory.Length, 0);
-
-            if (!s.CanSeek && factory.Length > 1)
-            {
-                using (var mem = new System.IO.MemoryStream())
-                {
-                    s.CopyTo(mem);
-                    mem.Position = 0;
-                    return Read(mem, factory);
-                }
-            }
-
-            var startPos = s.Position;
-
-            foreach (var f in factory)
-            {
-                if (f.TryRead(s, out MemoryBitmap bmp)) return bmp;
-                if (s.CanSeek) s.Position = startPos;
-            }
-
-            throw new ArgumentException("invalid format", nameof(s));
+            return Codecs.CodecFactory.Read(s, factory);
         }
 
-        public static MemoryBitmap Load(string filePath, params Codecs.IBitmapDecoding[] factory)
-        {
-            foreach (var f in factory)
-            {                
-                using (var s = System.IO.File.OpenRead(filePath))
-                {
-                    if (f.TryRead(s, out MemoryBitmap bmp)) return bmp;
-                }                
+        public static MemoryBitmap Load(string filePath, params Codecs.IBitmapDecoder[] factory)
+        {            
+            using (var s = System.IO.File.OpenRead(filePath))
+            {
+                return Codecs.CodecFactory.Read(s, factory);
             }
-
-            throw new ArgumentException("invalid format", nameof(filePath));
         }
 
-        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
+        public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Save(filePath, factory);
         }
 
-        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
+        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Write(stream, format, factory);
         }        

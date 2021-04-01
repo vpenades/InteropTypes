@@ -26,13 +26,13 @@ namespace InteropBitmaps
                 Undefined6, Green6,
 
                 // 8 bits
-                Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Gray8, // PremulAlpha8
+                Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Luminance8, // PremulAlpha8
 
                 // 16 bits
-                Undefined16, Index16, Gray16, Red16, Green16, Blue16, Alpha16, DepthMM16,
+                Undefined16, Index16, Red16, Green16, Blue16, Alpha16, Luminance16, DepthMM16,
 
                 // 32 bits (floating point)
-                Undefined32F, Red32F, Green32F, Blue32F, Alpha32F, Gray32F,
+                Undefined32F, Red32F, Green32F, Blue32F, Alpha32F, Luminance32F,
             }
         }
     }

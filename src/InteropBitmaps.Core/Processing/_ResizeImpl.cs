@@ -96,7 +96,7 @@ namespace InteropBitmaps.Processing
 
         private static void _FitPixels3<TSrcPixel,TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)
             where TSrcPixel : unmanaged, Pixel.IConvertible
-            where TDstPixel : unmanaged, Pixel.IFactory<TDstPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelReflection<TDstPixel>
         {
             var (colPairs, rowPairs) = _BilinearSampleSource.Create(src.Info, dst.Info);
 

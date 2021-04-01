@@ -19,7 +19,7 @@ namespace InteropBitmaps
             // XYZA ToPremul();
         }
 
-        public interface IFactory<TPixel> : IConvertible
+        public interface IPixelReflection<TPixel> : IConvertible
         {
             TPixel From(BGRA32 color);
             TPixel From(VectorRGBA color);
@@ -32,7 +32,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{A}")]
-        public readonly partial struct Alpha8 : IFactory<Alpha8>
+        public readonly partial struct Alpha8 : IPixelReflection<Alpha8>
         {
             #region constructors
             public Alpha8(Byte alpha) { A = alpha; }
@@ -48,8 +48,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32((Byte)0, (Byte)0, (Byte)0, A); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            Alpha8 IFactory<Alpha8>.From(BGRA32 color) { return new Alpha8(color.A); }
-            Alpha8 IFactory<Alpha8>.From(VectorRGBA color) { return new Alpha8((Byte)(color.A * 255f)); }
+            Alpha8 IPixelReflection<Alpha8>.From(BGRA32 color) { return new Alpha8(color.A); }
+            Alpha8 IPixelReflection<Alpha8>.From(VectorRGBA color) { return new Alpha8((Byte)(color.A * 255f)); }
 
             #endregion
         }
@@ -59,7 +59,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{L}")]
-        public readonly partial struct Luminance8 : IFactory<Luminance8>
+        public readonly partial struct Luminance8 : IPixelReflection<Luminance8>
         {
             #region constants
 
@@ -105,8 +105,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(L, L, L); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            Luminance8 IFactory<Luminance8>.From(BGRA32 color) { return new Luminance8(color); }
-            Luminance8 IFactory<Luminance8>.From(VectorRGBA color) { return new Luminance8(color); }
+            Luminance8 IPixelReflection<Luminance8>.From(BGRA32 color) { return new Luminance8(color); }
+            Luminance8 IPixelReflection<Luminance8>.From(VectorRGBA color) { return new Luminance8(color); }
 
             #endregion
         }
@@ -116,7 +116,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{L}")]
-        public readonly partial struct Luminance16 : IFactory<Luminance16>
+        public readonly partial struct Luminance16 : IPixelReflection<Luminance16>
         {
             #region constants            
 
@@ -162,8 +162,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { var v = (Byte)(L >> 8); return new BGRA32(v, v, v); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            Luminance16 IFactory<Luminance16>.From(BGRA32 color) { return new Luminance16(color); }
-            Luminance16 IFactory<Luminance16>.From(VectorRGBA color) { return new Luminance16(color); }             
+            Luminance16 IPixelReflection<Luminance16>.From(BGRA32 color) { return new Luminance16(color); }
+            Luminance16 IPixelReflection<Luminance16>.From(VectorRGBA color) { return new Luminance16(color); }             
 
             #endregion
         }
@@ -173,7 +173,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{L}")]
-        public readonly partial struct StdLuminance : IFactory<StdLuminance>
+        public readonly partial struct StdLuminance : IPixelReflection<StdLuminance>
         {
             #region constructors
             public StdLuminance(UInt16 luminance) { L = luminance; }
@@ -211,8 +211,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { var v = (Byte)(L * 255); return new BGRA32(v, v, v); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            StdLuminance IFactory<StdLuminance>.From(BGRA32 color) { return new StdLuminance(color); }
-            StdLuminance IFactory<StdLuminance>.From(VectorRGBA color) { return new StdLuminance(color); }
+            StdLuminance IPixelReflection<StdLuminance>.From(BGRA32 color) { return new StdLuminance(color); }
+            StdLuminance IPixelReflection<StdLuminance>.From(VectorRGBA color) { return new StdLuminance(color); }
 
             #endregion
         }
@@ -222,7 +222,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct BGR565 : IFactory<BGR565>
+        public readonly partial struct BGR565 : IPixelReflection<BGR565>
         {
             #region constructors
 
@@ -251,8 +251,8 @@ namespace InteropBitmaps
             public BGRA32 ToBGRA32() { return new BGRA32((Byte)R, (Byte)G, (Byte)B, (Byte)255); }            
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
 
-            BGR565 IFactory<BGR565>.From(BGRA32 color) { return new BGR565(color.R, color.G, color.B); }
-            BGR565 IFactory<BGR565>.From(VectorRGBA color)
+            BGR565 IPixelReflection<BGR565>.From(BGRA32 color) { return new BGR565(color.R, color.G, color.B); }
+            BGR565 IPixelReflection<BGR565>.From(VectorRGBA color)
             {
                 var v = color.RGBA * 255f;
                 return new BGR565((Byte)v.X, (Byte)v.Y, (Byte)v.Z);
@@ -266,7 +266,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA5551 : IFactory<BGRA5551>
+        public readonly partial struct BGRA5551 : IPixelReflection<BGRA5551>
         {
             #region constructors
 
@@ -297,8 +297,8 @@ namespace InteropBitmaps
             public BGRA32 ToBGRA32() { return new BGRA32((Byte)R, (Byte)G, (Byte)B, (Byte)A); }            
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
 
-            BGRA5551 IFactory<BGRA5551>.From(BGRA32 color) { return new BGRA5551(color.R, color.G, color.B, color.A >= 128); }
-            BGRA5551 IFactory<BGRA5551>.From(VectorRGBA color)
+            BGRA5551 IPixelReflection<BGRA5551>.From(BGRA32 color) { return new BGRA5551(color.R, color.G, color.B, color.A >= 128); }
+            BGRA5551 IPixelReflection<BGRA5551>.From(VectorRGBA color)
             {
                 var v = color.RGBA * 255f;
                 return new BGRA5551((Byte)v.X, (Byte)v.Y, (Byte)v.Z, v.W >= 128);
@@ -312,7 +312,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA4444 : IFactory<BGRA4444>
+        public readonly partial struct BGRA4444 : IPixelReflection<BGRA4444>
         {
             #region constructors
 
@@ -343,8 +343,8 @@ namespace InteropBitmaps
             public BGRA32 ToBGRA32() { return new BGRA32((Byte)R, (Byte)G, (Byte)B, (Byte)A); }            
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
 
-            BGRA4444 IFactory<BGRA4444>.From(BGRA32 color) { return new BGRA4444(color.R, color.G, color.B, color.A); }
-            BGRA4444 IFactory<BGRA4444>.From(VectorRGBA color)
+            BGRA4444 IPixelReflection<BGRA4444>.From(BGRA32 color) { return new BGRA4444(color.R, color.G, color.B, color.A); }
+            BGRA4444 IPixelReflection<BGRA4444>.From(VectorRGBA color)
             {
                 var v = color.RGBA * 255f;
                 return new BGRA4444((Byte)v.X, (Byte)v.Y, (Byte)v.Z, (Byte)v.W);
@@ -358,7 +358,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA32 : IFactory<BGRA32>
+        public readonly partial struct BGRA32 : IPixelReflection<BGRA32>
         {
             #region constructors
 
@@ -442,8 +442,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return this; }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            BGRA32 IFactory<BGRA32>.From(BGRA32 color) { return color; }
-            BGRA32 IFactory<BGRA32>.From(VectorRGBA color) { return new BGRA32(color); }
+            BGRA32 IPixelReflection<BGRA32>.From(BGRA32 color) { return color; }
+            BGRA32 IPixelReflection<BGRA32>.From(VectorRGBA color) { return new BGRA32(color); }
 
             #endregion
         }
@@ -453,7 +453,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct RGBA32 : IFactory<RGBA32>
+        public readonly partial struct RGBA32 : IPixelReflection<RGBA32>
         {
             #region constructors
 
@@ -492,8 +492,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(R, G, B, A); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            RGBA32 IFactory<RGBA32>.From(BGRA32 color) { return new RGBA32(color.R, color.G, color.B, color.A); }
-            RGBA32 IFactory<RGBA32>.From(VectorRGBA color) { return new RGBA32(color); }
+            RGBA32 IPixelReflection<RGBA32>.From(BGRA32 color) { return new RGBA32(color.R, color.G, color.B, color.A); }
+            RGBA32 IPixelReflection<RGBA32>.From(VectorRGBA color) { return new RGBA32(color); }
 
             #endregion
         }
@@ -503,7 +503,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct ARGB32 : IFactory<ARGB32>
+        public readonly partial struct ARGB32 : IPixelReflection<ARGB32>
         {
             #region constructors
 
@@ -542,8 +542,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(R, G, B, A); }            
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            ARGB32 IFactory<ARGB32>.From(VectorRGBA color) { return new ARGB32(color); }
-            ARGB32 IFactory<ARGB32>.From(BGRA32 color) { return new ARGB32(color.R, color.G, color.B, color.A); }
+            ARGB32 IPixelReflection<ARGB32>.From(VectorRGBA color) { return new ARGB32(color); }
+            ARGB32 IPixelReflection<ARGB32>.From(BGRA32 color) { return new ARGB32(color.R, color.G, color.B, color.A); }
 
             #endregion
         }
@@ -553,7 +553,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct BGR24 : IFactory<BGR24>
+        public readonly partial struct BGR24 : IPixelReflection<BGR24>
         {
             #region constructors
 
@@ -596,8 +596,8 @@ namespace InteropBitmaps
             
             public BGRA32 ToBGRA32() { return new BGRA32(R, G, B); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            BGR24 IFactory<BGR24>.From(BGRA32 color) { return new BGR24(color.R, color.G, color.B); }
-            BGR24 IFactory<BGR24>.From(VectorRGBA color) { return new BGR24(color); }
+            BGR24 IPixelReflection<BGR24>.From(BGRA32 color) { return new BGR24(color.R, color.G, color.B); }
+            BGR24 IPixelReflection<BGR24>.From(VectorRGBA color) { return new BGR24(color); }
 
             #endregion
         }
@@ -607,7 +607,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct RGB24 : IFactory<RGB24>
+        public readonly partial struct RGB24 : IPixelReflection<RGB24>
         {
             #region constructors
 
@@ -636,8 +636,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(R, G, B); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            RGB24 IFactory<RGB24>.From(BGRA32 color) { return new RGB24(color.R, color.G, color.B); }
-            RGB24 IFactory<RGB24>.From(VectorRGBA color) { return new RGB24(color); }
+            RGB24 IPixelReflection<RGB24>.From(BGRA32 color) { return new RGB24(color.R, color.G, color.B); }
+            RGB24 IPixelReflection<RGB24>.From(VectorRGBA color) { return new RGB24(color); }
 
             #endregion
         }
@@ -647,7 +647,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct VectorBGRA : IFactory<VectorBGRA>
+        public readonly partial struct VectorBGRA : IPixelReflection<VectorBGRA>
         {
             #region constructors
             public VectorBGRA(Single red, Single green, Single blue, Single alpha) { BGRA = new XYZA(blue, green, red, alpha); }
@@ -668,8 +668,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(this); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(R, G, B, A); }
-            VectorBGRA IFactory<VectorBGRA>.From(BGRA32 color) { return new VectorBGRA(color); }
-            VectorBGRA IFactory<VectorBGRA>.From(VectorRGBA color) { return new VectorBGRA(color.R, color.G, color.B, color.A); }
+            VectorBGRA IPixelReflection<VectorBGRA>.From(BGRA32 color) { return new VectorBGRA(color); }
+            VectorBGRA IPixelReflection<VectorBGRA>.From(VectorRGBA color) { return new VectorBGRA(color.R, color.G, color.B, color.A); }
             #endregion
         }
 
@@ -678,7 +678,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct VectorRGBA : IFactory<VectorRGBA>
+        public readonly partial struct VectorRGBA : IPixelReflection<VectorRGBA>
         {
             #region constructors
             public VectorRGBA(Alpha8 alpha) { RGBA = new XYZA(0, 0, 0, alpha.A) / 255f; }
@@ -716,8 +716,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(this); }
             public VectorRGBA ToVectorRGBA() { return this; }
-            VectorRGBA IFactory<VectorRGBA>.From(BGRA32 color) { return new VectorRGBA(color); }
-            VectorRGBA IFactory<VectorRGBA>.From(VectorRGBA color) { return color; }
+            VectorRGBA IPixelReflection<VectorRGBA>.From(BGRA32 color) { return new VectorRGBA(color); }
+            VectorRGBA IPixelReflection<VectorRGBA>.From(VectorRGBA color) { return color; }
 
             public VectorRGBA FromPremul(XYZA premultiplied)
             {
@@ -746,7 +746,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct VectorBGR : IFactory<VectorBGR>
+        public readonly partial struct VectorBGR : IPixelReflection<VectorBGR>
         {
             #region constructors
             public VectorBGR(Single red, Single green, Single blue) { BGR = new XYZ(blue, green, red); }
@@ -768,8 +768,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(this); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(R, G, B, 1); }
-            VectorBGR IFactory<VectorBGR>.From(BGRA32 color) { return new VectorBGR(color); }
-            VectorBGR IFactory<VectorBGR>.From(VectorRGBA color) { return new VectorBGR(color.R, color.G, color.B); }
+            VectorBGR IPixelReflection<VectorBGR>.From(BGRA32 color) { return new VectorBGR(color); }
+            VectorBGR IPixelReflection<VectorBGR>.From(VectorRGBA color) { return new VectorBGR(color.R, color.G, color.B); }
 
             #endregion
         }

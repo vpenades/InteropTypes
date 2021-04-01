@@ -65,7 +65,7 @@ namespace InteropBitmaps
             }
         }
 
-        public BitmapBounds(int x, int y,int w,int h)
+        public BitmapBounds(int x, int y, int w, int h)
         {
             this.X = x;
             this.Y = y;

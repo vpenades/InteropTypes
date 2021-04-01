@@ -59,30 +59,35 @@ namespace InteropDrawing
 
         #region drawing        
 
-        public static void DrawLine(this IDrawing2D dc, POINT2 a, POINT2 b, SCALAR diameter, LineStyle brush)
+        public static void DrawLines(this IDrawing2D dc, SCALAR diameter, LineStyle style, params POINT2[] points)
+        {
+            dc.DrawLines(points, diameter, style);
+        }
+
+        public static void DrawLine(this IDrawing2D dc, POINT2 a, POINT2 b, SCALAR diameter, LineStyle style)
         {
             Span<POINT2> pp = stackalloc POINT2[2];
             pp[0] = a;
             pp[1] = b;
 
-            dc.DrawLines(pp, diameter, brush);
+            dc.DrawLines(pp, diameter, style);
         }        
 
-        public static void DrawCircle(this IDrawing2D dc, POINT2 center, SCALAR diameter, ColorStyle brush)
+        public static void DrawCircle(this IDrawing2D dc, POINT2 center, SCALAR diameter, ColorStyle style)
         {
-            dc.DrawEllipse(center, diameter, diameter, brush);
+            dc.DrawEllipse(center, diameter, diameter, style);
         }        
 
-        public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle brush)
+        public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
 
             Parametric.ShapeFactory.FillRectangleVertices(vertices, origin, size, 0, 0);
 
-            dc.DrawPolygon(vertices, brush);
+            dc.DrawPolygon(vertices, style);
         }
 
-        public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle brush, float borderRadius, int arcVertexCount = 6)
+        public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle style, float borderRadius, int arcVertexCount = 6)
         {
             if (borderRadius == 0) arcVertexCount = 0;
 
@@ -90,12 +95,12 @@ namespace InteropDrawing
 
             Parametric.ShapeFactory.FillRectangleVertices(vertices, origin, size, borderRadius, arcVertexCount);
 
-            dc.DrawPolygon(vertices, brush);
+            dc.DrawPolygon(vertices, style);
         }        
 
-        public static void DrawPolygon(this IDrawing2D dc, ColorStyle brush, params POINT2[] points)
+        public static void DrawPolygon(this IDrawing2D dc, ColorStyle style, params POINT2[] points)
         {
-            dc.DrawPolygon(points, brush);
+            dc.DrawPolygon(points, style);
         }
 
         public static void DrawLine(this IDrawing2D dc, POINT2 a, POINT2 b, float diameter, SpriteStyle style)

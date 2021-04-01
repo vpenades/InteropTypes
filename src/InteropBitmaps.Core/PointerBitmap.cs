@@ -192,6 +192,24 @@ namespace InteropBitmaps
             return refreshed;
         }
 
+        public bool CopyTo<TPixel>(ref MemoryBitmap<TPixel> other)
+            where TPixel:unmanaged
+        {
+            var refreshed = false;
+
+            var info = this.Info.WithPixelFormat<TPixel>(other.Info.PixelFormat);
+
+            if (!info.Equals(other.Info))
+            {
+                other = new MemoryBitmap<TPixel>(info);
+                refreshed = true;
+            }
+
+            other.AsTypeless().SetPixels(0, 0, this);
+
+            return refreshed;
+        }
+
         public bool CopyTo(ref BitmapInfo otherInfo, ref Byte[] otherData)
         {
             if (!this.Info.Equals(otherInfo)) otherInfo = this.Info;

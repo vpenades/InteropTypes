@@ -307,12 +307,12 @@ namespace InteropBitmaps
 
         #region API - IO
 
-        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
+        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
         {
             AsTypeless().Write(stream, format, factory);
         }
 
-        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
+        public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
             AsTypeless().Save(filePath, factory);
         }

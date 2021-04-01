@@ -23,10 +23,10 @@ namespace InteropBitmaps
 
             public const uint Empty = (uint)PEF.Empty;
 
-            public const uint Gray8 = SHIFT0 * (uint)PEF.Gray8;
+            public const uint Luminance8 = SHIFT0 * (uint)PEF.Luminance8;
             public const uint Alpha8 = SHIFT0 * (uint)PEF.Alpha8;
 
-            public const uint Gray16 = SHIFT0 * (uint)PEF.Gray16;
+            public const uint Luminance16 = SHIFT0 * (uint)PEF.Luminance16;
             public const uint BGR565 = SHIFT0 * (uint)PEF.Blue5 | SHIFT1 * (uint)PEF.Green6 | SHIFT2 * (uint)PEF.Red5;
             public const uint BGRA4444 = SHIFT0 * (uint)PEF.Blue4 | SHIFT1 * (uint)PEF.Green4 | SHIFT2 * (uint)PEF.Red4 | SHIFT3 * (uint)PEF.Alpha4;
             public const uint BGRA5551 = SHIFT0 * (uint)PEF.Blue5 | SHIFT1 * (uint)PEF.Green5 | SHIFT2 * (uint)PEF.Red5 | SHIFT3 * (uint)PEF.Alpha1;
@@ -39,7 +39,7 @@ namespace InteropBitmaps
             public const uint BGRA32 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8 | SHIFT3 * (uint)PEF.Alpha8;
             public const uint ARGB32 = SHIFT0 * (uint)PEF.Alpha8 | SHIFT1 * (uint)PEF.Red8 | SHIFT2 * (uint)PEF.Green8 | SHIFT3 * (uint)PEF.Blue8;
 
-            public const uint Gray32F = SHIFT0 * (uint)PEF.Gray32F;
+            public const uint Gray32F = SHIFT0 * (uint)PEF.Luminance32F;
 
             public const uint BGR96F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F;
 
@@ -66,13 +66,13 @@ namespace InteropBitmaps
         
         partial struct Luminance8
         {
-            public const uint Code = _PackedPixelCodes.Gray8;
+            public const uint Code = _PackedPixelCodes.Luminance8;
             public static readonly Format Format = new Format(Code);
         }
         
         partial struct Luminance16
         {
-            public const uint Code = _PackedPixelCodes.Gray16;
+            public const uint Code = _PackedPixelCodes.Luminance16;
             public static readonly Format Format = new Format(Code);
         }
 

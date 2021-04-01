@@ -86,14 +86,14 @@ namespace InteropBitmaps
 
                             case PEF.Index8:
                             case PEF.Alpha8:
-                            case PEF.Gray8:
+                            case PEF.Luminance8:
                             case PEF.Red8:
                             case PEF.Green8:
                             case PEF.Blue8:
                             case PEF.Undefined8: return 8;
 
                             case PEF.Index16:
-                            case PEF.Gray16:
+                            case PEF.Luminance16:
                             case PEF.Red16:
                             case PEF.Green16:
                             case PEF.Blue16:
@@ -101,7 +101,7 @@ namespace InteropBitmaps
                             case PEF.DepthMM16:
                             case PEF.Undefined16: return 16;
 
-                            case PEF.Gray32F:
+                            case PEF.Luminance32F:
                             case PEF.Red32F:
                             case PEF.Green32F:
                             case PEF.Blue32F:
@@ -202,9 +202,9 @@ namespace InteropBitmaps
                     {
                         switch (Id)
                         {
-                            case PEF.Gray8: return true;
-                            case PEF.Gray16: return true;
-                            case PEF.Gray32F: return true;
+                            case PEF.Luminance8: return true;
+                            case PEF.Luminance16: return true;
+                            case PEF.Luminance32F: return true;
                             default: return false;
                         }
                     }

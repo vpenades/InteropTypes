@@ -221,7 +221,7 @@ namespace InteropBitmaps
 
         #region API - IO
 
-        public static MemoryBitmap<TPixel> Read(System.IO.Stream s, params Codecs.IBitmapDecoding[] factory)
+        public static MemoryBitmap<TPixel> Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
         {
             var raw = MemoryBitmap.Read(s, factory);
             if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
@@ -232,7 +232,7 @@ namespace InteropBitmaps
             return dst;
         }
 
-        public static MemoryBitmap<TPixel> Load(string filePath, params Codecs.IBitmapDecoding[] factory)
+        public static MemoryBitmap<TPixel> Load(string filePath, params Codecs.IBitmapDecoder[] factory)
         {
             var raw = MemoryBitmap.Load(filePath, factory);
             if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
@@ -243,7 +243,7 @@ namespace InteropBitmaps
             return dst;
         }
 
-        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
+        public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Save(filePath, factory);
         }        

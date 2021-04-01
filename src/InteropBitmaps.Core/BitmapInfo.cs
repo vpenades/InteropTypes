@@ -15,7 +15,7 @@ namespace InteropBitmaps
     /// <summary>
     /// Represents the width, height and pixel format of a bitmap.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{_DebuggerDisplay(),nq}")]
+    [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly struct BitmapInfo : IEquatable<BitmapInfo>
     {
@@ -23,7 +23,7 @@ namespace InteropBitmaps
 
         #region debug
 
-        internal string _DebuggerDisplay() { return $"{PixelFormat._GetDebuggerDisplay()}×{Width}×{Height}"; }
+        public string ToDebuggerDisplayString() { return $"{PixelFormat._GetDebuggerDisplay()}×{Width}×{Height}"; }
 
         #endregion
 
@@ -44,6 +44,16 @@ namespace InteropBitmaps
         public BitmapInfo WithPixelFormat<TPixel>() where TPixel:unmanaged
         {
             var fmt = Pixel.Format.TryIdentifyPixel<TPixel>();
+            return this.WithPixelFormat(fmt);
+        }
+
+        public BitmapInfo WithPixelFormat<TPixel>(Pixel.Format format) where TPixel : unmanaged
+        {
+            var fmt = Pixel.Format.TryIdentifyPixel<TPixel>();
+            if (format == default) return this.WithPixelFormat(fmt);
+
+            if (fmt.ByteCount != format.ByteCount) throw new ArgumentException("Pixel size mismatch");
+            
             return this.WithPixelFormat(fmt);
         }
 

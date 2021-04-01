@@ -7,7 +7,7 @@ namespace InteropBitmaps
     partial class Pixel
     {
         public static TPixel GetColor<TPixel>(System.Drawing.Color color)
-            where TPixel : IFactory<TPixel>
+            where TPixel : IPixelReflection<TPixel>
         {
             return default(TPixel).From(new BGRA32(color));
         }
@@ -88,7 +88,7 @@ namespace InteropBitmaps
 
         public static ConverterCallback<Byte, Byte> GetConverter<TSrcPixel, TDstPixel>()
             where TSrcPixel : unmanaged, IConvertible
-            where TDstPixel : unmanaged, IFactory<TDstPixel>
+            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
         {
             if (typeof(TSrcPixel) == typeof(TDstPixel)) { return (a, b) => a.CopyTo(b); }
 
@@ -211,7 +211,7 @@ namespace InteropBitmaps
         }
 
         private static void _ConvertPixels<TDstPixel>(Span<TDstPixel> dst, ReadOnlySpan<VectorRGBA> src)
-            where TDstPixel : unmanaged, IFactory<TDstPixel>
+            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
         {
             if (typeof(VectorRGBA) == typeof(TDstPixel))
             {
@@ -228,7 +228,7 @@ namespace InteropBitmaps
 
         public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)
             where TSrcPixel : unmanaged, IConvertible
-            where TDstPixel : unmanaged, IFactory<TDstPixel>
+            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
         {
             for(int i=0; i < dst.Length; ++i)
             {
@@ -238,7 +238,7 @@ namespace InteropBitmaps
         }
 
         public static void LerpArray<TDstPixel>(ReadOnlySpan<System.Numerics.Vector3> left, ReadOnlySpan<System.Numerics.Vector3> right, float amount, Span<TDstPixel> dst)            
-            where TDstPixel : unmanaged, IFactory<TDstPixel>
+            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
         {
             for (int i = 0; i < dst.Length; ++i)
             {

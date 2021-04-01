@@ -64,7 +64,7 @@ namespace InteropBitmaps
 
             return other;
         }
-
+        
         #endregion
 
         #region data
@@ -230,6 +230,32 @@ namespace InteropBitmaps
             OfType<TPixel>().SetPixels(value);
         }
 
+        public void SetPixels(System.Drawing.Color color)
+        {
+            switch(Info.PixelFormat.PackedFormat)
+            {
+                case Pixel.Alpha8.Code: SetPixels(Pixel.GetColor<Pixel.Alpha8>(color));break;
+                case Pixel.Luminance8.Code: SetPixels(Pixel.GetColor<Pixel.Luminance8>(color)); break;
+                case Pixel.Luminance16.Code: SetPixels(Pixel.GetColor<Pixel.Luminance16>(color)); break;
+
+                case Pixel.BGR565.Code: SetPixels(Pixel.GetColor<Pixel.BGR565>(color)); break;
+                case Pixel.BGRA4444.Code: SetPixels(Pixel.GetColor<Pixel.BGRA4444>(color)); break;
+                case Pixel.BGRA5551.Code: SetPixels(Pixel.GetColor<Pixel.BGRA5551>(color)); break;
+
+                case Pixel.RGB24.Code: SetPixels(Pixel.GetColor<Pixel.RGB24>(color)); break;
+                case Pixel.BGR24.Code: SetPixels(Pixel.GetColor<Pixel.BGR24>(color)); break;
+
+                case Pixel.RGBA32.Code: SetPixels(Pixel.GetColor<Pixel.RGBA32>(color)); break;
+                case Pixel.BGRA32.Code: SetPixels(Pixel.GetColor<Pixel.BGRA32>(color)); break;
+                case Pixel.ARGB32.Code: SetPixels(Pixel.GetColor<Pixel.ARGB32>(color)); break;
+
+                case Pixel.VectorBGR.Code: SetPixels(Pixel.GetColor<Pixel.VectorBGR>(color)); break;
+                case Pixel.VectorBGRA.Code: SetPixels(Pixel.GetColor<Pixel.VectorBGRA>(color)); break;
+                case Pixel.VectorRGBA.Code: SetPixels(Pixel.GetColor<Pixel.VectorRGBA>(color)); break;
+                default:throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Blits the pixels of <paramref name="src"/> to this <see cref="SpanBitmap"/> at the <paramref name="dstX"/> and <paramref name="dstY"/> coordinates.
         /// </summary>
@@ -245,7 +271,29 @@ namespace InteropBitmaps
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
-        }        
+        }
+
+        public void SetPixels(Random rnd)
+        {
+            for(int y=0; y < this.Height; ++y)
+            {
+                var row = UseScanlineBytes(y);
+
+                var fourCount = row.Length & ~3;
+
+                var rowInts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(row.Slice(0, fourCount));
+
+                for(int x=0; x < rowInts.Length; ++x)
+                {
+                    rowInts[x] = rnd.Next();
+                }
+
+                for (int x = rowInts.Length * 4; x < row.Length; ++x)
+                {
+                    row[x] = (Byte)rnd.Next();
+                }
+            }
+        }
 
         public bool CopyTo(ref MemoryBitmap other)
         {
@@ -335,35 +383,34 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region API - IO
+        #region API - IO        
 
-        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoding[] factory)
+        public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
-            var position = stream.Position;
+            if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
 
-            foreach (var f in factory)
-            {
-                if (stream.Position != position) throw new InvalidOperationException("incompatible codecs must not write to the stream.");
-
-                if (f.TryWrite(stream, format, this)) return;                
-            }
-        }
-
-        public void Save(string filePath, params Codecs.IBitmapEncoding[] factory)
-        {
             var fmt = Codecs.CodecFactory.ParseFormat(filePath);
+            var lzs = new Lazy<System.IO.Stream>(() => System.IO.File.Create(filePath));
 
-            foreach (var f in factory)
-            {                
-                using (var s = System.IO.File.Create(filePath))
-                {
-                    if (f.TryWrite(s, fmt, this)) return;
-                }
-            }
-
-            throw new ArgumentException("invalid format", nameof(filePath));
+            try { Codecs.CodecFactory.Write(lzs, fmt, factory, this); }
+            finally { if (lzs.IsValueCreated) lzs.Value.Dispose(); }            
         }
 
+        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (!stream.CanWrite) throw new ArithmeticException(nameof(stream));
+
+            var lzs = new Lazy<System.IO.Stream>(() => stream);
+
+            Codecs.CodecFactory.Write(lzs, format, factory, this);
+        }        
+
+        public void Write(Lazy<System.IO.Stream> stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
+        {
+            Codecs.CodecFactory.Write(stream, format, factory, this);
+        }
+        
         #endregion        
     }    
 }

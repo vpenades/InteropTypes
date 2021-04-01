@@ -6,17 +6,30 @@ namespace InteropBitmaps.MemoryManagers
 {
     /// <summary>
     /// Helper class that wraps a <see cref="PointerBitmap"/> to expose it as a <see cref="MemoryBitmap"/>
-    /// </summary>
+    /// </summary>    
+    /// <see cref="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Buffers/MemoryManager.cs"/>
+    [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
     public abstract unsafe class BitmapMemoryManager
         : System.Buffers.MemoryManager<Byte>
         , IMemoryBitmapOwner
         , IPointerBitmapOwner
     {
+        #region debug
+
+        protected virtual string ToDebuggerDisplayString()
+        {
+            if (_Disposed) return "⚠ DISPOSED";
+            return _PointerBitmap.Info.ToDebuggerDisplayString();
+        }
+
+        #endregion
+
         #region lifecycle
 
         protected void Initialize(PointerBitmap ptrbmp)
         {
-            _PointerBitmap = ptrbmp;
+            _Disposed = false;
+            _PointerBitmap = ptrbmp;            
         }
 
         /// <summary>
@@ -24,32 +37,61 @@ namespace InteropBitmaps.MemoryManagers
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            _PointerBitmap = default;            
+            _Disposed = true;
+            _PointerBitmap = default;
+        }
+
+        private void _CheckDisposed()
+        {
+            if (_Disposed) throw new ObjectDisposedException(nameof(BitmapMemoryManager));
+        }
+
+        ~BitmapMemoryManager()
+        {
+            if (!_Disposed) throw new InvalidOperationException("Object must be disposed");
         }
 
         #endregion
 
         #region data
 
-        private PointerBitmap _PointerBitmap;
+        private bool _Disposed = true;
+        private PointerBitmap _PointerBitmap;        
 
         #endregion
 
         #region properties        
 
-        PointerBitmap IPointerBitmapOwner.Bitmap => _PointerBitmap;
+        PointerBitmap IPointerBitmapOwner.Bitmap
+        {
+            get
+            {
+                _CheckDisposed();
+                return _PointerBitmap;
+            }
+        }
 
-        MemoryBitmap IMemoryBitmapOwner.Bitmap => new MemoryBitmap(this.Memory, _PointerBitmap.Info);
+        
+
+        MemoryBitmap IMemoryBitmapOwner.Bitmap
+        {
+            get
+            {
+                _CheckDisposed();
+                return new MemoryBitmap(this.Memory, _PointerBitmap.Info);
+            }
+        }
 
         #endregion
 
-        #region API
+        #region MemoryManager<Byte> API
 
         /// <summary>
         /// Obtains a span that represents the region
         /// </summary>
         public override Span<Byte> GetSpan()
         {
+            _CheckDisposed();
             var ptr = _PointerBitmap.Pointer.ToPointer();
             return new Span<Byte>(ptr, _PointerBitmap.Info.BitmapByteSize);
         }
@@ -59,6 +101,8 @@ namespace InteropBitmaps.MemoryManagers
         /// </summary>
         public override System.Buffers.MemoryHandle Pin(int elementIndex = 0)
         {
+            _CheckDisposed();
+
             // if (elementIndex < 0 || elementIndex >= _Info.BitmapByteSize) throw new ArgumentOutOfRangeException(nameof(elementIndex));
 
             var ptr = (Byte*)_PointerBitmap.Pointer.ToPointer();
@@ -69,7 +113,10 @@ namespace InteropBitmaps.MemoryManagers
         /// <summary>
         /// Has no effect
         /// </summary>
-        public override void Unpin() { }
+        public override void Unpin()
+        {
+            _CheckDisposed();
+        }
 
         #endregion
     }

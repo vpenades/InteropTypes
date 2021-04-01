@@ -3,21 +3,40 @@ using System.Numerics;
 
 namespace InteropDrawing.Backends
 {
-    readonly struct _SimpleDrawingContext<TPixel> : IDrawing2D
+    [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
+    sealed class _MemoryDrawingContext<TPixel> : IDrawing2D
         where TPixel: unmanaged
     {
-        public _SimpleDrawingContext(InteropBitmaps.MemoryBitmap<TPixel> target, Converter<System.Drawing.Color, TPixel> converter)
+        #region debug
+
+        private string _ToDebuggerDisplay()
+        {
+            return $"IDrawing2D {_Target.Info.ToDebuggerDisplayString()}";
+        }
+
+        #endregion
+
+        #region constructor
+        public _MemoryDrawingContext(InteropBitmaps.MemoryBitmap<TPixel> target, Converter<System.Drawing.Color, TPixel> converter)
         {
             _Target = target;
             _ColorConverter = converter;
 
-            _PolygonRasterizer = new Helpers.PolygonScanlines(target.Width, target.Height);
+            _PolygonRasterizer = new Lazy<Helpers.PolygonScanlines>(() => new Helpers.PolygonScanlines(target.Width, target.Height));
         }
+
+        #endregion
+
+        #region data
 
         private readonly InteropBitmaps.MemoryBitmap<TPixel> _Target;
         private readonly Converter<System.Drawing.Color, TPixel> _ColorConverter;
 
-        private readonly Helpers.PolygonScanlines _PolygonRasterizer;
+        private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;
+
+        #endregion
+
+        #region API        
 
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
@@ -59,7 +78,7 @@ namespace InteropDrawing.Backends
             {
                 var fillColor = _ColorConverter(style.FillColor);
 
-                foreach (var (y, xmin, xmax) in _PolygonRasterizer.GetScanlines(Point2.AsNumerics(points)))
+                foreach (var (y, xmin, xmax) in _PolygonRasterizer.Value.GetScanlines(Point2.AsNumerics(points)))
                 {
                     _Target
                         .UseScanlinePixels(y)
@@ -83,5 +102,9 @@ namespace InteropDrawing.Backends
                 InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, points[points.Length - 1], points[0], outColor);
             }
         }
+
+        #endregion
     }
+
+    
 }

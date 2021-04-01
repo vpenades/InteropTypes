@@ -35,6 +35,13 @@ namespace InteropDrawing
 
     public interface IDrawing2D : IPolygonDrawing2D
     {
+        // methods could return a value:
+        // - a boolean, indicating success or failure/unsupported
+        // - or an object that could be used to fill additional metadata.
+
+        // metadata could be set with Push/Pop methods
+
+
         void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
 
         void DrawLines(ReadOnlySpan<Point2> points, SCALAR diameter, LineStyle style);
