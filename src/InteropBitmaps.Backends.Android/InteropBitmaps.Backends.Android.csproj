@@ -6,8 +6,7 @@
   </PropertyGroup>
   
   <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+  <Import Project="..\Version.props" />  
 
   <ItemGroup>
     <!-- https://github.com/xamarin/Essentials/issues/904 -->

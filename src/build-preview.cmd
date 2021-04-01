@@ -7,7 +7,12 @@ set VERSIONSUFFIX=Preview-%TIMEKEY%
 
 echo Building 1.0.0-%VERSIONSUFFIX%
 
-dotnet build -c:Release --version-suffix %VERSIONSUFFIX% /p:Authors=vpenades ..\InteropTypes.sln
+rem dotnet pack -restore:true -c:Release --version-suffix %VERSIONSUFFIX% /p:NoWarn=1591 /p:Authors=vpenades ..\InteropTypes.sln
+
+set MSBUILDPROPERTIES=Configuration=Release;VersionSuffix=%VERSIONSUFFIX%;NoWarn=1591
+
+msbuild -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
+msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
 
 md bin
 
