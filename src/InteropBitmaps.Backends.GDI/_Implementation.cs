@@ -6,6 +6,11 @@ using System.Drawing;
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
 using INTEROPFMT = InteropBitmaps.Pixel.Format;
 
+using GDIICON = System.Drawing.Icon;
+using GDIIMAGE = System.Drawing.Image;
+using GDIBITMAP = System.Drawing.Bitmap;
+using GDIPTR = System.Drawing.Imaging.BitmapData;
+
 namespace InteropBitmaps
 {
     static class _Implementation
@@ -16,7 +21,7 @@ namespace InteropBitmaps
         {
             switch (fmt)
             {
-                case GDIFMT.Format8bppIndexed: return Pixel.Luminance8.Format;
+                case GDIFMT.Format8bppIndexed: throw new NotImplementedException(fmt.ToString());                
 
                 case GDIFMT.Format16bppGrayScale: return Pixel.Luminance16.Format;
                 case GDIFMT.Format16bppRgb565: return Pixel.BGR565.Format;
@@ -67,17 +72,17 @@ namespace InteropBitmaps
             }
 
             return GDIFMT.Undefined;
-        }        
+        }
 
         #endregion
 
         #region API
 
-        public static BitmapInfo GetBitmapInfo(System.Drawing.Imaging.BitmapData bits)
+        public static BitmapInfo GetBitmapInfo(GDIPTR bits)
         {
             var fmt = ToPixelFormat(bits.PixelFormat);
             return new BitmapInfo(bits.Width, bits.Height, fmt, bits.Stride);
-        }
+        }        
 
         public static Bitmap WrapAsGDIBitmap(PointerBitmap src)
         {

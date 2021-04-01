@@ -6,7 +6,7 @@ using System.Text;
 namespace InteropBitmaps.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
-    public sealed class GDICodec : IBitmapDecoding, IBitmapEncoding
+    public sealed class GDICodec : IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle
 
@@ -22,6 +22,7 @@ namespace InteropBitmaps.Codecs
 
         #region API
 
+        /// <inheritdoc/>
         public bool TryRead(Stream s, out MemoryBitmap bitmap)
         {
             try
@@ -40,7 +41,8 @@ namespace InteropBitmaps.Codecs
             }
         }
 
-        public bool TryWrite(Stream s, CodecFormat format, SpanBitmap bmp)
+        /// <inheritdoc/>
+        public bool TryWrite(Lazy<System.IO.Stream> stream, CodecFormat format, SpanBitmap bmp)
         {
             var fmt = GetFormatFromExtension(format);
             if (fmt == null) return false;
@@ -51,7 +53,7 @@ namespace InteropBitmaps.Codecs
             {
                 using (var tmp = _Implementation.CloneToGDIBitmap(bmp, true))
                 {
-                    tmp.Save(s, fmt);
+                    tmp.Save(stream.Value, fmt);
                 }
             }
             else
@@ -60,7 +62,7 @@ namespace InteropBitmaps.Codecs
                 {
                     using (var tmp = _Implementation.WrapAsGDIBitmap(ptr))
                     {
-                        tmp.Save(s, fmt);
+                        tmp.Save(stream.Value, fmt);
                     }
                 }
 
