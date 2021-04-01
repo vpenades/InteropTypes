@@ -14,13 +14,13 @@ namespace InteropBitmaps.Codecs
     {
         public static void _EnsureBinariesAreSet()
         {
-            if (!string.IsNullOrEmpty(ffmpeg.RootPath)) return;
-
-            FFmpegHelper.RegisterFFmpegBinaries();
+            FFmpegHelper.Initialize();
         }
 
         public static unsafe PointerBitmap AsPointerBitmap(AVFrame frame)
         {
+            _EnsureBinariesAreSet();
+
             var binfo = new BitmapInfo(frame.width, frame.height, Pixel.BGR24.Format, frame.linesize[0]);
             return new PointerBitmap((IntPtr)frame.data[0], binfo, true);
         }
@@ -37,6 +37,8 @@ namespace InteropBitmaps.Codecs
 
         private static IReadOnlyDictionary<string, string> GetDecoderInfo(VideoStreamDecoder vsd)
         {
+            _EnsureBinariesAreSet();
+
             var info = vsd.GetContextInfo();
 
             var dict = new Dictionary<string, string>();

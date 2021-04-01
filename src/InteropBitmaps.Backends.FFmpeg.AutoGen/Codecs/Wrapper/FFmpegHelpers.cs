@@ -10,16 +10,26 @@ namespace InteropBitmaps.Codecs
 {
     static class FFmpegHelper
     {
-        internal static void RegisterFFmpegBinaries()
+        static FFmpegHelper()
         {
-            var path = Path.GetDirectoryName(typeof(FFmpegHelper).Assembly.Location);            
+            if (_RegisterInitialized) return;
+
+            _RegisterInitialized = true;
+
+            var path = Path.GetDirectoryName(typeof(FFmpegHelper).Assembly.Location);
 
             path = Path.Combine(path, "FFmpegAutoGen", Environment.Is64BitProcess ? "win-x64" : "win-x86");
 
-            if (!Directory.Exists(path)) return;            
-                
-            ffmpeg.RootPath = path;            
+            if (!Directory.Exists(path)) return;
+
+            ffmpeg.RootPath = path;
         }
+
+        private static bool _RegisterInitialized;
+
+        public static bool Initialize() => _RegisterInitialized;
+
+        
 
         public static unsafe string av_strerror(int error)
         {

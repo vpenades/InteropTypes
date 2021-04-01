@@ -84,9 +84,7 @@ namespace InteropBitmaps.Codecs
                 data = new byte_ptrArray8 { [0] = (Byte*)inputFrame.Pointer.ToPointer() },
                 linesize = new int_array8 { [0] = inputFrame.StepByteSize },
                 height = inputFrame.Height
-            };
-
-            
+            };            
 
             var convertedFrame = converter.Convert(frame);
 
