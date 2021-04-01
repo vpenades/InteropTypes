@@ -1,0 +1,22 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras"> <!-- Remember to keep the file global.json in the project!!! -->
+
+  <PropertyGroup>
+    <TargetFrameworks>MonoAndroid81;MonoAndroid90;MonoAndroid10.0</TargetFrameworks>    
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+  
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
+
+  <ItemGroup>
+    <!-- https://github.com/xamarin/Essentials/issues/904 -->
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+  </ItemGroup>
+    
+</Project>
