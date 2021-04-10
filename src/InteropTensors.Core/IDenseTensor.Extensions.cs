@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace InteropTensors
@@ -35,6 +36,53 @@ namespace InteropTensors
             }
 
             return tensor;
-        }        
+        }
+
+        /// <summary>
+        /// Copies the ROI of an image to the target tensor.
+        /// </summary>
+        /// <param name="dstTensor">The tensor target.</param>
+        /// <param name="dstTensorSizeIdx">
+        /// <para>Index in the tensor dimensions representing the bitmap size.</para>
+        /// <para>In tensor semantics, the size is represented as Height, followed by Width.</para>
+        /// </param>
+        /// <param name="srcImage">The source image.</param>
+        /// <param name="srcImageROI">The region of interest of the source image.</param>
+        /// <param name="dstToSrcXform">A transform to transform from <paramref name="dstTensor"/> coordinates to <paramref name="srcImage"/> coordinates. </param>
+        public static void SetPixels(this IInputImageTensor dstTensor, int dstTensorSizeIdx, InteropBitmaps.PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
+        {
+            if (dstTensor == null) throw new ArgumentNullException(nameof(dstTensor));            
+
+            for(int i=0; i <= dstTensorSizeIdx+1; ++i)
+            {
+                if (dstTensor.Dimensions[i] <= 0) throw new ArgumentException($"Dimension[{i}] value is invalid.", nameof(dstTensor));
+            }            
+
+            Matrix3x2.Invert(srcImageROI, out Matrix3x2 iform);
+            var ih = dstTensor.Dimensions[dstTensorSizeIdx + 0];
+            var iw = dstTensor.Dimensions[dstTensorSizeIdx + 1];
+            iform *= Matrix3x2.CreateScale(iw, ih);
+            Matrix3x2.Invert(iform, out dstToSrcXform);
+
+            dstTensor.SetPixels(srcImage, iform);
+        }
+
+        /// <summary>
+        /// Copies the ROI of an image to the target tensor.
+        /// </summary>
+        /// <param name="dstTensor">The tensor target.</param>
+        /// <param name="dstTensorSizeIdx">
+        /// <para>Index in the tensor dimensions representing the bitmap size.</para>
+        /// <para>In tensor semantics, the size is represented as Height, followed by Width.</para>
+        /// </param>
+        /// <param name="srcImage">The source image.</param>
+        /// <param name="srcImageROI">The region of interest of the source image.</param>
+        /// <param name="dstToSrcXform">A transform to transform from <paramref name="dstTensor"/> coordinates to <paramref name="srcImage"/> coordinates. </param>
+        public static void SetPixels(this IDenseTensor dstTensor, int dstTensorSizeIdx, InteropBitmaps.PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
+        {
+            if (!(dstTensor is IInputImageTensor dstImage)) throw new ArgumentException($"Does not implement {nameof(IInputImageTensor)}.", nameof(dstTensor));
+            
+            dstImage.SetPixels(dstTensorSizeIdx, srcImage, srcImageROI, out dstToSrcXform);            
+        }
     }
 }

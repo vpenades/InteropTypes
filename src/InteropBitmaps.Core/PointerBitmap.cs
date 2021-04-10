@@ -14,7 +14,7 @@ namespace InteropBitmaps
     /// This is the lowest possible level bitmap representation, so it is assumed a developer knows how to use it.
     /// This structure just wraps the pointer; in order to access it, use <see cref="AsSpanBitmap"/> or <see cref="AsSpanBitmapOfType{TPixel}"/>.    
     /// </remarks>
-    [System.Diagnostics.DebuggerDisplay("{Pointer} {Info._DebuggerDisplay(),nq}")]
+    [System.Diagnostics.DebuggerDisplay("{Pointer} {Info.ToDebuggerDisplayString(),nq}")]
     public readonly struct PointerBitmap
     {
         #region constructors        

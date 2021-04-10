@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{227D251E-A653-47FC-AAF3-60FE3AD17C89}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vision", "Vision", "{227D251E-A653-47FC-AAF3-60FE3AD17C89}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.GDI", "src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj", "{B054109D-EE89-4D47-B454-59053223D0DE}"
 EndProject
@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backends", "Backends", "{32
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{17B219B6-2393-4D14-B532-F23C7EC56364}"
 	ProjectSection(SolutionItems) = preProject
+		src\build-preview.cmd = src\build-preview.cmd
 		README.md = README.md
 	EndProjectSection
 EndProject

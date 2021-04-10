@@ -10,7 +10,7 @@ namespace InteropBitmaps
     /// <summary>
     /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Info._DebuggerDisplay(),nq}")]
+    [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
     public readonly struct MemoryBitmap<TPixel>
         : IBitmap<TPixel> where TPixel : unmanaged        

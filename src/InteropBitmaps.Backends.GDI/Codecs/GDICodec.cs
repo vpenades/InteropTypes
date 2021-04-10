@@ -60,7 +60,7 @@ namespace InteropBitmaps.Codecs
             {
                 void _doSave(PointerBitmap ptr)
                 {
-                    using (var tmp = _Implementation.WrapAsGDIBitmap(ptr))
+                    using (var tmp = _Implementation.WrapOrCloneAsGDIBitmap(ptr))
                     {
                         tmp.Save(stream.Value, fmt);
                     }

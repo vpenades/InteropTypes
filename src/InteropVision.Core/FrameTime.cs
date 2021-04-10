@@ -33,6 +33,12 @@ namespace InteropVision
             var b = DateTime.UtcNow;
 
             _BaseTimeUTC = a + new TimeSpan((b - a).Ticks / 2);
+
+            // remove two hours to prevent the extremely rare case of instancing this value
+            // within the Saturday night hour when we switch from summer time to winter time,
+            // where we "travel back in time one hour", which would cause the relative time
+            // to be negative.
+            _BaseTimeUTC -= TimeSpan.FromHours(2);
         }
 
         #endregion

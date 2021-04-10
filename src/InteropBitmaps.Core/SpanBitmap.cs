@@ -10,7 +10,7 @@ namespace InteropBitmaps
     /// <summary>
     /// Represents a Bitmap backed by a <see cref="Span{Byte}"/>
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Info._DebuggerDisplay(),nq}")]
+    [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
     public readonly ref partial struct SpanBitmap
     {

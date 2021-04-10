@@ -82,17 +82,32 @@ namespace InteropBitmaps
         {
             var fmt = ToPixelFormat(bits.PixelFormat);
             return new BitmapInfo(bits.Width, bits.Height, fmt, bits.Stride);
+        }
+
+        public static Bitmap WrapOrCloneAsGDIBitmap(PointerBitmap src)
+        {
+            if (TryWrap(src, out var dst, out _)) return dst;
+            return CloneToGDIBitmap(src, true);
+        }
+
+        public static bool TryWrap(PointerBitmap src, out GDIBITMAP dst, out string errorMsg)
+        {
+            dst = null;
+
+            if (src.IsEmpty) { errorMsg = "Empty"; return false; }
+            var fmt = ToPixelFormat(src.Info.PixelFormat, false);
+            if (fmt == GDIFMT.Undefined) { errorMsg = $"Invalid format {src.Info.PixelFormat}"; return false; }
+            if ((src.Info.StepByteSize & 3) != 0) { errorMsg = $"Stride Must be multiple of 4 but found {src.Info.StepByteSize}"; return false; }
+
+            dst = new Bitmap(src.Info.Width, src.Info.Height, src.Info.StepByteSize, fmt, src.Pointer);
+            errorMsg = null;
+            return true;
         }        
 
         public static Bitmap WrapAsGDIBitmap(PointerBitmap src)
         {
-            if (src.IsEmpty) return null;
-            var fmt = ToPixelFormat(src.Info.PixelFormat, false);
-            if (fmt == GDIFMT.Undefined) throw new ArgumentException($"Invalid format {src.Info.PixelFormat}", nameof(src));
-
-            if ((src.Info.StepByteSize & 3) != 0) throw new ArgumentException($"Must be multiple of 4 but found {src.Info.StepByteSize}", nameof(src.Info.StepByteSize));
-
-            return new Bitmap(src.Info.Width, src.Info.Height, src.Info.StepByteSize, fmt, src.Pointer);
+            if (TryWrap(src, out var dst, out var err)) return dst;
+            throw new ArgumentException(err, nameof(src));
         }
 
         public static Bitmap CloneToGDIBitmap(SpanBitmap src, bool allowCompatibleFormats, GDIFMT? fmtOverride = null)
