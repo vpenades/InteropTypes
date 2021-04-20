@@ -164,6 +164,24 @@ namespace InteropBitmaps
             return new MemoryBitmap(memory, info);
         }
 
+        /// <summary>
+        /// Reshapes <paramref name="bmp"/> if it doesn't match <paramref name="fmt"/>.
+        /// </summary>
+        /// <param name="bmp">The bitmap to reshape.</param>
+        /// <param name="fmt">The shape to apply.</param>
+        /// <param name="compareStep">True if we want to take <see cref="BitmapInfo.StepByteSize"/> into account.</param>
+        /// <param name="discardPixels">True if we don't want to copy the pixels when reshaping.</param>
+        /// <returns></returns>
+        public static bool Reshape(ref MemoryBitmap bmp, BitmapInfo fmt, bool compareStep = false, bool discardPixels = false)
+        {
+            if (BitmapInfo.AreEqual(bmp.Info, fmt, compareStep)) return false;
+
+            var newBmp = new MemoryBitmap(fmt);
+            if (!discardPixels) newBmp.SetPixels(0, 0, bmp);
+            bmp = newBmp;
+            return true;
+        }
+
         #endregion
 
         #region API - IO
@@ -189,8 +207,24 @@ namespace InteropBitmaps
         public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Write(stream, format, factory);
-        }        
+        }
 
-        #endregion        
-    }    
+        #endregion
+
+        #region nested types
+
+        /// <summary>
+        /// Represents an object that promises a <see cref="MemoryBitmap"/> and controls its life cycle.
+        /// </summary>
+        public interface ISource : IDisposable
+        {
+            /// <summary>
+            /// Gets the <see cref="MemoryBitmap"/> owned by this instance.<br/>
+            /// If this <see cref="ISource"/> is disposed, the <see cref="Bitmap"/> will no longet be valid.
+            /// </summary>
+            MemoryBitmap Bitmap { get; }
+        }
+
+        #endregion
+    }
 }

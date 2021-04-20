@@ -87,9 +87,9 @@ namespace InteropVision
                 _DisplayLineIndices.Clear();
             }
 
-            public void SetFrameSize(InferenceInput input)
+            public void SetFrameSize(PointerBitmapInput input)
             {
-                SetFrameSize(input.Image.Width, input.Image.Height);
+                SetFrameSize(input.Content.Width, input.Content.Height);
             }
 
             public void SetFrameSize(int width, int height)

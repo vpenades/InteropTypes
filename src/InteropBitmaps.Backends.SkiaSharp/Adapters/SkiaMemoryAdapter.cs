@@ -15,7 +15,7 @@ namespace InteropBitmaps.Adapters
 
             var ptr = new PointerBitmap(_Handle.Value, bmp.Info);
 
-            _ProxyBitmap = _Implementation.AsSKBitmap(ptr);
+            _ProxyBitmap = _Implementation.WrapAsSKBitmap(ptr);
             _DeviceContext = new SkiaSharp.SKCanvas(_ProxyBitmap);
         }
 

@@ -28,7 +28,7 @@ namespace InteropBitmaps.Adapters
 
         private static void _OnDraw(PointerBitmap ptr, Action<SkiaSharp.SKCanvas> onDraw)
         {
-            using(var dst = _Implementation.AsSKBitmap(ptr))
+            using(var dst = _Implementation.WrapAsSKBitmap(ptr))
             {
                 using(var canvas = new SkiaSharp.SKCanvas(dst))
                 {

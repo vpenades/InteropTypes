@@ -9,65 +9,25 @@ using SixLabors.ImageSharp.Processing;
 
 namespace InteropBitmaps
 {
-    static class _Implementation
+    public delegate void TransferAction(SpanBitmap src, SpanBitmap dst);
+
+    public delegate void MutateAction(SpanBitmap bmp);
+
+    static partial class _Implementation
     {
-        #region pixel formats       
-
-        public static Pixel.Format GetPixelFormat<TPixel>()
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            if (typeof(TPixel) == typeof(A8)) return Pixel.Alpha8.Format;
-            if (typeof(TPixel) == typeof(L8)) return Pixel.Luminance8.Format;            
-
-            if (typeof(TPixel) == typeof(L16)) return Pixel.Luminance16.Format;
-            if (typeof(TPixel) == typeof(Bgr565)) return Pixel.BGR565.Format;
-            if (typeof(TPixel) == typeof(Bgra5551)) return Pixel.BGRA5551.Format;
-            if (typeof(TPixel) == typeof(Bgra4444)) return Pixel.BGRA4444.Format;
-
-            if (typeof(TPixel) == typeof(Bgr24)) return Pixel.BGR24.Format;
-            if (typeof(TPixel) == typeof(Rgb24)) return Pixel.RGB24.Format;
-
-            if (typeof(TPixel) == typeof(Argb32)) return Pixel.ARGB32.Format;
-            if (typeof(TPixel) == typeof(Bgra32)) return Pixel.BGRA32.Format;
-            if (typeof(TPixel) == typeof(Rgba32)) return Pixel.RGBA32.Format;
-
-            throw new NotImplementedException();
-        }
-
-        public static Type ToPixelFormat(Pixel.Format fmt)
-        {
-            switch (fmt.PackedFormat)
-            {
-                case Pixel.Alpha8.Code: return typeof(A8);
-                case Pixel.Luminance8.Code: return typeof(L8);
-
-                case Pixel.Luminance16.Code: return typeof(L16);
-                case Pixel.BGR565.Code: return typeof(Bgr565);
-                case Pixel.BGRA5551.Code: return typeof(Bgra5551);
-                case Pixel.BGRA4444.Code: return typeof(Bgra4444);
-
-                case Pixel.RGB24.Code: return typeof(Rgb24);
-                case Pixel.BGR24.Code: return typeof(Bgr24);
-
-                case Pixel.RGBA32.Code: return typeof(Rgba32);
-                case Pixel.BGRA32.Code: return typeof(Bgra32);
-                case Pixel.ARGB32.Code: return typeof(Argb32);
-
-                default: throw new NotImplementedException();
-            }
-        }
+        #region API
 
         public static Image TryWrapImageSharp(MemoryBitmap src)
         {
-            var pixType = ToPixelFormat(src.PixelFormat);
+            if (!TryGetExactPixelType(src.PixelFormat, out var pixType)) throw new NotImplementedException();
 
             if (pixType == typeof(A8)) return TryWrapImageSharp<A8>(src);
             if (pixType == typeof(L8)) return TryWrapImageSharp<L8>(src);
 
             if (pixType == typeof(L16)) return TryWrapImageSharp<L16>(src);
             if (pixType == typeof(Bgr565)) return TryWrapImageSharp<Bgr565>(src);
-            if (pixType == typeof(Bgra5551)) return TryWrapImageSharp<Bgra5551>(src);
             if (pixType == typeof(Bgra4444)) return TryWrapImageSharp<Bgra4444>(src);
+            if (pixType == typeof(Bgra5551)) return TryWrapImageSharp<Bgra5551>(src);
 
             if (pixType == typeof(Bgr24)) return TryWrapImageSharp<Bgr24>(src);
             if (pixType == typeof(Rgb24)) return TryWrapImageSharp<Rgb24>(src);
@@ -76,13 +36,29 @@ namespace InteropBitmaps
             if (pixType == typeof(Bgra32)) return TryWrapImageSharp<Bgra32>(src);
             if (pixType == typeof(Rgba32)) return TryWrapImageSharp<Rgba32>(src);
 
+            if (pixType == typeof(RgbaVector)) return TryWrapImageSharp<RgbaVector>(src);
+
             throw new NotImplementedException();
         }
 
+        public static bool TryWrap<TPixel>(Image<TPixel> src, out SpanBitmap<TPixel> dst)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            dst = default;
 
-        #endregion
+            if (src == null) return false;
 
-        #region API      
+            if (!TryGetExactPixelFormat<TPixel>(out var pfmt)) return false;
+
+            if (!src.TryGetSinglePixelSpan(out Span<TPixel> srcSpan)) return false;
+
+            // We assume ImageSharp guarantees that memory is continuous.
+            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan);
+
+            dst = new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
+
+            return true;
+        }
 
         public static Image<TPixel> TryWrapImageSharp<TPixel>(this MemoryBitmap src)
             where TPixel : unmanaged, IPixel<TPixel>
@@ -90,12 +66,12 @@ namespace InteropBitmaps
             // ImageSharp does not support non-continuous pixel rows.
             if (!src.Info.IsContinuous) return null;
 
-            var pixType = ToPixelFormat(src.PixelFormat);
-            if (pixType != typeof(TPixel)) throw new ArgumentException(nameof(src.PixelFormat));
+            TryGetExactPixelType(src.PixelFormat, out var pixType);
+            if (pixType != typeof(TPixel)) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
 
             var memMngr = new Adapters.CastMemoryManager<Byte, TPixel>(src.Memory);
 
-            return Image<TPixel>.WrapMemory(memMngr, src.Width, src.Height);
+            return Image.WrapMemory(memMngr, src.Width, src.Height);
         }
 
         public static Image CreateImageSharp(Pixel.Format fmt, int width, int height)
@@ -154,19 +130,22 @@ namespace InteropBitmaps
             throw new NotImplementedException();
         }
 
+        
+
         public static SpanBitmap<TPixel> WrapAsSpanBitmap<TPixel>(Image<TPixel> src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             if (src == null) return default;
 
-            var pfmt = GetPixelFormat<TPixel>();
-
-            if (src.TryGetSinglePixelSpan(out Span<TPixel> srcSpan))
+            if (TryGetExactPixelFormat<TPixel>(out var pfmt))
             {
-                // We assume ImageSharp guarantees that memory is continuous.
-                var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan);
+                if (src.TryGetSinglePixelSpan(out Span<TPixel> srcSpan))
+                {
+                    // We assume ImageSharp guarantees that memory is continuous.
+                    var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan);
 
-                return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
+                    return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
+                }
             }
 
             throw new NotSupportedException();
@@ -184,7 +163,8 @@ namespace InteropBitmaps
         public static Image<TPixel> CloneToImageSharp<TPixel>(SpanBitmap src)
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            System.Diagnostics.Debug.Assert(ToPixelFormat(src.PixelFormat) == typeof(TPixel));
+            TryGetExactPixelType(src.PixelFormat, out var pixType);
+            System.Diagnostics.Debug.Assert(pixType == typeof(TPixel));
 
             return CloneToImageSharp(src.OfType<TPixel>());
         }
@@ -215,6 +195,42 @@ namespace InteropBitmaps
 
                 // transfer pixels back to src.
                 src.SetPixels(0, 0, WrapAsSpanBitmap(tmp));
+            }
+        }
+
+        public static void Transfer<TPixel>(SpanBitmap<TPixel> src, Image<TPixel> dst, TransferAction action)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            src = src.AsReadOnly();
+
+            if (TryWrap(dst, out var dstSpan))
+            {
+                action(src, dstSpan);                
+            }
+            else
+            {
+                dstSpan = dst.ToMemoryBitmap().AsSpanBitmap();
+                action(src, dstSpan);                
+            }
+        }
+
+        public static void Transfer<TPixel>(Image<TPixel> src, SpanBitmap<TPixel> dst, TransferAction action)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            if (TryWrap(src, out var srcSpan))
+            {
+                srcSpan = srcSpan.AsReadOnly();
+
+                action(srcSpan, dst);
+            }
+            else
+            {
+                srcSpan = src
+                    .ToMemoryBitmap()
+                    .AsSpanBitmap()
+                    .AsReadOnly();
+
+                action(srcSpan, dst);
             }
         }
 

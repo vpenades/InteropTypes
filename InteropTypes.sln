@@ -82,6 +82,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.And
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Droid.Tests", "tests\InteropTypes.Droid.Tests\InteropTypes.Droid.Tests.csproj", "{AD7B78B0-AE51-4FB7-9B11-4E22A2B538CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropVision.Tests", "tests\InteropVision.Tests\InteropVision.Tests.csproj", "{AC53DF1D-7081-4269-947B-4D0150E22609}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -334,6 +336,14 @@ Global
 		{AD7B78B0-AE51-4FB7-9B11-4E22A2B538CA}.Release|x64.ActiveCfg = Release|Any CPU
 		{AD7B78B0-AE51-4FB7-9B11-4E22A2B538CA}.Release|x64.Build.0 = Release|Any CPU
 		{AD7B78B0-AE51-4FB7-9B11-4E22A2B538CA}.Release|x64.Deploy.0 = Release|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Debug|x64.Build.0 = Debug|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Release|x64.ActiveCfg = Release|Any CPU
+		{AC53DF1D-7081-4269-947B-4D0150E22609}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -371,6 +381,7 @@ Global
 		{3C34B3B5-C92E-45B0-A3DE-26A72FC2EC35} = {2D022348-7707-4DB8-A5CD-469EA8ABBB5A}
 		{A8C9FC2F-2624-4AFE-AE0E-434A2B965430} = {329DAC85-E2C7-430F-9B8C-598298D0CFB8}
 		{AD7B78B0-AE51-4FB7-9B11-4E22A2B538CA} = {88681588-D801-4956-ACA7-ADE65AF158A7}
+		{AC53DF1D-7081-4269-947B-4D0150E22609} = {88681588-D801-4956-ACA7-ADE65AF158A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

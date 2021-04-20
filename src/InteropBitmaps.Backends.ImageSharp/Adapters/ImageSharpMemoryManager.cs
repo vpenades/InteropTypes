@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.Advanced;
 
 namespace InteropBitmaps.Adapters
 {
-    class ImageSharpMemoryManager<TPixel> : MemoryManager<Byte>, IMemoryBitmapOwner
+    class ImageSharpMemoryManager<TPixel> : MemoryManager<Byte>, MemoryBitmap.ISource
         where TPixel : unmanaged, IPixel<TPixel>
     {
         #region lifecycle

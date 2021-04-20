@@ -28,7 +28,7 @@ namespace InteropBitmaps
 
         #region As MemoryBitmap
 
-        public static IMemoryBitmapOwner UsingMemoryBitmap<TPixel>(this Image<TPixel> src, bool owned = false)
+        public static MemoryBitmap.ISource UsingMemoryBitmap<TPixel>(this Image<TPixel> src, bool owned = false)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             return new Adapters.ImageSharpMemoryManager<TPixel>(src, owned);

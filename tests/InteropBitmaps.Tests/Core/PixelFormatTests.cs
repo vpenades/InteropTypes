@@ -13,11 +13,6 @@ namespace InteropBitmaps
     [Category("Core")]
     public class PixelFormatTests
     {
-        private static readonly PEF[] _Bits1 = new[] { PEF.Undefined1, PEF.Alpha1 };
-        private static readonly PEF[] _Bits4 = new[] { PEF.Undefined4, PEF.Alpha4, PEF.Red4, PEF.Green4, PEF.Blue4 };
-        private static readonly PEF[] _Bits5 = new[] { PEF.Undefined5, PEF.Red5, PEF.Green5, PEF.Blue5 };
-        private static readonly PEF[] _Bits6 = new[] { PEF.Undefined6, PEF.Green6 };
-
         [Test]
         public void TestPixelFormatStructure()
         {

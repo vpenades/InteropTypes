@@ -10,7 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />    
+    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Drawing\InteropBitmaps.Drawing.csproj" />    
   </ItemGroup>
 
 </Project>

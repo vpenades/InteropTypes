@@ -366,7 +366,7 @@ namespace InteropTensors
         /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices2 GetDecomposedIndex(int flattenedIndex)
         {
@@ -621,7 +621,7 @@ namespace InteropTensors
         /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices3 GetDecomposedIndex(int flattenedIndex)
         {
@@ -914,7 +914,7 @@ namespace InteropTensors
         /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices4 GetDecomposedIndex(int flattenedIndex)
         {
@@ -1248,7 +1248,7 @@ namespace InteropTensors
         /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices5 GetDecomposedIndex(int flattenedIndex)
         {
@@ -1626,7 +1626,7 @@ namespace InteropTensors
         /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices6 GetDecomposedIndex(int flattenedIndex)
         {
@@ -2051,7 +2051,7 @@ namespace InteropTensors
         /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices7 GetDecomposedIndex(int flattenedIndex)
         {
@@ -2526,7 +2526,7 @@ namespace InteropTensors
         /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices8 GetDecomposedIndex(int flattenedIndex)
         {

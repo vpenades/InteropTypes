@@ -63,7 +63,7 @@ namespace InteropVision
             {
                 if (_DetectionT1.HasValue)
                 {
-                    if (_DetectionT1.Value.Time.RelativeTime >= d.Time.RelativeTime)
+                    if (_DetectionT1.Value.Time >= d.Time)
                     {
                         _DetectionT1 = d;
                         return;
@@ -98,7 +98,7 @@ namespace InteropVision
         #endif
 
         [Conditional("DEBUG")]
-        private void _Stats_AddBroadScore(FrameTime t, Score score)
+        private void _Stats_AddBroadScore(DateTime t, Score score)
         {
             #if DEBUG
             _BroadScores.Add(t,score);
@@ -106,7 +106,7 @@ namespace InteropVision
         }
 
         [Conditional("DEBUG")]
-        private void _Stats_AddNarrowScore(FrameTime t, Score score)
+        private void _Stats_AddNarrowScore(DateTime t, Score score)
         {
             #if DEBUG
             _NarrowScores.Add(t,score);
@@ -117,7 +117,7 @@ namespace InteropVision
 
         #region API
 
-        public void Inference(DetectedObject.Collection result, InferenceInput input, Rectangle? inputWindow = null)
+        public void Inference(DetectedObject.Collection result, PointerBitmapInput input, Rectangle? inputWindow = null)
         {
             // if we don't have any tracked face
             // or the tracked faces have a very low confidence,
@@ -130,7 +130,7 @@ namespace InteropVision
 
             if (_BroadTracked.Count == 0)
             {
-                var seeds = new DetectedObject.Collection(new SizeF(input.Image.Width,input.Image.Height));                
+                var seeds = new DetectedObject.Collection(new SizeF(input.Content.Width,input.Content.Height));                
                 _BroadDetector.Inference(seeds, input, inputWindow);
 
                 var tracked = seeds.Objects

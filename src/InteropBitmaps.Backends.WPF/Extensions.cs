@@ -25,7 +25,7 @@ namespace InteropBitmaps
             where TPixel:unmanaged
         { return new Adapters.WPFAdapter(bmp); }
 
-        public static IMemoryBitmapOwner UsingMemoryBitmap(this WIC_WRITABLE src) { return new Adapters.WPFMemoryManager(src); }
+        public static MemoryBitmap.ISource UsingMemoryBitmap(this WIC_WRITABLE src) { return new Adapters.WPFMemoryManager(src); }
 
         public static void SetPixels(this WIC_WRITABLE bmp, int dstX, int dstY, SpanBitmap spanSrc)
         {

@@ -14,7 +14,11 @@ namespace InteropBitmaps.Adapters
         public WPFAdapter(SpanBitmap bmp)
         {
             _Bitmap = bmp;
-            _Exact = _Implementation.ToPixelFormat(bmp.PixelFormat);
+
+            if (!_Implementation.TryGetExactPixelFormat(bmp.PixelFormat, out _Exact))
+            {
+                throw new Diagnostics.PixelFormatNotSupportedException(bmp.PixelFormat, nameof(bmp));
+            }
         }
 
         #endregion
@@ -43,7 +47,7 @@ namespace InteropBitmaps.Adapters
                 if (!allowCompatibleFormats || dstHdr.Size != _Bitmap.Info.Size) dst = null;
                 else
                 {
-                    var expected = _Implementation.ToBestMatch(_Bitmap.Info.PixelFormat);
+                    var expected = _Implementation.GetCompatiblePixelFormat(_Bitmap.Info.PixelFormat);
                     if (expected != dst.Format) dst = null;
                 }                
             }

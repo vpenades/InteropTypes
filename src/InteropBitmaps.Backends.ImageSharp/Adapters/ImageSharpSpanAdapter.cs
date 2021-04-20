@@ -16,7 +16,7 @@ namespace InteropBitmaps.Adapters
         public ImageSharpSpanAdapter(SpanBitmap bmp)
         {
             _Bitmap = bmp;
-            _ImageSharpPixelType = _Implementation.ToPixelFormat(bmp.PixelFormat);
+            _Implementation.TryGetExactPixelType(bmp.PixelFormat, out _ImageSharpPixelType);
         }
 
         #endregion

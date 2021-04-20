@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-using GDIFMT = System.Drawing.Imaging.PixelFormat;
-
 namespace InteropBitmaps.Adapters
 {
     public readonly ref struct GDISpanAdapter
@@ -23,20 +21,18 @@ namespace InteropBitmaps.Adapters
 
         #region API
 
-        private bool IsCompatibleWith(Bitmap bmp, bool allowCompatibleFormats)
+        private bool IsCompatibleWith(Bitmap bmp)
         {
             if (bmp == null) return false;
             if (bmp.Width != _Bitmap.Info.Width) return false;
             if (bmp.Height != _Bitmap.Info.Height) return false;
-
-            var fmt = _Implementation.ToPixelFormat(_Bitmap.Info.PixelFormat, allowCompatibleFormats);
-
-            return bmp.PixelFormat == fmt;
+            
+            return bmp.PixelFormat == _Implementation.GetCompatiblePixelFormat(_Bitmap.Info.PixelFormat);
         }
 
         public void CopyTo(ref Bitmap bmp)
         {
-            if (!IsCompatibleWith(bmp, false))
+            if (!IsCompatibleWith(bmp))
             {
                 bmp?.Dispose();
                 bmp = null;
@@ -48,7 +44,7 @@ namespace InteropBitmaps.Adapters
 
         public Bitmap ToBitmap(bool allowCompatibleFormats = false)
         {
-            return _Implementation.CloneToGDIBitmap(_Bitmap, allowCompatibleFormats);
+            return _Implementation.CloneAsGDIBitmap(_Bitmap);
         }
 
         public Bitmap ToResizedBitmap(int width, int height)

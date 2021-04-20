@@ -29,7 +29,7 @@ namespace InteropBitmaps.Codecs
             {
                 using (var img = System.Drawing.Image.FromStream(s))
                 {
-                    bitmap = _Implementation.CloneToMemoryBitmap(img);
+                    bitmap = _Implementation.CloneAsMemoryBitmap(img);
                 }
 
                 return true;
@@ -42,16 +42,14 @@ namespace InteropBitmaps.Codecs
         }
 
         /// <inheritdoc/>
-        public bool TryWrite(Lazy<System.IO.Stream> stream, CodecFormat format, SpanBitmap bmp)
+        public bool TryWrite(Lazy<Stream> stream, CodecFormat format, SpanBitmap bmp)
         {
             var fmt = GetFormatFromExtension(format);
-            if (fmt == null) return false;
+            if (fmt == null) return false;            
 
-            var needsConversion = _Implementation.ToPixelFormat(bmp.PixelFormat, false) == System.Drawing.Imaging.PixelFormat.Undefined;
-
-            if (needsConversion)
+            if (!_Implementation.TryGetExactPixelFormat(bmp.PixelFormat, out _))
             {
-                using (var tmp = _Implementation.CloneToGDIBitmap(bmp, true))
+                using (var tmp = _Implementation.CloneAsGDIBitmap(bmp))
                 {
                     tmp.Save(stream.Value, fmt);
                 }

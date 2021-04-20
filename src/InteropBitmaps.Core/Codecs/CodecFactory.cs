@@ -57,15 +57,18 @@ namespace InteropBitmaps.Codecs
             {
                 if (encoder.TryWrite(stream, format, bmp)) return;
 
-                // current encoder failed, amend the stream:
+                if (!stream.IsValueCreated) continue;
 
-                if (stream.IsValueCreated)
+                // if encoder failed, amend the stream
+                
+                if (!keepOpen) throw new ArgumentException(_CodecError000, nameof(encoders));
+
+                if (stream.Value.Position != position)
                 {
-                    if (stream.Value.Position == position) continue;
-                    if (stream.Value.CanSeek) stream.Value.Position = position;
-                    else throw new ArgumentException(_CodecError000, nameof(encoders));
+                    if (!stream.Value.CanSeek) throw new ArgumentException(_CodecError000, nameof(encoders));
+                    
+                    stream.Value.Position = position;
                 }
-                else if (!keepOpen) throw new ArgumentException(_CodecError000, nameof(encoders));
             }
 
             throw new ArgumentException("invalid format", nameof(format));

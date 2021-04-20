@@ -1,61 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace InteropVision
 {
     /// <summary>
     /// Represents the output score of an inference.
     /// </summary>    
-    [System.Diagnostics.DebuggerDisplay("{IsValid?✅:❎} {Value}")]
-    public readonly struct Score : IComparable<Score>
+    [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplayString(),nq}")]
+    public readonly struct Score :
+        IEquatable<Score>,
+        IComparable<Score>,
+        IComparable        
     {
-        #region constructor
+        #region diagnostics
 
-        public Score(bool isValid)
-        {            
-            IsValid = isValid;
-            Value = IsValid ? 1 : 0;
-        }
+        internal string _ToDebuggerDisplayString()
+        {
+            var r = IsValid
+                ? "✅"
+                : "❎";
 
-        public Score(float value, bool isValid)
-        {            
-            Value = value;
-            IsValid = isValid;
+            return this.Type == ResultType.Sigmoid
+                ? $"{r} {NormalizedValue}"
+                : $"{r} {Value}";
         }
 
         #endregion
 
-        #region operators
-
-        public static implicit operator Score((float raw, bool valid) score) { return new Score(score.raw, score.valid); }
-
-        public static bool operator <(Score a, Score b) => a.CompareTo(b) < 0;
-
-        public static bool operator >(Score a, Score b) => a.CompareTo(b) > 0;
-
-        #endregion
-
-        #region data
-
-        /// <summary>
-        /// Arbitrary score value.
-        /// </summary>
-        /// <remarks>
-        /// Most inference models return a "score" that can be used to determine whether the output result
-        /// can be considered valid or not. The meaning of the score depends on each model and there's no
-        /// standard, with some models using a Sigmoid value, while others using completely arbitrary scales.
-        /// Also, the threshold for every score is also defined by every model. So this structure defines
-        /// both the raw output score, and whether it passed the thresold.
-        /// </remarks>
-        public readonly float Value;
-
-        /// <summary>
-        /// A value indicating whether the score is considered valid or not.
-        /// </summary>
-        public readonly bool IsValid;
+        #region constants
 
         public static readonly Score Zero = (0, false);
 
@@ -63,20 +36,136 @@ namespace InteropVision
 
         #endregion
 
-        #region properties
+        #region constructor
+
+        public static implicit operator Score((float value, bool valid) score)
+        {
+            return new Score(score.value, score.valid);
+        }
+
+        public static implicit operator Score((float value, ResultType result) score)
+        {
+            return new Score(score.value, score.result);
+        }
+
+        public Score(bool isValid)
+        {            
+            Type = isValid ? ResultType.Valid : ResultType.Invalid;
+            Value = isValid ? 1 : 0;
+        }
+
+        public Score(float value, bool isValid)
+        {
+            Type = isValid ? ResultType.Valid : ResultType.Invalid;
+            Value = value;            
+        }
+
+        public Score(float value, ResultType result)
+        {
+            if (float.IsNaN(value)) throw new ArgumentException("NaN", nameof(value));
+
+            if (result == ResultType.Normalized)
+            {
+                if (value < 0 || value > 1) throw new ArgumentOutOfRangeException(nameof(value));
+            }
+
+            Type = result;
+            Value = value;
+        }
+
+        #endregion
+
+        #region data
+
 
         /// <summary>
-        /// Gets the sigmoid of <see cref="Value"/>.
+        /// Defines how <see cref="Value"/> has to be interpreted.
         /// </summary>
-        public float ValueSigmoid => Sigmoid(Value);
+        public readonly ResultType Type;        
+
+        /// <summary>
+        /// Arbitrary score value.
+        /// </summary>        
+        public readonly float Value;
+
+        /// <inheritdoc />
+        public override int GetHashCode() { return Type.GetHashCode() ^ Value.GetHashCode(); }
+
+        /// <inheritdoc />
+        public bool Equals(Score other) { return this.Type == other.Type && this.Value == other.Value; }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj) { return obj is Score other && this.Equals(other); }
+
+        /// <inheritdoc />
+        public static bool operator ==(Score a, Score b) => a.Equals(b);
+
+        /// <inheritdoc />
+        public static bool operator !=(Score a, Score b) => !a.Equals(b);
+
+        /// <inheritdoc />
+        public int CompareTo(Score other)
+        {
+            return this.IsValid == other.IsValid
+                ? this.Value.CompareTo(other.Value)
+                : this.IsValid ? 1 : -1;
+        }
+
+        /// <inheritdoc />
+        public int CompareTo(object obj)
+        {
+            return obj is Score other
+                ? this.CompareTo(other)
+                : throw new ArgumentException("invalid type", nameof(obj));
+        }
+
+        /// <inheritdoc />
+        public static bool operator <(Score a, Score b) => a.CompareTo(b) < 0;
+
+        /// <inheritdoc />
+        public static bool operator <=(Score a, Score b) => a.CompareTo(b) <= 0;
+
+        /// <inheritdoc />
+        public static bool operator >(Score a, Score b) => a.CompareTo(b) > 0;
+
+        /// <inheritdoc />
+        public static bool operator >=(Score a, Score b) => a.CompareTo(b) >= 0;
 
         #endregion
 
-        #region API
+        #region properties
 
-        public int CompareTo(Score other) { return this.Value.CompareTo(other.Value); }
+        public bool IsValid
+        {
+            get
+            {
+                switch(Type)
+                {
+                    case ResultType.Invalid: return false;
+                    case ResultType.Valid: return true;
+                    case ResultType.Normalized: return Value >= 0.5f;
+                    case ResultType.Sigmoid: return Sigmoid(Value) >= 0.5f;
+                    default: throw new NotImplementedException();                        
+                }
+            }
+        }
+        
+        public float NormalizedValue
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case ResultType.Invalid: return 0;
+                    case ResultType.Valid: return 1;
+                    case ResultType.Normalized: return Value;
+                    case ResultType.Sigmoid: return Sigmoid(Value);
+                    default: throw new NotImplementedException();
+                }
+            }
+        }
 
-        #endregion
+        #endregion        
 
         #region static API
 
@@ -86,6 +175,33 @@ namespace InteropVision
         #endregion
 
         #region nested types
+
+        public enum ResultType
+        {
+            /// <summary>
+            /// Result is invalid regardless of the value
+            /// </summary>
+            Invalid,
+
+            /// <summary>
+            /// Score is valid regardless of the value
+            /// </summary>
+            Valid,
+
+            /// <summary>
+            /// Score is a value between 0 and 1, where 0.5 is the threshold between invalid/valid
+            /// </summary>
+            Normalized,
+
+            /// <summary>
+            /// Score is a sigmoid value.
+            /// </summary>
+            /// <remarks>
+            /// negative values are rendered as invalid, 0 and positive values are rendered as valid.        
+            /// </remarks>
+            Sigmoid,
+
+        }
 
         /// <summary>
         /// Time Series Statistics helper
@@ -102,6 +218,7 @@ namespace InteropVision
             #region data
 
             private readonly string _Name;
+            private DateTime? _BaseTime;
 
             private readonly List<(float x,float y)> _Scores = new List<(float x, float y)>();
 
@@ -117,14 +234,18 @@ namespace InteropVision
 
             #region API
 
-            public void Add(FrameTime x, Score y)
+            public void Add(DateTime t, Score y)
             {
-                Add((float)x.RelativeTime.TotalSeconds, y.Value);
+                Add(t, y.Value);
             }
 
-            public void Add(FrameTime x, float y)
+            public void Add(DateTime t, float y)
             {
-                Add((float)x.RelativeTime.TotalSeconds, y);
+                if (!_BaseTime.HasValue) _BaseTime = t;
+
+                var x = t - _BaseTime.Value;
+
+                Add((float)x.TotalSeconds, y);
             }
 
             private void Add(float x, float y)

@@ -1,166 +1,128 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
 using System.Numerics;
 
 using RECT = System.Drawing.Rectangle;
-
+using PTRBMP = InteropBitmaps.PointerBitmap;
 
 namespace InteropVision
 {
     /// <summary>
-    /// Represents the input image for an inference engine.
+    /// Represents the input for an inference engine.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Time.RelativeTime}")]
-    public class InferenceInput<TImage>
+    [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
+    public class InferenceInput<T>
     {
+        #region diagnostics
+
+        protected string ToDebuggerDisplayString()
+        {
+            var text = Device?.Name ?? string.Empty;
+            if (text.Length > 0) text += "/";
+
+            text += Time.ToString();
+            text += "/";
+
+            if (Content is PTRBMP ptrBmp)
+            {
+                text += ptrBmp.Info.ToDebuggerDisplayString();
+            }
+            else if (Content is InteropBitmaps.MemoryBitmap memBmp)
+            {
+                text += memBmp.Info.ToDebuggerDisplayString();
+            }
+            else
+            {
+                text += Device?.ToString() ?? "<NULL>";
+            }
+
+            return text;
+        }
+
+        #endregion
+
         #region constructor
 
-        public static implicit operator InferenceInput<TImage>(TImage frameImage)
+        public static implicit operator InferenceInput<T>(T frameImage)
         {
-            return new InferenceInput<TImage>(frameImage);
+            return new InferenceInput<T>(frameImage);
+        }        
+
+        public static implicit operator InferenceInput<T>((T Image, DateTime Time) frame)
+        {
+            return new InferenceInput<T>(frame.Image, frame.Time);
         }
 
-        public static implicit operator InferenceInput<TImage>((TImage Image, TimeSpan Time) frame)
+        public InferenceInput(IO.ICaptureDeviceInfo device)
         {
-            return new InferenceInput<TImage>(frame.Image, new FrameTime(frame.Time));
+            Device = device;
         }
 
-        public static implicit operator InferenceInput<TImage>((TImage Image, FrameTime Time) frame)
+        public InferenceInput(T frameImage)
         {
-            return new InferenceInput<TImage>(frame.Image, frame.Time);
+            Content = frameImage;
+            Time = DateTime.UtcNow;
         }
 
-        public InferenceInput(TImage frameImage)
+        public InferenceInput(T frameImage, DateTime frameTime)
         {
-            Image = frameImage;
-            Time = FrameTime.Now;
-        }
-
-        public InferenceInput(TImage frameImage, FrameTime frameTime)
-        {
-            Image = frameImage;
+            Content = frameImage;
             Time = frameTime;
         }
 
         #endregion
 
         #region data
-        public FrameTime Time { get; private set; }
-        public TImage Image { get; private set; }        
+        public IO.ICaptureDeviceInfo Device { get; private set; }
+        public DateTime Time { get; private set; }
+        public T Content { get; private set; }        
 
         #endregion
 
-        #region API
+        #region API        
 
-        public void Update(TImage frameImage)
+        public void Update(T frameImage)
         {
-            Time = FrameTime.Now;
-            Image = frameImage;            
+            Time = DateTime.UtcNow;
+            Content = frameImage;            
         }
 
-        public void Update(TImage frameImage, FrameTime frameTime)
+        public void Update(T frameImage, DateTime frameTime)
         {
             Time = frameTime;
-            Image = frameImage;
+            Content = frameImage;
         }
 
         #endregion
     }
 
     /// <inheritdoc/>
-    [System.Diagnostics.DebuggerDisplay("{Time.RelativeTime}: {Image.Info.ToDebuggerDisplayString(),nq}")]
-    public class InferenceInput : InferenceInput<InteropBitmaps.PointerBitmap>
+    [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
+    public class PointerBitmapInput : InferenceInput<PTRBMP>
     {
         #region constructor
 
-        public static implicit operator InferenceInput(InteropBitmaps.PointerBitmap sourceImage)
+        public static implicit operator PointerBitmapInput(PTRBMP sourceImage)
         {
-            return new InferenceInput(sourceImage);
+            return new PointerBitmapInput(sourceImage);
+        }        
+
+        public static implicit operator PointerBitmapInput((PTRBMP img, DateTime t) src)
+        {
+            return new PointerBitmapInput(src.img, src.t);
         }
 
-        public static implicit operator InferenceInput((InteropBitmaps.PointerBitmap img, TimeSpan t) src)
-        {
-            return new InferenceInput(src.img, new FrameTime(src.t));
-        }
-
-        public static implicit operator InferenceInput((InteropBitmaps.PointerBitmap img, FrameTime t) src)
-        {
-            return new InferenceInput(src.img, src.t);
-        }
-
-        public InferenceInput(InteropBitmaps.PointerBitmap sourceImage)
+        public PointerBitmapInput(PTRBMP sourceImage)
             : base(sourceImage) { }
 
-        public InferenceInput(InteropBitmaps.PointerBitmap sourceImage, FrameTime t)
+        public PointerBitmapInput(PTRBMP sourceImage, DateTime t)
             : base(sourceImage, t) { }
 
         #endregion                
-    }
-
-    [System.Diagnostics.DebuggerDisplay("{_Model}")]
-    public abstract class ConcurrentImageInference<T> : IImageInference<T>
-    {
-        #region lifecycle
-
-        protected virtual void SetModel(IModelGraph model)
-        {
-            if (model == null) throw new ArgumentNullException(nameof(model));
-
-            _Release();
-
-            lock (_Mutex)
-            {
-                _Model = model;
-                _Session = model.CreateSession();
-            }
-        }
-
-        public void Dispose() { Dispose(true); }
-
-        protected virtual void Dispose(bool disposing) { if (disposing) { _Release(); } }
-
-        private void _Release()
-        {
-            lock (_Mutex)
-            {
-                _Session?.Dispose();
-                _Session = null;
-
-                _Model?.Dispose();
-                _Model = null;
-            }
-        }
-
-        #endregion
-
-        #region data
-
-        private readonly object _Mutex = new object();
-
-        private IModelGraph _Model;
-        private IModelSession _Session;
-
-        #endregion
-
-        #region API
-
-        public void Inference(T result, InferenceInput input, RECT? inputWindow = null)
-        {
-            lock(_Mutex)
-            {
-                Inference(_Session, input, inputWindow);
-            }
-        }
-
-        protected abstract void Inference(IModelSession session, InferenceInput input, RECT? inputWindow);
-
-        #endregion
-    }
+    }    
 
     /// <summary>
-    /// Represents how the input image is to be copied to the tensor
+    /// Represents how the input image needs to be formatted before
+    /// copying it to the input tensor.
     /// </summary>
     public class TensorImageSettings
     {

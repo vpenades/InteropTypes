@@ -9,7 +9,7 @@ namespace InteropBitmaps.Adapters
         internal ImageSharpFactory(BitmapInfo binfo)
         {
             _Info = binfo;
-            _Exact = _Implementation.ToPixelFormat(binfo.PixelFormat);            
+            _Implementation.TryGetExactPixelType(binfo.PixelFormat, out _Exact);            
         }
 
         private readonly BitmapInfo _Info;

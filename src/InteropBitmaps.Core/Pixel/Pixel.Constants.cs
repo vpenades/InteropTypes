@@ -30,7 +30,7 @@ namespace InteropBitmaps
             public const uint BGR565 = SHIFT0 * (uint)PEF.Blue5 | SHIFT1 * (uint)PEF.Green6 | SHIFT2 * (uint)PEF.Red5;
             public const uint BGRA4444 = SHIFT0 * (uint)PEF.Blue4 | SHIFT1 * (uint)PEF.Green4 | SHIFT2 * (uint)PEF.Red4 | SHIFT3 * (uint)PEF.Alpha4;
             public const uint BGRA5551 = SHIFT0 * (uint)PEF.Blue5 | SHIFT1 * (uint)PEF.Green5 | SHIFT2 * (uint)PEF.Red5 | SHIFT3 * (uint)PEF.Alpha1;
-            public const uint DepthMM16 = SHIFT0 * (uint)PEF.DepthMM16;
+            public const uint Millimeter16 = SHIFT0 * (uint)PEF.Millimeter16;
 
             public const uint RGB24 = SHIFT0 * (uint)PEF.Red8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Blue8;
             public const uint BGR24 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8;
@@ -46,16 +46,12 @@ namespace InteropBitmaps
             public const uint RGBA128F = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F | SHIFT3 * (uint)PEF.Alpha32F;
 
             public const uint BGRA128F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F | SHIFT3 * (uint)PEF.Alpha32F;
-        }
+        }        
 
-        /// <summary>
-        /// Predefined pixel formats, mirroring <see cref="_PackedPixelCodes"/> definitions.
-        /// </summary>
-        [Obsolete]
-        public static class Standard
-        {           
-            public static readonly Format DepthMM16 = new Format(_PackedPixelCodes.DepthMM16);
-            public static readonly Format Gray32F = new Format(_PackedPixelCodes.Gray32F);
+        partial struct Millimeter16
+        {
+            public const uint Code = _PackedPixelCodes.Millimeter16;
+            public static readonly Format Format = new Format(Code);
         }
         
         partial struct Alpha8
@@ -76,7 +72,7 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct StdLuminance
+        partial struct LuminanceScalar
         {
             public const uint Code = _PackedPixelCodes.Gray32F;
             public static readonly Format Format = new Format(Code);

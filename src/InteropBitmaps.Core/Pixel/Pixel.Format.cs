@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Numerics;
-using System.Text;
 
 namespace InteropBitmaps
 {
@@ -16,7 +14,7 @@ namespace InteropBitmaps
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         public readonly partial struct Format : IEquatable<Format>
         {
-            #region debug
+            #region diagnostics
 
             internal string _GetDebuggerDisplay()
             {
@@ -166,7 +164,7 @@ namespace InteropBitmaps
 
                 if (depth == typeof(Single))
                 {
-                    if (channels == 1) return Standard.Gray32F;
+                    if (channels == 1) return LuminanceScalar.Format;
                     if (channels == 3) return VectorBGR.Format;
                     if (channels == 4) return VectorBGRA.Format;
                 }
@@ -198,7 +196,7 @@ namespace InteropBitmaps
                         if (typeof(TPixel) == typeof(BGRA32)) return BGRA32.Format;
                         if (typeof(TPixel) == typeof(RGBA32)) return RGBA32.Format;
                         if (typeof(TPixel) == typeof(ARGB32)) return ARGB32.Format;
-                        if (typeof(TPixel) == typeof(StdLuminance)) return StdLuminance.Format;
+                        if (typeof(TPixel) == typeof(LuminanceScalar)) return LuminanceScalar.Format;
                         break;
                     case 24:
                         if (typeof(TPixel) == typeof(VectorBGR)) return VectorBGR.Format;
@@ -395,7 +393,7 @@ namespace InteropBitmaps
 
                     case Luminance8.Code: return typeof(Luminance8);
                     case Luminance16.Code: return typeof(Luminance16);
-                    case StdLuminance.Code: return typeof(StdLuminance);
+                    case LuminanceScalar.Code: return typeof(LuminanceScalar);
 
                     case BGR565.Code: return typeof(BGR565);
                     case BGRA5551.Code: return typeof(BGRA5551);

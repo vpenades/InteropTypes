@@ -11,8 +11,8 @@ namespace InteropBitmaps.MemoryManagers
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
     public abstract unsafe class BitmapMemoryManager
         : System.Buffers.MemoryManager<Byte>
-        , IMemoryBitmapOwner
-        , IPointerBitmapOwner
+        , MemoryBitmap.ISource
+        , PointerBitmap.ISource
     {
         #region debug
 
@@ -62,7 +62,13 @@ namespace InteropBitmaps.MemoryManagers
 
         #region properties        
 
-        PointerBitmap IPointerBitmapOwner.Bitmap
+        public static implicit operator PointerBitmap(BitmapMemoryManager manager)
+        {
+            manager._CheckDisposed();
+            return manager._PointerBitmap;
+        }
+
+        PointerBitmap PointerBitmap.ISource.Bitmap
         {
             get
             {
@@ -71,9 +77,13 @@ namespace InteropBitmaps.MemoryManagers
             }
         }
 
-        
+        public static implicit operator MemoryBitmap(BitmapMemoryManager manager)
+        {
+            manager._CheckDisposed();
+            return new MemoryBitmap(manager.Memory, manager._PointerBitmap.Info);
+        }
 
-        MemoryBitmap IMemoryBitmapOwner.Bitmap
+        MemoryBitmap MemoryBitmap.ISource.Bitmap
         {
             get
             {

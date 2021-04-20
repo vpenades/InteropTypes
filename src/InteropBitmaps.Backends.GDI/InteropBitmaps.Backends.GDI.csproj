@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

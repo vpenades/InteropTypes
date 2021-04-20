@@ -9,7 +9,7 @@ namespace InteropVision.With
     {
         #region data
 
-        public FrameTime Time { get; internal set; }
+        public DateTime Time { get; internal set; }
         public ZXing.Result Result { get; internal set; }
 
         #endregion
@@ -46,9 +46,9 @@ namespace InteropVision.With
 
             #region API        
 
-            public void Inference(ZXingCode result, InferenceInput input, Rectangle? inputWindow = null)
+            public void Inference(ZXingCode result, PointerBitmapInput input, Rectangle? inputWindow = null)
             {
-                var luminance = _Implementation.CreateLuminanceSource(input.Image.AsSpanBitmap(), ref _Buffer);
+                var luminance = _Implementation.CreateLuminanceSource(input.Content.AsSpanBitmap(), ref _Buffer);
 
                 result.Time = input.Time;
                 result.Result = _Reader.Decode(luminance);

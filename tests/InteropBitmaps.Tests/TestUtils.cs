@@ -52,31 +52,39 @@ namespace InteropBitmaps
 
         public static void AttachToCurrentTest(this MemoryBitmap bmp, string filePath)
         {
-            bmp.AsSpanBitmap().AttachToCurrentTestAll(filePath);
+            bmp
+                .AsSpanBitmap()
+                .AsReadOnly()
+                .AttachToCurrentTestAll(filePath);
         }
 
         public static void AttachToCurrentTest<TPixel>(this MemoryBitmap<TPixel> bmp, string filePath)
             where TPixel:unmanaged
         {
-            bmp.AsSpanBitmap().AsTypeless().AttachToCurrentTestAll(filePath);
+            bmp
+                .AsSpanBitmap()
+                .AsTypeless()
+                .AsReadOnly()
+                .AttachToCurrentTestAll(filePath);
         }
 
         public static void AttachToCurrentTestAll(this SpanBitmap bmp, string filePath)
         {
+            bmp = bmp.AsReadOnly();
+
+            TestContext.WriteLine($"{filePath} {bmp.Info.ToDebuggerDisplayString()}");
+
             filePath = TestContext.CurrentContext.GetTestResultPath(filePath);
 
             var dirPath = System.IO.Path.GetDirectoryName(filePath);
             System.IO.Directory.CreateDirectory(dirPath);
 
-
             if (bmp.PixelFormat == Pixel.VectorBGR.Format)
             {
                 var tmp = new MemoryBitmap(bmp.Width, bmp.Height, Pixel.BGR24.Format);
-
                 SpanBitmap.CopyPixels(bmp.OfType<System.Numerics.Vector3>(), tmp, (0, 1), (0,255));
-
                 bmp = tmp;
-            }
+            }            
 
             string _injectExt(string fp, string extPrefix)
             {
@@ -99,6 +107,9 @@ namespace InteropBitmaps
 
             var f5 = _injectExt(filePath, "OpenCvSharp");
             bmp.Save(f5, Codecs.OpenCvCodec.Default); TestContext.AddTestAttachment(f5);
+
+            var f6 = _injectExt(filePath, "STB");
+            bmp.Save(f6, Codecs.STBCodec.WithQuality(80)); TestContext.AddTestAttachment(f6);
 
             // TODO: it should compare saved files against bmp
         }
@@ -207,5 +218,30 @@ namespace InteropBitmaps
     public static class TestResources
     {
         public static string ShannonJpg => System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+    }
+
+    readonly struct PerformanceBenchmark : IDisposable
+    {
+        public static PerformanceBenchmark Run(Action<TimeSpan> onCompleted)
+        {
+            return new PerformanceBenchmark(onCompleted);
+        }
+
+        private PerformanceBenchmark(Action<TimeSpan> onCompleted)
+        {
+            _OnCompleted = onCompleted;
+            _Timer = System.Diagnostics.Stopwatch.StartNew();
+        }
+
+        public void Dispose()
+        {
+            var elapsed = _Timer.Elapsed;
+
+            if (_OnCompleted != null) _OnCompleted(elapsed);
+        }
+
+        private readonly Action<TimeSpan> _OnCompleted;
+
+        private readonly System.Diagnostics.Stopwatch _Timer;        
     }
 }

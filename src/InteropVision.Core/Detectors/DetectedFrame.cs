@@ -15,17 +15,17 @@ namespace InteropVision
 
         public static implicit operator DetectedFrame(RECTI rect)
         {
-            return new DetectedFrame(rect, FrameTime.Now, Score.Ok);
+            return new DetectedFrame(rect, DateTime.UtcNow, Score.Ok);
         }
 
-        public DetectedFrame(RECTF r, FrameTime t, Score s)
+        public DetectedFrame(RECTF r, DateTime t, Score s)
         {
             Region = r;
             Time = t;
             Score = s;
         }
 
-        public DetectedFrame(RECTF r, float rs, FrameTime t, Score s)
+        public DetectedFrame(RECTF r, float rs, DateTime t, Score s)
         {
             Region = r;
             Time = t;
@@ -39,7 +39,7 @@ namespace InteropVision
         #region data
 
         public RECTF Region;
-        public FrameTime Time;
+        public DateTime Time;
         public Score Score;        
 
         #endregion
@@ -60,7 +60,7 @@ namespace InteropVision
 
         public static Vector2 GetVelocity(in DetectedFrame t0, in DetectedFrame t1)
         {
-            var dt = t1.Time.RelativeTime - t0.Time.RelativeTime;
+            var dt = t1.Time - t0.Time;
             var cc = t1.Center - t0.Center;
 
             return cc / (float)dt.TotalSeconds;

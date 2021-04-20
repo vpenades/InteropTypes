@@ -25,22 +25,46 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region API
+        #region API        
 
-        public static unsafe SpanBitmap AsSpanBitmap(this OpenCvSharp.Mat src) { return _Implementation.WrapAsSpanBitmap(src); }
+        public static SpanBitmap AsSpanBitmap(this OpenCvSharp.Mat src)
+        {
+            return _Implementation.TryWrapAsPointer(src, out var span)
+                ? span
+                : throw new ArgumentException(nameof(src));
+        }
 
-        public static unsafe SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this OpenCvSharp.Mat<TPixel> src)
+        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this OpenCvSharp.Mat<TPixel> src)
             where TPixel : unmanaged
-        { return _Implementation.WrapAsSpanBitmap(src); }
+        {
+            return _Implementation.TryWrapAsPointer(src, out var dstPtr)
+                ? dstPtr.AsSpanBitmap().OfType<TPixel>()
+                : throw new ArgumentException(nameof(src));
+        }
 
-        public static OpenCvSharp.Mat AsMat(this PointerBitmap src)
+        public static OpenCvSharp.Mat WrapAsMat(this PointerBitmap src)
         {
             return _Implementation.WrapAsMat(src);
         }
 
-        public static unsafe OpenCvSharp.Mat<TPixel> ToMat<TPixel>(this SpanBitmap<TPixel> srcSpan)
+        public static OpenCvSharp.Mat<TPixel> CloneAsMat<TPixel>(this SpanBitmap<TPixel> srcSpan)
             where TPixel:unmanaged
-        { return _Implementation.CloneToMat(srcSpan); }           
+        {
+            return _Implementation.CloneAsMat(srcSpan);
+        }
+
+        #endregion
+
+        #region transforms
+
+        public static void WarpAffine(this SpanBitmap src, SpanBitmap dst, System.Numerics.Matrix3x2 xform)
+        {
+            _Implementation.TransferCv(src, dst, (s, d) => _Implementation.WarpAffine(s, d, xform));
+        }
+        public static void WarpAffine(this PointerBitmap src, PointerBitmap dst, System.Numerics.Matrix3x2 xform)
+        {
+            _Implementation.TransferCv(src, dst, (s, d) => _Implementation.WarpAffine(s, d, xform));
+        }
 
         #endregion
     }

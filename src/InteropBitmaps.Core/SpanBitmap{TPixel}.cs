@@ -88,9 +88,9 @@ namespace InteropBitmaps
 
         #region properties
 
-        public Span<Byte> WritableSpan => _Writable;
+        public Span<Byte> WritableBytes => _Writable;       
 
-        public ReadOnlySpan<Byte> ReadableSpan => _Readable;
+        public ReadOnlySpan<Byte> ReadableBytes => _Readable;        
 
         #endregion
 
@@ -140,9 +140,11 @@ namespace InteropBitmaps
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public BitmapBounds Bounds => _Info.Bounds;
 
-        #endregion        
+        #endregion
 
-        #region API - Buffers        
+        #region API - Buffers
+
+        public SpanBitmap<TPixel> AsReadOnly() { return new SpanBitmap<TPixel>(_Readable, _Info); }
         public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }        
         public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Readable, y); }        
         public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }        
@@ -250,7 +252,23 @@ namespace InteropBitmaps
             // _Implementation.FitPixelsNearest(this, src);
 
             SpanBitmap.FitPixels(src, this, (0, 1));
-        }        
+        }
+
+        /// <summary>
+        /// Draws <paramref name="src"/> at the location defined by <paramref name="dstSRT"/>.
+        /// </summary>
+        /// <param name="dstSRT">Where to draw the image.</param>
+        /// <param name="src">Image to draw.</param>
+        /// <remarks>
+        /// This is equivalent to OpenCV's WarpAffine
+        /// </remarks>
+        public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap<TPixel> src)
+        {
+            // TODO: if dstSRT has no rotation, use _NearestResizeImplementation
+
+            Matrix3x2.Invert(dstSRT, out var iform);
+            Processing._NearestTransformImplementation.SetPixelsNearest(this, src, iform);
+        }
 
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)
             where TSrcPixel: unmanaged

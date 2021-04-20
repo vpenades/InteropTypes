@@ -24,7 +24,7 @@ namespace InteropBitmaps
 
         #region As MemoryBitmap
 
-        public static IMemoryBitmapOwner UsingMemoryBitmap(this SkiaSharp.SKBitmap bmp)
+        public static MemoryBitmap.ISource UsingMemoryBitmap(this SkiaSharp.SKBitmap bmp)
         {
             return new Adapters.SkiaMemoryManager(bmp);
         }

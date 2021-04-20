@@ -76,7 +76,12 @@ namespace InteropDrawing
         public static void DrawCircle(this IDrawing2D dc, POINT2 center, SCALAR diameter, ColorStyle style)
         {
             dc.DrawEllipse(center, diameter, diameter, style);
-        }        
+        }
+
+        public static void DrawRectangle(this IDrawing2D dc, BRECT rect, ColorStyle style)
+        {
+            dc.DrawRectangle(rect.Location, rect.Size, style);
+        }
 
         public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle style)
         {
@@ -85,6 +90,11 @@ namespace InteropDrawing
             Parametric.ShapeFactory.FillRectangleVertices(vertices, origin, size, 0, 0);
 
             dc.DrawPolygon(vertices, style);
+        }
+
+        public static void DrawRectangle(this IDrawing2D dc, BRECT rect, ColorStyle style, float borderRadius, int arcVertexCount = 6)
+        {
+            dc.DrawRectangle(rect.Location, rect.Size, style, borderRadius, arcVertexCount);
         }
 
         public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle style, float borderRadius, int arcVertexCount = 6)

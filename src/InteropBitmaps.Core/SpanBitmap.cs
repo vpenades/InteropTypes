@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 using SIZE = System.Drawing.Size;
 using POINT = System.Drawing.Point;
@@ -84,9 +85,9 @@ namespace InteropBitmaps
 
         #region properties
 
-        public Span<Byte> WritableSpan => _Writable;
+        public Span<Byte> WritableBytes => _Writable;
 
-        public ReadOnlySpan<Byte> ReadableSpan => _Readable;
+        public ReadOnlySpan<Byte> ReadableBytes => _Readable;
 
         #endregion
 
@@ -139,6 +140,7 @@ namespace InteropBitmaps
         #endregion        
 
         #region API - Buffers
+        public SpanBitmap AsReadOnly() { return new SpanBitmap(_Readable, _Info); }
         public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }
         public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }
 
@@ -271,6 +273,76 @@ namespace InteropBitmaps
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
+        }
+
+        /// <summary>
+        /// Draws <paramref name="src"/> at the location defined by <paramref name="dstSRT"/>.
+        /// </summary>
+        /// <param name="dstSRT">Where to draw the image.</param>
+        /// <param name="src">Image to draw.</param>
+        /// <remarks>
+        /// This is equivalent to OpenCV's WarpAffine
+        /// </remarks>
+        public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap src)
+        {
+            if (src.PixelFormat != this.PixelFormat) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
+
+            switch(this.PixelFormat.PackedFormat)
+            {
+                case Pixel.Alpha8.Code: this.OfType<Pixel.Alpha8>().SetPixels(dstSRT, src.OfType<Pixel.Alpha8>()); break;
+
+                case Pixel.Luminance8.Code: this.OfType<Pixel.Luminance8>().SetPixels(dstSRT, src.OfType<Pixel.Luminance8>()); break;
+                case Pixel.Luminance16.Code: this.OfType<Pixel.Luminance16>().SetPixels(dstSRT, src.OfType<Pixel.Luminance16>()); break;
+                case Pixel.LuminanceScalar.Code: this.OfType<Pixel.LuminanceScalar>().SetPixels(dstSRT, src.OfType<Pixel.LuminanceScalar>()); break;
+
+                case Pixel.BGR565.Code: this.OfType<Pixel.BGR565>().SetPixels(dstSRT, src.OfType<Pixel.BGR565>()); break;
+                case Pixel.BGRA5551.Code: this.OfType<Pixel.BGRA5551>().SetPixels(dstSRT, src.OfType<Pixel.BGRA5551>()); break;
+                case Pixel.BGRA4444.Code: this.OfType<Pixel.BGRA4444>().SetPixels(dstSRT, src.OfType<Pixel.BGRA4444>()); break;
+
+                case Pixel.BGR24.Code: this.OfType<Pixel.BGR24>().SetPixels(dstSRT, src.OfType<Pixel.BGR24>()); break;
+                case Pixel.RGB24.Code: this.OfType<Pixel.RGB24>().SetPixels(dstSRT, src.OfType<Pixel.RGB24>()); break;
+
+                case Pixel.BGRA32.Code: this.OfType<Pixel.BGRA32>().SetPixels(dstSRT, src.OfType<Pixel.BGRA32>()); break;
+                case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().SetPixels(dstSRT, src.OfType<Pixel.RGBA32>()); break;
+                case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().SetPixels(dstSRT, src.OfType<Pixel.ARGB32>()); break;
+
+                case Pixel.VectorBGR.Code: this.OfType<Pixel.VectorBGR>().SetPixels(dstSRT, src.OfType<Pixel.VectorBGR>()); break;
+                case Pixel.VectorBGRA.Code: this.OfType<Pixel.VectorBGRA>().SetPixels(dstSRT, src.OfType<Pixel.VectorBGRA>()); break;
+                case Pixel.VectorRGBA.Code: this.OfType<Pixel.VectorRGBA>().SetPixels(dstSRT, src.OfType<Pixel.VectorRGBA>()); break;
+
+                default: throw new NotSupportedException();
+            }
+        }
+
+        public void FitPixels(SpanBitmap src)
+        {
+            if (src.PixelFormat != this.PixelFormat) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
+
+            switch (this.PixelFormat.PackedFormat)
+            {
+                case Pixel.Alpha8.Code: this.OfType<Pixel.Alpha8>().FitPixels(src.OfType<Pixel.Alpha8>()); break;
+
+                case Pixel.Luminance8.Code: this.OfType<Pixel.Luminance8>().FitPixels(src.OfType<Pixel.Luminance8>()); break;
+                case Pixel.Luminance16.Code: this.OfType<Pixel.Luminance16>().FitPixels(src.OfType<Pixel.Luminance16>()); break;
+                case Pixel.LuminanceScalar.Code: this.OfType<Pixel.LuminanceScalar>().FitPixels(src.OfType<Pixel.LuminanceScalar>()); break;
+
+                case Pixel.BGR565.Code: this.OfType<Pixel.BGR565>().FitPixels(src.OfType<Pixel.BGR565>()); break;
+                case Pixel.BGRA5551.Code: this.OfType<Pixel.BGRA5551>().FitPixels(src.OfType<Pixel.BGRA5551>()); break;
+                case Pixel.BGRA4444.Code: this.OfType<Pixel.BGRA4444>().FitPixels(src.OfType<Pixel.BGRA4444>()); break;
+
+                case Pixel.BGR24.Code: this.OfType<Pixel.BGR24>().FitPixels(src.OfType<Pixel.BGR24>()); break;
+                case Pixel.RGB24.Code: this.OfType<Pixel.RGB24>().FitPixels(src.OfType<Pixel.RGB24>()); break;
+
+                case Pixel.BGRA32.Code: this.OfType<Pixel.BGRA32>().FitPixels(src.OfType<Pixel.BGRA32>()); break;
+                case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().FitPixels(src.OfType<Pixel.RGBA32>()); break;
+                case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().FitPixels(src.OfType<Pixel.ARGB32>()); break;
+
+                case Pixel.VectorBGR.Code: this.OfType<Pixel.VectorBGR>().FitPixels(src.OfType<Pixel.VectorBGR>()); break;
+                case Pixel.VectorBGRA.Code: this.OfType<Pixel.VectorBGRA>().FitPixels(src.OfType<Pixel.VectorBGRA>()); break;
+                case Pixel.VectorRGBA.Code: this.OfType<Pixel.VectorRGBA>().FitPixels(src.OfType<Pixel.VectorRGBA>()); break;
+
+                default: throw new NotSupportedException();
+            }
         }
 
         public void SetPixels(Random rnd)

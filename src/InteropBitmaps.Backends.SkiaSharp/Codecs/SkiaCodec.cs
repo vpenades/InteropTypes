@@ -37,7 +37,7 @@ namespace InteropBitmaps.Codecs
             using (var img = SkiaSharp.SKBitmap.Decode(s))
             {
                 if (img == null) return false;
-                bitmap = _Implementation.AsSpanBitmap(img).ToMemoryBitmap();
+                bitmap = _Implementation.WrapAsSpan(img).ToMemoryBitmap();
             }
 
             return true;
@@ -55,7 +55,7 @@ namespace InteropBitmaps.Codecs
 
                 if (clr.Color == SkiaSharp.SKColorType.Unknown) return false;
 
-                using (var skbmp = _Implementation.ToSKImage(bmp, clr))
+                using (var skbmp = _Implementation.CloneAsSKImage(bmp, clr))
                 {
                     var data = skbmp.Encode(fmt, 95);
 

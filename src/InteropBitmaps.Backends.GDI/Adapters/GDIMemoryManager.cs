@@ -20,6 +20,8 @@ namespace InteropBitmaps.Adapters
 
             var info = _Implementation.GetBitmapInfo(_BitmapData);
 
+            System.Diagnostics.Debug.Assert(info.StepByteSize == _BitmapData.Stride);
+
             var ptr = new PointerBitmap(_BitmapData.Scan0, info);
 
             Initialize(ptr);

@@ -8,112 +8,48 @@ using SKIAALPHA = SkiaSharp.SKAlphaType;
 
 namespace InteropBitmaps
 {
-    static class _Implementation
+    static partial class _Implementation
     {
-        #region pixel format
-
-        public static (SKIACOLOR Color, SKIAALPHA Alpha) ToPixelFormat(INTEROPFMT fmt, bool allowCompatibleFormats = false)
-        {
-            switch (fmt)
-            {
-                case Pixel.Alpha8.Code: return (SKIACOLOR.Alpha8, SKIAALPHA.Opaque);
-                case Pixel.Luminance8.Code: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
-
-                case Pixel.BGR565.Code: return (SKIACOLOR.Rgb565, SKIAALPHA.Opaque);
-                
-                case Pixel.RGBA32.Code: return (SKIACOLOR.Rgba8888, SKIAALPHA.Unpremul);
-                case Pixel.BGRA32.Code: return (SKIACOLOR.Bgra8888, SKIAALPHA.Unpremul);
-            }
-
-            if (allowCompatibleFormats)
-            {
-                switch (fmt)
-                {
-                    case Pixel.BGR24.Code: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
-                    case Pixel.RGB24.Code: return (SKIACOLOR.Rgb888x, SKIAALPHA.Opaque);
-                    case Pixel.Luminance16.Code: return (SKIACOLOR.Gray8, SKIAALPHA.Opaque);
-                }
-            }
-
-            return (SKIACOLOR.Unknown, SKIAALPHA.Unknown);
-        }
-
-        private static INTEROPFMT ToPixelFormat(SKIACOLOR color, bool allowCompatibleFormats = false)
-        {
-            switch (color)
-            {
-                case SKIACOLOR.Alpha8: return Pixel.Alpha8.Format;
-                case SKIACOLOR.Gray8: return Pixel.Luminance8.Format;
-                case SKIACOLOR.Rgba8888: return Pixel.RGBA32.Format;
-                case SKIACOLOR.Rgb888x: return Pixel.RGBA32.Format;
-                case SKIACOLOR.Bgra8888: return Pixel.BGRA32.Format;
-            }
-
-            if (allowCompatibleFormats)
-            {
-                switch(color)
-                {
-                    case SKIACOLOR.Argb4444: return Pixel.BGRA4444.Format;
-                    case SKIACOLOR.Rgb565: return Pixel.BGR565.Format;
-                    case SKIACOLOR.Rgb888x: return Pixel.RGB24.Format;
-                }
-            }
-
-            throw new NotSupportedException();
-        }
-
-        public static INTEROPFMT ToPixelFormat(SKIACOLOR color, SKIAALPHA alpha, bool allowCompatibleFormats = false)
-        {
-            switch(alpha)
-            {
-                case SKIAALPHA.Opaque: return ToPixelFormat(color, allowCompatibleFormats);
-                case SKIAALPHA.Unpremul: return ToPixelFormat(color, allowCompatibleFormats);
-            }
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
         #region Skia => Interop
 
-        public static BitmapInfo ToBitmapInfo(SkiaSharp.SKImageInfo info, int rowBytes = 0)
+        public static BitmapInfo GetBitmapInfo(SkiaSharp.SKImageInfo info, int rowBytes = 0)
         {
             var fmt = ToPixelFormat(info.ColorType, info.AlphaType);
             return new BitmapInfo(info.Width, info.Height, fmt, Math.Max(info.RowBytes, rowBytes));
         }
 
-        public static PointerBitmap AsPointerBitmap(SkiaSharp.SKPixmap map)
+        public static PointerBitmap WrapAsPointer(SkiaSharp.SKPixmap src)
         {
-            var ptr = map.GetPixels();
-            if (ptr == IntPtr.Zero) throw new ArgumentNullException();
+            var wrapInfo = GetBitmapInfo(src.Info, src.RowBytes);            
 
-            var binfo = ToBitmapInfo(map.Info, map.RowBytes);
+            var wrapBytes = src.GetPixels();
+            if (wrapBytes == IntPtr.Zero) throw new ArgumentNullException();            
 
-            return new PointerBitmap(ptr, binfo);
+            return new PointerBitmap(wrapBytes, wrapInfo);
         }
 
-        public static SpanBitmap AsSpanBitmap(SkiaSharp.SKPixmap map, bool readOnly = false)
+        public static SpanBitmap WrapAsSpan(SkiaSharp.SKPixmap src, bool readOnly = false)
         {
-            var binfo = ToBitmapInfo(map.Info, map.RowBytes);
+            var wrapInfo = GetBitmapInfo(src.Info, src.RowBytes);
 
-            if (readOnly) return new SpanBitmap(map.GetPixelSpan(), binfo);
+            if (readOnly) return new SpanBitmap(src.GetPixelSpan(), wrapInfo);
 
-            var ptr = map.GetPixels();
-            if (ptr == IntPtr.Zero) throw new ArgumentNullException();
+            var wrapBytes = src.GetPixels();
+            if (wrapBytes == IntPtr.Zero) throw new ArgumentNullException();
 
-            return new SpanBitmap(ptr, binfo);
+            return new SpanBitmap(wrapBytes, wrapInfo);
         }        
 
-        public static SpanBitmap AsSpanBitmap(SkiaSharp.SKBitmap bmp, bool readOnly = false)
+        public static SpanBitmap WrapAsSpan(SkiaSharp.SKBitmap bmp, bool readOnly = false)
         {
-            var binfo = ToBitmapInfo(bmp.Info, bmp.RowBytes);
+            var wrapInfo = GetBitmapInfo(bmp.Info, bmp.RowBytes);
 
-            if (readOnly) return new SpanBitmap(bmp.GetPixelSpan(), binfo);
+            if (readOnly) return new SpanBitmap(bmp.GetPixelSpan(), wrapInfo);
 
-            var ptr = bmp.GetPixels();
-            if (ptr == IntPtr.Zero) throw new ArgumentNullException();
+            var wrapBytes = bmp.GetPixels();
+            if (wrapBytes == IntPtr.Zero) throw new ArgumentNullException();
 
-            return new SpanBitmap(ptr, binfo);
+            return new SpanBitmap(wrapBytes, wrapInfo);
 
             // should call bmp.NotifyPixelsChanged(); afterwards
         }
@@ -122,21 +58,37 @@ namespace InteropBitmaps
 
         #region Interop => Skia
 
-        public static SkiaSharp.SKImageInfo ToSkia(BitmapInfo binfo, bool allowCompatibleFormats = false)
+        public static SkiaSharp.SKImageInfo GetSKImageInfo(BitmapInfo binfo, bool allowCompatibleFormats = false)
         {
-            var (color, alpha) = ToPixelFormat(binfo.PixelFormat, allowCompatibleFormats);
-            if (color == SKIACOLOR.Unknown) throw new ArgumentException(nameof(binfo));
-            if (alpha == SKIAALPHA.Unknown) throw new ArgumentException(nameof(binfo));
-
-            return new SkiaSharp.SKImageInfo(binfo.Width, binfo.Height, color, alpha);
+            return TryGetPixelFormat(binfo.PixelFormat, out var color, out var alpha, allowCompatibleFormats)
+                ? new SkiaSharp.SKImageInfo(binfo.Width, binfo.Height, color, alpha)
+                : throw new ArgumentException(nameof(binfo));
         }
-        
-        public static SkiaSharp.SKBitmap ToSKBitmap(SpanBitmap bmp)
+
+        public static SkiaSharp.SKImage WrapAsSKImage(PointerBitmap src)
         {
-            var (color, alpha) = ToPixelFormat(bmp.PixelFormat);
+            var wrapInfo = GetSKImageInfo(src.Info, false);
+
+            return SkiaSharp.SKImage.FromPixels(wrapInfo, src.Pointer, src.Info.StepByteSize);
+        }
+
+        public static SkiaSharp.SKBitmap WrapAsSKBitmap(PointerBitmap src)
+        {
+            var wrapInfo = GetSKImageInfo(src.Info, false);
+
+            var wrap = new SkiaSharp.SKBitmap();
+            if (!wrap.InstallPixels(wrapInfo, src.Pointer, src.Info.StepByteSize)) throw new InvalidOperationException("InstallPixels");
+            return wrap;
+        }        
+
+        public static SkiaSharp.SKBitmap CloneAsSKBitmap(SpanBitmap bmp)
+        {
+            if (!TryGetPixelFormat(bmp.PixelFormat, out var color, out var alpha))
+                throw new ArgumentException("format",nameof(bmp));
+                        
             var img = new SkiaSharp.SKBitmap(bmp.Width, bmp.Height, color, alpha);
 
-            var binfo = ToBitmapInfo(img.Info, img.RowBytes);
+            var binfo = GetBitmapInfo(img.Info, img.RowBytes);
 
             var ptr = img.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();            
@@ -150,46 +102,27 @@ namespace InteropBitmaps
             return img;
         }
 
-        public static SkiaSharp.SKImage ToSKImage(SpanBitmap bmp, (SKIACOLOR Color, SKIAALPHA Alpha)? fmtOverride = null)
+        public static SkiaSharp.SKImage CloneAsSKImage(SpanBitmap bmp, (SKIACOLOR Color, SKIAALPHA Alpha)? fmtOverride = null)
         {            
             var skinfo = fmtOverride.HasValue
-                ?
-                new SkiaSharp.SKImageInfo(bmp.Width,bmp.Height,fmtOverride.Value.Color,fmtOverride.Value.Alpha)
-                :
-                ToSkia(bmp.Info, true);
+                ? new SkiaSharp.SKImageInfo(bmp.Width,bmp.Height,fmtOverride.Value.Color,fmtOverride.Value.Alpha)
+                : GetSKImageInfo(bmp.Info, true);
 
             var img = SkiaSharp.SKImage.Create(skinfo);
 
             var pix = img.PeekPixels();
 
-            AsSpanBitmap(pix).SetPixels(0,0,bmp);
+            WrapAsSpan(pix).SetPixels(0,0,bmp);
 
             return img;            
         }
 
-        public static SkiaSharp.SKImage ToSKImage(PointerBitmap bmp)
+        public static SkiaSharp.SKImage CloneAsSKImage(PointerBitmap bmp)
         {
-            var skinfo = ToSkia(bmp.Info, false);
+            var skinfo = GetSKImageInfo(bmp.Info, false);
 
             return SkiaSharp.SKImage.FromPixelCopy(skinfo, bmp.Pointer, bmp.Info.StepByteSize);
-        }
-
-        public static SkiaSharp.SKImage AsSKImage(PointerBitmap bmp)
-        {
-            var skinfo = ToSkia(bmp.Info, false);
-
-            return SkiaSharp.SKImage.FromPixels(skinfo, bmp.Pointer, bmp.Info.StepByteSize);
-        }
-
-        public static SkiaSharp.SKBitmap AsSKBitmap(PointerBitmap bmp)
-        {
-            var skinfo = ToSkia(bmp.Info, false);
-            
-            var dst = new SkiaSharp.SKBitmap();
-            dst.InstallPixels(skinfo, bmp.Pointer, bmp.Info.StepByteSize);
-            
-            return dst;
-        }
+        }       
 
         #endregion
     }

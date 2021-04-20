@@ -12,8 +12,8 @@ namespace InteropBitmaps.Adapters
         internal GDIFactory(BitmapInfo binfo)
         {
             _Info = binfo;
-            _Exact = _Implementation.ToPixelFormat(_Info.PixelFormat, false);
-            _Compatible = _Implementation.ToPixelFormat(_Info.PixelFormat, true);
+            _Exact = _Implementation.TryGetExactPixelFormat(_Info.PixelFormat, out var exact) ? exact : default;
+            _Compatible = _Implementation.GetCompatiblePixelFormat(_Info.PixelFormat);
         }
 
         #endregion
@@ -30,10 +30,7 @@ namespace InteropBitmaps.Adapters
 
         public Bitmap CreateBitmap()
         {
-            var fmt = _Implementation.ToPixelFormat(_Info.PixelFormat, false);
-            if (fmt == System.Drawing.Imaging.PixelFormat.Undefined) throw new ArgumentException(nameof(_Info));
-
-            return new Bitmap(_Info.Width, _Info.Height, fmt);
+            return new Bitmap(_Info.Width, _Info.Height, _Compatible);
         }
 
         public void CopyTo(ref Bitmap bmp)

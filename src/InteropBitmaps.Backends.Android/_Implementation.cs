@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using ANDROIDGFX = Android.Graphics;
 using ANDROIDBITMAP = Android.Graphics.Bitmap;
@@ -12,67 +10,16 @@ using ANDROIDIMAGE = Android.Media.Image;
 
 namespace InteropBitmaps
 {
-    static class _Implementation
+    static partial class _Implementation
     {
-        #region format conversions
-
-        public static Pixel.Format ToInterop(ANDROIDGFX.Format fmt, Pixel.Format? defFmt = null)
-        {
-            switch (fmt)
-            {
-                case ANDROIDGFX.Format.A8: return Pixel.Alpha8.Format;
-                case ANDROIDGFX.Format.L8: return Pixel.Luminance8.Format;
-                case ANDROIDGFX.Format.Rgb565: return Pixel.BGR565.Format;
-                case ANDROIDGFX.Format.Rgba4444: return Pixel.BGRA4444.Format;
-                case ANDROIDGFX.Format.Rgb888: return Pixel.RGB24.Format;
-                case ANDROIDGFX.Format.Rgba8888: return Pixel.RGBA32.Format;                
-                default: if (defFmt.HasValue) return defFmt.Value; break;
-            }
-
-            throw new NotImplementedException($"{fmt}");
-        }
-
-        public static Pixel.Format ToInterop(ANDROIDBITMAP.Config fmt,bool isPremultiplied, Pixel.Format? defFmt = null)
-        {
-            if (isPremultiplied) throw new NotSupportedException();
-
-            if (fmt == ANDROIDBITMAP.Config.Alpha8) return Pixel.Alpha8.Format;
-            if (fmt == ANDROIDBITMAP.Config.Rgb565) return Pixel.BGR565.Format;
-            if (fmt == ANDROIDBITMAP.Config.Argb4444) return Pixel.BGRA4444.Format;
-            if (fmt == ANDROIDBITMAP.Config.Argb8888) return Pixel.RGBA32.Format;
-            if (defFmt.HasValue) return defFmt.Value;
-
-            throw new NotImplementedException($"{fmt}");
-        }
-
-        public static ANDROIDBITMAP.Config ToAndroidBitmapConfig(Pixel.Format fmt, ANDROIDBITMAP.Config defval = null)
-        {
-            switch (fmt.PackedFormat)
-            {
-                case Pixel.Alpha8.Code: return ANDROIDBITMAP.Config.Alpha8;
-                case Pixel.BGR565.Code: return ANDROIDBITMAP.Config.Rgb565;
-                case Pixel.BGRA4444.Code: return ANDROIDBITMAP.Config.Argb4444;
-                case Pixel.RGBA32.Code: return ANDROIDBITMAP.Config.Argb8888;
-                default: return defval;
-            }
-        }
-
-        public static BitmapInfo ToInterop(ANDROIDGFX.AndroidBitmapInfo info, Pixel.Format? defFmt = null)
-        {
-            var fmt = ToInterop(info.Format, defFmt);
-            return new BitmapInfo((int)info.Width, (int)info.Height, fmt, (int)info.Stride);
-        }
-
-        #endregion
-
         #region clone & copy
 
         public static void Mutate(ANDROIDBITMAP bmp, Action<PointerBitmap> pinContext)
         {
             System.Diagnostics.Debug.Assert(bmp != null);
 
-            var info = ToInterop(bmp.GetBitmapInfo());
-
+            if (!TryGetBitmapInfo(bmp.GetBitmapInfo(),bmp.IsPremultiplied, out var info)) throw new Diagnostics.PixelFormatNotSupportedException(bmp.GetBitmapInfo(), nameof(bmp));
+            
             if (info.BitmapByteSize != bmp.ByteCount) throw new InvalidOperationException("Byte Size mismatch");
 
             var ptr = bmp.LockPixels();
@@ -80,7 +27,7 @@ namespace InteropBitmaps
             finally { bmp.UnlockPixels(); }
         }
 
-        public static bool Reconfigure(ref ANDROIDBITMAP bmp, ANDROIDBITMAP.Config fmt, int w, int h)
+        public static bool Reshape(ref ANDROIDBITMAP bmp, ANDROIDBITMAP.Config fmt, int w, int h)
         {
             if (w <= 0 || w <= 0)
             {
@@ -96,13 +43,13 @@ namespace InteropBitmaps
                 return true;
             }
 
-            return Reconfigure(bmp, fmt, w, h);
+            return Reshape(bmp, fmt, w, h);
         }
 
-        public static bool Reconfigure(ANDROIDBITMAP bmp, ANDROIDBITMAP.Config fmt, int w, int h)
+        public static bool Reshape(ANDROIDBITMAP bmp, ANDROIDBITMAP.Config fmt, int w, int h)
         {
             if (bmp == null) throw new ArgumentNullException(nameof(bmp));
-            if (fmt == null) throw new ArgumentNullException(nameof(fmt));
+            if (fmt == null) throw new Diagnostics.PixelFormatNotSupportedException(fmt, nameof(fmt));
             if (w <= 0) throw new ArgumentOutOfRangeException(nameof(w));
             if (h <= 0) throw new ArgumentOutOfRangeException(nameof(h));
 
@@ -114,18 +61,18 @@ namespace InteropBitmaps
             return true;
         }
 
-        public static bool Reconfigure(ref ANDROIDBITMAP bmp, BitmapInfo info, ANDROIDBITMAP.Config defFmt)
+        public static bool Reshape(ref ANDROIDBITMAP bmp, BitmapInfo info, ANDROIDBITMAP.Config defFmt)
         {
             var bmpCfg = ToAndroidBitmapConfig(info.PixelFormat, bmp != null ? bmp.GetConfig() : defFmt);
 
-            return Reconfigure(ref bmp, bmpCfg, info.Width, info.Height);
+            return Reshape(ref bmp, bmpCfg, info.Width, info.Height);
         }
 
-        public static bool Reconfigure(ANDROIDBITMAP bmp, BitmapInfo info, ANDROIDBITMAP.Config defFmt)
+        public static bool Reshape(ANDROIDBITMAP bmp, BitmapInfo info, ANDROIDBITMAP.Config defFmt)
         {
             var bmpCfg = ToAndroidBitmapConfig(info.PixelFormat, bmp != null ? bmp.GetConfig() : defFmt);
 
-            return Reconfigure(bmp, bmpCfg, info.Width, info.Height);
+            return Reshape(bmp, bmpCfg, info.Width, info.Height);
         }
 
         public static bool CopyTo(SpanBitmap src, ANDROIDBITMAP dst)
@@ -133,14 +80,14 @@ namespace InteropBitmaps
             if (dst == null) throw new ArgumentNullException(nameof(dst));
             if (!dst.IsMutable) throw new ArgumentException(nameof(dst));
 
-            var refreshed = Reconfigure(dst, src.Info, null);
+            var refreshed = Reshape(dst, src.Info, null);
             _PerformCopy(src, dst);
             return refreshed;
         }        
 
         public static bool CopyTo(SpanBitmap src, ref ANDROIDBITMAP dst)
         {
-            var refreshed = Reconfigure(ref dst, src.Info, null);
+            var refreshed = Reshape(ref dst, src.Info, null);
             _PerformCopy(src, dst);
             return refreshed;
         }
@@ -152,8 +99,10 @@ namespace InteropBitmaps
 
             if (dst.IsRecycled || !dst.IsMutable) throw new ArgumentNullException(nameof(dst));
 
-            var nfo = ToInterop(dst.GetBitmapInfo());
+            if (!TryGetBitmapInfo(dst.GetBitmapInfo(), dst.IsPremultiplied, out var nfo)) throw new Diagnostics.PixelFormatNotSupportedException((dst.GetBitmapInfo().Format, dst.Premultiplied), nameof(dst));            
+
             var ptr = dst.LockPixels();
+            if (ptr == IntPtr.Zero) throw new ArgumentNullException("lock",nameof(dst));
 
             try { new PointerBitmap(ptr, nfo).AsSpanBitmap().SetPixels(0, 0, src); }
             finally { dst.UnlockPixels(); }

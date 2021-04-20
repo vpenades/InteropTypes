@@ -152,7 +152,7 @@ namespace InteropBitmaps
                 case Alpha8.Code: _ConvertPixels(dst, src.OfType<Alpha8>()); break;
                 case Luminance8.Code: _ConvertPixels(dst, src.OfType<Luminance8>()); break;
                 case Luminance16.Code: _ConvertPixels(dst, src.OfType<Luminance16>()); break;
-                case StdLuminance.Code: _ConvertPixels(dst, src.OfType<StdLuminance>()); break;
+                case LuminanceScalar.Code: _ConvertPixels(dst, src.OfType<LuminanceScalar>()); break;
                 case RGB24.Code: _ConvertPixels(dst, src.OfType<RGB24>()); break;
                 case BGR24.Code: _ConvertPixels(dst, src.OfType<BGR24>()); break;
                 case BGR565.Code: _ConvertPixels(dst, src.OfType<BGR565>()); break;
@@ -175,7 +175,7 @@ namespace InteropBitmaps
                 case Alpha8.Code: _ConvertPixels(dst.OfType<Alpha8>(), src); break;
                 case Luminance8.Code: _ConvertPixels(dst.OfType<Luminance8>(), src); break;
                 case Luminance16.Code: _ConvertPixels(dst.OfType<Luminance16>(), src); break;
-                case StdLuminance.Code: _ConvertPixels(dst.OfType<StdLuminance>(), src); break;
+                case LuminanceScalar.Code: _ConvertPixels(dst.OfType<LuminanceScalar>(), src); break;
                 case RGB24.Code: _ConvertPixels(dst.OfType<RGB24>(), src); break;
                 case BGR24.Code: _ConvertPixels(dst.OfType<BGR24>(), src); break;
                 case BGR565.Code: _ConvertPixels(dst.OfType<BGR565>(), src); break;

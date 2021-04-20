@@ -272,7 +272,7 @@ idx += idx0 * len;
 /// <summary>
         /// Gets the indices of each dimension from a flattend index.
         /// </summary>
-        /// <param name="index">a flattened index</param>
+        /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
         public TensorIndices<#= TDIMCOUNT#> GetDecomposedIndex(int flattenedIndex)
         {

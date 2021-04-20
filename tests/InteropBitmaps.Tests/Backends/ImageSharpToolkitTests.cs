@@ -11,12 +11,6 @@ namespace InteropBitmaps.Backends
     [Category("Backends")]
     public class ImageSharpTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
-        }
-
         [TestCase("Resources\\shannon.jpg")]
         [TestCase("Resources\\diagram.jpg")]
         [TestCase("Resources\\white.png")]

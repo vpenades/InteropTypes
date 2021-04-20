@@ -15,23 +15,23 @@ namespace InteropVision
     {
         public static PointerBitmap GetWindow(this InferenceInput<PointerBitmap> input, ref RECT? window)
         {
-            if (input.Image.IsEmpty) return default;
+            if (input.Content.IsEmpty) return default;
 
             if (!window.HasValue)
             {
-                window = new RECT(System.Drawing.Point.Empty, input.Image.Size);
-                return input.Image;
+                window = new RECT(System.Drawing.Point.Empty, input.Content.Size);
+                return input.Content;
             }
 
             if (window.Value.Width == 0) return default;
             if (window.Value.Height == 0) return default;
 
-            var r = BitmapBounds.Clip(window.Value, input.Image.Bounds);
+            var r = BitmapBounds.Clip(window.Value, input.Content.Bounds);
             if (r.Width * r.Height == 0) return default;
 
             window = r;
 
-            var tmp = input.Image.Slice(window.Value);
+            var tmp = input.Content.Slice(window.Value);
 
             System.Diagnostics.Debug.Assert(tmp.Size == window.Value.Size);
 

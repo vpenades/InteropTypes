@@ -14,8 +14,12 @@ namespace InteropBitmaps.Adapters
         {
             bmp.Lock();
 
-            var fmt = _Implementation.ToInterop(bmp.Format);
-            var nfo = new BitmapInfo(bmp.PixelWidth, bmp.PixelHeight, fmt, bmp.BackBufferStride);
+            if (!_Implementation.TryGetExactPixelFormat(bmp.Format, out var bmpFmt))
+            {
+                throw new Diagnostics.PixelFormatNotSupportedException(bmp.Format, nameof(bmp));
+            }
+            
+            var nfo = new BitmapInfo(bmp.PixelWidth, bmp.PixelHeight, bmpFmt, bmp.BackBufferStride);
             var ptr = new PointerBitmap(bmp.BackBuffer, nfo);
         }
 

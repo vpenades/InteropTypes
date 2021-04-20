@@ -74,6 +74,7 @@ namespace InteropBitmaps
                             case PEF.Green4:
                             case PEF.Blue4:
                             case PEF.Alpha4:
+                            case PEF.Premul4:
                             case PEF.Undefined4: return 4;
 
                             case PEF.Red5:
@@ -86,6 +87,7 @@ namespace InteropBitmaps
 
                             case PEF.Index8:
                             case PEF.Alpha8:
+                            case PEF.Premul8:
                             case PEF.Luminance8:
                             case PEF.Red8:
                             case PEF.Green8:
@@ -98,7 +100,8 @@ namespace InteropBitmaps
                             case PEF.Green16:
                             case PEF.Blue16:
                             case PEF.Alpha16:
-                            case PEF.DepthMM16:
+                            case PEF.Premul16:
+                            case PEF.Millimeter16:
                             case PEF.Undefined16: return 16;
 
                             case PEF.Luminance32F:
@@ -106,6 +109,9 @@ namespace InteropBitmaps
                             case PEF.Green32F:
                             case PEF.Blue32F:
                             case PEF.Alpha32F:
+                            case PEF.Premul32F:
+                            case PEF.Millimeter32:
+                            case PEF.Meter32F:
                             case PEF.Undefined32F: return 32;
 
                             default: throw new NotImplementedException($"Not implemented:{Id}");

@@ -132,13 +132,13 @@ namespace InteropVision.IO
         {
             if (_CheckDisposed()) return;
 
-            var time = FrameTime.Now;
+            var time = DateTime.UtcNow;
             _FPS.AddFrame();
 
-            if (_CurrentFrame.Value.Device != this) throw new InvalidOperationException("Owner mismatch");
+            if (_CurrentFrame.Value.CaptureDevice != this) throw new InvalidOperationException("Owner mismatch");
 
-            _CurrentFrame.Value._TimeStamp = time;
-            _CurrentFrame.Value._Bitmap = bmp;            
+            _CurrentFrame.Value._CaptureTime = time;
+            _CurrentFrame.Value._CapturedBitmap = bmp;            
 
             OnFrameReceived?.Invoke(this, _CurrentFrame.Value);
         }
@@ -179,58 +179,69 @@ namespace InteropVision.IO
     /// This container is created only once, and updated every new frame is received.<br/>
     /// so it must not be used to keep multiple frames in a collection.
     /// </remarks>
+    [System.Diagnostics.DebuggerDisplay("{CaptureDevice}/{CaptureTime.RelativeTime}/{Bitmap.Info.ToDebuggerDisplayString(),nq}")]
     public class VideoCaptureFrameArgs : EventArgs
     {
-        #region lifecycle
-        
+        #region lifecycle        
+
         /// <summary>
         /// Used mostly for testing
         /// </summary>        
-        public static implicit operator VideoCaptureFrameArgs((PointerBitmap b, FrameTime t) frame)
+        public static implicit operator VideoCaptureFrameArgs((PointerBitmap b, DateTime t) frame)
         {
             return new VideoCaptureFrameArgs(frame.b, frame.t);
         }
 
-        /// <summary>
-        /// Used mostly for testing
-        /// </summary>        
-        public static implicit operator VideoCaptureFrameArgs((PointerBitmap b, TimeSpan t) frame)
+        protected VideoCaptureFrameArgs(ISource device)
         {
-            return new VideoCaptureFrameArgs(frame.b, new FrameTime(frame.t));
+            _CaptureDevice = device;
+            _CaptureTime = DateTime.UtcNow;
         }
 
-        protected VideoCaptureFrameArgs(ISource device) { _Device = device; }
-
-        private VideoCaptureFrameArgs(PointerBitmap bmp, FrameTime ts)
+        private VideoCaptureFrameArgs(PointerBitmap bmp, DateTime ts)
         {
-            _Device = null;
-            _Bitmap = bmp;
-            _TimeStamp = ts;
+            _CaptureDevice = new _SingleImageSource();
+            _CapturedBitmap = bmp;
+            _CaptureTime = ts;
         }
 
         #endregion
 
         #region data
 
-        private readonly ISource _Device;
+        private readonly ISource _CaptureDevice;
 
         /// <summary>
         /// Updated by <see cref="VideoCaptureDevice.RaiseFrameReceived(PointerBitmap)"/>
         /// </summary>
-        internal FrameTime _TimeStamp;
+        internal DateTime _CaptureTime;
 
         /// <summary>
         /// Updated by <see cref="VideoCaptureDevice.RaiseFrameReceived(PointerBitmap)"/>
         /// </summary>
-        internal PointerBitmap _Bitmap;
+        internal PointerBitmap _CapturedBitmap;
 
         #endregion
 
         #region properties
 
-        public ISource Device => _Device;
-        public FrameTime TimeStamp => _TimeStamp;
-        public PointerBitmap Bitmap => _Bitmap;        
+        /// <summary>
+        /// Gets access to the underlaying capture device object, or null.
+        /// </summary>
+        /// <remarks>
+        /// Try cast to <see cref="ICaptureDeviceInfo"/> to get additional information from the device.
+        /// </remarks>
+        public ISource CaptureDevice => _CaptureDevice;
+
+        /// <summary>
+        /// Gets the time at which this bitmap was captured.
+        /// </summary>
+        public DateTime CaptureTime => _CaptureTime;
+
+        /// <summary>
+        /// Gets the captured bitmap.
+        /// </summary>
+        public PointerBitmap Bitmap => _CapturedBitmap;        
 
         #endregion
 
@@ -256,6 +267,13 @@ namespace InteropVision.IO
             event EventHandler<VideoCaptureFrameArgs> OnFrameReceived;
         }
 
+        struct _SingleImageSource : ISource, ICaptureDeviceInfo
+        {
+            public string Name => "Single Frame";
+
+            public event EventHandler<VideoCaptureFrameArgs> OnFrameReceived;
+        }
+
         public readonly struct Cropped
         {
             public Cropped(VideoCaptureFrameArgs frame, BitmapBounds bounds)
@@ -267,7 +285,7 @@ namespace InteropVision.IO
             public readonly VideoCaptureFrameArgs Source;
             public readonly BitmapBounds Bounds;
 
-            public FrameTime TimeStamp => Source.TimeStamp;
+            public DateTime TimeStamp => Source.CaptureTime;
 
             /// <summary>
             /// The cropped bitmap

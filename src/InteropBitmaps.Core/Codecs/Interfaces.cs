@@ -56,6 +56,9 @@ namespace InteropBitmaps.Codecs
         Tiff,
         Tga,
 
+        Hdr,
+        Dds,
+
         Emf,
         Wmf,
         Wbmp,

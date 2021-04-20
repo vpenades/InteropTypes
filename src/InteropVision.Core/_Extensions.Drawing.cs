@@ -19,8 +19,8 @@ using XY = System.Numerics.Vector2;
 
 namespace InteropVision
 {
-    [Obsolete]
-    public static partial class Extensions
+    [Obsolete("Do not use",true)]
+    public static class DrawingExtensions
     {
         public static XY ToVector2(this POINTI point) { return new XY(point.X, point.Y); }
         public static XY ToVector2(this POINTF point) { return new XY(point.X, point.Y); }

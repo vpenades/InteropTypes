@@ -11,7 +11,11 @@ namespace InteropBitmaps.Adapters
         internal WPFFactory(BitmapInfo binfo)
         {
             _Info = binfo;
-            _Exact = _Implementation.ToPixelFormat(binfo.PixelFormat);
+
+            if (!_Implementation.TryGetExactPixelFormat(binfo.PixelFormat, out _Exact))
+            {
+                throw new Diagnostics.PixelFormatNotSupportedException(binfo.PixelFormat, nameof(binfo));
+            }            
         }
 
         private readonly BitmapInfo _Info;

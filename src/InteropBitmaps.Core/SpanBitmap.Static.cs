@@ -7,6 +7,11 @@ namespace InteropBitmaps
 {
     partial struct SpanBitmap
     {
+        public static void PinTransferPointers(SpanBitmap src, SpanBitmap dst, Action<PointerBitmap,PointerBitmap> onPinned)
+        {
+            SpanBitmapImpl.PinTransferPointers(src, dst, onPinned);
+        }
+
         public static (Single Min, Single Max) MinMax(SpanBitmap<float> src)
         {
             var min = float.PositiveInfinity;

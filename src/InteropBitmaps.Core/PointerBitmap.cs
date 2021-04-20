@@ -17,7 +17,7 @@ namespace InteropBitmaps
     [System.Diagnostics.DebuggerDisplay("{Pointer} {Info.ToDebuggerDisplayString(),nq}")]
     public readonly struct PointerBitmap
     {
-        #region constructors        
+        #region constructors
 
         public unsafe PointerBitmap(System.Buffers.MemoryHandle ptr, BitmapInfo info, bool isReadOnly = false)
         {
@@ -151,7 +151,7 @@ namespace InteropBitmaps
             return new SpanBitmap<TPixel>(_Pointer, _Info, _IsReadOnly);
         }
 
-        public IMemoryBitmapOwner UsingMemoryBitmap()
+        public MemoryBitmap.ISource UsingMemoryBitmap()
         {
             return new _MemoryManager(this);
         }
@@ -236,7 +236,16 @@ namespace InteropBitmaps
             public _MemoryManager(PointerBitmap bmp)
             {
                 Initialize(bmp);
-            }
+            }        
+        }        
+
+        public interface ISource : IDisposable
+        {
+            /// <summary>
+            /// Gets the <see cref="PointerBitmap"/> owned by this instance.<br/>
+            /// If this <see cref="ISource"/> is disposed, the <see cref="Bitmap"/> will no longet be valid.
+            /// </summary>
+            PointerBitmap Bitmap { get; }
         }
 
         #endregion

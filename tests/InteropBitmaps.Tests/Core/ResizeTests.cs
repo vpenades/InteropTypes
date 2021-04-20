@@ -65,20 +65,35 @@ namespace InteropBitmaps.Core
         [TestCase(1920, 1080, true, true, true)]
         public void TestFlipPerformance(int w, int h, bool multiThread, bool hflip, bool vflip)
         {
-            var bmp = new MemoryBitmap<Pixel.RGB24>(w, h).AsSpanBitmap();
+            var bmp = new MemoryBitmap<Pixel.RGB24>(w, h).AsSpanBitmap();            
 
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            for(int r=0; r < 1000; ++r)
+            using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"{w}x{h} HFlip:{hflip} VFlip:{vflip} {Math.Round(t.TotalMilliseconds / 1000)}ms")))
             {
-                bmp.ApplyMirror(hflip, vflip, multiThread);
+                for (int r = 0; r < 1000; ++r)
+                {
+                    bmp.ApplyMirror(hflip, vflip, multiThread);
+                }
             }
+        }
 
-            watch.Stop();
+        [Test]
+        public void TestTransform()
+        {
+            var src = LoadShannonImage().OfType<Pixel.BGR24>();
+            src.AttachToCurrentTest("input.png");
 
-            var ms = watch.ElapsedMilliseconds / 1000f;
+            var x = Matrix3x2.CreateScale(0.75f, 0.75f) * Matrix3x2.CreateRotation(0.25f);
+            x.Translation = new Vector2(20, 20);
+            Matrix3x2.Invert(x, out var xx);
 
-            TestContext.WriteLine($"{w}x{h} HFlip:{hflip} VFlip:{vflip} {ms}ms");
+            var dst = new MemoryBitmap<Pixel.BGR24>(512, 512);
+
+            using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {t}")))
+            {
+                dst.AsSpanBitmap().SetPixels(xx, src);
+            }            
+
+            dst.AttachToCurrentTest("transformed.png");
         }
     }
 }

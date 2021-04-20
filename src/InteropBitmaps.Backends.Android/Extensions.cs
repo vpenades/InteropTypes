@@ -27,7 +27,9 @@ namespace InteropBitmaps
 
         public static BitmapInfo ToInterop(this ANDROIDGFX.AndroidBitmapInfo info, Pixel.Format? defFmt = null)
         {
-            return _Implementation.ToInterop(info, defFmt);
+            return _Implementation.TryGetBitmapInfo(info, false, out var fmt)
+                ? fmt
+                : new BitmapInfo((int)info.Width, (int)info.Height, defFmt.Value, (int)info.Stride);
         }
 
         public static Adapters.AndroidFactory ToAndroidFactory(this BitmapInfo binfo, ANDROIDBITMAP.Config defCfg = null)
@@ -41,13 +43,13 @@ namespace InteropBitmaps
             _Implementation.Mutate(bmp, pinContext);
         }
 
-        public static IPointerBitmapOwner UsingPointerBitmap(this ANDROIDBITMAP bmp)
+        public static PointerBitmap.ISource UsingPointerBitmap(this ANDROIDBITMAP bmp)
         {
             if (bmp == null) throw new ArgumentNullException(nameof(bmp));
             return new Adapters.AndroidBitmapBits(bmp);
         }
 
-        public static IMemoryBitmapOwner UsingMemoryBitmap(this ANDROIDBITMAP bmp)
+        public static MemoryBitmap.ISource UsingMemoryBitmap(this ANDROIDBITMAP bmp)
         {
             if (bmp == null) throw new ArgumentNullException(nameof(bmp));            
             return new Adapters.AndroidBitmapBits(bmp);

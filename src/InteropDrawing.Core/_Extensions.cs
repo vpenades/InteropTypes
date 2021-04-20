@@ -92,13 +92,13 @@ namespace InteropDrawing
             var sx = new XY(xform.M11, xform.M12).Length();
             var sy = new XY(xform.M21, xform.M22).Length();
             return (sx + sy) / 2;
-        }       
-        
+        }
+
 
         /// <summary>
         /// Calculates the "global scale" of the matrix
         /// </summary>
-        /// <param name="xform">Any matrix</param>
+        /// <param name="matrix">Any matrix</param>
         /// <returns>The average scale being applied by the matrix.</returns>
         public static Single DecomposeScale(this in Matrix4x4 matrix)
         {

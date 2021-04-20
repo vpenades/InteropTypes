@@ -28,5 +28,32 @@ namespace InteropBitmaps.Backends
 
             bitmap.AttachToCurrentTest("Result.png");
         }
+
+        [Test]
+        public void WarpAffine()
+        {
+            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+
+            var src = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
+            var dst = new MemoryBitmap(512, 512, src.Info.PixelFormat);
+
+            var xform = System.Numerics.Matrix3x2.CreateScale(1.3f, 1.3f) * System.Numerics.Matrix3x2.CreateRotation(0.25f);
+            xform.Translation = new System.Numerics.Vector2(5, 40);
+
+            using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"OpenCV {t}")))
+            {
+                OpenCvSharp4Toolkit.WarpAffine(src, dst, xform);
+            }
+            dst.AttachToCurrentTest("result.opencv.jpg");            
+
+            dst.AsSpanBitmap().WritableBytes.Fill(0);
+            using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"Soft {t}")))
+            {
+                dst.AsSpanBitmap().SetPixels(xform, src);
+            }
+            dst.AttachToCurrentTest("result.soft.jpg");
+        }
+
+        
     }
 }

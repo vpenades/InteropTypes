@@ -173,12 +173,12 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{L}")]
-        public readonly partial struct StdLuminance : IPixelReflection<StdLuminance>
+        public readonly partial struct LuminanceScalar : IPixelReflection<LuminanceScalar>
         {
             #region constructors
-            public StdLuminance(UInt16 luminance) { L = luminance; }
+            public LuminanceScalar(UInt16 luminance) { L = luminance; }
 
-            public StdLuminance(BGRA32 color)
+            public LuminanceScalar(BGRA32 color)
             {
                 float accum = 0;
 
@@ -191,7 +191,7 @@ namespace InteropBitmaps
                 L = accum;
             }
 
-            public StdLuminance(VectorRGBA color)
+            public LuminanceScalar(VectorRGBA color)
             {
                 float accum = color.R * 0.2989f + color.G * 0.5870f + color.B * 0.1140f;
                 accum *= 65535f;
@@ -211,8 +211,8 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { var v = (Byte)(L * 255); return new BGRA32(v, v, v); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            StdLuminance IPixelReflection<StdLuminance>.From(BGRA32 color) { return new StdLuminance(color); }
-            StdLuminance IPixelReflection<StdLuminance>.From(VectorRGBA color) { return new StdLuminance(color); }
+            LuminanceScalar IPixelReflection<LuminanceScalar>.From(BGRA32 color) { return new LuminanceScalar(color); }
+            LuminanceScalar IPixelReflection<LuminanceScalar>.From(VectorRGBA color) { return new LuminanceScalar(color); }
 
             #endregion
         }
@@ -684,7 +684,7 @@ namespace InteropBitmaps
             public VectorRGBA(Alpha8 alpha) { RGBA = new XYZA(0, 0, 0, alpha.A) / 255f; }
             public VectorRGBA(Luminance8 luma) { RGBA = new XYZA(luma.L, luma.L, luma.L, 255) / 255f; }
             public VectorRGBA(Luminance16 luma) { RGBA = new XYZA(luma.L, luma.L, luma.L, 65565) / 65535f; }
-            public VectorRGBA(StdLuminance luma) { RGBA = new XYZA(luma.L, luma.L, luma.L, 1); }
+            public VectorRGBA(LuminanceScalar luma) { RGBA = new XYZA(luma.L, luma.L, luma.L, 1); }
             public VectorRGBA(BGR565 color) { RGBA = new XYZA(color.R, color.G, color.B, 255) / 255f; }
             public VectorRGBA(BGRA5551 color) { RGBA = new XYZA(color.R, color.G, color.B, color.A) / 255f; }
             public VectorRGBA(BGRA4444 color) { RGBA = new XYZA(color.R, color.G, color.B, color.A) / 255f; }

@@ -23,7 +23,7 @@ namespace InteropBitmaps.Adapters
 
         #region API
 
-        public Mat ToMat() { return _Implementation.CloneToMat(_Bitmap); }
+        public Mat ToMat() { return _Implementation.CloneAsMat(_Bitmap); }
 
         public unsafe void Apply(Func<Mat, Mat> context)
         {
@@ -32,7 +32,7 @@ namespace InteropBitmaps.Adapters
 
         private static unsafe void _Apply(PointerBitmap bmp, Func<Mat, Mat> operation)
         {
-            using (var srcMat = bmp.AsMat())
+            using (var srcMat = _Implementation.WrapAsMat(bmp))
             {
                 using (var dstMat = operation(srcMat))
                 {
@@ -68,7 +68,7 @@ namespace InteropBitmaps.Adapters
 
         private static MemoryBitmap _Resize(PointerBitmap src, int width, int height, InterpolationFlags flags)
         {
-            using (var srcMat = src.AsMat())
+            using (var srcMat = _Implementation.WrapAsMat(src))
             {
                 using (var dstMat = srcMat.Resize(new Size(width, height), 0, 0, flags))
                 {

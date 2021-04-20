@@ -114,7 +114,7 @@ namespace InteropTensors
             if (dims[2] != 1) return false;
 
             var data = System.Runtime.InteropServices.MemoryMarshal.Cast<float, byte>(src.Span);
-            bmp = new SpanBitmap<float>(data, dims[1], dims[0], Pixel.Standard.Gray32F);
+            bmp = new SpanBitmap<float>(data, dims[1], dims[0], Pixel.LuminanceScalar.Format);
             return true;
         }        
 

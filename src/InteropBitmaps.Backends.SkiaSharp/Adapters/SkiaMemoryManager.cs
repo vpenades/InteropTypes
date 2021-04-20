@@ -12,7 +12,7 @@ namespace InteropBitmaps.Adapters
         public SkiaMemoryManager(SkiaSharp.SKBitmap bmp)
         {
             _BitmapSource = bmp;
-            _BitmapInfo = _Implementation.ToBitmapInfo(bmp.Info, bmp.RowBytes);
+            _BitmapInfo = _Implementation.GetBitmapInfo(bmp.Info, bmp.RowBytes);
 
             var ptr = bmp.GetPixels();
             if (ptr == IntPtr.Zero) throw new ArgumentNullException();

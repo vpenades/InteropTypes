@@ -52,7 +52,7 @@ namespace InteropBitmaps
             var fmt = Pixel.Format.TryIdentifyPixel<TPixel>();
             if (format == default) return this.WithPixelFormat(fmt);
 
-            if (fmt.ByteCount != format.ByteCount) throw new ArgumentException("Pixel size mismatch");
+            if (fmt.ByteCount != format.ByteCount) throw new Diagnostics.PixelFormatNotSupportedException(format, nameof(format));
             
             return this.WithPixelFormat(fmt);
         }
@@ -121,13 +121,13 @@ namespace InteropBitmaps
             return Width.GetHashCode() ^ Height.GetHashCode() ^ PixelFormat.GetHashCode();
         }
 
-        public static bool AreEqual(in BitmapInfo a, in BitmapInfo b)
+        public static bool AreEqual(in BitmapInfo a, in BitmapInfo b, bool compareStepSize = true)
         {
             if (a.Width != b.Width) return false;
             if (a.Height != b.Height) return false;
             if (a.PixelByteSize != b.PixelByteSize) return false;            
             if (a.PixelFormat != b.PixelFormat) return false;
-            if (a.StepByteSize != b.StepByteSize) return false;
+            if (compareStepSize && a.StepByteSize != b.StepByteSize) return false;
             return true;
         }
 

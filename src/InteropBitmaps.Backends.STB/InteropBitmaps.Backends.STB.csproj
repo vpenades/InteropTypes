@@ -9,8 +9,9 @@
   <Import Project="..\Version.props" />
 
   <ItemGroup>
-    <PackageReference Include="StbImageLib" Version="2.22.3" />
-    <PackageReference Include="StbImageWriteSharp" Version="1.13.5" />
+    <PackageReference Include="SafeStbImageSharp" Version="2.22.4" />
+    <PackageReference Include="StbDxtSharp" Version="1.10.3" />    
+    <PackageReference Include="StbImageWriteSharp" Version="1.13.5" />    
   </ItemGroup>
 
   <ItemGroup>

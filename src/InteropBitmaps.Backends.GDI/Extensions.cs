@@ -29,12 +29,12 @@ namespace InteropBitmaps
 
         #region As MemoryBitmap
 
-        public static IPointerBitmapOwner UsingPointerBitmap(this Bitmap bmp)
+        public static PointerBitmap.ISource UsingPointerBitmap(this GDIBITMAP bmp)
         {
             return new Adapters.GDIMemoryManager(bmp);
         }
 
-        public static IMemoryBitmapOwner UsingMemoryBitmap(this Bitmap bmp)
+        public static MemoryBitmap.ISource UsingMemoryBitmap(this GDIBITMAP bmp)
         {
             return new Adapters.GDIMemoryManager(bmp);
         }
@@ -45,12 +45,15 @@ namespace InteropBitmaps
 
         public static BitmapInfo GetBitmapInfo(this GDIPTR data)
         {
-            return _Implementation.GetBitmapInfo(data);
+            var binfo = _Implementation.GetBitmapInfo(data);
+            System.Diagnostics.Debug.Assert(binfo.StepByteSize == data.Stride);
+            return binfo;
         }
 
         public static PointerBitmap AsPointerBitmap(this GDIPTR data)
         {
             var info = _Implementation.GetBitmapInfo(data);
+            System.Diagnostics.Debug.Assert(info.StepByteSize == data.Stride);
             return new PointerBitmap(data.Scan0, info);
         }
 
@@ -67,7 +70,7 @@ namespace InteropBitmaps
 
         #endregion        
 
-        #region API
+        #region Generic API
         
         public static void Mutate(this GDIBITMAP bmp, Action<PointerBitmap> action)
         {
@@ -76,90 +79,108 @@ namespace InteropBitmaps
 
         public static void SetPixels(this GDIBITMAP dst, int dstx, int dsty, in SpanBitmap src)
         {
-            _Implementation.SetPixels(dst, dstx, dsty, src);
-        }        
-
-        public static MemoryBitmap ToMemoryBitmap(this GDIBITMAP bmp, Pixel.Format? fmtOverride = null)
-        {
-            return _Implementation.CloneToMemoryBitmap(bmp, fmtOverride);
-        }        
-
-        public static MemoryBitmap ToMemoryBitmap(this GDIIMAGE img, Pixel.Format? fmtOverride = null)
-        {
-            using (var bmp = new Bitmap(img))
-            {
-                return _Implementation.CloneToMemoryBitmap(bmp, fmtOverride);
-            }
+            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
         }
 
-        public static MemoryBitmap ToMemoryBitmap(this TextureBrush brush, Pixel.Format? fmtOverride = null)
+        public static void SetPixels(this SpanBitmap dst, int dstx, int dsty, in GDIBITMAP src)
         {
-            return ToMemoryBitmap(brush.Image, fmtOverride);
-        }        
-
-        public static MemoryBitmap ToMemoryBitmap(this GDIICON icon, Pixel.Format? fmtOverride = null)
-        {
-            using (var bmp = icon.ToBitmap())
-            {
-                return _Implementation.CloneToMemoryBitmap(bmp, fmtOverride);
-            }
+            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
         }
 
-        public static GDIBITMAP UsingAsGDIBitmap(this PointerBitmap bmp)
+        public static void SetPixels(this GDIBITMAP dst, System.Numerics.Matrix3x2 dstSRT, in SpanBitmap src)
         {
-            return _Implementation.WrapAsGDIBitmap(bmp);
+            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstSRT, s));
         }
 
-        public static GDIBITMAP ToGDIBitmap(this MemoryBitmap bmp)
+        public static void SetPixels(this SpanBitmap dst, System.Numerics.Matrix3x2 dstSRT, in GDIBITMAP src)
         {
-            return _Implementation.CloneToGDIBitmap(bmp.AsSpanBitmap(),true);
+            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstSRT, s));
         }
 
-        
+        public static void FitPixels(this GDIBITMAP dst, in SpanBitmap src)
+        {
+            _Implementation.TransferSpan(src, dst, (s, d) => d.FitPixels(s));
+        }
+
+        public static void FitPixels(this SpanBitmap dst, in GDIBITMAP src)
+        {
+            _Implementation.TransferSpan(src, dst, (s, d) => d.FitPixels(s));
+        }
 
         public static bool CopyTo(this GDIBITMAP src, ref MemoryBitmap dst, Pixel.Format? fmtOverride = null)
         {
             if (src == null)
             {
+                // if both are empty, exit with no changes
                 if (dst.IsEmpty) return false;
-                dst = default;
-                return true;
+
+                // if src is empty, clear dst
+                dst = default; return true;
             }
 
-            if (dst.IsEmpty) { dst = src.ToMemoryBitmap(fmtOverride); return true; }
-
-            var bits = src.LockBits(Rectangle.Empty, System.Drawing.Imaging.ImageLockMode.ReadOnly, src.PixelFormat);
-
-            try { return bits.CopyTo(ref dst, fmtOverride); }
-            finally { src.UnlockBits(bits); }
+            var refreshed = _Implementation.Reshape(ref dst, src, fmtOverride);
+            dst.AsSpanBitmap().SetPixels(0, 0, src);
+            return refreshed;
         }
 
         public static bool CopyTo(this GDIPTR src, ref MemoryBitmap dst, Pixel.Format? fmtOverride = null)
         {
             if (src == null)
             {
+                // if both are empty, exit with no changes
                 if (dst.IsEmpty) return false;
-                dst = default;
-                return true;
-            }
-            
-            var srcSpan = src.AsSpanBitmap();
 
-            var srcInfo = srcSpan.Info;
-            if (fmtOverride.HasValue) srcInfo = srcInfo.WithPixelFormat(fmtOverride.Value);
-
-            bool refreshed = false;
-
-            if (srcInfo != dst.Info)
-            {
-                dst = new MemoryBitmap(srcInfo);
-                refreshed = true;
+                // if src is empty, clear dst
+                dst = default; return true;
             }
 
-            dst.SetPixels(0, 0, srcSpan);            
-
+            var refreshed = _Implementation.Reshape(ref dst, src, fmtOverride);
+            dst.SetPixels(0, 0, src.AsSpanBitmap());
             return refreshed;
         }
+
+        #endregion
+
+        #region Specific API
+
+        public static MemoryBitmap ToMemoryBitmap(this TextureBrush brush, Pixel.Format? fmtOverride = null)
+        {
+            return brush.Image.ToMemoryBitmap(fmtOverride);
+        }
+
+        public static MemoryBitmap ToMemoryBitmap(this GDIIMAGE img, Pixel.Format? fmtOverride = null)
+        {
+            using (var bmp = new GDIBITMAP(img))
+            {
+                return bmp.ToMemoryBitmap(fmtOverride);
+            }
+        }
+
+        public static MemoryBitmap ToMemoryBitmap(this GDIICON icon, Pixel.Format? fmtOverride = null)
+        {
+            using (var bmp = icon.ToBitmap())
+            {
+                return bmp.ToMemoryBitmap(fmtOverride);
+            }
+        }
+
+        public static MemoryBitmap ToMemoryBitmap(this GDIBITMAP bmp, Pixel.Format? fmtOverride = null)
+        {
+            MemoryBitmap dst = default;
+            return CopyTo(bmp, ref dst, fmtOverride) ? dst : throw new ArgumentException(nameof(bmp));
+        }
+
+        public static GDIBITMAP UsingAsGDIBitmap(this PointerBitmap bmp)
+        {
+            if (_Implementation.TryWrap(bmp, out var dst, out var err)) return dst;
+            throw new ArgumentException(err, nameof(bmp));
+        }
+
+        public static GDIBITMAP ToGDIBitmap(this MemoryBitmap bmp)
+        {
+            return _Implementation.CloneAsGDIBitmap(bmp.AsSpanBitmap());
+        }
+
 
         #endregion
     }
