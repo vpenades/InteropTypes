@@ -11,7 +11,8 @@ using RECTF = System.Drawing.RectangleF;
 
 namespace InteropVision
 {
-    public static partial class _Extensions
+    [Obsolete]
+    public static partial class _ObsoleteExtensions
     {
         public static XY SelectXY(this XYZ v) { return new XY(v.X, v.Y); }
 

@@ -20,7 +20,7 @@ namespace InteropDrawing.Transforms
     /// </list>
     /// </para>
     /// </remarks>
-    class PerspectiveTransform : IDrawing3D
+    public class PerspectiveTransform : IDrawing3D
     {
         #region lifecycle
 

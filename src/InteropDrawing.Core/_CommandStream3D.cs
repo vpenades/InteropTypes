@@ -314,15 +314,15 @@ namespace InteropDrawing
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
                 var xref = references[src.AssetRef];
 
-                if (src.Transform == Matrix4x4.Identity)
+                if (src.Transform == XFORM3.Identity)
                 {
-                    var box = Toolkit.GetAssetBoundingBox(xref);
+                    var box = Toolkit.GetAssetBoundingMinMax(xref);
 
                     // todo: add all 8 vertices
                     if (box.HasValue)
                     {
-                        bounds.AddVertex(box.Value.ColumnX(), 0);
-                        bounds.AddVertex(box.Value.ColumnY(), 0);
+                        bounds.AddVertex(box.Value.Min, 0);
+                        bounds.AddVertex(box.Value.Max, 0);
                     }
                 }
                 else

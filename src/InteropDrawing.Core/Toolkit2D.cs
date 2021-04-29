@@ -41,11 +41,18 @@ namespace InteropDrawing
         public static void DrawAsset(this IDrawing2D dc, in XFORM2 transform, Object asset)
         {
             dc.DrawAsset(transform, asset, COLOR.White);
-        }
+        }        
         
         public static BRECT? GetAssetBoundingRect(Object asset)
-        {
+        {            
             if (asset is Model2D model2D) return model2D.BoundingRect;
+            if (asset is IDrawable2D drawable)
+            {
+                var mdl = new Model2D();
+                drawable.DrawTo(mdl, false);
+                return mdl.BoundingRect;
+            }
+
             return null;
         }
         
@@ -245,11 +252,7 @@ namespace InteropDrawing
                 return;
             }*/
 
-            if (asset is Model2D mdl3D)
-            {
-                mdl3D.DrawTo(dc);
-                return;
-            }
+            if (asset is IDrawable2D drawable) { drawable.DrawTo(dc); return; }
         }
 
         #endregion

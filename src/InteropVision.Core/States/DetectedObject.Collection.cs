@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 
+using InteropBitmaps;
+
 using XY = System.Numerics.Vector2;
 using POINT = InteropDrawing.Point2;
 
@@ -12,6 +14,7 @@ using SCORE = InteropVision.Score;
 using RECTI = System.Drawing.Rectangle;
 using RECTF = System.Drawing.RectangleF;
 using COLOR = System.Drawing.Color;
+
 
 namespace InteropVision
 {
@@ -87,7 +90,7 @@ namespace InteropVision
                 _DisplayLineIndices.Clear();
             }
 
-            public void SetFrameSize(PointerBitmapInput input)
+            public void SetFrameSize(InferenceInput<PointerBitmap> input)
             {
                 SetFrameSize(input.Content.Width, input.Content.Height);
             }

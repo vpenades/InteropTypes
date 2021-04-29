@@ -59,7 +59,7 @@ namespace InteropDrawing
                 return;
             }
 
-            if (asset is Model3D mdl3D)
+            if (asset is IDrawable3D mdl3D)
             {
                 mdl3D.DrawTo(dc);
                 return;
@@ -115,11 +115,29 @@ namespace InteropDrawing
             dc.DrawSegment(center + zzz * size * 0.1f, center + zzz * size, size * 0.1f, (colorZ, LineCapStyle.Round, LineCapStyle.Triangle));
         }
 
-        
 
-        public static BBOX? GetAssetBoundingBox(Object asset)
+        public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
+        {
+            if (asset is Model3D model3D) return model3D.BoundingBox;
+            if (asset is IDrawable3D drawable)
+            {
+                var mdl = new Model3D();
+                drawable.DrawTo(mdl);
+                return mdl.BoundingBox;
+            }
+
+            return null;
+        }
+
+        public static BBOX? GetAssetBoundingMatrix(Object asset)
         {
             if (asset is Model3D model3D) return model3D.BoundingMatrix;
+            if (asset is IDrawable3D drawable)
+            {
+                var mdl = new Model3D();
+                drawable.DrawTo(mdl);
+                return mdl.BoundingMatrix;
+            }
 
             return null;
         }

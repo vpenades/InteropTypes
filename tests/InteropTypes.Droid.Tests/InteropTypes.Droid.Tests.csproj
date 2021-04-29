@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit">
-      <Version>3.13.1</Version>
+      <Version>3.13.2</Version>
     </PackageReference>
     <PackageReference Include="nunit.xamarin">
       <Version>3.6.1</Version>

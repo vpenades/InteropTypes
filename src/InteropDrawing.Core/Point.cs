@@ -10,6 +10,7 @@ using GDISIZE = System.Drawing.Size;
 using GDISIZEF = System.Drawing.SizeF;
 
 using VECTOR3 = System.Numerics.Vector3;
+using System.Linq;
 
 namespace InteropDrawing
 {
@@ -71,6 +72,9 @@ namespace InteropDrawing
         public static Point2 operator *(Point2 a, Single b) { return new Point2(a.X * b, a.Y * b); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point2 operator /(Point2 a, Single b) { return new Point2(a.X / b, a.Y / b); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 operator +(Point2 a, Point2 b) { return new Point2(a.X + b.X, a.Y + b.Y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -98,6 +102,20 @@ namespace InteropDrawing
         public static Point2 Center(System.Drawing.Rectangle rect)
         {
             return new Point2(rect.X + (rect.Width / 2f), rect.Y + (rect.Height / 2f));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point2 Centroid(IEnumerable<Point2> points)
+        {            
+            var weight = 1;
+            return points.Aggregate((i, j) => { ++weight; return i + j; }) / weight;            
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static VECTOR2 Centroid(IEnumerable<VECTOR2> points)
+        {
+            var weight = 1;
+            return points.Aggregate((i, j) => { ++weight; return i + j; }) / weight;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

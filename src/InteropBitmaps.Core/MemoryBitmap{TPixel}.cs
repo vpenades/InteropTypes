@@ -12,8 +12,7 @@ namespace InteropBitmaps
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
-    public readonly struct MemoryBitmap<TPixel>
-        : IBitmap<TPixel> where TPixel : unmanaged        
+    public readonly struct MemoryBitmap<TPixel> : IBitmap<TPixel> where TPixel : unmanaged        
     {
         #region debug
 

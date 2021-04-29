@@ -10,7 +10,7 @@ using RECT = System.Drawing.RectangleF;
 namespace InteropDrawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model2DProxy))]
-    public class Model2D : IDrawing2D, IPseudoImmutable
+    public class Model2D : IDrawing2D, IDrawable2D, IPseudoImmutable
     {
         #region data
 
@@ -113,7 +113,7 @@ namespace InteropDrawing
         public IEnumerable<string> ToLog() { return new _Model2DProxy(this).Primitives; }
 
 
-        public void DrawTo(IDrawing3D dc, Matrix4x4 xform) { this.DrawTo(dc.CreateTransformed2D(xform)); }
+        public void DrawTo(IDrawing3D dc, Matrix4x4 xform) { this.DrawTo(dc.CreateTransformed2D(xform)); }        
 
         public void DrawTo((IDrawing2D target, float width, float height) renderTarget, Matrix3x2 projection, Matrix3x2 camera)
         {

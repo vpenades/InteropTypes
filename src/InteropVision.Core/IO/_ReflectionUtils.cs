@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace InteropVision
+namespace InteropVision.IO
 {
     static class _ReflectionUtils
     {
-        public static IO.VideoCaptureDevice CreateDefaultCaptureDevice()
+        public static VideoCaptureDevice CreateDefaultCaptureDevice()
         {
             #if DEBUG
 
@@ -27,11 +27,11 @@ namespace InteropVision
             return _CreateCaptureDevice();
         }
 
-        private static IO.VideoCaptureDevice _CreateCaptureDevice()
+        private static VideoCaptureDevice _CreateCaptureDevice()
         {
             try
             {
-                var minfo = FindStaticMethod("TensorFlow.Emgu", "EmguCaptureDevice", "CreateFromDirectShow");
+                var minfo = _FindStaticMethod("TensorFlow.Emgu", "EmguCaptureDevice", "CreateFromDirectShow");
                 if (minfo == null) return null;
 
                 return minfo.Invoke(null, null) as IO.VideoCaptureDevice;
@@ -42,11 +42,11 @@ namespace InteropVision
             }
         }
 
-        private static IO.VideoCaptureDevice _CreateVideoFile(string videoFilePath)
+        private static VideoCaptureDevice _CreateVideoFile(string videoFilePath)
         {
             try
             {
-                var minfo = FindStaticMethod("TensorFlow.Emgu", "EmguCaptureDevice", "CreateFromUrl");
+                var minfo = _FindStaticMethod("TensorFlow.Emgu", "EmguCaptureDevice", "CreateFromUrl");
                 if (minfo == null) return null;
 
                 return minfo.Invoke(null, new object[] { videoFilePath }) as IO.VideoCaptureDevice;
@@ -57,7 +57,7 @@ namespace InteropVision
             }
         }
 
-        private static System.Reflection.MethodInfo FindStaticMethod(string assemblyName, string className, string methodName)
+        private static System.Reflection.MethodInfo _FindStaticMethod(string assemblyName, string className, string methodName)
         {
             var assembly = AppDomain.CurrentDomain
                     .GetAssemblies()

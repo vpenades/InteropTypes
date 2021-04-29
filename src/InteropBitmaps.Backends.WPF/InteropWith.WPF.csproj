@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net471</TargetFrameworks>
+    <RootNamespace>InteropBitmaps.Backend</RootNamespace>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="InteropDrawing\WPFSceneCanvas.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+  <!--
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  -->
+
+</Project>

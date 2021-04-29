@@ -40,7 +40,7 @@ namespace InteropDrawing.Backends
 
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
-            throw new NotImplementedException();
+            this.DrawAssetAsPolygons(transform, asset, style);
         }
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)

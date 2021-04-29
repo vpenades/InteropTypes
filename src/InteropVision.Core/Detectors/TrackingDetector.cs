@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
+using InteropBitmaps;
+
 namespace InteropVision
 {    
     /// <summary>
     /// Combines a broad and a narrow detector.
     /// </summary>
-    public class TrackingDetector : IImageInference<DetectedObject.Collection>
+    public class TrackingDetector : IInferenceContext<PointerBitmap, DetectedObject.Collection>
     {
         #region lifecycle
         public TrackingDetector(string keyword)
@@ -17,13 +19,13 @@ namespace InteropVision
             _ObjectFilter = keyword;
         }
 
-        public TrackingDetector WithBroad(IImageInference<DetectedObject.Collection> broadDetector)
+        public TrackingDetector WithBroad(IInferenceContext<PointerBitmap, DetectedObject.Collection> broadDetector)
         {
             _BroadDetector = broadDetector;            
             return this;
         }
 
-        public TrackingDetector WithNarrow(INarrowInference<DetectedObject.Collection> narrowDetector)
+        public TrackingDetector WithNarrow(INarrowInference<PointerBitmap, DetectedObject.Collection> narrowDetector)
         {
             _NarrowDetector = narrowDetector;
             return this;
@@ -44,8 +46,8 @@ namespace InteropVision
 
         private string _ObjectFilter;
 
-        private IImageInference<DetectedObject.Collection> _BroadDetector;
-        private INarrowInference<DetectedObject.Collection> _NarrowDetector;
+        private IInferenceContext<PointerBitmap, DetectedObject.Collection> _BroadDetector;
+        private INarrowInference<PointerBitmap, DetectedObject.Collection> _NarrowDetector;
 
         private float _BroadOutputScale;
 
@@ -117,7 +119,7 @@ namespace InteropVision
 
         #region API
 
-        public void Inference(DetectedObject.Collection result, PointerBitmapInput input, Rectangle? inputWindow = null)
+        public void Inference(DetectedObject.Collection result, InferenceInput<PointerBitmap> input, Rectangle? inputWindow = null)
         {
             // if we don't have any tracked face
             // or the tracked faces have a very low confidence,
@@ -125,8 +127,8 @@ namespace InteropVision
 
             // result.Clear();
 
-            _Stats_AddNarrowScore(input.Time, Score.Zero);
-            _Stats_AddBroadScore(input.Time, Score.Zero);
+            _Stats_AddNarrowScore(input.CaptureTime, Score.Zero);
+            _Stats_AddBroadScore(input.CaptureTime, Score.Zero);
 
             if (_BroadTracked.Count == 0)
             {
@@ -136,7 +138,7 @@ namespace InteropVision
                 var tracked = seeds.Objects
                     .Where(item => item.Name == _ObjectFilter)
                     .Where(item => item.Score.IsValid)
-                    .Select(item => new DetectedFrame(item.Rect, _BroadOutputScale, input.Time, item.Score))
+                    .Select(item => new DetectedFrame(item.Rect, _BroadOutputScale, input.CaptureTime, item.Score))
                     .ToList();
 
                 DetectedFrame.RemoveOverlapping(tracked);
@@ -149,7 +151,7 @@ namespace InteropVision
                     var r = o.GetDetectionWindow(1);
                     result.AddObject(r, o._DetectionT1.Value.Score, "Detected");
 
-                    _Stats_AddBroadScore(input.Time, o._DetectionT1.Value.Score);
+                    _Stats_AddBroadScore(input.CaptureTime, o._DetectionT1.Value.Score);
                 }                
             }
 
@@ -176,10 +178,10 @@ namespace InteropVision
                     result.Add(_NarrowTracked, result.AddObject(broadRect, item.Score, "Window"));
 
                     // update the broad tracking window for this face
-                    o.AddDetection(new DetectedFrame(item.Rect, input.Time, item.Score));                    
+                    o.AddDetection(new DetectedFrame(item.Rect, input.CaptureTime, item.Score));                    
                 }
 
-                _Stats_AddNarrowScore(input.Time, item.Score);
+                _Stats_AddNarrowScore(input.CaptureTime, item.Score);
             }
         }
 

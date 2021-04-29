@@ -9,9 +9,15 @@ namespace InteropVision.IO
     /// <summary>
     /// Represents the base class for an object or device able to stream a sequence of video frames.
     /// </summary>
+    /// <remarks>
+    /// Classes deriving from <see cref="VideoCaptureDevice"/> must also implement:
+    /// <list type="table">
+    /// <item><see cref="ICaptureDeviceInfo"/></item>
+    /// </list>
+    /// </remarks>
     public abstract class VideoCaptureDevice :
-        IDisposable,
-        VideoCaptureFrameArgs.ISource
+        VideoCaptureFrameArgs.ISource,
+        IDisposable        
     {
         #region lifecycle
 
@@ -143,6 +149,10 @@ namespace InteropVision.IO
             OnFrameReceived?.Invoke(this, _CurrentFrame.Value);
         }
         
+        /// <summary>
+        /// Stores <paramref name="ex"/> in <see cref="LastException"/> and invokes <see cref="OnError"/>.
+        /// </summary>
+        /// <param name="ex">The exception to raise</param>
         protected void RaiseError(Exception ex)
         {
             if (ex == null) return;
@@ -184,12 +194,20 @@ namespace InteropVision.IO
     {
         #region lifecycle        
 
+        public static implicit operator VideoCaptureFrameArgs(InferenceInput<PointerBitmap> frame)
+        {
+            var args = new VideoCaptureFrameArgs(frame.CaptureDevice as ISource);
+            args._CaptureTime = frame.CaptureTime;
+            args._CapturedBitmap = frame.Content;
+            return args;
+        }
+
         /// <summary>
         /// Used mostly for testing
         /// </summary>        
-        public static implicit operator VideoCaptureFrameArgs((PointerBitmap b, DateTime t) frame)
+        public static implicit operator VideoCaptureFrameArgs((DateTime t, PointerBitmap b) frame)
         {
-            return new VideoCaptureFrameArgs(frame.b, frame.t);
+            return new VideoCaptureFrameArgs(frame.t, frame.b);
         }
 
         protected VideoCaptureFrameArgs(ISource device)
@@ -198,7 +216,7 @@ namespace InteropVision.IO
             _CaptureTime = DateTime.UtcNow;
         }
 
-        private VideoCaptureFrameArgs(PointerBitmap bmp, DateTime ts)
+        private VideoCaptureFrameArgs(DateTime ts, PointerBitmap bmp)
         {
             _CaptureDevice = new _SingleImageSource();
             _CapturedBitmap = bmp;
@@ -241,7 +259,7 @@ namespace InteropVision.IO
         /// <summary>
         /// Gets the captured bitmap.
         /// </summary>
-        public PointerBitmap Bitmap => _CapturedBitmap;        
+        public PointerBitmap Content => _CapturedBitmap;        
 
         #endregion
 
@@ -269,7 +287,18 @@ namespace InteropVision.IO
 
         struct _SingleImageSource : ISource, ICaptureDeviceInfo
         {
+            private DateTime? _CaptureTime;
+
             public string Name => "Single Frame";
+
+            public DateTime CaptureStart
+            {
+                get
+                {
+                    if (!_CaptureTime.HasValue) _CaptureTime = DateTime.Now;
+                    return _CaptureTime.Value;
+                }
+            }
 
             public event EventHandler<VideoCaptureFrameArgs> OnFrameReceived;
         }
@@ -290,7 +319,7 @@ namespace InteropVision.IO
             /// <summary>
             /// The cropped bitmap
             /// </summary>
-            public PointerBitmap Bitmap => Source.Bitmap.Slice(Bounds);
+            public PointerBitmap Bitmap => Source.Content.Slice(Bounds);
 
             /// <summary>
             /// gets a cropped region of the current crop.

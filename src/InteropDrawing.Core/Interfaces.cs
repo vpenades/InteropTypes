@@ -17,9 +17,11 @@ namespace InteropDrawing
     /// if this object has changed.    
     /// </summary>
     /// <example>
+    /// <code>
     /// var model1 = new Model3D();
-    /// var gpuDict = new Dictionary<Object,GPUModel>();
+    /// var gpuDict = new Dictionary&gt;Object,GPUModel&lt;();
     /// gpuDict[model1.ImmutableKey] = new GPUModel(model1);
+    /// </code>
     /// </example>
     public interface IPseudoImmutable
     {
@@ -30,7 +32,7 @@ namespace InteropDrawing
     
     public interface IPolygonDrawing2D
     {
-        void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style);
+        void DrawPolygon(ReadOnlySpan<POINT2> points, ColorStyle style);
     }
 
     public interface IDrawing2D : IPolygonDrawing2D
@@ -44,9 +46,9 @@ namespace InteropDrawing
 
         void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
 
-        void DrawLines(ReadOnlySpan<Point2> points, SCALAR diameter, LineStyle style);
+        void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, LineStyle style);
 
-        void DrawEllipse(Point2 center, SCALAR width, SCALAR height, ColorStyle style);        
+        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, ColorStyle style);        
 
         void DrawSprite(in XFORM2 transform, in SpriteStyle style);
     }
@@ -67,7 +69,7 @@ namespace InteropDrawing
 
     
 
-    public delegate void Drawing2DAction(IDrawing2D context, Point2 viewport);
+    public delegate void Drawing2DAction(IDrawing2D context, POINT2 viewport);
 
     public interface IDrawingContext2D : IDrawing2D, IDisposable { }
 
@@ -81,5 +83,21 @@ namespace InteropDrawing
     public interface ISceneViewport3D
     {
         (XFORM3 Camera, XFORM3 Projection) GetMatrices(float renderWidth, float renderHeight);
+    }
+
+    /// <summary>
+    /// Represents an object that can be drawn to a <see cref="IDrawing2D"/>.
+    /// </summary>
+    public interface IDrawable2D
+    {
+        void DrawTo(IDrawing2D dc, bool collapseAssets = false);
+    }
+
+    /// <summary>
+    /// Represents an object that can be drawn to a <see cref="IDrawing3D"/>.
+    /// </summary>
+    public interface IDrawable3D
+    {
+        void DrawTo(IDrawing3D dc, bool collapseAssets = false);
     }
 }

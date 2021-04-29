@@ -7,6 +7,15 @@ using POINT = System.Drawing.Point;
 
 namespace InteropBitmaps
 {
+    public interface IBitmapInfo
+    {
+        BitmapInfo Info { get; }
+        Pixel.Format PixelFormat { get; }
+        SIZE Size { get; }
+        int Width { get; }
+        int Height { get; }
+    }
+
     /// <summary>
     /// Represents an interface to a bitmap that allows accessing pixels individually.
     /// </summary>    
@@ -14,13 +23,9 @@ namespace InteropBitmaps
     /// This interface is suitable for image types that store pixel data in non contiguous memory,
     /// or if the underlaying memory data is not accessible.
     /// </remarks>
-    public interface IBitmap<TPixel>
+    public interface IBitmap<TPixel> : IBitmapInfo
         where TPixel : unmanaged
     {
-        Pixel.Format PixelFormat { get; }
-
-        SIZE Size { get; }        
-
         TPixel GetPixel(POINT point);
         void SetPixel(POINT point, TPixel value);
     }    

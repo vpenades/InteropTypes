@@ -66,20 +66,14 @@ namespace InteropVision
     /// <remarks>
     /// Optionally implemented by <see cref="IModelSession"/> objects.
     /// </remarks>    
-    public interface IImageInference<TImage, TResult> : IDisposable
+    public interface IInferenceContext<TInput, TResult> : IDisposable
         where TResult:class
     {
-        void Inference(TResult result, InferenceInput<TImage> input, Rectangle? inputWindow = null);
-    }
+        void Inference(TResult result, InferenceInput<TInput> input, Rectangle? inputWindow = null);
+    }    
 
-
-    [Obsolete("Use IImageInference<TImage, TResult>")]
-    public interface IImageInference<T> : IDisposable
-    {
-        void Inference(T result, PointerBitmapInput input, Rectangle? inputWindow = null);
-    }
-
-    public interface INarrowInference<T> : IImageInference<T>
+    public interface INarrowInference<TImage, TResult> : IInferenceContext<TImage,TResult>
+        where TResult:class
     {
         RectangleF GetNextDetectionWindow(DetectedFrame t1, DetectedFrame? t0 = null);
     }

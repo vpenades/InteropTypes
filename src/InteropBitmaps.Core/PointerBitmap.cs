@@ -15,7 +15,7 @@ namespace InteropBitmaps
     /// This structure just wraps the pointer; in order to access it, use <see cref="AsSpanBitmap"/> or <see cref="AsSpanBitmapOfType{TPixel}"/>.    
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Pointer} {Info.ToDebuggerDisplayString(),nq}")]
-    public readonly struct PointerBitmap
+    public readonly struct PointerBitmap : IBitmapInfo
     {
         #region constructors
 

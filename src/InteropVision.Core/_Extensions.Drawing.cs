@@ -20,12 +20,12 @@ using XY = System.Numerics.Vector2;
 namespace InteropVision
 {
     [Obsolete("Do not use",true)]
-    public static class DrawingExtensions
+    static class DrawingExtensions
     {
-        public static XY ToVector2(this POINTI point) { return new XY(point.X, point.Y); }
-        public static XY ToVector2(this POINTF point) { return new XY(point.X, point.Y); }
-        public static XY ToVector2(this SIZEI point) { return new XY(point.Width, point.Height); }
-        public static XY ToVector2(this SIZEF point) { return new XY(point.Width, point.Height); }
+        public static XY ToNumerics(this POINTI point) { return new XY(point.X, point.Y); }
+        public static XY ToNumerics(this POINTF point) { return new XY(point.X, point.Y); }
+        public static XY ToNumerics(this SIZEI point) { return new XY(point.Width, point.Height); }
+        public static XY ToNumerics(this SIZEF point) { return new XY(point.Width, point.Height); }
 
         public static POINTI ToPointT(this XY point) { return POINTI.Truncate(point.ToPoint()); }
         public static POINTI ToPointR(this XY point) { return POINTI.Round(point.ToPoint()); }
@@ -35,7 +35,7 @@ namespace InteropVision
         public static POINTF ToPoint(this (float X, float Y) point) { return new POINTF(point.X, point.Y); }
         public static POINTF Lerp(this (POINTF a,POINTF b) points, float amount)
         {
-            return XY.Lerp(points.a.ToVector2(), points.b.ToVector2(), amount).ToPoint();
+            return XY.Lerp(points.a.ToNumerics(), points.b.ToNumerics(), amount).ToPoint();
         }
         
 
@@ -47,15 +47,15 @@ namespace InteropVision
         public static SIZEF ToSize(this (float X, float Y) size) { return new SIZEF(size.X, size.Y); }
         public static SIZEF Lerp(this (SIZEF a, SIZEF b) points, float amount)
         {
-            return XY.Lerp(points.a.ToVector2(), points.b.ToVector2(), amount).ToSize();
+            return XY.Lerp(points.a.ToNumerics(), points.b.ToNumerics(), amount).ToSize();
         }
 
 
         public static POINTF Center(this RECTF rect) { return rect.CenterVector2().ToPoint(); }
         public static XY CenterVector2(this RECTF rect)
         {
-            var o = rect.Location.ToVector2();
-            var s = rect.Size.ToVector2();
+            var o = rect.Location.ToNumerics();
+            var s = rect.Size.ToNumerics();
             return (o - s * 0.5f);
         }        
 
@@ -140,7 +140,7 @@ namespace InteropVision
 
             foreach (var p in points)
             {
-                var v = p.ToVector2();
+                var v = p.ToNumerics();
 
                 min = XY.Min(min, v);
                 max = XY.Max(max, v);
@@ -156,7 +156,7 @@ namespace InteropVision
 
             foreach (var p in points)
             {
-                var v = p.ToVector2();
+                var v = p.ToNumerics();
 
                 min = XY.Min(min, v);
                 max = XY.Max(max, v);
@@ -180,6 +180,23 @@ namespace InteropVision
             }
 
             return collection.GroupBy(item => _findFirstOverlap(item));
-        }        
+        }
+
+        public static IEnumerable<IGrouping<T, T>> GroupByOverlapIslands<T>(this IEnumerable<T> collection, Func<T, RECTF> rectFunc)
+        {
+            T _findFirstOverlap(T item)
+            {
+                var itemRect = rectFunc(item);
+
+                foreach (var other in collection)
+                {
+                    if (itemRect.IntersectsWith(rectFunc(other))) return other;
+                }
+
+                return item;
+            }
+
+            return collection.GroupBy(item => _findFirstOverlap(item));
+        }
     }
 }
