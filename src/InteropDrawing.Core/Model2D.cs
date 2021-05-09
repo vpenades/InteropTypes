@@ -102,11 +102,11 @@ namespace InteropDrawing
             _Commands.DrawSprite(transform, style);
         }
 
-        public void DrawTo(IDrawing2D dc, bool collapse = false)
+        public void DrawTo(IDrawing2D dc)
         {
             foreach(var offset in _Commands.GetCommands())
             {
-                _Commands.DrawTo(offset, dc, collapse);
+                _Commands.DrawTo(offset, dc, false);
             }
         }
 

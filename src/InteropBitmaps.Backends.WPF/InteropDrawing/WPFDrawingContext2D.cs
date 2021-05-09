@@ -164,7 +164,7 @@ namespace InteropDrawing.Backends
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
             this.VerifyAccess();
-            this.DrawAssetAsPolygons(transform, asset, brush);
+            new Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)

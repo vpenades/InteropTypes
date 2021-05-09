@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace InteropDrawing.Transforms
 {
-    public struct Drawing2DTransform : IDrawing2D, IDrawing3D
+    public readonly struct Drawing2DTransform : IDrawing2D, IDrawing3D
     {
         #region constructors
 
@@ -276,7 +276,7 @@ namespace InteropDrawing.Transforms
 
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
-            this.DrawAssetAsPolygons(transform, asset, brush);
+            new Decompose2D(this).DrawAsset(transform, asset, brush);
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)

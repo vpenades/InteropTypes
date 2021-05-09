@@ -12,6 +12,8 @@ namespace InteropDrawing.Backends
         {
             _Owner = owner;
             _Content = new _PlotlyMeshBuilder();
+
+            _Collapse =  new Transforms.Decompose3D(this);
         }
         public void Dispose()
         {
@@ -31,7 +33,9 @@ namespace InteropDrawing.Backends
         #region data
 
         private readonly PlotlyDocumentBuilder _Owner;
-        private _PlotlyMeshBuilder _Content;
+        private readonly Transforms.Decompose3D _Collapse;
+
+        private _PlotlyMeshBuilder _Content;        
 
         #endregion
 
@@ -41,31 +45,25 @@ namespace InteropDrawing.Backends
         {
             if (_Content == null) throw new ObjectDisposedException(nameof(_Content));
 
-            if (asset is Model3D model3) model3.DrawTo(this.CreateTransformed3D(transform));
+            _Collapse.DrawAsset(transform, asset, style);
         }
 
-        public void DrawSegment(Point3 a, Point3 b, float diameter, InteropDrawing.LineStyle style)
+        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)
         {
             if (_Content == null) throw new ObjectDisposedException(nameof(_Content));
 
-            if (style.Style.HasFill)
-            {
-                style = style.With(style.Style.WithOutline(0));
-            }
+            if (style.Style.HasFill) { style = style.With(style.Style.WithOutline(0)); }
 
-            _Content.DrawCylinderAsSurfaces(a, diameter, b, diameter, 6, style);
+            _Collapse.DrawSegment(a, b, diameter, style);
         }
 
         public void DrawSphere(Point3 center, float diameter, ColorStyle style)
         {
             if (_Content == null) throw new ObjectDisposedException(nameof(_Content));            
 
-            if (style.HasFill)
-            {
-                style = style.WithOutline(0);
-            }
+            if (style.HasFill) { style = style.WithOutline(0); }
 
-            _Content.DrawSphereAsSurfaces(center, diameter, 3, style);
+            _Collapse.DrawSphere(center, diameter, style);
         }
 
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle style)

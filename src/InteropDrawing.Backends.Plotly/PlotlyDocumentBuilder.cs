@@ -6,7 +6,7 @@ using Plotly.Types;
 
 using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
-
+using System.Numerics;
 
 namespace InteropDrawing.Backends
 {
@@ -41,6 +41,27 @@ namespace InteropDrawing.Backends
         #endregion
 
         #region API
+
+        public PlotlyDocumentBuilder Draw(params IDrawable3D[] drawables)
+        {
+            using (var dc = CreateScene3DContext())
+            {
+                foreach (var d in drawables) d.DrawTo(dc);
+            }
+
+            return this;
+        }
+
+        public PlotlyDocumentBuilder Draw(Matrix4x4 xform, params IDrawable3D[] drawables)
+        {
+            using (var dc = CreateScene3DContext())
+            {
+                var dcx = dc.CreateTransformed3D(xform);
+                foreach (var d in drawables) d.DrawTo(dcx);
+            }
+
+            return this;
+        }
 
         /// <summary>
         /// Creates a new <see cref="IDrawingContext2D"/> context optimized for data sets.

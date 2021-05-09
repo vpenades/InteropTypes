@@ -30,74 +30,7 @@ namespace InteropDrawing
         // void InvalidateImmutableKey();
     }
     
-    public interface IPolygonDrawing2D
-    {
-        void DrawPolygon(ReadOnlySpan<POINT2> points, ColorStyle style);
-    }
-
-    public interface IDrawing2D : IPolygonDrawing2D
-    {
-        // methods could return a value:
-        // - a boolean, indicating success or failure/unsupported
-        // - or an object that could be used to fill additional metadata.
-
-        // metadata could be set with Push/Pop methods
-
-
-        void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
-
-        void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, LineStyle style);
-
-        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, ColorStyle style);        
-
-        void DrawSprite(in XFORM2 transform, in SpriteStyle style);
-    }
-
-    public interface ISurfaceDrawing3D
-    {
-        void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle style);
-    }
-
-    public interface IDrawing3D : ISurfaceDrawing3D
-    {
-        void DrawAsset(in XFORM3 transform, ASSET asset, ColorStyle style);
-
-        void DrawSegment(POINT3 a, POINT3 b, SCALAR diameter, LineStyle style);
-
-        void DrawSphere(POINT3 center, SCALAR diameter, ColorStyle style);        
-    }
-
     
 
-    public delegate void Drawing2DAction(IDrawing2D context, POINT2 viewport);
-
-    public interface IDrawingContext2D : IDrawing2D, IDisposable { }
-
-    public interface IDrawingContext3D : IDrawing3D, IDisposable { }
-
-    public interface ISceneViewport2D
-    {
-        (XFORM2 Camera, XFORM2 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }
-
-    public interface ISceneViewport3D
-    {
-        (XFORM3 Camera, XFORM3 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }
-
-    /// <summary>
-    /// Represents an object that can be drawn to a <see cref="IDrawing2D"/>.
-    /// </summary>
-    public interface IDrawable2D
-    {
-        void DrawTo(IDrawing2D dc, bool collapseAssets = false);
-    }
-
-    /// <summary>
-    /// Represents an object that can be drawn to a <see cref="IDrawing3D"/>.
-    /// </summary>
-    public interface IDrawable3D
-    {
-        void DrawTo(IDrawing3D dc, bool collapseAssets = false);
-    }
+    
 }

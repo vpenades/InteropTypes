@@ -23,6 +23,8 @@ namespace InteropDrawing.Backends
             _ColorConverter = converter;
 
             _PolygonRasterizer = new Lazy<Helpers.PolygonScanlines>(() => new Helpers.PolygonScanlines(target.Width, target.Height));
+
+            _Collapse = new Transforms.Decompose2D(this);
         }
 
         #endregion
@@ -34,13 +36,15 @@ namespace InteropDrawing.Backends
 
         private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;
 
+        private readonly Transforms.Decompose2D _Collapse;
+
         #endregion
 
         #region API        
 
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
-            this.DrawAssetAsPolygons(transform, asset, style);
+            _Collapse.DrawAsset(transform, asset, style);
         }
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
@@ -52,24 +56,25 @@ namespace InteropDrawing.Backends
         {
             if (diameter > 1)
             {
-                this.DrawLinesAsPolygons(points, diameter, style);
-                return;
+                _Collapse.DrawLines(points, diameter, style);
             }
-
-            var pixColor = _ColorConverter(style.Style.FillColor);
-
-            for (int i = 1; i < points.Length; ++i)
+            else
             {
-                var a = points[i - 1];
-                var b = points[i + 0];
+                var pixColor = _ColorConverter(style.Style.FillColor);
 
-                InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, a, b, pixColor);
+                for (int i = 1; i < points.Length; ++i)
+                {
+                    var a = points[i - 1];
+                    var b = points[i + 0];
+
+                    InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, a, b, pixColor);
+                }
             }
         }
 
         public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
         {
-            this.DrawEllipseAsPolygon(center, width, height, style);
+            _Collapse.DrawEllipse(center, width, height, style);
         }        
 
         public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)

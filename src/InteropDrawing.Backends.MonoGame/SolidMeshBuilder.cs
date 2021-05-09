@@ -50,9 +50,11 @@ namespace InteropDrawing.Backends
 
         #region Drawing2D
 
+        private Transforms.Decompose2D _Collapsed2D => new Transforms.Decompose2D(this);
+
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
-            this.DrawAssetAsPolygons(transform, asset, brush);
+            _Collapsed2D.DrawAsset(transform, asset, brush);
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
@@ -76,16 +78,22 @@ namespace InteropDrawing.Backends
 
             if (diameter < 1) diameter = 1;
 
-            this.DrawLinesAsPolygons(points, diameter, brush);
+            _Collapsed2D.DrawLines(points, diameter, brush);
         }
 
         public void DrawEllipse(Point2 center, float width, float height, ColorStyle brush)
         {
-            this.DrawEllipseAsPolygon(center, width, height, brush);
+            _Collapsed2D.DrawEllipse(center, width, height, brush);
         }
 
         public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle brush)
         {
+            if (brush.HasOutline && brush.OutlineWidth > 1)
+            {
+                _Collapsed2D.DrawPolygon(points, brush);
+                return;
+            }
+
             if (brush.HasFill)
             {
                 Span<Point3> vertices = stackalloc Point3[points.Length];
@@ -100,16 +108,11 @@ namespace InteropDrawing.Backends
 
             if (brush.HasOutline)
             {
-                if (brush.OutlineWidth <= 1)
-                {
-                    this.DrawLines(points, brush.OutlineWidth, brush.OutlineColor);
-                    // close the loop
-                    this.DrawLine(points[points.Length - 1], points[0], brush.OutlineWidth, brush.OutlineColor);
-                }
-                else
-                {
-                    this.DrawLinesAsPolygons(points, brush.OutlineWidth, brush.OutlineColor, true);
-                }
+                System.Diagnostics.Debug.Assert(brush.OutlineWidth <= 1);
+
+                this.DrawLines(points, brush.OutlineWidth, brush.OutlineColor);
+                // close the loop
+                this.DrawLine(points[points.Length - 1], points[0], brush.OutlineWidth, brush.OutlineColor);                
             }
         }
 
@@ -122,9 +125,11 @@ namespace InteropDrawing.Backends
 
         #region Drawing3D
 
+        private Transforms.Decompose3D _Collapsed3D => new Transforms.Decompose3D(this, CylinderLOD, SphereLOD);
+
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
         {
-            this.DrawAssetAsSurfaces(transform, asset, brush);
+            _Collapsed3D.DrawAsset(transform, asset, brush);
         }
 
         public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
@@ -140,57 +145,56 @@ namespace InteropDrawing.Backends
                 brush = brush.With(COLOR.Transparent);
             }
 
-            this.DrawCylinderAsSurfaces(a, diameter, b, diameter, CylinderLOD, brush);
+            _Collapsed3D.DrawSegment(a, b, diameter, brush);
         }
 
         public void DrawSphere(Point3 center, Single diameter, ColorStyle brush)
         {
-            this.DrawSphereAsSurfaces(center, diameter, SphereLOD, brush);
+            _Collapsed3D.DrawSphere(center, diameter, brush);
         }
 
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
-            if (brush.Style.HasFill)
-            {
-                var c = brush.Style.FillColor.ToXna();
-
-                // add vertices
-
-                Span<int> indices = stackalloc int[vertices.Length];
-
-                for (int i = 0; i < vertices.Length; ++i)
-                {
-                    var srcVrt = vertices[i];
-
-                    var v = new VERTEX
-                    {
-                        Position = srcVrt.ToXna(),
-                        Color = c
-                    };
-
-                    indices[i] = _Triangles.UseVertex(v);
-                }
-
-                // add triangles
-
-                for (int i = 2; i < vertices.Length; ++i)
-                {
-                    if (!_FaceFlip || brush.DoubleSided)
-                    {
-                        _Triangles.AddTriangle(indices[0], indices[i - 0], indices[i - 1]);
-                    }
-
-                    if (_FaceFlip || brush.DoubleSided)
-                    {
-                        _Triangles.AddTriangle(indices[0], indices[i - 1], indices[i - 0]);
-                    }
-                }
-            }
-
             if (brush.Style.HasOutline)
             {
-                this.DrawOutlineAsSegments(vertices, brush.Style.OutlineWidth, brush.Style.OutlineColor);
+                _Collapsed3D.DrawSurface(vertices, brush);
+                return;
             }
+            
+            var c = brush.Style.FillColor.ToXna();
+
+            // add vertices
+
+            Span<int> indices = stackalloc int[vertices.Length];
+
+            for (int i = 0; i < vertices.Length; ++i)
+            {
+                var srcVrt = vertices[i];
+
+                var v = new VERTEX
+                {
+                    Position = srcVrt.ToXna(),
+                    Color = c
+                };
+
+                indices[i] = _Triangles.UseVertex(v);
+            }
+
+            // add triangles
+
+            for (int i = 2; i < vertices.Length; ++i)
+            {
+                if (!_FaceFlip || brush.DoubleSided)
+                {
+                    _Triangles.AddTriangle(indices[0], indices[i - 0], indices[i - 1]);
+                }
+
+                if (_FaceFlip || brush.DoubleSided)
+                {
+                    _Triangles.AddTriangle(indices[0], indices[i - 1], indices[i - 0]);
+                }
+            }
+                        
         }
 
         #endregion

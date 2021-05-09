@@ -68,24 +68,25 @@ namespace InteropDrawing.Backends
                 brush = brush.With(COLOR.Transparent);
             }
 
-            this.DrawCylinderAsSurfaces(a, diameter, b, diameter, CylinderLOD, brush);
+            new Transforms.Decompose3D(this, CylinderLOD, SphereLOD).DrawSegment(a,b,diameter,brush);
         }
 
         public void DrawSphere(POINT3 center, Single diameter, ColorStyle brush)
         {
-            this.DrawSphereAsSurfaces(center, diameter, SphereLOD, brush);
+            new Transforms.Decompose3D(this, CylinderLOD, SphereLOD).DrawSphere(center, diameter, brush);
         }
 
         public void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle brush)
         {
             if (vertices.Length < 3) return;
 
-            if (brush.Style.HasFill) _DrawSurface(vertices, brush.Style.FillColor, brush.DoubleSided);
-
             if (brush.Style.HasOutline)
             {
-                this.DrawOutlineAsSegments(vertices, brush.Style.OutlineWidth, brush.Style.OutlineColor);                
+                new Transforms.Decompose3D(this, CylinderLOD, SphereLOD).DrawSurface(vertices, brush);
+                return;
             }
+
+            _DrawSurface(vertices, brush.Style.FillColor, brush.DoubleSided);
         }
 
         #endregion

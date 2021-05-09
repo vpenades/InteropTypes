@@ -11,7 +11,7 @@ namespace InteropDrawing.Backends
 {
     public class GltfSceneBuilder
     {
-        #region factory       
+        #region factory        
 
         public static SharpGLTF.Scenes.SceneBuilder Convert(Model3D srcModel, GLTFWriteSettings? settings = null)
         {
@@ -50,6 +50,26 @@ namespace InteropDrawing.Backends
         #endregion
 
         #region Drawing API
+
+        public GltfSceneBuilder Draw(params IDrawable3D[] drawables)
+        {
+            using (var dc = CreateDrawing3DContext())
+            {
+                foreach (var d in drawables) d.DrawTo(dc);
+            }
+
+            return this;
+        }
+
+        public GltfSceneBuilder Draw(Matrix4x4 xform, params IDrawable3D[] drawables)
+        {
+            using(var dc = CreateDrawing3DContext(xform))
+            {
+                foreach (var d in drawables) d.DrawTo(dc);
+            }
+
+            return this;
+        }
 
         public IDrawingContext3D CreateDrawing3DContext()
         {

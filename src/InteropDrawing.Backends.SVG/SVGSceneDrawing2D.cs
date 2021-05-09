@@ -96,7 +96,7 @@ namespace InteropDrawing.Backends
 
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
-            this.DrawAssetAsPolygons(transform, asset, brush);
+            new Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
@@ -223,7 +223,7 @@ namespace InteropDrawing.Backends
         {
             using (var svg = CreateGraphic())
             {
-                scene.DrawTo(svg, true);
+                scene.DrawTo(svg);
 
                 var document = svg.ToSVGContent();
 

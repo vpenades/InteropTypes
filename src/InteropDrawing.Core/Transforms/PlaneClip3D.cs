@@ -12,6 +12,7 @@ namespace InteropDrawing.Transforms
         public PlaneClip3D(IDrawing3D target, Plane plane)
         {
             _Target = target;
+            _DecomposedTarget = new Decompose3D(this, 6, 2);
             _Plane = plane;
         }
 
@@ -20,6 +21,8 @@ namespace InteropDrawing.Transforms
         #region data
 
         private readonly IDrawing3D _Target;
+        private readonly IDrawing3D _DecomposedTarget;
+        
         private readonly Plane _Plane;
 
         #endregion
@@ -56,10 +59,11 @@ namespace InteropDrawing.Transforms
             if (_Plane.IsInPositiveSideOfPlane(center, diameter*0.5f))
             {
                 _Target.DrawSphere(center, diameter, brush);
-                return;
             }
-
-            this.DrawSphereAsSurfaces(center, diameter, 2, brush);
+            else
+            {
+                _DecomposedTarget.DrawSphere(center, diameter, brush);
+            }
         }
 
         public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)

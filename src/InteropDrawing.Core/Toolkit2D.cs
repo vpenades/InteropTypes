@@ -49,7 +49,7 @@ namespace InteropDrawing
             if (asset is IDrawable2D drawable)
             {
                 var mdl = new Model2D();
-                drawable.DrawTo(mdl, false);
+                drawable.DrawTo(mdl);
                 return mdl.BoundingRect;
             }
 
@@ -59,6 +59,12 @@ namespace InteropDrawing
         public static (VECTOR2 Center,Single Radius)? GetAssetBoundingCircle(Object asset)
         {
             if (asset is Model2D model2D) return model2D.BoundingCircle;
+            if (asset is IDrawable2D drawable)
+            {
+                var mdl = new Model2D();
+                drawable.DrawTo(mdl);
+                return mdl.BoundingCircle;
+            }
             return null;
         }        
 
@@ -78,7 +84,26 @@ namespace InteropDrawing
             pp[1] = b;
 
             dc.DrawLines(pp, diameter, style);
-        }        
+        }
+
+        public static void DrawLine(this IDrawing2D dc, POINT2 a, POINT2 b, float diameter, SpriteStyle style)
+        {
+            var aa = a.ToNumerics();
+            var ab = b.ToNumerics() - aa;
+
+            var brush = style.Bitmap;
+            var brushLen = brush.Width - brush.Pivot.X * 2;
+
+            var ss = new VECTOR2(ab.Length(), diameter) / new VECTOR2(brushLen, brush.Height);
+            var rr = MathF.Atan2(ab.Y, ab.X);
+
+            var xform = XFORM2.CreateScale(ss);
+            xform *= XFORM2.CreateRotation(rr);
+
+            xform.Translation = aa;
+
+            dc.DrawSprite(xform, style);
+        }
 
         public static void DrawCircle(this IDrawing2D dc, POINT2 center, SCALAR diameter, ColorStyle style)
         {
@@ -88,6 +113,22 @@ namespace InteropDrawing
         public static void DrawRectangle(this IDrawing2D dc, BRECT rect, ColorStyle style)
         {
             dc.DrawRectangle(rect.Location, rect.Size, style);
+        }
+
+        public static void DrawRectangle(this IDrawing2D dc, XFORM2 rect, ColorStyle style)
+        {
+            Span<POINT2> vertices = stackalloc POINT2[4];
+
+            var scaleX = new VECTOR2(rect.M11, rect.M12);
+            var scaleY = new VECTOR2(rect.M21, rect.M22);
+            var origin = new VECTOR2(rect.M31, rect.M32);
+
+            vertices[0] = origin;
+            vertices[1] = origin + scaleX;
+            vertices[2] = origin + scaleX + scaleY;
+            vertices[3] = origin + scaleY;
+
+            dc.DrawPolygon(vertices, style);
         }
 
         public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle style)
@@ -118,27 +159,7 @@ namespace InteropDrawing
         public static void DrawPolygon(this IDrawing2D dc, ColorStyle style, params POINT2[] points)
         {
             dc.DrawPolygon(points, style);
-        }
-
-        public static void DrawLine(this IDrawing2D dc, POINT2 a, POINT2 b, float diameter, SpriteStyle style)
-        {
-            var aa = a.ToNumerics();
-            var ab = b.ToNumerics() - aa;
-
-            var brush = style.Bitmap;
-            var brushLen = brush.Width - brush.Pivot.X * 2;
-
-            var ss = new VECTOR2(ab.Length(), diameter) / new VECTOR2(brushLen, brush.Height);
-            var rr = MathF.Atan2(ab.Y, ab.X);
-
-            var xform = XFORM2.CreateScale(ss);
-            xform *= XFORM2.CreateRotation(rr);
-
-            xform.Translation = aa;
-
-            dc.DrawSprite(xform, style);
-        }
-
+        }        
 
         public static void DrawFont(this IDrawing2D dc, POINT2 origin, float size, String text, FontStyle style)
         {
@@ -175,84 +196,6 @@ namespace InteropDrawing
             var endCap = (index + 1) == pointCount ? brush.EndCap : LineCapStyle.Triangle;
 
             return new LineStyle(brush.Style, startCap, endCap);
-        }
-
-        public static void DrawLinesAsPolygons(this IDrawing2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, LineStyle style)
-        {
-            for (int i = 1; i < points.Length; ++i)
-            {
-                var b = style.GetLineSegmentStyle(points.Length, i);
-                _DrawLineAsPolygon(dc, points[i - 1], points[i], diameter, b.Style, b.StartCap, b.EndCap);
-            }
-        }
-
-        public static void DrawLinesAsPolygons(this IDrawing2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, ColorStyle style, bool closed)
-        {
-            if (points.Length < 2) return;
-            if (points.Length == 2) closed = false;
-
-            // create segments
-            Span<POINT2> segments = stackalloc POINT2[Parametric.ShapeFactory.GetLinesSegmentsVerticesCount(points.Length, closed)];
-            Parametric.ShapeFactory.FillLinesSegments(segments, points, diameter, closed);
-
-            // draw segments
-            var segment = segments;
-            while(segment.Length >= 4)
-            {                
-                dc.DrawPolygon(segment.Slice(0,4), style);
-                segment = segment.Slice(4);
-            }
-        }        
-
-        private static void _DrawLineAsPolygon(IDrawing2D dc, POINT2 a, POINT2 b, SCALAR diameter, ColorStyle brush, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
-        {
-            var startCapCount = Parametric.ShapeFactory.GetLineCapVertexCount(startCapStyle);
-            var endCapCount = Parametric.ShapeFactory.GetLineCapVertexCount(endCapStyle);
-            Span<POINT2> vertices = stackalloc POINT2[startCapCount + endCapCount];
-
-            var aa = a.ToNumerics();
-            var bb = b.ToNumerics();
-
-            var delta = bb - aa;
-
-            delta = delta.LengthSquared() <= 1 ? VECTOR2.UnitX : VECTOR2.Normalize(delta);
-
-            Parametric.ShapeFactory.FillLineCapVertices(vertices, 0, aa, delta, diameter, startCapStyle);
-            Parametric.ShapeFactory.FillLineCapVertices(vertices, startCapCount, bb, -delta, diameter, endCapStyle);
-
-            dc.DrawPolygon(vertices, brush);
-        }        
-
-        public static void DrawEllipseAsPolygon(this IDrawing2D dc, POINT2 center, SCALAR width, SCALAR height, ColorStyle style)
-        {
-            // calculate number of vertices based on dimensions
-            int count = Math.Max((int)width, (int)height);
-            if (count < 3) count = 3;
-
-            Span<POINT2> points = stackalloc POINT2[count];
-            Parametric.ShapeFactory.FillEllipseVertices(points, center, width, height);
-
-            dc.DrawPolygon(points, style);
-        }
-
-        public static void DrawAssetAsPolygons(this IDrawing2D dc, in XFORM2 transform, ASSET asset, ColorStyle style)
-        {
-            // TODO: if dc is IAssetDrawing, call directly
-
-            dc = dc.CreateTransformed2D(transform);
-            dc.DrawAssetAsPolygons(asset, style);
-        }
-
-        public static void DrawAssetAsPolygons(this IDrawing2D dc, ASSET asset, ColorStyle style)
-        {
-            /*
-            if (asset is Asset3D a3d)
-            {
-                a3d._DrawAsSurfaces(dc);
-                return;
-            }*/
-
-            if (asset is IDrawable2D drawable) { drawable.DrawTo(dc); return; }
         }
 
         #endregion

@@ -30,7 +30,7 @@ namespace InteropVision.With
 
         #region API
 
-        public void DrawTo(IDrawing2D dc, bool collapseAssets = false)
+        public void DrawTo(IDrawing2D dc)
         {
             if (this.Results == null) return;
 

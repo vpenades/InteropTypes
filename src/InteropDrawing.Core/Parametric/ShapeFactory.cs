@@ -36,44 +36,113 @@ namespace InteropDrawing.Parametric
 
         public static int GetRectangleVertexCount(int arcVertexCount) => arcVertexCount * 4 + 4;
 
-        public static void FillRectangleVertices(this Span<Point2> vertices, Point2 origin, Point2 size, float borderRadius, int arcVertexCount = 6)
+        public static void FillRectangleVertices(this Span<POINT2> vertices, XFORM2 rect, float borderRadius, int arcVertexCount = 6)
         {
+            var scaleX = new VECTOR2(rect.M11, rect.M12);
+            var scaleY = new VECTOR2(rect.M21, rect.M22);
+            var origin = new VECTOR2(rect.M31, rect.M32);
+
             if (vertices.Length == 4)
             {
                 vertices[0] = origin;
-                vertices[1] = origin + new Point2(size.X, 0);
-                vertices[2] = origin + size;
-                vertices[3] = origin + new Point2(0, size.Y);
+                vertices[1] = origin + scaleX;
+                vertices[2] = origin + scaleX + scaleY;
+                vertices[3] = origin + scaleY;
                 return;
             }
 
             int idx = 0;
 
+            var sizeX = scaleX.Length();
+            var axisX = VECTOR2.Normalize(scaleX);
+            var sizeY = scaleY.Length();
+            var axisY = VECTOR2.Normalize(scaleY);
+
+            throw new NotImplementedException();
+
             // top
-            vertices[idx++] = origin + new Point2(borderRadius, 0);
-            vertices[idx++] = origin + new Point2(size.X - borderRadius, 0);
+            vertices[idx++] = origin + axisX * borderRadius;
+            vertices[idx++] = origin + axisX * (sizeX - borderRadius);
 
             // top right
-            var center = origin + new Point2(size.X - borderRadius, borderRadius);
+            var center = origin + axisX * (sizeX - borderRadius) + axisY * borderRadius;
             foreach (var p in _GetRectangleCornerVertices(arcVertexCount, MathF.PI * 0.5f, 0f))
             {
-                vertices[idx++] = center + p * borderRadius;
+                vertices[idx++] = center + (axisX * p.X + axisY * p.Y) * borderRadius;
             }
 
             // right
-            vertices[idx++] = origin + new Point2(size.X, borderRadius);
-            vertices[idx++] = origin + new Point2(size.X, size.Y - borderRadius);
+            vertices[idx++] = origin + axisX * (sizeX - borderRadius);
+            vertices[idx++] = origin + new POINT2(sizeX, sizeY - borderRadius);
 
             // bottom right
-            center = origin + new Point2(size.X - borderRadius, size.Y - borderRadius);
+            center = origin + new VECTOR2(sizeX - borderRadius, sizeY - borderRadius);
             foreach (var p in _GetRectangleCornerVertices(arcVertexCount, 0, -MathF.PI * 0.5f))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
 
             // bottom
-            vertices[idx++] = origin + new Point2(size.X - borderRadius, size.Y);
-            vertices[idx++] = origin + new Point2(borderRadius, size.Y);
+            vertices[idx++] = origin + new POINT2(sizeX - borderRadius, sizeY);
+            vertices[idx++] = origin + new POINT2(borderRadius, sizeY);
+
+            // bottom left
+            center = origin + new VECTOR2(borderRadius, sizeY - borderRadius);
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -MathF.PI * 0.5f, -MathF.PI))
+            {
+                vertices[idx++] = center + p * borderRadius;
+            }
+
+            // left
+            vertices[idx++] = origin + new POINT2(0, sizeY - borderRadius);
+            vertices[idx++] = origin + new POINT2(0, borderRadius);
+
+            // top left
+            center = origin + new VECTOR2(borderRadius, borderRadius);
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -MathF.PI, -MathF.PI * 1.5f))
+            {
+                vertices[idx++] = center + p * borderRadius;
+            }
+        }
+
+        public static void FillRectangleVertices(this Span<POINT2> vertices, POINT2 origin, POINT2 size, float borderRadius, int arcVertexCount = 6)
+        {
+            if (vertices.Length == 4)
+            {
+                vertices[0] = origin;
+                vertices[1] = origin + new POINT2(size.X, 0);
+                vertices[2] = origin + size;
+                vertices[3] = origin + new POINT2(0, size.Y);
+                return;
+            }
+
+            int idx = 0;
+
+            // top
+            vertices[idx++] = origin + new POINT2(borderRadius, 0);
+            vertices[idx++] = origin + new POINT2(size.X - borderRadius, 0);
+
+            // top right
+            var center = origin + new POINT2(size.X - borderRadius, borderRadius);
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, MathF.PI * 0.5f, 0f))
+            {
+                vertices[idx++] = center + p * borderRadius;
+            }
+
+            // right
+            vertices[idx++] = origin + new POINT2(size.X, borderRadius);
+            vertices[idx++] = origin + new POINT2(size.X, size.Y - borderRadius);
+
+            // bottom right
+            center = origin + new POINT2(size.X - borderRadius, size.Y - borderRadius);
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, 0, -MathF.PI * 0.5f))
+            {
+                vertices[idx++] = center + p * borderRadius;
+            }
+
+            // bottom
+            vertices[idx++] = origin + new POINT2(size.X - borderRadius, size.Y);
+            vertices[idx++] = origin + new POINT2(borderRadius, size.Y);
 
             // bottom left
             center = origin + new VECTOR2(borderRadius, size.Y - borderRadius);
@@ -83,11 +152,11 @@ namespace InteropDrawing.Parametric
             }
 
             // left
-            vertices[idx++] = origin + new Point2(0, size.Y - borderRadius);
-            vertices[idx++] = origin + new Point2(0, borderRadius);
+            vertices[idx++] = origin + new POINT2(0, size.Y - borderRadius);
+            vertices[idx++] = origin + new POINT2(0, borderRadius);
 
             // top left
-            center = origin + new Point2(borderRadius, borderRadius);
+            center = origin + new POINT2(borderRadius, borderRadius);
             foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -MathF.PI, -MathF.PI * 1.5f))
             {
                 vertices[idx++] = center + p * borderRadius;

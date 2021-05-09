@@ -6,9 +6,12 @@ using COLOR = System.Drawing.Color;
 using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
 using VECTOR4 = System.Numerics.Vector4;
-using XFORM = System.Numerics.Matrix4x4;
 
-using BRECT = System.Drawing.RectangleF;
+using POINT3 = InteropDrawing.Point3;
+
+using XFORM2 = System.Numerics.Matrix3x2;
+using XFORM4 = System.Numerics.Matrix4x4;
+
 using BBOX = System.Numerics.Matrix3x2; // Column 0 is Min, Column 1 is Max
 
 namespace InteropDrawing
@@ -17,33 +20,31 @@ namespace InteropDrawing
     {
         #region 3D transforms
 
-        public static IDrawing2D CreateTransformed2D(this IDrawing2D t, System.Numerics.Matrix3x2 xform)
+        public static IDrawing2D CreateTransformed2D(this IDrawing2D t, XFORM2 xform)
         {
-            if (xform == System.Numerics.Matrix3x2.Identity) return t;
-
-            return Transforms.Drawing2DTransform.Create(t, xform);
+            return xform.IsIdentity ? t : Transforms.Drawing2DTransform.Create(t, xform);
         }
 
-        public static IDrawing2D CreateTransformed2D(this IDrawing3D t, XFORM xform)
+        public static IDrawing2D CreateTransformed2D(this IDrawing3D t, XFORM4 xform)
         {
             return Transforms.Drawing3DTransform.Create(t, xform);
         }
 
-        public static IDrawing3D CreateTransformed3D(this IDrawing3D t, XFORM xform)
+        public static IDrawing3D CreateTransformed3D(this IDrawing3D t, XFORM4 xform)
         {
-            return Transforms.Drawing3DTransform.Create(t, xform);
+            return xform.IsIdentity ? t : Transforms.Drawing3DTransform.Create(t, xform);
         }
 
         #endregion
 
         #region assets
 
-        public static void DrawAsset(this IDrawing3D dc, in XFORM transform, Object asset)
+        public static void DrawAsset(this IDrawing3D dc, in XFORM4 transform, Object asset)
         {
             dc.DrawAsset(transform, asset, COLOR.White);
         }
 
-        public static void DrawAssetAsSurfaces(this IDrawing3D dc, in XFORM transform, Object asset, ColorStyle brush)
+        public static void DrawAssetAsSurfaces(this IDrawing3D dc, in XFORM4 transform, Object asset, ColorStyle brush)
         {
             // TODO: if dc is IAssetDrawing, call directly
 
@@ -66,7 +67,7 @@ namespace InteropDrawing
             }
         }
 
-        public static void DrawAssetAsPrimitives(this IDrawing3D dc, in XFORM transform, Object asset, ColorStyle brush)
+        public static void DrawAssetAsPrimitives(this IDrawing3D dc, in XFORM4 transform, Object asset, ColorStyle brush)
         {
             // TODO: if dc is IAssetDrawing, call directly
 
@@ -98,7 +99,7 @@ namespace InteropDrawing
             dc.DrawSurface(points, brush);
         }        
 
-        public static void DrawPivot(this IDrawing3D dc, in XFORM pivot, Single size)
+        public static void DrawPivot(this IDrawing3D dc, in XFORM4 pivot, Single size)
         {
             var center = pivot.Translation;
 
@@ -115,6 +116,75 @@ namespace InteropDrawing
             dc.DrawSegment(center + zzz * size * 0.1f, center + zzz * size, size * 0.1f, (colorZ, LineCapStyle.Round, LineCapStyle.Triangle));
         }
 
+        public static void DrawCube(this IDrawing3D dc, in XFORM4 cube, params ColorStyle[] style)
+        {
+            Span<POINT3> corners = stackalloc POINT3[8];
+
+            var scaleX = new POINT3(cube.M11, cube.M12, cube.M13);
+            var scaleY = new POINT3(cube.M21, cube.M22, cube.M23);
+            var scaleZ = new POINT3(cube.M31, cube.M32, cube.M33);
+            POINT3 origin = cube.Translation;
+
+            corners[0] = origin;
+            corners[1] = origin + scaleX;
+            corners[2] = origin + scaleX + scaleY;
+            corners[3] = origin + scaleY;
+
+            corners[4] = corners[0] + scaleZ;
+            corners[5] = corners[1] + scaleZ;
+            corners[6] = corners[2] + scaleZ;
+            corners[7] = corners[3] + scaleZ;
+
+            Span<POINT3> vertices = stackalloc POINT3[4];
+
+            int idx = 0;
+
+            vertices[0] = corners[3];
+            vertices[1] = corners[0];
+            vertices[2] = corners[0 + 4];
+            vertices[3] = corners[3 + 4];
+            dc.DrawSurface(vertices, new SurfaceStyle(style[idx],false));            
+
+            ++idx; idx %= style.Length;
+
+            vertices[0] = corners[0];
+            vertices[1] = corners[1];
+            vertices[2] = corners[1 + 4];
+            vertices[3] = corners[0 + 4];
+            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+
+            ++idx; idx %= style.Length;
+
+            vertices[0] = corners[0];
+            vertices[1] = corners[1];
+            vertices[2] = corners[2];
+            vertices[3] = corners[3];
+            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));             
+             
+            ++idx; idx %= style.Length;
+
+            vertices[0] = corners[1];
+            vertices[1] = corners[2];
+            vertices[2] = corners[2 + 4];
+            vertices[3] = corners[1 + 4];
+            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+
+            ++idx; idx %= style.Length;
+
+            vertices[0] = corners[2];
+            vertices[1] = corners[3];
+            vertices[2] = corners[3 + 4];
+            vertices[3] = corners[2 + 4];
+            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+
+            ++idx; idx %= style.Length;
+
+            vertices[0] = corners[3 + 4];
+            vertices[1] = corners[2 + 4];
+            vertices[2] = corners[1 + 4];
+            vertices[3] = corners[0 + 4];
+            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+        }
 
         public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
         {
@@ -150,7 +220,7 @@ namespace InteropDrawing
         }
         
 
-        public static void DrawCamera(this IDrawing3D dc, XFORM pivot, float cameraSize)
+        public static void DrawCamera(this IDrawing3D dc, XFORM4 pivot, float cameraSize)
         {
             if (pivot.GetDeterminant() == 0) return;
 
@@ -181,9 +251,9 @@ namespace InteropDrawing
             dc.DrawSegment(center + zzz * 1.2f, center + zzz * 2.2f, cameraSize * 0.1f, (colorZ, LineCapStyle.Round, LineCapStyle.Triangle));
         }
 
-        public static void DrawProjectedPlane(this IDrawing3D dc, XFORM pivot, in XFORM projection, Single depth, Single diameter, LineStyle brush)
+        public static void DrawProjectedPlane(this IDrawing3D dc, XFORM4 pivot, in XFORM4 projection, Single depth, Single diameter, LineStyle brush)
         {
-            XFORM.Invert(projection, out XFORM ip);
+            XFORM4.Invert(projection, out XFORM4 ip);
 
             var a = new VECTOR3(-1, -1, 1) * depth;
             var b = new VECTOR3(+1, -1, 1) * depth;
@@ -211,9 +281,9 @@ namespace InteropDrawing
             dc.DrawSegment(d, a, diameter, brush);
         }
 
-        public static void DrawProjectedPlane(this IDrawing3D dc, XFORM pivot, in XFORM projection, Single diameter, LineStyle brush)
+        public static void DrawProjectedPlane(this IDrawing3D dc, XFORM4 pivot, in XFORM4 projection, Single diameter, LineStyle brush)
         {
-            XFORM.Invert(projection, out XFORM ip);
+            XFORM4.Invert(projection, out XFORM4 ip);
 
             var a = new VECTOR3(-1, -1, 0);
             var b = new VECTOR3(+1, -1, 0);
@@ -240,7 +310,7 @@ namespace InteropDrawing
             dc.DrawSegment(d, a, diameter, brush);
         }
 
-        public static void DrawFont(this IDrawing3D dc, XFORM xform, String text, COLOR color)
+        public static void DrawFont(this IDrawing3D dc, XFORM4 xform, String text, COLOR color)
         {
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
         }
@@ -273,204 +343,5 @@ namespace InteropDrawing
         }
 
         #endregion
-
-        #region primitive decomposition
-
-        public static void DrawCylinderAsSurfaces(this ISurfaceDrawing3D dc, Point3 a, Single diameterA, Point3 b, Single diameterB, int divisions, LineStyle brush)
-        {
-            var outr = Math.Abs(brush.Style.OutlineWidth);
-
-            diameterA -= outr;
-            diameterB -= outr;
-
-            var aradius = diameterA * 0.5f;
-            var bradius = diameterB * 0.5f;
-
-            var av = a.ToNumerics();
-            var bv = b.ToNumerics();
-            var ab = bv - av;
-
-            // degenerated lines are rendered as "points"
-            if (ab.Length() <= Math.Max(aradius, bradius) * 0.1f)
-            {
-                dc.DrawSphereAsSurfaces((av + bv) * 0.5f, Math.Max(aradius, bradius), 0, brush.Style);
-                return;
-            }
-
-            ab = VECTOR3.Normalize(ab);
-
-            if (brush.Style.HasOutline)
-            {
-                var aa = a.ToNumerics();
-                var bb = b.ToNumerics();
-
-                if (brush.StartCap != LineCapStyle.Flat) aa -= ab * outr * 0.5f;
-                if (brush.EndCap != LineCapStyle.Flat) bb += ab * outr * 0.5f;
-
-                _DrawCylinderInternal(dc, aa, aradius + outr, bb, bradius + outr, divisions, brush.Style.OutlineColor, true, brush.StartCap, brush.EndCap);
-            }
-
-            if (brush.Style.HasFill)
-            {
-                _DrawCylinderInternal(dc, av, aradius, bv, bradius, divisions, brush.Style.FillColor, false, brush.StartCap, brush.EndCap);
-            }
-        }
-
-        public static void DrawSphereAsSurfaces(this ISurfaceDrawing3D dc, Point3 center, Single diameter, int lod, ColorStyle brush)
-        {
-            lod = lod.Clamp(1, 5); // more than 5 lods will create way too many polygons
-
-            var radius = diameter * 0.5f;
-
-            if (brush.HasOutline)
-            {
-                var r = radius + brush.OutlineWidth * 0.5f;
-                if (r > 0) Parametric.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.OutlineColor, true);
-            }
-
-            if (brush.HasFill)
-            {
-                var r = radius - brush.OutlineWidth * 0.5f;
-                if (r > 0) Parametric.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.FillColor, false);
-            }
-        }
-
-        public static void DrawOutlineAsSegments(this IDrawing3D dc, ReadOnlySpan<Point3> vertices, Single diameter, COLOR color)
-        {
-            var c = new LineStyle(color);
-
-            for (int i = 1; i < vertices.Length; ++i)
-            {
-                dc.DrawSegment(vertices[i - 1], vertices[i], diameter, c);
-            }
-
-            dc.DrawSegment(vertices[vertices.Length - 1], vertices[0], diameter, c);
-        }
-
-        #endregion
-
-        #region internals
-
-        private static void _DrawCylinderInternal(this ISurfaceDrawing3D dc, VECTOR3 a, Single aradius, VECTOR3 b, Single bradius, int divisions, COLOR color, bool flipFaces, LineCapStyle startCap, LineCapStyle endCap)
-        {
-            if (aradius < 0.0001f && bradius < 0.0001f)
-            {
-                aradius = bradius = 0.0001f;
-                divisions = 3;
-
-                // todo: draw a segment with 6 triangles
-            }
-
-            aradius = _AdjustNGonRadius(aradius, divisions);
-            bradius = _AdjustNGonRadius(bradius, divisions);
-
-            var nz = VECTOR3.Normalize(b - a);
-            var nx = VECTOR3.Normalize(nz.PerpendicularAxis());
-            var ny = VECTOR3.Normalize(VECTOR3.Cross(nz, nx));
-
-            Span<Point3> aa = stackalloc Point3[divisions];
-            Span<Point3> bb = stackalloc Point3[divisions];
-
-            var brush = new SurfaceStyle(color, false);
-
-            for (int i = 0; i < divisions; ++i)
-            {
-                var angle = -MathF.PI * 2 * i / divisions;
-                var p = (nx * MathF.Cos(angle) + ny * MathF.Sin(angle));
-                aa[i] = a + p * aradius;
-                bb[i] = b + p * bradius;
-            }
-
-            for (int i = 0; i < aa.Length; ++i)
-            {
-                var j = (i + 1) % aa.Length;
-
-                if (flipFaces) dc.DrawSurface(brush, aa[i], aa[j], bb[j], bb[i]);
-                else dc.DrawSurface(brush, aa[j], aa[i], bb[i], bb[j]);
-            }
-
-            if (flipFaces)
-            {
-                for (int i = 0; i < aa.Length / 2; ++i)
-                {
-                    var j = aa.Length - 1 - i;
-                    var k = aa[i];
-                    aa[i] = aa[j];
-                    aa[j] = k;
-                }
-            }
-
-            _DrawCylinderCap(dc, brush, startCap, a, -nz * aradius, aa);
-
-            if (!flipFaces)
-            {
-                for (int i = 0; i < bb.Length / 2; ++i)
-                {
-                    var j = bb.Length - 1 - i;
-                    var k = bb[i];
-                    bb[i] = bb[j];
-                    bb[j] = k;
-                }
-            }
-
-            _DrawCylinderCap(dc, brush, endCap, b, nz * bradius, bb);
-        }
-
-        /// <summary>
-        /// Adjusts the radius of a circle so a n-Gon will have the same cross area.
-        /// </summary>
-        /// <param name="circleRadius">The target circle radius</param>
-        /// <param name="divisions">The number of corners of the n-Gon</param>
-        /// <returns>the radius of the n-Gon corner</returns>
-        internal static float _AdjustNGonRadius(float circleRadius, int divisions)
-        {
-            System.Diagnostics.Debug.Assert(circleRadius > 0, nameof(circleRadius));
-            System.Diagnostics.Debug.Assert(divisions >= 3, nameof(divisions));
-
-            // taking 2. Given the radius (circumradius) from here: https://www.mathopenref.com/polygonregulararea.html            
-            // and resolving 'r' gives this formula:
-
-            var circleArea = MathF.PI * circleRadius * circleRadius;
-
-            var k = MathF.Sin(MathF.PI * 2.0f / divisions);
-
-            return MathF.Sqrt(circleArea * 2 / divisions * k);
-        }
-
-        private static void _DrawCylinderCap(ISurfaceDrawing3D dc, SurfaceStyle brush, LineCapStyle cap, VECTOR3 center, VECTOR3 axis, Span<Point3> corners)
-        {
-            switch (cap)
-            {
-                case LineCapStyle.Round:
-                    for (int i = 0; i < corners.Length; ++i)
-                    {
-                        var j = (i + 1) % corners.Length;
-
-                        var i0 = corners[i].ToNumerics();
-                        var j0 = corners[j].ToNumerics();
-                        var i1 = VECTOR3.Lerp(center, i0 + axis, 0.7f);
-                        var j1 = VECTOR3.Lerp(center, j0 + axis, 0.7f);
-
-                        dc.DrawSurface(brush, i0, j0, j1, i1);
-                        dc.DrawSurface(brush, center + axis, i1, j1);
-                    }
-                    break;
-
-                case LineCapStyle.Triangle:
-                    for (int i = 0; i < corners.Length; ++i)
-                    {
-                        var j = (i + 1) % corners.Length;
-                        dc.DrawSurface(brush, center + axis, corners[i], corners[j]);
-                    }
-                    break;
-
-
-                default: dc.DrawSurface(corners, brush); break;
-            }
-        }
-
-        #endregion
     }
-
-
 }

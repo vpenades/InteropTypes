@@ -368,7 +368,7 @@ namespace InteropDrawing
 
                 if (collapse)
                 {
-                    dst.DrawAssetAsPolygons(body.Transform, references[body.AssetRef], body.Style);
+                    new Transforms.Decompose2D(dst).DrawAsset(body.Transform, references[body.AssetRef], body.Style);
                     return;
                 }
 

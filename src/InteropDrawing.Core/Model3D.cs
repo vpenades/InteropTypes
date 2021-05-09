@@ -111,14 +111,11 @@ namespace InteropDrawing
             _Commands.DrawSurface(vertices, brush);
         }
 
-        public void DrawTo(IDrawing3D dc, bool collapse = false)
+        public void DrawTo(IDrawing3D dc)
         {
-            int offset = 0;
-
-            while (offset < _Commands.Count)
+            foreach (var offset in _Commands.GetCommands())
             {
-                offset += _Commands.DrawTo(offset, dc, collapse);
-                offset += 4;
+                _Commands.DrawTo(offset, dc, false);
             }
         }        
 

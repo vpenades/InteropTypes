@@ -101,7 +101,7 @@ namespace InteropDrawing.Backends
 
             using (var dc = renderTarget.OpenDrawingContext())
             {
-                scene.DrawTo(dc, true);
+                scene.DrawTo(dc);
             }
 
             renderTarget.SaveToPNG(filePath);
