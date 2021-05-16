@@ -159,6 +159,8 @@ namespace InteropDrawing
         {
             var scene = SceneFactory.CreateScene3D(sceneName);
 
+            scene.DrawCube(Matrix4x4.Identity, COLOR.Red, COLOR.Green, COLOR.Blue);
+
             var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
 
             Backends.WPFDrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
@@ -282,10 +284,12 @@ namespace InteropDrawing
 
             x = 100; dc.DrawFont((x, 30), texts, "Polygonized", FontStyle.VFlip_Gray.With(COLOR.White));
 
-            dc.DrawEllipseAsPolygon((x, 50), 10, 10, COLOR.Yellow);
-            dc.DrawEllipseAsPolygon((x, 100), 10, 10, (COLOR.Yellow, COLOR.Red, 5));
-            dc.DrawLinesAsPolygons(new[] { new POINT2(x, 150), new POINT2(x, 200) }, 10, l1style);
-            dc.DrawLinesAsPolygons(new[] { new POINT2(x, 250), new POINT2(x, 300) }, 10, l2style);
+            var dc2x = new Transforms.Decompose2D(dc);
+
+            dc2x.DrawEllipse((x, 50), 10, 10, COLOR.Yellow);
+            dc2x.DrawEllipse((x, 100), 10, 10, (COLOR.Yellow, COLOR.Red, 5));
+            dc2x.DrawLines(new[] { new POINT2(x, 150), new POINT2(x, 200) }, 10, l1style);
+            dc2x.DrawLines(new[] { new POINT2(x, 250), new POINT2(x, 300) }, 10, l2style);
 
             var dc3d = Transforms.Drawing2DTransform.Create(dc, Matrix3x2.Identity);
 
@@ -298,10 +302,11 @@ namespace InteropDrawing
 
             x = 200; dc.DrawFont((x, 30), texts, "3D Polygonized", FontStyle.VFlip_Gray.With(COLOR.White));
 
-            dc3d.DrawSphereAsSurfaces(new Vector3(x, 50, 0), 10, 3, COLOR.Yellow);
-            dc3d.DrawSphereAsSurfaces(new Vector3(x, 100, 0), 10, 3, (COLOR.Yellow, COLOR.Red, 5));
-            dc3d.DrawCylinderAsSurfaces(new Vector3(x, 150, 0), 10, new Vector3(x, 200, 0), 10, 5, l1style);
-            dc3d.DrawCylinderAsSurfaces(new Vector3(x, 250, 0), 10, new Vector3(x, 300, 0), 10, 5, l2style);
+            var dc3x = new Transforms.Decompose3D(dc3d, 5, 3);
+            dc3x.DrawSphere(new Vector3(x, 50, 0), 10, COLOR.Yellow);
+            dc3x.DrawSphere(new Vector3(x, 100, 0), 10, (COLOR.Yellow, COLOR.Red, 5));
+            dc3x.DrawSegment(new Vector3(x, 150, 0), new Vector3(x, 200, 0), 10, l1style);
+            dc3x.DrawSegment(new Vector3(x, 250, 0), new Vector3(x, 300, 0), 10, l2style);
         }
     }
 }

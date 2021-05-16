@@ -116,7 +116,7 @@ namespace InteropDrawing
             dc.DrawSegment(center + zzz * size * 0.1f, center + zzz * size, size * 0.1f, (colorZ, LineCapStyle.Round, LineCapStyle.Triangle));
         }
 
-        public static void DrawCube(this IDrawing3D dc, in XFORM4 cube, params ColorStyle[] style)
+        public static void DrawCube(this ISurfaceDrawing3D dc, in XFORM4 cube, params SurfaceStyle[] style)
         {
             Span<POINT3> corners = stackalloc POINT3[8];
 
@@ -143,7 +143,7 @@ namespace InteropDrawing
             vertices[1] = corners[0];
             vertices[2] = corners[0 + 4];
             vertices[3] = corners[3 + 4];
-            dc.DrawSurface(vertices, new SurfaceStyle(style[idx],false));            
+            dc.DrawSurface(vertices, style[idx]);            
 
             ++idx; idx %= style.Length;
 
@@ -151,15 +151,15 @@ namespace InteropDrawing
             vertices[1] = corners[1];
             vertices[2] = corners[1 + 4];
             vertices[3] = corners[0 + 4];
-            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+            dc.DrawSurface(vertices, style[idx]);
 
             ++idx; idx %= style.Length;
 
-            vertices[0] = corners[0];
-            vertices[1] = corners[1];
-            vertices[2] = corners[2];
-            vertices[3] = corners[3];
-            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));             
+            vertices[0] = corners[3];
+            vertices[1] = corners[2];
+            vertices[2] = corners[1];
+            vertices[3] = corners[0];
+            dc.DrawSurface(vertices, style[idx]);             
              
             ++idx; idx %= style.Length;
 
@@ -167,7 +167,7 @@ namespace InteropDrawing
             vertices[1] = corners[2];
             vertices[2] = corners[2 + 4];
             vertices[3] = corners[1 + 4];
-            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+            dc.DrawSurface(vertices, style[idx]);
 
             ++idx; idx %= style.Length;
 
@@ -175,15 +175,15 @@ namespace InteropDrawing
             vertices[1] = corners[3];
             vertices[2] = corners[3 + 4];
             vertices[3] = corners[2 + 4];
-            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+            dc.DrawSurface(vertices, style[idx]);
 
             ++idx; idx %= style.Length;
 
-            vertices[0] = corners[3 + 4];
-            vertices[1] = corners[2 + 4];
-            vertices[2] = corners[1 + 4];
-            vertices[3] = corners[0 + 4];
-            dc.DrawSurface(vertices, new SurfaceStyle(style[idx], false));
+            vertices[0] = corners[0 + 4];
+            vertices[1] = corners[1 + 4];
+            vertices[2] = corners[2 + 4];
+            vertices[3] = corners[3 + 4];
+            dc.DrawSurface(vertices, style[idx]);
         }
 
         public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
