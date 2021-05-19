@@ -268,30 +268,35 @@ namespace InteropDrawing
         {
             Style = fillColor;
             DoubleSided = true;
+            SmoothingGroups = 0;
         }
 
         public SurfaceStyle(COLOR outColor, Single outWidth)
         {
             Style = new ColorStyle(outColor, outWidth);
             DoubleSided = true;
+            SmoothingGroups = 0;
         }
 
         public SurfaceStyle(COLOR fillColor, COLOR outColor, Single outWidth)
         {
             Style = new ColorStyle(fillColor, outColor, outWidth);
             DoubleSided = true;
+            SmoothingGroups = 0;
         }
 
         public SurfaceStyle(COLOR fillColor, bool doubleSided)
         {
             Style = new ColorStyle(fillColor);
             DoubleSided = doubleSided;
+            SmoothingGroups = 0;
         }
 
         public SurfaceStyle(ColorStyle color, bool doubleSided)
         {
             Style = color;
             DoubleSided = doubleSided;
+            SmoothingGroups = 0;
         }
 
         #endregion
@@ -300,6 +305,7 @@ namespace InteropDrawing
 
         public readonly ColorStyle Style;
         public readonly Boolean DoubleSided;
+        public readonly UInt32 SmoothingGroups;
 
         // another interesting value would be SmoothingGroups, which can be used at triangulation.
 
