@@ -25,6 +25,15 @@ namespace InteropBitmaps
             TPixel From(VectorRGBA color);
 
             // TPixel FromPremul(XYZA premultiplied);
+
+            // TPixel AverageWith(TPixel other);
+        }
+
+        public interface IPixelBlendOps<TDstPixel, TSrcPixel> : IConvertible
+        {
+            TDstPixel AverageWith(TSrcPixel other);
+
+            // TODO: TDstPixel LerpWith(TSrcPixel other);
         }
 
         /// <summary>
@@ -32,7 +41,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{A}")]
-        public readonly partial struct Alpha8 : IPixelReflection<Alpha8>
+        public readonly partial struct Alpha8 : IPixelReflection<Alpha8>, IPixelBlendOps<Alpha8, Alpha8>
         {
             #region constructors
             public Alpha8(Byte alpha) { A = alpha; }
@@ -50,6 +59,11 @@ namespace InteropBitmaps
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
             Alpha8 IPixelReflection<Alpha8>.From(BGRA32 color) { return new Alpha8(color.A); }
             Alpha8 IPixelReflection<Alpha8>.From(VectorRGBA color) { return new Alpha8((Byte)(color.A * 255f)); }
+
+            public Alpha8 AverageWith(Alpha8 other)
+            {
+                return new Alpha8((Byte)((this.A + other.A) / 2));
+            }
 
             #endregion
         }
@@ -358,7 +372,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA32 : IPixelReflection<BGRA32>
+        public readonly partial struct BGRA32 : IPixelReflection<BGRA32>, IPixelBlendOps<BGRA32, BGRA32>
         {
             #region constructors
 
@@ -445,6 +459,18 @@ namespace InteropBitmaps
             BGRA32 IPixelReflection<BGRA32>.From(BGRA32 color) { return color; }
             BGRA32 IPixelReflection<BGRA32>.From(VectorRGBA color) { return new BGRA32(color); }
 
+            public BGRA32 AverageWith(BGRA32 other)
+            {
+                if (this.A == 0) return other;
+                if (other.A == 0) return this;
+
+                return new BGRA32(
+                    (this.R + other.R) / 2,
+                    (this.G + other.G) / 2,
+                    (this.B + other.B) / 2,
+                    (this.A + other.A) / 2 );
+            }
+
             #endregion
         }
 
@@ -453,7 +479,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct RGBA32 : IPixelReflection<RGBA32>
+        public readonly partial struct RGBA32 : IPixelReflection<RGBA32>, IPixelBlendOps<RGBA32, RGBA32>
         {
             #region constructors
 
@@ -467,6 +493,14 @@ namespace InteropBitmaps
                 A = (Byte)v.W;
             }
             public RGBA32(Byte red, Byte green, Byte blue, Byte alpha) { B = blue; G = green; R = red; A = alpha; }
+
+            public RGBA32(int red, int green, int blue, int alpha = 255)
+            {
+                R = (byte)red;
+                G = (byte)green;
+                B = (byte)blue;                
+                A = (byte)alpha;
+            }
 
             #endregion
 
@@ -495,6 +529,18 @@ namespace InteropBitmaps
             RGBA32 IPixelReflection<RGBA32>.From(BGRA32 color) { return new RGBA32(color.R, color.G, color.B, color.A); }
             RGBA32 IPixelReflection<RGBA32>.From(VectorRGBA color) { return new RGBA32(color); }
 
+            public RGBA32 AverageWith(RGBA32 other)
+            {
+                if (this.A == 0) return other;
+                if (other.A == 0) return this;
+
+                return new RGBA32(
+                    (this.R + other.R) / 2,
+                    (this.G + other.G) / 2,
+                    (this.B + other.B) / 2,
+                    (this.A + other.A) / 2);
+            }
+
             #endregion
         }
 
@@ -503,7 +549,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct ARGB32 : IPixelReflection<ARGB32>
+        public readonly partial struct ARGB32 : IPixelReflection<ARGB32>, IPixelBlendOps<ARGB32, ARGB32>
         {
             #region constructors
 
@@ -517,6 +563,14 @@ namespace InteropBitmaps
                 A = (Byte)v.W;
             }
             public ARGB32(Byte red, Byte green, Byte blue, Byte alpha) { B = blue; G = green; R = red; A = alpha; }
+
+            public ARGB32(int red, int green, int blue, int alpha = 255)
+            {
+                A = (byte)alpha;
+                R = (byte)red;
+                G = (byte)green;
+                B = (byte)blue;                
+            }
 
             #endregion
 
@@ -545,6 +599,18 @@ namespace InteropBitmaps
             ARGB32 IPixelReflection<ARGB32>.From(VectorRGBA color) { return new ARGB32(color); }
             ARGB32 IPixelReflection<ARGB32>.From(BGRA32 color) { return new ARGB32(color.R, color.G, color.B, color.A); }
 
+            public ARGB32 AverageWith(ARGB32 other)
+            {
+                if (this.A == 0) return other;
+                if (other.A == 0) return this;
+
+                return new ARGB32(
+                    (this.R + other.R) / 2,
+                    (this.G + other.G) / 2,
+                    (this.B + other.B) / 2,
+                    (this.A + other.A) / 2);
+            }
+
             #endregion
         }
 
@@ -553,7 +619,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct BGR24 : IPixelReflection<BGR24>
+        public readonly partial struct BGR24 : IPixelReflection<BGR24>, IPixelBlendOps<BGR24, BGR24>
         {
             #region constructors
 
@@ -582,6 +648,13 @@ namespace InteropBitmaps
 
             public BGR24(Byte red, Byte green, Byte blue) { B = blue; G = green; R = red; }
 
+            public BGR24(int red, int green, int blue)
+            {
+                B = (byte)blue;
+                G = (byte)green;
+                R = (byte)red;                
+            }
+
             #endregion
 
             #region data
@@ -599,6 +672,14 @@ namespace InteropBitmaps
             BGR24 IPixelReflection<BGR24>.From(BGRA32 color) { return new BGR24(color.R, color.G, color.B); }
             BGR24 IPixelReflection<BGR24>.From(VectorRGBA color) { return new BGR24(color); }
 
+            public BGR24 AverageWith(BGR24 other)
+            {
+                return new BGR24(
+                    (this.R + other.R) / 2,
+                    (this.G + other.G) / 2,
+                    (this.B + other.B) / 2);
+            }
+
             #endregion
         }
 
@@ -607,7 +688,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct RGB24 : IPixelReflection<RGB24>
+        public readonly partial struct RGB24 : IPixelReflection<RGB24>, IPixelBlendOps<RGB24, RGB24>
         {
             #region constructors
 
@@ -621,6 +702,13 @@ namespace InteropBitmaps
             }
 
             public RGB24(Byte red, Byte green, Byte blue) { B = blue; G = green; R = red; }
+
+            public RGB24(int red, int green, int blue)
+            {
+                R = (byte)red;
+                G = (byte)green;
+                B = (byte)blue;
+            }
 
             #endregion
 
@@ -638,6 +726,14 @@ namespace InteropBitmaps
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
             RGB24 IPixelReflection<RGB24>.From(BGRA32 color) { return new RGB24(color.R, color.G, color.B); }
             RGB24 IPixelReflection<RGB24>.From(VectorRGBA color) { return new RGB24(color); }
+
+            public RGB24 AverageWith(RGB24 other)
+            {
+                return new RGB24(
+                    (this.R + other.R) / 2,
+                    (this.G + other.G) / 2,
+                    (this.B + other.B) / 2);
+            }
 
             #endregion
         }

@@ -84,6 +84,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropVision.Tests", "test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backends", "Backends", "{8BAB1140-2A9B-450A-8B38-A1203E72F060}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.VideoLAN", "src\InteropBitmaps.Backends.VideoLAN\InteropBitmaps.Backends.VideoLAN.csproj", "{20F71865-1AEC-4B69-8C7C-F32086ECD946}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -336,6 +338,14 @@ Global
 		{AC53DF1D-7081-4269-947B-4D0150E22609}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC53DF1D-7081-4269-947B-4D0150E22609}.Release|x64.ActiveCfg = Release|Any CPU
 		{AC53DF1D-7081-4269-947B-4D0150E22609}.Release|x64.Build.0 = Release|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Debug|x64.Build.0 = Debug|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Release|x64.ActiveCfg = Release|Any CPU
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -373,6 +383,7 @@ Global
 		{A8C9FC2F-2624-4AFE-AE0E-434A2B965430} = {329DAC85-E2C7-430F-9B8C-598298D0CFB8}
 		{AD7B78B0-AE51-4FB7-9B11-4E22A2B538CA} = {88681588-D801-4956-ACA7-ADE65AF158A7}
 		{AC53DF1D-7081-4269-947B-4D0150E22609} = {88681588-D801-4956-ACA7-ADE65AF158A7}
+		{20F71865-1AEC-4B69-8C7C-F32086ECD946} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

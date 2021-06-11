@@ -166,9 +166,77 @@ namespace InteropBitmaps
             dst.Set(1, 2, src.M32);
         }
 
+        public static void CopyTo(this in System.Numerics.Matrix3x2 src, ref CVMATRIX dst)
+        {
+            if (dst == null) new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F, 1);
+            else
+            {
+                if (dst.Type() != CVDEPTHTYPE.CV_32F) throw new ArgumentOutOfRangeException("Type", nameof(dst));
+                if (dst.Rows != 2) throw new ArgumentOutOfRangeException("Rows", nameof(dst));
+                if (dst.Cols != 3) throw new ArgumentOutOfRangeException("Cols", nameof(dst));                
+            }            
+
+            dst.Set(0, 0, src.M11);
+            dst.Set(0, 1, src.M21);
+            dst.Set(0, 2, src.M31);
+            dst.Set(1, 0, src.M12);
+            dst.Set(1, 1, src.M22);
+            dst.Set(1, 2, src.M32);
+        }
+
+        public static InteropTensors.SpanTensor2<T> AsSpanTensor2<T>(this CVMATRIX src)
+            where T : unmanaged
+        {
+            if (src == null) throw new ArgumentNullException(nameof(src));
+            if (src.Empty()) throw new ArgumentNullException(nameof(src.Empty));
+            if (!src.IsContinuous()) throw new ArgumentNullException(nameof(src.IsContinuous));
+            // if (OPENCV.GetDepthType(src.Depth) != typeof(T)) throw new ArgumentNullException(nameof(T));            
+
+            if (src.Dims == 1)
+            {
+                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
+                return new InteropTensors.SpanTensor2<T>(src.Data, src.Size(0), src.Channels());
+            }
+
+            if (src.Dims == 2)
+            {
+                if (src.Channels() != 1) throw new ArgumentNullException(nameof(src.Channels));
+                return new InteropTensors.SpanTensor2<T>(src.Data, src.Size(0), src.Size(1));
+            }
+
+            throw new ArgumentNullException(nameof(src.Dims));
+        }
+
+        public static InteropTensors.SpanTensor3<T> AsSpanTensor3<T>(this CVMATRIX src)
+            where T : unmanaged
+        {
+            if (src == null) throw new ArgumentNullException(nameof(src));
+            if (src.Empty()) throw new ArgumentNullException(nameof(src.Empty));
+            if (!src.IsContinuous()) throw new ArgumentNullException(nameof(src.IsContinuous));
+            // if (OPENCV.GetDepthType(src.Depth) != typeof(T)) throw new ArgumentNullException(nameof(T));
+
+
+
+            if (src.Dims == 2)
+            {
+                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
+                return new InteropTensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Channels());
+            }
+
+            if (src.Dims == 3)
+            {
+                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
+                return new InteropTensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Size(2));
+            }
+
+            throw new ArgumentNullException(nameof(src.Dims));
+        }
+
         #endregion
 
         #region extras
+
+        public static InteropDrawing.Point2 ToPoint2(this OpenCvSharp.Point2f p) { return new InteropDrawing.Point2(p.X, p.Y); }
 
         public static void TransferPtr(SpanBitmap src, SpanBitmap dst, TransferPtrAction action)
         {

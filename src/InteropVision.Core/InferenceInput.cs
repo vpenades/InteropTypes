@@ -301,7 +301,7 @@ namespace InteropVision
             IDisposable
             where TResult : class
         {
-            void Inference(TResult result, PointerBitmapInput input, System.Drawing.Rectangle? inputWindow = null);
+            void Inference(TResult result, PointerBitmapInput input, RECT? inputWindow = null);
         }
 
         #endregion

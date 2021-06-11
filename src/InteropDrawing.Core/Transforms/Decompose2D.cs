@@ -14,12 +14,12 @@ namespace InteropDrawing.Transforms
     {
         public Decompose2D(IPolygonDrawing2D renderTarget)
         {
-            _RenderTarget = renderTarget;
+            _RenderTarget = renderTarget;            
             _DecomposePolygonOutlines = true;
         }
 
-        private readonly IPolygonDrawing2D _RenderTarget;
-        private readonly bool _DecomposePolygonOutlines;
+        private readonly IPolygonDrawing2D _RenderTarget;        
+        private readonly bool _DecomposePolygonOutlines;        
 
         #region API - IDrawing2D
 
@@ -43,7 +43,8 @@ namespace InteropDrawing.Transforms
         }
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
-        {            
+        {
+            // pass through?            
         }
 
         public void DrawPolygon(ReadOnlySpan<POINT2> points, ColorStyle style)

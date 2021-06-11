@@ -16,7 +16,7 @@ namespace InteropDrawing
     {
         #region lifecycle
 
-        public static IEnumerable<SpriteAsset> CreateGrid(string source, Point2 size, Point2 pivot, int count, int stride)
+        public static IEnumerable<SpriteAsset> CreateGrid(Object source, Point2 size, Point2 pivot, int count, int stride)
         {
             for (int idx = 0; idx < count; ++idx)
             {
@@ -27,12 +27,12 @@ namespace InteropDrawing
             }
         }        
 
-        public static SpriteAsset CreateFromBitmap(string source, Point2 size, Point2 pivot)
+        public static SpriteAsset CreateFromBitmap(Object source, Point2 size, Point2 pivot)
         {
             return new SpriteAsset(source, (0, 0), size, pivot);
         }        
 
-        public SpriteAsset(String source, Point2 origin, Point2 size, Point2 pivot)
+        public SpriteAsset(Object source, Point2 origin, Point2 size, Point2 pivot)
         {
             this.Source = source;
             this.Left = (int)origin.X;
@@ -64,9 +64,15 @@ namespace InteropDrawing
         /// Is, references, or points to the actual bitmap.
         /// </summary>
         /// <remarks>
-        /// This property can be cast to different data types depending on the context:<br/>
-        /// If it's a <see cref="String"/> or a <see cref="System.IO.FileInfo"/> it can point<br/>
-        /// to an image in the file system. Or, if it's a raw bitmap, it can be used directly.
+        /// This property can be cast to different data types depending on the context:
+        /// <para>
+        /// If it's a <see cref="String"/> or a <see cref="System.IO.FileInfo"/> it can point
+        /// to an image in the file system.
+        /// </para>
+        /// <para>
+        /// It can also be a known bitmap or texture object, in which case it should be used
+        /// directly as the bitmap source.
+        /// </para>
         /// </remarks>
         public Object Source { get; private set; }
 

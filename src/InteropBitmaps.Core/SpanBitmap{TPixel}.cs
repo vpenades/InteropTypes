@@ -267,7 +267,7 @@ namespace InteropBitmaps
             // TODO: if dstSRT has no rotation, use _NearestResizeImplementation
 
             Matrix3x2.Invert(dstSRT, out var iform);
-            Processing._NearestTransformImplementation.SetPixelsNearest(this, src, iform);
+            Processing._BitmapTransformImplementation.SetPixelsNearest(this, src, iform);
         }
 
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)

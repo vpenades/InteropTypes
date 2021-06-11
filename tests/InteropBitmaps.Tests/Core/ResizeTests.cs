@@ -90,7 +90,7 @@ namespace InteropBitmaps.Core
 
             using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {t}")))
             {
-                dst.AsSpanBitmap().SetPixels(xx, src);
+                dst.AsSpanBitmap().SetPixels(xx, src);                
             }            
 
             dst.AttachToCurrentTest("transformed.png");

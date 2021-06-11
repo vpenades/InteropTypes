@@ -54,6 +54,33 @@ namespace InteropBitmaps.Backends
             dst.AttachToCurrentTest("result.soft.jpg");
         }
 
-        
+        [TestCase("capture1.jpg")]
+        [TestCase("capture2.jpg")]
+        public void TryDetectAruco4x4(string filePath)
+        {
+            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "Aruco", filePath);
+            var bitmap = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);            
+
+            var arucoContext = new InteropVision.MarkersContext();
+
+            using (var arucoEstimator = new InteropVision.MarkersContext.ArucoEstimator())
+            {
+                arucoEstimator.SetCameraCalibrationDefault();
+                arucoEstimator.Inference(arucoContext, bitmap);
+            }
+
+            foreach(var item in arucoContext.Markers)
+            {
+                TestContext.WriteLine($"{item.Id} {item.A} {item.B} {item.C} {item.D}");
+            }
+
+            bitmap
+                .CreateDrawingContext()
+                .DrawAsset(System.Numerics.Matrix3x2.Identity, arucoContext, System.Drawing.Color.White);
+
+            bitmap.AttachToCurrentTest("output.png");
+        }
+
+
     }
 }

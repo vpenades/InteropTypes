@@ -4,12 +4,12 @@ using System.Text;
 
 namespace InteropBitmaps.Processing
 {
-    static class _NearestTransformImplementation
+    static class _BitmapTransformImplementation
     {
-        const int BITSHIFT = 14; // 16384
-
         struct _PixelInterator
         {
+            const int BITSHIFT = 14; // 16384
+
             public _PixelInterator(float dstY, System.Numerics.Matrix3x2 srcXform, int srcW, int srcH)
             {
                 var origin = System.Numerics.Vector2.Transform(new System.Numerics.Vector2(0, dstY), srcXform);
@@ -75,7 +75,7 @@ namespace InteropBitmaps.Processing
 
                 var dstRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(dstBytes.Slice(dstStride * y));
 
-                for (int x = 0; x < dst.Height; ++x)
+                for (int x = 0; x < dst.Width; ++x)
                 {
                     if (c.MoveNext(out int cx, out int cy))
                     {
@@ -85,6 +85,8 @@ namespace InteropBitmaps.Processing
                 }
             }
         }
+
+        
 
         public static void FillPixelsNearest<TPixel>(SpanBitmap<TPixel> dst, SpanBitmap<TPixel> src, System.Numerics.Matrix3x2 srcXform)
             where TPixel : unmanaged
@@ -103,7 +105,7 @@ namespace InteropBitmaps.Processing
 
                 var dstRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(dstBytes.Slice(dstStride * y));
 
-                for (int x = 0; x < dst.Height; ++x)
+                for (int x = 0; x < dst.Width; ++x)
                 {
                     var srcRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(srcBytes.Slice(srcStride * c.Y));
                     dstRow[x] = srcRow[c.X];
@@ -111,5 +113,45 @@ namespace InteropBitmaps.Processing
                 }
             }
         }
+
+        public static void FillPixelsLinear<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, System.Numerics.Matrix3x2 srcXform)
+            where TSrcPixel : unmanaged, Pixel.IPixelBlendOps<TDstPixel, TSrcPixel>
+            where TDstPixel : unmanaged
+        {
+            _PixelInterator c;
+
+            var srcBytes = src.ReadableBytes;
+            var srcStride = src.Info.StepByteSize;
+
+            var dstBytes = dst.WritableBytes;
+            var dstStride = dst.Info.StepByteSize;
+
+            Span<TSrcPixel> tmpRow = stackalloc TSrcPixel[dst.Width];
+
+            for (int y = 0; y < dst.Height; ++y)
+            {
+                var dstRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TDstPixel>(dstBytes.Slice(dstStride * y));
+
+                // 1st pass
+                c = new _PixelInterator(y - 0.25f, srcXform, src.Width, src.Height);
+
+                for (int x = 0; x < dst.Width; ++x)
+                {
+                    var srcRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TSrcPixel>(srcBytes.Slice(srcStride * c.Y));
+                    tmpRow[x] = srcRow[c.X];
+                    c.MoveNext();
+                }
+
+                // 2nd pass
+                c = new _PixelInterator(y + 0.25f, srcXform, src.Width, src.Height);
+
+                for (int x = 0; x < dst.Width; ++x)
+                {
+                    var srcRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TSrcPixel>(srcBytes.Slice(srcStride * c.Y));
+                    dstRow[x] = tmpRow[c.X].AverageWith(srcRow[c.X]);                    
+                    c.MoveNext();
+                }                
+            }
+        }        
     }
 }

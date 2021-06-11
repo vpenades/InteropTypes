@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>InteropBitmaps</RootNamespace>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropTensors.Core\InteropTensors.Core.csproj" />
+    <ProjectReference Include="..\InteropVision.Core\InteropVision.Core.csproj" />
   </ItemGroup>
 
 </Project>

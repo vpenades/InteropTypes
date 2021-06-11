@@ -12,12 +12,7 @@ using XNACOLOR = Microsoft.Xna.Framework.Color;
 using XNAV2 = Microsoft.Xna.Framework.Vector2;
 
 namespace InteropDrawing.Backends
-{
-    /// <summary>
-    /// This is an experimental version attempting
-    /// to merge <see cref="MonoGameDeferredDrawing2D"/>
-    /// and <see cref="MonoGameSprites"/>
-    /// </summary>
+{    
     public class MonoGameDrawing2D : IDisposable, IDrawing2D
     {
         #region lifecycle
@@ -77,6 +72,8 @@ namespace InteropDrawing.Backends
 
         public Texture2D FetchTexture(Object imageSource)
         {
+            if (imageSource is Texture2D xnaTex) return xnaTex;
+
             var imagePath = imageSource as string;
 
             if (_Textures.TryGetValue(imagePath, out Texture2D tex)) return tex;
@@ -106,8 +103,11 @@ namespace InteropDrawing.Backends
         public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, ColorStyle style)
         {
             if (!style.IsVisible) return;
-            if (_SpritesDirty) Flush();
-            _VectorsBatch.DrawAsset(transform, asset, style);
+            if (_SpritesDirty) Flush();            
+
+            if (asset is IDrawable2D drawable) { drawable.DrawTo(this); return; }
+
+            _VectorsBatch.DrawAsset(transform, asset);
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
@@ -218,10 +218,6 @@ namespace InteropDrawing.Backends
                 , 0, 0, 1, 0
                 , m.M31, m.M32, 0, 1);
         }
-
-        
-
-
 
         public static IEnumerable<(string, Rectangle?, V2)> CreateSpriteGrid(string assetName, int stride, (int w, int h) cell, int count, (int x, int y) offset)
         {

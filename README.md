@@ -16,7 +16,7 @@ concurrently.
 This is specially true when dealing with image acquisition devices,
 GPU textures, or client bitmaps like GDI or WIC,
 that typically use unmanaged memory to store bitmaps, and forces
-developers to write cumbersome and sometimes unsafe code.
+developers to write cumbersome and sometimes dangerous code.
 
 Exchanging bitmaps between libraries is a challenge, and __InteropBitmaps__
 is an attempt to solve this issue by providing a number of low level
@@ -30,6 +30,13 @@ bitmap types that can be instantiated over existing memory:
 
 These types simply wrap previously existing memory, and provide mechanisms
 to access bitmap data in a safer way.
+
+## InteropDrawing
+
+Provides a set of common interfaces for drawing basic vector shapes, both in 2D and 3D
+
+The purpose of this library is to allow writing _once_, code that draws vector shapes
+but can draw to canvas of different APIs and SDKs
 
 ### Backends
 
@@ -52,8 +59,7 @@ libraries:
 |Target Library|Package|
 |-|-|
 |OpenCVSharp4|InteropBitmaps.Backends.OpenCVSharp4|
-|ZXing|InteropBitmaps.Backends.ZXing|
-|FaceRecognitionDotNet|InteropBitmaps.Backends.Takeuchi.FaceRecognition|
+
 
 Other libraries I am considering are: ImageMagick, SharpDX,
 and some sensor libraries like Kinectv2, Orbbec and Nuitrack.

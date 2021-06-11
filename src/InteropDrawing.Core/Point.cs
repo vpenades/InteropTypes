@@ -153,6 +153,8 @@ namespace InteropDrawing
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point2, VECTOR2>(points);
         }
 
+        public override string ToString() { return ToNumerics().ToString(); }
+
         #endregion
     }
 
@@ -241,6 +243,8 @@ namespace InteropDrawing
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point3, VECTOR3>(points);
         }
+
+        public override string ToString() { return ToNumerics().ToString(); }
 
         #endregion
     }
