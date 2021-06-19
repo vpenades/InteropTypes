@@ -1,0 +1,175 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+using Veldrid;
+
+namespace InteropWith
+{
+    class _EffectTexture : IDisposable
+    {
+        #region lifecycle
+
+        public _EffectTexture(GraphicsDevice device, string inputName, string samplerName)
+        {
+            _ExtDevice = device;
+
+            // Input
+            var texDesc = new ResourceLayoutElementDescription(inputName, ResourceKind.TextureReadOnly, ShaderStages.Fragment);
+            _OwnedTextureLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(texDesc));
+
+            // Sampler
+            var smpDesc = new ResourceLayoutElementDescription(samplerName, ResourceKind.Sampler, ShaderStages.Fragment);
+            _OwnedSamplerLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(smpDesc));
+
+            _OwnedSamplerResourceSets = new _EffectSamplers(device, _OwnedSamplerLayout);
+        }
+
+        public void Dispose()
+        {
+            _OwnedTextureLayout?.Dispose();
+            _OwnedTextureLayout = null;
+
+            _OwnedSamplerLayout?.Dispose();
+            _OwnedSamplerLayout = null;
+
+            _OwnedSamplerResourceSets?.Dispose();
+            _OwnedSamplerResourceSets = null;
+
+            if (_OwnerTextureResourceSets != null)
+            {
+                foreach (var tset in _OwnerTextureResourceSets.Values) tset.Dispose();
+                _OwnerTextureResourceSets = null;
+            }
+
+            _ExtTextureSet = null;
+            _ExtSamplerSet = null;
+            _ExtDevice = null;
+        }
+
+        #endregion
+
+        #region data
+
+        private GraphicsDevice _ExtDevice;
+
+        private ResourceSet _ExtTextureSet;
+        internal ResourceLayout _OwnedTextureLayout;
+
+        private ResourceSet _ExtSamplerSet;
+        internal ResourceLayout _OwnedSamplerLayout;
+
+
+        private Dictionary<TextureView, ResourceSet> _OwnerTextureResourceSets = new Dictionary<TextureView, ResourceSet>();
+
+        private _EffectSamplers _OwnedSamplerResourceSets;
+
+        #endregion
+
+        #region API
+
+        public void SetTexture(TextureView texView)
+        {
+            if (_OwnerTextureResourceSets.TryGetValue(texView, out var textureSet)) { _ExtTextureSet = textureSet; return; }
+
+            var rsetDesc = new ResourceSetDescription(_OwnedTextureLayout, texView);
+            textureSet = _ExtDevice.ResourceFactory.CreateResourceSet(rsetDesc);
+            _OwnerTextureResourceSets[texView] = textureSet;
+
+            _ExtTextureSet = textureSet;
+        }
+
+        public void SetSampler(int filtering, bool clamp) { _ExtSamplerSet = _OwnedSamplerResourceSets[filtering, clamp]; }
+
+        public void Bind(CommandList cmdList, uint textureIndex, uint samplerIndex)
+        {
+            cmdList.SetGraphicsResourceSet(textureIndex, _ExtTextureSet);
+            cmdList.SetGraphicsResourceSet(samplerIndex, _ExtSamplerSet);
+        }
+
+        #endregion
+    }
+
+    class _EffectSamplers : IDisposable
+    {
+        #region lifecycle
+
+        public _EffectSamplers(GraphicsDevice device, ResourceLayout layout)
+        {
+            _SamplerResourceSets[0] = new Lazy<ResourceSet>(() => _SamplerFactory(device, layout, 1, true), false);
+            _SamplerResourceSets[1] = new Lazy<ResourceSet>(() => _SamplerFactory(device, layout, 1, false), false);
+            _SamplerResourceSets[2] = new Lazy<ResourceSet>(() => _SamplerFactory(device, layout, 0, true), false);
+            _SamplerResourceSets[3] = new Lazy<ResourceSet>(() => _SamplerFactory(device, layout, 0, false), false);
+            _SamplerResourceSets[4] = new Lazy<ResourceSet>(() => _SamplerFactory(device, layout, 2, true), false);
+            _SamplerResourceSets[5] = new Lazy<ResourceSet>(() => _SamplerFactory(device, layout, 2, false), false);
+        }
+
+        public void Dispose()
+        {
+            _Disposables.Dispose();
+
+            Array.Clear(_SamplerResourceSets,0,_SamplerResourceSets.Length);
+        }
+
+        #endregion
+
+        #region data
+
+        private readonly Lazy<ResourceSet>[] _SamplerResourceSets = new Lazy<ResourceSet>[6];
+
+        private readonly DisposablesRecorder _Disposables = new DisposablesRecorder();
+
+        #endregion
+
+        #region  API
+
+        public ResourceSet this[int filtering, bool clamp]
+        {
+            get
+            {
+                var index = filtering * 2;
+                if (!clamp) index += 1;
+
+                return _SamplerResourceSets[index].Value;
+            }
+        }
+
+        private ResourceSet _SamplerFactory(GraphicsDevice device, ResourceLayout layout, int filtering, bool clamp)
+        {            
+            ResourceSetDescription resourceSetDescr = default;            
+
+            if (clamp)
+            {
+                var clampDescr = SamplerDescription.Linear;
+
+                switch (filtering)
+                {
+                    case 0: clampDescr = SamplerDescription.Point; break;
+                    case 1: clampDescr = SamplerDescription.Linear; break;
+                    case 2: clampDescr = SamplerDescription.Aniso4x; break;
+                }
+
+                clampDescr.AddressModeU = SamplerAddressMode.Clamp;
+                clampDescr.AddressModeV = SamplerAddressMode.Clamp;
+                clampDescr.AddressModeW = SamplerAddressMode.Clamp;
+
+                var clampSampler = _Disposables.Record(device.ResourceFactory.CreateSampler(clampDescr));
+
+                resourceSetDescr = new ResourceSetDescription(layout, clampSampler);                
+            }
+            else
+            {
+                switch (filtering)
+                {
+                    case 0: resourceSetDescr = new ResourceSetDescription(layout, device.PointSampler); break;
+                    case 1: resourceSetDescr = new ResourceSetDescription(layout, device.LinearSampler); break;
+                    case 2: resourceSetDescr = new ResourceSetDescription(layout, device.Aniso4xSampler); break;
+                }
+            }
+
+            return _Disposables.Record(device.ResourceFactory.CreateResourceSet(ref resourceSetDescr));
+        }
+
+        #endregion
+    }
+}

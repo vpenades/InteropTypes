@@ -7,11 +7,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropDrawing.Backends
 {
-    public class MonoGamDrawing3D : IDisposable, IDrawing3D
+    public class MonoGameDrawing3D : IDisposable, IDrawing3D
     {
         #region lifecycle
 
-        public MonoGamDrawing3D(GraphicsDevice device, bool flipFaces = false)            
+        public MonoGameDrawing3D(GraphicsDevice device, bool flipFaces = false)            
         {
             _Batch = new MonoGameSolidMeshBuilder(flipFaces);
         }
