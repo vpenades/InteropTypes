@@ -7,6 +7,9 @@
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
+  <ItemGroup>
+    <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
@@ -14,6 +17,10 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" PrivateAssets="all" />    
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Collections\" />
   </ItemGroup>
 
 </Project>

@@ -5,10 +5,27 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
+  
   <PropertyGroup>
     <ShaderContentIncludePath>Shaders</ShaderContentIncludePath>
-    <ShaderOutputPath>$(BaseIntermediateOutputPath)</ShaderOutputPath>    
-  </PropertyGroup>   
+    <ShaderOutputPath>$(BaseIntermediateOutputPath)/ShadersBin</ShaderOutputPath>    
+  </PropertyGroup>
+  
+  
+  <ItemGroup>
+    <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />
+  </ItemGroup>   
+  
+  <!--
+  <PropertyGroup>
+    <ShaderContentIncludePath>Shaders</ShaderContentIncludePath>
+    <ShaderOutputPath>Shaders/Generated</ShaderOutputPath>    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource LinkBase="Shaders" Include="Shaders/Generated/**" />
+  </ItemGroup>
+  -->
 
   <ItemGroup>
     <PackageReference Include="ShaderGen" Version="1.2.0-beta3" />
@@ -18,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
     <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
   </ItemGroup>
 

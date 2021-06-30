@@ -6,10 +6,10 @@ using Veldrid;
 
 namespace InteropWith
 {
-    class IndexedVertexBuffer : IDisposable
+    class _IndexedVertexBuffer : IDisposable
     {
         #region lifecycle
-        public IndexedVertexBuffer(GraphicsDevice device) { _Device = device; }
+        public _IndexedVertexBuffer(GraphicsDevice device) { _Device = device; }
 
         public void Dispose()
         {
@@ -30,14 +30,14 @@ namespace InteropWith
 
         #region API
 
-        public void SetData<TVertex>(Span<TVertex> vertexBuffer, Span<int> indexBuffer, int vertexCount, int indexCount)
+        public unsafe void SetData<TVertex>(Span<TVertex> vertexBuffer, Span<int> indexBuffer)
             where TVertex:unmanaged
         {
             _EnsureVertexBufferSize<TVertex>(vertexBuffer.Length);
             _EnsureIndexBufferSize(indexBuffer.Length);
 
-            _Device.UpdateBuffer(_vertexBuffer, 0, ref vertexBuffer[0], (uint)(vertexCount * Vertex.SizeInBytes));
-            _Device.UpdateBuffer(_indexBuffer, 0, ref indexBuffer[0], (uint)(indexCount * sizeof(int)));            
+            _Device.UpdateBuffer(_vertexBuffer, 0, ref vertexBuffer[0], (uint)(vertexBuffer.Length * sizeof(TVertex)));
+            _Device.UpdateBuffer(_indexBuffer, 0, ref indexBuffer[0], (uint)(indexBuffer.Length * sizeof(int)));            
         }
 
         public void Bind(CommandList cmdList)

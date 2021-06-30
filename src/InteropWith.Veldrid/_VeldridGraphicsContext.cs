@@ -19,9 +19,7 @@ namespace InteropWith
             GraphicsDevice = graphicsDevice;
             _currentTarget = GraphicsDevice.SwapchainFramebuffer;
 
-            CreateResources();
-
-            _pipelines = new Dictionary<OutputDescription, Pipeline>();
+            CreateResources();            
 
             // _textureStorage = textureStorage;
             // _textureViews = new TextureView[32];
@@ -35,7 +33,7 @@ namespace InteropWith
         {
             _commandList = _Disposables.Record(GraphicsDevice.ResourceFactory.CreateCommandList());
             _spriteEffect = _Disposables.Record(new SpriteEffect(GraphicsDevice));
-            _ivBuffer = _Disposables.Record(new IndexedVertexBuffer(GraphicsDevice));
+            _ivBuffer = _Disposables.Record(new _IndexedVertexBuffer(GraphicsDevice));
 
             UpdateWvp();            
         }        
@@ -51,16 +49,14 @@ namespace InteropWith
 
         public GraphicsDevice GraphicsDevice { get; }
 
-        private readonly DisposablesRecorder _Disposables = new DisposablesRecorder();
-
-        private readonly Dictionary<OutputDescription, Pipeline> _pipelines;        
+        private readonly _DisposablesRecorder _Disposables = new _DisposablesRecorder();        
 
         private Framebuffer _currentTarget;
 
         private CommandList _commandList;        
 
         private SpriteEffect _spriteEffect;
-        private IndexedVertexBuffer _ivBuffer;
+        private _IndexedVertexBuffer _ivBuffer;
 
         #endregion
 
@@ -95,33 +91,28 @@ namespace InteropWith
         public void Clear(System.Drawing.Color color)
         {
             _commandList.Begin();
-
             _commandList.SetFramebuffer(_currentTarget);
+
             var c = new RgbaFloat(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
             _commandList.ClearColorTarget(0, c);
-            _commandList.End();
+            // _commandList.ClearDepthStencil(1);
 
+            _commandList.End();
             GraphicsDevice.SubmitCommands(_commandList);
         }
 
-        public void BeginRender(Span<Vertex> vertexBuffer, Span<int> indexBuffer, int vertexCount, int indexCount)
+        public void BeginRender(Span<Vertex> vertexBuffer, Span<int> indexBuffer)
         {
-            _ivBuffer.SetData(vertexBuffer, indexBuffer, vertexCount, indexCount);
-
-            // Begin() must be called before commands can be issued.
+            _ivBuffer.SetData(vertexBuffer, indexBuffer);
+            
             _commandList.Begin();
-
             _commandList.SetFramebuffer(_currentTarget);            
         }       
 
         
         public void DrawBatch(int startIndex, int indexCount)
         {
-            var outputDescr = _currentTarget.OutputDescription;
-            var pipeline = UsePipeline(outputDescr);
-            _commandList.SetPipeline(pipeline);
-
-            _spriteEffect.Bind(_commandList);
+            _spriteEffect.Bind(_commandList, _currentTarget.OutputDescription);
 
             _ivBuffer.Bind(_commandList);
             _ivBuffer.DrawIndexed(_commandList, startIndex, indexCount);
@@ -134,17 +125,23 @@ namespace InteropWith
             GraphicsDevice.SubmitCommands(_commandList);
         }
 
-        private Pipeline UsePipeline(in OutputDescription outputDescr)
+        public void Draw(_PrimitivesAccumulator primitives)
         {
-            if (_pipelines.TryGetValue(outputDescr, out var pipeline)) return pipeline;
+            primitives.CopyTo(_ivBuffer);
 
-            var gpd = _spriteEffect.GetPipelineDesc(outputDescr);
+            _commandList.Begin();
+            _commandList.SetFramebuffer(_currentTarget);
+            _spriteEffect.Bind(_commandList, _currentTarget.OutputDescription);
 
-            pipeline = _Disposables.Record(GraphicsDevice.ResourceFactory.CreateGraphicsPipeline(gpd));
-            _pipelines[outputDescr] = pipeline;
-            return pipeline;
+            primitives.DrawTo(_commandList, _ivBuffer);
+
+            EndRender();
         }
 
+        public void SwapBuffers()
+        {
+            GraphicsDevice.SwapBuffers();
+        }
 
         #endregion
 

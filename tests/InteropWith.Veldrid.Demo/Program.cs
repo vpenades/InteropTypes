@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Numerics;
 
+using InteropDrawing;
+
 using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 
 namespace InteropWith
-{
+{    
     class Program
     {
         static void Main(string[] args)
@@ -23,11 +25,11 @@ namespace InteropWith
             // Create a renderer that implements the OpenWheels.Rendering.IRenderer interface
             // this guy actually draws everything to the backbuffer
             var renderer = new _VeldridGraphicsContext(graphicsDevice);
-            var textures = new _VeldridTextureFactory(graphicsDevice);
+            var textures = new _VeldridTextureCollection(graphicsDevice);
 
             var texId = textures.CreateTexture(16, 16, PixelFormat.R8_G8_B8_A8_UNorm);
             var texData = new UInt32[16 * 16];
-            texData.AsSpan().Fill(uint.MaxValue);
+            texData.AsSpan().Fill(0xff4080ff);
             textures.SetData<UInt32>(texId, new System.Drawing.Rectangle(0, 0, 16, 16), texData.AsSpan());
 
             var first = true;
@@ -70,39 +72,23 @@ namespace InteropWith
             }
         }
 
-        private static void Draw(_VeldridGraphicsContext dc, _VeldridTextureFactory tex)
+        private static void Draw(_VeldridGraphicsContext dc, _VeldridTextureCollection tex)
         {
             dc.SetTarget();
 
-            dc.UpdateWvp();
+            dc.UpdateWvp();            
 
-            dc.Clear(System.Drawing.Color.CornflowerBlue);
-            dc.CurrentEffect.SetTexture(tex.GetTextureView(tex.GetTexture(0)));
+            var batches = new _Drawing2DContext();
+            batches.AddPolygon(System.Drawing.Color.White, (10,10),(20,20),(10,20) );
+            batches.DrawEllipse((40, 40), 50, 50, System.Drawing.Color.Blue);
+            batches.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White,2));
 
-            var tri = new Vertex[3];
-            tri[0] = new Vertex
-            {
-                Position = new Vector3(0, 0, 0),
-                Color = Vector4.One
-            };
+            dc.Clear(System.Drawing.Color.CornflowerBlue);           
 
-            tri[1] = new Vertex
-            {
-                Position = new Vector3(10, 10, 0),
-                Color = Vector4.One
-            };
+            var t = tex.GetTextureView(tex.GetTexture(0)); 
+            dc.CurrentEffect.SetTexture(t);            
 
-            tri[2] = new Vertex
-            {
-                Position = new Vector3(0, 10, 0),
-                Color = Vector4.One
-            };
-
-            dc.BeginRender(tri, new int[] { 0, 1, 2 }, 3, 3);
-
-            dc.DrawBatch(0, 3);
-
-            dc.EndRender();
+            dc.Draw(batches);
         }
     }
 }

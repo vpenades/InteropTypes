@@ -4,9 +4,9 @@ using System.Text;
 
 namespace InteropWith
 {
-    sealed class DisposablesRecorder : IDisposable
+    sealed class _DisposablesRecorder : IDisposable
     {
-        public DisposablesRecorder() { }
+        public _DisposablesRecorder() { }
 
         public void Dispose()
         {
@@ -20,6 +20,11 @@ namespace InteropWith
         {
             _Disposables.Add(disposable);
             return disposable;
+        }
+
+        public void Record<T>(IEnumerable<T> disposables) where T : IDisposable
+        {
+            foreach (var d in disposables) Record<T>(d);
         }
 
         public void DisposeOf<T>(T disposable) where T:IDisposable

@@ -6,13 +6,16 @@ using Veldrid;
 
 namespace InteropWith
 {
-    class _EffectUniform : IDisposable
+    class _EffectUniform : IEffectInput, IDisposable
     {
+        #region lifecycle
+
         public static implicit operator ResourceLayout(_EffectUniform uniform) => uniform._ResourceLayout;
 
         public _EffectUniform(GraphicsDevice device, string name, ShaderStages stage, int byteCount)
         {
             _Device = device;
+            Name = name;
 
             var desc = new ResourceLayoutElementDescription(name, ResourceKind.UniformBuffer, stage);
 
@@ -37,24 +40,54 @@ namespace InteropWith
             _Device = null;
         }
 
-        private GraphicsDevice _Device;
+        #endregion
 
-        private DeviceBuffer _DeviceBuffer;
+        #region data
+
+        protected GraphicsDevice _Device;
+
+        protected DeviceBuffer _DeviceBuffer;
         private ResourceSet _ResourceSet;
         private ResourceLayout _ResourceLayout;
 
-        private int _ByteCount;
+        protected readonly int _ByteCount;        
 
-        public unsafe void Update<T>(ref T value) where T:unmanaged
-        {
-            System.Diagnostics.Debug.Assert(sizeof(T) <= _ByteCount);
+        #endregion
 
-            _Device.UpdateBuffer(_DeviceBuffer, 0, ref value);
-        }
+        #region API
 
-        public void Bind(CommandList cmdList, uint index)
+        public string Name { get; private set; }
+
+        ResourceLayout IEffectInput.GetResourceLayout() => _ResourceLayout;        
+
+        public virtual void Bind(CommandList cmdList, uint index)
         {
             cmdList.SetGraphicsResourceSet(index, _ResourceSet);
+        }
+
+        #endregion
+    }
+
+    class _EffectUniform<T> : _EffectUniform
+        where T:unmanaged
+    {
+        public unsafe _EffectUniform(GraphicsDevice device, string name, ShaderStages stage)
+            : base(device,name,stage, sizeof(T)) { }
+
+        private T _Value;
+
+        public unsafe void Update(ref T value)
+        {
+            _Value = value;
+
+            // _Device.UpdateBuffer(_DeviceBuffer, 0, ref value);
+        }
+
+        public override void Bind(CommandList cmdList, uint index)
+        {
+            cmdList.UpdateBuffer(_DeviceBuffer, 0, ref _Value);
+
+            base.Bind(cmdList, index);
         }
     }
 }

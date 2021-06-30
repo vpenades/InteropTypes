@@ -9,8 +9,6 @@ namespace InteropWith
 {
     internal static class VeldridHelper
     {
-        
-
         public static Shader LoadShader(ResourceFactory factory, string set, ShaderStages stage, string entryPoint)
         {
             string name = $"{set}-{stage.ToString().ToLower()}.{GetExtension(factory.BackendType)}";

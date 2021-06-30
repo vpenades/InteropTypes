@@ -6,35 +6,26 @@ using Veldrid;
 
 namespace InteropWith
 {
-    class _EffectTexture : IDisposable
+    class _EffectTexture : IEffectInput, IDisposable
     {
         #region lifecycle
 
-        public _EffectTexture(GraphicsDevice device, string inputName, string samplerName)
+        public static implicit operator ResourceLayout(_EffectTexture texture) => texture._OwnedTextureLayout;
+
+        public _EffectTexture(GraphicsDevice device, string inputName)
         {
+            Name = inputName;
             _ExtDevice = device;
 
             // Input
             var texDesc = new ResourceLayoutElementDescription(inputName, ResourceKind.TextureReadOnly, ShaderStages.Fragment);
-            _OwnedTextureLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(texDesc));
-
-            // Sampler
-            var smpDesc = new ResourceLayoutElementDescription(samplerName, ResourceKind.Sampler, ShaderStages.Fragment);
-            _OwnedSamplerLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(smpDesc));
-
-            _OwnedSamplerResourceSets = new _EffectSamplers(device, _OwnedSamplerLayout);
+            _OwnedTextureLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(texDesc));            
         }
 
         public void Dispose()
         {
             _OwnedTextureLayout?.Dispose();
-            _OwnedTextureLayout = null;
-
-            _OwnedSamplerLayout?.Dispose();
-            _OwnedSamplerLayout = null;
-
-            _OwnedSamplerResourceSets?.Dispose();
-            _OwnedSamplerResourceSets = null;
+            _OwnedTextureLayout = null;            
 
             if (_OwnerTextureResourceSets != null)
             {
@@ -42,7 +33,79 @@ namespace InteropWith
                 _OwnerTextureResourceSets = null;
             }
 
-            _ExtTextureSet = null;
+            _ExtTextureSet = null;            
+            _ExtDevice = null;
+        }
+
+        #endregion
+
+        #region data
+
+        public string Name { get; private set; }
+
+        ResourceLayout IEffectInput.GetResourceLayout() => _OwnedTextureLayout;
+
+        private GraphicsDevice _ExtDevice;
+
+        private ResourceSet _ExtTextureSet;
+        internal ResourceLayout _OwnedTextureLayout;
+
+        private Dictionary<TextureView, ResourceSet> _OwnerTextureResourceSets = new Dictionary<TextureView, ResourceSet>();        
+
+        #endregion
+
+        #region API
+
+        public void SetTexture(TextureView texView)
+        {
+            if (texView == null) { _ExtTextureSet = null; return; }
+
+            if (_OwnerTextureResourceSets.TryGetValue(texView, out var textureSet)) { _ExtTextureSet = textureSet; return; }
+
+            var rsetDesc = new ResourceSetDescription(_OwnedTextureLayout, texView);
+            textureSet = _ExtDevice.ResourceFactory.CreateResourceSet(rsetDesc);
+            _OwnerTextureResourceSets[texView] = textureSet;
+
+            _ExtTextureSet = textureSet;
+        }        
+
+        public void Bind(CommandList cmdList, uint textureIndex)
+        {
+            if (_ExtTextureSet == null) return;
+
+            cmdList.SetGraphicsResourceSet(textureIndex, _ExtTextureSet);
+            
+        }
+
+        #endregion
+    }
+
+    class _EffectSampler : IEffectInput, IDisposable
+    {
+        #region lifecycle
+
+        public static implicit operator ResourceLayout(_EffectSampler sampler) => sampler._OwnedSamplerLayout;
+
+        public _EffectSampler(GraphicsDevice device, string samplerName)
+        {
+            Name = samplerName;
+            _ExtDevice = device;
+            
+            var smpDesc = new ResourceLayoutElementDescription(samplerName, ResourceKind.Sampler, ShaderStages.Fragment);
+
+            _OwnedSamplerLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(smpDesc));
+
+            _OwnedSamplerResourceSets = new _EffectSamplers(device, _OwnedSamplerLayout);
+        }
+
+        public void Dispose()
+        {
+            _OwnedSamplerLayout?.Dispose();
+            _OwnedSamplerLayout = null;
+
+            _OwnedSamplerResourceSets?.Dispose();
+            _OwnedSamplerResourceSets = null;
+            
             _ExtSamplerSet = null;
             _ExtDevice = null;
         }
@@ -51,39 +114,29 @@ namespace InteropWith
 
         #region data
 
+        public string Name { get; private set; }
+
         private GraphicsDevice _ExtDevice;
-
-        private ResourceSet _ExtTextureSet;
-        internal ResourceLayout _OwnedTextureLayout;
-
         private ResourceSet _ExtSamplerSet;
+
         internal ResourceLayout _OwnedSamplerLayout;
-
-
-        private Dictionary<TextureView, ResourceSet> _OwnerTextureResourceSets = new Dictionary<TextureView, ResourceSet>();
-
         private _EffectSamplers _OwnedSamplerResourceSets;
 
         #endregion
 
         #region API
 
-        public void SetTexture(TextureView texView)
+        ResourceLayout IEffectInput.GetResourceLayout() => _OwnedSamplerLayout;
+
+        public void SetSampler(int filtering, bool clamp)
         {
-            if (_OwnerTextureResourceSets.TryGetValue(texView, out var textureSet)) { _ExtTextureSet = textureSet; return; }
-
-            var rsetDesc = new ResourceSetDescription(_OwnedTextureLayout, texView);
-            textureSet = _ExtDevice.ResourceFactory.CreateResourceSet(rsetDesc);
-            _OwnerTextureResourceSets[texView] = textureSet;
-
-            _ExtTextureSet = textureSet;
+            _ExtSamplerSet = _OwnedSamplerResourceSets[filtering, clamp];
         }
 
-        public void SetSampler(int filtering, bool clamp) { _ExtSamplerSet = _OwnedSamplerResourceSets[filtering, clamp]; }
-
-        public void Bind(CommandList cmdList, uint textureIndex, uint samplerIndex)
+        public void Bind(CommandList cmdList, uint samplerIndex)
         {
-            cmdList.SetGraphicsResourceSet(textureIndex, _ExtTextureSet);
+            if (_ExtSamplerSet == null) return;
+
             cmdList.SetGraphicsResourceSet(samplerIndex, _ExtSamplerSet);
         }
 
@@ -117,12 +170,11 @@ namespace InteropWith
 
         private readonly Lazy<ResourceSet>[] _SamplerResourceSets = new Lazy<ResourceSet>[6];
 
-        private readonly DisposablesRecorder _Disposables = new DisposablesRecorder();
+        private readonly _DisposablesRecorder _Disposables = new _DisposablesRecorder();
 
         #endregion
 
         #region  API
-
         public ResourceSet this[int filtering, bool clamp]
         {
             get
