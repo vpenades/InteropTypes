@@ -125,7 +125,7 @@ namespace InteropWith
             GraphicsDevice.SubmitCommands(_commandList);
         }
 
-        public void Draw(_PrimitivesAccumulator primitives)
+        public void Draw(_Drawing2DContext primitives)
         {
             primitives.CopyTo(_ivBuffer);
 

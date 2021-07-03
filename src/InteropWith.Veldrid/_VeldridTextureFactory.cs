@@ -54,6 +54,15 @@ namespace InteropWith
 
         #region API
 
+        public void SetData(Texture tex, InteropBitmaps.SpanBitmap src)            
+        {
+            CheckDisposed();
+
+            var bpp = src.Info.PixelFormat.ByteCount;            
+            
+            _CopyData(tex, src.ReadableBytes, 0, 0, tex.Width, tex.Height);
+        }
+
         public void SetData<T>(Texture tex, in Rectangle subRect, ReadOnlySpan<T> data)
             where T : unmanaged
         {

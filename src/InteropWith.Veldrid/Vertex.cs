@@ -11,6 +11,12 @@ namespace InteropWith
     [StructLayout(LayoutKind.Sequential)]
     public struct Vertex
     {
+        public static implicit operator Vertex(Vector2 p)
+        {
+            return new Vertex(p, UInt32.MaxValue);
+        }
+            
+
         public Vertex(InteropDrawing.Point2 pos, UInt32 color)
         {
             Position = new Vector3(pos.X, pos.Y, -1);

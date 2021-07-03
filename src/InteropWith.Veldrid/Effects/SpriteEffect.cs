@@ -11,7 +11,7 @@ namespace InteropWith
     {
         string Name { get; }
         ResourceLayout GetResourceLayout();
-        void Bind(CommandList cmdList, uint index);
+        void Bind(CommandList cmdList, uint resourceIndex);
     }
 
     public abstract class BaseEffect : IDisposable
@@ -123,7 +123,7 @@ namespace InteropWith
         {
             _PrimaryTexture.SetTexture(texture);
             _PrimarySampler.SetSampler(0, false);
-        }
+        }        
 
         public void Bind(CommandList cmdList, in OutputDescription outDesc)
         {
@@ -132,6 +132,13 @@ namespace InteropWith
             cmdList.SetPipeline(pipeline);
 
             _TexturedShader.BindInputs(cmdList);
+        }
+
+        public void SetTexture(CommandList cmdList, TextureView texture)
+        {
+            SetTexture(texture);
+
+            _PrimaryTexture.Bind(cmdList, 1);
         }
 
         #endregion

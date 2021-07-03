@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
+
+using InteropBitmaps;
 
 using InteropDrawing;
 
@@ -11,6 +14,8 @@ namespace InteropWith
 {    
     class Program
     {
+        private static SpriteAsset _Sprite1 = new SpriteAsset("assets\\hieroglyph_sprites_by_asalga.png", (0, 0), (192, 192), (8, 8));        
+
         static void Main(string[] args)
         {
             // Create the window and the graphics device
@@ -24,20 +29,13 @@ namespace InteropWith
 
             // Create a renderer that implements the OpenWheels.Rendering.IRenderer interface
             // this guy actually draws everything to the backbuffer
-            var renderer = new _VeldridGraphicsContext(graphicsDevice);
-            var textures = new _VeldridTextureCollection(graphicsDevice);
-
-            var texId = textures.CreateTexture(16, 16, PixelFormat.R8_G8_B8_A8_UNorm);
-            var texData = new UInt32[16 * 16];
-            texData.AsSpan().Fill(0xff4080ff);
-            textures.SetData<UInt32>(texId, new System.Drawing.Rectangle(0, 0, 16, 16), texData.AsSpan());
-
-            var first = true;
+            var renderer = new VeldridDrawingFactory(graphicsDevice);            
 
             // We run the game loop here and do our drawing inside of it.
-            VeldridRunLoop(window, graphicsDevice, () => Draw(renderer, textures));
-
+            VeldridRunLoop(window, graphicsDevice, () => Draw(renderer));
+            
             renderer.Dispose();
+            
             graphicsDevice.Dispose();
         }
 
@@ -72,23 +70,18 @@ namespace InteropWith
             }
         }
 
-        private static void Draw(_VeldridGraphicsContext dc, _VeldridTextureCollection tex)
+        private static void Draw(VeldridDrawingFactory dc)
         {
-            dc.SetTarget();
-
-            dc.UpdateWvp();            
-
-            var batches = new _Drawing2DContext();
-            batches.AddPolygon(System.Drawing.Color.White, (10,10),(20,20),(10,20) );
+            var batches = dc.CreateDrawingContext();
             batches.DrawEllipse((40, 40), 50, 50, System.Drawing.Color.Blue);
-            batches.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White,2));
+            batches.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White, 2));
+            batches.DrawSprite(Matrix3x2.CreateTranslation(100, 20), _Sprite1);
 
-            dc.Clear(System.Drawing.Color.CornflowerBlue);           
+            dc.Context.SetTarget();
+            dc.Context.Clear(System.Drawing.Color.CornflowerBlue);
 
-            var t = tex.GetTextureView(tex.GetTexture(0)); 
-            dc.CurrentEffect.SetTexture(t);            
-
-            dc.Draw(batches);
-        }
+            dc.Context.UpdateWvp();            
+            dc.Context.Draw(batches);
+        }        
     }
 }

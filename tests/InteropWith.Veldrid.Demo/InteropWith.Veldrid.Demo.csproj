@@ -6,11 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\hieroglyph_sprites_by_asalga.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\hieroglyph_sprites_by_asalga.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Veldrid.SDL2" Version="4.8.0" />
     <PackageReference Include="Veldrid.StartupUtilities" Version="4.8.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
     <ProjectReference Include="..\..\src\InteropWith.Veldrid\InteropWith.Veldrid.csproj" />
   </ItemGroup>
 

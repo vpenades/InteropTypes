@@ -69,11 +69,11 @@ namespace InteropWith
             _ExtTextureSet = textureSet;
         }        
 
-        public void Bind(CommandList cmdList, uint textureIndex)
+        public void Bind(CommandList cmdList, uint resourceIndex)
         {
             if (_ExtTextureSet == null) return;
 
-            cmdList.SetGraphicsResourceSet(textureIndex, _ExtTextureSet);
+            cmdList.SetGraphicsResourceSet(resourceIndex, _ExtTextureSet);
             
         }
 

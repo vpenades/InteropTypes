@@ -107,7 +107,12 @@ namespace InteropWith
 
             var textureDescr = TextureDescription.Texture2D((uint)bitmap.Width, (uint)bitmap.Height, 1, 1, dstFmt, TextureUsage.Sampled);
             var tex = _gd.ResourceFactory.CreateTexture(ref textureDescr);
-            return _AddTexture(tex);
+
+            var texid = _AddTexture(tex);
+
+            SetData(texid, bitmap);
+
+            return texid;
         }
 
         
@@ -170,7 +175,15 @@ namespace InteropWith
 
             var tex = _textures[id];
             _Factory.SetData<T>(tex, subRect, data);
-        }        
+        }
+
+        public void SetData(int id, InteropBitmaps.SpanBitmap src)            
+        {
+            CheckDisposed();
+
+            var tex = _textures[id];
+            _Factory.SetData(tex, src);
+        }
 
         private void _Grow()
         {

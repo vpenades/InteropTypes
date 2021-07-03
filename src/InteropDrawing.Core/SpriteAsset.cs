@@ -40,6 +40,9 @@ namespace InteropDrawing
             this.Width = (int)size.X;
             this.Height = (int)size.Y;
             this.Pivot = pivot.ToNumerics();
+            
+            this._UVMin = new System.Numerics.Vector2(Left, Top);
+            this._UVMax = new System.Numerics.Vector2(Left + Width, Top + Height);
         }
 
         public SpriteAsset() { }
@@ -95,6 +98,15 @@ namespace InteropDrawing
         /// Gets the Height of the sprite, in pixels.
         /// </summary>
         public int Height { get; private set; }
+
+        private System.Numerics.Vector2 _UVMin;
+        private System.Numerics.Vector2 _UVMax;
+
+        public System.Numerics.Vector2 UV0 => _UVMin;
+        public System.Numerics.Vector2 UV1 => new System.Numerics.Vector2(_UVMax.X,_UVMin.Y);
+        public System.Numerics.Vector2 UV2 => _UVMax;
+        public System.Numerics.Vector2 UV3 => new System.Numerics.Vector2(_UVMin.X, _UVMax.Y);
+
 
         /// <summary>
         /// Gets the rendering scale of the sprite.
