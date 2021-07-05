@@ -52,9 +52,9 @@ namespace InteropWith
 
         #endregion
 
-        #region API
+        #region API        
 
-        public void SetData(Texture tex, InteropBitmaps.SpanBitmap src)            
+        public void SetData(Texture tex, InteropBitmaps.SpanBitmap src)
         {
             CheckDisposed();
 

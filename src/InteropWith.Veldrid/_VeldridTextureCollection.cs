@@ -9,7 +9,7 @@ using Veldrid;
 
 namespace InteropWith
 {
-    public class _VeldridTextureCollection : IDisposable
+    class _VeldridTextureCollection : IDisposable
     {
         #region lifecycle        
         public _VeldridTextureCollection(GraphicsDevice gd)

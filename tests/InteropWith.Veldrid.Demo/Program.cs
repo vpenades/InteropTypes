@@ -20,21 +20,13 @@ namespace InteropWith
         {
             // Create the window and the graphics device
             VeldridInit(out var window, out var graphicsDevice);
-
-            // Create a texture storage that manages textures.
-            // Textures in OpenWheels are represented with integer values.
-            // A platform-specific ITextureStorageImplementation handles texture creation,
-            // destruction and modification.
-            // var texStorage = new VeldridTextureStorage(graphicsDevice);
-
-            // Create a renderer that implements the OpenWheels.Rendering.IRenderer interface
-            // this guy actually draws everything to the backbuffer
-            var renderer = new VeldridDrawingFactory(graphicsDevice);            
+            
+            var factory = new VeldridDrawingFactory(graphicsDevice);            
 
             // We run the game loop here and do our drawing inside of it.
-            VeldridRunLoop(window, graphicsDevice, () => Draw(renderer));
+            VeldridRunLoop(window, graphicsDevice, () => Draw(factory));
             
-            renderer.Dispose();
+            factory.Dispose();
             
             graphicsDevice.Dispose();
         }
@@ -47,7 +39,7 @@ namespace InteropWith
                 Y = 100,
                 WindowWidth = 960,
                 WindowHeight = 540,
-                WindowTitle = "OpenWheels Batcher Primitives"
+                WindowTitle = "InteropDrawing Demo"
             };
 
             window = VeldridStartup.CreateWindow(ref windowCI);
@@ -70,18 +62,14 @@ namespace InteropWith
             }
         }
 
-        private static void Draw(VeldridDrawingFactory dc)
+        private static void Draw(VeldridDrawingFactory factory)
         {
-            var batches = dc.CreateDrawingContext();
-            batches.DrawEllipse((40, 40), 50, 50, System.Drawing.Color.Blue);
-            batches.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White, 2));
-            batches.DrawSprite(Matrix3x2.CreateTranslation(100, 20), _Sprite1);
+            using var dc = factory.CreateDrawing2DContext(factory.GraphicsDevice.SwapchainFramebuffer, System.Drawing.Color.CornflowerBlue);
 
-            dc.Context.SetTarget();
-            dc.Context.Clear(System.Drawing.Color.CornflowerBlue);
-
-            dc.Context.UpdateWvp();            
-            dc.Context.Draw(batches);
+            dc.DrawEllipse((40, 40), 50, 50, System.Drawing.Color.Blue);
+            dc.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White, 2));
+            dc.DrawSprite(Matrix3x2.CreateTranslation(100, 20), _Sprite1);
+            dc.DrawRectangle((150, 350), (200, 100), (System.Drawing.Color.Yellow, 3), 20, 5);
         }        
     }
 }
