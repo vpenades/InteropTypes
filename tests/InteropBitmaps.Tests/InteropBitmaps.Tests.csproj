@@ -23,9 +23,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />    
-    <PackageReference Include="SkiaSharp" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp" Version="2.80.3" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.2.20210404" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.14" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
   </ItemGroup>
 
   <ItemGroup>

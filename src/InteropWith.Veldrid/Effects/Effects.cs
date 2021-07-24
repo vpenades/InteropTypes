@@ -98,10 +98,8 @@ namespace InteropWith
 
         protected override GraphicsPipelineDescription GetPipelineDesc(in OutputDescription outputDescr)
         {
-            var rasterizer = new RasterizerStateDescription(FaceCullMode.None, PolygonFillMode.Solid, FrontFace.Clockwise, true, false);
-
-            // rasterizer = RasterizerStateDescription.Default;
-
+            var rasterizer = new RasterizerStateDescription(FaceCullMode.None, PolygonFillMode.Solid, FrontFace.Clockwise, false, false);
+            
             var gpd = new GraphicsPipelineDescription();
             gpd.BlendState = BlendStateDescription.SingleAlphaBlend;            
             gpd.DepthStencilState = DepthStencilStateDescription.Disabled;
@@ -140,6 +138,66 @@ namespace InteropWith
 
             _PrimaryTexture.Bind(cmdList, 1);
         }
+
+        #endregion
+    }
+
+    public class SolidEffect : BaseEffect
+    {
+        #region lifecycle
+        public SolidEffect(GraphicsDevice gdev) : base(gdev)
+        {
+            // uniforms
+
+            _ViewMatrix = _Disposables.Record(new _EffectUniform<Matrix4x4>(gdev, "XformView", ShaderStages.Vertex));
+            _ProjMatrix = _Disposables.Record(new _EffectUniform<Matrix4x4>(gdev, "XformProj", ShaderStages.Vertex));
+
+            // shader
+
+            _Shader = _Disposables.Record(new _EffectShader(VeldridShaders.SolidShader.CreateShader(gdev.ResourceFactory), _ViewMatrix, _ProjMatrix));            
+        }
+
+        #endregion
+
+        #region data        
+
+        private _EffectShader _Shader;        
+
+        private _EffectUniform<Matrix4x4> _ViewMatrix;
+        private _EffectUniform<Matrix4x4> _ProjMatrix;
+
+        #endregion        
+
+        #region API
+
+        protected override GraphicsPipelineDescription GetPipelineDesc(in OutputDescription outputDescr)
+        {
+            var rasterizer = RasterizerStateDescription.Default;
+
+            var gpd = new GraphicsPipelineDescription();
+            gpd.BlendState = BlendStateDescription.SingleOverrideBlend;
+            gpd.DepthStencilState = DepthStencilStateDescription.DepthOnlyLessEqual;
+            gpd.RasterizerState = rasterizer;
+            gpd.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            gpd.Outputs = outputDescr;
+
+            _Shader.FillPipelineDesc(ref gpd);
+
+            return gpd;
+        }
+
+        public void SetViewMatrix(Matrix4x4 matrix) { _ViewMatrix.Update(ref matrix); }
+
+        public void SetProjMatrix(Matrix4x4 matrix) { _ProjMatrix.Update(ref matrix); }
+
+        public void Bind(CommandList cmdList, in OutputDescription outDesc)
+        {
+            var pipeline = UsePipeline(outDesc);
+
+            cmdList.SetPipeline(pipeline);
+
+            _Shader.BindInputs(cmdList);
+        }        
 
         #endregion
     }

@@ -16,7 +16,7 @@ using CVDEPTHTYPE = OpenCvSharp.MatType;
 namespace InteropVision
 {
     partial class MarkersContext
-    {
+    {        
         public class ArucoEstimator :
             PointerBitmapInput.IInference<MarkersContext>,
             IInferenceContext<PointerBitmap, MarkersContext>,

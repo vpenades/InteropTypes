@@ -9,15 +9,14 @@ using Veldrid;
 namespace InteropWith
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct Vertex
+    struct Vertex2D
     {
-        public static implicit operator Vertex(Vector2 p)
+        public static implicit operator Vertex2D(Vector2 p)
         {
-            return new Vertex(p, UInt32.MaxValue);
-        }
-            
+            return new Vertex2D(p, UInt32.MaxValue);
+        }           
 
-        public Vertex(InteropDrawing.Point2 pos, UInt32 color)
+        public Vertex2D(InteropDrawing.Point2 pos, UInt32 color)
         {
             Position = new Vector3(pos.X, pos.Y, -1);
             Color = color;
@@ -35,6 +34,23 @@ namespace InteropWith
                 new VertexElementDescription("Position", VertexElementSemantic.Position, VertexElementFormat.Float3),
                 new VertexElementDescription("Color", VertexElementSemantic.Color, VertexElementFormat.Byte4_Norm),
                 new VertexElementDescription("TextureCoordinate", VertexElementSemantic.TextureCoordinate,VertexElementFormat.Float2)
+                );
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct Vertex3D
+    {
+        public Vector3 Position;
+        public Vector3 Normal;
+        public UInt32 Color;
+        public static VertexLayoutDescription GetDescription()
+        {
+            return new VertexLayoutDescription
+                (
+                new VertexElementDescription("Position", VertexElementSemantic.Position, VertexElementFormat.Float3),
+                new VertexElementDescription("Normal", VertexElementSemantic.Normal, VertexElementFormat.Float3),
+                new VertexElementDescription("Color", VertexElementSemantic.Color, VertexElementFormat.Byte4_Norm)
                 );
         }
     }

@@ -22,7 +22,7 @@ namespace InteropDrawing
     /// </remarks>
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [System.Diagnostics.DebuggerDisplay("{X} {Y}")]
-    public struct Point2
+    public readonly struct Point2
     {
         #region implicit
 
@@ -55,8 +55,10 @@ namespace InteropDrawing
 
         #region data
 
-        public float X;
-        public float Y;
+        public static readonly Point2 Zero = new Point2(0, 0);
+
+        public readonly float X;
+        public readonly float Y;
 
         #endregion
 
@@ -83,6 +85,12 @@ namespace InteropDrawing
         #endregion
 
         #region API
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point2 WithX(float x) { return new Point2(x, this.Y); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point2 WithY(float y) { return new Point2(this.X, y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public VECTOR2 ToNumerics() { return new VECTOR2(X, Y); }
@@ -166,7 +174,7 @@ namespace InteropDrawing
     /// </remarks>
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [System.Diagnostics.DebuggerDisplay("{X} {Y} {Z}")]
-    public struct Point3
+    public readonly struct Point3
     {
         #region implicit
         
@@ -190,9 +198,11 @@ namespace InteropDrawing
 
         #region data
 
-        public float X;
-        public float Y;
-        public float Z;
+        public static readonly Point3 Zero = new Point3(0, 0, 0);
+
+        public readonly float X;
+        public readonly float Y;
+        public readonly float Z;
 
         #endregion
 
@@ -216,6 +226,15 @@ namespace InteropDrawing
         #endregion
 
         #region API
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3 WithX(float x) { return new Point3(x, this.Y, this.Z); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3 WithY(float y) { return new Point3(this.X, y, this.Z); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3 WithZ(float z) { return new Point3(this.X, this.Y, z); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3 Normalized() { return VECTOR3.Normalize(new VECTOR3(X, Y, Z)); }

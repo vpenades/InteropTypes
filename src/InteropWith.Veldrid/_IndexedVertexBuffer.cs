@@ -34,10 +34,20 @@ namespace InteropWith
             where TVertex:unmanaged
         {
             _EnsureVertexBufferSize<TVertex>(vertexBuffer.Length);
-            _EnsureIndexBufferSize(indexBuffer.Length);
+            _EnsureIndexBufferSize(indexBuffer.Length);            
 
             _Device.UpdateBuffer(_vertexBuffer, 0, ref vertexBuffer[0], (uint)(vertexBuffer.Length * sizeof(TVertex)));
             _Device.UpdateBuffer(_indexBuffer, 0, ref indexBuffer[0], (uint)(indexBuffer.Length * sizeof(int)));            
+        }
+
+        public unsafe void SetData<TVertex>(CommandList cmd, Span<TVertex> vertexBuffer, Span<int> indexBuffer)
+            where TVertex : unmanaged
+        {
+            _EnsureVertexBufferSize<TVertex>(vertexBuffer.Length);
+            _EnsureIndexBufferSize(indexBuffer.Length);
+
+            cmd.UpdateBuffer(_vertexBuffer, 0, ref vertexBuffer[0], (uint)(vertexBuffer.Length * sizeof(TVertex)));
+            cmd.UpdateBuffer(_indexBuffer, 0, ref indexBuffer[0], (uint)(indexBuffer.Length * sizeof(int)));
         }
 
         public void Bind(CommandList cmdList)

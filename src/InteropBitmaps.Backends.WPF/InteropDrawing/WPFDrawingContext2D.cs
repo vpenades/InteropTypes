@@ -252,8 +252,7 @@ namespace InteropDrawing.Backends
                 1
                 );
 
-            origin.X -= (float)fmtText.Width * 0.5f;
-            origin.Y -= (float)fmtText.Height * 0.5f;
+            origin -= new Point2((float)fmtText.Width, (float)fmtText.Height) * 0.5f;
 
             _Context.DrawText(fmtText, origin.ToDevicePoint());
         }

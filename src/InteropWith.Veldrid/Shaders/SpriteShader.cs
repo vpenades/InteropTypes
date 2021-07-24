@@ -63,7 +63,7 @@ namespace InteropWith.VeldridShaders
             var fragmentShader = VeldridHelper.LoadShader(factory, "SpriteShaderSolid", Veldrid.ShaderStages.Fragment, nameof(FS_Solid));
 
             return new Veldrid.ShaderSetDescription(
-                new[] { Vertex.GetDescription() },
+                new[] { Vertex2D.GetDescription() },
                 new[] { vertexShader, fragmentShader });
         }
 
@@ -73,7 +73,7 @@ namespace InteropWith.VeldridShaders
             var fragmentShader = VeldridHelper.LoadShader(factory, "SpriteShaderTextured", Veldrid.ShaderStages.Fragment, nameof(FS_Textured));
 
             return new Veldrid.ShaderSetDescription(
-                new[] { Vertex.GetDescription() },
+                new[] { Vertex2D.GetDescription() },
                 new[] { vertexShader, fragmentShader });
         }
     }

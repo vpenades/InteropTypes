@@ -20,77 +20,87 @@ namespace InteropWith
 
             GraphicsDevice = device;
 
-            CreateResources();
-            
+            _SpriteEffect = _Disposables.Record(new SpriteEffect(GraphicsDevice));
+            _SolidEffect = _Disposables.Record(new SolidEffect(GraphicsDevice));
+
             // We lazily create and cache texture views and resource sets when required.
             // When a texture is destroyed the matching cached values are destroyed as well.
             // _textureStorage.TextureDestroyed += (s, a) => RemoveTextureResourceSet(a.TextureId);
-            _Textures = new _VeldridTextureCollection(device);
-        }
-
-        private void CreateResources()
-        {
-            _CommandList = _Disposables.Record(GraphicsDevice.ResourceFactory.CreateCommandList());
-            _SpriteEffect = _Disposables.Record(new SpriteEffect(GraphicsDevice));
-            _IndexedVertexBuffer = _Disposables.Record(new _IndexedVertexBuffer(GraphicsDevice));
-        }
+            _Textures = _Disposables.Record(new _VeldridTextureCollection(device));
+        }        
 
         public void Dispose()
         {
-            _Textures?.Dispose();
-            _Textures = null;
+            if (GraphicsDevice != null)
+            {
+                this.GraphicsDevice.WaitForIdle();                            
 
-            _Disposables.Dispose();
+                _Disposables.Dispose();
+
+                _Context2DPool = null;
+                _Context3DPool = null;
+
+                GraphicsDevice = null;
+            }
         }
 
         #endregion
 
         #region data
 
-        public GraphicsDevice GraphicsDevice { get; }
+        public GraphicsDevice GraphicsDevice { get; private set; }
 
-        private readonly _DisposablesRecorder _Disposables = new _DisposablesRecorder();
+        internal readonly _DisposablesRecorder _Disposables = new _DisposablesRecorder();
 
         private SpriteEffect _SpriteEffect;
-        private _VeldridTextureCollection _Textures;
-
-        private CommandList _CommandList;        
-        private _IndexedVertexBuffer _IndexedVertexBuffer;        
+        private SolidEffect _SolidEffect;
+        private _VeldridTextureCollection _Textures;        
 
         private readonly Dictionary<Object, (int, Vector2)> _SpriteTextures = new Dictionary<object, (int, Vector2)>();
 
-        private readonly System.Collections.Concurrent.ConcurrentBag<_VeldridDrawing2DContext> _ContextPool = new System.Collections.Concurrent.ConcurrentBag<_VeldridDrawing2DContext>();
+        private System.Collections.Concurrent.ConcurrentBag<_VeldridDrawing2DContext> _Context2DPool = new System.Collections.Concurrent.ConcurrentBag<_VeldridDrawing2DContext>();
+        private System.Collections.Concurrent.ConcurrentBag<_VeldridDrawing3DContext> _Context3DPool = new System.Collections.Concurrent.ConcurrentBag<_VeldridDrawing3DContext>();
 
         #endregion
 
         #region API
 
-        internal SpriteEffect CurrentEffect => _SpriteEffect;        
+        internal SpriteEffect SpriteEffect => _SpriteEffect;
+        internal SolidEffect SolidEffect => _SolidEffect;
 
-        public IDrawingContext2D CreateDrawing2DContext(Framebuffer dstFrame, System.Drawing.Color? fillColor)
+        public IVeldridDrawingContext2D CreateDrawing2DContext(Framebuffer dstFrame)
         {
-            if (!_ContextPool.TryTake(out var dc)) dc = new _VeldridDrawing2DContext(this);
+            if (!_Context2DPool.TryTake(out var dc)) dc = new _VeldridDrawing2DContext(this);
 
-            dc.Initialize(dstFrame, fillColor);
+            dc.Initialize(dstFrame);
+            return dc;
+        }        
+
+        public IVeldridDrawingContext3D CreateDrawing3DContext(Framebuffer dstFrame, Matrix4x4 view, Matrix4x4 projection)
+        {
+            if (!_Context3DPool.TryTake(out var dc)) dc = new _VeldridDrawing3DContext(this);
+
+            dc.Initialize(dstFrame, view,  size => projection);
             return dc;
         }
 
-        internal void Draw(_VeldridDrawing2DContext primitives)
+        public IVeldridDrawingContext3D CreateDrawing3DContext(Framebuffer dstFrame, Matrix4x4 view, float fov, (float Near, float Far) depthPlanes)
         {
-            primitives.CopyTo(_IndexedVertexBuffer);
+            if (!_Context3DPool.TryTake(out var dc)) dc = new _VeldridDrawing3DContext(this);
 
-            _CommandList.Begin();
+            Matrix4x4 projFunc(Vector2 size)
+            {
+                return Matrix4x4.CreatePerspectiveFieldOfView(fov, size.X / size.Y, depthPlanes.Near, depthPlanes.Far);
+            };
 
-            primitives.DrawTo(_CommandList, _IndexedVertexBuffer);
+            dc.Initialize(dstFrame, view, projFunc);
 
-            _CommandList.End();
-            GraphicsDevice.SubmitCommands(_CommandList);
+            return dc;
         }
 
-        internal void _ReturnDrawing2DContext(_VeldridDrawing2DContext dc)
-        {
-            _ContextPool.Add(dc);
-        }
+        internal void _Return(_VeldridDrawing2DContext dc) { _Context2DPool.Add(dc); }
+
+        internal void _Return(_VeldridDrawing3DContext dc) { _Context3DPool.Add(dc); }
 
         internal (int, Vector2) _GetTexture(Object textureSource)
         {

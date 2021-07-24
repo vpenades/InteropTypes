@@ -184,7 +184,12 @@ namespace InteropDrawing
             xform = XFORM2.CreateScale(xflip, yflip) * xform;
 
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
-        }        
+        }
+
+        public static void DrawPath(this IDrawing2D dc, XFORM2 xform, string path, ColorStyle style)
+        {
+            Parametric.PathParser.DrawPath(dc, xform, path, style);
+        }
 
         #endregion
 

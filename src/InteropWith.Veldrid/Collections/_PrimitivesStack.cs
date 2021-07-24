@@ -6,11 +6,12 @@ using InteropDrawing;
 
 namespace InteropWith
 {
-    class _PrimitivesStack
+    class _PrimitivesStack<TVertex>
+        where TVertex: unmanaged
     {
         #region data
 
-        private Vertex[] _VertexArray = Array.Empty<Vertex>();
+        private TVertex[] _VertexArray = Array.Empty<TVertex>();
         private int _VertexCount;
 
         private int[] _IndicesArray = Array.Empty<int>();
@@ -53,18 +54,10 @@ namespace InteropWith
             int idx = _UseBatchIndex(offset, textureId);
 
             _BatchArray[idx].Count++;
-        }
+        }        
 
-        private int _AddVertex(Point2 p, UInt32 c)
+        private int _AddVertex(TVertex v)
         {
-            var v = new Vertex(p, c);
-            return _AddVertex(v);
-        }
-
-        private int _AddVertex(Vertex v)
-        {
-            var o = _IndicesCount;
-
             var idx = _VertexCount; // we can look back up to 6 vertices to find a match
 
             if (_VertexArray.Length <= idx)
@@ -87,28 +80,26 @@ namespace InteropWith
             _IndicesArray[_IndicesCount++] = idx;
         }
 
-        public unsafe void AddPolygon(ReadOnlySpan<Point2> points, System.Drawing.Color color, int textureId)
+        public unsafe void AddPolygon(ReadOnlySpan<TVertex> points, int texIdx)
         {
-            var c = (UInt32)color.ToArgb();
-
             Span<int> indices = stackalloc int[points.Length];
 
             for (int i = 0; i < indices.Length; ++i)
             {
-                indices[i] = _AddVertex(points[i], c);
+                indices[i] = _AddVertex(points[i]);
             }
 
             for (int i = 2; i < points.Length; ++i)
             {
-                _AddTriangle(_IndicesCount, textureId);
+                _AddTriangle(_IndicesCount, texIdx);
 
                 _AddIndex(indices[0]);
+                _AddIndex(indices[i - 0]);
                 _AddIndex(indices[i - 1]);
-                _AddIndex(indices[i + 0]);
             }
         }
 
-        public unsafe void AddQuad(in Vertex v0, in Vertex v1, in Vertex v2, in Vertex v3, int texIdx)
+        public unsafe void AddQuad(in TVertex v0, in TVertex v1, in TVertex v2, in TVertex v3, int texIdx)
         {
             Span<int> indices = stackalloc int[4];
 
