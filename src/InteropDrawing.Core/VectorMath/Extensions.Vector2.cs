@@ -65,6 +65,25 @@ namespace InteropDrawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 LerpTo(this Vector2 a, Vector2 b, float amount) { return Vector2.Lerp(a, b, amount); }
 
+
+        public static Vector2 LerpCurve(this (Vector2 P1, Vector2 P2, Vector2 P3, Vector2 P4) curve, float amount)
+        {
+            var squared = amount * amount;
+            var cubed = squared * amount;
+
+            // calculate weights
+            var w4 = (3.0f * squared) - (2.0f * cubed);
+            var w1 = 1 - w4;
+            var w3 = cubed - squared;
+            var w2 = w3 - squared + amount;
+
+            // convert p2 and p3 to tangent vectors:
+            var t12 = curve.P2 - curve.P1;
+            var t34 = curve.P4 - curve.P3;
+
+            return curve.P1 * w1 + t12 * w2 + t34 * w3 + curve.P4 * w4;
+        }
+
         #endregion
 
         #region interaction with collections

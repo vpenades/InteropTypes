@@ -94,6 +94,24 @@ namespace InteropDrawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Lerp(this (Vector3 A, Vector3 B) pair, Single amount) { return Vector3.Lerp(pair.A, pair.B, amount); }
 
+        public static Vector3 LerpCurve(this (Vector3 P1, Vector3 P2, Vector3 P3, Vector3 P4) curve, float amount)
+        {
+            var squared = amount * amount;
+            var cubed = squared * amount;
+
+            // calculate weights
+            var w4 = (3.0f * squared) - (2.0f * cubed);
+            var w1 = 1 - w4;
+            var w3 = cubed - squared;
+            var w2 = w3 - squared + amount;
+
+            // convert p2 and p3 to tangent vectors:
+            var t12 = curve.P2 - curve.P1;
+            var t34 = curve.P4 - curve.P3;
+
+            return curve.P1 * w1 + t12 * w2 + t34 * w3 + curve.P4 * w4;
+        }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Angle(this (Vector3 A, Vector3 B) pair)

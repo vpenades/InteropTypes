@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -9,13 +10,14 @@ using System.Text.RegularExpressions;
  * https://github.com/regebro/svg.path/blob/master/src/svg/path/parser.py
  * https://github.com/timrwood/SVGPath/blob/master/SVGPath/SVGPath.swift
  * https://github.com/wwwMADwww/ManuPathLib
+ * https://www.w3.org/TR/SVG/paths.html
  */
 
 namespace InteropDrawing.Parametric
 {
     public static class PathParser
     {
-        public static void DrawPath(IDrawing2D dc, System.Numerics.Matrix3x2 xform, string path, ColorStyle style)
+        public static void DrawPath(IDrawing2D dc, Matrix3x2 xform, string path, ColorStyle style)
         {
             var shapes = ParseShapes(path);
             
@@ -32,10 +34,8 @@ namespace InteropDrawing.Parametric
 
                 if (style.HasFill) dc.DrawPolygon(points, style.FillColor);
                 if (style.HasOutline) dc.DrawLines(points, style.OutlineWidth, style.OutlineColor);
-            }
-            
+            }            
         }
-
 
         public static IEnumerable<Point2[]> ParseShapes(string path)
         {
@@ -71,7 +71,7 @@ namespace InteropDrawing.Parametric
                             if (sequence.Count > 0) yield return sequence.ToArray();
                             sequence.Clear();
 
-                            _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
 
                             head = sequence[0];
 
@@ -81,6 +81,14 @@ namespace InteropDrawing.Parametric
                     case CommandType.LineTo:
                         {
                             tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            break;
+                        }
+
+                    case CommandType.CurveTo:
+                        {
+                            sequence.Add(tail);
+
+                            tail = _ApplyCurveTo(sequence, tail, values, cmd.IsRelative);
                             break;
                         }
 
@@ -107,12 +115,40 @@ namespace InteropDrawing.Parametric
             return tail;
         }
 
+        private static Point2 _ApplyCurveTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
+        {
+            var p1 = tail.ToNumerics();            
 
-        // https://www.w3.org/TR/SVG/paths.html        
-        // lowercase: relative values
-        // uppercase: absolute values
+            for (int i = 0; i < src.Count; i += 6)
+            {                
+                var p2 = new Vector2(src[i + 0], src[i + 1]);
+                if (srcIsRelative) p2 += p1;
 
-        
+                var p3 = new Vector2(src[i + 2], src[i + 3]);
+                if (srcIsRelative) p3 += p2;
+
+                var p4 = new Vector2(src[i + 4], src[i + 5]);
+                if (srcIsRelative) p4 += p3;
+
+                _AddCurvePoints(dst, p1, p2, p3, p4);
+
+                p1 = p4;
+                tail = p4;
+            }
+
+            return tail;
+        }
+
+        private static void _AddCurvePoints(List<Point2> dst, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {                
+                var f = (float)i / 5f;
+                var p = (p1, p2, p3, p4).LerpCurve(f);
+                dst.Add(p);
+            }
+        }
+
         enum CommandType
         {
             Undefined = 0,
@@ -132,6 +168,13 @@ namespace InteropDrawing.Parametric
             Arc = 'A',                  // A (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+            
         }
 
+        /// <summary>
+        /// Represents a segment withing a SVG Path string.
+        /// </summary>
+        /// <remarks>
+        /// The segment starts with the command character (M, L, C, Z, etc),
+        /// and follows with a sequence of floating point values.
+        /// </remarks>
         readonly struct PathSegment
         {
             #region lifecycle
