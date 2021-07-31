@@ -11,6 +11,8 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing
 {
+    [System.ComponentModel.Browsable(false)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     static partial class _PrivateExtensions
     {
         #region drawing

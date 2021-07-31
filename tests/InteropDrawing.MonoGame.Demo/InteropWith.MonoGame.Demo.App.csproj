@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -13,20 +13,23 @@
     <RootNamespace>InteropDrawing</RootNamespace>
   </PropertyGroup>
   
-  <ItemGroup>
-    <None Remove="Assets\*.png" />
+  <ItemGroup>    
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Content Include="Assets\*.png" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest"/>    
+  </ItemGroup>  
+  
+  <ItemGroup>
+    <Compile Include="..\Shared\DrawableScenes.cs" Link="DrawableScenes.cs" />
+  </ItemGroup>  
   
   <ItemGroup>    
     <MonoGameContentReference Include="Content\Content.mgcb" />

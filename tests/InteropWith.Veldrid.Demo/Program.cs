@@ -7,7 +7,7 @@ namespace InteropWith
     {
         static void Main(string[] args)
         {
-            ProgramVR.Run(args);
+            ProgramWin.Run(args);
         }
     }
 }

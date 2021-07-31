@@ -10,6 +10,10 @@
   <ItemGroup>
     <None Remove="Assets\PunkRun.png" />
     <None Remove="Assets\Tiles.jpg" />    
+  </ItemGroup>  
+
+  <ItemGroup>
+    <Compile Include="..\Shared\DrawableScenes.cs" Link="DrawableScenes.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,10 +10,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\hieroglyph_sprites_by_asalga.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Assets\hieroglyph_sprites_by_asalga.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\DrawableScenes.cs" Link="DrawableScenes.cs" />
+  </ItemGroup>  
 
   <ItemGroup>
     <PackageReference Include="Veldrid.SDL2" Version="4.8.0" />

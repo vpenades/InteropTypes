@@ -77,6 +77,8 @@ namespace InteropWith
 
         private static Vector3 _Camera = Vector3.Zero;
 
+        private static _Sprites2D _AnimatedScene = new _Sprites2D();
+
         private static void Draw(VeldridDrawingFactory factory)
         {
             var buffer = factory.GraphicsDevice.SwapchainFramebuffer;
@@ -106,6 +108,8 @@ namespace InteropWith
                 dc2.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White, 2));
                 dc2.DrawSprite(Matrix3x2.CreateTranslation(100, 20), _Sprite1);
                 dc2.DrawRectangle((150, 350), (200, 100), (System.Drawing.Color.Yellow, 3), 20, 5);
+
+                _AnimatedScene.DrawTo(dc2);
             }
         }
     }

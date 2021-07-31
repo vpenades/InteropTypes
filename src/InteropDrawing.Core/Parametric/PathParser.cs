@@ -43,9 +43,10 @@ namespace InteropDrawing.Parametric
 
             var values = new List<float>();
             var sequence = new List<Point2>();
-            
-            var tail = Point2.Zero;
-            var head = tail;
+
+            var head = Point2.Zero; // beginning of the shape, used to close with Z.
+            var tcpt = Point2.Zero; // 2nd control point, used for smooth curves.
+            var tail = Point2.Zero; // current point.
 
             foreach (var cmd in commands)
             {
@@ -71,24 +72,48 @@ namespace InteropDrawing.Parametric
                             if (sequence.Count > 0) yield return sequence.ToArray();
                             sequence.Clear();
 
-                            tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
 
                             head = sequence[0];
 
                             break;
-                        }                                        
+                        }
 
-                    case CommandType.LineTo:
+                    case CommandType.LineHorizontalTo:
                         {
-                            tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            for (int i = values.Count; i > 0; i -= 2) { values.Insert(i, cmd.IsRelative ? 0 : tail.Y); }
+
+                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
                             break;
                         }
 
-                    case CommandType.CurveTo:
+                    case CommandType.LineVerticalTo:
+                        {
+                            for (int i = values.Count-1; i >= 0; i -= 2) { values.Insert(i, cmd.IsRelative ? 0 : tail.X); }
+
+                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            break;
+                        }
+
+                    case CommandType.LineTo:
+                        {
+                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            break;
+                        }
+
+                    case CommandType.CubicCurveTo:
                         {
                             sequence.Add(tail);
 
-                            tail = _ApplyCurveTo(sequence, tail, values, cmd.IsRelative);
+                            (tcpt,tail) = _ApplyCurveTo(sequence, tail, values, cmd.IsRelative);
+                            break;
+                        }
+
+                    case CommandType.SmoothCubicCurveTo:
+                        {
+                            sequence.Add(tail);
+
+                            (tcpt, tail) = _ApplySmoothCurveTo(sequence, tcpt.ToNumerics(), tail, values, cmd.IsRelative);
                             break;
                         }
 
@@ -115,9 +140,11 @@ namespace InteropDrawing.Parametric
             return tail;
         }
 
-        private static Point2 _ApplyCurveTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
+        private static (Point2,Point2) _ApplyCurveTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
         {
-            var p1 = tail.ToNumerics();            
+            var p1 = tail.ToNumerics();
+
+            var mid = p1;
 
             for (int i = 0; i < src.Count; i += 6)
             {                
@@ -133,10 +160,35 @@ namespace InteropDrawing.Parametric
                 _AddCurvePoints(dst, p1, p2, p3, p4);
 
                 p1 = p4;
+                mid = p3;
                 tail = p4;
             }
 
-            return tail;
+            return (mid,tail);
+        }
+
+        private static (Point2, Point2) _ApplySmoothCurveTo(List<Point2> dst, Vector2 p2, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
+        {
+            var p1 = tail.ToNumerics();            
+
+            for (int i = 0; i < src.Count; i += 4)
+            {
+                p2 = p1 + (p1 - p2); // reflect            
+
+                var p3 = new Vector2(src[i + 2], src[i + 3]);
+                if (srcIsRelative) p3 += p2;
+
+                var p4 = new Vector2(src[i + 4], src[i + 5]);
+                if (srcIsRelative) p4 += p3;
+
+                _AddCurvePoints(dst, p1, p2, p3, p4);
+
+                p2 = p3;
+                p1 = p4;                
+                tail = p4;
+            }
+
+            return (p2, tail);
         }
 
         private static void _AddCurvePoints(List<Point2> dst, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
@@ -159,8 +211,8 @@ namespace InteropDrawing.Parametric
             LineHorizontalTo = 'H',     // H x+
             LineVerticalTo = 'V',       // V y+
 
-            CurveTo = 'C',                  // C (x1 y1 x2 y2 x y)+
-            SmoothCurveTo = 'S',            // S (x2 y2 x y)+
+            CubicCurveTo = 'C',                  // C (x1 y1 x2 y2 x y)+
+            SmoothCubicCurveTo = 'S',            // S (x2 y2 x y)+
 
             QuadraticCurveTo = 'Q',         // Q (x1 y1 x y)+
             SmoothQuadraticCurveTo = 'T',   // T (x y)+

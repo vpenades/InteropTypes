@@ -11,8 +11,8 @@
   <Import Project="..\Version.props" />
 
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4" Version="4.5.2.20210404" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.2.20210404" />
+    <PackageReference Include="OpenCvSharp4" Version="4.5.3.20210725" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.3.20210725" />
   </ItemGroup>
 
   <ItemGroup>

@@ -58,14 +58,34 @@ namespace InteropDrawing
 
         public static Single Angle(this Vector2 v) { return MathF.Atan2(v.Y, v.X); }
 
+        public static Single Angle(this (Vector2 a, Vector2 b) vectors)
+        {
+            var av = Vector2.Normalize(vectors.a);
+            var bv = Vector2.Normalize(vectors.b);
+            var dot = Vector2.Dot(av,bv).Clamp(-1,1);
+            return MathF.Acos(dot);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Cross(this Vector2 a, Vector2 b) { return a.X * b.Y - a.Y * b.X; }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 LerpTo(this Vector2 a, Vector2 b, float amount) { return Vector2.Lerp(a, b, amount); }
+        public static Vector2 Lerp(this (Vector2 A, Vector2 B) line, Single amount) { return Vector2.Lerp(line.A, line.B, amount); }
 
+        /// <summary>
+        /// Interpolates over a cuadratic curve defined by 3 points
+        /// </summary>
+        public static Vector2 LerpCurve(this (Vector2 P1, Vector2 P2, Vector2 P3) curve, float amount)
+        {
+            var p12 = Vector2.Lerp(curve.P1, curve.P2, amount);
+            var p23 = Vector2.Lerp(curve.P2, curve.P3, amount);
+            return Vector2.Lerp(p12, p23, amount);
+        }
 
+        /// <summary>
+        /// Interpolates over a cubic curve defined by 4 points
+        /// </summary>
         public static Vector2 LerpCurve(this (Vector2 P1, Vector2 P2, Vector2 P3, Vector2 P4) curve, float amount)
         {
             var squared = amount * amount;

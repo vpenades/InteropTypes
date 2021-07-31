@@ -89,10 +89,10 @@ namespace InteropDrawing
         public static Vector3 PerpendicularAxis(this Vector3 v)
         {
             return Vector3.Cross(v, v.DominantAxis() == 0 ? Vector3.UnitY : Vector3.UnitX);
-        }
+        }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3 Lerp(this (Vector3 A, Vector3 B) pair, Single amount) { return Vector3.Lerp(pair.A, pair.B, amount); }
+        public static Vector3 Lerp(this (Vector3 A, Vector3 B) line, Single amount) { return Vector3.Lerp(line.A, line.B, amount); }        
 
         public static Vector3 LerpCurve(this (Vector3 P1, Vector3 P2, Vector3 P3, Vector3 P4) curve, float amount)
         {

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Graphics" Version="6.0.100-preview.6.299" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+  </ItemGroup>
+
+</Project>
