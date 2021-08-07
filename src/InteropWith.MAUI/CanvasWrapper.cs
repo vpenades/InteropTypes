@@ -35,37 +35,48 @@ namespace InteropWith.MAUI
         public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
         {
             _SetColorStyle(style);
-            _Canvas.DrawEllipse(center.X, center.Y, width, height);
+
+            if (style.HasFill)
+            {
+                _Canvas.FillEllipse(center.X, center.Y, width, height);
+            }
+
+            if (style.HasOutline)
+            {
+                _Canvas.DrawEllipse(center.X, center.Y, width, height);
+            }            
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
-            _SetLineStyle(style);
-
-            var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y);
-
-            for (int i = 1; i < points.Length; ++i)
+            using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
             {
-                path.LineTo(points[i].X, points[i].Y);
-            }            
+                for (int i = 1; i < points.Length; ++i)
+                {
+                    path.LineTo(points[i].X, points[i].Y);
+                }
 
-            _Canvas.DrawPath(path);
+                _SetLineStyle(style);
+                _Canvas.DrawPath(path);
+            }
         }
 
         public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
         {
-            _SetColorStyle(style);
-
-            var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y);            
-
-            for(int i=1; i < points.Length; ++i)
+            using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
             {
-                path.LineTo(points[i].X, points[i].Y);
+                for (int i = 1; i < points.Length; ++i)
+                {
+                    path.LineTo(points[i].X, points[i].Y);
+                }
+
+                path.Close();
+
+                _SetColorStyle(style);
+
+                if (style.HasFill) _Canvas.FillPath(path, Microsoft.Maui.Graphics.WindingMode.NonZero);
+                if (style.HasOutline) _Canvas.DrawPath(path);
             }
-
-            path.Close();
-
-            _Canvas.DrawPath(path);
         }
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
