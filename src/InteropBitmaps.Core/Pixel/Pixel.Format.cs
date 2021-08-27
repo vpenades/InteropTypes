@@ -194,8 +194,11 @@ namespace InteropBitmaps
                         break;
                     case 4:
                         if (typeof(TPixel) == typeof(BGRA32)) return BGRA32.Format;
+                        if (typeof(TPixel) == typeof(BGRA32P)) return BGRA32P.Format;
                         if (typeof(TPixel) == typeof(RGBA32)) return RGBA32.Format;
+                        if (typeof(TPixel) == typeof(RGBA32P)) return RGBA32P.Format;
                         if (typeof(TPixel) == typeof(ARGB32)) return ARGB32.Format;
+                        if (typeof(TPixel) == typeof(ARGB32P)) return ARGB32P.Format;
                         if (typeof(TPixel) == typeof(LuminanceScalar)) return LuminanceScalar.Format;
                         break;
                     case 24:
@@ -314,6 +317,10 @@ namespace InteropBitmaps
             }
 
             public bool HasAlpha => Element0.IsAlpha | Element1.IsAlpha | Element2.IsAlpha | Element3.IsAlpha;
+
+            public bool HasPremul => Element0.IsPremul | Element1.IsPremul | Element2.IsPremul | Element3.IsPremul;
+
+            public bool HasAlphaOrPremul => HasAlpha | HasPremul;
 
             #endregion
 

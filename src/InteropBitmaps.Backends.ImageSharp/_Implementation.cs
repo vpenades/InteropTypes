@@ -89,8 +89,11 @@ namespace InteropBitmaps
                 case Pixel.RGB24.Code: return new Image<Rgb24>(width, height);
                 case Pixel.BGR24.Code: return new Image<Bgr24>(width, height);
 
+                case Pixel.RGBA32P.Code:
                 case Pixel.RGBA32.Code: return new Image<Rgba32>(width, height);
+                case Pixel.BGRA32P.Code:
                 case Pixel.BGRA32.Code: return new Image<Bgra32>(width, height);
+                // case Pixel.ARGB32P.Code:
                 case Pixel.ARGB32.Code: return new Image<Argb32>(width, height);
 
                 default: throw new NotImplementedException();

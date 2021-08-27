@@ -117,8 +117,15 @@ namespace InteropBitmaps
         public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
         public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
 
-        public Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged
+        /// <summary>
+        /// Gets the underlaying buffer as a <typeparamref name="TPixel"/> memory buffer.
+        /// </summary>
+        /// <typeparam name="TPixel">The pixel format</typeparam>
+        /// <returns>A memory buffer</returns>
+        public unsafe Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged
         {
+            if ((this.Info.StepByteSize % sizeof(TPixel)) != 0) throw new ArgumentException("The bitmap stride is not a multiple of TPixel size.", nameof(TPixel));
+
             return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory;
         }
         
@@ -180,6 +187,11 @@ namespace InteropBitmaps
             if (!discardPixels) newBmp.SetPixels(0, 0, bmp);
             bmp = newBmp;
             return true;
+        }
+
+        public MemoryBitmap ToMemoryBitmap(Pixel.Format? fmtOverride = null)
+        {
+            return this.AsSpanBitmap().ToMemoryBitmap(fmtOverride);
         }
 
         #endregion

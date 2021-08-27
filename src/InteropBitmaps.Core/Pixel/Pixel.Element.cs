@@ -153,6 +153,21 @@ namespace InteropBitmaps
                     }
                 }
 
+                public bool IsPremul
+                {
+                    get
+                    {
+                        switch (Id)
+                        {                            
+                            case PEF.Premul4: return true;
+                            case PEF.Premul8: return true;
+                            case PEF.Premul16: return true;
+                            case PEF.Premul32F: return true;
+                            default: return false;
+                        }
+                    }
+                }
+
                 public bool IsRed
                 {
                     get

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace InteropWith
 {    
@@ -7,7 +8,8 @@ namespace InteropWith
     {
         static void Main(string[] args)
         {
-            ProgramWin.Run(args);
+            if (args.Contains("-VR")) ProgramVR.Run(args);
+            else ProgramWin.Run(args);
         }
     }
 }

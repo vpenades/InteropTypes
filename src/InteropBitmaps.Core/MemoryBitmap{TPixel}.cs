@@ -193,7 +193,7 @@ namespace InteropBitmaps
             var (offset, info) = _Info.Slice(rect);
             var memory = this._Data.Slice(offset, info.BitmapByteSize);
             return new MemoryBitmap<TPixel>(memory, info);
-        }        
+        }
         
         public TPixel GetPixel(int x, int y) { return UseScanlinePixels(y)[x]; }
 
@@ -214,7 +214,12 @@ namespace InteropBitmaps
                     yield return (p, GetPixel(p));
                 }
             }
-        }        
+        }
+
+        public MemoryBitmap<TPixel> ToMemoryBitmap(Pixel.Format? fmtOverride = null)
+        {
+            return this.AsSpanBitmap().ToMemoryBitmap(fmtOverride);
+        }
 
         #endregion
 

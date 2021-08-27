@@ -9,13 +9,23 @@ namespace InteropWith.MAUI
 {
     public readonly struct CanvasWrapper : IDrawing2D
     {
+        public static IDrawing2D Create(Microsoft.Maui.Graphics.ICanvas canvas)
+        {
+            return new CanvasWrapper(canvas);
+        }
+
+        private CanvasWrapper(Microsoft.Maui.Graphics.ICanvas canvas)
+        {
+            _Canvas = canvas;
+        }
+
         private readonly Microsoft.Maui.Graphics.ICanvas _Canvas;
 
         private void _SetColorStyle(in ColorStyle style)
         {
-            // _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Overlay;
-            _Canvas.FillColor = new Microsoft.Maui.Graphics.Color(style.FillColor.ToArgb());
-            _Canvas.StrokeColor = new Microsoft.Maui.Graphics.Color(style.OutlineColor.ToArgb());
+            _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Normal;
+            _Canvas.FillColor = style.FillColor.ToMaui();
+            _Canvas.StrokeColor = style.OutlineColor.ToMaui();
             _Canvas.StrokeSize = style.OutlineWidth;
         }
 

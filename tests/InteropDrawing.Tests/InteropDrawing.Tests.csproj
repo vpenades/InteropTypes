@@ -10,38 +10,41 @@
   <ItemGroup>
     <None Remove="Assets\PunkRun.png" />
     <None Remove="Assets\Tiles.jpg" />    
-  </ItemGroup>  
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\PunkRun.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\Tiles.jpg" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\Shared\DrawableScenes.cs" Link="DrawableScenes.cs" />
-  </ItemGroup>
+    <Compile Include="..\Shared\TestUtils.cs" Link="TestUtils.cs" />
+  </ItemGroup>  
 
   <ItemGroup>
-    <Content Include="Assets\PunkRun.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Tiles.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="6.0.100-preview.7.358" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropBitmaps.Backends.FFmpeg.AutoGen.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropWith.OpenCvSharp4.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropBitmaps.Backends.SkiaSharp.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropWith.WPF.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.GLTF\InteropDrawing.Backends.GLTF.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropDrawing.Backends.MonoGame.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropDrawing.Backends.Plotly.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+    <ProjectReference Include="..\..\src\InteropWith.MAUI\InteropWith.MAUI.csproj" />
   </ItemGroup>
 
 </Project>

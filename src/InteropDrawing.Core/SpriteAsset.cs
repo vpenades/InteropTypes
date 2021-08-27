@@ -148,6 +148,17 @@ namespace InteropDrawing
 
         #region API
 
+        public System.Numerics.Matrix3x2 GetSpriteMatrix(bool hflip, bool vflip)
+        {
+            var sx = hflip ? -Scale : +Scale;
+            var sy = vflip ? -Scale : +Scale;
+
+            var final = System.Numerics.Matrix3x2.CreateScale(Width, Height);
+            final *= System.Numerics.Matrix3x2.CreateTranslation(-Pivot);
+            final *= System.Numerics.Matrix3x2.CreateScale(sx,sy);
+            return final;
+        }
+
         public void CopyTo(SpriteAsset other, System.Numerics.Vector2 pivotOffset)
         {
             other.Source = this.Source;

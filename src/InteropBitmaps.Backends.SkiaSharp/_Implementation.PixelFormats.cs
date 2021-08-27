@@ -46,7 +46,20 @@ namespace InteropBitmaps
             return (sc, sa);
         }
 
-        private static INTEROPFMT ToPixelFormat(SKIACOLOR color, bool allowCompatibleFormats = false)
+        
+
+        public static INTEROPFMT ToPixelFormat(SKIACOLOR color, SKIAALPHA alpha, bool allowCompatibleFormats = false)
+        {
+            switch (alpha)
+            {
+                case SKIAALPHA.Opaque: return ToPixelFormatAlpha(color, allowCompatibleFormats);
+                case SKIAALPHA.Premul: return ToPixelFormatPremul(color, allowCompatibleFormats);
+                case SKIAALPHA.Unpremul: return ToPixelFormatAlpha(color, allowCompatibleFormats);
+            }
+            throw new NotImplementedException();
+        }
+
+        private static INTEROPFMT ToPixelFormatAlpha(SKIACOLOR color, bool allowCompatibleFormats = false)
         {
             switch (color)
             {
@@ -70,14 +83,28 @@ namespace InteropBitmaps
             throw new NotSupportedException();
         }
 
-        public static INTEROPFMT ToPixelFormat(SKIACOLOR color, SKIAALPHA alpha, bool allowCompatibleFormats = false)
+        private static INTEROPFMT ToPixelFormatPremul(SKIACOLOR color, bool allowCompatibleFormats = false)
         {
-            switch (alpha)
+            switch (color)
             {
-                case SKIAALPHA.Opaque: return ToPixelFormat(color, allowCompatibleFormats);
-                case SKIAALPHA.Unpremul: return ToPixelFormat(color, allowCompatibleFormats);
+                case SKIACOLOR.Alpha8: return Pixel.Alpha8.Format;
+                case SKIACOLOR.Gray8: return Pixel.Luminance8.Format;
+                case SKIACOLOR.Rgba8888: return Pixel.RGBA32P.Format;
+                case SKIACOLOR.Rgb888x: return Pixel.RGBA32P.Format;
+                case SKIACOLOR.Bgra8888: return Pixel.BGRA32P.Format;
             }
-            throw new NotImplementedException();
-        }        
+
+            if (allowCompatibleFormats)
+            {
+                switch (color)
+                {                    
+                    case SKIACOLOR.Argb4444: return Pixel.RGBA32P.Format;
+                    case SKIACOLOR.Rgb565: return Pixel.RGBA32P.Format;
+                    case SKIACOLOR.Rgb888x: return Pixel.RGBA32P.Format;
+                }
+            }
+
+            throw new NotSupportedException();
+        }
     }
 }

@@ -47,6 +47,7 @@ namespace InteropBitmaps
 
                 case Pixel.BGR24.Code: { dst = CVDEPTHTYPE.CV_8UC3; return true; }
                 case Pixel.BGRA32.Code: { dst = CVDEPTHTYPE.CV_8UC4; return true; }
+                case Pixel.BGRA32P.Code: { dst = CVDEPTHTYPE.CV_8UC4; return true; }
 
                 case Pixel.VectorBGR.Code: { dst = CVDEPTHTYPE.CV_32FC3; return true; }
                 case Pixel.VectorBGRA.Code: { dst = CVDEPTHTYPE.CV_32FC4; return true; }
@@ -69,6 +70,7 @@ namespace InteropBitmaps
                 case Pixel.BGRA4444.Code:
                 case Pixel.BGRA5551.Code:
                 case Pixel.RGBA32.Code:
+                case Pixel.RGBA32P.Code:
                 case Pixel.ARGB32.Code:
                     return CVDEPTHTYPE.CV_8UC4;
 

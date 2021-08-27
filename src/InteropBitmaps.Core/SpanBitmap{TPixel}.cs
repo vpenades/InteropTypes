@@ -191,7 +191,9 @@ namespace InteropBitmaps
         
         public MemoryBitmap<TPixel> ToMemoryBitmap(Pixel.Format? fmtOverride = null)
         {
-            if (!fmtOverride.HasValue) return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info);
+            fmtOverride = fmtOverride ?? this.PixelFormat;
+
+            if (fmtOverride.Value == this.PixelFormat) return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info);
 
             var dst = new MemoryBitmap<TPixel>(this.Width, this.Height, fmtOverride.Value);
             dst.SetPixels(0, 0, this);

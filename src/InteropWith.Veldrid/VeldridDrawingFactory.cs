@@ -70,7 +70,12 @@ namespace InteropWith
 
         public IVeldridDrawingContext2D CreateDrawing2DContext(Framebuffer dstFrame)
         {
-            if (!_Context2DPool.TryTake(out var dc)) dc = new _VeldridDrawing2DContext(this);
+            if (!_Context2DPool.TryTake(out var dc))
+            {
+                // if there's no context available in the pool,
+                // we create a new one (which will be stored in the pool layer)
+                dc = new _VeldridDrawing2DContext(this);
+            }
 
             dc.Initialize(dstFrame);
             return dc;

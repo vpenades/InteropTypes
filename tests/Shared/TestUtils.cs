@@ -16,7 +16,7 @@ namespace InteropBitmaps
 {
     static class TestUtils
     {
-        public static string GetTestResultPath(this NUnit.Framework.TestContext context, params string[] parts)
+        public static string GetTestResultPath(this TestContext context, params string[] parts)
         {
             // https://github.com/nunit/nunit/issues/1768#issuecomment-242454699
 
@@ -49,6 +49,8 @@ namespace InteropBitmaps
 
             owner.Bitmap.AttachToCurrentTest(filePath);
         }
+
+        
 
         public static void AttachToCurrentTest(this MemoryBitmap bmp, string filePath)
         {

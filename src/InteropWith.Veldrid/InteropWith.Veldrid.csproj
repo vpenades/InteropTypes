@@ -3,34 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  
-  
-  <PropertyGroup>
-    <ShaderContentIncludePath>Shaders</ShaderContentIncludePath>
-    <ShaderOutputPath>$(BaseIntermediateOutputPath)/ShadersBin</ShaderOutputPath>    
-  </PropertyGroup>
-  
+  </PropertyGroup>  
   
   <ItemGroup>
     <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />
-  </ItemGroup>   
+  </ItemGroup>  
   
-  <!--
-  <PropertyGroup>
-    <ShaderContentIncludePath>Shaders</ShaderContentIncludePath>
-    <ShaderOutputPath>Shaders/Generated</ShaderOutputPath>    
-  </PropertyGroup>
-
   <ItemGroup>
-    <EmbeddedResource LinkBase="Shaders" Include="Shaders/Generated/**" />
-  </ItemGroup>
-  -->
+    <EmbeddedResource Include="..\InteropWith.Veldrid.ShaderGen\bin\Debug\netstandard2.0\ShadersBin\*" LinkBase="ShadersGen" />
+  </ItemGroup>  
 
-  <ItemGroup>
-    <PackageReference Include="ShaderGen" Version="1.2.0-beta3" />
-    <PackageReference Include="ShaderGen.Build" PrivateAssets="All" Version="1.2.0-beta3" />
-    <PackageReference Include="ShaderGen.Primitives" Version="1.2.0-beta3" />
+  <ItemGroup>    
     <PackageReference Include="Veldrid" Version="4.8.0" />
   </ItemGroup>
 

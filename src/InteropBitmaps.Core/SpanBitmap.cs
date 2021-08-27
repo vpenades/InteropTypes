@@ -189,7 +189,9 @@ namespace InteropBitmaps
         /// <returns>A new <see cref="MemoryBitmap"/>.</returns>
         public MemoryBitmap ToMemoryBitmap(Pixel.Format? fmtOverride = null)
         {
-            if (!fmtOverride.HasValue) return new MemoryBitmap(_Readable.ToArray(), _Info);
+            fmtOverride = fmtOverride ?? this.PixelFormat;
+
+            if (fmtOverride.Value == this.PixelFormat) return new MemoryBitmap(_Readable.ToArray(), _Info);
 
             var dst = new MemoryBitmap(this.Width, this.Height, fmtOverride.Value);
             dst.SetPixels(0, 0, this);

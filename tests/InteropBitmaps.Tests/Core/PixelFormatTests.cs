@@ -88,7 +88,13 @@ namespace InteropBitmaps
             ConversionTest<Pixel.ARGB32, Pixel.RGBA32>();
             ConversionTest<Pixel.ARGB32, Pixel.ARGB32>();
 
+            // premultiplied
 
+            ConversionTest<Pixel.ARGB32, Pixel.BGRA32P>();
+            ConversionTest<Pixel.BGRA32P, Pixel.ARGB32>();
+
+            ConversionTest<Pixel.ARGB32, Pixel.RGBA32P>();
+            ConversionTest<Pixel.RGBA32P, Pixel.ARGB32>();            
         }
 
 
@@ -111,20 +117,37 @@ namespace InteropBitmaps
             cvt.Invoke
                 (
                 System.Runtime.InteropServices.MemoryMarshal.Cast<TSrcPixel, Byte>(src),
-                System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, Byte>(dst));
+                System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, Byte>(dst)
+                );
 
-            for(int i=0; i < 5; ++i)
+            if (srcFmt.HasPremul || dstFmt.HasPremul)
             {
-                var srcP = src[i].ToBGRA32();
-                var dstP = dst[i].ToBGRA32();
-
-                if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
+                for (int i = 0; i < 5; ++i)
                 {
-                    srcP = new Pixel.BGRA32(srcP.R, srcP.G, srcP.B, 256);
-                    dstP = new Pixel.BGRA32(dstP.R, dstP.G, dstP.B, 256);
-                }
+                    var srcP = new Pixel.RGBA32P(src[i].ToBGRA32());
+                    var dstP = new Pixel.RGBA32P(dst[i].ToBGRA32());                    
 
-                Assert.AreEqual(srcP, dstP);
+                    Assert.AreEqual(srcP.R, dstP.R, 1);
+                    Assert.AreEqual(srcP.G, dstP.G, 1);
+                    Assert.AreEqual(srcP.B, dstP.B, 1);
+                    Assert.AreEqual(srcP.A, dstP.A, 1);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 5; ++i)
+                {
+                    var srcP = src[i].ToBGRA32();
+                    var dstP = dst[i].ToBGRA32();
+
+                    if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
+                    {
+                        srcP = new Pixel.BGRA32(srcP.R, srcP.G, srcP.B, (Byte)255);
+                        dstP = new Pixel.BGRA32(dstP.R, dstP.G, dstP.B, (Byte)255);
+                    }
+
+                    Assert.AreEqual(srcP, dstP);
+                }
             }
         }
 

@@ -90,7 +90,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.Veldrid", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.Veldrid.Demo.App", "tests\InteropWith.Veldrid.Demo\InteropWith.Veldrid.Demo.App.csproj", "{7D4D8596-946E-4D9C-B2D8-072AD4DA73C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropWith.MAUI", "src\InteropWith.MAUI\InteropWith.MAUI.csproj", "{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.MAUI", "src\InteropWith.MAUI\InteropWith.MAUI.csproj", "{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.Veldrid.ShaderGen", "src\InteropWith.Veldrid.ShaderGen\InteropWith.Veldrid.ShaderGen.csproj", "{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -376,6 +378,14 @@ Global
 		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}.Release|x64.ActiveCfg = Release|Any CPU
 		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}.Release|x64.Build.0 = Release|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Debug|x64.Build.0 = Debug|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Release|x64.ActiveCfg = Release|Any CPU
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -417,6 +427,7 @@ Global
 		{F7B1B478-9F05-497A-A67F-9CAD2AB01E68} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{7D4D8596-946E-4D9C-B2D8-072AD4DA73C1} = {88681588-D801-4956-ACA7-ADE65AF158A7}
 		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
+		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

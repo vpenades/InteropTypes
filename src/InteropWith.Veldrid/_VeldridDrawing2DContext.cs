@@ -66,7 +66,7 @@ namespace InteropWith
 
         #endregion
 
-        #region API
+        #region core API
 
         private InteropDrawing.Transforms.Decompose2D _Collapsed2D => new InteropDrawing.Transforms.Decompose2D(this);
 
@@ -165,7 +165,7 @@ namespace InteropWith
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
         {
-            var final = Matrix3x2.CreateScale(style.Bitmap.Width, style.Bitmap.Height) * transform;
+            var final = style.Bitmap.GetSpriteMatrix(style.FlipHorizontal, style.FlipVertical) * transform;
 
             Vertex2D p0 = final.Translation;
             Vertex2D p1 = Vector2.Transform(Vector2.UnitX, final);

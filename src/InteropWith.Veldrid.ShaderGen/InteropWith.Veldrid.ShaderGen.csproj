@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>    
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ShaderGen" Version="1.2.0-beta3" />
+    <PackageReference Include="ShaderGen.Build" PrivateAssets="All" Version="1.2.0-beta3" />
+    <PackageReference Include="ShaderGen.Primitives" Version="1.2.0-beta3" />    
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- for some reason, at this point OutDir and TargetDir are not defined yet. -->
+    <ShaderContentIncludePath>Shaders</ShaderContentIncludePath>
+    <!-- <ShaderOutputPath>$(BaseIntermediateOutputPath)/ShadersBin</ShaderOutputPath> -->
+    <ShaderOutputPath>bin\$(Configuration)\$(TargetFramework)\ShadersBin\</ShaderOutputPath>
+  </PropertyGroup>
+
+</Project>

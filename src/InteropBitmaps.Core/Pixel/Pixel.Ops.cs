@@ -75,9 +75,7 @@ namespace InteropBitmaps
                 }
             }
 
-
-
-                void _converter(ReadOnlySpan<Byte> src, Span<Byte> dst)
+            void _converter(ReadOnlySpan<Byte> src, Span<Byte> dst)
             {
                 _ConvertPixels(dst, dstFmt, src, srcFmt);
             }
@@ -119,6 +117,13 @@ namespace InteropBitmaps
         }
 
 
+        /// <summary>
+        /// Converts pixels by using <see cref="VectorRGBA"/> as an intermediate format.
+        /// </summary>
+        /// <param name="dst"></param>
+        /// <param name="dstFmt"></param>
+        /// <param name="src"></param>
+        /// <param name="srcFmt"></param>
         private static void _ConvertPixels(Span<Byte> dst, Format dstFmt, ReadOnlySpan<Byte> src, Format srcFmt)
         {
             if (dstFmt == srcFmt) { src.CopyTo(dst); return; }
@@ -159,7 +164,9 @@ namespace InteropBitmaps
                 case BGRA5551.Code: _ConvertPixels(dst, src.OfType<BGRA5551>()); break;
                 case BGRA4444.Code: _ConvertPixels(dst, src.OfType<BGRA4444>()); break;
                 case BGRA32.Code: _ConvertPixels(dst, src.OfType<BGRA32>()); break;
+                case BGRA32P.Code: _ConvertPixels(dst, src.OfType<BGRA32P>()); break;
                 case RGBA32.Code: _ConvertPixels(dst, src.OfType<RGBA32>()); break;
+                case RGBA32P.Code: _ConvertPixels(dst, src.OfType<RGBA32P>()); break;
                 case ARGB32.Code: _ConvertPixels(dst, src.OfType<ARGB32>()); break;
                 case VectorBGR.Code: _ConvertPixels(dst, src.OfType<VectorBGR>()); break;
                 case VectorBGRA.Code: _ConvertPixels(dst, src.OfType<VectorBGRA>()); break;
@@ -182,11 +189,14 @@ namespace InteropBitmaps
                 case BGRA5551.Code: _ConvertPixels(dst.OfType<BGRA5551>(), src); break;
                 case BGRA4444.Code: _ConvertPixels(dst.OfType<BGRA4444>(), src); break;
                 case BGRA32.Code: _ConvertPixels(dst.OfType<BGRA32>(), src); break;
+                case BGRA32P.Code: _ConvertPixels(dst.OfType<BGRA32P>(), src); break;
                 case RGBA32.Code: _ConvertPixels(dst.OfType<RGBA32>(), src); break;
+                case RGBA32P.Code: _ConvertPixels(dst.OfType<RGBA32P>(), src); break;
                 case ARGB32.Code: _ConvertPixels(dst.OfType<ARGB32>(), src); break;
                 case VectorBGR.Code: _ConvertPixels(dst.OfType<VectorBGR>(), src); break;
                 case VectorBGRA.Code: _ConvertPixels(dst.OfType<VectorBGRA>(), src); break;
                 case VectorRGBA.Code: _ConvertPixels(dst.OfType<VectorRGBA>(), src); break;
+                
                 default: throw new NotImplementedException(nameof(dstFmt));
             }
         }
