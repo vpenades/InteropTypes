@@ -103,8 +103,8 @@ namespace InteropDrawing
 
         public static Matrix4x4 CreateMatrixFromCrossPreserveFirst(Vector3 a, Vector3 b)
         {
-            System.Diagnostics.Debug.Assert(a.IsReal() && a.ManhattanLength() > 0);
-            System.Diagnostics.Debug.Assert(b.IsReal() && b.ManhattanLength() > 0);
+            System.Diagnostics.Debug.Assert(a.IsFinite() && a.ManhattanLength() > 0);
+            System.Diagnostics.Debug.Assert(b.IsFinite() && b.ManhattanLength() > 0);
 
             var c = Vector3.Cross(a, b).Normalized();
             a = a.Normalized();
@@ -115,8 +115,8 @@ namespace InteropDrawing
 
         public static Matrix4x4 CreateMatrixFromCrossPreserveSecond(Vector3 a, Vector3 b)
         {
-            System.Diagnostics.Debug.Assert(a.IsReal() && a.ManhattanLength() > 0);
-            System.Diagnostics.Debug.Assert(b.IsReal() && b.ManhattanLength() > 0);
+            System.Diagnostics.Debug.Assert(a.IsFinite() && a.ManhattanLength() > 0);
+            System.Diagnostics.Debug.Assert(b.IsFinite() && b.ManhattanLength() > 0);
 
             var c = Vector3.Cross(a, b).Normalized();
             b = b.Normalized();

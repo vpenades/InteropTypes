@@ -58,10 +58,20 @@ namespace InteropDrawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNan(this double val) => double.IsNaN(val);
 
+        /// <summary>
+        /// Tells if the value is finite and not NaN
+        /// </summary>
+        /// <remarks>
+        /// <see href="https://github.com/dotnet/runtime/blob/5df6cc63151d937724fa0ce8138e69f933052606/src/libraries/System.Private.CoreLib/src/System/Single.cs#L74">DotNet implementation</see>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsReal(this float val) => !float.IsNaN(val) && !float.IsInfinity(val);
+        public static bool IsFinite(this float val)
+        {
+            return !float.IsNaN(val) && !float.IsInfinity(val);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsReal(this double val) => !double.IsNaN(val) && !double.IsInfinity(val);
+        public static bool IsFinite(this double val) => !double.IsNaN(val) && !double.IsInfinity(val);
 
         #endregion
 

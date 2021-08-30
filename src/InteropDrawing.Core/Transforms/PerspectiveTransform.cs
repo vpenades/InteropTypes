@@ -100,7 +100,7 @@ namespace InteropDrawing.Transforms
 
         public Vector2 GetPerspective(Vector4 v)
         {
-            System.Diagnostics.Debug.Assert(v.IsReal(), "Invalid Vertex: NaN");
+            System.Diagnostics.Debug.Assert(v.IsFinite(), "Invalid Vertex: NaN");
             System.Diagnostics.Debug.Assert(v.W > 0, "Invalid Vertex, W must be positive");
 
             var xy = new Vector2(v.X, v.Y) / v.W;

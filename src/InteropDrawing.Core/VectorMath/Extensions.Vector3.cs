@@ -13,7 +13,7 @@ namespace InteropDrawing
         #region integrity check
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsReal(this Vector3 v) { return v.X.IsReal() & v.Y.IsReal() & v.Z.IsReal(); }
+        public static Boolean IsFinite(this Vector3 v) { return v.X.IsFinite() & v.Y.IsFinite() & v.Z.IsFinite(); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsZero(this Vector3 v) { return (v.X == 0) & (v.Y == 0) & (v.Z == 0); }
@@ -61,7 +61,7 @@ namespace InteropDrawing
         public static Vector3 WithLength(this Vector3 v, Func<Vector3, Single> vl) { return Vector3.Normalize(v) * vl(v); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNormalizable(this Vector3 v, Single epsilon = 0.00001f) { return v.IsReal() && v.Length() > epsilon; }
+        public static bool IsNormalizable(this Vector3 v, Single epsilon = 0.00001f) { return v.IsFinite() && v.Length() > epsilon; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 Normalized(this Vector3 v) { return Vector3.Normalize(v); }
@@ -116,7 +116,7 @@ namespace InteropDrawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Angle(this (Vector3 A, Vector3 B) pair)
         {
-            System.Diagnostics.Debug.Assert(pair.A.IsReal() && pair.B.IsReal());
+            System.Diagnostics.Debug.Assert(pair.A.IsFinite() && pair.B.IsFinite());
 
             float dot = Vector3
                 .Dot(pair.A.Normalized(), pair.B.Normalized())

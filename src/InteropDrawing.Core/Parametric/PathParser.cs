@@ -39,7 +39,7 @@ namespace InteropDrawing.Parametric
 
         public static IEnumerable<Point2[]> ParseShapes(string path)
         {
-            var commands = PathSegment.Parse(path);
+            var commands = PathSlice.Parse(path);
 
             var values = new List<float>();
             var sequence = new List<Point2>();
@@ -81,23 +81,25 @@ namespace InteropDrawing.Parametric
 
                     case CommandType.LineHorizontalTo:
                         {
-                            for (int i = values.Count; i > 0; i -= 2) { values.Insert(i, cmd.IsRelative ? 0 : tail.Y); }
-
-                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative, true, false);
                             break;
                         }
 
                     case CommandType.LineVerticalTo:
                         {
-                            for (int i = values.Count-1; i >= 0; i -= 2) { values.Insert(i, cmd.IsRelative ? 0 : tail.X); }
-
-                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative, false, true);
                             break;
                         }
 
                     case CommandType.LineTo:
                         {
-                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative);
+                            tcpt = tail = _ApplyLineTo(sequence, tail, values, cmd.IsRelative, true, true);
+                            break;
+                        }
+
+                    case CommandType.Arc:
+                        {
+                            tcpt = tail = _ApplyArcTo(sequence, tail, values, cmd.IsRelative);
                             break;
                         }
 
@@ -115,7 +117,7 @@ namespace InteropDrawing.Parametric
 
                             (tcpt, tail) = _ApplySmoothCurveTo(sequence, tcpt.ToNumerics(), tail, values, cmd.IsRelative);
                             break;
-                        }
+                        }                    
 
                     default: throw new NotImplementedException();
                 }
@@ -124,15 +126,24 @@ namespace InteropDrawing.Parametric
             if (sequence.Count > 0) yield return sequence.ToArray();
         }
 
-        private static Point2 _ApplyLineTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
+        private static Point2 _ApplyLineTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative, bool h = true, bool v = true)
         {
-            for (int i = 0; i < src.Count; i += 2)
-            {
-                var x = src[i + 0];
-                var y = src[i + 1];
-                var p = new Point2(x, y);
+            int i = 0;
 
-                tail = srcIsRelative ? tail + p : p;
+            while (i < src.Count)
+            {
+                if (srcIsRelative)
+                {
+                    var x = h ? src[i++] : 0;
+                    var y = v ? src[i++] : 0;
+                    tail += new Point2(x, y);
+                }
+                else
+                {
+                    var x = h ? src[i++] : tail.X;
+                    var y = v ? src[i++] : tail.Y;
+                    tail = new Point2(x, y);
+                }
 
                 dst.Add(tail);
             }
@@ -140,7 +151,40 @@ namespace InteropDrawing.Parametric
             return tail;
         }
 
-        private static (Point2,Point2) _ApplyCurveTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
+        private static Point2 _ApplyArcTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative, bool h = true, bool v = true)
+        {
+            for (int i = 0; i < src.Count; i += 7)
+            {
+                var p1 = tail.ToNumerics();
+
+                var rr = new Vector2(src[i + 0], src[i + 1]);
+                
+                var xr = src[i + 2]; // x axis rotation, in degrees (0-360)
+                var lf = src[i + 3]; // large flag
+                var sf = src[i + 4]; // sweep flag
+
+                var p2 = new Vector2(src[i + 5], src[i + 6]);
+                if (srcIsRelative) p2 += p1;
+
+                tail = p2;
+
+                xr %= 360f;
+                xr = xr.ToRadians();
+
+                var arc = (p1, p2, rr, xr, lf != 0, sf != 0);
+
+                for (int j = 1; j <= 10; ++j)
+                {
+                    var f = (float)j / 10f;
+                    var p = arc.LerpArc(f);
+                    dst.Add(p);
+                }                
+            }
+
+            return tail;
+        }
+
+        private static (Point2, Point2) _ApplyCurveTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
         {
             var p1 = tail.ToNumerics();
 
@@ -221,54 +265,64 @@ namespace InteropDrawing.Parametric
         }
 
         /// <summary>
-        /// Represents a segment withing a SVG Path string.
+        /// Represents a slice within a SVG Path string.
         /// </summary>
         /// <remarks>
-        /// The segment starts with the command character (M, L, C, Z, etc),
+        /// The slice starts with the command character (M, L, C, Z, etc),
         /// and follows with a sequence of floating point values.
         /// </remarks>
-        readonly struct PathSegment
+        [System.Diagnostics.DebuggerDisplay("{ToString()}")]
+        readonly struct PathSlice
         {
-            #region lifecycle
-
-            public static IEnumerable<PathSegment> Parse(string src)
-            {
-                int offset = 0;
-
-                while(TryParse(src,offset,out var segment))
-                {
-                    yield return segment;
-                    offset += segment.Count;
-                }
-            }
+            #region constants
 
             private static readonly char[] _Commands = "MZLHVCSQTAmzlhvcsqta".ToCharArray();
 
-            public static bool TryParse(string src, int head, out PathSegment segment)
+            #endregion
+
+            #region lifecycle
+
+            public static IEnumerable<PathSlice> Parse(string src)
+            {
+                int offset = 0;
+
+                while(TryParse(src,offset,out var slice, out var next))
+                {
+                    System.Diagnostics.Debug.Assert(slice._Length > 0);
+
+                    yield return slice;
+                    offset = next;
+                }
+            }            
+
+            public static bool TryParse(string src, int head, out PathSlice slice, out int next)
             {
                 head = src.IndexOfAny(_Commands, head);
-                if (head < 0) { segment = default; return false; }
+                if (head < 0) { slice = default; next = -1; return false; }
 
                 var tail = src.IndexOfAny(_Commands, head + 1);
                 if (tail < 0) tail = src.Length;
-                tail -= 1;
+                else tail -= 1;
 
-                if (tail == head) { segment = default; return false; }
+                if (tail == head) { slice = default; next = -1; return false; }
 
-                segment = new PathSegment(src, head, tail - head);
+                slice = new PathSlice(src, head, tail - head);
+
+                next = tail;
+
                 return true;                
             }
 
-            private PathSegment(string src, int ofs, int len)
+            private PathSlice(string src, int ofs, int len)
             {
                 _Source = src;
-
-                var c = _Source[ofs];
-                _Command = (CommandType)(((int)c) & ~0x20);
-                _IsRelative = c >= (int)'a';
-
                 _Offset = ofs;
-                _Count = len;
+                _Length = len;
+
+                var c = src[ofs];
+                System.Diagnostics.Debug.Assert(_Commands.Contains(c));
+                _Command = (CommandType)(((int)c) & ~0x20);
+                _IsRelative = c >= (int)'a';                
             }
 
             #endregion
@@ -277,7 +331,7 @@ namespace InteropDrawing.Parametric
 
             private readonly string _Source;
             private readonly int _Offset;
-            private readonly int _Count;
+            private readonly int _Length;
 
             private readonly CommandType _Command;
             private readonly bool _IsRelative;
@@ -288,7 +342,7 @@ namespace InteropDrawing.Parametric
 
             public CommandType Command => _Command;
             public Boolean IsRelative => _IsRelative;
-            public int Count => _Count;
+            public int Count => _Length;
 
             #endregion
 
@@ -296,11 +350,11 @@ namespace InteropDrawing.Parametric
 
             public void CopyTo(List<float> values)
             {
-                Span<Byte> ascii = stackalloc Byte[_Count - 1];
+                Span<Byte> ascii = stackalloc Byte[_Length - 1];
 
                 for(int i=0; i < ascii.Length; ++i)
                 {
-                    ascii[i] = (Byte)_Source[_Offset + i + 1];
+                    ascii[i] = (Byte)this._Source[_Offset + i + 1];
                 }
 
                 _CopyTo(ascii, values);
@@ -310,10 +364,10 @@ namespace InteropDrawing.Parametric
             {
                 while(ascii.Length > 0)
                 {
-                    ascii = _SkipWhiteSpacesAndCommas(ascii);
+                    ascii = _SkipWhiteSpacesAndCommas(ascii);                    
 
                     if (!System.Buffers.Text.Utf8Parser.TryParse(ascii, out float value, out int valueLen)) throw new InvalidOperationException();
-
+                    
                     values.Add(value);
 
                     ascii = ascii.Slice(valueLen);
@@ -325,12 +379,20 @@ namespace InteropDrawing.Parametric
                 // skip leading whitespaces
                 while (ascii.Length > 0)
                 {
-                    var c = ascii[0]; 
+                    // allowed characters should be only those required to represent floating point, a la:  4523E-43 or -23.43
+
+                    var c = ascii[0];
+                    System.Diagnostics.Debug.Assert(c < 128, "Invalid character");
                     if (c > 0x20 && c != 0x2c) break;
                     ascii = ascii.Slice(1);                    
                 }
 
                 return ascii;
+            }
+
+            public override string ToString()
+            {
+                return _Source.Substring(_Offset, _Length);
             }
 
             #endregion

@@ -11,7 +11,7 @@ namespace InteropDrawing
     static partial class _SystemNumericsExtensions
     {
         #region integrity check
-        public static bool IsReal(this Matrix4x4 value) { return value.SelectRowX().IsReal() && value.SelectRowY().IsReal() && value.SelectRowZ().IsReal() && value.SelectRowW().IsReal(); }
+        public static bool IsReal(this Matrix4x4 value) { return value.SelectRowX().IsFinite() && value.SelectRowY().IsFinite() && value.SelectRowZ().IsFinite() && value.SelectRowW().IsFinite(); }
 
         #endregion
 

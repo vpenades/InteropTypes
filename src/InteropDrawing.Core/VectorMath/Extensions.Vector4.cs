@@ -13,7 +13,7 @@ namespace InteropDrawing
         #region integrity check
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsReal(this Vector4 value) { return value.X.IsReal() && value.Y.IsReal() && value.Z.IsReal() && value.W.IsReal(); }
+        public static bool IsFinite(this Vector4 value) { return value.X.IsFinite() && value.Y.IsFinite() && value.Z.IsFinite() && value.W.IsFinite(); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsZero(this Vector4 value) { return value.Equals(Vector4.Zero); }

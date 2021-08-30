@@ -23,6 +23,10 @@ namespace InteropDrawing
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [System.Diagnostics.DebuggerDisplay("{X} {Y}")]
     public readonly struct Point2
+        : IEquatable<Point2>
+        , IEquatable<VECTOR2>
+        , IEquatable<GDIPOINTF>
+        , IEquatable<GDISIZEF>
     {
         #region implicit
 
@@ -60,11 +64,49 @@ namespace InteropDrawing
         public readonly float X;
         public readonly float Y;
 
+        /// <inheritdoc/>
+        public override int GetHashCode() => (X, Y).GetHashCode();
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj is Point2 otherP) return AreEqual(this, otherP);
+            if (obj is VECTOR2 otherV) return AreEqual(this, otherV);
+            if (obj is GDIPOINTF otherGP) return AreEqual(this, otherGP);
+            if (obj is GDISIZEF otherGS) return AreEqual(this, otherGS);
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(Point2 other) => AreEqual(this, other);
+        /// <inheritdoc/>
+        public bool Equals(VECTOR2 other) => AreEqual(this, other);
+        /// <inheritdoc/>
+        public bool Equals(GDIPOINTF other) => AreEqual(this, other);
+        /// <inheritdoc/>
+        public bool Equals(GDISIZEF other) => AreEqual(this, other);
+
+        /// <inheritdoc/>
+        public static bool operator ==(in Point2 a, Point2 b) => AreEqual(a, b);
+        /// <inheritdoc/>
+        public static bool operator !=(in Point2 a, Point2 b) => !AreEqual(a, b);
+
+        /// <inheritdoc/>
+        public static bool operator ==(in Point2 a, VECTOR2 b) => AreEqual(a, b);
+        /// <inheritdoc/>
+        public static bool operator !=(in Point2 a, VECTOR2 b) => !AreEqual(a, b);       
+
+
+        public static bool AreEqual(in Point2 a, in Point2 b) { return a.X == b.X && a.Y == b.Y; }
+        public static bool AreEqual(in Point2 a, in VECTOR2 b) { return a.X == b.X && a.Y == b.Y; }
+        public static bool AreEqual(in Point2 a, in GDIPOINTF b) { return a.X == b.X && a.Y == b.Y; }
+        public static bool AreEqual(in Point2 a, in GDISIZEF b) { return a.X == b.Width && a.Y == b.Height; }
+
         #endregion
 
         #region properties
 
-        public bool IsReal => X.IsReal() && Y.IsReal();
+        public bool IsReal => X.IsFinite() && Y.IsFinite();
 
         #endregion
 
@@ -161,7 +203,7 @@ namespace InteropDrawing
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point2, VECTOR2>(points);
         }
 
-        public override string ToString() { return ToNumerics().ToString(); }
+        public override string ToString() { return ToNumerics().ToString(); }        
 
         #endregion
     }
@@ -204,11 +246,28 @@ namespace InteropDrawing
         public readonly float Y;
         public readonly float Z;
 
+        /// <inheritdoc/>
+        public override int GetHashCode() => (X, Y, Z).GetHashCode();
+
+        /// <inheritdoc/>
+        public bool Equals(Point3 other) => AreEqual(this, other);
+
+        /// <inheritdoc/>
+        public bool Equals(VECTOR3 other) => AreEqual(this, other);
+
+        /// <inheritdoc/>
+        public static bool operator ==(in Point3 a, in Point3 b) => AreEqual(a, b);
+        /// <inheritdoc/>
+        public static bool operator !=(in Point3 a, in Point3 b) => !AreEqual(a, b);
+
+        public static bool AreEqual(in Point3 a, in Point3 b) { return a.X == b.X && a.Y == b.Y && a.Z == b.Z; }
+        public static bool AreEqual(in Point3 a, in VECTOR3 b) { return a.X == b.X && a.Y == b.Y && a.Z == b.Z; }
+
         #endregion
 
         #region properties
 
-        public bool IsReal => X.IsReal() && Y.IsReal() && Z.IsReal();
+        public bool IsReal => X.IsFinite() && Y.IsFinite() && Z.IsFinite();
 
         #endregion
 
