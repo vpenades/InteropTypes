@@ -194,9 +194,9 @@ namespace InteropBitmaps
                         break;
                     case 4:
                         if (typeof(TPixel) == typeof(BGRA32)) return BGRA32.Format;
-                        if (typeof(TPixel) == typeof(BGRA32P)) return BGRA32P.Format;
+                        if (typeof(TPixel) == typeof(BGRP32)) return BGRP32.Format;
                         if (typeof(TPixel) == typeof(RGBA32)) return RGBA32.Format;
-                        if (typeof(TPixel) == typeof(RGBA32P)) return RGBA32P.Format;
+                        if (typeof(TPixel) == typeof(RGBP32)) return RGBP32.Format;
                         if (typeof(TPixel) == typeof(ARGB32)) return ARGB32.Format;
                         if (typeof(TPixel) == typeof(ARGB32P)) return ARGB32P.Format;
                         if (typeof(TPixel) == typeof(LuminanceScalar)) return LuminanceScalar.Format;
@@ -259,6 +259,9 @@ namespace InteropBitmaps
 
             public Element Element3 => new Element(_Element3);
 
+            /// <summary>
+            /// Gets the number of bytes required to store this pixel format
+            /// </summary>
             public int ByteCount => _GetByteLength();
 
             /// <summary>
@@ -325,6 +328,46 @@ namespace InteropBitmaps
             #endregion
 
             #region API
+
+            public bool All(PEF a) { return _FindIndex(a) >= 0; }
+            public bool All(PEF a, PEF b) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0; }
+            public bool All(PEF a, PEF b, PEF c) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0; }
+            public bool All(PEF a, PEF b, PEF c, PEF d) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0 && _FindIndex(d) >= 0; }
+
+            public bool Any(PEF a) { return _FindIndex(a) >= 0; }
+            public bool Any(PEF a, PEF b) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0; }
+            public bool Any(PEF a, PEF b, PEF c) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0; }
+            public bool Any(PEF a, PEF b, PEF c, PEF d) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0 || _FindIndex(d) >= 0; }
+
+            public int GetBitOffset(PEF pef)
+            {
+                if (Element0 == pef) return 0;
+                int l = Element0.BitCount;
+
+                if (Element1 == pef) return l;
+                l += Element1.BitCount;
+
+                if (Element2 == pef) return l;
+                l += Element2.BitCount;
+
+                if (Element3 == pef) return l;
+                return -1;
+            }
+
+            public int GetByteOffset(PEF pef)
+            {
+                if (Element0 == pef) return 0;
+                int l = Element0.ByteCount;
+
+                if (Element1 == pef) return l;
+                l += Element1.ByteCount;
+
+                if (Element2 == pef) return l;
+                l += Element2.ByteCount;
+
+                if (Element3 == pef) return l;
+                return -1;
+            }
 
             private int _GetByteLength()
             {
@@ -419,46 +462,6 @@ namespace InteropBitmaps
                 }
 
                 return null;
-            }
-
-            #endregion
-
-            #region static        
-
-            public static void Convert(SpanBitmap dst, SpanBitmap src)
-            {
-                Guard.AreEqual(nameof(src), dst.Width, src.Width);
-                Guard.AreEqual(nameof(src), dst.Height, src.Height);
-
-                var byteIndices = new int[dst.PixelByteSize];
-
-                for (int i = 0; i < byteIndices.Length; ++i)
-                {
-                    var c = dst.PixelFormat._GetComponentAt(i);
-                    var idx = src.PixelFormat._FindIndex(c);
-                    if (idx < 0) throw new ArgumentException(nameof(src));
-                    byteIndices[i] = idx;
-                }
-
-                for (int y = 0; y < dst.Height; ++y)
-                {
-                    var dstRow = dst.UseScanlineBytes(y);
-                    var srcRow = src.GetScanlineBytes(y);
-
-                    for (int x = 0; x < dst.Width; ++x)
-                    {
-                        for (int z = 0; z < byteIndices.Length; ++z)
-                        {
-                            var idx = byteIndices[z];
-                            dstRow[z] = srcRow[idx];
-                        }
-
-                        dstRow = dstRow.Slice(dst.PixelByteSize);
-                        srcRow = srcRow.Slice(src.PixelByteSize);
-
-                        throw new NotImplementedException();
-                    }
-                }
             }
 
             #endregion

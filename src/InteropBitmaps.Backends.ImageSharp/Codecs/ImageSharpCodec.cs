@@ -23,11 +23,11 @@ namespace InteropBitmaps.Codecs
         #region API
 
         /// <inheritdoc/>
-        public bool TryRead(Stream s, out MemoryBitmap bitmap)
+        public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
             try
             {
-                using (var img = SixLabors.ImageSharp.Image.Load(s))
+                using (var img = SixLabors.ImageSharp.Image.Load(context.Stream))
                 {
                     bitmap = img.AsSpanBitmap().ToMemoryBitmap();
                 }

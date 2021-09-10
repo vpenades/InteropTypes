@@ -24,23 +24,31 @@ namespace InteropBitmaps.Codecs
         // TODO: we should try to operate directly with SkiaSharp.SKCodec
 
         /// <inheritdoc/>
-        public bool TryRead(Stream s, out MemoryBitmap bitmap)
+        public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
             bitmap = default;
 
-            /*
-            using (var skc = SkiaSharp.SKCodec.Create(s))
+            if (context.BytesToRead.HasValue)
             {
-                if (!skc.GetFrameInfo(0, out SkiaSharp.SKCodecFrameInfo finfo)) return null;                
-            }*/
-
-            using (var img = SkiaSharp.SKBitmap.Decode(s))
-            {
-                if (img == null) return false;
-                bitmap = _Implementation.WrapAsSpan(img).ToMemoryBitmap();
+                using (var data = SkiaSharp.SKData.Create(context.Stream, context.BytesToRead.Value))
+                {
+                    using (var skc = SkiaSharp.SKCodec.Create(data))
+                    {
+                        var binfo = _Implementation.GetBitmapInfo(skc.Info);
+                        bitmap = new MemoryBitmap(skc.Pixels, binfo);
+                        return true;
+                    }
+                }
             }
+            
+            using (var skc = SkiaSharp.SKCodec.Create(context.Stream))
+            {
+                var binfo = _Implementation.GetBitmapInfo(skc.Info);
+                bitmap = new MemoryBitmap(skc.Pixels, binfo);
+                return true;
+            }            
 
-            return true;
+            return false;
         }
 
         /// <inheritdoc/>

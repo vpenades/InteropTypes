@@ -203,6 +203,12 @@ namespace InteropDrawing
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point2, VECTOR2>(points);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<Point2> AsPoints(ReadOnlySpan<VECTOR2> points)
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR2, Point2>(points);
+        }
+
         public override string ToString() { return ToNumerics().ToString(); }        
 
         #endregion
@@ -320,6 +326,12 @@ namespace InteropDrawing
         public static ReadOnlySpan<VECTOR3> AsNumerics(ReadOnlySpan<Point3> points)
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point3, VECTOR3>(points);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<Point3> AsPoints(ReadOnlySpan<VECTOR3> points)
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR3, Point3>(points);
         }
 
         public override string ToString() { return ToNumerics().ToString(); }

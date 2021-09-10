@@ -9,47 +9,125 @@ namespace InteropBitmaps
 {
     partial class Pixel
     {
+        public static void ApplyPremul(ref Byte r, ref Byte g, ref Byte b, Byte a)
+        {
+            if (a == 0) { r = g = b = 0; }
+            else
+            {
+                r = (byte)((r * a) / 255);                
+                g = (byte)((g * a) / 255);                
+                b = (byte)((b * a) / 255);
+            }
+        }
+
+        public static void ApplyUnpremul(ref Byte r, ref Byte g, ref Byte b, Byte a)
+        {
+            if (a == 0) { r = g = b = 0; }
+            else
+            {
+                var x = (255 * 256) / a;
+                r = (Byte)((r * x) / 256);
+                g = (Byte)((g * x) / 256);
+                b = (Byte)((b * x) / 256);                
+            }
+        }
+
+        public static void ApplyPremul(ref float r, ref float g, ref float b, float a)
+        {
+            if (a == 0) { r = g = b = 0; }
+            else
+            {
+                r *= a;
+                g *= a;
+                b *= a;
+            }
+        }
+
+        public static void ApplyUnpremul(ref float r, ref float g, ref float b, float a)
+        {
+            if (a == 0) { r = g = b = 0; }
+            else
+            {
+                a = 1f / a;
+                r *= a;
+                g *= a;
+                b *= a;
+            }
+        }
+
+        public static void ApplyPremul(ref XYZA xxxa)
+        {
+            if (xxxa.W == 0) { xxxa = XYZA.Zero; }
+            else
+            {
+                var a = xxxa.W;
+                xxxa *= a;
+                xxxa.W = a;                
+            }
+        }
+
+        public static void ApplyUnpremul(ref XYZA xxxa)
+        {
+            if (xxxa.W == 0) { xxxa = XYZA.Zero; }
+            else
+            {
+                var a = xxxa.W;
+                xxxa /= a;
+                xxxa.W = a;
+            }
+        }
+
+        public static XYZA GetPremul(XYZA xxxa)
+        {
+            if (xxxa.W == 0) return XYZA.Zero;            
+            var a = xxxa.W;
+            xxxa *= a;
+            xxxa.W = a;
+            return xxxa;            
+        }
+
+        public static XYZA GetUnpremul(XYZA xxxa)
+        {
+            if (xxxa.W == 0) return XYZA.Zero;
+            var a = xxxa.W;
+            xxxa /= a;
+            xxxa.W = a;
+            return xxxa;
+        }
+
         partial struct BGRA32
         {
-            public BGRA32(RGBA32P color)
-            {
-                if (color.A == 0) { this = default; return; }
-                R = (Byte)(color.R * color.A);
-                G = (Byte)(color.G * color.A);
-                B = (Byte)(color.B * color.A);
+            public BGRA32(RGBP32 color)
+            {                
+                R = color.PreR;
+                G = color.PreG;
+                B = color.PreB;
                 A = color.A;
+                ApplyUnpremul(ref R, ref G, ref B, A);
             }
 
-            public BGRA32(BGRA32P color)
+            public BGRA32(BGRP32 color)
             {
-                if (color.A == 0) { this = default; return; }
-                R = (Byte)(color.R * color.A);
-                G = (Byte)(color.G * color.A);
-                B = (Byte)(color.B * color.A);
+                R = color.PreR;
+                G = color.PreG;
+                B = color.PreB;
                 A = color.A;
+                ApplyUnpremul(ref R, ref G, ref B, A);
             }
         }
 
         partial struct VectorRGBA
         {
-            public VectorRGBA(RGBA32P color)
+            public VectorRGBA(RGBP32 color)
             {
-                if (color.A == 0) { this = default; return; }
-
-                this.RGBA = new XYZA(color.R, color.G, color.B, color.A);
-                this.RGBA *= this.RGBA.W;
-                this.RGBA.W = color.A;
-                this.RGBA /= 255f;
+                this.RGBA = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
+                ApplyUnpremul(ref this.RGBA);
             }
 
-            public VectorRGBA(BGRA32P color)
+            public VectorRGBA(BGRP32 color)
             {
-                if (color.A == 0) { this = default; return; }
-
-                this.RGBA = new XYZA(color.R, color.G, color.B, color.A);
-                this.RGBA *= this.RGBA.W;
-                this.RGBA.W = color.A;
-                this.RGBA /= 255f;
+                this.RGBA = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
+                ApplyUnpremul(ref this.RGBA);
             }
         }
 
@@ -58,50 +136,42 @@ namespace InteropBitmaps
         /// RGBA Quantized to 8 bits. Alpha Premultiplied
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-        [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct RGBA32P : IPixelReflection<RGBA32P>, IPixelBlendOps<RGBA32P, RGBA32P>
+        [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
+        public readonly partial struct RGBP32 : IPixelReflection<RGBP32>, IPixelBlendOps<RGBP32, RGBP32>
         {
             #region constructors
 
-            public RGBA32P(in VectorRGBA rgba)
+            public RGBP32(in VectorRGBA rgba)
             {
-                if (rgba.A == 0) { this = default; return; }
-
-                var v = rgba.RGBA;
-                v *= 255f;
-
+                var v = GetPremul(rgba.RGBA) * 255f;
+                PreR = (Byte)v.X;
+                PreG = (Byte)v.Y;
+                PreB = (Byte)v.Z;
                 A = (Byte)v.W;
-                
-                v /= v.W;
-
-                R = (Byte)v.X;
-                G = (Byte)v.Y;
-                B = (Byte)v.Z;                
             }
 
-            public RGBA32P(in BGRA32 bgra)
+            public RGBP32(in BGRA32 bgra)
             {
-                if (bgra.A == 0) { this = default; return; }
-
-                R = (Byte)(bgra.R / bgra.A);
-                G = (Byte)(bgra.G / bgra.A);
-                B = (Byte)(bgra.B / bgra.A);
+                PreR = bgra.R;
+                PreG = bgra.G;
+                PreB = bgra.B;
                 A = bgra.A;
+                ApplyPremul(ref PreR, ref PreG, ref PreB, A);
             }
 
-            public RGBA32P(Byte premulRed, Byte premulGreen, Byte premulBlue, Byte alpha)
+            public RGBP32(Byte premulRed, Byte premulGreen, Byte premulBlue, Byte alpha)
             {
-                B = premulBlue;
-                G = premulGreen;
-                R = premulRed;
+                PreB = premulBlue;
+                PreG = premulGreen;
+                PreR = premulRed;
                 A = alpha;
             }
 
-            public RGBA32P(int premulRed, int premulGreen, int premulBlue, int alpha = 255)
+            public RGBP32(int premulRed, int premulGreen, int premulBlue, int alpha = 255)
             {
-                R = (byte)premulRed;
-                G = (byte)premulGreen;
-                B = (byte)premulBlue;
+                PreR = (byte)premulRed;
+                PreG = (byte)premulGreen;
+                PreB = (byte)premulBlue;
                 A = (byte)alpha;
             }
 
@@ -109,19 +179,23 @@ namespace InteropBitmaps
 
             #region data
 
-            public uint RGBA
+            public uint BGRP
             {
                 get
                 {
                     var tmp = this;
-                    return System.Runtime.CompilerServices.Unsafe.As<RGBA32P, uint>(ref tmp);
+                    return System.Runtime.CompilerServices.Unsafe.As<RGBP32, uint>(ref tmp);
                 }
             }
 
-            public readonly Byte R;
-            public readonly Byte G;
-            public readonly Byte B;
+            public readonly Byte PreR;
+            public readonly Byte PreG;
+            public readonly Byte PreB;
             public readonly Byte A;
+
+            public Byte R => (Byte)(PreR * 255 / A);
+            public Byte G => (Byte)(PreR * 255 / A);
+            public Byte B => (Byte)(PreR * 255 / A);
 
             #endregion
 
@@ -129,18 +203,18 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(this); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            RGBA32P IPixelReflection<RGBA32P>.From(BGRA32 color) { return new RGBA32P(color); }
-            RGBA32P IPixelReflection<RGBA32P>.From(VectorRGBA color) { return new RGBA32P(color); }
+            RGBP32 IPixelReflection<RGBP32>.From(BGRA32 color) { return new RGBP32(color); }
+            RGBP32 IPixelReflection<RGBP32>.From(VectorRGBA color) { return new RGBP32(color); }
 
-            public RGBA32P AverageWith(RGBA32P other)
+            public RGBP32 AverageWith(RGBP32 other)
             {
                 if (this.A == 0) return other;
                 if (other.A == 0) return this;
 
-                return new RGBA32P(
-                    (this.R + other.R) / 2,
-                    (this.G + other.G) / 2,
-                    (this.B + other.B) / 2,
+                return new RGBP32(
+                    (this.PreR + other.PreR) / 2,
+                    (this.PreG + other.PreG) / 2,
+                    (this.PreB + other.PreB) / 2,
                     (this.A + other.A) / 2);
             }
 
@@ -151,50 +225,42 @@ namespace InteropBitmaps
         /// BGRA Quantized to 8 bits. Alpha Premultiplied
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-        [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA32P : IPixelReflection<BGRA32P>, IPixelBlendOps<BGRA32P, BGRA32P>
+        [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
+        public readonly partial struct BGRP32 : IPixelReflection<BGRP32>, IPixelBlendOps<BGRP32, BGRP32>
         {
             #region constructors
 
-            public BGRA32P(in VectorRGBA rgba)
+            public BGRP32(in VectorRGBA rgba)
             {
-                if (rgba.A == 0) { this = default; return; }
-
-                var v = rgba.RGBA;
-                v *= 255f;
-
+                var v = GetPremul(rgba.RGBA) * 255f;
+                PreR = (Byte)v.X;
+                PreG = (Byte)v.Y;
+                PreB = (Byte)v.Z;
                 A = (Byte)v.W;
-
-                v /= v.W;
-
-                R = (Byte)v.X;
-                G = (Byte)v.Y;
-                B = (Byte)v.Z;
             }
 
-            public BGRA32P(in BGRA32 bgra)
+            public BGRP32(in BGRA32 bgra)
             {
-                if (bgra.A == 0) { this = default; return; }
-
-                R = (Byte)(bgra.R / bgra.A);
-                G = (Byte)(bgra.G / bgra.A);
-                B = (Byte)(bgra.B / bgra.A);
+                PreR = bgra.R;
+                PreG = bgra.G;
+                PreB = bgra.B;
                 A = bgra.A;
+                ApplyPremul(ref PreR, ref PreG, ref PreB, A);
             }
 
-            public BGRA32P(Byte premulRed, Byte premulGreen, Byte premulBlue, Byte alpha)
+            public BGRP32(Byte premulRed, Byte premulGreen, Byte premulBlue, Byte alpha)
             {
-                B = premulBlue;
-                G = premulGreen;
-                R = premulRed;
+                PreB = premulBlue;
+                PreG = premulGreen;
+                PreR = premulRed;
                 A = alpha;
             }
 
-            public BGRA32P(int premulRed, int premulGreen, int premulBlue, int alpha = 255)
+            public BGRP32(int premulRed, int premulGreen, int premulBlue, int alpha = 255)
             {
-                R = (byte)premulRed;
-                G = (byte)premulGreen;
-                B = (byte)premulBlue;
+                PreR = (byte)premulRed;
+                PreG = (byte)premulGreen;
+                PreB = (byte)premulBlue;
                 A = (byte)alpha;
             }
 
@@ -202,19 +268,23 @@ namespace InteropBitmaps
 
             #region data
 
-            public uint BGRA
+            public uint BGRP
             {
                 get
                 {
                     var tmp = this;
-                    return System.Runtime.CompilerServices.Unsafe.As<BGRA32P, uint>(ref tmp);
+                    return System.Runtime.CompilerServices.Unsafe.As<BGRP32, uint>(ref tmp);
                 }
             }
 
-            public readonly Byte B;
-            public readonly Byte G;
-            public readonly Byte R;
+            public readonly Byte PreB;
+            public readonly Byte PreG;
+            public readonly Byte PreR;
             public readonly Byte A;
+
+            public Byte R => (Byte)(PreR * 255 / A);
+            public Byte G => (Byte)(PreR * 255 / A);
+            public Byte B => (Byte)(PreR * 255 / A);
 
             #endregion
 
@@ -222,18 +292,18 @@ namespace InteropBitmaps
 
             public BGRA32 ToBGRA32() { return new BGRA32(this); }
             public VectorRGBA ToVectorRGBA() { return new VectorRGBA(this); }
-            BGRA32P IPixelReflection<BGRA32P>.From(BGRA32 color) { return new BGRA32P(color); }
-            BGRA32P IPixelReflection<BGRA32P>.From(VectorRGBA color) { return new BGRA32P(color); }
+            BGRP32 IPixelReflection<BGRP32>.From(BGRA32 color) { return new BGRP32(color); }
+            BGRP32 IPixelReflection<BGRP32>.From(VectorRGBA color) { return new BGRP32(color); }
 
-            public BGRA32P AverageWith(BGRA32P other)
+            public BGRP32 AverageWith(BGRP32 other)
             {
                 if (this.A == 0) return other;
                 if (other.A == 0) return this;
 
-                return new BGRA32P(
-                    (this.R + other.R) / 2,
-                    (this.G + other.G) / 2,
-                    (this.B + other.B) / 2,
+                return new BGRP32(
+                    (this.PreR + other.PreR) / 2,
+                    (this.PreG + other.PreG) / 2,
+                    (this.PreB + other.PreB) / 2,
                     (this.A + other.A) / 2);
             }
 

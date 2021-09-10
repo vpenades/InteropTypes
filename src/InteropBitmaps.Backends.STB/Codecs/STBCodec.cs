@@ -37,13 +37,13 @@ namespace InteropBitmaps.Codecs
         #region API - Decoder
 
         /// <inheritdoc/>
-        public bool TryRead(System.IO.Stream s, out MemoryBitmap bitmap)
+        public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
             bitmap = default;
 
             try
             {
-                var img = STBREAD.ImageResult.FromStream(s, STBREAD.ColorComponents.RedGreenBlueAlpha);
+                var img = STBREAD.ImageResult.FromStream(context.Stream, STBREAD.ColorComponents.RedGreenBlueAlpha);
 
                 var info = _Implementation.GetBitmapInfo(img);
 

@@ -108,7 +108,7 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct BGRA32P
+        partial struct BGRP32
         {
             public const uint Code = _PackedPixelCodes.BGRA32P;
             public static readonly Format Format = new Format(Code);
@@ -120,7 +120,7 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct RGBA32P
+        partial struct RGBP32
         {
             public const uint Code = _PackedPixelCodes.RGBA32P;
             public static readonly Format Format = new Format(Code);

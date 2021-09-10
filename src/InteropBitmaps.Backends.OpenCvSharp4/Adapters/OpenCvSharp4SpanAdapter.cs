@@ -32,7 +32,7 @@ namespace InteropBitmaps.Adapters
 
         private static unsafe void _Apply(PointerBitmap bmp, Func<Mat, Mat> operation)
         {
-            using (var srcMat = _Implementation.WrapAsMat(bmp))
+            using (var srcMat = _Implementation.WrapOrCloneAsMat(bmp))
             {
                 using (var dstMat = operation(srcMat))
                 {

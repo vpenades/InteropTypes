@@ -77,8 +77,8 @@ namespace InteropBitmaps
                     return WIC_FORMATS.Bgra32;
 
                 // case Pixel.ARGB32P.Code:
-                case Pixel.RGBA32P.Code:
-                case Pixel.BGRA32P.Code:
+                case Pixel.RGBP32.Code:
+                case Pixel.BGRP32.Code:
                     return WIC_FORMATS.Pbgra32;
 
                 case Pixel.VectorBGR.Code:

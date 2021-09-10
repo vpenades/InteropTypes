@@ -25,7 +25,7 @@ namespace InteropBitmaps
 
                 case GDIFMT.Format32bppRgb: outFmt = Pixel.BGRA32.Format; return true;
                 case GDIFMT.Format32bppArgb: outFmt = Pixel.BGRA32.Format; return true;
-                case GDIFMT.Format32bppPArgb: outFmt = Pixel.BGRA32P.Format; return true;
+                case GDIFMT.Format32bppPArgb: outFmt = Pixel.BGRP32.Format; return true;
             }
 
             outFmt = default;
@@ -80,8 +80,8 @@ namespace InteropBitmaps
                     return GDIFMT.Format32bppArgb;
 
                 // case Pixel.ARGB32P.Code:
-                case Pixel.BGRA32P.Code:
-                case Pixel.RGBA32P.Code:
+                case Pixel.BGRP32.Code:
+                case Pixel.RGBP32.Code:
                     return GDIFMT.Format32bppPArgb;                
 
                 default: throw new Diagnostics.PixelFormatNotSupportedException(inFmt, nameof(inFmt));

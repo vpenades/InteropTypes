@@ -23,9 +23,9 @@ namespace InteropBitmaps.Codecs
         #endregion
 
         /// <inheritdoc/>
-        public bool TryRead(Stream s, out MemoryBitmap bitmap)
+        public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
-            var frame = System.Windows.Media.Imaging.BitmapFrame.Create(s, System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat, System.Windows.Media.Imaging.BitmapCacheOption.None);
+            var frame = System.Windows.Media.Imaging.BitmapFrame.Create(context.Stream, System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat, System.Windows.Media.Imaging.BitmapCacheOption.None);
 
             bitmap = _Implementation.ToMemoryBitmap(frame);
 

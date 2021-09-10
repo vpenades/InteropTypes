@@ -85,6 +85,20 @@ namespace InteropBitmaps
                             case PEF.Green6:
                             case PEF.Undefined6: return 6;
 
+                            default: return this.ByteCount * 8;
+                        }
+                    }
+                }
+
+                public int ByteCount
+                {
+                    // an alternative to the switch is to have a lookup table
+                    get
+                    {
+                        switch (Id)
+                        {
+                            case PEF.Empty: return 0;                            
+
                             case PEF.Index8:
                             case PEF.Alpha8:
                             case PEF.Premul8:
@@ -92,7 +106,7 @@ namespace InteropBitmaps
                             case PEF.Red8:
                             case PEF.Green8:
                             case PEF.Blue8:
-                            case PEF.Undefined8: return 8;
+                            case PEF.Undefined8: return 1;
 
                             case PEF.Index16:
                             case PEF.Luminance16:
@@ -102,7 +116,7 @@ namespace InteropBitmaps
                             case PEF.Alpha16:
                             case PEF.Premul16:
                             case PEF.Millimeter16:
-                            case PEF.Undefined16: return 16;
+                            case PEF.Undefined16: return 2;
 
                             case PEF.Luminance32F:
                             case PEF.Red32F:
@@ -112,7 +126,7 @@ namespace InteropBitmaps
                             case PEF.Premul32F:
                             case PEF.Millimeter32:
                             case PEF.Meter32F:
-                            case PEF.Undefined32F: return 32;
+                            case PEF.Undefined32F: return 4;
 
                             default: throw new NotImplementedException($"Not implemented:{Id}");
                         }

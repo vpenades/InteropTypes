@@ -14,7 +14,7 @@ namespace InteropBitmaps
 
         public static BitmapInfo GetBitmapInfo(SkiaSharp.SKImageInfo info, int rowBytes = 0)
         {
-            var fmt = ToPixelFormat(info.ColorType, info.AlphaType);
+            var fmt = ToPixelFormat((info.ColorType, info.AlphaType));
             return new BitmapInfo(info.Width, info.Height, fmt, Math.Max(info.RowBytes, rowBytes));
         }
 

@@ -48,13 +48,13 @@ namespace InteropBitmaps
 
         
 
-        public static INTEROPFMT ToPixelFormat(SKIACOLOR color, SKIAALPHA alpha, bool allowCompatibleFormats = false)
+        public static INTEROPFMT ToPixelFormat((SKIACOLOR Color, SKIAALPHA Alpha) fmt, bool allowCompatibleFormats = false)
         {
-            switch (alpha)
+            switch (fmt.Alpha)
             {
-                case SKIAALPHA.Opaque: return ToPixelFormatAlpha(color, allowCompatibleFormats);
-                case SKIAALPHA.Premul: return ToPixelFormatPremul(color, allowCompatibleFormats);
-                case SKIAALPHA.Unpremul: return ToPixelFormatAlpha(color, allowCompatibleFormats);
+                case SKIAALPHA.Opaque: return ToPixelFormatAlpha(fmt.Color, allowCompatibleFormats);
+                case SKIAALPHA.Premul: return ToPixelFormatPremul(fmt.Color, allowCompatibleFormats);
+                case SKIAALPHA.Unpremul: return ToPixelFormatAlpha(fmt.Color, allowCompatibleFormats);
             }
             throw new NotImplementedException();
         }
@@ -89,18 +89,18 @@ namespace InteropBitmaps
             {
                 case SKIACOLOR.Alpha8: return Pixel.Alpha8.Format;
                 case SKIACOLOR.Gray8: return Pixel.Luminance8.Format;
-                case SKIACOLOR.Rgba8888: return Pixel.RGBA32P.Format;
-                case SKIACOLOR.Rgb888x: return Pixel.RGBA32P.Format;
-                case SKIACOLOR.Bgra8888: return Pixel.BGRA32P.Format;
+                case SKIACOLOR.Rgba8888: return Pixel.RGBP32.Format;
+                case SKIACOLOR.Rgb888x: return Pixel.RGBP32.Format;
+                case SKIACOLOR.Bgra8888: return Pixel.BGRP32.Format;
             }
 
             if (allowCompatibleFormats)
             {
                 switch (color)
                 {                    
-                    case SKIACOLOR.Argb4444: return Pixel.RGBA32P.Format;
-                    case SKIACOLOR.Rgb565: return Pixel.RGBA32P.Format;
-                    case SKIACOLOR.Rgb888x: return Pixel.RGBA32P.Format;
+                    case SKIACOLOR.Argb4444: return Pixel.RGBP32.Format;
+                    case SKIACOLOR.Rgb565: return Pixel.RGBP32.Format;
+                    case SKIACOLOR.Rgb888x: return Pixel.RGBP32.Format;
                 }
             }
 

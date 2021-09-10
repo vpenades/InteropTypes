@@ -23,11 +23,11 @@ namespace InteropBitmaps.Codecs
         #region API
 
         /// <inheritdoc/>
-        public bool TryRead(Stream s, out MemoryBitmap bitmap)
+        public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
             try
             {
-                using (var img = System.Drawing.Image.FromStream(s))
+                using (var img = System.Drawing.Image.FromStream(context.Stream))
                 {
                     bitmap = _Implementation.CloneAsMemoryBitmap(img);
                 }

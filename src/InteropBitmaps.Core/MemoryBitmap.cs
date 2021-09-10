@@ -207,7 +207,7 @@ namespace InteropBitmaps
         {            
             using (var s = System.IO.File.OpenRead(filePath))
             {
-                return Codecs.CodecFactory.Read(s, factory);
+                return Codecs.CodecFactory.Read(s, factory, (int)s.Length);
             }
         }
 

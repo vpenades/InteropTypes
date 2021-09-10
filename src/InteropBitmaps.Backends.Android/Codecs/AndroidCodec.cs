@@ -27,13 +27,13 @@ namespace InteropBitmaps.Codecs
         #region API
 
         /// <inheritdoc/>
-        public bool TryRead(Stream s, out MemoryBitmap bitmap)
+        public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
             try
             {
                 bitmap = default;
 
-                var bmp = Android.Graphics.BitmapFactory.DecodeStream(s);                
+                var bmp = Android.Graphics.BitmapFactory.DecodeStream(context.Stream);                
 
                 bmp.CopyTo(ref bitmap);
 

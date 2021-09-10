@@ -90,11 +90,11 @@ namespace InteropBitmaps
 
             // premultiplied
 
-            ConversionTest<Pixel.ARGB32, Pixel.BGRA32P>();
-            ConversionTest<Pixel.BGRA32P, Pixel.ARGB32>();
+            ConversionPremulTest<Pixel.ARGB32, Pixel.BGRP32>();
+            ConversionPremulTest<Pixel.BGRP32, Pixel.ARGB32>();
 
-            ConversionTest<Pixel.ARGB32, Pixel.RGBA32P>();
-            ConversionTest<Pixel.RGBA32P, Pixel.ARGB32>();            
+            ConversionPremulTest<Pixel.ARGB32, Pixel.RGBP32>();
+            ConversionPremulTest<Pixel.RGBP32, Pixel.ARGB32>();            
         }
 
 
@@ -106,48 +106,60 @@ namespace InteropBitmaps
             var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();
 
             var src = new TSrcPixel[5];
-            var dst = new TDstPixel[5];
-            var cvt = Pixel.GetConverter(srcFmt,dstFmt);
+            var dst = new TDstPixel[5];            
 
             for(int i=0; i < 5; ++i)
             {
                 src[i] = default(TSrcPixel).From(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
             }
-
-            cvt.Invoke
-                (
-                System.Runtime.InteropServices.MemoryMarshal.Cast<TSrcPixel, Byte>(src),
-                System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, Byte>(dst)
-                );
-
-            if (srcFmt.HasPremul || dstFmt.HasPremul)
+            
+            Pixel.GetPixelConverter<TSrcPixel,TDstPixel>().Invoke(src,dst);
+            
+            for (int i = 0; i < 5; ++i)
             {
-                for (int i = 0; i < 5; ++i)
-                {
-                    var srcP = new Pixel.RGBA32P(src[i].ToBGRA32());
-                    var dstP = new Pixel.RGBA32P(dst[i].ToBGRA32());                    
+                var srcP = src[i].ToBGRA32();
+                var dstP = dst[i].ToBGRA32();
 
-                    Assert.AreEqual(srcP.R, dstP.R, 1);
-                    Assert.AreEqual(srcP.G, dstP.G, 1);
-                    Assert.AreEqual(srcP.B, dstP.B, 1);
-                    Assert.AreEqual(srcP.A, dstP.A, 1);
+                if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
+                {
+                    srcP = new Pixel.BGRA32(srcP.R, srcP.G, srcP.B, (Byte)255);
+                    dstP = new Pixel.BGRA32(dstP.R, dstP.G, dstP.B, (Byte)255);
                 }
+
+                Assert.AreEqual(srcP, dstP);
+            }            
+        }
+
+        public void ConversionPremulTest<TSrcPixel, TDstPixel>()
+            where TSrcPixel : unmanaged, Pixel.IPixelReflection<TSrcPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelReflection<TDstPixel>
+        {
+            var srcFmt = Pixel.Format.TryIdentifyPixel<TSrcPixel>();
+            var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();
+
+            var src = new TSrcPixel[5];
+            var dst = new TDstPixel[5];
+            var cvt = Pixel.GetByteConverter(srcFmt, dstFmt);
+
+            for (int i = 0; i < 5; ++i)
+            {
+                src[i] = default(TSrcPixel).From(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
             }
-            else
+
+            Pixel.GetPixelConverter<TSrcPixel, TDstPixel>().Invoke(src, dst);
+
+            for (int i = 0; i < 5; ++i)
             {
-                for (int i = 0; i < 5; ++i)
-                {
-                    var srcP = src[i].ToBGRA32();
-                    var dstP = dst[i].ToBGRA32();
+                var srcA = src[i].ToBGRA32();
+                var dstA = dst[i].ToBGRA32();
 
-                    if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
-                    {
-                        srcP = new Pixel.BGRA32(srcP.R, srcP.G, srcP.B, (Byte)255);
-                        dstP = new Pixel.BGRA32(dstP.R, dstP.G, dstP.B, (Byte)255);
-                    }
+                var srcP = new Pixel.RGBP32(srcA);
+                var dstP = new Pixel.RGBP32(dstA);
 
-                    Assert.AreEqual(srcP, dstP);
-                }
+                Assert.AreEqual(srcP.PreR, dstP.PreR, 1);
+                Assert.AreEqual(srcP.PreG, dstP.PreG, 1);
+                Assert.AreEqual(srcP.PreB, dstP.PreB, 1);
+                Assert.AreEqual(srcP.A, dstP.A, 1);
             }
         }
 

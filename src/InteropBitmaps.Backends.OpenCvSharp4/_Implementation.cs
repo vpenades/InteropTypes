@@ -47,7 +47,7 @@ namespace InteropBitmaps
 
                 case Pixel.BGR24.Code: { dst = CVDEPTHTYPE.CV_8UC3; return true; }
                 case Pixel.BGRA32.Code: { dst = CVDEPTHTYPE.CV_8UC4; return true; }
-                case Pixel.BGRA32P.Code: { dst = CVDEPTHTYPE.CV_8UC4; return true; }
+                case Pixel.BGRP32.Code: { dst = CVDEPTHTYPE.CV_8UC4; return true; }
 
                 case Pixel.VectorBGR.Code: { dst = CVDEPTHTYPE.CV_32FC3; return true; }
                 case Pixel.VectorBGRA.Code: { dst = CVDEPTHTYPE.CV_32FC4; return true; }
@@ -70,7 +70,7 @@ namespace InteropBitmaps
                 case Pixel.BGRA4444.Code:
                 case Pixel.BGRA5551.Code:
                 case Pixel.RGBA32.Code:
-                case Pixel.RGBA32P.Code:
+                case Pixel.RGBP32.Code:
                 case Pixel.ARGB32.Code:
                     return CVDEPTHTYPE.CV_8UC4;
 
@@ -102,6 +102,18 @@ namespace InteropBitmaps
             wrap = new PointerBitmap(src.Data, info);
 
             return true;
+        }
+
+        /// <summary>
+        /// Tries to wrap the input bitmap with a <see cref="CVMATRIX"/>.
+        /// If it fails, it creates a <see cref="CVMATRIX"/> clone, using the closest compatible pixel format.
+        /// </summary>
+        /// <param name="src">The bitmap to wrap or clone</param>
+        /// <returns>A <see cref="CVMATRIX"/></returns>
+        public static CVMATRIX WrapOrCloneAsMat(PointerBitmap src)
+        {
+            if (TryWrapAsMat(src, out var wrap)) return wrap;
+            return CloneAsMat(src.AsSpanBitmap());
         }
         
         public static CVMATRIX WrapAsMat(PointerBitmap src)

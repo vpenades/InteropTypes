@@ -74,7 +74,7 @@ namespace InteropBitmaps.Codecs
             throw new ArgumentException("invalid format", nameof(format));
         }
 
-        public static MemoryBitmap Read(System.IO.Stream stream, IBitmapDecoder[] decoders)
+        public static MemoryBitmap Read(System.IO.Stream stream, IBitmapDecoder[] decoders, int? bytesToReadHint = null)
         {
             Guard.NotNull(nameof(stream), stream);
             Guard.IsTrue(nameof(stream), stream.CanRead);
@@ -103,7 +103,13 @@ namespace InteropBitmaps.Codecs
 
             foreach (var decoder in decoders)
             {
-                if (decoder.TryRead(stream, out MemoryBitmap bmp)) return bmp;
+                var context = new BitmapDecoderContext
+                {
+                    Stream = stream,
+                    BytesToRead = bytesToReadHint
+                };
+
+                if (decoder.TryRead(context, out MemoryBitmap bmp)) return bmp;
 
                 // current decoder failed, amend the stream:
 

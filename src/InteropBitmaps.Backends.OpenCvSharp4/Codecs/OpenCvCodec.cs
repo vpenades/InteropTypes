@@ -21,11 +21,11 @@ namespace InteropBitmaps.Codecs
         #endregion
 
         /// <inheritdoc/>
-        public bool TryRead(Stream s, out MemoryBitmap bitmap)
+        public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
             bitmap = default;
 
-            using(var mat = OpenCvSharp.Mat.FromStream(s, OpenCvSharp.ImreadModes.AnyColor))
+            using(var mat = OpenCvSharp.Mat.FromStream(context.Stream, OpenCvSharp.ImreadModes.AnyColor))
             {
                 if (mat.Cols == 0) return false;
                 bitmap = mat.AsSpanBitmap().ToMemoryBitmap();                

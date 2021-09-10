@@ -6,6 +6,12 @@ namespace InteropBitmaps.Codecs
 {
     public class CodecException : System.IO.IOException { }
 
+    public struct BitmapDecoderContext
+    {
+        public System.IO.Stream Stream;
+        public int? BytesToRead;
+    }
+
     /// <summary>
     /// Interface implemented by bitmap reader codecs.
     /// </summary>
@@ -14,10 +20,10 @@ namespace InteropBitmaps.Codecs
         /// <summary>
         /// Tries to read an image from the stream.
         /// </summary>
-        /// <param name="stream">The input stream to read from.</param>
-        /// <param name="bitmap">The output bitmap.</param>
+        /// <param name="readContext">The input stream to read from.</param>
+        /// <param name="bitmap">The output bitmap.</param>        
         /// <returns>True if succeeded reading the image, false otherwise.</returns>
-        bool TryRead(System.IO.Stream stream, out MemoryBitmap bitmap);
+        bool TryRead(BitmapDecoderContext readContext, out MemoryBitmap bitmap);
     }
 
     /// <summary>

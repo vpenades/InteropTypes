@@ -27,7 +27,7 @@ namespace InteropBitmaps
             // TPixel FromPremul(XYZA premultiplied);
 
             // TPixel AverageWith(TPixel other);
-        }
+        }        
 
         public interface IPixelBlendOps<TDstPixel, TSrcPixel> : IConvertible
         {
@@ -242,10 +242,20 @@ namespace InteropBitmaps
 
             public BGR565(Byte red, Byte green, Byte blue)
             {
+                int bgr = red << 8;
+                bgr &= 0b1111100000000000;
+                bgr |= green << 3;
+                bgr &= 0b1111111111100000;
+                bgr |= blue >> 3;
+
+                BGR = (UInt16)bgr;
+
+                /*
                 var x = blue >> 3;
                 x |= (green >> 2) << 5;
                 x |= (red >> 3) << 11;
                 BGR = (UInt16)x;
+                */
             }
             
             #endregion
@@ -747,7 +757,7 @@ namespace InteropBitmaps
         {
             #region constructors
             public VectorBGRA(Single red, Single green, Single blue, Single alpha) { BGRA = new XYZA(blue, green, red, alpha); }
-            public VectorBGRA(BGRA32 color) { BGRA = new XYZA(color.B, color.G, color.R, color.A) * 255f; }
+            public VectorBGRA(BGRA32 color) { BGRA = new XYZA(color.B, color.G, color.R, color.A) / 255f; }
             #endregion
 
             #region data
@@ -846,7 +856,8 @@ namespace InteropBitmaps
         {
             #region constructors
             public VectorBGR(Single red, Single green, Single blue) { BGR = new XYZ(blue, green, red); }
-            public VectorBGR(BGRA32 color) { BGR = new XYZ(color.B, color.G, color.R) * 255f; }
+            public VectorBGR(Byte red, Byte green, Byte blue) { BGR = new XYZ(blue, green, red) / 255f; }
+            public VectorBGR(BGRA32 color) { BGR = new XYZ(color.B, color.G, color.R) / 255f; }            
 
             #endregion
 
