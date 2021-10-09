@@ -59,7 +59,10 @@ namespace InteropDrawing.Backends
             set => VerticalOriginProperty.SetValue(this, value);
         }
 
-        private static readonly StaticProperty<Matrix3x2> CameraTransformProperty = _PropFactory.Register<Matrix3x2>(nameof(CameraTransform), Matrix3x2.Identity, _Update);
+        /// <summary>
+        /// TODO: convert to attached property
+        /// </summary>
+        private static readonly StaticProperty<Matrix3x2> CameraTransformProperty = _PropFactory.Register(nameof(CameraTransform), Matrix3x2.Identity, _Update);
         public Matrix3x2 CameraTransform
         {
             get => CameraTransformProperty.GetValue(this);

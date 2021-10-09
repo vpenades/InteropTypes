@@ -42,7 +42,7 @@ namespace InteropDrawing.Backends
 
         private static void _Update(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is WPFScene3DCanvas dc) dc._Update(e.Property, e.OldValue, e.NewValue);
+            (d as WPFScene3DCanvas)?._Update(e.Property, e.OldValue, e.NewValue);
         }
 
         private void _Update(DependencyProperty p, object oldv, object newv)
@@ -57,7 +57,7 @@ namespace InteropDrawing.Backends
 
             var content = this.Content;
             if (content == null) return;
-            if (content is Model3D model && model.IsEmpty) return;
+            if (content is Model3D model && model.IsEmpty) return;            
 
             _Context2D.DrawScene(dc, this.RenderSize, Viewport, content);
         }        

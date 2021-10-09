@@ -6,11 +6,9 @@ using ASSET = System.Object;
 using SCALAR = System.Single;
 
 using XFORM2 = System.Numerics.Matrix3x2;
-using POINT2 = InteropDrawing.Point2;
 
 using XFORM3 = System.Numerics.Matrix4x4;
 using POINT3 = InteropDrawing.Point3;
-
 
 namespace InteropDrawing
 {
@@ -20,6 +18,11 @@ namespace InteropDrawing
     public interface IDrawable3D
     {
         void DrawTo(IDrawing3D dc);
+    }
+
+    public interface IBounds3D
+    {
+        (System.Numerics.Vector3 Center, Single Radius) GetBoundingSphere();
     }
 
     /// <summary>
@@ -55,6 +58,8 @@ namespace InteropDrawing
 
     public interface ISceneViewport3D
     {
+        // TODO: include near/far depth plane distance hints
+
         (XFORM3 Camera, XFORM3 Projection) GetMatrices(float renderWidth, float renderHeight);
     }
 
