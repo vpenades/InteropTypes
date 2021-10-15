@@ -24,6 +24,11 @@ namespace InteropVision
     public interface IModelGraph : IDisposable
     {
         /// <summary>
+        /// Represents the Base64(Sha256) hash of the model's file.
+        /// </summary>
+        string ModelSha256 { get; }
+
+        /// <summary>
         /// Represents the image constrainsts the input image needs to meet<br/>
         /// to be compatible with this model.
         /// </summary>

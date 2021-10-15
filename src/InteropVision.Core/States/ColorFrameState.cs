@@ -2,14 +2,14 @@
 using System.Numerics;
 
 using InteropBitmaps;
-
-using DISPRIM = InteropVision.DisplayPrimitive;
+using InteropDrawing;
 
 namespace InteropVision
 {
-    public partial class ColorFrameState : DISPRIM.IBitmapSource
+    public partial class ColorFrameState : IDrawable2D
     {
         private MemoryBitmap _Image;
+        private SpriteAsset _SpriteAsset;
 
         public MemoryBitmap Image => _Image;
 
@@ -22,12 +22,25 @@ namespace InteropVision
                 _Image = new MemoryBitmap(newImage.Width, newImage.Height, Pixel.BGR24.Format);
             }
 
-            SpanBitmap.CopyPixels(newImage, _Image, (0, 255), (0, 255));            
+            SpanBitmap.CopyPixels(newImage, _Image, (0, 255), (0, 255));
+
+            _SpriteAsset = null;
         }
 
         public MemoryBitmap GetDisplayBitmap()
         {
             return _Image; // it's already a BGR24 image!
+        }
+
+        public void DrawTo(IDrawing2D dc)
+        {
+            if (_SpriteAsset == null)
+            {
+                var bmp = GetDisplayBitmap();
+                _SpriteAsset = SpriteAsset.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
+            }
+
+            dc.DrawSprite(Matrix3x2.Identity, _SpriteAsset);
         }
     }
 }

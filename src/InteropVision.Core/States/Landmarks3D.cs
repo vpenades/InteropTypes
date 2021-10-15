@@ -7,16 +7,14 @@ using System.Numerics;
 
 using XYZ = System.Numerics.Vector3;
 
-using DISPRIM = InteropVision.DisplayPrimitive;
-
 namespace InteropVision
 {
-    public class Landmarks3D : DISPRIM.ISource
+    public class Landmarks3D : InteropDrawing.IDrawable3D //, InteropDrawing.IBounds3D
     {
         #region lifecycle
 
         public Landmarks3D() { }
-
+        
         public Landmarks3D(params int[] innerIndices)
         {
             _InnerIndices = innerIndices;
@@ -33,8 +31,9 @@ namespace InteropVision
 
         private RectangleF? _InnerBounds;
         private RectangleF? _OuterBounds;
+        private XYZ? _Size;
 
-        private Func<Landmarks3D, IEnumerable<DISPRIM>> _DisplayFunc;
+        // private (XYZ Center, float Radius)? _BoundingSphere;
 
         #endregion
 
@@ -107,7 +106,7 @@ namespace InteropVision
             _Score = score;
         }
 
-        public void SetLandmarks(Score score, ReadOnlySpan<Vector3> points)
+        public void SetLandmarks(Score score, ReadOnlySpan<XYZ> points)
         {
             if (!score.IsValid) { SetLandmarks(score); return; }
 
@@ -157,21 +156,38 @@ namespace InteropVision
 
         #endregion
 
-        #region drawing
+        #region drawing        
 
-        public void DrawTo(InteropDrawing.IDrawing2D dc)
+        private XYZ _GetSize()
         {
-            DISPRIM.Draw(dc, GetDisplayPrimitives());
+            if (_Size.HasValue) return _Size.Value;
+
+            var min = _Landmarks.Aggregate((a, b) => XYZ.Min(a, b));
+            var max = _Landmarks.Aggregate((a, b) => XYZ.Max(a, b));
+            _Size = max - min;
+
+            return _Size.Value;
         }
 
-        public IEnumerable<DISPRIM> GetDisplayPrimitives()
+        public virtual void DrawTo(InteropDrawing.IDrawing3D dc)
         {
-            if (_DisplayFunc == null) return Enumerable.Empty<DISPRIM>();
+            // ideally this should be half the distance of the two closest points
+            // but that's not trivial to calculate.
+            var r = 0.25f * _GetSize().Length() / (Landmarks.Count + 1);
 
-            return _DisplayFunc(this);
+            foreach(var l in Landmarks)
+            {
+                dc.DrawSphere(l, r * 2f, Color.White);
+            }
         }
 
-        public void SetDisplayFunc(Func<Landmarks3D, IEnumerable<DISPRIM>> f) { _DisplayFunc = f; }
+        /*
+        public (XYZ Center, float Radius) GetBoundingSphere()
+        {
+            if (_BoundingSphere.HasValue) return _BoundingSphere.Value;
+
+            throw new NotImplementedException();
+        }*/
 
         #endregion
     }

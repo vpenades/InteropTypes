@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 using InteropBitmaps;
-
-using DISPRIM = InteropVision.DisplayPrimitive;
+using InteropDrawing;
 
 namespace InteropVision
 {
-    public partial class DepthFrameState : DISPRIM.IBitmapSource
+    public partial class DepthFrameState : IDrawable2D
     {
         private MemoryBitmap<float> _Depth;
+        private SpriteAsset _SpriteAsset;
 
         public MemoryBitmap<float> Depth => _Depth;
 
         public void Update(SpanBitmap<float> newDepth)
         {
             newDepth.CopyTo(ref _Depth);
+            _SpriteAsset = null;
         }
 
         public MemoryBitmap<Byte> GetGrayBitmap()
@@ -39,6 +41,17 @@ namespace InteropVision
             SpanBitmap.CopyPixels(_Depth, rgb, (-min, 255.0f / (max - min)), (0, 255));
 
             return rgb;
+        }
+
+        public void DrawTo(IDrawing2D dc)
+        {
+            if (_SpriteAsset == null)
+            {
+                var bmp = GetDisplayBitmap();
+                _SpriteAsset = SpriteAsset.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
+            }
+
+            dc.DrawSprite(Matrix3x2.Identity, _SpriteAsset);
         }
     }
 }

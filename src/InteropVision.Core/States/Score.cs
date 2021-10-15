@@ -6,7 +6,7 @@ namespace InteropVision
 {
     /// <summary>
     /// Represents the output score of an inference.
-    /// </summary>    
+    /// </summary>
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplayString(),nq}")]
     public readonly struct Score :
         IEquatable<Score>,
@@ -77,9 +77,8 @@ namespace InteropVision
 
         #region data
 
-
         /// <summary>
-        /// Defines how <see cref="Value"/> has to be interpreted.
+        /// Determines how to interpret <see cref="Value"/>.
         /// </summary>
         public readonly ResultType Type;        
 

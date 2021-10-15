@@ -8,11 +8,26 @@ namespace InteropVision
 {
     public static partial class _Extensions
     {
-        static bool IsARM(this System.Runtime.InteropServices.Architecture arch)
+        private static bool IsARM(this System.Runtime.InteropServices.Architecture arch)
         {
             if (arch == System.Runtime.InteropServices.Architecture.Arm) return true;
             if (arch == System.Runtime.InteropServices.Architecture.Arm64) return true;
             return false;
+        }
+
+        public static (string Name, Byte[] Data) ReadResourceToEnd(this IEnumerable<Assembly> assemblies, string resourceName, string sha256)
+        {
+            foreach(var a in assemblies)
+            {
+                try
+                {
+                    var (name,data) = a.ReadModelToEnd(resourceName, sha256);
+                    if (data != null && data.Length > 0) return (name, data);
+                }
+                catch { }
+            }
+
+            return (null, null);
         }
 
         public static (string Name, Byte[] Data) ReadModelToEnd(this Assembly assembly, string name, string x86sha256 = null, string armsha256 = null)
@@ -106,6 +121,26 @@ namespace InteropVision
             using var calc = System.Security.Cryptography.SHA256.Create("SHA256");
 
             var result = calc.ComputeHash(array.Array, array.Offset, array.Count);
+
+            return string.Join(string.Empty, result.Select(item => item.ToString("X2")));
+        }
+
+        public static String GetSha256(this IEnumerable<ArraySegment<Byte>> arrays)
+        {
+            using var calc = System.Security.Cryptography.SHA256.Create("SHA256");
+
+            using var m = new System.IO.MemoryStream();
+
+            foreach (var array in arrays)
+            {
+                m.Write(array.Array, array.Offset, array.Count);
+            }
+
+            m.Flush();
+
+            m.Position = 0;
+
+            var result = calc.ComputeHash(m);
 
             return string.Join(string.Empty, result.Select(item => item.ToString("X2")));
         }

@@ -20,7 +20,7 @@ namespace InteropVision
 {
     partial struct DetectedObject
     {
-        public class Collection : DisplayPrimitive.ISource
+        public partial class Collection
         {
             #region lifecycle
 
@@ -278,85 +278,7 @@ namespace InteropVision
             public void AddDisplayLine(int indexA, int indexB) { _DisplayLineIndices.Add((indexA, indexB)); }            
                  
 
-            #endregion
-
-            #region API - Display
-
-            public IEnumerable<DisplayPrimitive> GetDisplayPrimitives() { return GetDisplayPrimitives(false); }
-
-            public IEnumerable<DisplayPrimitive> GetDisplayPrimitives(bool mirrored)
-            {
-                var xform = Matrix3x2.Identity;
-
-                if (mirrored)
-                {
-                    var w = _FrameSize.Width;
-                    // if w == 0 get bounds
-
-                    xform = Matrix3x2.CreateScale(-1, 1) * Matrix3x2.CreateTranslation(w, 0);
-                }                
-
-                return GetDisplayPrimitives(xform);
-            }
-
-            public IEnumerable<DisplayPrimitive> GetDisplayPrimitives(Matrix3x2 xform)
-            {
-                foreach (var r in _Objects)
-                {
-                    var rr = r.Rect;
-
-                    var color = _GetColor(r.Name);
-
-                    foreach (var prim in DisplayPrimitive.Rect(color, rr.Location, rr.Size, xform)) yield return prim;
-
-                    if (r.Area < 8 * 8) continue;
-                    if (!r.Score.IsValid) continue;
-                    if (r.Score.Value <= 0) continue;
-                    if (r.Score.Value > 1) continue;
-
-                    float x = rr.Location.X - 6;
-                    float y = rr.Location.Y + rr.Height;
-                    float s = r.Score.Value * (float)rr.Height;
-                    y -= s;
-
-                    yield return DisplayPrimitive.Line(COLOR.Green, (x, y), (x, y + s));                    
-                }
-
-                foreach(var l in _DisplayLineIndices)
-                {
-                    var a = _Objects[l.Item1].Rect;
-                    var b = _Objects[l.Item2].Rect;
-
-                    yield return DisplayPrimitive.Line(COLOR.Green, POINT.Center(a), POINT.Center(b));
-                }
-
-                int row = 0;
-
-                foreach(var item in this.Roots)
-                {
-                    var s = item.Current.Score;
-                    if (s.Equals(SCORE.Ok)) continue;
-
-                    yield return DisplayPrimitive.Write(s.IsValid ? COLOR.Green : COLOR.Red, (5, row), s.Value.ToString(), 10);
-
-                    row += 20;
-                }
-            }
-
-            private static COLOR _GetColor(string name)
-            {
-                if (name == null) name = string.Empty;
-                var h = 0;
-                foreach (var c in name) { h ^= c.GetHashCode(); h *= 17; }
-
-                var r = (h & 4) != 0 ? 255 : 0;
-                var g = (h & 2) != 0 ? 255 : 0;
-                var b = (h & 1) != 0 ? 255 : 0;
-
-                return COLOR.FromArgb(r, g, b);
-            }            
-
-            #endregion
+            #endregion            
         }
     }
 }
