@@ -12,14 +12,22 @@ namespace InteropDrawing.Transforms
 {
     public readonly struct Decompose2D : IDrawing2D
     {
+        #region lifecycle
+
         public Decompose2D(IPolygonDrawing2D renderTarget)
         {
             _RenderTarget = renderTarget;            
             _DecomposePolygonOutlines = true;
         }
 
+        #endregion
+
+        #region data
+
         private readonly IPolygonDrawing2D _RenderTarget;        
-        private readonly bool _DecomposePolygonOutlines;        
+        private readonly bool _DecomposePolygonOutlines;
+
+        #endregion
 
         #region API - IDrawing2D
 

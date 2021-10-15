@@ -13,7 +13,7 @@ namespace InteropDrawing
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IDrawing3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Model3D : IDrawing3D, IDrawable3D, IPseudoImmutable
+    public class Model3D : IDrawing3D, IDrawable3D, IPseudoImmutable, IBounds3D
     {
         #region data
 
@@ -72,6 +72,12 @@ namespace InteropDrawing
 
         #region API
 
+        public (XYZ Center, float Radius) GetBoundingSphere()
+        {
+            var key = (Model3DVersionKey)ImmutableKey;
+            return key.BoundingSphere;
+        }
+
         public void Clear()
         {
             _ImmutableKey = null;
@@ -79,7 +85,7 @@ namespace InteropDrawing
             _Commands.Clear();            
         }
 
-        public void DrawAsset((Quaternion R, Vector3 T) transform, object asset, ColorStyle brush)
+        public void DrawAsset((Quaternion R, XYZ T) transform, object asset, ColorStyle brush)
         {
             var xform = Matrix4x4.CreateFromQuaternion(transform.R);
             xform.Translation = transform.T;
@@ -157,7 +163,7 @@ namespace InteropDrawing
         {
             other._Commands.Set(this._Commands);
             other._ImmutableKey = null;
-        }
+        }        
 
         #endregion
     }

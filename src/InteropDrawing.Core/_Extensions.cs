@@ -91,9 +91,9 @@ namespace InteropDrawing
 
         public static float DecomposeScale(this in Matrix3x2 xform)
         {
-            var sx = new XY(xform.M11, xform.M12).Length();
-            var sy = new XY(xform.M21, xform.M22).Length();
-            return (sx + sy) / 2;
+            var det = xform.GetDeterminant();
+            var area = Math.Abs(det);
+            return (float)Math.Sqrt(area);
         }
 
 

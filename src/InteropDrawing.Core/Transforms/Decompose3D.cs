@@ -13,6 +13,7 @@ namespace InteropDrawing.Transforms
 {
     public readonly struct Decompose3D : IDrawing3D
     {
+        #region lifecycle
         public Decompose3D(ISurfaceDrawing3D renderTarget)
         {
             _RenderTarget = renderTarget;
@@ -29,10 +30,16 @@ namespace InteropDrawing.Transforms
             _SphereLod = sphereLOD;
         }
 
+        #endregion
+
+        #region data
+
         private readonly ISurfaceDrawing3D _RenderTarget;
         private readonly bool _DecomposeSurfaceOutlines;
         private readonly int _CylinderLod;
         private readonly int _SphereLod;
+
+        #endregion
 
         #region API - IDrawing3D
 

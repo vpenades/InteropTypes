@@ -80,12 +80,9 @@ namespace InteropDrawing.Transforms
         private Drawing2DTransform(IDrawing2D t, Matrix3x2 xform)
         {
             _Target = t;
-
             _Transform = xform;
-
-            Matrix3x2.Invert(xform, out _TransformInverse);
-
-            _SizeScale = xform.DecomposeScale();            
+            _TransformScale = xform.DecomposeScale();
+            Matrix3x2.Invert(xform, out _TransformInverse);            
         }        
 
         #endregion
@@ -94,14 +91,14 @@ namespace InteropDrawing.Transforms
 
         private readonly IDrawing2D _Target;
         private readonly Matrix3x2 _Transform;
-        private readonly Matrix3x2 _TransformInverse;
-        private readonly Single _SizeScale;
+        private readonly Single _TransformScale;
+        private readonly Matrix3x2 _TransformInverse;        
 
         #endregion
 
         #region API
 
-        private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _SizeScale; }
+        private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _TransformScale; }
 
         private Point2 _GetTransformed(Point2 point) { return Point2.Transform(point, _Transform); }
 
