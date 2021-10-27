@@ -162,6 +162,9 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
 
         <# var TSTEPLEN = String.Join(" * ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Dim{idx}")); #>
 
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => <#= TSTEPLEN#>;
 
         #endregion

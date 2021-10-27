@@ -12,7 +12,7 @@ using TENSOR4FLOAT = InteropTensors.SpanTensor4<float>;
 
 namespace InteropTensors
 {
-    public static class TensorExtensions
+    public static partial class TensorExtensions
     {
         public static SpanTensor1<T> AsSpanTensor1<T>(this IDenseTensor<T> tensor)
             where T : unmanaged

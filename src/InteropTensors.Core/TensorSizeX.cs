@@ -105,6 +105,9 @@ namespace InteropTensors
         
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0;
 
         #endregion
@@ -281,6 +284,9 @@ namespace InteropTensors
         public TensorSize1 Tail1 => new TensorSize1(Dim1);
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0 * Dim1;
 
         #endregion
@@ -514,6 +520,9 @@ namespace InteropTensors
         public TensorSize2 Tail2 => new TensorSize2(Dim1, Dim2);
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0 * Dim1 * Dim2;
 
         #endregion
@@ -782,6 +791,9 @@ namespace InteropTensors
         public TensorSize3 Tail3 => new TensorSize3(Dim1, Dim2, Dim3);
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0 * Dim1 * Dim2 * Dim3;
 
         #endregion
@@ -1088,6 +1100,9 @@ namespace InteropTensors
         public TensorSize4 Tail4 => new TensorSize4(Dim1, Dim2, Dim3, Dim4);
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4;
 
         #endregion
@@ -1435,6 +1450,9 @@ namespace InteropTensors
         public TensorSize5 Tail5 => new TensorSize5(Dim1, Dim2, Dim3, Dim4, Dim5);
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5;
 
         #endregion
@@ -1826,6 +1844,9 @@ namespace InteropTensors
         public TensorSize6 Tail6 => new TensorSize6(Dim1, Dim2, Dim3, Dim4, Dim5, Dim6);
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5 * Dim6;
 
         #endregion
@@ -2264,6 +2285,9 @@ namespace InteropTensors
         public TensorSize7 Tail7 => new TensorSize7(Dim1, Dim2, Dim3, Dim4, Dim5, Dim6, Dim7);
         
         
+        /// <Remarks>
+        /// The total number of elements (computed as the dot product of the dimensions)
+        /// </Remarks>
         public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5 * Dim6 * Dim7;
 
         #endregion
