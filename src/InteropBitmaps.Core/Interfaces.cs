@@ -28,7 +28,12 @@ namespace InteropBitmaps
     {
         TPixel GetPixel(POINT point);
         void SetPixel(POINT point, TPixel value);
-    }    
+    }
+
+    public interface ISpanBitmap
+    {
+        SpanBitmap AsSpanBitmap();
+    }
 
     
 

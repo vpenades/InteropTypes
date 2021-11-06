@@ -102,5 +102,109 @@ namespace InteropTensors
                 }
             }
         }
+        
+
+        public static void FitBitmap(SpanTensor2<Vector3> dst, InteropBitmaps.SpanBitmap src)
+        {
+            var dstData = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, byte>(dst.Span);
+            var dstBmp = new InteropBitmaps.SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], InteropBitmaps.Pixel.VectorBGR.Format);
+
+            if (src.PixelFormat == InteropBitmaps.Pixel.VectorBGR.Format)
+            {
+                dstBmp.FitPixels(src);
+                return;
+            }
+
+            if (src.PixelFormat == InteropBitmaps.Pixel.BGR24.Format)
+            {
+                InteropBitmaps.SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));
+                return;
+            }
+
+            if (src.PixelFormat == InteropBitmaps.Pixel.BGRA32.Format)
+            {
+                InteropBitmaps.SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static void ApplyAddMultiply(SpanTensor2<Vector3> target, Vector3 add, Vector3 multiply)
+        {
+            for (int y = 0; y < target.Dimensions[0]; ++y)
+            {
+                var row = target[y].Span;
+                for (int i = 0; i < row.Length; ++i)
+                {
+                    row[i] += add;
+                    row[i] *= multiply;
+                }
+            }
+        }
+
+        public static void CopyTo(SpanTensor2<Vector3> src, SpanTensor2<float> dstX, SpanTensor2<float> dstY, SpanTensor2<float> dstZ)
+        {
+            for (int y = 0; y < src.Dimensions[0]; ++y)
+            {
+                var srcRow = src[y].Span;
+                var dstRowX = dstX[y].Span;
+                var dstRowY = dstY[y].Span;
+                var dstRowZ = dstZ[y].Span;
+
+                for (int x = 0; x < srcRow.Length; ++x)
+                {
+                    var val = srcRow[x];
+                    dstRowX[x] = val.X;
+                    dstRowY[x] = val.Y;
+                    dstRowZ[x] = val.Z;
+                }
+            }
+        }
+
+        public static void Copy(SpanTensor2<Vector3> src, SpanTensor2<float> dstX, SpanTensor2<float> dstY, SpanTensor2<float> dstZ, Vector3 add, Vector3 mul)
+        {
+            for (int y = 0; y < src.Dimensions[0]; ++y)
+            {
+                var srcRow = src[y].Span;
+                var dstRowX = dstX[y].Span;
+                var dstRowY = dstY[y].Span;
+                var dstRowZ = dstZ[y].Span;
+
+                for (int x = 0; x < srcRow.Length; ++x)
+                {
+                    var val = srcRow[x];
+
+                    val += add;
+                    val *= mul;
+
+                    dstRowX[x] = val.X;
+                    dstRowY[x] = val.Y;
+                    dstRowZ[x] = val.Z;
+                }
+            }
+        }
+
+        public static void Copy(SpanTensor2<float> srcX, SpanTensor2<float> srcY, SpanTensor2<float> srcZ, Vector3 mul, Vector3 add, SpanTensor2<Vector3> dst)
+        {
+            for (int y = 0; y < dst.Dimensions[0]; ++y)
+            {
+                var srcRowX = srcX[y].Span;
+                var srcRowY = srcY[y].Span;
+                var srcRowZ = srcZ[y].Span;
+
+                var dstRow = dst[y].Span;                
+
+                for (int x = 0; x < dstRow.Length; ++x)
+                {
+                    var val = new Vector3(srcRowX[x], srcRowY[x], srcRowZ[x]);
+
+                    val *= mul;
+                    val += add;
+
+                    dstRow[x] = val;                    
+                }
+            }
+        }
     }
 }

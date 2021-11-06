@@ -271,6 +271,19 @@ namespace InteropBitmaps
             }
         }
 
+        public static void ApplyAddMultiply(SpanBitmap<Vector3> target, Vector3 add, Vector3 multiply)
+        {
+            for (int y = 0; y < target.Height; ++y)
+            {
+                var row = target.UseScanlinePixels(y);                
+                for(int i=0; i < row.Length; ++i)
+                {
+                    row[i] += add;
+                    row[i] *= multiply;
+                }
+            }
+        }
+
         public static void ApplyMultiplyAndAdd(SpanBitmap<Vector3> target, Single multiply, Single add)
         {
             for (int y = 0; y < target.Height; ++y)

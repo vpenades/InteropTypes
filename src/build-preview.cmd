@@ -36,5 +36,7 @@ move InteropDrawing.Backends.SVG\bin\release\*.*nupkg bin
 move InteropDrawing.Backends.WPF\bin\release\*.*nupkg bin
 move InteropDrawing.Backends.Plotly\bin\release\*.*nupkg bin
 
+move InteropWith.OnnxRuntime\bin\release\*.*nupkg bin
+
 pause
 exit /b
