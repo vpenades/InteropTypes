@@ -79,7 +79,7 @@ namespace InteropVision.Backends
         {
             var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
 
-            var model = InteropWith.OnnxModel.FromFile("Models\\pnet.onnx");
+            var model = InteropWith.OnnxModel.FromFile("Models\\MCNN\\pnet.onnx");
             var imagePreprocessor = new ImageProcessor<Pixel.VectorRGB>();
 
             using (var session = model.CreateSession())
