@@ -162,6 +162,16 @@ namespace InteropTensors
 
         
         #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize1 left, TensorSize1 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
+        #endregion
     }
 
     
@@ -385,6 +395,16 @@ namespace InteropTensors
         }
 
         
+        #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize2 left, TensorSize2 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
         #endregion
     }
 
@@ -644,6 +664,16 @@ namespace InteropTensors
         }
 
         
+        #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize3 left, TensorSize3 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
         #endregion
     }
 
@@ -941,6 +971,16 @@ namespace InteropTensors
         }
 
         
+        #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize4 left, TensorSize4 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
         #endregion
     }
 
@@ -1279,6 +1319,16 @@ namespace InteropTensors
         }
 
         
+        #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize5 left, TensorSize5 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
         #endregion
     }
 
@@ -1661,6 +1711,16 @@ namespace InteropTensors
         }
 
         
+        #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize6 left, TensorSize6 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
         #endregion
     }
 
@@ -2090,6 +2150,16 @@ namespace InteropTensors
         }
 
         
+        #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize7 left, TensorSize7 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
         #endregion
     }
 
@@ -2569,6 +2639,16 @@ namespace InteropTensors
         }
 
         
+        #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, TensorSize8 left, TensorSize8 right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
         #endregion
     }
 

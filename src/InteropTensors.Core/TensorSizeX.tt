@@ -291,6 +291,16 @@ idx += idx0 * len;
         <# } #>
 
         #endregion
+
+        #region guard
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void GuardEquals(string leftname, string rightname, <#= TTENSORSIZE#> left, <#= TTENSORSIZE#> right)
+        {
+            if (left != right) throw new ArgumentException($"{leftname} and {rightname} must have the same size");
+        }        
+
+        #endregion
     }
 
     <# } #>

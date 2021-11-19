@@ -254,7 +254,7 @@ namespace InteropBitmaps
             // _Implementation.FitPixelsNearest(this, src);
 
             SpanBitmap.FitPixels(src, this, (0, 1));
-        }
+        }        
 
         /// <summary>
         /// Draws <paramref name="src"/> at the location defined by <paramref name="dstSRT"/>.
@@ -315,7 +315,7 @@ namespace InteropBitmaps
 
             new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
 
-            return true;
+            return refreshed;
         }
 
         public void ApplyMirror(bool horizontal, bool vertical, bool useMultiThreading = true)

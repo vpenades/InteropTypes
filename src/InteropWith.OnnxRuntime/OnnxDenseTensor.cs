@@ -14,7 +14,7 @@ namespace InteropWith
     /// <typeparam name="T"></typeparam>
     /// <see href="https://devblogs.microsoft.com/dotnet/introducing-tensor-for-multi-dimensional-machine-learning-and-ai-data/"/>
     /// <seealso href="https://github.com/dotnet/runtime/labels/area-System.Numerics.Tensors"/>
-    struct OnnxDenseTensor<T> : IDenseTensor<T> , IServiceProvider
+    readonly struct OnnxDenseTensor<T> : IDenseTensor<T> , IServiceProvider
         where T : unmanaged
     {
         #region constructor
@@ -37,20 +37,13 @@ namespace InteropWith
 
         public string Name => _Name;
 
-        public ReadOnlySpan<int> Dimensions => _Tensor.Dimensions;
-
-        public IntPtr DataPointer => throw new NotImplementedException();
+        public ReadOnlySpan<int> Dimensions => _Tensor.Dimensions;        
 
         public Span<T> Span => _Tensor.Buffer.Span;
 
         #endregion
 
-        #region API
-
-        public DenseTensor<T> ToDenseTensor()
-        {
-            return _Tensor.Clone() as DenseTensor<T>;
-        }        
+        #region API              
 
         System.Numerics.Tensors.DenseTensor<T> IDenseTensor<T>.ToDenseTensor()
         {
@@ -59,7 +52,8 @@ namespace InteropWith
 
         public object GetService(Type serviceType)
         {
-            throw new NotImplementedException();
+            if (serviceType == typeof(DenseTensor<T>)) return _Tensor;
+            return null;
         }
 
         #endregion

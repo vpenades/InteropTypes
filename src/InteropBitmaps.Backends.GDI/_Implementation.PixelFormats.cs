@@ -68,6 +68,7 @@ namespace InteropBitmaps
                 case Pixel.RGB24.Code:
                 case Pixel.BGR24.Code:
                 case Pixel.BGR565.Code:
+                case Pixel.VectorRGB.Code:
                 case Pixel.VectorBGR.Code:
                     return GDIFMT.Format24bppRgb;
 

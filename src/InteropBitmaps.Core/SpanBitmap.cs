@@ -308,9 +308,10 @@ namespace InteropBitmaps
                 case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().SetPixels(dstSRT, src.OfType<Pixel.RGBA32>()); break;
                 case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().SetPixels(dstSRT, src.OfType<Pixel.ARGB32>()); break;
 
+                case Pixel.VectorRGB.Code: this.OfType<Pixel.VectorRGB>().SetPixels(dstSRT, src.OfType<Pixel.VectorRGB>()); break;
                 case Pixel.VectorBGR.Code: this.OfType<Pixel.VectorBGR>().SetPixels(dstSRT, src.OfType<Pixel.VectorBGR>()); break;
                 case Pixel.VectorBGRA.Code: this.OfType<Pixel.VectorBGRA>().SetPixels(dstSRT, src.OfType<Pixel.VectorBGRA>()); break;
-                case Pixel.VectorRGBA.Code: this.OfType<Pixel.VectorRGBA>().SetPixels(dstSRT, src.OfType<Pixel.VectorRGBA>()); break;
+                case Pixel.VectorRGBA.Code: this.OfType<Pixel.VectorRGBA>().SetPixels(dstSRT, src.OfType<Pixel.VectorRGBA>()); break;                
 
                 default: throw new NotSupportedException();
             }
@@ -318,33 +319,9 @@ namespace InteropBitmaps
 
         public void FitPixels(SpanBitmap src)
         {
-            if (src.PixelFormat != this.PixelFormat) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
+            // _Implementation.FitPixelsNearest(this, src);
 
-            switch (this.PixelFormat.PackedFormat)
-            {
-                case Pixel.Alpha8.Code: this.OfType<Pixel.Alpha8>().FitPixels(src.OfType<Pixel.Alpha8>()); break;
-
-                case Pixel.Luminance8.Code: this.OfType<Pixel.Luminance8>().FitPixels(src.OfType<Pixel.Luminance8>()); break;
-                case Pixel.Luminance16.Code: this.OfType<Pixel.Luminance16>().FitPixels(src.OfType<Pixel.Luminance16>()); break;
-                case Pixel.LuminanceScalar.Code: this.OfType<Pixel.LuminanceScalar>().FitPixels(src.OfType<Pixel.LuminanceScalar>()); break;
-
-                case Pixel.BGR565.Code: this.OfType<Pixel.BGR565>().FitPixels(src.OfType<Pixel.BGR565>()); break;
-                case Pixel.BGRA5551.Code: this.OfType<Pixel.BGRA5551>().FitPixels(src.OfType<Pixel.BGRA5551>()); break;
-                case Pixel.BGRA4444.Code: this.OfType<Pixel.BGRA4444>().FitPixels(src.OfType<Pixel.BGRA4444>()); break;
-
-                case Pixel.BGR24.Code: this.OfType<Pixel.BGR24>().FitPixels(src.OfType<Pixel.BGR24>()); break;
-                case Pixel.RGB24.Code: this.OfType<Pixel.RGB24>().FitPixels(src.OfType<Pixel.RGB24>()); break;
-
-                case Pixel.BGRA32.Code: this.OfType<Pixel.BGRA32>().FitPixels(src.OfType<Pixel.BGRA32>()); break;
-                case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().FitPixels(src.OfType<Pixel.RGBA32>()); break;
-                case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().FitPixels(src.OfType<Pixel.ARGB32>()); break;
-
-                case Pixel.VectorBGR.Code: this.OfType<Pixel.VectorBGR>().FitPixels(src.OfType<Pixel.VectorBGR>()); break;
-                case Pixel.VectorBGRA.Code: this.OfType<Pixel.VectorBGRA>().FitPixels(src.OfType<Pixel.VectorBGRA>()); break;
-                case Pixel.VectorRGBA.Code: this.OfType<Pixel.VectorRGBA>().FitPixels(src.OfType<Pixel.VectorRGBA>()); break;
-
-                default: throw new NotSupportedException();
-            }
+            SpanBitmap.FitPixels(src, this, (0, 1));            
         }
 
         public void SetPixels(Random rnd)
@@ -453,6 +430,54 @@ namespace InteropBitmaps
         public void ApplyMirror(bool horizontal, bool vertical, bool multiThread = true)
         {
             Processing._MirrorImplementation.ApplyMirror(this, horizontal, vertical, multiThread);
+        }
+
+        public bool TrySetPixelsFormatRGBX(out SpanBitmap newBitmap)
+        {
+            if (!Pixel.TryGetFormatAsRGBX(this.PixelFormat, out var newFmt))
+            {
+                newBitmap = default;
+                return false;
+            }
+
+            this.TrySetPixelsFormat(newFmt, out newBitmap);
+            return true;
+        }
+
+        public bool TrySetPixelsFormatBGRX(out SpanBitmap newBitmap)
+        {
+            if (!Pixel.TryGetFormatAsBGRX(this.PixelFormat, out var newFmt))
+            {
+                newBitmap = default;
+                return false;
+            }
+
+            this.TrySetPixelsFormat(newFmt, out newBitmap);
+            return true;
+        }
+
+        public bool TrySetPixelsFormat(Pixel.Format newFormat, out SpanBitmap newBitmap)
+        {
+            if (this.PixelFormat.ByteCount != newFormat.ByteCount)
+            {
+                newBitmap = default;
+                return false;
+            }
+
+            var converter = Pixel.GetByteConverter(this.PixelFormat, newFormat);
+
+            Span<byte> tmpRow = stackalloc byte[this.StepByteSize];
+
+            for(int y=0; y < this.Height; ++y)
+            {
+                var row = UseScanlineBytes(y);
+                row.CopyTo(tmpRow);
+                converter.Invoke(tmpRow, row);
+            }
+
+            var newInfo = this.Info.WithPixelFormat(newFormat);
+            newBitmap = new SpanBitmap(this._Readable, newInfo);
+            return true;
         }
 
         #endregion

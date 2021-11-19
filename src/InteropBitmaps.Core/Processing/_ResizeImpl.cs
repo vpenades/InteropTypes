@@ -38,6 +38,12 @@ namespace InteropBitmaps.Processing
 
         public static void FitPixels(SpanBitmap src, SpanBitmap dst, (float offset, float scale) transform)
         {
+            if (src.Width == dst.Width && src.Height == dst.Height)
+            {
+                dst.SetPixels(0, 0, src);
+                return;
+            }
+
             if (dst.PixelFormat == Pixel.BGR24.Format)
             {
                 var dstX = dst.OfType<Pixel.BGR24>();
@@ -49,6 +55,7 @@ namespace InteropBitmaps.Processing
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
                     case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
                     case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
                     case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
@@ -66,6 +73,7 @@ namespace InteropBitmaps.Processing
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
                     case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
                     case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
                     case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
@@ -83,6 +91,25 @@ namespace InteropBitmaps.Processing
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
+                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
+                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
+                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;                    
+                }
+            }
+
+            if (dst.PixelFormat == Pixel.VectorRGB.Format)
+            {
+                var dstX = dst.OfType<Pixel.VectorRGB>();
+
+                switch (src.PixelFormat.PackedFormat)
+                {
+                    case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
+                    case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
+                    case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
+                    case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
                     case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
                     case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
                     case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;

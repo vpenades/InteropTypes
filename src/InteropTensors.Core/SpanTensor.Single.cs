@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
+using TENSOR2S = InteropTensors.SpanTensor2<float>;
+using TENSOR3S = InteropTensors.SpanTensor3<float>;
+
+using TENSOR2V3 = InteropTensors.SpanTensor2<System.Numerics.Vector3>;
+using TENSOR2V4 = InteropTensors.SpanTensor2<System.Numerics.Vector4>;
+
+using XFORM3 = InteropTensors.Mad3;
+using XFORM4 = InteropTensors.Mad4;
+
 namespace InteropTensors
 {
     public static partial class SpanTensor
@@ -12,7 +21,7 @@ namespace InteropTensors
         /// </summary>
         /// <param name="values">The array to wrap</param>
         /// <returns>A (n,2) tensor</returns>
-        public static SpanTensor2<float> Wrap(params Vector2[] values)
+        public static TENSOR2S Wrap(params Vector2[] values)
         {
             return new SpanTensor1<Vector2>(values).DownCast<float>();
         }
@@ -22,7 +31,7 @@ namespace InteropTensors
         /// </summary>
         /// <param name="values">The array to wrap</param>
         /// <returns>A (n,3) tensor</returns>
-        public static SpanTensor2<float> Wrap(params Vector3[] values)
+        public static TENSOR2S Wrap(params Vector3[] values)
         {
             return new SpanTensor1<Vector3>(values).DownCast<float>();
         }
@@ -32,7 +41,7 @@ namespace InteropTensors
         /// </summary>
         /// <param name="values">The array to wrap</param>
         /// <returns>A (n,4) tensor</returns>
-        public static SpanTensor2<float> Wrap(params Vector4[] values)
+        public static TENSOR2S Wrap(params Vector4[] values)
         {
             return new SpanTensor1<Vector4>(values).DownCast<float>();
         }
@@ -42,7 +51,7 @@ namespace InteropTensors
         /// </summary>
         /// <param name="values">The array to wrap</param>
         /// <returns>A (n,4,4) tensor</returns>
-        public static SpanTensor3<float> Wrap(params Matrix4x4[] values)
+        public static TENSOR3S Wrap(params Matrix4x4[] values)
         {
             return new SpanTensor1<Matrix4x4>(values)
                 .DownCast<float>()
@@ -68,24 +77,31 @@ namespace InteropTensors
             }
         }
 
-        public static Matrix4x4 ToMatrix4x4(SpanTensor2<float> src)
+        public static Matrix4x4 ToMatrix4x4(TENSOR2S src)
         {
             return src                
                 .Reshaped(16)
                 .Cast<Matrix4x4>()[0];
         }
 
-        public static void Multiply(SpanTensor2<float> a, SpanTensor2<float> b, SpanTensor2<float> result)
+        /// <summary>
+        /// Performs an Algrebraic Matrix Multiplication
+        /// </summary>
+        /// <param name="a">1st matrix</param>
+        /// <param name="b">2nd matrix</param>
+        /// <param name="result">result</param>
+        public static void Multiply(TENSOR2S a, TENSOR2S b, TENSOR2S result)
         {
-            // TODO: if we detect the result's memory is shared with a or b, we can do a stackalloc.
-            if (a._Buffer == result._Buffer) throw new ArgumentException(nameof(result._Buffer));
-            if (b._Buffer == result._Buffer) throw new ArgumentException(nameof(result._Buffer));
+            if (result.Dimensions[0] != a.Dimensions[0]) throw new ArgumentException("dimension 0 mismatch", nameof(result));
+            if (result.Dimensions[1] != b.Dimensions[1]) throw new ArgumentException("dimension 1 mismatch", nameof(result));
+
+            // TODO: if we detect the result's memory is shared with a or b, we can do a stackalloc or new array()
+            if (a.Span.Overlaps(result.Span)) throw new ArgumentException("memory overlap");
+            if (b.Span.Overlaps(result.Span)) throw new ArgumentException("memory overlap");
 
             // https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm
-
-            var rows = a.Dimensions[0];
-            var cols = b.Dimensions[1];
-            int rmin = Math.Min(rows, cols);
+            
+            int rmin = Math.Min(result.Dimensions[0], result.Dimensions[1]);
 
             for (int y = 0; y < rmin; ++y)
             {
@@ -93,117 +109,224 @@ namespace InteropTensors
                 {
                     float sum = 0;
 
-                    for (int z = 0; z < rmin; ++z)
+                    for (int i = 0; i < rmin; ++i)
                     {
-                        sum += a[y, z] * b[z, x];
+                        sum += a[y, i] * b[i, x];
                     }
 
                     result[y, x] = sum;
                 }
             }
-        }
-        
+        }        
 
-        public static void FitBitmap(SpanTensor2<Vector3> dst, InteropBitmaps.SpanBitmap src)
+        public static void FitBitmap(TENSOR2V3 dst, InteropBitmaps.SpanBitmap src)
         {
             var dstData = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, byte>(dst.Span);
             var dstBmp = new InteropBitmaps.SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], InteropBitmaps.Pixel.VectorBGR.Format);
 
-            if (src.PixelFormat == InteropBitmaps.Pixel.VectorBGR.Format)
+            if (src.PixelFormat.IsFloating)
             {
-                dstBmp.FitPixels(src);
-                return;
+                dstBmp.FitPixels(src);                
             }
-
-            if (src.PixelFormat == InteropBitmaps.Pixel.BGR24.Format)
+            else
             {
-                InteropBitmaps.SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));
-                return;
-            }
-
-            if (src.PixelFormat == InteropBitmaps.Pixel.BGRA32.Format)
-            {
-                InteropBitmaps.SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));
-                return;
-            }
-
-            throw new NotImplementedException();
+                InteropBitmaps.SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));             
+            }            
         }
 
-        public static void ApplyAddMultiply(SpanTensor2<Vector3> target, Vector3 add, Vector3 multiply)
+        public static void ApplyAddMultiply(TENSOR2V3 target, in XFORM3 xform)
         {
             for (int y = 0; y < target.Dimensions[0]; ++y)
             {
                 var row = target[y].Span;
                 for (int i = 0; i < row.Length; ++i)
                 {
-                    row[i] += add;
-                    row[i] *= multiply;
+                    row[i] = xform.Transform(row[i]); 
                 }
             }
         }
 
-        public static void CopyTo(SpanTensor2<Vector3> src, SpanTensor2<float> dstX, SpanTensor2<float> dstY, SpanTensor2<float> dstZ)
+        
+
+        public static void Copy(TENSOR2V3 src, TENSOR3S dst, in XFORM3 xform)
         {
+            if (dst.Dimensions[0] == 3)
+            {
+                Copy(src, dst[0], dst[1], dst[2], xform);
+                return;
+            }
+            else if (dst.Dimensions[2] == 3)
+            {
+                Copy(src, dst.UpCast<Vector3>(), xform);
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static void Copy(TENSOR2V4 src, TENSOR3S dst, in XFORM4 xform)
+        {
+            if (dst.Dimensions[0] == 4)
+            {
+                Copy(src, dst[0], dst[1], dst[2], dst[3], xform);
+                return;
+            }
+            else if (dst.Dimensions[2] == 4)
+            {
+                Copy(src, dst.UpCast<Vector4>(), xform);
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static void Copy(TENSOR2V3 src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, in XFORM3 xform)
+        {
+            TensorSize2.GuardEquals(nameof(src), nameof(dstX), src.Dimensions, dstX.Dimensions);
+            TensorSize2.GuardEquals(nameof(src), nameof(dstY), src.Dimensions, dstY.Dimensions);
+            TensorSize2.GuardEquals(nameof(src), nameof(dstZ), src.Dimensions, dstZ.Dimensions);
+
             for (int y = 0; y < src.Dimensions[0]; ++y)
             {
-                var srcRow = src[y].Span;
+                var srcRow = src[y].ReadOnlySpan;
                 var dstRowX = dstX[y].Span;
                 var dstRowY = dstY[y].Span;
                 var dstRowZ = dstZ[y].Span;
 
-                for (int x = 0; x < srcRow.Length; ++x)
-                {
-                    var val = srcRow[x];
-                    dstRowX[x] = val.X;
-                    dstRowY[x] = val.Y;
-                    dstRowZ[x] = val.Z;
-                }
+                XFORM3.Transform(srcRow, dstRowX, dstRowY, dstRowZ, xform);
             }
         }
 
-        public static void Copy(SpanTensor2<Vector3> src, SpanTensor2<float> dstX, SpanTensor2<float> dstY, SpanTensor2<float> dstZ, Vector3 add, Vector3 mul)
+        public static void Copy(TENSOR2V4 src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, TENSOR2S dstW, in XFORM4 xform)
         {
+            TensorSize2.GuardEquals(nameof(src), nameof(dstX), src.Dimensions, dstX.Dimensions);
+            TensorSize2.GuardEquals(nameof(src), nameof(dstY), src.Dimensions, dstY.Dimensions);
+            TensorSize2.GuardEquals(nameof(src), nameof(dstZ), src.Dimensions, dstZ.Dimensions);
+            TensorSize2.GuardEquals(nameof(src), nameof(dstW), src.Dimensions, dstW.Dimensions);
+
             for (int y = 0; y < src.Dimensions[0]; ++y)
             {
-                var srcRow = src[y].Span;
+                var srcRow = src[y].ReadOnlySpan;
                 var dstRowX = dstX[y].Span;
                 var dstRowY = dstY[y].Span;
                 var dstRowZ = dstZ[y].Span;
+                var dstRowW = dstZ[y].Span;
 
-                for (int x = 0; x < srcRow.Length; ++x)
-                {
-                    var val = srcRow[x];
-
-                    val += add;
-                    val *= mul;
-
-                    dstRowX[x] = val.X;
-                    dstRowY[x] = val.Y;
-                    dstRowZ[x] = val.Z;
-                }
+                XFORM4.Transform(srcRow, dstRowX, dstRowY, dstRowZ, dstRowW, xform);
             }
         }
 
-        public static void Copy(SpanTensor2<float> srcX, SpanTensor2<float> srcY, SpanTensor2<float> srcZ, Vector3 mul, Vector3 add, SpanTensor2<Vector3> dst)
+        public static void Copy(TENSOR3S src, TENSOR2V3 dst, in XFORM3 xform)
         {
+            if (src.Dimensions[0] == 3)
+            {
+                Copy(src[0], src[1], src[2], dst, xform);
+                return;
+            }
+            else if (src.Dimensions[2] == 3)
+            {
+                Copy(src.UpCast<Vector3>(), dst, xform);
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static void Copy(TENSOR3S src, TENSOR2V4 dst, in XFORM4 xform)
+        {
+            if (src.Dimensions[0] == 4)
+            {
+                Copy(src[0], src[1], src[2], src[3], dst, xform);
+                return;
+            }
+            else if (src.Dimensions[2] == 4)
+            {
+                Copy(src.UpCast<Vector4>(), dst, xform);
+                return;
+            }
+
+            throw new NotImplementedException();
+        }        
+
+        public static void Copy(TENSOR2S srcX, TENSOR2S srcY, TENSOR2S srcZ, TENSOR2V3 dst, in XFORM3 xform)
+        {
+            TensorSize2.GuardEquals(nameof(srcX), nameof(dst), srcX.Dimensions, dst.Dimensions);
+            TensorSize2.GuardEquals(nameof(srcY), nameof(dst), srcY.Dimensions, dst.Dimensions);
+            TensorSize2.GuardEquals(nameof(srcZ), nameof(dst), srcZ.Dimensions, dst.Dimensions);            
+
             for (int y = 0; y < dst.Dimensions[0]; ++y)
             {
-                var srcRowX = srcX[y].Span;
-                var srcRowY = srcY[y].Span;
-                var srcRowZ = srcZ[y].Span;
+                var srcRowX = srcX[y].ReadOnlySpan;
+                var srcRowY = srcY[y].ReadOnlySpan;
+                var srcRowZ = srcZ[y].ReadOnlySpan;
 
-                var dstRow = dst[y].Span;                
+                var dstRow = dst[y].Span;
 
-                for (int x = 0; x < dstRow.Length; ++x)
-                {
-                    var val = new Vector3(srcRowX[x], srcRowY[x], srcRowZ[x]);
+                XFORM3.Transform(srcRowX, srcRowY, srcRowZ, dstRow, xform);
+            }
+        }
 
-                    val *= mul;
-                    val += add;
+        public static void Copy(TENSOR2S srcX, TENSOR2S srcY, TENSOR2S srcZ, TENSOR2S srcW, TENSOR2V4 dst, in XFORM4 xform)
+        {
+            TensorSize2.GuardEquals(nameof(srcX), nameof(dst), srcX.Dimensions, dst.Dimensions);
+            TensorSize2.GuardEquals(nameof(srcY), nameof(dst), srcY.Dimensions, dst.Dimensions);
+            TensorSize2.GuardEquals(nameof(srcZ), nameof(dst), srcZ.Dimensions, dst.Dimensions);
+            TensorSize2.GuardEquals(nameof(srcW), nameof(dst), srcW.Dimensions, dst.Dimensions);
 
-                    dstRow[x] = val;                    
-                }
+            for (int y = 0; y < dst.Dimensions[0]; ++y)
+            {
+                var srcRowX = srcX[y].ReadOnlySpan;
+                var srcRowY = srcY[y].ReadOnlySpan;
+                var srcRowZ = srcZ[y].ReadOnlySpan;
+                var srcRowW = srcW[y].ReadOnlySpan;
+
+                var dstRow = dst[y].Span;
+
+                XFORM4.Transform(srcRowX, srcRowY, srcRowZ, srcRowW, dstRow, xform);
+            }
+        }
+                
+        public static void Copy(TENSOR2V3 src, TENSOR2V3 dst, in XFORM3 xform)
+        {
+            TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
+
+            var srcSpan = src.UpCast<Vector3>().ReadOnlySpan;
+            var dstSpan = dst.Span;
+
+            XFORM3.Transform(srcSpan, dstSpan, xform);
+        }
+
+        public static void Copy(TENSOR2V4 src, TENSOR2V4 dst, in XFORM4 xform)
+        {
+            TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
+
+            var srcSpan = src.UpCast<Vector4>().ReadOnlySpan;
+            var dstSpan = dst.Span;
+
+            XFORM4.Transform(srcSpan, dstSpan, xform);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="span"></param>
+        /// <remarks>
+        /// <see href="https://en.wikipedia.org/wiki/Softmax_function"/>
+        /// </remarks>
+        public static void ApplySoftMax(Span<float> span)
+        {
+            float sum = 0;
+
+            for(int i=0; i < span.Length; ++i)
+            {
+                var v = (float)Math.Exp(span[i]);
+                sum += v;
+                span[i] = v;
+            }
+
+            for (int i = 0; i < span.Length; ++i)
+            {
+                span[i] /= sum;
             }
         }
     }

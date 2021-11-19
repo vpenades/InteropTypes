@@ -24,7 +24,12 @@ namespace InteropTensors
         var TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int d{idx}"));
         var TNEWSIZE = $"new TensorSize{TDIMCOUNT}(" + String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"d{idx}")) + ")";
 
-        #>    
+        #>
+
+        public static void ApplySoftMax(this SpanTensor<#= TDIMCOUNT#><float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
         <# if (TDIMCOUNT == 1) { #>
 
@@ -111,7 +116,7 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
         <# } #>        
 

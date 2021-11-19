@@ -37,6 +37,17 @@ namespace InteropTensors
             if (typeof(T) == typeof(Vector4)) return AsSpanBitmap(Pixel.Format.GetFromDepthAndChannels(typeof(float), 4));
 
             throw new NotImplementedException();
-        }        
+        }
+
+        public unsafe SpanBitmap<TPixel> AsSpanBitmap<TPixel>()
+            where TPixel:unmanaged
+        {
+            if (sizeof(T) != sizeof(TPixel)) throw new ArgumentException(nameof(TPixel));
+
+            var data = System.Runtime.InteropServices.MemoryMarshal.Cast<T, TPixel>(this._Buffer);
+            var pfmt = Pixel.Format.TryIdentifyPixel<TPixel>();
+
+            return new SpanBitmap<TPixel>(data, BitmapSize.Width, BitmapSize.Height, pfmt);
+        }
     }
 }

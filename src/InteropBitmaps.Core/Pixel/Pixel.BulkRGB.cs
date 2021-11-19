@@ -10,10 +10,14 @@ namespace InteropBitmaps
     {
         private static BulkConverterCallback<Byte, Byte> GetConverterToRGB(Format srcFmt, Format dstFmt)
         {
-            if (dstFmt == BGR565.Format) return GetConverterToRGB<BGR565>(srcFmt);
-            if (dstFmt == BGR24.Format) return GetConverterToRGB<BGR24>(srcFmt);
-            if (dstFmt == RGB24.Format) return GetConverterToRGB<RGB24>(srcFmt);
-            if (dstFmt == VectorBGR.Format) return GetConverterToRGB<VectorBGR>(srcFmt);
+            switch(dstFmt.PackedFormat)
+            {
+                case BGR565.Code: return GetConverterToRGB<BGR565>(srcFmt);
+                case BGR24.Code: return GetConverterToRGB<BGR24>(srcFmt);
+                case RGB24.Code: return GetConverterToRGB<RGB24>(srcFmt);
+                case VectorRGB.Code: return GetConverterToRGB<VectorRGB>(srcFmt);
+                case VectorBGR.Code: return GetConverterToRGB<VectorBGR>(srcFmt);
+            }
 
             return null;
         }
@@ -141,6 +145,30 @@ namespace InteropBitmaps
                     dst[i] = new RGB24((Byte)rgb.X, (Byte)rgb.Y, (Byte)rgb.Z);
                 }
             }
+        }        
+
+        partial struct VectorRGB : _IPixelBulkRGB<VectorRGB>
+        {
+            void _IPixelBulkRGB<VectorRGB>.Fill(Span<VectorRGB> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
+            {
+                for (int i = 0; i < dst.Length; ++i)
+                {
+                    var ii = i * srcStep;
+                    var r = red[ii];
+                    var g = green[ii];
+                    var b = blue[ii];
+                    dst[i] = new VectorRGB(r, g, b);
+                }
+            }
+
+            void _IPixelBulkRGB<VectorRGB>.Fill(Span<VectorRGB> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
+            {
+                for (int i = 0; i < dst.Length; ++i)
+                {
+                    var ii = i * srcStep;
+                    dst[i] = new VectorRGB(red[ii], green[ii], blue[ii]);
+                }
+            }
         }
 
         partial struct VectorBGR : _IPixelBulkRGB<VectorBGR>
@@ -161,7 +189,7 @@ namespace InteropBitmaps
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
-                    var ii = i * srcStep;                    
+                    var ii = i * srcStep;
                     dst[i] = new VectorBGR(red[ii], green[ii], blue[ii]);
                 }
             }

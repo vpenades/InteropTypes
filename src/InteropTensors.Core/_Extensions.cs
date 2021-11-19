@@ -8,6 +8,8 @@ using System.Text;
 
 using InteropBitmaps;
 
+using TENSOR2FLOAT = InteropTensors.SpanTensor2<float>;
+using TENSOR3FLOAT = InteropTensors.SpanTensor3<float>;
 using TENSOR4FLOAT = InteropTensors.SpanTensor4<float>;
 
 namespace InteropTensors

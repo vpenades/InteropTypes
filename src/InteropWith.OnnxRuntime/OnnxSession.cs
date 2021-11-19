@@ -18,61 +18,14 @@ namespace InteropWith
     {
         #region lifecycle
 
-        private static ONNX.SessionOptions _CreateOptions(int deviceId)
+        internal OnnxSession(Byte[] model, ONNX.SessionOptions options)
         {
-            var providers = ONNX.OrtEnv.Instance().GetAvailableProviders();
-
-            var options = new ONNX.SessionOptions();
-            // options.AppendExecutionProvider_DML(0);
-            return options;
-
-            // return ONNX.SessionOptions.MakeSessionOptionWithCudaProvider(0);
-
-            return ONNX.SessionOptions.MakeSessionOptionWithTensorrtProvider(0);
-
-            /*
-            var options = new ONNX.SessionOptions();
-            
-            options = new ONNX.SessionOptions
-            {
-                LogSeverityLevel = ONNX.OrtLoggingLevel.ORT_LOGGING_LEVEL_INFO,
-                GraphOptimizationLevel = ONNX.GraphOptimizationLevel.ORT_ENABLE_ALL,
-                ExecutionMode = deviceId < 0 ?
-                    ONNX.ExecutionMode.ORT_PARALLEL :
-                    ONNX.ExecutionMode.ORT_SEQUENTIAL,
-                EnableMemoryPattern = deviceId < 0
-            };
-
-            if (deviceId >= 0)
-            {
-                options.AppendExecutionProvider_CUDA(deviceId);
-                // options.a(deviceId);
-            }
-
-            
-            else
-            {
-                options.IntraOpNumThreads = 2;
-                options.ExecutionMode = ONNX.ExecutionMode.ORT_PARALLEL;
-                options.InterOpNumThreads = 6;
-                options.GraphOptimizationLevel = ONNX.GraphOptimizationLevel.ORT_ENABLE_ALL;                
-                options.AppendExecutionProvider_CPU(0);
-            }
-
-            return options;
-            */
-        }
-
-        internal OnnxSession(Byte[] model)
-        {
-            var options = _CreateOptions(0);
-
             _Session = new ONNX.InferenceSession(model, options);
 
             _Inputs = _Session.InputMetadata.Select(item => _Create(item.Key, item.Value)).ToArray();
             _Outputs = _Session.OutputMetadata.Select(item => _Create(item.Key, item.Value)).ToArray();
             _OutputNames = _Outputs.Select(item => item.Name).ToArray();
-        }
+        }             
 
         private static ONNX.NamedOnnxValue _Create(string name, ONNX.NodeMetadata metadata)
         {
@@ -80,6 +33,12 @@ namespace InteropWith
 
             if (metadata.IsTensor)
             {
+                if (metadata.Dimensions.Any(item => item < 0))
+                {
+                    // it's a dynamic tensor
+                    return ONNX.NamedOnnxValue.CreateFromTensor<float>(name, null);
+                }
+
                 if (metadata.ElementType == typeof(Byte))
                 {
                     var denseTensor = new ONNX.Tensors.DenseTensor<Byte>(metadata.Dimensions);
@@ -137,15 +96,8 @@ namespace InteropWith
         public IDenseTensor<T> UseInputTensor<T>(int idx, params int[] dims) where T : unmanaged
         {
             var input = _Inputs[idx];
-
-            if (input.Value is ONNX.Tensors.DenseTensor<T> denseTensor)
-            {
-                if (denseTensor.Dimensions.SequenceEqual(dims)) return new OnnxDenseTensor<T>(denseTensor, input.Name);
-            }
-
-            denseTensor = new ONNX.Tensors.DenseTensor<T>(dims);
-
-            _Inputs[idx] = ONNX.NamedOnnxValue.CreateFromTensor(input.Name, denseTensor);
+            var denseTensor = _UpdateTensor<T>(ref input, dims);
+            _Inputs[idx] = input;
 
             return new OnnxDenseTensor<T>(denseTensor, input.Name);
         }
@@ -166,7 +118,34 @@ namespace InteropWith
             return new OnnxDenseTensor<T>(denseTensor, output.Name);
         }
 
-        public void Inference() { _Session.Run(_Inputs, _Outputs); }        
+        public IDenseTensor<T> UseOutputTensor<T>(int idx, params int[] dims) where T : unmanaged
+        {
+            var output = _Outputs[idx];
+            var denseTensor = _UpdateTensor<T>(ref output, dims);
+            _Outputs[idx] = output;
+
+            return new OnnxDenseTensor<T>(denseTensor, output.Name);
+        }
+
+        public void Inference() { _Session.Run(_Inputs, _Outputs); }
+
+        #endregion
+
+        #region helpers
+
+        private ONNX.Tensors.DenseTensor<T> _UpdateTensor<T>(ref ONNX.NamedOnnxValue namedValue, params int[] dims) where T:unmanaged
+        {
+            if (namedValue.Value is ONNX.Tensors.DenseTensor<T> denseTensor)
+            {
+                if (denseTensor.Dimensions.SequenceEqual(dims)) return denseTensor;
+            }
+
+            denseTensor = new ONNX.Tensors.DenseTensor<T>(dims);
+
+            namedValue = ONNX.NamedOnnxValue.CreateFromTensor(namedValue.Name, denseTensor);
+
+            return denseTensor;
+        }
 
         #endregion
     }

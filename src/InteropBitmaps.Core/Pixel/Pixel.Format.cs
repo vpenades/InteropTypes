@@ -198,15 +198,18 @@ namespace InteropBitmaps
                         if (typeof(TPixel) == typeof(RGBA32)) return RGBA32.Format;
                         if (typeof(TPixel) == typeof(RGBP32)) return RGBP32.Format;
                         if (typeof(TPixel) == typeof(ARGB32)) return ARGB32.Format;
-                        if (typeof(TPixel) == typeof(ARGB32P)) return ARGB32P.Format;
+                        if (typeof(TPixel) == typeof(PRGB32)) return PRGB32.Format;
                         if (typeof(TPixel) == typeof(LuminanceScalar)) return LuminanceScalar.Format;
                         break;
-                    case 24:
+                    case 12:
+                        if (typeof(TPixel) == typeof(VectorRGB)) return VectorRGB.Format;
                         if (typeof(TPixel) == typeof(VectorBGR)) return VectorBGR.Format;
                         break;
-                    case 32:
+                    case 16:
                         if (typeof(TPixel) == typeof(VectorBGRA)) return VectorBGRA.Format;
                         if (typeof(TPixel) == typeof(VectorRGBA)) return VectorRGBA.Format;
+                        if (typeof(TPixel) == typeof(VectorBGRP)) return VectorBGRP.Format;
+                        if (typeof(TPixel) == typeof(VectorRGBP)) return VectorRGBP.Format;
                         break;
                 }
 
@@ -324,6 +327,8 @@ namespace InteropBitmaps
             public bool HasPremul => Element0.IsPremul | Element1.IsPremul | Element2.IsPremul | Element3.IsPremul;
 
             public bool HasAlphaOrPremul => HasAlpha | HasPremul;
+
+            public bool IsFloating => Element0.IsFloating && Element1.IsFloating && Element2.IsFloating && Element3.IsFloating;
 
             #endregion
 
@@ -456,9 +461,14 @@ namespace InteropBitmaps
                     case RGBA32.Code: return typeof(RGBA32);
                     case ARGB32.Code: return typeof(ARGB32);
 
+                    case VectorRGB.Code: return typeof(VectorRGB);
                     case VectorBGR.Code: return typeof(VectorBGR);
-                    case VectorBGRA.Code: return typeof(VectorBGRA);
+
                     case VectorRGBA.Code: return typeof(VectorRGBA);
+                    case VectorRGBP.Code: return typeof(VectorRGBP);
+
+                    case VectorBGRA.Code: return typeof(VectorBGRA);
+                    case VectorBGRP.Code: return typeof(VectorBGRP);                        
                 }
 
                 return null;

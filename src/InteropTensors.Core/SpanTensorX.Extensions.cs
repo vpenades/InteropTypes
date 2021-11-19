@@ -10,7 +10,11 @@ namespace InteropTensors
 {
     public static partial class SpanTensor
     {
-            
+        
+        public static void ApplySoftMax(this SpanTensor1<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
         
         public static int IndexOf<T>(this SpanTensor1<T> tensor, T value)
@@ -54,7 +58,11 @@ namespace InteropTensors
 
                 
 
-        
+    
+        public static void ApplySoftMax(this SpanTensor2<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
                 
         public static TensorIndices2 IndexOf<T>(this SpanTensor2<T> tensor, T value)
@@ -99,11 +107,15 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
                 
 
-        
+    
+        public static void ApplySoftMax(this SpanTensor3<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
                 
         public static TensorIndices3 IndexOf<T>(this SpanTensor3<T> tensor, T value)
@@ -148,11 +160,15 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
                 
 
-        
+    
+        public static void ApplySoftMax(this SpanTensor4<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
                 
         public static TensorIndices4 IndexOf<T>(this SpanTensor4<T> tensor, T value)
@@ -197,11 +213,15 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
                 
 
-        
+    
+        public static void ApplySoftMax(this SpanTensor5<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
                 
         public static TensorIndices5 IndexOf<T>(this SpanTensor5<T> tensor, T value)
@@ -246,11 +266,15 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
                 
 
-        
+    
+        public static void ApplySoftMax(this SpanTensor6<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
                 
         public static TensorIndices6 IndexOf<T>(this SpanTensor6<T> tensor, T value)
@@ -295,11 +319,15 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
                 
 
-        
+    
+        public static void ApplySoftMax(this SpanTensor7<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
                 
         public static TensorIndices7 IndexOf<T>(this SpanTensor7<T> tensor, T value)
@@ -344,11 +372,15 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
                 
 
-        
+    
+        public static void ApplySoftMax(this SpanTensor8<float> tensor)
+        {
+            SpanTensor.ApplySoftMax(tensor.Span);
+        }
 
                 
         public static TensorIndices8 IndexOf<T>(this SpanTensor8<T> tensor, T value)
@@ -393,7 +425,7 @@ namespace InteropTensors
             }
 
             return tensor._Dimensions.GetDecomposedIndex(idx);
-        }
+        }        
 
                 
 

@@ -10,7 +10,7 @@
   <Import Project="..\SourceLink.props" />
 
   <ItemGroup>
-    <PackageReference Include="SvgNet" Version="2.1.6" />    
+    <PackageReference Include="SvgNet" Version="2.2.0" />    
   </ItemGroup>
 
   <ItemGroup>

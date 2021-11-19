@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using InteropVision;
+
+using ONNX = Microsoft.ML.OnnxRuntime;
 
 namespace InteropWith
 {
@@ -33,35 +36,57 @@ namespace InteropWith
 
         public void Dispose()
         {
-            
+            _Options?.Dispose();
+            _Options = null;
+            _Model = null;
         }
 
         #endregion
 
         #region data
 
-        private readonly Lazy<Byte[]> _Model;
+        private Lazy<Byte[]> _Model;
+
+        private OnnxOptions _Options = new OnnxOptions();
 
         #endregion
 
-        #region properties
+        #region properties        
 
+        /// <inheritdoc/> 
         public string ModelSha256 => _Model.Value.GetSha256();
 
+        /// <inheritdoc/> 
         public TensorImageSettings InputSettings { get; set; }
+
+        /// <summary>
+        /// Gets or set the hardware device to use when creating the session.
+        /// </summary>
+        /// <remarks>
+        /// -1 will default to CPU, 0 will use first hardware device.
+        /// </remarks>
+        public static int DeviceID
+        {
+            get => OnnxOptions.DeviceID;
+            set => OnnxOptions.DeviceID = value;
+        }
 
         #endregion
 
         #region API
 
+        /// <inheritdoc/> 
         public IModelSession CreateSession()
         {            
-            return new OnnxSession(_Model.Value);
+            return new OnnxSession(_Model.Value, _Options.Options);
         }
 
+        /// <inheritdoc/> 
         public object GetService(Type serviceType)
         {
-            throw new NotImplementedException();
+            if (serviceType == typeof(ONNX.OrtEnv)) return ONNX.OrtEnv.Instance();
+            if (serviceType == typeof(ONNX.SessionOptions)) return _Options.Options;
+            throw new NotSupportedException();
         }
 
         #endregion

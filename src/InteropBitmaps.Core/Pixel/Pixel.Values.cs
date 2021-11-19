@@ -408,6 +408,16 @@ namespace InteropBitmaps
                 A = (Byte)v.W;
             }
 
+            public BGRA32(in VectorRGB bgra)
+            {
+                var v = bgra.RGB * 255f;
+
+                R = (Byte)v.X;
+                G = (Byte)v.Y;
+                B = (Byte)v.Z;
+                A = 255;
+            }
+
             public BGRA32(in VectorBGR bgra)
             {
                 var v = bgra.BGR * 255f;
@@ -848,7 +858,41 @@ namespace InteropBitmaps
         }
 
         /// <summary>
-        /// RGBA in values between 0-1
+        /// RGB in values between 0-1
+        /// </summary>
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
+        public readonly partial struct VectorRGB : IPixelReflection<VectorRGB>
+        {
+            #region constructors
+            public VectorRGB(Single red, Single green, Single blue) { RGB = new XYZ(red, green, blue); }
+            public VectorRGB(Byte red, Byte green, Byte blue) { RGB = new XYZ(red, green, blue) / 255f; }
+            public VectorRGB(BGRA32 color) { RGB = new XYZ(color.R, color.G, color.B) / 255f; }
+
+            #endregion
+
+            #region data
+
+            public readonly XYZ RGB;
+
+            public Single R => RGB.X;
+            public Single G => RGB.Y;
+            public Single B => RGB.Z;
+
+            #endregion
+
+            #region API
+
+            public BGRA32 ToBGRA32() { return new BGRA32(this); }
+            public VectorRGBA ToVectorRGBA() { return new VectorRGBA(R, G, B, 1); }
+            VectorRGB IPixelReflection<VectorRGB>.From(BGRA32 color) { return new VectorRGB(color); }
+            VectorRGB IPixelReflection<VectorRGB>.From(VectorRGBA color) { return new VectorRGB(color.R, color.G, color.B); }
+
+            #endregion
+        }
+
+        /// <summary>
+        /// RGB in values between 0-1
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]

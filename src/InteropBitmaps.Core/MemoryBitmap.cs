@@ -194,6 +194,48 @@ namespace InteropBitmaps
             return this.AsSpanBitmap().ToMemoryBitmap(fmtOverride);
         }
 
+        public bool TrySetPixelsFormatRGBX(out MemoryBitmap newBitmap)
+        {
+            if (this.AsSpanBitmap().TrySetPixelsFormatRGBX(out var newSpan))
+            {
+                newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
+                return true;
+            }
+            else
+            {
+                newBitmap = default;
+                return false;
+            }
+        }
+
+        public bool TrySetPixelsFormatBGRX(out MemoryBitmap newBitmap)
+        {
+            if (this.AsSpanBitmap().TrySetPixelsFormatBGRX(out var newSpan))
+            {
+                newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
+                return true;
+            }
+            else
+            {
+                newBitmap = default;
+                return false;
+            }
+        }
+
+        public bool TrySetPixelsFormat(Pixel.Format newFormat, out MemoryBitmap newBitmap)
+        {
+            if (this.AsSpanBitmap().TrySetPixelsFormat(newFormat, out var newSpan))
+            {
+                newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
+                return true;
+            }
+            else
+            {
+                newBitmap = default;
+                return false;
+            }
+        }
+
         #endregion
 
         #region API - IO

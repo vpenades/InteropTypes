@@ -14,6 +14,60 @@ namespace InteropBitmaps
             return default(TPixel).From(new BGRA32(color));
         }
 
+        public static bool TryGetFormatAsRGBX(Format fmt, out Format newFmt)
+        {
+            newFmt = default;
+
+            switch(fmt.PackedFormat)
+            {                
+                case RGB24.Code: newFmt = RGB24.Format; break;
+                case BGR24.Code: newFmt = RGB24.Format; break;
+
+                case RGBA32.Code: newFmt = RGBA32.Format; break;
+                case BGRA32.Code: newFmt = RGBA32.Format; break;
+                case ARGB32.Code: newFmt = RGBA32.Format; break;
+                case RGBP32.Code: newFmt = RGBP32.Format; break;
+                case BGRP32.Code: newFmt = RGBP32.Format; break;
+
+                case VectorRGB.Code: newFmt = VectorRGB.Format; break;
+                case VectorBGR.Code: newFmt = VectorRGB.Format; break;
+
+                case VectorRGBA.Code: newFmt = VectorRGBA.Format; break;
+                case VectorBGRA.Code: newFmt = VectorRGBA.Format; break;
+                case VectorRGBP.Code: newFmt = VectorRGBP.Format; break;
+                case VectorBGRP.Code: newFmt = VectorRGBP.Format; break;
+            }
+
+            return newFmt != default;            
+        }
+
+        public static bool TryGetFormatAsBGRX(Format fmt, out Format newFmt)
+        {
+            newFmt = default;
+
+            switch (fmt.PackedFormat)
+            {
+                case RGB24.Code: newFmt = BGR24.Format; break;
+                case BGR24.Code: newFmt = BGR24.Format; break;
+
+                case RGBA32.Code: newFmt = BGRA32.Format; break;
+                case BGRA32.Code: newFmt = BGRA32.Format; break;
+                case ARGB32.Code: newFmt = BGRA32.Format; break;
+                case RGBP32.Code: newFmt = BGRA32.Format; break;
+                case BGRP32.Code: newFmt = BGRA32.Format; break;
+
+                case VectorRGB.Code: newFmt = VectorBGR.Format; break;
+                case VectorBGR.Code: newFmt = VectorBGR.Format; break;
+
+                case VectorRGBA.Code: newFmt = VectorBGRA.Format; break;
+                case VectorBGRA.Code: newFmt = VectorBGRA.Format; break;
+                case VectorRGBP.Code: newFmt = VectorBGRP.Format; break;
+                case VectorBGRP.Code: newFmt = VectorBGRP.Format; break;
+            }
+
+            return newFmt != default;
+        }
+
         public static void Convert(SpanBitmap dst, SpanBitmap src)
         {
             Guard.AreEqual(nameof(src), dst.Width, src.Width);
@@ -175,6 +229,7 @@ namespace InteropBitmaps
                 case RGBA32.Code: _ConvertPixels(dst, src.OfType<RGBA32>()); break;
                 case RGBP32.Code: _ConvertPixels(dst, src.OfType<RGBP32>()); break;
                 case ARGB32.Code: _ConvertPixels(dst, src.OfType<ARGB32>()); break;
+                case VectorRGB.Code: _ConvertPixels(dst, src.OfType<VectorRGB>()); break;
                 case VectorBGR.Code: _ConvertPixels(dst, src.OfType<VectorBGR>()); break;
                 case VectorBGRA.Code: _ConvertPixels(dst, src.OfType<VectorBGRA>()); break;
                 case VectorRGBA.Code: _ConvertPixels(dst, src.OfType<VectorRGBA>()); break;
@@ -200,6 +255,7 @@ namespace InteropBitmaps
                 case RGBA32.Code: _ConvertPixels(dst.OfType<RGBA32>(), src); break;
                 case RGBP32.Code: _ConvertPixels(dst.OfType<RGBP32>(), src); break;
                 case ARGB32.Code: _ConvertPixels(dst.OfType<ARGB32>(), src); break;
+                case VectorRGB.Code: _ConvertPixels(dst.OfType<VectorRGB>(), src); break;
                 case VectorBGR.Code: _ConvertPixels(dst.OfType<VectorBGR>(), src); break;
                 case VectorBGRA.Code: _ConvertPixels(dst.OfType<VectorBGRA>(), src); break;
                 case VectorRGBA.Code: _ConvertPixels(dst.OfType<VectorRGBA>(), src); break;

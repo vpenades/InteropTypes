@@ -245,6 +245,8 @@ namespace InteropBitmaps
                     }
                 }
 
+                public bool IsFloating => Id >= PEF.Undefined32F;
+
                 #endregion
             }
         }

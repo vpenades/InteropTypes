@@ -63,6 +63,8 @@ namespace InteropVision
         IReadOnlyList<string> OutputNames { get; }
 
         IDenseTensor<T> GetOutputTensor<T>(int idx) where T : unmanaged;
+
+        IDenseTensor<T> UseOutputTensor<T>(int idx, params int[] dims) where T : unmanaged;
     }
 
     /// <summary>
@@ -81,8 +83,14 @@ namespace InteropVision
         where TResult:class
     {
         RectangleF GetNextDetectionWindow(DetectedFrame t1, DetectedFrame? t0 = null);
+    }  
+
+    public interface ITensorImageProcessor<TTensorPixel>
+        where TTensorPixel:unmanaged
+    {
+        void CopyImage(InteropBitmaps.SpanBitmap src, SpanTensor3<TTensorPixel> dst);
+
+        void CopyImage(SpanTensor3<TTensorPixel> src, InteropBitmaps.SpanBitmap dst);
     }
-
-
 
 }

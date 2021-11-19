@@ -39,19 +39,20 @@ namespace InteropBitmaps
             public const uint BGRA32 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8 | SHIFT3 * (uint)PEF.Alpha8;
             public const uint ARGB32 = SHIFT0 * (uint)PEF.Alpha8 | SHIFT1 * (uint)PEF.Red8 | SHIFT2 * (uint)PEF.Green8 | SHIFT3 * (uint)PEF.Blue8;
 
-            public const uint RGBA32P = SHIFT0 * (uint)PEF.Red8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Blue8 | SHIFT3 * (uint)PEF.Premul8;
-            public const uint BGRA32P = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8 | SHIFT3 * (uint)PEF.Premul8;
-            public const uint ARGB32P = SHIFT0 * (uint)PEF.Premul8 | SHIFT1 * (uint)PEF.Red8 | SHIFT2 * (uint)PEF.Green8 | SHIFT3 * (uint)PEF.Blue8;
+            public const uint RGBP32 = SHIFT0 * (uint)PEF.Red8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Blue8 | SHIFT3 * (uint)PEF.Premul8;
+            public const uint BGRP32 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8 | SHIFT3 * (uint)PEF.Premul8;
+            public const uint PRGB32 = SHIFT0 * (uint)PEF.Premul8 | SHIFT1 * (uint)PEF.Red8 | SHIFT2 * (uint)PEF.Green8 | SHIFT3 * (uint)PEF.Blue8;
 
             public const uint Gray32F = SHIFT0 * (uint)PEF.Luminance32F;
 
+            public const uint RGB96F = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F;
             public const uint BGR96F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F;
 
             public const uint RGBA128F = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F | SHIFT3 * (uint)PEF.Alpha32F;
-            public const uint RGBA128FP = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F | SHIFT3 * (uint)PEF.Premul32F;
+            public const uint RGBP128F = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F | SHIFT3 * (uint)PEF.Premul32F;
 
             public const uint BGRA128F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F | SHIFT3 * (uint)PEF.Alpha32F;
-            public const uint BGRA128FP = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F | SHIFT3 * (uint)PEF.Premul32F;
+            public const uint BGRP128F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F | SHIFT3 * (uint)PEF.Premul32F;
         }        
 
         partial struct Millimeter16
@@ -110,7 +111,7 @@ namespace InteropBitmaps
 
         partial struct BGRP32
         {
-            public const uint Code = _PackedPixelCodes.BGRA32P;
+            public const uint Code = _PackedPixelCodes.BGRP32;
             public static readonly Format Format = new Format(Code);
         }
 
@@ -122,7 +123,7 @@ namespace InteropBitmaps
 
         partial struct RGBP32
         {
-            public const uint Code = _PackedPixelCodes.RGBA32P;
+            public const uint Code = _PackedPixelCodes.RGBP32;
             public static readonly Format Format = new Format(Code);
         }
 
@@ -132,9 +133,9 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct ARGB32P
+        partial struct PRGB32
         {
-            public const uint Code = _PackedPixelCodes.ARGB32P;
+            public const uint Code = _PackedPixelCodes.PRGB32;
             public static readonly Format Format = new Format(Code);
         }
 
@@ -150,15 +151,27 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
+        partial struct VectorRGB
+        {
+            public const uint Code = _PackedPixelCodes.RGB96F;
+            public static readonly Format Format = new Format(Code);
+        }
+
+        partial struct VectorBGR
+        {
+            public const uint Code = _PackedPixelCodes.BGR96F;
+            public static readonly Format Format = new Format(Code);
+        }
+
         partial struct VectorBGRA
         {            
             public const uint Code = _PackedPixelCodes.BGRA128F;
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorBGRAP
+        partial struct VectorBGRP
         {
-            public const uint Code = _PackedPixelCodes.BGRA128FP;
+            public const uint Code = _PackedPixelCodes.BGRP128F;
             public static readonly Format Format = new Format(Code);
         }
 
@@ -168,16 +181,10 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorRGBAP
+        partial struct VectorRGBP
         {
-            public const uint Code = _PackedPixelCodes.RGBA128FP;
+            public const uint Code = _PackedPixelCodes.RGBP128F;
             public static readonly Format Format = new Format(Code);
-        }
-
-        partial struct VectorBGR
-        {            
-            public const uint Code = _PackedPixelCodes.BGR96F;
-            public static readonly Format Format = new Format(Code);
-        }
+        }        
     }
 }

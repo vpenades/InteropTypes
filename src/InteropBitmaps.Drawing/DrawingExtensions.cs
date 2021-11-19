@@ -78,6 +78,7 @@ namespace InteropBitmaps
                 case Pixel.RGBA32.Code: return _Create<Pixel.RGBA32>();
                 case Pixel.BGRA32.Code: return _Create<Pixel.BGRA32>();
 
+                case Pixel.VectorRGB.Code: return _Create<Pixel.VectorRGB>();
                 case Pixel.VectorBGR.Code: return _Create<Pixel.VectorBGR>();
                 case Pixel.VectorRGBA.Code: return _Create<Pixel.VectorRGBA>();
                 case Pixel.VectorBGRA.Code: return _Create<Pixel.VectorBGRA>();

@@ -53,6 +53,7 @@ namespace InteropBitmaps
                 case Pixel.BGR565.Code:
                 case Pixel.BGR24.Code:
                 case Pixel.RGB24.Code:
+                case Pixel.VectorRGB.Code:
                 case Pixel.VectorBGR.Code:
                     return STBWRITE.ColorComponents.RedGreenBlue;
 

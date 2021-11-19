@@ -100,11 +100,17 @@ namespace InteropTensors
         public TensorSize1 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public T this[int idx] { get => _Buffer[idx]; set => _Buffer[idx] = value; }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -193,7 +199,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
@@ -289,6 +296,10 @@ namespace InteropTensors
         public TensorSize2 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public SpanTensor1<T> this[int idx] => GetSubTensor(idx);
@@ -301,6 +312,8 @@ namespace InteropTensors
         }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -350,7 +363,67 @@ namespace InteropTensors
             var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
 
             return new SpanTensor1<TElement>(xdata, _Dimensions.GetTensorHead());
-        }        
+        }
+
+        public void CopyTransposed(SpanTensor2<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public bool CopyTransposed(ref SpanTensor2<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor2<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
 
         
         
@@ -421,7 +494,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
@@ -517,6 +591,10 @@ namespace InteropTensors
         public TensorSize3 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public SpanTensor2<T> this[int idx] => GetSubTensor(idx);
@@ -529,6 +607,8 @@ namespace InteropTensors
         }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -578,7 +658,67 @@ namespace InteropTensors
             var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
 
             return new SpanTensor2<TElement>(xdata, _Dimensions.GetTensorHead());
-        }        
+        }
+
+        public void CopyTransposed(SpanTensor3<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public bool CopyTransposed(ref SpanTensor3<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor3<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        public void Swap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
 
         
         
@@ -649,7 +789,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
@@ -745,6 +886,10 @@ namespace InteropTensors
         public TensorSize4 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public SpanTensor3<T> this[int idx] => GetSubTensor(idx);
@@ -757,6 +902,8 @@ namespace InteropTensors
         }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -806,7 +953,67 @@ namespace InteropTensors
             var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
 
             return new SpanTensor3<TElement>(xdata, _Dimensions.GetTensorHead());
-        }        
+        }
+
+        public void CopyTransposed(SpanTensor4<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public bool CopyTransposed(ref SpanTensor4<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor4<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
 
         
         
@@ -877,7 +1084,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
@@ -973,6 +1181,10 @@ namespace InteropTensors
         public TensorSize5 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public SpanTensor4<T> this[int idx] => GetSubTensor(idx);
@@ -985,6 +1197,8 @@ namespace InteropTensors
         }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -1034,7 +1248,67 @@ namespace InteropTensors
             var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
 
             return new SpanTensor4<TElement>(xdata, _Dimensions.GetTensorHead());
-        }        
+        }
+
+        public void CopyTransposed(SpanTensor5<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public bool CopyTransposed(ref SpanTensor5<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor5<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
 
         
         
@@ -1105,7 +1379,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
@@ -1201,6 +1476,10 @@ namespace InteropTensors
         public TensorSize6 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public SpanTensor5<T> this[int idx] => GetSubTensor(idx);
@@ -1213,6 +1492,8 @@ namespace InteropTensors
         }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -1262,7 +1543,67 @@ namespace InteropTensors
             var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
 
             return new SpanTensor5<TElement>(xdata, _Dimensions.GetTensorHead());
-        }        
+        }
+
+        public void CopyTransposed(SpanTensor6<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public bool CopyTransposed(ref SpanTensor6<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor6<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
 
         
         
@@ -1333,7 +1674,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
@@ -1429,6 +1771,10 @@ namespace InteropTensors
         public TensorSize7 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public SpanTensor6<T> this[int idx] => GetSubTensor(idx);
@@ -1441,6 +1787,8 @@ namespace InteropTensors
         }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -1490,7 +1838,67 @@ namespace InteropTensors
             var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
 
             return new SpanTensor6<TElement>(xdata, _Dimensions.GetTensorHead());
-        }        
+        }
+
+        public void CopyTransposed(SpanTensor7<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public bool CopyTransposed(ref SpanTensor7<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor7<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
 
         
         
@@ -1542,7 +1950,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
@@ -1638,6 +2047,10 @@ namespace InteropTensors
         public TensorSize8 Dimensions => _Dimensions;
 
         public Span<T> Span => _Buffer;
+
+        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+
+        public T[] ToArray() { return _Buffer.ToArray(); }
         
         
         public SpanTensor7<T> this[int idx] => GetSubTensor(idx);
@@ -1650,6 +2063,8 @@ namespace InteropTensors
         }
 
         
+        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+
         #endregion
 
         #region API
@@ -1699,7 +2114,67 @@ namespace InteropTensors
             var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
 
             return new SpanTensor7<TElement>(xdata, _Dimensions.GetTensorHead());
-        }        
+        }
+
+        public void CopyTransposed(SpanTensor8<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public bool CopyTransposed(ref SpanTensor8<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor8<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
 
         
         
@@ -1751,7 +2226,8 @@ namespace InteropTensors
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-                
+              
+        
 
         #endregion
     }
