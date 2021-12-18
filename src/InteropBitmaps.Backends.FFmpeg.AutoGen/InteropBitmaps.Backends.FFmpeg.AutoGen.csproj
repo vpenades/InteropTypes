@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>        
-    <PackageReference Include="FFmpeg.AutoGen" Version="4.4.1" />
+    <PackageReference Include="FFmpeg.AutoGen" Version="4.4.1.1" />
     <PackageReference Include="FFmpeg.Nightly" Version="20200831.1.0" GeneratePathProperty="true" PrivateAssets="all" />
   </ItemGroup>
 

@@ -99,8 +99,8 @@ namespace InteropBitmaps
 
 
         public void ConversionTest<TSrcPixel,TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IPixelReflection<TSrcPixel>
-            where TDstPixel : unmanaged, Pixel.IPixelReflection<TDstPixel>
+            where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32,TSrcPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>
         {
             var srcFmt = Pixel.Format.TryIdentifyPixel<TSrcPixel>();
             var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();
@@ -117,8 +117,8 @@ namespace InteropBitmaps
             
             for (int i = 0; i < 5; ++i)
             {
-                var srcP = src[i].ToBGRA32();
-                var dstP = dst[i].ToBGRA32();
+                var srcP = src[i].ToPixel();
+                var dstP = dst[i].ToPixel();
 
                 if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
                 {
@@ -131,8 +131,8 @@ namespace InteropBitmaps
         }
 
         public void ConversionPremulTest<TSrcPixel, TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IPixelReflection<TSrcPixel>
-            where TDstPixel : unmanaged, Pixel.IPixelReflection<TDstPixel>
+            where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32, TSrcPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>
         {
             var srcFmt = Pixel.Format.TryIdentifyPixel<TSrcPixel>();
             var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();
@@ -150,8 +150,8 @@ namespace InteropBitmaps
 
             for (int i = 0; i < 5; ++i)
             {
-                var srcA = src[i].ToBGRA32();
-                var dstA = dst[i].ToBGRA32();
+                var srcA = src[i].ToPixel();
+                var dstA = dst[i].ToPixel();
 
                 var srcP = new Pixel.RGBP32(srcA);
                 var dstP = new Pixel.RGBP32(dstA);
@@ -161,6 +161,29 @@ namespace InteropBitmaps
                 Assert.AreEqual(srcP.PreB, dstP.PreB, 1);
                 Assert.AreEqual(srcP.A, dstP.A, 1);
             }
+        }
+
+        [Ignore("just an experiment")]
+        [Test]
+        public void TestIntegerAlpha255vs256()
+        {
+            for (int y = 0; y < 256; ++y)
+            {
+                for (int x = 0; x < 256; ++x)
+                {
+                    var r1 = (x * y) / 255;
+
+                    
+                    uint xx = (uint)x;
+                    uint yy = (uint)y;                    
+                    yy = yy + (yy >> 7);
+
+                    var r2 = (xx * yy) / 256;
+
+                    Assert.AreEqual(r1, r2);                    
+                }
+            }
+
         }
 
     }

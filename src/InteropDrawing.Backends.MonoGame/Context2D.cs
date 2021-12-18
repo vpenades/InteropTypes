@@ -27,17 +27,12 @@ namespace InteropDrawing.Backends
         {
             _Device = null;
 
-            _SpritesBatch?.Dispose();
-            _SpritesBatch = null;
-
-            _VectorsEffect?.Dispose();
-            _VectorsEffect = null;
+            System.Threading.Interlocked.Exchange(ref _SpritesBatch, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _VectorsEffect, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _WhiteTexture, null)?.Dispose();
 
             foreach (var tex in _Textures.Values) tex.Dispose();
-            _Textures.Clear();
-
-            _WhiteTexture?.Dispose();
-            _WhiteTexture = null;
+            _Textures.Clear();            
 
             _OldTexture = null;
 
@@ -162,12 +157,13 @@ namespace InteropDrawing.Backends
             var scale = _ToXna(s) * sprite.Scale;
             var rotation = r;
             var translation = _ToXna(t);
+            var color = style.Color.ToXnaPremul();
 
             var effects = SpriteEffects.None;
             if (style.FlipHorizontal) effects |= SpriteEffects.FlipHorizontally;
             if (style.FlipVertical) effects |= SpriteEffects.FlipVertically;
 
-            _SpritesBatch.Draw(tex, translation, new Rectangle(sprite.Left, sprite.Top, sprite.Width, sprite.Height), style.Color.ToXnaPremul(), rotation, offset, scale, effects, 0);
+            _SpritesBatch.Draw(tex, translation, new Rectangle(sprite.Left, sprite.Top, sprite.Width, sprite.Height), color, rotation, offset, scale, effects, 0);
         }
 
         public void Flush()

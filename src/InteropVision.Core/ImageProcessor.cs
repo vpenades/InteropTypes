@@ -13,15 +13,14 @@ namespace InteropVision
     {
         #region constructor
         public ImageProcessor() { }
-
-        public ImageProcessor(Mad3 transform) { Transform = new Mad4(transform); }
-        public ImageProcessor(Mad4 transform) { Transform = transform; }
+        
+        public ImageProcessor(MultiplyAdd transform) { Transform = transform; }
 
         #endregion
 
         #region properties
 
-        public Mad4 Transform { get; set; } = Mad4.Identity;
+        public MultiplyAdd Transform { get; set; } = MultiplyAdd.Identity;
 
         #endregion
 
@@ -35,7 +34,7 @@ namespace InteropVision
 
                 CopyImage(src, tmpTensor.AsSpanBitmap<TPixel>());
 
-                Transform.SelectXYZ().ApplyTransformTo(tmpTensor.Span);
+                Transform.ApplyTransformTo(tmpTensor.Span);
 
                 return;
             }
@@ -60,7 +59,7 @@ namespace InteropVision
 
                 CopyImage(src, tmpTensor.AsSpanBitmap<TPixel>());
 
-                SpanTensor.Copy(tmpTensor, dst, Transform.SelectXYZ());
+                SpanTensor.Copy(tmpTensor, dst, Transform);
                 return;
             }
 

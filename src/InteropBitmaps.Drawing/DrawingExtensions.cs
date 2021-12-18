@@ -55,7 +55,7 @@ namespace InteropBitmaps
             IDrawing2D _Create<TPixel>()
                 where TPixel
                 : unmanaged
-                , Pixel.IPixelReflection<TPixel>
+                , Pixel.IPixelFactory<Pixel.BGRA32, TPixel>
             {                
                 return new InteropDrawing.Backends._MemoryDrawingContext<TPixel>(bitmap.OfType<TPixel>(), c => Pixel.GetColor<TPixel>(c));
             }
@@ -78,10 +78,10 @@ namespace InteropBitmaps
                 case Pixel.RGBA32.Code: return _Create<Pixel.RGBA32>();
                 case Pixel.BGRA32.Code: return _Create<Pixel.BGRA32>();
 
-                case Pixel.VectorRGB.Code: return _Create<Pixel.VectorRGB>();
-                case Pixel.VectorBGR.Code: return _Create<Pixel.VectorBGR>();
-                case Pixel.VectorRGBA.Code: return _Create<Pixel.VectorRGBA>();
-                case Pixel.VectorBGRA.Code: return _Create<Pixel.VectorBGRA>();
+                case Pixel.RGB96F.Code: return _Create<Pixel.RGB96F>();
+                case Pixel.BGR96F.Code: return _Create<Pixel.BGR96F>();
+                case Pixel.RGBA128F.Code: return _Create<Pixel.RGBA128F>();
+                case Pixel.BGRA128F.Code: return _Create<Pixel.BGRA128F>();
             }            
 
             throw new NotImplementedException();

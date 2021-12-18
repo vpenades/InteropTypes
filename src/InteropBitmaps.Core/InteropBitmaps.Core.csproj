@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>    
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>    
     <RootNamespace>InteropBitmaps</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -21,8 +21,36 @@
     </AssemblyAttribute>    
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Pixel\Pixel.Interfaces.IPixelConvertible.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Pixel.Interfaces.IPixelConvertible.cs</LastGenOutput>
+    </None>
+    <None Update="Pixel\Pixel.Interfaces.IPixelFactory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Pixel.Interfaces.IPixelFactory.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pixel\Pixel.Interfaces.IPixelConvertible.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.IPixelConvertible.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Pixel\Pixel.Interfaces.IPixelFactory.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.IPixelFactory.tt</DependentUpon>
+    </Compile>
   </ItemGroup>  
 
 </Project>

@@ -31,9 +31,8 @@ namespace InteropBitmaps
         {
             if (w <= 0 || w <= 0)
             {
-                if (bmp == null) return false;                
-                bmp.Dispose();
-                bmp = null;
+                if (bmp == null) return false;
+                System.Threading.Interlocked.Exchange(ref bmp, null)?.Dispose();
                 return true;
             }
             
@@ -140,7 +139,7 @@ namespace InteropBitmaps
         public static void CopyTo(this ANDROIDIMAGE src, ref MemoryBitmap<System.Numerics.Vector3> dst)
         {
             if (dst.Width != src.Width || dst.Height != src.Height) dst = default;
-            if (dst.IsEmpty) dst = new MemoryBitmap<System.Numerics.Vector3>(src.Width, src.Height, Pixel.VectorBGR.Format);
+            if (dst.IsEmpty) dst = new MemoryBitmap<System.Numerics.Vector3>(src.Width, src.Height, Pixel.BGR96F.Format);
 
             src._CopyYuv445345To(dst.AsSpanBitmap());
         }        

@@ -10,6 +10,7 @@ namespace InteropBitmaps
 {
     public delegate void TransferCvAction(CVMATRIX src, CVMATRIX dst);
     public delegate void TransferPtrAction(PointerBitmap src, PointerBitmap dst);
+    public delegate void TransferSpanAction(SpanBitmap src, SpanBitmap dst);
 
     static class _Implementation
     {
@@ -28,9 +29,9 @@ namespace InteropBitmaps
             }
             else
             {
-                if (inFmt == CVDEPTHTYPE.CV_32FC1) { outFmt = Pixel.LuminanceScalar.Format; return true; }
-                if (inFmt == CVDEPTHTYPE.CV_32FC3) { outFmt = Pixel.VectorBGR.Format; return true; }
-                if (inFmt == CVDEPTHTYPE.CV_32FC4) { outFmt = Pixel.VectorBGRA.Format; return true; }                
+                if (inFmt == CVDEPTHTYPE.CV_32FC1) { outFmt = Pixel.Luminance32F.Format; return true; }
+                if (inFmt == CVDEPTHTYPE.CV_32FC3) { outFmt = Pixel.BGR96F.Format; return true; }
+                if (inFmt == CVDEPTHTYPE.CV_32FC4) { outFmt = Pixel.BGRA128F.Format; return true; }                
             }
 
             outFmt = default;
@@ -43,14 +44,14 @@ namespace InteropBitmaps
             {
                 case Pixel.Luminance8.Code: { dst = CVDEPTHTYPE.CV_8UC1; return true; }
                 case Pixel.Luminance16.Code: { dst = CVDEPTHTYPE.CV_16UC1; return true; }
-                case Pixel.LuminanceScalar.Code: { dst = CVDEPTHTYPE.CV_32FC1; return true; }
+                case Pixel.Luminance32F.Code: { dst = CVDEPTHTYPE.CV_32FC1; return true; }
 
                 case Pixel.BGR24.Code: { dst = CVDEPTHTYPE.CV_8UC3; return true; }
                 case Pixel.BGRA32.Code: { dst = CVDEPTHTYPE.CV_8UC4; return true; }
                 case Pixel.BGRP32.Code: { dst = CVDEPTHTYPE.CV_8UC4; return true; }
 
-                case Pixel.VectorBGR.Code: { dst = CVDEPTHTYPE.CV_32FC3; return true; }
-                case Pixel.VectorBGRA.Code: { dst = CVDEPTHTYPE.CV_32FC4; return true; }
+                case Pixel.BGR96F.Code: { dst = CVDEPTHTYPE.CV_32FC3; return true; }
+                case Pixel.BGRA128F.Code: { dst = CVDEPTHTYPE.CV_32FC4; return true; }
             }
 
             dst = default;
@@ -74,7 +75,7 @@ namespace InteropBitmaps
                 case Pixel.ARGB32.Code:
                     return CVDEPTHTYPE.CV_8UC4;
 
-                case Pixel.VectorRGBA.Code:
+                case Pixel.RGBA128F.Code:
                     return CVDEPTHTYPE.CV_32FC4;
 
                 default: throw new NotImplementedException();
@@ -255,6 +256,11 @@ namespace InteropBitmaps
         public static void TransferPtr(SpanBitmap src, SpanBitmap dst, TransferPtrAction action)
         {
             SpanBitmap.PinTransferPointers(src, dst, (s,d) => action(s,d));
+        }
+
+        public static void TransferSpan(SpanBitmap src, SpanBitmap dst, TransferSpanAction action)
+        {
+            SpanBitmap.PinTransferPointers(src, dst, (s, d) => action(s, d));
         }
 
         public static void TransferCv(SpanBitmap src, SpanBitmap dst, TransferCvAction action)

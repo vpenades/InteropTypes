@@ -9,8 +9,8 @@ using TENSOR3S = InteropTensors.SpanTensor3<float>;
 using TENSOR2V3 = InteropTensors.SpanTensor2<System.Numerics.Vector3>;
 using TENSOR2V4 = InteropTensors.SpanTensor2<System.Numerics.Vector4>;
 
-using XFORM3 = InteropTensors.Mad3;
-using XFORM4 = InteropTensors.Mad4;
+using XFORM3 = InteropTensors.MultiplyAdd;
+using XFORM4 = InteropTensors.MultiplyAdd;
 
 namespace InteropTensors
 {
@@ -122,7 +122,7 @@ namespace InteropTensors
         public static void FitBitmap(TENSOR2V3 dst, InteropBitmaps.SpanBitmap src)
         {
             var dstData = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, byte>(dst.Span);
-            var dstBmp = new InteropBitmaps.SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], InteropBitmaps.Pixel.VectorBGR.Format);
+            var dstBmp = new InteropBitmaps.SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], InteropBitmaps.Pixel.BGR96F.Format);
 
             if (src.PixelFormat.IsFloating)
             {
@@ -306,6 +306,96 @@ namespace InteropTensors
             XFORM4.Transform(srcSpan, dstSpan, xform);
         }
 
+        public static void Copy(SpanTensor3<Byte> src, TENSOR2V3 dst, MultiplyAdd xform)
+        {            
+            if (src.Dimensions[2] == 3)
+            {
+                TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions.Head2, dst.Dimensions);
+
+                var l0 = src.Dimensions[0];
+                var l1 = src.Dimensions[1];
+
+                for (int i0 = 0; i0 < l0; ++i0)
+                {
+                    for (int i1 = 0; i1 < l1; ++i1)
+                    {
+                        var v = new Vector3(src[i0, i1, 0], src[i0, i1, 1], src[i0, i1, 2]);
+                        v = xform.Transform(v);
+                        dst[i0, i1] = v;
+                    }
+                }
+
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static void Copy(SpanTensor3<Byte> src, SpanTensor2<float> dstX, SpanTensor2<float> dstY, SpanTensor2<float> dstZ, MultiplyAdd xform)
+        {
+            if (src.Dimensions[2] == 3)
+            {
+                TensorSize2.GuardEquals(nameof(src), nameof(dstX), src.Dimensions.Head2, dstX.Dimensions);
+                TensorSize2.GuardEquals(nameof(src), nameof(dstY), src.Dimensions.Head2, dstY.Dimensions);
+                TensorSize2.GuardEquals(nameof(src), nameof(dstZ), src.Dimensions.Head2, dstZ.Dimensions);
+
+                var l0 = src.Dimensions[0];
+                var l1 = src.Dimensions[1];
+
+                for (int i0 = 0; i0 < l0; ++i0)
+                {
+                    for (int i1 = 0; i1 < l1; ++i1)
+                    {
+                        var v = new Vector3(src[i0, i1, 0], src[i0, i1, 1], src[i0, i1, 2]);
+                        v = xform.Transform(v);
+                        dstX[i0, i1] = v.X;
+                        dstY[i0, i1] = v.Y;
+                        dstZ[i0, i1] = v.Z;
+                    }
+                }
+
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static void Copy(SpanTensor2<float> src, SpanTensor2<Byte> dst, MultiplyAdd xform)
+        {
+            TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
+
+            var l0 = src.Dimensions[0];
+            var l1 = src.Dimensions[1];
+
+            if (xform.IsIdentity)
+            {
+                for (int i0 = 0; i0 < l0; ++i0)
+                {
+                    for (int i1 = 0; i1 < l1; ++i1)
+                    {
+                        var v = src[i0, i1];
+                        v = Math.Max(0, v);
+                        v = Math.Min(255, v);
+                        dst[i0, i1] = (Byte)v;
+                    }
+                }
+            }
+            else
+            {
+                for (int i0 = 0; i0 < l0; ++i0)
+                {
+                    for (int i1 = 0; i1 < l1; ++i1)
+                    {
+                        var v = src[i0, i1];
+                        v = xform.Transform(v);
+                        v = Math.Max(0, v);
+                        v = Math.Min(255, v);
+                        dst[i0, i1] = (Byte)v;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -329,5 +419,25 @@ namespace InteropTensors
                 span[i] /= sum;
             }
         }
+
+        
+        public static void ApplySoftMax(Span<Vector2> span)
+        {
+            // https://github.com/ShiqiYu/libfacedetection/blob/master/src/facedetectcnn.cpp#L594
+
+            for (int i = 0; i < span.Length; ++i)
+            {
+                var v1 = span[i].X;
+                var v2 = span[i].Y;
+                var max = Math.Max(v1, v2);
+                v1 -= max;
+                v2 -= max;
+                v1 = (float)Math.Exp(v1);
+                v2 = (float)Math.Exp(v2);
+                var vm = v1 + v2;
+
+                span[i] = new Vector2(v1, v2) / vm;
+            }
+        }        
     }
 }

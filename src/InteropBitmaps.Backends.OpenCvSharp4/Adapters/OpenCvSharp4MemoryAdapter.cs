@@ -29,8 +29,7 @@ namespace InteropBitmaps.Adapters
                 }
             }
 
-            _ProxyBitmap?.Dispose();
-            _ProxyBitmap = null;
+            System.Threading.Interlocked.Exchange(ref _ProxyBitmap, null)?.Dispose();
 
             _Handle?.Dispose();
             _Handle = null;

@@ -35,7 +35,10 @@ namespace InteropBitmaps.Adapters
 
         public void CopyTo(ref Bitmap bmp)
         {
-            if (!IsExact(bmp)) { bmp?.Dispose(); bmp = null; }
+            if (!IsExact(bmp))
+            {
+                System.Threading.Interlocked.Exchange(ref bmp, null)?.Dispose();
+            }
 
             if (bmp == null) bmp = CreateBitmap();
         }

@@ -61,23 +61,23 @@ namespace InteropBitmaps
 
                 case Pixel.Luminance8.Code:
                 case Pixel.Luminance16.Code:
-                case Pixel.LuminanceScalar.Code:
+                case Pixel.Luminance32F.Code:
                     //outFmt = GDIFMT.Format16bppGrayScale; return true; // Gray16 is listed, but not supported by GDI.
                     return GDIFMT.Format24bppRgb;
 
                 case Pixel.RGB24.Code:
                 case Pixel.BGR24.Code:
                 case Pixel.BGR565.Code:
-                case Pixel.VectorRGB.Code:
-                case Pixel.VectorBGR.Code:
+                case Pixel.RGB96F.Code:
+                case Pixel.BGR96F.Code:
                     return GDIFMT.Format24bppRgb;
 
                 case Pixel.BGRA32.Code:
                 case Pixel.RGBA32.Code:
                 case Pixel.ARGB32.Code:
                 case Pixel.BGRA4444.Code:
-                case Pixel.VectorBGRA.Code:
-                case Pixel.VectorRGBA.Code:
+                case Pixel.BGRA128F.Code:
+                case Pixel.RGBA128F.Code:
                     return GDIFMT.Format32bppArgb;
 
                 // case Pixel.ARGB32P.Code:

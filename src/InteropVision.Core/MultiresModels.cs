@@ -130,11 +130,8 @@ namespace InteropVision
 
             public void Dispose()
             {
-                _Session?.Dispose();
-                _Session = null;
-
-                _Model?.Dispose();
-                _Model = null;
+                System.Threading.Interlocked.Exchange(ref _Session, null)?.Dispose();
+                System.Threading.Interlocked.Exchange(ref _Model, null)?.Dispose();
             }
 
             #endregion

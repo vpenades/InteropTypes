@@ -10,14 +10,15 @@ namespace InteropWith
 
         public void Dispose()
         {
-            foreach (var item in _Disposables) item.Dispose();
-            _Disposables.Clear();
+            var hhh = System.Threading.Interlocked.Exchange(ref _Disposables, null);
+            if (hhh != null) { foreach (var item in hhh) item.Dispose(); }
         }
 
-        private readonly HashSet<IDisposable> _Disposables = new HashSet<IDisposable>();
+        private HashSet<IDisposable> _Disposables = new HashSet<IDisposable>();
 
         public T Record<T>(T disposable) where T:IDisposable
         {
+            if (_Disposables == null) _Disposables = new HashSet<IDisposable>();
             _Disposables.Add(disposable);
             return disposable;
         }
@@ -29,7 +30,7 @@ namespace InteropWith
 
         public void DisposeOf<T>(T disposable) where T:IDisposable
         {
-            _Disposables.Remove(disposable);
+            _Disposables?.Remove(disposable);
 
             disposable.Dispose();            
         }

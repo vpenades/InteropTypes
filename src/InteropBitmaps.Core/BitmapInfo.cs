@@ -149,6 +149,11 @@ namespace InteropBitmaps
         public bool IsEmpty => (Width * Height * PixelByteSize) == 0;
 
         /// <summary>
+        /// Gets the number of bytes used by a visible pixel row.
+        /// </summary>
+        public int RowByteSize => Width * PixelByteSize;
+
+        /// <summary>
         /// Gets the number of bytes required to store a bitmap.
         /// </summary>
         /// <remarks>

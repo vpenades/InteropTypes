@@ -164,9 +164,9 @@ namespace InteropBitmaps
 
                 if (depth == typeof(Single))
                 {
-                    if (channels == 1) return LuminanceScalar.Format;
-                    if (channels == 3) return VectorBGR.Format;
-                    if (channels == 4) return VectorBGRA.Format;
+                    if (channels == 1) return Luminance32F.Format;
+                    if (channels == 3) return BGR96F.Format;
+                    if (channels == 4) return BGRA128F.Format;
                 }
 
                 throw new NotImplementedException();
@@ -199,17 +199,17 @@ namespace InteropBitmaps
                         if (typeof(TPixel) == typeof(RGBP32)) return RGBP32.Format;
                         if (typeof(TPixel) == typeof(ARGB32)) return ARGB32.Format;
                         if (typeof(TPixel) == typeof(PRGB32)) return PRGB32.Format;
-                        if (typeof(TPixel) == typeof(LuminanceScalar)) return LuminanceScalar.Format;
+                        if (typeof(TPixel) == typeof(Luminance32F)) return Luminance32F.Format;
                         break;
                     case 12:
-                        if (typeof(TPixel) == typeof(VectorRGB)) return VectorRGB.Format;
-                        if (typeof(TPixel) == typeof(VectorBGR)) return VectorBGR.Format;
+                        if (typeof(TPixel) == typeof(RGB96F)) return RGB96F.Format;
+                        if (typeof(TPixel) == typeof(BGR96F)) return BGR96F.Format;
                         break;
                     case 16:
-                        if (typeof(TPixel) == typeof(VectorBGRA)) return VectorBGRA.Format;
-                        if (typeof(TPixel) == typeof(VectorRGBA)) return VectorRGBA.Format;
-                        if (typeof(TPixel) == typeof(VectorBGRP)) return VectorBGRP.Format;
-                        if (typeof(TPixel) == typeof(VectorRGBP)) return VectorRGBP.Format;
+                        if (typeof(TPixel) == typeof(BGRA128F)) return BGRA128F.Format;
+                        if (typeof(TPixel) == typeof(BGRP128F)) return BGRP128F.Format;
+                        if (typeof(TPixel) == typeof(RGBA128F)) return RGBA128F.Format;                        
+                        if (typeof(TPixel) == typeof(RGBP128F)) return RGBP128F.Format;
                         break;
                 }
 
@@ -448,7 +448,7 @@ namespace InteropBitmaps
 
                     case Luminance8.Code: return typeof(Luminance8);
                     case Luminance16.Code: return typeof(Luminance16);
-                    case LuminanceScalar.Code: return typeof(LuminanceScalar);
+                    case Luminance32F.Code: return typeof(Luminance32F);
 
                     case BGR565.Code: return typeof(BGR565);
                     case BGRA5551.Code: return typeof(BGRA5551);
@@ -461,14 +461,17 @@ namespace InteropBitmaps
                     case RGBA32.Code: return typeof(RGBA32);
                     case ARGB32.Code: return typeof(ARGB32);
 
-                    case VectorRGB.Code: return typeof(VectorRGB);
-                    case VectorBGR.Code: return typeof(VectorBGR);
+                    case BGRP32.Code: return typeof(BGRP32);
+                    case RGBP32.Code: return typeof(RGBP32);
 
-                    case VectorRGBA.Code: return typeof(VectorRGBA);
-                    case VectorRGBP.Code: return typeof(VectorRGBP);
+                    case RGB96F.Code: return typeof(RGB96F);
+                    case BGR96F.Code: return typeof(BGR96F);
 
-                    case VectorBGRA.Code: return typeof(VectorBGRA);
-                    case VectorBGRP.Code: return typeof(VectorBGRP);                        
+                    case RGBA128F.Code: return typeof(RGBA128F);
+                    case RGBP128F.Code: return typeof(RGBP128F);
+
+                    case BGRA128F.Code: return typeof(BGRA128F);
+                    case BGRP128F.Code: return typeof(BGRP128F);                        
                 }
 
                 return null;

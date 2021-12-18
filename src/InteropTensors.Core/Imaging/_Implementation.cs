@@ -62,7 +62,7 @@ namespace InteropTensors
             if (dims[2] != 3) return false;
 
             var data = System.Runtime.InteropServices.MemoryMarshal.Cast<float, byte>(src.Span);
-            bmp = new SpanBitmap<Vector3>(data, dims[1], dims[0], Pixel.VectorBGR.Format);
+            bmp = new SpanBitmap<Vector3>(data, dims[1], dims[0], Pixel.BGR96F.Format);
             return true;
         }
         
@@ -75,7 +75,7 @@ namespace InteropTensors
         {
             var midPixel = new Single[tensor.Dimensions[2]];
 
-            var memory = new MemoryBitmap<Vector3>(tensor.Dimensions[1], tensor.Dimensions[0], Pixel.VectorBGR.Format);
+            var memory = new MemoryBitmap<Vector3>(tensor.Dimensions[1], tensor.Dimensions[0], Pixel.BGR96F.Format);
 
             for (int y = 0; y < tensor.Dimensions[0]; ++y)
             {
@@ -160,9 +160,7 @@ namespace InteropTensors
             if (srcSpan.PixelFormat.ByteCount == 1)
             {
                 SpanBitmap.CopyPixels(srcSpan.OfType<Byte>(), dstSpan, (offset, scale), (0, 1));
-            }
-
-            
+            }            
 
         }
     }

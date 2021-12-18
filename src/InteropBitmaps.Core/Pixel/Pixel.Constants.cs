@@ -43,7 +43,7 @@ namespace InteropBitmaps
             public const uint BGRP32 = SHIFT0 * (uint)PEF.Blue8 | SHIFT1 * (uint)PEF.Green8 | SHIFT2 * (uint)PEF.Red8 | SHIFT3 * (uint)PEF.Premul8;
             public const uint PRGB32 = SHIFT0 * (uint)PEF.Premul8 | SHIFT1 * (uint)PEF.Red8 | SHIFT2 * (uint)PEF.Green8 | SHIFT3 * (uint)PEF.Blue8;
 
-            public const uint Gray32F = SHIFT0 * (uint)PEF.Luminance32F;
+            public const uint Luminance32F = SHIFT0 * (uint)PEF.Luminance32F;
 
             public const uint RGB96F = SHIFT0 * (uint)PEF.Red32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Blue32F;
             public const uint BGR96F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F;
@@ -79,9 +79,9 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct LuminanceScalar
+        partial struct Luminance32F
         {
-            public const uint Code = _PackedPixelCodes.Gray32F;
+            public const uint Code = _PackedPixelCodes.Luminance32F;
             public static readonly Format Format = new Format(Code);
         }
 
@@ -151,37 +151,37 @@ namespace InteropBitmaps
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorRGB
+        partial struct RGB96F
         {
             public const uint Code = _PackedPixelCodes.RGB96F;
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorBGR
+        partial struct BGR96F
         {
             public const uint Code = _PackedPixelCodes.BGR96F;
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorBGRA
+        partial struct BGRA128F
         {            
             public const uint Code = _PackedPixelCodes.BGRA128F;
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorBGRP
+        partial struct BGRP128F
         {
             public const uint Code = _PackedPixelCodes.BGRP128F;
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorRGBA
+        partial struct RGBA128F
         {
             public const uint Code = _PackedPixelCodes.RGBA128F;
             public static readonly Format Format = new Format(Code);
         }
 
-        partial struct VectorRGBP
+        partial struct RGBP128F
         {
             public const uint Code = _PackedPixelCodes.RGBP128F;
             public static readonly Format Format = new Format(Code);

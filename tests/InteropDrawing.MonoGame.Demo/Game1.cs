@@ -79,7 +79,7 @@ namespace InteropDrawing
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;            
 
-            _Drawing2D.Begin(800, -600, true);
+            _Drawing2D.Begin(800, 600, true);
 
             _Drawing2D.DrawLine((0, 0), (800, 600), 2, COLOR.Red);
             _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, _Sprites);

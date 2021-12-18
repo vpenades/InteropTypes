@@ -33,11 +33,8 @@ namespace InteropVision
 
         public void Dispose()
         {
-            _BroadDetector?.Dispose();
-            _BroadDetector = null;
-
-            _NarrowDetector?.Dispose();
-            _NarrowDetector = null;
+            System.Threading.Interlocked.Exchange(ref _BroadDetector, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _NarrowDetector, null)?.Dispose();
         }
 
         #endregion

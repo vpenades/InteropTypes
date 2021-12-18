@@ -29,8 +29,7 @@ namespace InteropWith
         {
             if (disposing)
             {
-                _CommandList?.Dispose();
-                _CommandList = null;
+                System.Threading.Interlocked.Exchange(ref _CommandList, null)?.Dispose();
                 _Graphics = null;
             }
         }        
@@ -118,7 +117,7 @@ namespace InteropWith
         {
             var tmpTex = _GetStagingTexture(dstTex.Width, dstTex.Height);
 
-            _PinWritablePointer(tmpTex, dstSpan => dstSpan.AsSpanBitmap().SetPixels(0, 0, srcBitmap));
+            _WriteFromTexture(tmpTex, dstSpan => dstSpan.SetPixels(0, 0, srcBitmap));
 
             _CommandList.Begin();
             _CommandList.CopyTexture(
@@ -127,19 +126,19 @@ namespace InteropWith
             _CommandList.End();
 
             _Graphics.SubmitCommands(_CommandList);
-        }
+        }        
 
-        private void _PinWritablePointer(Texture srcTexture, Action<InteropBitmaps.PointerBitmap> writer)
+        private void _WriteFromTexture(Texture srcTexture, InteropBitmaps.SpanBitmap.Action1 writeAction)
         {
-            var fmt = From(srcTexture.Format);            
+            var fmt = From(srcTexture.Format);
 
-            var map = _Graphics.Map(srcTexture, MapMode.Write, 0);
+            var srcMap = _Graphics.Map(srcTexture, MapMode.Write, 0);
 
-            var binfo = new InteropBitmaps.BitmapInfo((int)srcTexture.Width, (int)srcTexture.Height, fmt, (int)map.RowPitch);
+            var binfo = new InteropBitmaps.BitmapInfo((int)srcTexture.Width, (int)srcTexture.Height, fmt, (int)srcMap.RowPitch);
 
-            var span = new InteropBitmaps.PointerBitmap(map.Data, binfo);
+            var srcSpan = new InteropBitmaps.SpanBitmap(srcMap.Data, binfo);
 
-            writer(span);
+            writeAction(srcSpan);
 
             _Graphics.Unmap(srcTexture);
         }
@@ -156,7 +155,7 @@ namespace InteropWith
                 case PixelFormat.B8_G8_R8_A8_UNorm: return InteropBitmaps.Pixel.BGRA32.Format;
                 case PixelFormat.B8_G8_R8_A8_UNorm_SRgb: return InteropBitmaps.Pixel.BGRA32.Format;
 
-                case PixelFormat.R32_G32_B32_A32_Float: return InteropBitmaps.Pixel.VectorRGBA.Format;                
+                case PixelFormat.R32_G32_B32_A32_Float: return InteropBitmaps.Pixel.RGBA128F.Format;                
 
                 default: throw new NotImplementedException();
             }

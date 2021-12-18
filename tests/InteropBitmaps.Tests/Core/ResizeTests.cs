@@ -91,7 +91,24 @@ namespace InteropBitmaps.Core
             using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {t}")))
             {
                 dst.AsSpanBitmap().SetPixels(xx, src);                
-            }            
+            }
+
+
+            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");            
+            var cat = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
+            var cat00 = cat.OfType<Pixel.RGBA32>().Slice((36,54,99,123)).AsSpanBitmap();
+
+            for(float r=0; r < 1; r+=0.3f)
+            {
+                var xform = Matrix3x2.CreateRotation(r) * Matrix3x2.CreateTranslation(50, 15);
+
+                // offset
+                xform = Matrix3x2.CreateTranslation(-50, -50) * xform * Matrix3x2.CreateTranslation(50, 50);
+
+                dst.AsSpanBitmap().SetPixels(xform, cat00, r);
+            }
+
+            
 
             dst.AttachToCurrentTest("transformed.png");
         }

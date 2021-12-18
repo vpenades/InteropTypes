@@ -18,6 +18,7 @@ namespace InteropTensors
     for(var TDIMCOUNT = 1; TDIMCOUNT <= TDIM_MAX; ++TDIMCOUNT)    
     {
         var TTENSORSIZE = $"TensorSize{TDIMCOUNT}";
+        var TTENSORINDEX = $"TensorIndices{TDIMCOUNT}";
 
         var TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int d{idx}")); 
         var TNAMELESSTUPLE = (TDIMCOUNT>1?"(":"") + String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int")) + (TDIMCOUNT>1?")":""); 
@@ -203,7 +204,73 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static <#= TTENSORSIZE#> operator +(in <#= TTENSORSIZE#> a, in <#= TTENSORSIZE#> b)        
+        {
+            return new <#= TTENSORSIZE#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> a.Dim<#= TDIM#> + b.Dim<#= TDIM#> <# } #>);            
+        }     
+
+        public static <#= TTENSORSIZE#> operator -(in <#= TTENSORSIZE#> a, in <#= TTENSORSIZE#> b)        
+        {
+            return new <#= TTENSORSIZE#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> a.Dim<#= TDIM#> - b.Dim<#= TDIM#> <# } #>);            
+        }  
+
+        public static <#= TTENSORSIZE#> operator +(in <#= TTENSORSIZE#> a, in <#= TTENSORINDEX#> b)        
+        {
+            return new <#= TTENSORSIZE#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> a.Dim<#= TDIM#> + b.Index<#= TDIM#> <# } #>);            
+        }     
+
+        public static <#= TTENSORSIZE#> operator -(in <#= TTENSORSIZE#> a, in <#= TTENSORINDEX#> b)        
+        {
+            return new <#= TTENSORSIZE#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> a.Dim<#= TDIM#> - b.Index<#= TDIM#> <# } #>);            
+        }  
+
+        public static <#= TTENSORSIZE#> Min(in <#= TTENSORSIZE#> a, in <#= TTENSORSIZE#> b)        
+        {
+            return new <#= TTENSORSIZE#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> Math.Min(a.Dim<#= TDIM#> , b.Dim<#= TDIM#>) <# } #>);            
+        }     
+
+        public static <#= TTENSORSIZE#> Max(in <#= TTENSORSIZE#> a, in <#= TTENSORSIZE#> b)        
+        {
+            return new <#= TTENSORSIZE#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> Math.Max(a.Dim<#= TDIM#> , b.Dim<#= TDIM#>) <# } #>);            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static <#= TTENSORSIZE#> ExclusiveUnion(<#= TTENSORSIZE#> srcSize, ref <#= TTENSORINDEX#> srcOffset, <#= TTENSORSIZE#> dstSize, ref <#= TTENSORINDEX#> dstOffset)
+        {
+            var s = <#= TTENSORSIZE#>.Min(srcSize, dstSize);
+
+            s += <#= TTENSORINDEX#>.Min(default, srcOffset);
+            srcOffset = <#= TTENSORINDEX#>.Max(default, srcOffset);
+
+            s += <#= TTENSORINDEX#>.Min(default, dstOffset);
+            dstOffset = <#= TTENSORINDEX#>.Max(default, dstOffset);
+            
+            srcSize = <#= TTENSORSIZE#>.Max(default, srcSize - srcOffset);
+            dstSize = <#= TTENSORSIZE#>.Max(default, dstSize - dstOffset);
+
+            s = <#= TTENSORSIZE#>.Min(srcSize, s);
+            s = <#= TTENSORSIZE#>.Min(dstSize, s);
+            s = <#= TTENSORSIZE#>.Max(default, s);
+
+            return s;
+        }
+
 
         <# if (TDIMCOUNT > 1) { #>        
         
@@ -289,6 +356,16 @@ idx += idx0 * len;
         }
 
         <# } #>
+
+        <# TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int idx{idx}")); #>
+public bool ContainsIndices(<#= TARGS#>)
+        {
+            <# for(var XDIM = 0; XDIM < TDIMCOUNT; ++XDIM) { #>
+if (idx<#= XDIM#> < 0 || idx<#= XDIM#> >= Dim<#= XDIM#>) return false;
+            <# } #>
+
+            return true;
+        }
 
         #endregion
 

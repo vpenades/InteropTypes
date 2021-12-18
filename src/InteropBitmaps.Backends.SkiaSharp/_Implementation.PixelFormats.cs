@@ -22,7 +22,7 @@ namespace InteropBitmaps
                 case Pixel.RGBA32.Code: dstColor = SKIACOLOR.Rgba8888; dstAlpha = SKIAALPHA.Unpremul; return true;
                 case Pixel.BGRA32.Code: dstColor = SKIACOLOR.Bgra8888; dstAlpha = SKIAALPHA.Unpremul; return true;
 
-                case Pixel.VectorRGBA.Code: dstColor = SKIACOLOR.RgbaF32; dstAlpha = SKIAALPHA.Unpremul; return true;
+                case Pixel.RGBA128F.Code: dstColor = SKIACOLOR.RgbaF32; dstAlpha = SKIAALPHA.Unpremul; return true;
             }
 
             if (allowCompatibleFormats)

@@ -34,8 +34,7 @@ namespace InteropBitmaps.Adapters
         {
             if (!IsCompatibleWith(bmp))
             {
-                bmp?.Dispose();
-                bmp = null;
+                System.Threading.Interlocked.Exchange(ref bmp, null)?.Dispose();
             }
 
             if (bmp == null) bmp = ToBitmap(true);

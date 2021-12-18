@@ -21,15 +21,9 @@ namespace InteropBitmaps.Codecs
 
         public void Dispose()
         {
-            _Encoder?.Dispose();
-            _Encoder = null;
-
-            _Stream?.Flush();
-            _Stream?.Dispose();
-            _Stream = null;
-
-            _Converter?.Dispose();
-            _Converter = null;
+            System.Threading.Interlocked.Exchange(ref _Encoder, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _Stream, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _Converter, null)?.Dispose();
         }
 
         #endregion

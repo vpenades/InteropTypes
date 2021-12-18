@@ -24,8 +24,7 @@ namespace InteropWith
 
         public void Dispose()
         {
-            _OwnedTextureLayout?.Dispose();
-            _OwnedTextureLayout = null;            
+            System.Threading.Interlocked.Exchange(ref _OwnedTextureLayout, null)?.Dispose();
 
             if (_OwnerTextureResourceSets != null)
             {
@@ -100,12 +99,9 @@ namespace InteropWith
 
         public void Dispose()
         {
-            _OwnedSamplerLayout?.Dispose();
-            _OwnedSamplerLayout = null;
+            System.Threading.Interlocked.Exchange(ref _OwnedSamplerLayout, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _OwnedSamplerResourceSets, null)?.Dispose();
 
-            _OwnedSamplerResourceSets?.Dispose();
-            _OwnedSamplerResourceSets = null;
-            
             _ExtSamplerSet = null;
             _ExtDevice = null;
         }

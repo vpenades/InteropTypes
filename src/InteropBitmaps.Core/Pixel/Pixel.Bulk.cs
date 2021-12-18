@@ -9,7 +9,7 @@ namespace InteropBitmaps
     partial class Pixel
     {
         public static TPixel GetColor<TPixel>(System.Drawing.Color color)
-            where TPixel : IPixelReflection<TPixel>
+            where TPixel : IPixelFactory<Pixel.BGRA32, TPixel>
         {
             return default(TPixel).From(new BGRA32(color));
         }
@@ -29,13 +29,13 @@ namespace InteropBitmaps
                 case RGBP32.Code: newFmt = RGBP32.Format; break;
                 case BGRP32.Code: newFmt = RGBP32.Format; break;
 
-                case VectorRGB.Code: newFmt = VectorRGB.Format; break;
-                case VectorBGR.Code: newFmt = VectorRGB.Format; break;
+                case RGB96F.Code: newFmt = RGB96F.Format; break;
+                case BGR96F.Code: newFmt = RGB96F.Format; break;
 
-                case VectorRGBA.Code: newFmt = VectorRGBA.Format; break;
-                case VectorBGRA.Code: newFmt = VectorRGBA.Format; break;
-                case VectorRGBP.Code: newFmt = VectorRGBP.Format; break;
-                case VectorBGRP.Code: newFmt = VectorRGBP.Format; break;
+                case RGBA128F.Code: newFmt = RGBA128F.Format; break;
+                case BGRA128F.Code: newFmt = RGBA128F.Format; break;
+                case RGBP128F.Code: newFmt = RGBP128F.Format; break;
+                case BGRP128F.Code: newFmt = BGRP128F.Format; break;
             }
 
             return newFmt != default;            
@@ -56,13 +56,13 @@ namespace InteropBitmaps
                 case RGBP32.Code: newFmt = BGRA32.Format; break;
                 case BGRP32.Code: newFmt = BGRA32.Format; break;
 
-                case VectorRGB.Code: newFmt = VectorBGR.Format; break;
-                case VectorBGR.Code: newFmt = VectorBGR.Format; break;
+                case RGB96F.Code: newFmt = BGR96F.Format; break;
+                case BGR96F.Code: newFmt = BGR96F.Format; break;
 
-                case VectorRGBA.Code: newFmt = VectorBGRA.Format; break;
-                case VectorBGRA.Code: newFmt = VectorBGRA.Format; break;
-                case VectorRGBP.Code: newFmt = VectorBGRP.Format; break;
-                case VectorBGRP.Code: newFmt = VectorBGRP.Format; break;
+                case RGBA128F.Code: newFmt = BGRA128F.Format; break;
+                case BGRA128F.Code: newFmt = BGRA128F.Format; break;
+                case RGBP128F.Code: newFmt = RGBP128F.Format; break;
+                case BGRP128F.Code: newFmt = BGRP128F.Format; break;
             }
 
             return newFmt != default;
@@ -146,8 +146,8 @@ namespace InteropBitmaps
         }
 
         public static BulkConverterCallback<Byte, Byte> GetByteConverter<TSrcPixel, TDstPixel>()
-            where TSrcPixel : unmanaged, IConvertible
-            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
+            where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
+            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
         {
             if (typeof(TSrcPixel) == typeof(TDstPixel)) { return (a, b) => a.CopyTo(b); }
 
@@ -158,13 +158,13 @@ namespace InteropBitmaps
 
                 int blockSize = Math.Min(src.Length, 1024);
 
-                Span<VectorRGBA> block = stackalloc VectorRGBA[blockSize];
+                Span<RGBA128F> block = stackalloc RGBA128F[blockSize];
 
                 var factory = default(TDstPixel);
 
                 while (dst.Length > 0)
                 {
-                    for (int i = 0; i < blockSize; ++i) { block[i] = src[i].ToVectorRGBA(); }
+                    for (int i = 0; i < blockSize; ++i) { block[i] = src[i].ToPixel(); }
                     for (int i = 0; i < blockSize; ++i) { dst[i] = factory.From(block[i]); }
 
                     src = src.Slice(blockSize);
@@ -179,7 +179,7 @@ namespace InteropBitmaps
 
 
         /// <summary>
-        /// Converts pixels by using <see cref="VectorRGBA"/> as an intermediate format.
+        /// Converts pixels by using <see cref="RGBA128F"/> as an intermediate format.
         /// </summary>
         /// <param name="dst"></param>
         /// <param name="dstFmt"></param>
@@ -194,7 +194,7 @@ namespace InteropBitmaps
 
             int blockSize = Math.Min(src.Length / srcLen, 1024);
 
-            Span<VectorRGBA> block = stackalloc VectorRGBA[blockSize];
+            Span<RGBA128F> block = stackalloc RGBA128F[blockSize];
 
             while (dst.Length > 0)
             {
@@ -211,14 +211,14 @@ namespace InteropBitmaps
             }
         }
 
-        private static void _ConvertPixels(Span<VectorRGBA> dst, ReadOnlySpan<Byte> src, Format srcFmt)
+        private static void _ConvertPixels(Span<RGBA128F> dst, ReadOnlySpan<Byte> src, Format srcFmt)
         {
             switch (srcFmt.PackedFormat)
             {
                 case Alpha8.Code: _ConvertPixels(dst, src.OfType<Alpha8>()); break;
                 case Luminance8.Code: _ConvertPixels(dst, src.OfType<Luminance8>()); break;
                 case Luminance16.Code: _ConvertPixels(dst, src.OfType<Luminance16>()); break;
-                case LuminanceScalar.Code: _ConvertPixels(dst, src.OfType<LuminanceScalar>()); break;
+                case Luminance32F.Code: _ConvertPixels(dst, src.OfType<Luminance32F>()); break;
                 case RGB24.Code: _ConvertPixels(dst, src.OfType<RGB24>()); break;
                 case BGR24.Code: _ConvertPixels(dst, src.OfType<BGR24>()); break;
                 case BGR565.Code: _ConvertPixels(dst, src.OfType<BGR565>()); break;
@@ -229,22 +229,22 @@ namespace InteropBitmaps
                 case RGBA32.Code: _ConvertPixels(dst, src.OfType<RGBA32>()); break;
                 case RGBP32.Code: _ConvertPixels(dst, src.OfType<RGBP32>()); break;
                 case ARGB32.Code: _ConvertPixels(dst, src.OfType<ARGB32>()); break;
-                case VectorRGB.Code: _ConvertPixels(dst, src.OfType<VectorRGB>()); break;
-                case VectorBGR.Code: _ConvertPixels(dst, src.OfType<VectorBGR>()); break;
-                case VectorBGRA.Code: _ConvertPixels(dst, src.OfType<VectorBGRA>()); break;
-                case VectorRGBA.Code: _ConvertPixels(dst, src.OfType<VectorRGBA>()); break;
+                case RGB96F.Code: _ConvertPixels(dst, src.OfType<RGB96F>()); break;
+                case BGR96F.Code: _ConvertPixels(dst, src.OfType<BGR96F>()); break;
+                case BGRA128F.Code: _ConvertPixels(dst, src.OfType<BGRA128F>()); break;
+                case RGBA128F.Code: _ConvertPixels(dst, src.OfType<RGBA128F>()); break;
                 default: throw new NotImplementedException(nameof(srcFmt));
             }
         }
 
-        private static void _ConvertPixels(Span<Byte> dst, Format dstFmt, ReadOnlySpan<VectorRGBA> src)
+        private static void _ConvertPixels(Span<Byte> dst, Format dstFmt, ReadOnlySpan<RGBA128F> src)
         {
             switch (dstFmt.PackedFormat)
             {
                 case Alpha8.Code: _ConvertPixels(dst.OfType<Alpha8>(), src); break;
                 case Luminance8.Code: _ConvertPixels(dst.OfType<Luminance8>(), src); break;
                 case Luminance16.Code: _ConvertPixels(dst.OfType<Luminance16>(), src); break;
-                case LuminanceScalar.Code: _ConvertPixels(dst.OfType<LuminanceScalar>(), src); break;
+                case Luminance32F.Code: _ConvertPixels(dst.OfType<Luminance32F>(), src); break;
                 case RGB24.Code: _ConvertPixels(dst.OfType<RGB24>(), src); break;
                 case BGR24.Code: _ConvertPixels(dst.OfType<BGR24>(), src); break;
                 case BGR565.Code: _ConvertPixels(dst.OfType<BGR565>(), src); break;
@@ -255,40 +255,40 @@ namespace InteropBitmaps
                 case RGBA32.Code: _ConvertPixels(dst.OfType<RGBA32>(), src); break;
                 case RGBP32.Code: _ConvertPixels(dst.OfType<RGBP32>(), src); break;
                 case ARGB32.Code: _ConvertPixels(dst.OfType<ARGB32>(), src); break;
-                case VectorRGB.Code: _ConvertPixels(dst.OfType<VectorRGB>(), src); break;
-                case VectorBGR.Code: _ConvertPixels(dst.OfType<VectorBGR>(), src); break;
-                case VectorBGRA.Code: _ConvertPixels(dst.OfType<VectorBGRA>(), src); break;
-                case VectorRGBA.Code: _ConvertPixels(dst.OfType<VectorRGBA>(), src); break;
+                case RGB96F.Code: _ConvertPixels(dst.OfType<RGB96F>(), src); break;
+                case BGR96F.Code: _ConvertPixels(dst.OfType<BGR96F>(), src); break;
+                case BGRA128F.Code: _ConvertPixels(dst.OfType<BGRA128F>(), src); break;
+                case RGBA128F.Code: _ConvertPixels(dst.OfType<RGBA128F>(), src); break;
                 
                 default: throw new NotImplementedException(nameof(dstFmt));
             }
         }
 
-        private static void _ConvertPixels(Span<VectorRGBA> dst, ReadOnlySpan<VectorRGBA> src)
+        private static void _ConvertPixels(Span<RGBA128F> dst, ReadOnlySpan<RGBA128F> src)
         {
             src.CopyTo(dst);
         }
 
-        private static void _ConvertPixels<TSrcPixel>(Span<VectorRGBA> dst, ReadOnlySpan<TSrcPixel> src)
-            where TSrcPixel : unmanaged, IConvertible
+        private static void _ConvertPixels<TSrcPixel>(Span<RGBA128F> dst, ReadOnlySpan<TSrcPixel> src)
+            where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
         {
-            if (typeof(TSrcPixel) == typeof(VectorRGBA))
+            if (typeof(TSrcPixel) == typeof(RGBA128F))
             {
                 var srcBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<TSrcPixel, Byte>(src);
-                var dstBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<VectorRGBA, Byte>(dst);
+                var dstBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<RGBA128F, Byte>(dst);
                 srcBytes.CopyTo(dstBytes);
                 return;
             }
 
-            for (int i = 0; i < dst.Length; ++i) { dst[i] = src[i].ToVectorRGBA(); }
+            for (int i = 0; i < dst.Length; ++i) { dst[i] = src[i].ToPixel(); }
         }
 
-        private static void _ConvertPixels<TDstPixel>(Span<TDstPixel> dst, ReadOnlySpan<VectorRGBA> src)
-            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
+        private static void _ConvertPixels<TDstPixel>(Span<TDstPixel> dst, ReadOnlySpan<RGBA128F> src)
+            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
         {
-            if (typeof(VectorRGBA) == typeof(TDstPixel))
+            if (typeof(RGBA128F) == typeof(TDstPixel))
             {
-                var srcBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<VectorRGBA, Byte>(src);
+                var srcBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<RGBA128F, Byte>(src);
                 var dstBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, Byte>(dst);
                 srcBytes.CopyTo(dstBytes);
                 return;
@@ -300,23 +300,23 @@ namespace InteropBitmaps
         }
 
         public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)
-            where TSrcPixel : unmanaged, IConvertible
-            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
+            where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
+            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
         {
             for(int i=0; i < dst.Length; ++i)
             {
-                var v = System.Numerics.Vector4.Lerp(left[i].ToVectorRGBA().RGBA, right[i].ToVectorRGBA().RGBA, amount);
-                dst[i] = default(TDstPixel).From( new VectorRGBA(v));
+                var v = System.Numerics.Vector4.Lerp(left[i].ToPixel().RGBA, right[i].ToPixel().RGBA, amount);
+                dst[i] = default(TDstPixel).From( new RGBA128F(v));
             }
         }
 
         public static void LerpArray<TDstPixel>(ReadOnlySpan<System.Numerics.Vector3> left, ReadOnlySpan<System.Numerics.Vector3> right, float amount, Span<TDstPixel> dst)            
-            where TDstPixel : unmanaged, IPixelReflection<TDstPixel>
+            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
         {
             for (int i = 0; i < dst.Length; ++i)
             {
                 var v = System.Numerics.Vector3.Lerp(left[i], right[i], amount);
-                dst[i] = default(TDstPixel).From(new VectorRGBA(v));
+                dst[i] = default(TDstPixel).From(new RGBA128F(v));
             }
         }
 

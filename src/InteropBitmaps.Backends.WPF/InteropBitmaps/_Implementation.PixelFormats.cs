@@ -22,7 +22,7 @@ namespace InteropBitmaps
         {
             if (inFmt == WIC_FORMATS.Gray8) { outFmt = Pixel.Luminance8.Format; return true; }
             if (inFmt == WIC_FORMATS.Gray16) { outFmt = Pixel.Luminance16.Format; return true; }
-            if (inFmt == WIC_FORMATS.Gray32Float) { outFmt = Pixel.LuminanceScalar.Format; return true; }
+            if (inFmt == WIC_FORMATS.Gray32Float) { outFmt = Pixel.Luminance32F.Format; return true; }
 
             if (inFmt == WIC_FORMATS.Bgr555) { outFmt = Pixel.BGRA5551.Format; return true; }
             if (inFmt == WIC_FORMATS.Bgr565) { outFmt = Pixel.BGR565.Format; return true; }
@@ -35,7 +35,7 @@ namespace InteropBitmaps
 
             if (inFmt == WIC_FORMATS.Pbgra32) { outFmt = Pixel.BGRA32.Format; return true; } // not right
 
-            if (inFmt == WIC_FORMATS.Rgba128Float) { outFmt = Pixel.VectorRGBA.Format; return true; }
+            if (inFmt == WIC_FORMATS.Rgba128Float) { outFmt = Pixel.RGBA128F.Format; return true; }
 
             outFmt = default;
             return false;
@@ -47,7 +47,7 @@ namespace InteropBitmaps
             {
                 case Pixel.Luminance8.Code: outFmt= WIC_FORMATS.Gray8; return true;
                 case Pixel.Luminance16.Code: outFmt = WIC_FORMATS.Gray16; return true;
-                case Pixel.LuminanceScalar.Code: outFmt = WIC_FORMATS.Gray32Float; return true;
+                case Pixel.Luminance32F.Code: outFmt = WIC_FORMATS.Gray32Float; return true;
 
                 case Pixel.BGR565.Code: outFmt = WIC_FORMATS.Bgr565; return true;
 
@@ -56,7 +56,7 @@ namespace InteropBitmaps
 
                 case Pixel.BGRA32.Code: outFmt = WIC_FORMATS.Bgra32; return true;
 
-                case Pixel.VectorRGBA.Code: outFmt = WIC_FORMATS.Rgba128Float; return true;                
+                case Pixel.RGBA128F.Code: outFmt = WIC_FORMATS.Rgba128Float; return true;                
             }
 
             outFmt = default;
@@ -81,8 +81,8 @@ namespace InteropBitmaps
                 case Pixel.BGRP32.Code:
                     return WIC_FORMATS.Pbgra32;
 
-                case Pixel.VectorBGR.Code:
-                case Pixel.VectorBGRA.Code:
+                case Pixel.BGR96F.Code:
+                case Pixel.BGRA128F.Code:
                     return WIC_FORMATS.Rgba128Float;                
 
                 default: throw new NotImplementedException();

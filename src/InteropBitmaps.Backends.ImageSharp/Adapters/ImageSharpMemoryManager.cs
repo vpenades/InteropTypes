@@ -35,7 +35,7 @@ namespace InteropBitmaps.Adapters
                         .SetPixels(0, 0, src);
                 }
 
-                if (_Owned && _Image != null) { _Image.Dispose(); _Image = null; }
+                if (_Owned && _Image != null) { System.Threading.Interlocked.Exchange(ref _Image, null)?.Dispose(); }
                 
                 if (_Unmanaged != IntPtr.Zero) // unamanaged resources handling.
                 {

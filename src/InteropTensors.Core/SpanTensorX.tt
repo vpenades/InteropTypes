@@ -177,6 +177,18 @@ namespace InteropTensors
             return new SpanTensor<#= TDIMCOUNT-1#><T>(data,st.dims);
         }
 
+        public unsafe SpanTensor<#= TDIMCOUNT#><TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize<#= TDIMCOUNT#>(_Dimensions.Head<#= TDIMCOUNT-1#>, lastDim);            
+
+            return new SpanTensor<#= TDIMCOUNT#><TElement>(xdata, xdims);
+        }
+
         public unsafe SpanTensor<#= TDIMCOUNT-1#><TElement> UpCast<TElement>()
             where TElement:unmanaged
         {

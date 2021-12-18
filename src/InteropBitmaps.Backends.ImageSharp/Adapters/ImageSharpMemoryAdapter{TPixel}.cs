@@ -31,8 +31,7 @@ namespace InteropBitmaps.Adapters
                 _SourceBitmap = default;
             }
 
-            _ProxyImage?.Dispose();
-            _ProxyImage = null;
+            System.Threading.Interlocked.Exchange(ref _ProxyImage, null)?.Dispose();
         }
 
         #endregion

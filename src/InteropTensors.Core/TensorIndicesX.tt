@@ -16,12 +16,14 @@ namespace InteropTensors
     <# for(var TDIMCOUNT = 1; TDIMCOUNT <= TDIM_MAX; ++TDIMCOUNT) { #>
     <# var TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int i{idx}")); #>
 
+    <# var TTENSORINDICES = $"TensorIndices{TDIMCOUNT}"; #>
+
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public partial struct TensorIndices<#= TDIMCOUNT#> : IReadOnlyList<int>, IEquatable<TensorIndices<#= TDIMCOUNT#>>
+    public partial struct <#= TTENSORINDICES#> : IReadOnlyList<int>, IEquatable<<#= TTENSORINDICES#>>
     {
         #region debug
 
@@ -34,21 +36,21 @@ namespace InteropTensors
 
         #region lifecycle
 
-        public static implicit operator TensorIndices<#= TDIMCOUNT#>(ReadOnlySpan<int> indices)
+        public static implicit operator <#= TTENSORINDICES#>(ReadOnlySpan<int> indices)
         {
-            return new TensorIndices<#= TDIMCOUNT#>(indices);
+            return new <#= TTENSORINDICES#>(indices);
         }        
 
         <# if (TDIMCOUNT == 1) { #>        
 
         <# } else { #>
 
-        public static implicit operator TensorIndices<#= TDIMCOUNT#>(in (<#= TARGS#>) indices)
+        public static implicit operator <#= TTENSORINDICES#>(in (<#= TARGS#>) indices)
         {
-            return new TensorIndices<#= TDIMCOUNT#>(indices);
+            return new <#= TTENSORINDICES#>(indices);
         }
 
-        public TensorIndices<#= TDIMCOUNT#>(in (<#= TARGS#>) indices)
+        public <#= TTENSORINDICES#>(in (<#= TARGS#>) indices)
         {
             <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> Index<#= TDIM#> = indices.i<#= TDIM#>;
             <# } #>
@@ -57,14 +59,14 @@ namespace InteropTensors
 
         <# } #>
 
-        public TensorIndices<#= TDIMCOUNT#>(<#= TARGS#>)
+        public <#= TTENSORINDICES#>(<#= TARGS#>)
         {
             <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> Index<#= TDIM#> = i<#= TDIM#>;
             <# } #>
 
         }
 
-        public TensorIndices<#= TDIMCOUNT#>(ReadOnlySpan<int> indices)
+        public <#= TTENSORINDICES#>(ReadOnlySpan<int> indices)
         {
             if (indices.Length != <#= TDIMCOUNT#>) throw new ArgumentOutOfRangeException(nameof(indices));
 
@@ -73,7 +75,7 @@ namespace InteropTensors
 
         }
 
-        public TensorIndices<#= TDIMCOUNT#>(IReadOnlyList<int> indices)
+        public <#= TTENSORINDICES#>(IReadOnlyList<int> indices)
         {
             if (indices.Count != <#= TDIMCOUNT#>) throw new ArgumentOutOfRangeException(nameof(indices));
 
@@ -91,7 +93,7 @@ namespace InteropTensors
         <# } else { #>
 
         <# var TNEGXX = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => "-1")); #>
-public static readonly TensorIndices<#= TDIMCOUNT#> Invalid = (<#= TNEGXX#>);
+public static readonly <#= TTENSORINDICES#> Invalid = (<#= TNEGXX#>);
 
         <# } #>
 
@@ -108,7 +110,7 @@ public static readonly TensorIndices<#= TDIMCOUNT#> Invalid = (<#= TNEGXX#>);
             return h;
         }
 
-        public static bool AreEqual(in TensorIndices<#= TDIMCOUNT#> a, in TensorIndices<#= TDIMCOUNT#> b)
+        public static bool AreEqual(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b)
         {            
             <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> if (a.Index<#= TDIM#> != b.Index<#= TDIM#>) return false;
             <# } #>
@@ -116,13 +118,13 @@ public static readonly TensorIndices<#= TDIMCOUNT#> Invalid = (<#= TNEGXX#>);
             return true;
         }
 
-        public static bool operator ==(in TensorIndices<#= TDIMCOUNT#> a, in TensorIndices<#= TDIMCOUNT#> b) { return AreEqual(a,b); }
+        public static bool operator ==(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b) { return AreEqual(a,b); }
 
-        public static bool operator !=(in TensorIndices<#= TDIMCOUNT#> a, in TensorIndices<#= TDIMCOUNT#> b) { return !AreEqual(a,b); }
+        public static bool operator !=(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices<#= TDIMCOUNT#> other) { return AreEqual(this, other); }
+        public bool Equals(<#= TTENSORINDICES#> other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices<#= TDIMCOUNT#> other ? AreEqual(this, other) : false; }
+        public override bool Equals(object obj) { return obj is <#= TTENSORINDICES#> other ? AreEqual(this, other) : false; }
 
         #endregion        
 
@@ -158,6 +160,38 @@ public static readonly TensorIndices<#= TDIMCOUNT#> Invalid = (<#= TNEGXX#>);
 
         <# var TITEMS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Index{idx}")); #>
 public int[] ToArray() { return new int[] { <#= TITEMS#> }; }        
+
+        #endregion
+
+        #region operators
+
+        public static <#= TTENSORINDICES#> operator +(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b)        
+        {
+            return new <#= TTENSORINDICES#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> a.Index<#= TDIM#> + b.Index<#= TDIM#> <# } #>);            
+        }     
+
+        public static <#= TTENSORINDICES#> operator -(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b)        
+        {
+            return new <#= TTENSORINDICES#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> a.Index<#= TDIM#> - b.Index<#= TDIM#> <# } #>);            
+        }   
+
+        public static <#= TTENSORINDICES#> Min(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b)        
+        {
+            return new <#= TTENSORINDICES#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> Math.Min(a.Index<#= TDIM#> , b.Index<#= TDIM#>) <# } #>);            
+        } 
+
+        public static <#= TTENSORINDICES#> Max(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b)        
+        {
+            return new <#= TTENSORINDICES#>(
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { if (TDIM > 0) #>, <#
+            #> Math.Max(a.Index<#= TDIM#> , b.Index<#= TDIM#>) <# } #>);            
+        } 
 
         #endregion
 

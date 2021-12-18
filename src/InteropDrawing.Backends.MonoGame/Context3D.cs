@@ -18,9 +18,7 @@ namespace InteropDrawing.Backends
 
         public void Dispose()
         {
-            _Effect3D?.Dispose();
-            _Effect3D = null;
-
+            System.Threading.Interlocked.Exchange(ref _Effect3D, null)?.Dispose();
             _Device = null;
         }
 

@@ -8,6 +8,7 @@ namespace InteropTensors
 {
     
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -121,6 +122,34 @@ namespace InteropTensors
 
         #endregion
 
+        #region operators
+
+        public static TensorIndices1 operator +(in TensorIndices1 a, in TensorIndices1 b)        
+        {
+            return new TensorIndices1(
+             a.Index0 + b.Index0 );            
+        }     
+
+        public static TensorIndices1 operator -(in TensorIndices1 a, in TensorIndices1 b)        
+        {
+            return new TensorIndices1(
+             a.Index0 - b.Index0 );            
+        }   
+
+        public static TensorIndices1 Min(in TensorIndices1 a, in TensorIndices1 b)        
+        {
+            return new TensorIndices1(
+             Math.Min(a.Index0 , b.Index0) );            
+        } 
+
+        public static TensorIndices1 Max(in TensorIndices1 a, in TensorIndices1 b)        
+        {
+            return new TensorIndices1(
+             Math.Max(a.Index0 , b.Index0) );            
+        } 
+
+        #endregion
+
         #region API - Other
 
                 
@@ -130,6 +159,7 @@ namespace InteropTensors
     }
 
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -264,6 +294,34 @@ namespace InteropTensors
 
         #endregion
 
+        #region operators
+
+        public static TensorIndices2 operator +(in TensorIndices2 a, in TensorIndices2 b)        
+        {
+            return new TensorIndices2(
+             a.Index0 + b.Index0 ,  a.Index1 + b.Index1 );            
+        }     
+
+        public static TensorIndices2 operator -(in TensorIndices2 a, in TensorIndices2 b)        
+        {
+            return new TensorIndices2(
+             a.Index0 - b.Index0 ,  a.Index1 - b.Index1 );            
+        }   
+
+        public static TensorIndices2 Min(in TensorIndices2 a, in TensorIndices2 b)        
+        {
+            return new TensorIndices2(
+             Math.Min(a.Index0 , b.Index0) ,  Math.Min(a.Index1 , b.Index1) );            
+        } 
+
+        public static TensorIndices2 Max(in TensorIndices2 a, in TensorIndices2 b)        
+        {
+            return new TensorIndices2(
+             Math.Max(a.Index0 , b.Index0) ,  Math.Max(a.Index1 , b.Index1) );            
+        } 
+
+        #endregion
+
         #region API - Other
 
         
@@ -274,6 +332,7 @@ namespace InteropTensors
     }
 
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -417,6 +476,34 @@ namespace InteropTensors
 
         #endregion
 
+        #region operators
+
+        public static TensorIndices3 operator +(in TensorIndices3 a, in TensorIndices3 b)        
+        {
+            return new TensorIndices3(
+             a.Index0 + b.Index0 ,  a.Index1 + b.Index1 ,  a.Index2 + b.Index2 );            
+        }     
+
+        public static TensorIndices3 operator -(in TensorIndices3 a, in TensorIndices3 b)        
+        {
+            return new TensorIndices3(
+             a.Index0 - b.Index0 ,  a.Index1 - b.Index1 ,  a.Index2 - b.Index2 );            
+        }   
+
+        public static TensorIndices3 Min(in TensorIndices3 a, in TensorIndices3 b)        
+        {
+            return new TensorIndices3(
+             Math.Min(a.Index0 , b.Index0) ,  Math.Min(a.Index1 , b.Index1) ,  Math.Min(a.Index2 , b.Index2) );            
+        } 
+
+        public static TensorIndices3 Max(in TensorIndices3 a, in TensorIndices3 b)        
+        {
+            return new TensorIndices3(
+             Math.Max(a.Index0 , b.Index0) ,  Math.Max(a.Index1 , b.Index1) ,  Math.Max(a.Index2 , b.Index2) );            
+        } 
+
+        #endregion
+
         #region API - Other
 
         
@@ -427,6 +514,7 @@ namespace InteropTensors
     }
 
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -579,6 +667,34 @@ namespace InteropTensors
 
         #endregion
 
+        #region operators
+
+        public static TensorIndices4 operator +(in TensorIndices4 a, in TensorIndices4 b)        
+        {
+            return new TensorIndices4(
+             a.Index0 + b.Index0 ,  a.Index1 + b.Index1 ,  a.Index2 + b.Index2 ,  a.Index3 + b.Index3 );            
+        }     
+
+        public static TensorIndices4 operator -(in TensorIndices4 a, in TensorIndices4 b)        
+        {
+            return new TensorIndices4(
+             a.Index0 - b.Index0 ,  a.Index1 - b.Index1 ,  a.Index2 - b.Index2 ,  a.Index3 - b.Index3 );            
+        }   
+
+        public static TensorIndices4 Min(in TensorIndices4 a, in TensorIndices4 b)        
+        {
+            return new TensorIndices4(
+             Math.Min(a.Index0 , b.Index0) ,  Math.Min(a.Index1 , b.Index1) ,  Math.Min(a.Index2 , b.Index2) ,  Math.Min(a.Index3 , b.Index3) );            
+        } 
+
+        public static TensorIndices4 Max(in TensorIndices4 a, in TensorIndices4 b)        
+        {
+            return new TensorIndices4(
+             Math.Max(a.Index0 , b.Index0) ,  Math.Max(a.Index1 , b.Index1) ,  Math.Max(a.Index2 , b.Index2) ,  Math.Max(a.Index3 , b.Index3) );            
+        } 
+
+        #endregion
+
         #region API - Other
 
         
@@ -589,6 +705,7 @@ namespace InteropTensors
     }
 
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -750,6 +867,34 @@ namespace InteropTensors
 
         #endregion
 
+        #region operators
+
+        public static TensorIndices5 operator +(in TensorIndices5 a, in TensorIndices5 b)        
+        {
+            return new TensorIndices5(
+             a.Index0 + b.Index0 ,  a.Index1 + b.Index1 ,  a.Index2 + b.Index2 ,  a.Index3 + b.Index3 ,  a.Index4 + b.Index4 );            
+        }     
+
+        public static TensorIndices5 operator -(in TensorIndices5 a, in TensorIndices5 b)        
+        {
+            return new TensorIndices5(
+             a.Index0 - b.Index0 ,  a.Index1 - b.Index1 ,  a.Index2 - b.Index2 ,  a.Index3 - b.Index3 ,  a.Index4 - b.Index4 );            
+        }   
+
+        public static TensorIndices5 Min(in TensorIndices5 a, in TensorIndices5 b)        
+        {
+            return new TensorIndices5(
+             Math.Min(a.Index0 , b.Index0) ,  Math.Min(a.Index1 , b.Index1) ,  Math.Min(a.Index2 , b.Index2) ,  Math.Min(a.Index3 , b.Index3) ,  Math.Min(a.Index4 , b.Index4) );            
+        } 
+
+        public static TensorIndices5 Max(in TensorIndices5 a, in TensorIndices5 b)        
+        {
+            return new TensorIndices5(
+             Math.Max(a.Index0 , b.Index0) ,  Math.Max(a.Index1 , b.Index1) ,  Math.Max(a.Index2 , b.Index2) ,  Math.Max(a.Index3 , b.Index3) ,  Math.Max(a.Index4 , b.Index4) );            
+        } 
+
+        #endregion
+
         #region API - Other
 
         
@@ -760,6 +905,7 @@ namespace InteropTensors
     }
 
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -930,6 +1076,34 @@ namespace InteropTensors
 
         #endregion
 
+        #region operators
+
+        public static TensorIndices6 operator +(in TensorIndices6 a, in TensorIndices6 b)        
+        {
+            return new TensorIndices6(
+             a.Index0 + b.Index0 ,  a.Index1 + b.Index1 ,  a.Index2 + b.Index2 ,  a.Index3 + b.Index3 ,  a.Index4 + b.Index4 ,  a.Index5 + b.Index5 );            
+        }     
+
+        public static TensorIndices6 operator -(in TensorIndices6 a, in TensorIndices6 b)        
+        {
+            return new TensorIndices6(
+             a.Index0 - b.Index0 ,  a.Index1 - b.Index1 ,  a.Index2 - b.Index2 ,  a.Index3 - b.Index3 ,  a.Index4 - b.Index4 ,  a.Index5 - b.Index5 );            
+        }   
+
+        public static TensorIndices6 Min(in TensorIndices6 a, in TensorIndices6 b)        
+        {
+            return new TensorIndices6(
+             Math.Min(a.Index0 , b.Index0) ,  Math.Min(a.Index1 , b.Index1) ,  Math.Min(a.Index2 , b.Index2) ,  Math.Min(a.Index3 , b.Index3) ,  Math.Min(a.Index4 , b.Index4) ,  Math.Min(a.Index5 , b.Index5) );            
+        } 
+
+        public static TensorIndices6 Max(in TensorIndices6 a, in TensorIndices6 b)        
+        {
+            return new TensorIndices6(
+             Math.Max(a.Index0 , b.Index0) ,  Math.Max(a.Index1 , b.Index1) ,  Math.Max(a.Index2 , b.Index2) ,  Math.Max(a.Index3 , b.Index3) ,  Math.Max(a.Index4 , b.Index4) ,  Math.Max(a.Index5 , b.Index5) );            
+        } 
+
+        #endregion
+
         #region API - Other
 
         
@@ -940,6 +1114,7 @@ namespace InteropTensors
     }
 
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -1119,6 +1294,34 @@ namespace InteropTensors
 
         #endregion
 
+        #region operators
+
+        public static TensorIndices7 operator +(in TensorIndices7 a, in TensorIndices7 b)        
+        {
+            return new TensorIndices7(
+             a.Index0 + b.Index0 ,  a.Index1 + b.Index1 ,  a.Index2 + b.Index2 ,  a.Index3 + b.Index3 ,  a.Index4 + b.Index4 ,  a.Index5 + b.Index5 ,  a.Index6 + b.Index6 );            
+        }     
+
+        public static TensorIndices7 operator -(in TensorIndices7 a, in TensorIndices7 b)        
+        {
+            return new TensorIndices7(
+             a.Index0 - b.Index0 ,  a.Index1 - b.Index1 ,  a.Index2 - b.Index2 ,  a.Index3 - b.Index3 ,  a.Index4 - b.Index4 ,  a.Index5 - b.Index5 ,  a.Index6 - b.Index6 );            
+        }   
+
+        public static TensorIndices7 Min(in TensorIndices7 a, in TensorIndices7 b)        
+        {
+            return new TensorIndices7(
+             Math.Min(a.Index0 , b.Index0) ,  Math.Min(a.Index1 , b.Index1) ,  Math.Min(a.Index2 , b.Index2) ,  Math.Min(a.Index3 , b.Index3) ,  Math.Min(a.Index4 , b.Index4) ,  Math.Min(a.Index5 , b.Index5) ,  Math.Min(a.Index6 , b.Index6) );            
+        } 
+
+        public static TensorIndices7 Max(in TensorIndices7 a, in TensorIndices7 b)        
+        {
+            return new TensorIndices7(
+             Math.Max(a.Index0 , b.Index0) ,  Math.Max(a.Index1 , b.Index1) ,  Math.Max(a.Index2 , b.Index2) ,  Math.Max(a.Index3 , b.Index3) ,  Math.Max(a.Index4 , b.Index4) ,  Math.Max(a.Index5 , b.Index5) ,  Math.Max(a.Index6 , b.Index6) );            
+        } 
+
+        #endregion
+
         #region API - Other
 
         
@@ -1129,6 +1332,7 @@ namespace InteropTensors
     }
 
         
+    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -1314,6 +1518,34 @@ namespace InteropTensors
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         public int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5, Index6, Index7 }; }        
+
+        #endregion
+
+        #region operators
+
+        public static TensorIndices8 operator +(in TensorIndices8 a, in TensorIndices8 b)        
+        {
+            return new TensorIndices8(
+             a.Index0 + b.Index0 ,  a.Index1 + b.Index1 ,  a.Index2 + b.Index2 ,  a.Index3 + b.Index3 ,  a.Index4 + b.Index4 ,  a.Index5 + b.Index5 ,  a.Index6 + b.Index6 ,  a.Index7 + b.Index7 );            
+        }     
+
+        public static TensorIndices8 operator -(in TensorIndices8 a, in TensorIndices8 b)        
+        {
+            return new TensorIndices8(
+             a.Index0 - b.Index0 ,  a.Index1 - b.Index1 ,  a.Index2 - b.Index2 ,  a.Index3 - b.Index3 ,  a.Index4 - b.Index4 ,  a.Index5 - b.Index5 ,  a.Index6 - b.Index6 ,  a.Index7 - b.Index7 );            
+        }   
+
+        public static TensorIndices8 Min(in TensorIndices8 a, in TensorIndices8 b)        
+        {
+            return new TensorIndices8(
+             Math.Min(a.Index0 , b.Index0) ,  Math.Min(a.Index1 , b.Index1) ,  Math.Min(a.Index2 , b.Index2) ,  Math.Min(a.Index3 , b.Index3) ,  Math.Min(a.Index4 , b.Index4) ,  Math.Min(a.Index5 , b.Index5) ,  Math.Min(a.Index6 , b.Index6) ,  Math.Min(a.Index7 , b.Index7) );            
+        } 
+
+        public static TensorIndices8 Max(in TensorIndices8 a, in TensorIndices8 b)        
+        {
+            return new TensorIndices8(
+             Math.Max(a.Index0 , b.Index0) ,  Math.Max(a.Index1 , b.Index1) ,  Math.Max(a.Index2 , b.Index2) ,  Math.Max(a.Index3 , b.Index3) ,  Math.Max(a.Index4 , b.Index4) ,  Math.Max(a.Index5 , b.Index5) ,  Math.Max(a.Index6 , b.Index6) ,  Math.Max(a.Index7 , b.Index7) );            
+        } 
 
         #endregion
 

@@ -30,7 +30,7 @@ namespace InteropBitmaps
             if (typeof(TPixel) == typeof(Bgra32)) { fmt = Pixel.BGRA32.Format; return true; }
             if (typeof(TPixel) == typeof(Rgba32)) { fmt = Pixel.RGBA32.Format; return true; }
 
-            if (typeof(TPixel) == typeof(RgbaVector)) { fmt = Pixel.VectorRGBA.Format; return true; }
+            if (typeof(TPixel) == typeof(RgbaVector)) { fmt = Pixel.RGBA128F.Format; return true; }
 
             fmt = default;
             return false;
@@ -56,7 +56,7 @@ namespace InteropBitmaps
                 case Pixel.BGRA32.Code: type = typeof(Bgra32); return true;
                 case Pixel.ARGB32.Code: type = typeof(Argb32); return true;
 
-                case Pixel.VectorRGBA.Code: type = typeof(RgbaVector); return true;
+                case Pixel.RGBA128F.Code: type = typeof(RgbaVector); return true;
 
                 default: type = null; return false;
             }

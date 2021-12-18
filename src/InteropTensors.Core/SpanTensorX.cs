@@ -355,6 +355,18 @@ namespace InteropTensors
             return new SpanTensor1<T>(data,st.dims);
         }
 
+        public unsafe SpanTensor2<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize2(_Dimensions.Head1, lastDim);            
+
+            return new SpanTensor2<TElement>(xdata, xdims);
+        }
+
         public unsafe SpanTensor1<TElement> UpCast<TElement>()
             where TElement:unmanaged
         {
@@ -650,6 +662,18 @@ namespace InteropTensors
             return new SpanTensor2<T>(data,st.dims);
         }
 
+        public unsafe SpanTensor3<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize3(_Dimensions.Head2, lastDim);            
+
+            return new SpanTensor3<TElement>(xdata, xdims);
+        }
+
         public unsafe SpanTensor2<TElement> UpCast<TElement>()
             where TElement:unmanaged
         {
@@ -707,7 +731,7 @@ namespace InteropTensors
             return updated;
         }
 
-        public void Swap(int index0, int index1)
+        public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
             var span1 = this[index1].Span;            
@@ -943,6 +967,18 @@ namespace InteropTensors
             var data = _Buffer.Slice(st.offs, st.dims.StepSize);
 
             return new SpanTensor3<T>(data,st.dims);
+        }
+
+        public unsafe SpanTensor4<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize4(_Dimensions.Head3, lastDim);            
+
+            return new SpanTensor4<TElement>(xdata, xdims);
         }
 
         public unsafe SpanTensor3<TElement> UpCast<TElement>()
@@ -1240,6 +1276,18 @@ namespace InteropTensors
             return new SpanTensor4<T>(data,st.dims);
         }
 
+        public unsafe SpanTensor5<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize5(_Dimensions.Head4, lastDim);            
+
+            return new SpanTensor5<TElement>(xdata, xdims);
+        }
+
         public unsafe SpanTensor4<TElement> UpCast<TElement>()
             where TElement:unmanaged
         {
@@ -1533,6 +1581,18 @@ namespace InteropTensors
             var data = _Buffer.Slice(st.offs, st.dims.StepSize);
 
             return new SpanTensor5<T>(data,st.dims);
+        }
+
+        public unsafe SpanTensor6<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize6(_Dimensions.Head5, lastDim);            
+
+            return new SpanTensor6<TElement>(xdata, xdims);
         }
 
         public unsafe SpanTensor5<TElement> UpCast<TElement>()
@@ -1830,6 +1890,18 @@ namespace InteropTensors
             return new SpanTensor6<T>(data,st.dims);
         }
 
+        public unsafe SpanTensor7<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize7(_Dimensions.Head6, lastDim);            
+
+            return new SpanTensor7<TElement>(xdata, xdims);
+        }
+
         public unsafe SpanTensor6<TElement> UpCast<TElement>()
             where TElement:unmanaged
         {
@@ -2104,6 +2176,18 @@ namespace InteropTensors
             var data = _Buffer.Slice(st.offs, st.dims.StepSize);
 
             return new SpanTensor7<T>(data,st.dims);
+        }
+
+        public unsafe SpanTensor8<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize8(_Dimensions.Head7, lastDim);            
+
+            return new SpanTensor8<TElement>(xdata, xdims);
         }
 
         public unsafe SpanTensor7<TElement> UpCast<TElement>()

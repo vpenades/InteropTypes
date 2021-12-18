@@ -6,9 +6,29 @@ namespace InteropTensors
 {
     public abstract class Statistics
     {
-        public static Statistics Create<T>(ReadOnlySpan<T> span)
+        public static unsafe Statistics Create<T>(ReadOnlySpan<T> span)
             where T : unmanaged
         {
+            if (sizeof(T) == 1)
+            {
+                var floatSpan = System.Runtime.InteropServices.MemoryMarshal.Cast<T, byte>(span);
+                return new Scalar(floatSpan);
+            }
+
+            if (sizeof(T) == 3)
+            {
+                var byteSpan = System.Runtime.InteropServices.MemoryMarshal.Cast<T, Byte>(span);
+
+                var v3Span = new System.Numerics.Vector3[byteSpan.Length / 3];
+
+                for (int i = 0; i < v3Span.Length; ++i)
+                {
+                    v3Span[i] = new System.Numerics.Vector3(byteSpan[i * 3 + 0], byteSpan[i * 3 + 1], byteSpan[i * 3 + 2]);
+                }
+
+                return new Vector3(v3Span);
+            }
+
             if (typeof(T) == typeof(float))
             {
                 var floatSpan = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(span);
@@ -19,7 +39,7 @@ namespace InteropTensors
             {
                 var v3Span = System.Runtime.InteropServices.MemoryMarshal.Cast<T, System.Numerics.Vector3>(span);
                 return new Vector3(v3Span);
-            }
+            }            
 
             throw new NotImplementedException();
         }
@@ -29,6 +49,22 @@ namespace InteropTensors
         [System.Diagnostics.DebuggerDisplay("{Min} < x̄={Mean} > {Max}")]
         public class Scalar : Statistics
         {
+            public Scalar(ReadOnlySpan<Byte> values)
+            {
+                Min = double.MaxValue;
+                Mean = 0;
+                Max = double.MinValue;
+
+                _Count = 0;
+
+                foreach (var v in values) _Append(v);
+
+                if (_Count > 0)
+                {
+                    Mean /= _Count;
+                }
+            }
+
             public Scalar(ReadOnlySpan<float> values)
             {
                 Min = double.MaxValue;

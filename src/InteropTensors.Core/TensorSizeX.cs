@@ -143,7 +143,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize1 operator +(in TensorSize1 a, in TensorSize1 b)        
+        {
+            return new TensorSize1(
+             a.Dim0 + b.Dim0 );            
+        }     
+
+        public static TensorSize1 operator -(in TensorSize1 a, in TensorSize1 b)        
+        {
+            return new TensorSize1(
+             a.Dim0 - b.Dim0 );            
+        }  
+
+        public static TensorSize1 operator +(in TensorSize1 a, in TensorIndices1 b)        
+        {
+            return new TensorSize1(
+             a.Dim0 + b.Index0 );            
+        }     
+
+        public static TensorSize1 operator -(in TensorSize1 a, in TensorIndices1 b)        
+        {
+            return new TensorSize1(
+             a.Dim0 - b.Index0 );            
+        }  
+
+        public static TensorSize1 Min(in TensorSize1 a, in TensorSize1 b)        
+        {
+            return new TensorSize1(
+             Math.Min(a.Dim0 , b.Dim0) );            
+        }     
+
+        public static TensorSize1 Max(in TensorSize1 a, in TensorSize1 b)        
+        {
+            return new TensorSize1(
+             Math.Max(a.Dim0 , b.Dim0) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize1 ExclusiveUnion(TensorSize1 srcSize, ref TensorIndices1 srcOffset, TensorSize1 dstSize, ref TensorIndices1 dstOffset)
+        {
+            var s = TensorSize1.Min(srcSize, dstSize);
+
+            s += TensorIndices1.Min(default, srcOffset);
+            srcOffset = TensorIndices1.Max(default, srcOffset);
+
+            s += TensorIndices1.Min(default, dstOffset);
+            dstOffset = TensorIndices1.Max(default, dstOffset);
+            
+            srcSize = TensorSize1.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize1.Max(default, dstSize - dstOffset);
+
+            s = TensorSize1.Min(srcSize, s);
+            s = TensorSize1.Min(dstSize, s);
+            s = TensorSize1.Max(default, s);
+
+            return s;
+        }
+
 
         
         
@@ -161,6 +221,13 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard
@@ -334,7 +401,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize2 operator +(in TensorSize2 a, in TensorSize2 b)        
+        {
+            return new TensorSize2(
+             a.Dim0 + b.Dim0 ,  a.Dim1 + b.Dim1 );            
+        }     
+
+        public static TensorSize2 operator -(in TensorSize2 a, in TensorSize2 b)        
+        {
+            return new TensorSize2(
+             a.Dim0 - b.Dim0 ,  a.Dim1 - b.Dim1 );            
+        }  
+
+        public static TensorSize2 operator +(in TensorSize2 a, in TensorIndices2 b)        
+        {
+            return new TensorSize2(
+             a.Dim0 + b.Index0 ,  a.Dim1 + b.Index1 );            
+        }     
+
+        public static TensorSize2 operator -(in TensorSize2 a, in TensorIndices2 b)        
+        {
+            return new TensorSize2(
+             a.Dim0 - b.Index0 ,  a.Dim1 - b.Index1 );            
+        }  
+
+        public static TensorSize2 Min(in TensorSize2 a, in TensorSize2 b)        
+        {
+            return new TensorSize2(
+             Math.Min(a.Dim0 , b.Dim0) ,  Math.Min(a.Dim1 , b.Dim1) );            
+        }     
+
+        public static TensorSize2 Max(in TensorSize2 a, in TensorSize2 b)        
+        {
+            return new TensorSize2(
+             Math.Max(a.Dim0 , b.Dim0) ,  Math.Max(a.Dim1 , b.Dim1) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize2 ExclusiveUnion(TensorSize2 srcSize, ref TensorIndices2 srcOffset, TensorSize2 dstSize, ref TensorIndices2 dstOffset)
+        {
+            var s = TensorSize2.Min(srcSize, dstSize);
+
+            s += TensorIndices2.Min(default, srcOffset);
+            srcOffset = TensorIndices2.Max(default, srcOffset);
+
+            s += TensorIndices2.Min(default, dstOffset);
+            dstOffset = TensorIndices2.Max(default, dstOffset);
+            
+            srcSize = TensorSize2.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize2.Max(default, dstSize - dstOffset);
+
+            s = TensorSize2.Min(srcSize, s);
+            s = TensorSize2.Min(dstSize, s);
+            s = TensorSize2.Max(default, s);
+
+            return s;
+        }
+
 
                 
         
@@ -395,6 +522,14 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0, int idx1)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            if (idx1 < 0 || idx1 >= Dim1) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard
@@ -582,7 +717,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize3 operator +(in TensorSize3 a, in TensorSize3 b)        
+        {
+            return new TensorSize3(
+             a.Dim0 + b.Dim0 ,  a.Dim1 + b.Dim1 ,  a.Dim2 + b.Dim2 );            
+        }     
+
+        public static TensorSize3 operator -(in TensorSize3 a, in TensorSize3 b)        
+        {
+            return new TensorSize3(
+             a.Dim0 - b.Dim0 ,  a.Dim1 - b.Dim1 ,  a.Dim2 - b.Dim2 );            
+        }  
+
+        public static TensorSize3 operator +(in TensorSize3 a, in TensorIndices3 b)        
+        {
+            return new TensorSize3(
+             a.Dim0 + b.Index0 ,  a.Dim1 + b.Index1 ,  a.Dim2 + b.Index2 );            
+        }     
+
+        public static TensorSize3 operator -(in TensorSize3 a, in TensorIndices3 b)        
+        {
+            return new TensorSize3(
+             a.Dim0 - b.Index0 ,  a.Dim1 - b.Index1 ,  a.Dim2 - b.Index2 );            
+        }  
+
+        public static TensorSize3 Min(in TensorSize3 a, in TensorSize3 b)        
+        {
+            return new TensorSize3(
+             Math.Min(a.Dim0 , b.Dim0) ,  Math.Min(a.Dim1 , b.Dim1) ,  Math.Min(a.Dim2 , b.Dim2) );            
+        }     
+
+        public static TensorSize3 Max(in TensorSize3 a, in TensorSize3 b)        
+        {
+            return new TensorSize3(
+             Math.Max(a.Dim0 , b.Dim0) ,  Math.Max(a.Dim1 , b.Dim1) ,  Math.Max(a.Dim2 , b.Dim2) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize3 ExclusiveUnion(TensorSize3 srcSize, ref TensorIndices3 srcOffset, TensorSize3 dstSize, ref TensorIndices3 dstOffset)
+        {
+            var s = TensorSize3.Min(srcSize, dstSize);
+
+            s += TensorIndices3.Min(default, srcOffset);
+            srcOffset = TensorIndices3.Max(default, srcOffset);
+
+            s += TensorIndices3.Min(default, dstOffset);
+            dstOffset = TensorIndices3.Max(default, dstOffset);
+            
+            srcSize = TensorSize3.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize3.Max(default, dstSize - dstOffset);
+
+            s = TensorSize3.Min(srcSize, s);
+            s = TensorSize3.Min(dstSize, s);
+            s = TensorSize3.Max(default, s);
+
+            return s;
+        }
+
 
                 
         
@@ -664,6 +859,15 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0, int idx1, int idx2)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            if (idx1 < 0 || idx1 >= Dim1) return false;
+            if (idx2 < 0 || idx2 >= Dim2) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard
@@ -865,7 +1069,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize4 operator +(in TensorSize4 a, in TensorSize4 b)        
+        {
+            return new TensorSize4(
+             a.Dim0 + b.Dim0 ,  a.Dim1 + b.Dim1 ,  a.Dim2 + b.Dim2 ,  a.Dim3 + b.Dim3 );            
+        }     
+
+        public static TensorSize4 operator -(in TensorSize4 a, in TensorSize4 b)        
+        {
+            return new TensorSize4(
+             a.Dim0 - b.Dim0 ,  a.Dim1 - b.Dim1 ,  a.Dim2 - b.Dim2 ,  a.Dim3 - b.Dim3 );            
+        }  
+
+        public static TensorSize4 operator +(in TensorSize4 a, in TensorIndices4 b)        
+        {
+            return new TensorSize4(
+             a.Dim0 + b.Index0 ,  a.Dim1 + b.Index1 ,  a.Dim2 + b.Index2 ,  a.Dim3 + b.Index3 );            
+        }     
+
+        public static TensorSize4 operator -(in TensorSize4 a, in TensorIndices4 b)        
+        {
+            return new TensorSize4(
+             a.Dim0 - b.Index0 ,  a.Dim1 - b.Index1 ,  a.Dim2 - b.Index2 ,  a.Dim3 - b.Index3 );            
+        }  
+
+        public static TensorSize4 Min(in TensorSize4 a, in TensorSize4 b)        
+        {
+            return new TensorSize4(
+             Math.Min(a.Dim0 , b.Dim0) ,  Math.Min(a.Dim1 , b.Dim1) ,  Math.Min(a.Dim2 , b.Dim2) ,  Math.Min(a.Dim3 , b.Dim3) );            
+        }     
+
+        public static TensorSize4 Max(in TensorSize4 a, in TensorSize4 b)        
+        {
+            return new TensorSize4(
+             Math.Max(a.Dim0 , b.Dim0) ,  Math.Max(a.Dim1 , b.Dim1) ,  Math.Max(a.Dim2 , b.Dim2) ,  Math.Max(a.Dim3 , b.Dim3) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize4 ExclusiveUnion(TensorSize4 srcSize, ref TensorIndices4 srcOffset, TensorSize4 dstSize, ref TensorIndices4 dstOffset)
+        {
+            var s = TensorSize4.Min(srcSize, dstSize);
+
+            s += TensorIndices4.Min(default, srcOffset);
+            srcOffset = TensorIndices4.Max(default, srcOffset);
+
+            s += TensorIndices4.Min(default, dstOffset);
+            dstOffset = TensorIndices4.Max(default, dstOffset);
+            
+            srcSize = TensorSize4.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize4.Max(default, dstSize - dstOffset);
+
+            s = TensorSize4.Min(srcSize, s);
+            s = TensorSize4.Min(dstSize, s);
+            s = TensorSize4.Max(default, s);
+
+            return s;
+        }
+
 
                 
         
@@ -971,6 +1235,16 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            if (idx1 < 0 || idx1 >= Dim1) return false;
+            if (idx2 < 0 || idx2 >= Dim2) return false;
+            if (idx3 < 0 || idx3 >= Dim3) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard
@@ -1186,7 +1460,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize5 operator +(in TensorSize5 a, in TensorSize5 b)        
+        {
+            return new TensorSize5(
+             a.Dim0 + b.Dim0 ,  a.Dim1 + b.Dim1 ,  a.Dim2 + b.Dim2 ,  a.Dim3 + b.Dim3 ,  a.Dim4 + b.Dim4 );            
+        }     
+
+        public static TensorSize5 operator -(in TensorSize5 a, in TensorSize5 b)        
+        {
+            return new TensorSize5(
+             a.Dim0 - b.Dim0 ,  a.Dim1 - b.Dim1 ,  a.Dim2 - b.Dim2 ,  a.Dim3 - b.Dim3 ,  a.Dim4 - b.Dim4 );            
+        }  
+
+        public static TensorSize5 operator +(in TensorSize5 a, in TensorIndices5 b)        
+        {
+            return new TensorSize5(
+             a.Dim0 + b.Index0 ,  a.Dim1 + b.Index1 ,  a.Dim2 + b.Index2 ,  a.Dim3 + b.Index3 ,  a.Dim4 + b.Index4 );            
+        }     
+
+        public static TensorSize5 operator -(in TensorSize5 a, in TensorIndices5 b)        
+        {
+            return new TensorSize5(
+             a.Dim0 - b.Index0 ,  a.Dim1 - b.Index1 ,  a.Dim2 - b.Index2 ,  a.Dim3 - b.Index3 ,  a.Dim4 - b.Index4 );            
+        }  
+
+        public static TensorSize5 Min(in TensorSize5 a, in TensorSize5 b)        
+        {
+            return new TensorSize5(
+             Math.Min(a.Dim0 , b.Dim0) ,  Math.Min(a.Dim1 , b.Dim1) ,  Math.Min(a.Dim2 , b.Dim2) ,  Math.Min(a.Dim3 , b.Dim3) ,  Math.Min(a.Dim4 , b.Dim4) );            
+        }     
+
+        public static TensorSize5 Max(in TensorSize5 a, in TensorSize5 b)        
+        {
+            return new TensorSize5(
+             Math.Max(a.Dim0 , b.Dim0) ,  Math.Max(a.Dim1 , b.Dim1) ,  Math.Max(a.Dim2 , b.Dim2) ,  Math.Max(a.Dim3 , b.Dim3) ,  Math.Max(a.Dim4 , b.Dim4) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize5 ExclusiveUnion(TensorSize5 srcSize, ref TensorIndices5 srcOffset, TensorSize5 dstSize, ref TensorIndices5 dstOffset)
+        {
+            var s = TensorSize5.Min(srcSize, dstSize);
+
+            s += TensorIndices5.Min(default, srcOffset);
+            srcOffset = TensorIndices5.Max(default, srcOffset);
+
+            s += TensorIndices5.Min(default, dstOffset);
+            dstOffset = TensorIndices5.Max(default, dstOffset);
+            
+            srcSize = TensorSize5.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize5.Max(default, dstSize - dstOffset);
+
+            s = TensorSize5.Min(srcSize, s);
+            s = TensorSize5.Min(dstSize, s);
+            s = TensorSize5.Max(default, s);
+
+            return s;
+        }
+
 
                 
         
@@ -1319,6 +1653,17 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            if (idx1 < 0 || idx1 >= Dim1) return false;
+            if (idx2 < 0 || idx2 >= Dim2) return false;
+            if (idx3 < 0 || idx3 >= Dim3) return false;
+            if (idx4 < 0 || idx4 >= Dim4) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard
@@ -1548,7 +1893,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize6 operator +(in TensorSize6 a, in TensorSize6 b)        
+        {
+            return new TensorSize6(
+             a.Dim0 + b.Dim0 ,  a.Dim1 + b.Dim1 ,  a.Dim2 + b.Dim2 ,  a.Dim3 + b.Dim3 ,  a.Dim4 + b.Dim4 ,  a.Dim5 + b.Dim5 );            
+        }     
+
+        public static TensorSize6 operator -(in TensorSize6 a, in TensorSize6 b)        
+        {
+            return new TensorSize6(
+             a.Dim0 - b.Dim0 ,  a.Dim1 - b.Dim1 ,  a.Dim2 - b.Dim2 ,  a.Dim3 - b.Dim3 ,  a.Dim4 - b.Dim4 ,  a.Dim5 - b.Dim5 );            
+        }  
+
+        public static TensorSize6 operator +(in TensorSize6 a, in TensorIndices6 b)        
+        {
+            return new TensorSize6(
+             a.Dim0 + b.Index0 ,  a.Dim1 + b.Index1 ,  a.Dim2 + b.Index2 ,  a.Dim3 + b.Index3 ,  a.Dim4 + b.Index4 ,  a.Dim5 + b.Index5 );            
+        }     
+
+        public static TensorSize6 operator -(in TensorSize6 a, in TensorIndices6 b)        
+        {
+            return new TensorSize6(
+             a.Dim0 - b.Index0 ,  a.Dim1 - b.Index1 ,  a.Dim2 - b.Index2 ,  a.Dim3 - b.Index3 ,  a.Dim4 - b.Index4 ,  a.Dim5 - b.Index5 );            
+        }  
+
+        public static TensorSize6 Min(in TensorSize6 a, in TensorSize6 b)        
+        {
+            return new TensorSize6(
+             Math.Min(a.Dim0 , b.Dim0) ,  Math.Min(a.Dim1 , b.Dim1) ,  Math.Min(a.Dim2 , b.Dim2) ,  Math.Min(a.Dim3 , b.Dim3) ,  Math.Min(a.Dim4 , b.Dim4) ,  Math.Min(a.Dim5 , b.Dim5) );            
+        }     
+
+        public static TensorSize6 Max(in TensorSize6 a, in TensorSize6 b)        
+        {
+            return new TensorSize6(
+             Math.Max(a.Dim0 , b.Dim0) ,  Math.Max(a.Dim1 , b.Dim1) ,  Math.Max(a.Dim2 , b.Dim2) ,  Math.Max(a.Dim3 , b.Dim3) ,  Math.Max(a.Dim4 , b.Dim4) ,  Math.Max(a.Dim5 , b.Dim5) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize6 ExclusiveUnion(TensorSize6 srcSize, ref TensorIndices6 srcOffset, TensorSize6 dstSize, ref TensorIndices6 dstOffset)
+        {
+            var s = TensorSize6.Min(srcSize, dstSize);
+
+            s += TensorIndices6.Min(default, srcOffset);
+            srcOffset = TensorIndices6.Max(default, srcOffset);
+
+            s += TensorIndices6.Min(default, dstOffset);
+            dstOffset = TensorIndices6.Max(default, dstOffset);
+            
+            srcSize = TensorSize6.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize6.Max(default, dstSize - dstOffset);
+
+            s = TensorSize6.Min(srcSize, s);
+            s = TensorSize6.Min(dstSize, s);
+            s = TensorSize6.Max(default, s);
+
+            return s;
+        }
+
 
                 
         
@@ -1711,6 +2116,18 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            if (idx1 < 0 || idx1 >= Dim1) return false;
+            if (idx2 < 0 || idx2 >= Dim2) return false;
+            if (idx3 < 0 || idx3 >= Dim3) return false;
+            if (idx4 < 0 || idx4 >= Dim4) return false;
+            if (idx5 < 0 || idx5 >= Dim5) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard
@@ -1954,7 +2371,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize7 operator +(in TensorSize7 a, in TensorSize7 b)        
+        {
+            return new TensorSize7(
+             a.Dim0 + b.Dim0 ,  a.Dim1 + b.Dim1 ,  a.Dim2 + b.Dim2 ,  a.Dim3 + b.Dim3 ,  a.Dim4 + b.Dim4 ,  a.Dim5 + b.Dim5 ,  a.Dim6 + b.Dim6 );            
+        }     
+
+        public static TensorSize7 operator -(in TensorSize7 a, in TensorSize7 b)        
+        {
+            return new TensorSize7(
+             a.Dim0 - b.Dim0 ,  a.Dim1 - b.Dim1 ,  a.Dim2 - b.Dim2 ,  a.Dim3 - b.Dim3 ,  a.Dim4 - b.Dim4 ,  a.Dim5 - b.Dim5 ,  a.Dim6 - b.Dim6 );            
+        }  
+
+        public static TensorSize7 operator +(in TensorSize7 a, in TensorIndices7 b)        
+        {
+            return new TensorSize7(
+             a.Dim0 + b.Index0 ,  a.Dim1 + b.Index1 ,  a.Dim2 + b.Index2 ,  a.Dim3 + b.Index3 ,  a.Dim4 + b.Index4 ,  a.Dim5 + b.Index5 ,  a.Dim6 + b.Index6 );            
+        }     
+
+        public static TensorSize7 operator -(in TensorSize7 a, in TensorIndices7 b)        
+        {
+            return new TensorSize7(
+             a.Dim0 - b.Index0 ,  a.Dim1 - b.Index1 ,  a.Dim2 - b.Index2 ,  a.Dim3 - b.Index3 ,  a.Dim4 - b.Index4 ,  a.Dim5 - b.Index5 ,  a.Dim6 - b.Index6 );            
+        }  
+
+        public static TensorSize7 Min(in TensorSize7 a, in TensorSize7 b)        
+        {
+            return new TensorSize7(
+             Math.Min(a.Dim0 , b.Dim0) ,  Math.Min(a.Dim1 , b.Dim1) ,  Math.Min(a.Dim2 , b.Dim2) ,  Math.Min(a.Dim3 , b.Dim3) ,  Math.Min(a.Dim4 , b.Dim4) ,  Math.Min(a.Dim5 , b.Dim5) ,  Math.Min(a.Dim6 , b.Dim6) );            
+        }     
+
+        public static TensorSize7 Max(in TensorSize7 a, in TensorSize7 b)        
+        {
+            return new TensorSize7(
+             Math.Max(a.Dim0 , b.Dim0) ,  Math.Max(a.Dim1 , b.Dim1) ,  Math.Max(a.Dim2 , b.Dim2) ,  Math.Max(a.Dim3 , b.Dim3) ,  Math.Max(a.Dim4 , b.Dim4) ,  Math.Max(a.Dim5 , b.Dim5) ,  Math.Max(a.Dim6 , b.Dim6) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize7 ExclusiveUnion(TensorSize7 srcSize, ref TensorIndices7 srcOffset, TensorSize7 dstSize, ref TensorIndices7 dstOffset)
+        {
+            var s = TensorSize7.Min(srcSize, dstSize);
+
+            s += TensorIndices7.Min(default, srcOffset);
+            srcOffset = TensorIndices7.Max(default, srcOffset);
+
+            s += TensorIndices7.Min(default, dstOffset);
+            dstOffset = TensorIndices7.Max(default, dstOffset);
+            
+            srcSize = TensorSize7.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize7.Max(default, dstSize - dstOffset);
+
+            s = TensorSize7.Min(srcSize, s);
+            s = TensorSize7.Min(dstSize, s);
+            s = TensorSize7.Max(default, s);
+
+            return s;
+        }
+
 
                 
         
@@ -2150,6 +2627,19 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            if (idx1 < 0 || idx1 >= Dim1) return false;
+            if (idx2 < 0 || idx2 >= Dim2) return false;
+            if (idx3 < 0 || idx3 >= Dim3) return false;
+            if (idx4 < 0 || idx4 >= Dim4) return false;
+            if (idx5 < 0 || idx5 >= Dim5) return false;
+            if (idx6 < 0 || idx6 >= Dim6) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard
@@ -2407,7 +2897,67 @@ namespace InteropTensors
 
         #endregion
 
-        #region API        
+        #region API
+
+        public static TensorSize8 operator +(in TensorSize8 a, in TensorSize8 b)        
+        {
+            return new TensorSize8(
+             a.Dim0 + b.Dim0 ,  a.Dim1 + b.Dim1 ,  a.Dim2 + b.Dim2 ,  a.Dim3 + b.Dim3 ,  a.Dim4 + b.Dim4 ,  a.Dim5 + b.Dim5 ,  a.Dim6 + b.Dim6 ,  a.Dim7 + b.Dim7 );            
+        }     
+
+        public static TensorSize8 operator -(in TensorSize8 a, in TensorSize8 b)        
+        {
+            return new TensorSize8(
+             a.Dim0 - b.Dim0 ,  a.Dim1 - b.Dim1 ,  a.Dim2 - b.Dim2 ,  a.Dim3 - b.Dim3 ,  a.Dim4 - b.Dim4 ,  a.Dim5 - b.Dim5 ,  a.Dim6 - b.Dim6 ,  a.Dim7 - b.Dim7 );            
+        }  
+
+        public static TensorSize8 operator +(in TensorSize8 a, in TensorIndices8 b)        
+        {
+            return new TensorSize8(
+             a.Dim0 + b.Index0 ,  a.Dim1 + b.Index1 ,  a.Dim2 + b.Index2 ,  a.Dim3 + b.Index3 ,  a.Dim4 + b.Index4 ,  a.Dim5 + b.Index5 ,  a.Dim6 + b.Index6 ,  a.Dim7 + b.Index7 );            
+        }     
+
+        public static TensorSize8 operator -(in TensorSize8 a, in TensorIndices8 b)        
+        {
+            return new TensorSize8(
+             a.Dim0 - b.Index0 ,  a.Dim1 - b.Index1 ,  a.Dim2 - b.Index2 ,  a.Dim3 - b.Index3 ,  a.Dim4 - b.Index4 ,  a.Dim5 - b.Index5 ,  a.Dim6 - b.Index6 ,  a.Dim7 - b.Index7 );            
+        }  
+
+        public static TensorSize8 Min(in TensorSize8 a, in TensorSize8 b)        
+        {
+            return new TensorSize8(
+             Math.Min(a.Dim0 , b.Dim0) ,  Math.Min(a.Dim1 , b.Dim1) ,  Math.Min(a.Dim2 , b.Dim2) ,  Math.Min(a.Dim3 , b.Dim3) ,  Math.Min(a.Dim4 , b.Dim4) ,  Math.Min(a.Dim5 , b.Dim5) ,  Math.Min(a.Dim6 , b.Dim6) ,  Math.Min(a.Dim7 , b.Dim7) );            
+        }     
+
+        public static TensorSize8 Max(in TensorSize8 a, in TensorSize8 b)        
+        {
+            return new TensorSize8(
+             Math.Max(a.Dim0 , b.Dim0) ,  Math.Max(a.Dim1 , b.Dim1) ,  Math.Max(a.Dim2 , b.Dim2) ,  Math.Max(a.Dim3 , b.Dim3) ,  Math.Max(a.Dim4 , b.Dim4) ,  Math.Max(a.Dim5 , b.Dim5) ,  Math.Max(a.Dim6 , b.Dim6) ,  Math.Max(a.Dim7 , b.Dim7) );            
+        }  
+
+        /// <Summary>
+        /// Calculates the exclusive union between two offset tensors 
+        /// </Summary>
+        public static TensorSize8 ExclusiveUnion(TensorSize8 srcSize, ref TensorIndices8 srcOffset, TensorSize8 dstSize, ref TensorIndices8 dstOffset)
+        {
+            var s = TensorSize8.Min(srcSize, dstSize);
+
+            s += TensorIndices8.Min(default, srcOffset);
+            srcOffset = TensorIndices8.Max(default, srcOffset);
+
+            s += TensorIndices8.Min(default, dstOffset);
+            dstOffset = TensorIndices8.Max(default, dstOffset);
+            
+            srcSize = TensorSize8.Max(default, srcSize - srcOffset);
+            dstSize = TensorSize8.Max(default, dstSize - dstOffset);
+
+            s = TensorSize8.Min(srcSize, s);
+            s = TensorSize8.Min(dstSize, s);
+            s = TensorSize8.Max(default, s);
+
+            return s;
+        }
+
 
                 
         
@@ -2639,6 +3189,20 @@ namespace InteropTensors
         }
 
         
+        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6, int idx7)
+        {
+            if (idx0 < 0 || idx0 >= Dim0) return false;
+            if (idx1 < 0 || idx1 >= Dim1) return false;
+            if (idx2 < 0 || idx2 >= Dim2) return false;
+            if (idx3 < 0 || idx3 >= Dim3) return false;
+            if (idx4 < 0 || idx4 >= Dim4) return false;
+            if (idx5 < 0 || idx5 >= Dim5) return false;
+            if (idx6 < 0 || idx6 >= Dim6) return false;
+            if (idx7 < 0 || idx7 >= Dim7) return false;
+            
+            return true;
+        }
+
         #endregion
 
         #region guard

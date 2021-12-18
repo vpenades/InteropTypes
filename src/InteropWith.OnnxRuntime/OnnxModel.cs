@@ -36,8 +36,7 @@ namespace InteropWith
 
         public void Dispose()
         {
-            _Options?.Dispose();
-            _Options = null;
+            System.Threading.Interlocked.Exchange(ref _Options, null)?.Dispose();
             _Model = null;
         }
 

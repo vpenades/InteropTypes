@@ -47,8 +47,7 @@ namespace InteropBitmaps.Codecs
                 current.AsSpanBitmap().PinReadablePointer(ptr => encoder.PushFrame(ptr));
             }
 
-            encoder?.Dispose();
-            
+            System.Threading.Interlocked.Exchange(ref encoder, null)?.Dispose();
         }
     }
 }

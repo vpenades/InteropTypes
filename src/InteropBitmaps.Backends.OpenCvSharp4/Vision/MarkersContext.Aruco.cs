@@ -33,11 +33,8 @@ namespace InteropVision
 
             public void Dispose()
             {
-                _CameraTransform?.Dispose();
-                _CameraTransform = null;
-
-                _CameraDistortion?.Dispose();
-                _CameraDistortion = null;
+                System.Threading.Interlocked.Exchange(ref _CameraTransform, null)?.Dispose();
+                System.Threading.Interlocked.Exchange(ref _CameraDistortion, null)?.Dispose();
             }
 
             #endregion

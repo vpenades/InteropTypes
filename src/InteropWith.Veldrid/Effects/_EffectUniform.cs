@@ -28,14 +28,9 @@ namespace InteropWith
 
         public void Dispose()
         {
-            _ResourceSet?.Dispose();
-            _ResourceSet = null;
-
-            _ResourceLayout?.Dispose();
-            _ResourceLayout = null;            
-
-            _DeviceBuffer?.Dispose();
-            _DeviceBuffer = null;
+            System.Threading.Interlocked.Exchange(ref _ResourceSet, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _ResourceLayout, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _DeviceBuffer, null)?.Dispose();
 
             _Device = null;
         }

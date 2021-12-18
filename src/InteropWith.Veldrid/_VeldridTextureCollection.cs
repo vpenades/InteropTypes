@@ -34,10 +34,9 @@ namespace InteropWith
                 }
 
                 _textureCount = 0;
-                _textures = null;                
+                _textures = null;
 
-                _Factory?.Dispose();
-                _Factory = null;
+                System.Threading.Interlocked.Exchange(ref _Factory, null)?.Dispose();
 
                 _gd = null;
             }            

@@ -22,8 +22,11 @@ namespace InteropWith
         {
             _Session = new ONNX.InferenceSession(model, options);
 
-            _Inputs = _Session.InputMetadata.Select(item => _Create(item.Key, item.Value)).ToArray();
-            _Outputs = _Session.OutputMetadata.Select(item => _Create(item.Key, item.Value)).ToArray();
+            _InputMeta = _Session.InputMetadata.ToArray();
+            _OutputMeta = _Session.OutputMetadata.ToArray();
+
+            _Inputs = _InputMeta.Select(item => _Create(item.Key, item.Value)).ToArray();
+            _Outputs = _OutputMeta.Select(item => _Create(item.Key, item.Value)).ToArray();
             _OutputNames = _Outputs.Select(item => item.Name).ToArray();
         }             
 
@@ -71,8 +74,7 @@ namespace InteropWith
 
         public void Dispose()
         {
-            _Session?.Dispose();
-            _Session = null;
+            System.Threading.Interlocked.Exchange(ref _Session, null)?.Dispose();
         }
 
         #endregion
@@ -80,6 +82,9 @@ namespace InteropWith
         #region data
 
         private ONNX.InferenceSession _Session;
+        private readonly KeyValuePair<string, ONNX.NodeMetadata>[] _InputMeta;
+        private readonly KeyValuePair<string, ONNX.NodeMetadata>[] _OutputMeta;
+
         private readonly ONNX.NamedOnnxValue[] _Inputs;
         private readonly ONNX.NamedOnnxValue[] _Outputs;
         private readonly string[] _OutputNames;
@@ -120,6 +125,14 @@ namespace InteropWith
 
         public IDenseTensor<T> UseOutputTensor<T>(int idx, params int[] dims) where T : unmanaged
         {
+            var rdims = _OutputMeta[idx].Value.Dimensions;
+
+            for(int i=0; i < rdims.Length; ++i)
+            {
+                if (rdims[i] < 0) continue;
+                if (rdims[i] != dims[i]) throw new ArgumentException(nameof(dims));
+            }
+
             var output = _Outputs[idx];
             var denseTensor = _UpdateTensor<T>(ref output, dims);
             _Outputs[idx] = output;

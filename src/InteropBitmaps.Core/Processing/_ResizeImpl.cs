@@ -55,10 +55,10 @@ namespace InteropBitmaps.Processing
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
-                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
-                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
-                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
-                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
+                    case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
+                    case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
+                    case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;
                 }
             }
 
@@ -73,16 +73,16 @@ namespace InteropBitmaps.Processing
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
-                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
-                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
-                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
-                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
+                    case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
+                    case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
+                    case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;
                 }
             }
 
-            if (dst.PixelFormat == Pixel.VectorBGR.Format)
+            if (dst.PixelFormat == Pixel.BGR96F.Format)
             {
-                var dstX = dst.OfType<Pixel.VectorBGR>();
+                var dstX = dst.OfType<Pixel.BGR96F>();
 
                 switch (src.PixelFormat.PackedFormat)
                 {
@@ -91,16 +91,16 @@ namespace InteropBitmaps.Processing
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
-                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
-                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
-                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
-                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;                    
+                    case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
+                    case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
+                    case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;                    
                 }
             }
 
-            if (dst.PixelFormat == Pixel.VectorRGB.Format)
+            if (dst.PixelFormat == Pixel.RGB96F.Format)
             {
-                var dstX = dst.OfType<Pixel.VectorRGB>();
+                var dstX = dst.OfType<Pixel.RGB96F>();
 
                 switch (src.PixelFormat.PackedFormat)
                 {
@@ -109,10 +109,10 @@ namespace InteropBitmaps.Processing
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
-                    case Pixel.VectorRGB.Code: _FitPixels3(src.OfType<Pixel.VectorRGB>(), dstX, transform); return;
-                    case Pixel.VectorBGR.Code: _FitPixels3(src.OfType<Pixel.VectorBGR>(), dstX, transform); return;
-                    case Pixel.VectorBGRA.Code: _FitPixels3(src.OfType<Pixel.VectorBGRA>(), dstX, transform); return;
-                    case Pixel.VectorRGBA.Code: _FitPixels3(src.OfType<Pixel.VectorRGBA>(), dstX, transform); return;
+                    case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
+                    case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
+                    case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;
                 }
             }
 
@@ -122,8 +122,8 @@ namespace InteropBitmaps.Processing
         }       
 
         private static void _FitPixels3<TSrcPixel,TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)
-            where TSrcPixel : unmanaged, Pixel.IConvertible
-            where TDstPixel : unmanaged, Pixel.IPixelReflection<TDstPixel>
+            where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.RGBA128F>
+            where TDstPixel : unmanaged, Pixel.IPixelFactory<Pixel.RGBA128F, TDstPixel>
         {
             var (colPairs, rowPairs) = _BilinearSampleSource.Create(src.Info, dst.Info);
 
@@ -149,7 +149,7 @@ namespace InteropBitmaps.Processing
         /// <summary>
         /// Takes an input <see cref="SpanBitmap"/> and exposes its rows, resized according to a <see cref="_BilinearSampleSource"/> table.
         /// </summary>
-        ref struct _RowBlendKernel3<TSrcPixel> where TSrcPixel : unmanaged, Pixel.IConvertible
+        ref struct _RowBlendKernel3<TSrcPixel> where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.RGBA128F>
         {
             #region constructor
 
@@ -209,7 +209,7 @@ namespace InteropBitmaps.Processing
 
                 for(int i=0; i < srcRow.Length; ++i)
                 {
-                    var pixel = srcRow[i].ToVectorRGBA().RGBA;
+                    var pixel = srcRow[i].ToPixel().RGBA;
                     dstRow[i] = new Vector3(pixel.X, pixel.Y, pixel.Z);
                 }                
 
