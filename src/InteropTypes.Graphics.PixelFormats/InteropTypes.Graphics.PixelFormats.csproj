@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
+    <RootNamespace>InteropTypes.Graphics</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>InteropBitmaps.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Bulk.cs" Link="Pixel.Bulk.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.BulkRGB.cs" Link="Pixel.BulkRGB.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Constants.cs" Link="Pixel.Constants.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Element.cs" Link="Pixel.Element.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.ElementID.cs" Link="Pixel.ElementID.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Format.cs" Link="Pixel.Format.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Interfaces.IntComposition.cs" Link="Pixel.Interfaces.IntComposition.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Interfaces.IPixelConvertible.cs" Link="Pixel.Interfaces.IPixelConvertible.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Interfaces.IPixelFactory.cs" Link="Pixel.Interfaces.IPixelFactory.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Interfaces.Lerp.cs" Link="Pixel.Interfaces.Lerp.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Interfaces.Linear.cs" Link="Pixel.Interfaces.Linear.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Values.cs" Link="Pixel.Values.cs" />
+    <Compile Include="..\InteropBitmaps.Core\Pixel\Pixel.Values.Premul.cs" Link="Pixel.Values.Premul.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pixel.Interfaces.IPixelConvertible.cs">
+      <DependentUpon>Pixel.Interfaces.IPixelConvertible.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Pixel.Interfaces.IPixelConvertible.tt">
+      <LastGenOutput>Pixel.Interfaces.IPixelConvertible.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

@@ -7,13 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropDrawing.Backends
 {
-    public class MonoGameDrawing3D : IDisposable, IDrawing3D
+    class MonoGameDrawing3D : IMonoGameDrawing3D
     {
         #region lifecycle
 
         public MonoGameDrawing3D(GraphicsDevice device, bool flipFaces = false)            
         {
-            _Batch = new MonoGameSolidMeshBuilder(flipFaces);
+            _Batch = new MeshBuilder(flipFaces);
         }
 
         public void Dispose()
@@ -31,7 +31,7 @@ namespace InteropDrawing.Backends
 
         private CameraView3D? _Camera;
 
-        private readonly MonoGameSolidMeshBuilder _Batch;        
+        private readonly MeshBuilder _Batch;        
 
         private readonly List<(Object, Matrix4x4)> _AssetInstances = new List<(Object, Matrix4x4)>();
 
@@ -106,24 +106,7 @@ namespace InteropDrawing.Backends
 
         public void SetCamera(CameraView3D camera) { _Camera = camera; }
 
-        public void Render()
-        {
-            Render(Matrix4x4.Identity);
-        }
-
-        protected BasicEffect GetShader3D()
-        {
-            if (_Effect3D == null || _Effect3D.IsDisposed)
-            {
-                _Effect3D = new BasicEffect(_Device);
-                _Effect3D.LightingEnabled = false;
-                _Effect3D.TextureEnabled = false;
-                _Effect3D.FogEnabled = false;
-                _Effect3D.VertexColorEnabled = true;
-            }
-
-            return _Effect3D;
-        }
+        public void Render() { Render(Matrix4x4.Identity); }        
 
         public void Render(Matrix4x4 sceneWorldMatrix)
         {
@@ -137,20 +120,7 @@ namespace InteropDrawing.Backends
             }
         }
 
-        private void _DrawAsset(Matrix4x4 sceneWorldMatrix)
-        {
-            var (proj, view) = GetMatrices();
-
-            foreach (var instance in _AssetInstances)
-            {
-                var mr = instance.Item1;                
-
-                var xform = instance.Item2 * sceneWorldMatrix;                
-
-                // foreach (var e in template.Effects.OfType<IEffectLights>()) e.EnableDefaultLighting();
-                // inst.Draw(proj.ToXNA(), view.ToXNA(), xform.ToXNA());
-            }
-        }
+        
 
         private void _DrawBatch(Matrix4x4 sceneWorldMatrix)
         {
@@ -165,6 +135,21 @@ namespace InteropDrawing.Backends
                 pass.Apply();
 
                 _Batch.RenderTo(effect.GraphicsDevice);
+            }
+        }
+
+        private void _DrawAsset(Matrix4x4 sceneWorldMatrix)
+        {
+            var (proj, view) = GetMatrices();
+
+            foreach (var instance in _AssetInstances)
+            {
+                var mr = instance.Item1;
+
+                var xform = instance.Item2 * sceneWorldMatrix;
+
+                // foreach (var e in template.Effects.OfType<IEffectLights>()) e.EnableDefaultLighting();
+                // inst.Draw(proj.ToXNA(), view.ToXNA(), xform.ToXNA());
             }
         }
 
@@ -190,7 +175,21 @@ namespace InteropDrawing.Backends
             var proj = cam.CreateProjectionMatrix(aspectRatio);
 
             return (proj, view);
-        }        
+        }
+
+        protected BasicEffect GetShader3D()
+        {
+            if (_Effect3D == null || _Effect3D.IsDisposed)
+            {
+                _Effect3D = new BasicEffect(_Device);
+                _Effect3D.LightingEnabled = false;
+                _Effect3D.TextureEnabled = false;
+                _Effect3D.FogEnabled = false;
+                _Effect3D.VertexColorEnabled = true;
+            }
+
+            return _Effect3D;
+        }
 
         #endregion
     }

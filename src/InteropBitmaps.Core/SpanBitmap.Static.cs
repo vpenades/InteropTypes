@@ -70,6 +70,21 @@ namespace InteropBitmaps
             return (min, max);
         }
 
+        public static void CopyPixels(SpanBitmap dst, SpanBitmap src) // Copy
+        {
+            Guard.AreEqual(nameof(src), dst.Width, src.Width);
+            Guard.AreEqual(nameof(src), dst.Height, src.Height);
+
+            var rowConverter = Pixel.GetByteConverter(src.PixelFormat, dst.PixelFormat);
+
+            for (int y = 0; y < dst.Height; ++y)
+            {
+                var dstRow = dst.UseScanlineBytes(y);
+                var srcRow = src.UseScanlineBytes(y);
+                rowConverter(srcRow, dstRow);
+            }
+        }
+
         public static void CopyPixels(SpanBitmap<Byte> src, SpanBitmap<Single> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
@@ -312,8 +327,6 @@ namespace InteropBitmaps
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, float>(row);
                 _SpanSingleExtensions.MultiplyAndAdd(fRow, multiply, add);
             }
-        }
-
-        
+        }        
     }
 }

@@ -34,15 +34,12 @@ namespace InteropDrawing
 
         public SpriteAsset(Object source, Point2 origin, Point2 size, Point2 pivot)
         {
-            this.Source = source;
-            this.Left = (int)origin.X;
-            this.Top = (int)origin.Y;            
-            this.Width = (int)size.X;
-            this.Height = (int)size.Y;
+            this._Source = source;           
+
             this.Pivot = pivot.ToNumerics();
             
-            this._UVMin = new System.Numerics.Vector2(Left, Top);
-            this._UVMax = new System.Numerics.Vector2(Left + Width, Top + Height);
+            this._SourceUVMin = origin.ToNumerics();
+            this._SourceUVMax = this._SourceUVMin + size.ToNumerics();            
         }
 
         public SpriteAsset() { }
@@ -59,59 +56,22 @@ namespace InteropDrawing
             return this;
         }
 
+        public void CopyTo(SpriteAsset other, System.Numerics.Vector2 pivotOffset)
+        {
+            other._Source = this.Source;
+            other._SourceUVMin = this._SourceUVMin;
+            other._SourceUVMax = this._SourceUVMax;
+            other.Scale = this.Scale;
+            other.Pivot = this.Pivot + pivotOffset; // should multiply by this.Scale ??
+        }
+
         #endregion
 
         #region data
 
-        /// <summary>
-        /// Is, references, or points to the actual bitmap.
-        /// </summary>
-        /// <remarks>
-        /// This property can be cast to different data types depending on the context:
-        /// <para>
-        /// If it's a <see cref="String"/> or a <see cref="System.IO.FileInfo"/> it can point
-        /// to an image in the file system.
-        /// </para>
-        /// <para>
-        /// It can also be a known bitmap or texture object, in which case it should be used
-        /// directly as the bitmap source.
-        /// </para>
-        /// </remarks>
-        public Object Source { get; private set; }
-
-        /// <summary>
-        /// Gets the Left pixel coordinate within the <see cref="Source"/> asset.
-        /// </summary>
-        public int Left { get; private set; }
-
-        /// <summary>
-        /// Gets the top pixel coordinate within the <see cref="Source"/> asset.
-        /// </summary>
-        public int Top { get; private set; }        
-
-        /// <summary>
-        /// Gets the width of the sprite, in pixels.
-        /// </summary>
-        public int Width { get; private set; }
-
-        /// <summary>
-        /// Gets the Height of the sprite, in pixels.
-        /// </summary>
-        public int Height { get; private set; }
-
-        private System.Numerics.Vector2 _UVMin;
-        private System.Numerics.Vector2 _UVMax;
-
-        public System.Numerics.Vector2 UV0 => _UVMin;
-        public System.Numerics.Vector2 UV1 => new System.Numerics.Vector2(_UVMax.X,_UVMin.Y);
-        public System.Numerics.Vector2 UV2 => _UVMax;
-        public System.Numerics.Vector2 UV3 => new System.Numerics.Vector2(_UVMin.X, _UVMax.Y);
-
-
-        /// <summary>
-        /// Gets the rendering scale of the sprite.
-        /// </summary>
-        public float Scale { get; private set; } = 1;
+        private object _Source;
+        private System.Numerics.Vector2 _SourceUVMin;
+        private System.Numerics.Vector2 _SourceUVMax;        
 
         /// <summary>
         /// Gets the coordinates of the center of the sprite, in pixels, relative to <see cref="Top"/> and <see cref="Left"/>.
@@ -126,9 +86,55 @@ namespace InteropDrawing
         /// </example>
         public System.Numerics.Vector2 Pivot { get; private set; }
 
+        /// <summary>
+        /// Gets the rendering scale of the sprite.
+        /// </summary>
+        public float Scale { get; private set; } = 1;
+
         #endregion
 
         #region properties
+
+        /// <summary>
+        /// device dependant reference that points, or is a bitmap.
+        /// </summary>
+        /// <remarks>
+        /// This property can be cast to different data types depending on the context:
+        /// <para>
+        /// If it's a <see cref="String"/> or a <see cref="System.IO.FileInfo"/> it can point
+        /// to an image in the file system.
+        /// </para>
+        /// <para>
+        /// It can also be a known bitmap or texture object, in which case it should be used
+        /// directly as the bitmap source.
+        /// </para>
+        /// </remarks>
+        public Object Source => _Source;
+
+        /// <summary>
+        /// Gets the Left pixel coordinate within the <see cref="Source"/> asset.
+        /// </summary>
+        public float Left => _SourceUVMin.X;
+
+        /// <summary>
+        /// Gets the top pixel coordinate within the <see cref="Source"/> asset.
+        /// </summary>
+        public float Top => _SourceUVMin.Y;
+
+        /// <summary>
+        /// Gets the width of the sprite, in pixels.
+        /// </summary>
+        public float Width => (_SourceUVMax.X - _SourceUVMin.X);
+
+        /// <summary>
+        /// Gets the Height of the sprite, in pixels.
+        /// </summary>
+        public float Height => (_SourceUVMax.Y - _SourceUVMin.Y);
+
+        public System.Numerics.Vector2 UV0 => _SourceUVMin;
+        public System.Numerics.Vector2 UV1 => new System.Numerics.Vector2(_SourceUVMax.X, _SourceUVMin.Y);
+        public System.Numerics.Vector2 UV2 => _SourceUVMax;
+        public System.Numerics.Vector2 UV3 => new System.Numerics.Vector2(_SourceUVMin.X, _SourceUVMax.Y);
 
         /// <summary>
         /// Gets a value indicating whether this asset can be rendered.
@@ -157,18 +163,7 @@ namespace InteropDrawing
             final *= System.Numerics.Matrix3x2.CreateTranslation(-Pivot);
             final *= System.Numerics.Matrix3x2.CreateScale(sx,sy);
             return final;
-        }
-
-        public void CopyTo(SpriteAsset other, System.Numerics.Vector2 pivotOffset)
-        {
-            other.Source = this.Source;
-            other.Left = this.Left;
-            other.Top = this.Top;            
-            other.Width = this.Width;
-            other.Height = this.Height;
-            other.Scale = this.Scale;
-            other.Pivot = this.Pivot + pivotOffset; // should multiply by this.Scale ??
-        }
+        }        
 
         #endregion
     }

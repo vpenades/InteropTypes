@@ -187,7 +187,9 @@ namespace InteropDrawing.Backends
             var img = _UseImage(bmp.Source);
             if (img == null) return;
 
-            var srcRect = new System.Drawing.RectangleF(bmp.Left, bmp.Top, bmp.Width, bmp.Height);
+            var o = bmp.UV0;
+            var s = bmp.UV2 - bmp.UV0;
+            var srcRect = new System.Drawing.RectangleF(o.X, o.Y, s.X, s.Y);
 
             if (transform.M12 == 0 && transform.M21 == 0) // no rotation
             {

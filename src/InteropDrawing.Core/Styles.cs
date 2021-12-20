@@ -483,6 +483,12 @@ namespace InteropDrawing
         public bool IsVisible => Bitmap.IsVisible && Color.A > 0;
 
         #endregion
+
+        #region API
+
+        public System.Numerics.Matrix3x2 Transform => Bitmap.GetSpriteMatrix(FlipHorizontal, FlipVertical);
+
+        #endregion
     }
 
     /// <summary>

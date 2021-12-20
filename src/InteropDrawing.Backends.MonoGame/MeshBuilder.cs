@@ -5,21 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 
-using Microsoft.Xna.Framework.Graphics;
-
+using XY = System.Numerics.Vector2;
 using XYZ = System.Numerics.Vector3;
 using COLOR = System.Drawing.Color;
 
-// SpriteEffect needs a white texture, which needs UV Coords in Monogame.Framework.DirectX.
 using VERTEX = Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture;
 
 namespace InteropDrawing.Backends
 {
-    class MonoGameSolidMeshBuilder : IDrawing3D, IDrawing2D
+    partial class MeshBuilder : IDrawing3D, IDrawing2D
     {
         #region lifecycle
 
-        public MonoGameSolidMeshBuilder(bool faceFlip)
+        public MeshBuilder(bool faceFlip)
         {
             _FaceFlip = faceFlip;
         }
@@ -30,6 +28,13 @@ namespace InteropDrawing.Backends
 
         private readonly Boolean _FaceFlip = false;
         private readonly float _DepthZ = 0;
+
+        private float _SpriteBleed = 0;
+        private XY _SpriteUv0Bleed = XY.Zero;
+        private XY _SpriteUv1Bleed = XY.Zero;
+        private XY _SpriteUv2Bleed = XY.Zero;
+        private XY _SpriteUv3Bleed = XY.Zero;
+        private XY _SpriteCoordInvScale;
 
         private readonly LinesBuffer _Lines = new LinesBuffer();
         private readonly TrianglesBuffer _Triangles = new TrianglesBuffer();
@@ -46,11 +51,29 @@ namespace InteropDrawing.Backends
 
         public bool IsEmpty => _Lines.IsEmpty && _Triangles.IsEmpty;
 
+        private Transforms.Decompose2D _Collapsed2D => new Transforms.Decompose2D(this);
+
+        public float  SpriteCoordsBleed
+        {
+            get => _SpriteBleed;
+            set
+            {
+                _SpriteBleed = value;
+                _SpriteUv0Bleed = new XY(value, value);
+                _SpriteUv1Bleed = new XY(-value, value);
+                _SpriteUv2Bleed = new XY(-value, -value);
+                _SpriteUv3Bleed = new XY(value, -value);
+            }
+        }
+
         #endregion
 
         #region Drawing2D
 
-        private Transforms.Decompose2D _Collapsed2D => new Transforms.Decompose2D(this);
+        public void SetSpriteTextureSize(int width, int height)
+        {
+            _SpriteCoordInvScale = XY.One / new XY(width, height);
+        }              
 
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
@@ -114,11 +137,20 @@ namespace InteropDrawing.Backends
                 // close the loop
                 this.DrawLine(points[points.Length - 1], points[0], brush.OutlineWidth, brush.OutlineColor);                
             }
-        }
+        }        
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
         {
-            throw new NotSupportedException();
+            var xform = style.Transform * transform;
+            var color = style.Color.ToXna();
+
+            var v1 = _Triangles.UseVertex(XY.Transform(XY.Zero, xform), _DepthZ, color, (style.Bitmap.UV0 + _SpriteUv0Bleed) * _SpriteCoordInvScale);
+            var v2 = _Triangles.UseVertex(XY.Transform(XY.UnitX, xform), _DepthZ, color, (style.Bitmap.UV1 + _SpriteUv1Bleed) * _SpriteCoordInvScale);
+            var v3 = _Triangles.UseVertex(XY.Transform(XY.One, xform), _DepthZ, color, (style.Bitmap.UV2 + _SpriteUv2Bleed) * _SpriteCoordInvScale);
+            var v4 = _Triangles.UseVertex(XY.Transform(XY.UnitY, xform), _DepthZ, color, (style.Bitmap.UV3 + _SpriteUv3Bleed) * _SpriteCoordInvScale);
+
+            _Triangles.AddTriangle(v1, v2, v3);
+            _Triangles.AddTriangle(v1, v3, v4);
         }
 
         #endregion
@@ -205,13 +237,7 @@ namespace InteropDrawing.Backends
         {
             _Lines.Clear();
             _Triangles.Clear();
-        }
-
-        public void RenderTo(GraphicsDevice device)
-        {
-            _Triangles.RenderTrianglesTo(device);
-            _Lines.RenderLinesTo(device);
-        }       
+        }           
 
         #endregion
     }
@@ -240,6 +266,18 @@ namespace InteropDrawing.Backends
         }
 
         protected void AddIndex(int idx) { _Indices.Add(idx); }
+
+        public int UseVertex(XY position, float z, Microsoft.Xna.Framework.Color color, XY uv)
+        {
+            var v = new VERTEX
+            {
+                Position = new Microsoft.Xna.Framework.Vector3(position.X, position.Y, z),
+                Color = color,
+                TextureCoordinate = uv.ToXna()
+            };
+
+            return _Vertices.Use(v);
+        }
 
         public int UseVertex(XYZ position, COLOR color)
         {
@@ -278,7 +316,7 @@ namespace InteropDrawing.Backends
         #endregion
     }
 
-    class LinesBuffer : VertexBuffer
+    partial class LinesBuffer : VertexBuffer
     {
         #region API        
 
@@ -288,27 +326,12 @@ namespace InteropDrawing.Backends
 
             AddIndex(a);
             AddIndex(b);
-        }
-
-        public void RenderLinesTo(GraphicsDevice device)
-        {
-            var indices = GetIndices();
-            if (indices.Count == 0) return;
-
-            var vertices = GetVertices();
-
-            device.DrawUserIndexedPrimitives
-                (
-                PrimitiveType.LineList,
-                vertices.Array, vertices.Offset, vertices.Count,
-                indices.Array, indices.Offset, indices.Count / 2
-                );
-        }
+        }        
 
         #endregion
     }
 
-    class TrianglesBuffer : VertexBuffer
+    partial class TrianglesBuffer : VertexBuffer
     {        
         #region API
 
@@ -319,22 +342,7 @@ namespace InteropDrawing.Backends
             AddIndex(a);
             AddIndex(b);
             AddIndex(c);
-        }
-
-        public void RenderTrianglesTo(GraphicsDevice device)
-        {
-            var indices = GetIndices();
-            if (indices.Count == 0) return;
-
-            var vertices = GetVertices();
-
-            device.DrawUserIndexedPrimitives
-                (
-                PrimitiveType.TriangleList,
-                vertices.Array, vertices.Offset, vertices.Count,
-                indices.Array, indices.Offset, indices.Count / 3
-                );
-        }
+        }        
 
         #endregion
     }

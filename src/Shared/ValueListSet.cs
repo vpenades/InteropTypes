@@ -9,8 +9,7 @@ namespace InteropDrawing.Backends.Collections
     /// Represents A specialised list that requires all elements to be unique.
     /// </summary>
     /// <remarks>
-    /// - This collection is based on <see cref="Dictionary{TKey, TValue}"/>
-    /// - Replaces <see cref="VertexList{T}"/>
+    /// - This collection is based on <see cref="Dictionary{TKey, TValue}"/>    
     /// - Designed to work with lists of vertices.
     ///
     /// This collection is:

@@ -37,13 +37,12 @@ namespace InteropDrawing
 
         private readonly GraphicsDeviceManager _Graphics;
 
-        private Backends.MonoGameDrawing2D _Drawing2D;
-        // private Backends.MonoGameDrawing3D _Drawing3D;
+        private Backends.IMonoGameDrawing2D _Drawing2D;
+        // private IDrawingContext3D _Drawing3D;
 
         private _Sprites2D _Sprites = new _Sprites2D();
 
         private _DynamicTexture _DynTex;
-
 
         #endregion
 
@@ -51,7 +50,7 @@ namespace InteropDrawing
 
         protected override void LoadContent()
         {
-            _Drawing2D = new Backends.MonoGameDrawing2D(this.GraphicsDevice);
+            _Drawing2D = Backends.MonoGameDrawing.CreateDrawingContext2D(this.GraphicsDevice);
 
             _DynTex = new _DynamicTexture(this.GraphicsDevice);
         }
@@ -79,7 +78,7 @@ namespace InteropDrawing
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;            
 
-            _Drawing2D.Begin(800, 600, true);
+            _Drawing2D.Begin(800, 600, true);            
 
             _Drawing2D.DrawLine((0, 0), (800, 600), 2, COLOR.Red);
             _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, _Sprites);

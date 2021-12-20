@@ -61,6 +61,10 @@ namespace InteropDrawing
 
         public static readonly Point2 Zero = new Point2(0, 0);
 
+        public static readonly Point2 Half = new Point2(0.5f, 0.5f);
+
+        public static readonly Point2 One = new Point2(1, 1);
+
         public readonly float X;
         public readonly float Y;
 

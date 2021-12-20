@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29911.84
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vision", "Vision", "{227D251E-A653-47FC-AAF3-60FE3AD17C89}"
 EndProject
@@ -95,6 +95,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.Veldrid.ShaderGen", "src\InteropWith.Veldrid.ShaderGen\InteropWith.Veldrid.ShaderGen.csproj", "{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.OnnxRuntime", "src\InteropWith.OnnxRuntime\InteropWith.OnnxRuntime.csproj", "{4D350D45-1AEA-4398-9A65-D47094A733ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.PixelFormats", "src\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.PixelFormats.csproj", "{B97CEF29-BDE8-442F-B182-2C78A63713BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -396,6 +398,14 @@ Global
 		{4D350D45-1AEA-4398-9A65-D47094A733ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4D350D45-1AEA-4398-9A65-D47094A733ED}.Release|x64.ActiveCfg = Release|Any CPU
 		{4D350D45-1AEA-4398-9A65-D47094A733ED}.Release|x64.Build.0 = Release|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Debug|x64.Build.0 = Debug|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Release|x64.ActiveCfg = Release|Any CPU
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -439,6 +449,7 @@ Global
 		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{4D350D45-1AEA-4398-9A65-D47094A733ED} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
+		{B97CEF29-BDE8-442F-B182-2C78A63713BB} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

@@ -14,7 +14,17 @@ namespace InteropDrawing.Backends
 
         public static XNACOLOR ToXnaPremul(this DRWCOLOR c) { return XNACOLOR.FromNonPremultiplied(c.R, c.G, c.B, c.A); }
 
-        private static XNACOLOR ToXnaPremul(this XNACOLOR c) { return XNACOLOR.FromNonPremultiplied(c.R, c.G, c.B, c.A); }
+        public static XNACOLOR ToXnaPremul(this XNACOLOR c) { return XNACOLOR.FromNonPremultiplied(c.R, c.G, c.B, c.A); }
+
+        public static Microsoft.Xna.Framework.Matrix ToXna(this in Matrix3x2 m)
+        {
+            return new Microsoft.Xna.Framework.Matrix
+                (
+                m.M11, m.M12, 0, 0,
+                m.M21, m.M22, 0, 0,
+                0, 0, 1, 0,
+                m.M31, m.M32, 0, 1);
+        }
 
         public static Microsoft.Xna.Framework.Matrix ToXNA(this in Matrix4x4 m)
         {
@@ -25,6 +35,11 @@ namespace InteropDrawing.Backends
                 m.M31, m.M32, m.M33, m.M34,
                 m.M41, m.M42, m.M43, m.M44
                 );
+        }
+
+        public static Microsoft.Xna.Framework.Vector2 ToXna(this in Vector2 vector)
+        {
+            return new Microsoft.Xna.Framework.Vector2(vector.X, vector.Y);
         }
 
         public static Microsoft.Xna.Framework.Vector3 ToXna(this in Vector3 vector)

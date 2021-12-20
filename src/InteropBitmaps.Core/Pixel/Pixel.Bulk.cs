@@ -4,8 +4,6 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    using PEF = Pixel.Format.ElementID;
-
     partial class Pixel
     {
         public static TPixel GetColor<TPixel>(System.Drawing.Color color)
@@ -66,22 +64,7 @@ namespace InteropBitmaps
             }
 
             return newFmt != default;
-        }
-
-        public static void Convert(SpanBitmap dst, SpanBitmap src)
-        {
-            Guard.AreEqual(nameof(src), dst.Width, src.Width);
-            Guard.AreEqual(nameof(src), dst.Height, src.Height);
-
-            var rowConverter = GetByteConverter(src.PixelFormat, dst.PixelFormat);
-
-            for (int y = 0; y < dst.Height; ++y)
-            {
-                var dstRow = dst.UseScanlineBytes(y);
-                var srcRow = src.UseScanlineBytes(y);
-                rowConverter(srcRow, dstRow);
-            }
-        }
+        }        
 
         /// <summary>
         /// Callback that copies the pixels from src to dst,<br/>

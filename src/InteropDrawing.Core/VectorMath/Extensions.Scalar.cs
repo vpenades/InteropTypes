@@ -101,6 +101,17 @@ namespace InteropDrawing
 
         #endregion
 
+        #region round
+
+        // https://stackoverflow.com/questions/33557332/can-i-speed-up-my-special-round-function
+
+        public static float FastRound(this float value)
+        {
+            return value > 0 ? value + 0.5f : value - 0.5f;
+        }        
+
+        #endregion
+
         #region Clamp
 
         public static byte Clamp(this byte val, byte min, byte max)

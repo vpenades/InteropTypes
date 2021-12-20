@@ -263,7 +263,7 @@ namespace InteropDrawing.Backends
 
             var image = _UseImage(bmp.Source);
 
-            var recti = new Int32Rect(bmp.Left, bmp.Top, bmp.Width, bmp.Height);
+            var recti = new Int32Rect((int)bmp.Left, (int)bmp.Top, (int)bmp.Width, (int)bmp.Height);
             var cropped = new System.Windows.Media.Imaging.CroppedBitmap(image, recti);
 
             // PushMatrix(transform);
