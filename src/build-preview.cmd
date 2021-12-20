@@ -16,6 +16,7 @@ msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
 
 md bin
 
+move InteropTypes.Graphics.PixelFormats\bin\release\*.*nupkg bin
 move InteropBitmaps.Core\bin\release\*.*nupkg bin
 move InteropDrawing.Core\bin\release\*.*nupkg bin
 move InteropTensors.Core\bin\release\*.*nupkg bin

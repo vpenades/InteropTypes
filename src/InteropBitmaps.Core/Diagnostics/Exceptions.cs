@@ -9,7 +9,7 @@ namespace InteropBitmaps.Diagnostics
         private static string _GetFormatString(Object format)
         {
             if (format == null) return "NULL";
-            if (format is Pixel.Format fmt) return fmt._GetDebuggerDisplay();
+            if (format is Pixel.Format fmt) return fmt.GetDebuggerDisplay();
             return format.ToString();
         }
 

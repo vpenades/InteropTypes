@@ -26,31 +26,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Pixel\Pixel.Interfaces.IPixelConvertible.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Pixel.Interfaces.IPixelConvertible.cs</LastGenOutput>
-    </None>
-    <None Update="Pixel\Pixel.Interfaces.IPixelFactory.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Pixel.Interfaces.IPixelFactory.cs</LastGenOutput>
-    </None>
+    <Compile Remove="Pixel\**" />
+    <EmbeddedResource Remove="Pixel\**" />
+    <None Remove="Pixel\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.PixelFormats.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Pixel\Pixel.Interfaces.IPixelConvertible.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IPixelConvertible.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Pixel\Pixel.Interfaces.IPixelFactory.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IPixelFactory.tt</DependentUpon>
-    </Compile>
   </ItemGroup>  
 
 </Project>

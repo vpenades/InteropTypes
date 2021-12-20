@@ -23,7 +23,7 @@ namespace InteropBitmaps
 
         #region debug
 
-        public string ToDebuggerDisplayString() { return $"{PixelFormat._GetDebuggerDisplay()}×{Width}×{Height}"; }
+        public string ToDebuggerDisplayString() { return $"{PixelFormat.GetDebuggerDisplay()}×{Width}×{Height}"; }
 
         #endregion
 
