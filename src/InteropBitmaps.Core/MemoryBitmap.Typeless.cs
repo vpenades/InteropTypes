@@ -54,7 +54,7 @@ namespace InteropBitmaps
         }        
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, int stepByteSize = 0)
-            : this(data, width, height, Pixel.Format.GetUndefined<TPixel>(), stepByteSize) { }
+            : this(data, width, height, Pixel.Format.CreateUndefined<TPixel>(), stepByteSize) { }
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)            
         {

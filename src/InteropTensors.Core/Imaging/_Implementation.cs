@@ -38,7 +38,7 @@ namespace InteropTensors
             var dims = tensor.Dimensions;
             var width = dims[2];
             var height = dims[1];
-            var fmt = Pixel.Format.GetFromDepthAndChannels(typeof(T), dims[3]);
+            var fmt = Pixel.Format.CreateFromDepthAndChannels(typeof(T), dims[3]);
 
             var info = new BitmapInfo(width, height, fmt);
             var data = System.Runtime.InteropServices.MemoryMarshal.Cast<T, Byte>(tensor.Span);

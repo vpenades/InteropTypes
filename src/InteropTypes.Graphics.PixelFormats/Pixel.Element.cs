@@ -10,6 +10,9 @@ namespace InteropBitmaps
     {
         partial struct Format
         {
+            /// <summary>
+            /// Wraps <see cref="ElementID"/> enumeration, providing rich information.
+            /// </summary>
             [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplay(),nq}")]
             [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
             public readonly struct Element : IEquatable<Element>
@@ -37,12 +40,16 @@ namespace InteropBitmaps
 
                 #region data
 
+                [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
                 private readonly Byte _Identifier;
 
+                /// <inheritdoc />
                 public override int GetHashCode() => _Identifier.GetHashCode();
 
+                /// <inheritdoc />
                 public override bool Equals(object obj) { return obj is Element other && this._Identifier == other._Identifier; }
 
+                /// <inheritdoc />
                 public bool Equals(Element other) => this._Identifier == other._Identifier;
 
                 public static bool operator ==(Element a, Element b) => a._Identifier == b._Identifier;
@@ -151,6 +158,9 @@ namespace InteropBitmaps
                     }
                 }
 
+                /// <summary>
+                /// True if Non premultiplied alpha
+                /// </summary>
                 public bool IsAlpha
                 {
                     get
@@ -167,6 +177,9 @@ namespace InteropBitmaps
                     }
                 }
 
+                /// <summary>
+                /// True if premultiplied alpha
+                /// </summary>
                 public bool IsPremul
                 {
                     get
@@ -231,7 +244,7 @@ namespace InteropBitmaps
                     }
                 }
 
-                public bool IsGrey
+                public bool IsLuminance
                 {
                     get
                     {

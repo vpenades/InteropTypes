@@ -10,71 +10,85 @@ namespace InteropBitmaps
     {
         private static BulkConverterCallback<Byte, Byte> GetConverterToRGB(Format srcFmt, Format dstFmt)
         {
-            switch(dstFmt.PackedFormat)
-            {
-                case BGR565.Code: return GetConverterToRGB<BGR565>(srcFmt);
-                case BGR24.Code: return GetConverterToRGB<BGR24>(srcFmt);
-                case RGB24.Code: return GetConverterToRGB<RGB24>(srcFmt);
-                case RGB96F.Code: return GetConverterToRGB<RGB96F>(srcFmt);
-                case BGR96F.Code: return GetConverterToRGB<BGR96F>(srcFmt);
-            }
-
-            return null;
-        }
-
-        private static BulkConverterCallback<Byte, Byte> GetConverterToRGB<TDstPixel>(Format srcFmt)
-            where TDstPixel : unmanaged, _IPixelBulkRGB<TDstPixel>
-        {
-            if (srcFmt.HasPremul) return null;
-
             if (srcFmt.All(PEF.Red8, PEF.Green8, PEF.Blue8))
             {
-                int srcStep = srcFmt.ByteCount;
-                int srcIdxR = srcFmt.GetByteOffset(PEF.Red8);
-                int srcIdxG = srcFmt.GetByteOffset(PEF.Green8);
-                int srcIdxB = srcFmt.GetByteOffset(PEF.Blue8);
-
-                return (src, dst) =>
+                switch (dstFmt.PackedFormat)
                 {
-                    var srcR = src.Slice(srcIdxR);
-                    var srcG = src.Slice(srcIdxG);
-                    var srcB = src.Slice(srcIdxB);
-
-                    var dstRGB = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TDstPixel>(dst);
-                    default(TDstPixel).Fill(dstRGB, srcStep, srcR, srcG, srcB);
-                };
+                    case BGR565.Code: return GetConverterByteToRGB<BGR565>(srcFmt);
+                    case BGR24.Code: return GetConverterByteToRGB<BGR24>(srcFmt);
+                    case RGB24.Code: return GetConverterByteToRGB<RGB24>(srcFmt);
+                    case RGB96F.Code: return GetConverterByteToRGB<RGB96F>(srcFmt);
+                    case BGR96F.Code: return GetConverterByteToRGB<BGR96F>(srcFmt);
+                }
             }
 
             if (srcFmt.All(PEF.Red32F, PEF.Green32F, PEF.Blue32F))
             {
-                int srcStep = srcFmt.ByteCount / 4;
-                int srcIdxR = srcFmt.GetByteOffset(PEF.Red32F);
-                int srcIdxG = srcFmt.GetByteOffset(PEF.Green32F);
-                int srcIdxB = srcFmt.GetByteOffset(PEF.Blue32F);
-
-                return (src, dst) =>
+                switch (dstFmt.PackedFormat)
                 {
-                    var srcR = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxR));
-                    var srcG = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxG));
-                    var srcB = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxB));
-
-                    var dstRGB = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TDstPixel>(dst);
-                    default(TDstPixel).Fill(dstRGB, srcStep, srcR, srcG, srcB);
-                };
+                    case BGR565.Code: return GetConverterFloatToRGB<BGR565>(srcFmt);
+                    case BGR24.Code: return GetConverterFloatToRGB<BGR24>(srcFmt);
+                    case RGB24.Code: return GetConverterFloatToRGB<RGB24>(srcFmt);
+                    case RGB96F.Code: return GetConverterFloatToRGB<RGB96F>(srcFmt);
+                    case BGR96F.Code: return GetConverterFloatToRGB<BGR96F>(srcFmt);
+                }
             }
 
             return null;
         }
 
-        interface _IPixelBulkRGB<TPixel>
+        private static BulkConverterCallback<Byte, Byte> GetConverterByteToRGB<TDstPixel>(Format srcFmt)
+            where TDstPixel : unmanaged, _IPixelBulkRGB<TDstPixel, Byte>
         {
-            void Fill(Span<TPixel> dst, int srcStep, ReadOnlySpan<Byte> red, ReadOnlySpan<Byte> green, ReadOnlySpan<Byte> blue);
-            void Fill(Span<TPixel> dst, int srcStep, ReadOnlySpan<Single> red, ReadOnlySpan<Single> green, ReadOnlySpan<Single> blue);
+            if (srcFmt.HasPremul) return null;
+            
+            int srcStep = srcFmt.ByteCount;
+            int srcIdxR = srcFmt.GetByteOffset(PEF.Red8);
+            int srcIdxG = srcFmt.GetByteOffset(PEF.Green8);
+            int srcIdxB = srcFmt.GetByteOffset(PEF.Blue8);
+
+            return (src, dst) =>
+            {
+                var srcR = src.Slice(srcIdxR);
+                var srcG = src.Slice(srcIdxG);
+                var srcB = src.Slice(srcIdxB);
+
+                var dstRGB = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TDstPixel>(dst);
+                default(TDstPixel).Fill(dstRGB, srcStep, srcR, srcG, srcB);
+            };
         }
 
-        partial struct BGR565 : _IPixelBulkRGB<BGR565>
+        private static BulkConverterCallback<Byte, Byte> GetConverterFloatToRGB<TDstPixel>(Format srcFmt)
+            where TDstPixel : unmanaged, _IPixelBulkRGB<TDstPixel,float>
         {
-            void _IPixelBulkRGB<BGR565>.Fill(Span<BGR565> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
+            if (srcFmt.HasPremul) return null;
+            
+            int srcStep = srcFmt.ByteCount / 4;
+            int srcIdxR = srcFmt.GetByteOffset(PEF.Red32F);
+            int srcIdxG = srcFmt.GetByteOffset(PEF.Green32F);
+            int srcIdxB = srcFmt.GetByteOffset(PEF.Blue32F);
+
+            return (src, dst) =>
+            {
+                var srcR = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxR));
+                var srcG = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxG));
+                var srcB = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxB));
+
+                var dstRGB = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TDstPixel>(dst);
+                default(TDstPixel).Fill(dstRGB, srcStep, srcR, srcG, srcB);
+            };
+        }
+
+        interface _IPixelBulkRGB<TPixel, TChannel>
+        {
+            void Fill(Span<TPixel> dst, int srcStep, ReadOnlySpan<TChannel> red, ReadOnlySpan<TChannel> green, ReadOnlySpan<TChannel> blue);
+        }
+
+        partial struct BGR565
+            : _IPixelBulkRGB<BGR565, byte>
+            , _IPixelBulkRGB<BGR565, float>
+        {
+            void _IPixelBulkRGB<BGR565, byte>.Fill(Span<BGR565> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -86,7 +100,7 @@ namespace InteropBitmaps
                 }
             }
 
-            void _IPixelBulkRGB<BGR565>.Fill(Span<BGR565> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
+            void _IPixelBulkRGB<BGR565, float>.Fill(Span<BGR565> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -97,9 +111,11 @@ namespace InteropBitmaps
             }
         }
 
-        partial struct BGR24 : _IPixelBulkRGB<BGR24>
+        partial struct BGR24
+            : _IPixelBulkRGB<BGR24, byte>
+            , _IPixelBulkRGB<BGR24, float>
         {
-            void _IPixelBulkRGB<BGR24>.Fill(Span<BGR24> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
+            void _IPixelBulkRGB<BGR24, byte>.Fill(Span<BGR24> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -111,7 +127,7 @@ namespace InteropBitmaps
                 }
             }
 
-            void _IPixelBulkRGB<BGR24>.Fill(Span<BGR24> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
+            void _IPixelBulkRGB<BGR24, float>.Fill(Span<BGR24> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -122,9 +138,11 @@ namespace InteropBitmaps
             }
         }
 
-        partial struct RGB24 : _IPixelBulkRGB<RGB24>
+        partial struct RGB24
+            : _IPixelBulkRGB<RGB24, byte>
+            , _IPixelBulkRGB<RGB24, float>
         {
-            void _IPixelBulkRGB<RGB24>.Fill(Span<RGB24> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
+            void _IPixelBulkRGB<RGB24, byte>.Fill(Span<RGB24> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -136,7 +154,7 @@ namespace InteropBitmaps
                 }
             }
 
-            void _IPixelBulkRGB<RGB24>.Fill(Span<RGB24> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
+            void _IPixelBulkRGB<RGB24, float>.Fill(Span<RGB24> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -145,11 +163,13 @@ namespace InteropBitmaps
                     dst[i] = new RGB24((Byte)rgb.X, (Byte)rgb.Y, (Byte)rgb.Z);
                 }
             }
-        }        
+        }
 
-        partial struct RGB96F : _IPixelBulkRGB<RGB96F>
+        partial struct RGB96F
+            : _IPixelBulkRGB<RGB96F, byte>
+            , _IPixelBulkRGB<RGB96F, float>
         {
-            void _IPixelBulkRGB<RGB96F>.Fill(Span<RGB96F> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
+            void _IPixelBulkRGB<RGB96F, byte>.Fill(Span<RGB96F> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -161,7 +181,7 @@ namespace InteropBitmaps
                 }
             }
 
-            void _IPixelBulkRGB<RGB96F>.Fill(Span<RGB96F> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
+            void _IPixelBulkRGB<RGB96F, float>.Fill(Span<RGB96F> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -171,9 +191,11 @@ namespace InteropBitmaps
             }
         }
 
-        partial struct BGR96F : _IPixelBulkRGB<BGR96F>
+        partial struct BGR96F
+            : _IPixelBulkRGB<BGR96F, byte>
+            , _IPixelBulkRGB<BGR96F, float>
         {
-            void _IPixelBulkRGB<BGR96F>.Fill(Span<BGR96F> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
+            void _IPixelBulkRGB<BGR96F, byte>.Fill(Span<BGR96F> dst, int srcStep, ReadOnlySpan<byte> red, ReadOnlySpan<byte> green, ReadOnlySpan<byte> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -185,7 +207,7 @@ namespace InteropBitmaps
                 }
             }
 
-            void _IPixelBulkRGB<BGR96F>.Fill(Span<BGR96F> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
+            void _IPixelBulkRGB<BGR96F, float>.Fill(Span<BGR96F> dst, int srcStep, ReadOnlySpan<float> red, ReadOnlySpan<float> green, ReadOnlySpan<float> blue)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {

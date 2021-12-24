@@ -26,6 +26,7 @@ namespace InteropBitmaps
 
             public readonly Byte A;
 
+            /// <inheritdoc />            
             public override int GetHashCode() { return A.GetHashCode(); }
 
             #endregion            
@@ -76,6 +77,7 @@ namespace InteropBitmaps
 
             public readonly Byte L;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return L.GetHashCode(); }
 
             #endregion
@@ -126,6 +128,7 @@ namespace InteropBitmaps
 
             public readonly UInt16 L;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return L.GetHashCode(); }
 
             #endregion            
@@ -168,13 +171,14 @@ namespace InteropBitmaps
 
             public readonly float L;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return L.GetHashCode(); }
 
             #endregion            
         }
 
         /// <summary>
-        /// BGR Quantized to 5,6,5 bits.
+        /// Standard BGR Quantized to 5,6,5 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
@@ -217,13 +221,14 @@ namespace InteropBitmaps
             public int G { get { var p = (BGR >> 5) & 0x3f; return (p * 4) | (p >> 4); } }
             public int B { get { var p = BGR & 0x1f; return (p * 8) | (p >> 2); } }
 
+            /// <inheritdoc />
             public override int GetHashCode() { return BGR.GetHashCode(); }
 
             #endregion            
         }
 
         /// <summary>
-        /// BGRA Quantized to 5,5,5,1 bits.
+        /// Standard BGRA Quantized to 5,5,5,1 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -262,11 +267,12 @@ namespace InteropBitmaps
 
             public readonly UInt16 BGRA;
 
-            public int R { get { var p = ((BGRA >> 10) & 0x1f); return p * 8 + (p >> 2); } }
-            public int G { get { var p = ((BGRA >> 5) & 0x1f); return p * 8 + (p >> 2); } }
+            public int R { get { var p = (BGRA >> 10) & 0x1f; return p * 8 + (p >> 2); } }
+            public int G { get { var p = (BGRA >> 5) & 0x1f; return p * 8 + (p >> 2); } }
             public int B { get { var p = BGRA & 0x1f; return p * 8 + (p >> 2); } }
             public int A => (BGRA >> 15) * 255;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return IsTransparent ? 0 : BGRA.GetHashCode(); }
 
             #endregion
@@ -279,7 +285,7 @@ namespace InteropBitmaps
         }
 
         /// <summary>
-        /// BGRA Quantized to 4,4,4,4 bits.
+        /// Standard BGRA Quantized to 4,4,4,4 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -319,6 +325,7 @@ namespace InteropBitmaps
             public int G { get { var p = ((BGRA >> 4) & 0xf); return p * 17; } }
             public int B { get { var p = BGRA & 0xf; return p * 17; } }
 
+            /// <inheritdoc />
             public override int GetHashCode() { return IsTransparent ? 0 : BGRA.GetHashCode(); }
 
             #endregion
@@ -331,7 +338,7 @@ namespace InteropBitmaps
         }
 
         /// <summary>
-        /// BGRA Quantized to 8 bits.
+        /// Standard BGRA Quantized to 8 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -434,13 +441,14 @@ namespace InteropBitmaps
             public readonly Byte R;
             public readonly Byte A;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return A == 0 ? 0 : BGRA.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// RGBA Quantized to 8 bits.
+        /// Standard RGBA Quantized to 8 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -493,13 +501,14 @@ namespace InteropBitmaps
             public readonly Byte B;
             public readonly Byte A;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return A == 0 ? 0 : RGBA.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// ARGB Quantized to 8 bits.
+        /// Standard ARGB Quantized to 8 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -552,13 +561,14 @@ namespace InteropBitmaps
             public readonly Byte G;
             public readonly Byte B;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return A == 0 ? 0 : ARGB.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// BGR Quantized to 8 bits.
+        /// Standard BGR Quantized to 8 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
@@ -606,13 +616,14 @@ namespace InteropBitmaps
             public readonly Byte G;
             public readonly Byte R;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return ((R<<16) | (G<<8) | B).GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// RGB Quantized to 8 bits.
+        /// Standard RGB Quantized to 8 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
@@ -653,13 +664,14 @@ namespace InteropBitmaps
             public readonly Byte G;
             public readonly Byte B;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return ((R << 16) | (G << 8) | B).GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// RGB in values between 0-1
+        /// Standard RGB in values between 0-1
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
@@ -681,13 +693,14 @@ namespace InteropBitmaps
             public Single G => RGB.Y;
             public Single B => RGB.Z;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return RGB.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// RGB in values between 0-1
+        /// Standard RGB in values between 0-1
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
@@ -710,13 +723,14 @@ namespace InteropBitmaps
             public Single G => BGR.Y;
             public Single R => BGR.Z;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return BGR.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// BGRA in values between 0-1
+        /// Standard BGRA in values between 0-1
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -737,13 +751,14 @@ namespace InteropBitmaps
             public Single R => BGRA.Z;
             public Single A => BGRA.W;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return A == 0 ? 0 : BGRA.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// RGBA in values between 0-1
+        /// Standard RGBA in values between 0-1
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -794,6 +809,7 @@ namespace InteropBitmaps
             [System.Runtime.InteropServices.FieldOffset(12)]
             public readonly Single A;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return A == 0 ? 0 : RGBA.GetHashCode(); }
 
             #endregion

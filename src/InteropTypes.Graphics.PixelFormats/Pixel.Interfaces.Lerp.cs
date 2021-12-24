@@ -28,6 +28,27 @@ namespace InteropBitmaps
 
                 return new RGBA32(r, g, b, a);                
             }
-        }        
+        }
+
+        public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)
+            where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
+            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
+        {
+            for (int i = 0; i < dst.Length; ++i)
+            {
+                var v = System.Numerics.Vector4.Lerp(left[i].ToPixel().RGBA, right[i].ToPixel().RGBA, amount);
+                dst[i] = default(TDstPixel).From(new RGBA128F(v));
+            }
+        }
+
+        public static void LerpArray<TDstPixel>(ReadOnlySpan<System.Numerics.Vector3> left, ReadOnlySpan<System.Numerics.Vector3> right, float amount, Span<TDstPixel> dst)
+            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
+        {
+            for (int i = 0; i < dst.Length; ++i)
+            {
+                var v = System.Numerics.Vector3.Lerp(left[i], right[i], amount);
+                dst[i] = default(TDstPixel).From(new RGBA128F(v));
+            }
+        }
     }
 }

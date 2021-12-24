@@ -182,7 +182,7 @@ namespace InteropBitmaps
         #region premultiplied types
 
         /// <summary>
-        /// RGBA Quantized to 8 bits. Alpha Premultiplied
+        /// Standard RGBA Quantized to 8 bits. Alpha Premultiplied
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
@@ -246,13 +246,14 @@ namespace InteropBitmaps
             public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
             public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);
 
+            /// <inheritdoc />
             public override int GetHashCode() { return RGBP.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// BGRA Quantized to 8 bits. Alpha Premultiplied
+        /// Standard BGRA Quantized to 8 bits. Alpha Premultiplied
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
@@ -316,13 +317,14 @@ namespace InteropBitmaps
             public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
             public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);
 
+            /// <inheritdoc />
             public override int GetHashCode() { return BGRP.GetHashCode(); }
 
             #endregion
         }
 
         /// <summary>
-        /// RGBP in values between 0-1
+        /// Standard RGBP in values between 0-1
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
@@ -406,6 +408,7 @@ namespace InteropBitmaps
             public Single G => A == 0 ? 0 : PreG / A;
             public Single B => A == 0 ? 0 : PreB / A;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return PreRGBA.GetHashCode(); }
 
             #endregion      

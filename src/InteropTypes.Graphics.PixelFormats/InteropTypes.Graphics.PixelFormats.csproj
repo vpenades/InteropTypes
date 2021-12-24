@@ -13,13 +13,13 @@
 
   <PropertyGroup>
     <Description>
-      Defines pixel types, conversions and processing operations.
+      Defines pixel types, formats, conversions and processing operations.
     </Description>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>InteropBitmaps.Tests</_Parameter1>
+      <_Parameter1>InteropTypes.Graphics.PixelFormats.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 

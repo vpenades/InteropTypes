@@ -9,7 +9,8 @@ namespace InteropBitmaps
         partial struct Format
         {
             /// <summary>
-            /// represents the meaning of a <see cref="Format"/>'s channel.
+            /// Represents the meaning of a <see cref="Format"/>'s channel.<br/>
+            /// It can be wrapped by a <see cref="Element"/> for additional information.
             /// </summary>
             /// <remarks>
             /// <para>This enumeration is required to be in the range of 0-255 to fit in 1 byte.</para>

@@ -6,75 +6,13 @@ namespace InteropBitmaps
 {
     partial class Pixel
     {
-        public static TPixel GetColor<TPixel>(System.Drawing.Color color)
-            where TPixel : IPixelFactory<Pixel.BGRA32, TPixel>
-        {
-            return default(TPixel).From(new BGRA32(color));
-        }
-
-        public static bool TryGetFormatAsRGBX(Format fmt, out Format newFmt)
-        {
-            newFmt = default;
-
-            switch(fmt.PackedFormat)
-            {                
-                case RGB24.Code: newFmt = RGB24.Format; break;
-                case BGR24.Code: newFmt = RGB24.Format; break;
-
-                case RGBA32.Code: newFmt = RGBA32.Format; break;
-                case BGRA32.Code: newFmt = RGBA32.Format; break;
-                case ARGB32.Code: newFmt = RGBA32.Format; break;
-                case RGBP32.Code: newFmt = RGBP32.Format; break;
-                case BGRP32.Code: newFmt = RGBP32.Format; break;
-
-                case RGB96F.Code: newFmt = RGB96F.Format; break;
-                case BGR96F.Code: newFmt = RGB96F.Format; break;
-
-                case RGBA128F.Code: newFmt = RGBA128F.Format; break;
-                case BGRA128F.Code: newFmt = RGBA128F.Format; break;
-                case RGBP128F.Code: newFmt = RGBP128F.Format; break;
-                case BGRP128F.Code: newFmt = BGRP128F.Format; break;
-            }
-
-            return newFmt != default;            
-        }
-
-        public static bool TryGetFormatAsBGRX(Format fmt, out Format newFmt)
-        {
-            newFmt = default;
-
-            switch (fmt.PackedFormat)
-            {
-                case RGB24.Code: newFmt = BGR24.Format; break;
-                case BGR24.Code: newFmt = BGR24.Format; break;
-
-                case RGBA32.Code: newFmt = BGRA32.Format; break;
-                case BGRA32.Code: newFmt = BGRA32.Format; break;
-                case ARGB32.Code: newFmt = BGRA32.Format; break;
-                case RGBP32.Code: newFmt = BGRA32.Format; break;
-                case BGRP32.Code: newFmt = BGRA32.Format; break;
-
-                case RGB96F.Code: newFmt = BGR96F.Format; break;
-                case BGR96F.Code: newFmt = BGR96F.Format; break;
-
-                case RGBA128F.Code: newFmt = BGRA128F.Format; break;
-                case BGRA128F.Code: newFmt = BGRA128F.Format; break;
-                case RGBP128F.Code: newFmt = RGBP128F.Format; break;
-                case BGRP128F.Code: newFmt = BGRP128F.Format; break;
-            }
-
-            return newFmt != default;
-        }        
-
         /// <summary>
         /// Callback that copies the pixels from src to dst,<br/>
         /// while aplying the appropiate conversion.
         /// </summary>
         /// <param name="src">The source pixels.</param>
         /// <param name="dst">The target pixels.</param>
-        public delegate void BulkConverterCallback<TSrc,TDst>(ReadOnlySpan<TSrc> src, Span<TDst> dst);
-
-        
+        public delegate void BulkConverterCallback<TSrc,TDst>(ReadOnlySpan<TSrc> src, Span<TDst> dst);        
 
         public static BulkConverterCallback<Byte,Byte> GetByteConverter(Format srcFmt, Format dstFmt)
         {
@@ -281,27 +219,5 @@ namespace InteropBitmaps
 
             for (int i = 0; i < dst.Length; ++i) { dst[i] = factory.From(src[i]); }
         }
-
-        public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)
-            where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
-            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
-        {
-            for(int i=0; i < dst.Length; ++i)
-            {
-                var v = System.Numerics.Vector4.Lerp(left[i].ToPixel().RGBA, right[i].ToPixel().RGBA, amount);
-                dst[i] = default(TDstPixel).From( new RGBA128F(v));
-            }
-        }
-
-        public static void LerpArray<TDstPixel>(ReadOnlySpan<System.Numerics.Vector3> left, ReadOnlySpan<System.Numerics.Vector3> right, float amount, Span<TDstPixel> dst)            
-            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
-        {
-            for (int i = 0; i < dst.Length; ++i)
-            {
-                var v = System.Numerics.Vector3.Lerp(left[i], right[i], amount);
-                dst[i] = default(TDstPixel).From(new RGBA128F(v));
-            }
-        }
-
     }
 }

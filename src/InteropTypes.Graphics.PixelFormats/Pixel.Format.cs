@@ -9,8 +9,62 @@ namespace InteropBitmaps
 
     partial class Pixel
     {
+        public static bool TryGetFormatAsRGBX(Format fmt, out Format newFmt)
+        {
+            newFmt = default;
+
+            switch (fmt.PackedFormat)
+            {
+                case RGB24.Code: newFmt = RGB24.Format; break;
+                case BGR24.Code: newFmt = RGB24.Format; break;
+
+                case RGBA32.Code: newFmt = RGBA32.Format; break;
+                case BGRA32.Code: newFmt = RGBA32.Format; break;
+                case ARGB32.Code: newFmt = RGBA32.Format; break;
+                case RGBP32.Code: newFmt = RGBP32.Format; break;
+                case BGRP32.Code: newFmt = RGBP32.Format; break;
+
+                case RGB96F.Code: newFmt = RGB96F.Format; break;
+                case BGR96F.Code: newFmt = RGB96F.Format; break;
+
+                case RGBA128F.Code: newFmt = RGBA128F.Format; break;
+                case BGRA128F.Code: newFmt = RGBA128F.Format; break;
+                case RGBP128F.Code: newFmt = RGBP128F.Format; break;
+                case BGRP128F.Code: newFmt = BGRP128F.Format; break;
+            }
+
+            return newFmt != default;
+        }
+
+        public static bool TryGetFormatAsBGRX(Format fmt, out Format newFmt)
+        {
+            newFmt = default;
+
+            switch (fmt.PackedFormat)
+            {
+                case RGB24.Code: newFmt = BGR24.Format; break;
+                case BGR24.Code: newFmt = BGR24.Format; break;
+
+                case RGBA32.Code: newFmt = BGRA32.Format; break;
+                case BGRA32.Code: newFmt = BGRA32.Format; break;
+                case ARGB32.Code: newFmt = BGRA32.Format; break;
+                case RGBP32.Code: newFmt = BGRA32.Format; break;
+                case BGRP32.Code: newFmt = BGRA32.Format; break;
+
+                case RGB96F.Code: newFmt = BGR96F.Format; break;
+                case BGR96F.Code: newFmt = BGR96F.Format; break;
+
+                case RGBA128F.Code: newFmt = BGRA128F.Format; break;
+                case BGRA128F.Code: newFmt = BGRA128F.Format; break;
+                case RGBP128F.Code: newFmt = RGBP128F.Format; break;
+                case BGRP128F.Code: newFmt = BGRP128F.Format; break;
+            }
+
+            return newFmt != default;
+        }
+
         // TODO: Rename to PixelEncoding
-        [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplay(),nq}")]
+        [System.Diagnostics.DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         public readonly partial struct Format : IEquatable<Format>
         {
@@ -21,9 +75,7 @@ namespace InteropBitmaps
                 var ptype = GetDefaultPixelType();
                 if (ptype != null) return ptype.Name;
 
-                var elements = Elements
-                    .Where(item => item.Id != PEF.Empty)
-                    .Select(item => item.Id);
+                var elements = Elements.Select(item => item.Id);
 
                 return string.Join("-", elements);
             }
@@ -38,9 +90,8 @@ namespace InteropBitmaps
             /// Creates a new <see cref="Format"/> from a packed value.
             /// </summary>
             /// <param name="packedFormat">a raw packed value.</param>
-            public Format(UInt32 packedFormat)
-            {
-                _Element0 = _Element1 = _Element2 = _Element3 = 0;
+            public Format(UInt32 packedFormat) : this()
+            {                
                 PackedFormat = packedFormat;
             }
 
@@ -48,9 +99,8 @@ namespace InteropBitmaps
             /// Creates a new <see cref="Format"/> with one <see cref="PEF"/> channel.
             /// </summary>
             /// <param name="e0">The first channel format.</param>
-            public Format(PEF e0)
-            {
-                PackedFormat = 0;
+            public Format(PEF e0) : this()
+            {                
                 _Element0 = (Byte)e0;
                 _Element1 = _Element2 = _Element3 = (Byte)PEF.Empty;
 
@@ -62,9 +112,8 @@ namespace InteropBitmaps
             /// </summary>
             /// <param name="e0">The first channel format.</param>
             /// <param name="e1">The second channel format.</param>
-            public Format(PEF e0, PEF e1)
-            {
-                PackedFormat = 0;
+            public Format(PEF e0, PEF e1) : this()
+            {                
                 _Element0 = (Byte)e0;
                 _Element1 = (Byte)e1;
                 _Element2 = _Element3 = (Byte)PEF.Empty;
@@ -78,9 +127,8 @@ namespace InteropBitmaps
             /// <param name="e0">The first channel format.</param>
             /// <param name="e1">The second channel format.</param>
             /// <param name="e2">The third channel format.</param>
-            public Format(PEF e0, PEF e1, PEF e2)
-            {
-                PackedFormat = 0;
+            public Format(PEF e0, PEF e1, PEF e2) : this()
+            {                
                 _Element0 = (Byte)e0;
                 _Element1 = (Byte)e1;
                 _Element2 = (Byte)e2;
@@ -96,9 +144,8 @@ namespace InteropBitmaps
             /// <param name="e1">The second channel format.</param>
             /// <param name="e2">The third channel format.</param>
             /// <param name="e3">The fourth channel format.</param>
-            public Format(PEF e0, PEF e1, PEF e2, PEF e3)
-            {
-                PackedFormat = 0;
+            public Format(PEF e0, PEF e1, PEF e2, PEF e3) : this()
+            {                
                 _Element0 = (Byte)e0;
                 _Element1 = (Byte)e1;
                 _Element2 = (Byte)e2;
@@ -119,7 +166,7 @@ namespace InteropBitmaps
                 if ((l & 7) != 0) throw new InvalidOperationException("Format must have a length multiple of 8");
             }
 
-            public static unsafe Format GetUndefined<TPixel>() where TPixel : unmanaged
+            public static unsafe Format CreateUndefined<TPixel>() where TPixel : unmanaged
             {
                 var tp = typeof(TPixel);
 
@@ -128,10 +175,10 @@ namespace InteropBitmaps
                 if (tp == typeof(Vector3)) return new Format(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
                 if (tp == typeof(Vector4)) return new Format(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
 
-                return GetUndefinedOfSize(sizeof(TPixel));
+                return CreateUndefinedOfSize(sizeof(TPixel));
             }
 
-            public static Format GetUndefinedOfSize(int byteCount)
+            public static Format CreateUndefinedOfSize(int byteCount)
             {
                 switch (byteCount)
                 {
@@ -146,7 +193,7 @@ namespace InteropBitmaps
                 }
             }
 
-            public static Format GetFromDepthAndChannels(Type depth, int channels)
+            public static Format CreateFromDepthAndChannels(Type depth, int channels)
             {
                 if (depth == typeof(Byte))
                 {
@@ -213,7 +260,7 @@ namespace InteropBitmaps
                         break;
                 }
 
-                return GetUndefined<TPixel>();
+                return CreateUndefined<TPixel>();
             }
 
             #endregion
@@ -240,10 +287,13 @@ namespace InteropBitmaps
             [System.Runtime.InteropServices.FieldOffset(3)]
             private readonly Byte _Element3;
 
+            /// <inheritdoc />
             public override int GetHashCode() { return PackedFormat.GetHashCode(); }
 
+            /// <inheritdoc />
             public override bool Equals(object obj) { return obj is Format other && this.Equals(other); }
 
+            /// <inheritdoc />
             public bool Equals(Format other) { return this.PackedFormat == other.PackedFormat; }
 
             public static bool operator ==(Format a, Format b) { return a.PackedFormat == b.PackedFormat; }
@@ -253,7 +303,7 @@ namespace InteropBitmaps
             #endregion
 
             #region properties
-
+            
             public Element Element0 => new Element(_Element0);
 
             public Element Element1 => new Element(_Element1);
@@ -278,14 +328,21 @@ namespace InteropBitmaps
                 get => this;
             }
 
+            /// <summary>
+            /// returns the sequence of non empty elements.
+            /// </summary>
             [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
             public IEnumerable<Element> Elements
             {
                 get
                 {
+                    if (Element0.IsEmpty) yield break;
                     yield return Element0;
+                    if (Element1.IsEmpty) yield break;
                     yield return Element1;
+                    if (Element2.IsEmpty) yield break;
                     yield return Element2;
+                    if (Element3.IsEmpty) yield break;
                     yield return Element3;
                 }
             }
@@ -322,12 +379,24 @@ namespace InteropBitmaps
                 }
             }
 
+            /// <summary>
+            /// True if one of the elements is non premultiplied alpha.
+            /// </summary>
             public bool HasAlpha => Element0.IsAlpha | Element1.IsAlpha | Element2.IsAlpha | Element3.IsAlpha;
 
+            /// <summary>
+            /// True if one of the elements is premultiplied alpha.
+            /// </summary>
             public bool HasPremul => Element0.IsPremul | Element1.IsPremul | Element2.IsPremul | Element3.IsPremul;
 
+            /// <summary>
+            /// True if one of the elements is alpha (premultiplied or not).
+            /// </summary>
             public bool HasAlphaOrPremul => HasAlpha | HasPremul;
 
+            /// <summary>
+            /// true if all the elements are floating point values.
+            /// </summary>
             public bool IsFloating => Element0.IsFloating && Element1.IsFloating && Element2.IsFloating && Element3.IsFloating;
 
             #endregion
@@ -347,30 +416,32 @@ namespace InteropBitmaps
             public int GetBitOffset(PEF pef)
             {
                 if (Element0 == pef) return 0;
+
                 int l = Element0.BitCount;
-
                 if (Element1 == pef) return l;
+
                 l += Element1.BitCount;
-
                 if (Element2 == pef) return l;
-                l += Element2.BitCount;
 
+                l += Element2.BitCount;
                 if (Element3 == pef) return l;
+
                 return -1;
             }
 
             public int GetByteOffset(PEF pef)
             {
                 if (Element0 == pef) return 0;
+
                 int l = Element0.ByteCount;
-
                 if (Element1 == pef) return l;
+
                 l += Element1.ByteCount;
-
                 if (Element2 == pef) return l;
-                l += Element2.ByteCount;
 
+                l += Element2.ByteCount;
                 if (Element3 == pef) return l;
+
                 return -1;
             }
 
@@ -391,6 +462,16 @@ namespace InteropBitmaps
                 if (Element2.Id == pef) return 2;
                 if (Element3.Id == pef) return 3;
                 return -1;
+            }
+
+            private int _GetEmptyCount()
+            {
+                int count = 0;
+                if (Element0.Id == PEF.Empty) ++count;
+                if (Element1.Id == PEF.Empty) ++count;
+                if (Element2.Id == PEF.Empty) ++count;
+                if (Element3.Id == PEF.Empty) ++count;
+                return count;
             }
 
             private Element _GetComponentAt(int byteIndex)
@@ -460,6 +541,7 @@ namespace InteropBitmaps
                     case BGRA32.Code: return typeof(BGRA32);
                     case RGBA32.Code: return typeof(RGBA32);
                     case ARGB32.Code: return typeof(ARGB32);
+                    case PRGB32.Code: return typeof(PRGB32);
 
                     case BGRP32.Code: return typeof(BGRP32);
                     case RGBP32.Code: return typeof(RGBP32);
@@ -477,7 +559,7 @@ namespace InteropBitmaps
                 return null;
             }
 
-            #endregion
+            #endregion            
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 
@@ -53,7 +54,45 @@ namespace InteropBitmaps
 
             public const uint BGRA128F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F | SHIFT3 * (uint)PEF.Alpha32F;
             public const uint BGRP128F = SHIFT0 * (uint)PEF.Blue32F | SHIFT1 * (uint)PEF.Green32F | SHIFT2 * (uint)PEF.Red32F | SHIFT3 * (uint)PEF.Premul32F;
-        }        
+        }
+
+        
+        public static readonly IReadOnlyList<Format> Formats = new Format[]
+        {
+            // Millimeter16.Code, WIP
+
+            Alpha8.Format,
+
+            Luminance8.Format,
+            Luminance16.Format,
+            Luminance32F.Format,
+
+            BGR565.Format,
+            BGRA5551.Format,
+            BGRA4444.Format,
+
+            RGB24.Format,
+            BGR24.Format,
+
+            BGRA32.Format,
+            BGRP32.Format,
+
+            RGBA32.Format,
+            RGBP32.Format,
+
+            ARGB32.Format,
+            PRGB32.Format,
+
+            RGB96F.Format,
+            BGR96F.Format,
+
+            RGBA128F.Format,
+            RGBP128F.Format,
+
+            BGRA128F.Format,
+            BGRP128F.Format,
+        };
+        
 
         partial struct Millimeter16
         {
