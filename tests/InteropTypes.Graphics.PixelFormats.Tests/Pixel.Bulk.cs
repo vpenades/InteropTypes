@@ -61,8 +61,8 @@ namespace InteropBitmaps
             where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32,TSrcPixel>
             where TDstPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>
         {
-            var srcFmt = Pixel.Format.TryIdentifyPixel<TSrcPixel>();
-            var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();
+            var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
+            var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
 
             var src = new TSrcPixel[5];
             var dst = new TDstPixel[5];            
@@ -72,7 +72,7 @@ namespace InteropBitmaps
                 src[i] = default(TSrcPixel).From(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
             }
             
-            Pixel.GetPixelConverter<TSrcPixel,TDstPixel>().Invoke(src,dst);
+            Pixel.GetPixelCopyConverter<TSrcPixel,TDstPixel>().Invoke(src,dst);
             
             for (int i = 0; i < 5; ++i)
             {
@@ -93,19 +93,19 @@ namespace InteropBitmaps
             where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32, TSrcPixel>
             where TDstPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>
         {
-            var srcFmt = Pixel.Format.TryIdentifyPixel<TSrcPixel>();
-            var dstFmt = Pixel.Format.TryIdentifyPixel<TDstPixel>();
+            var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
+            var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
 
             var src = new TSrcPixel[5];
             var dst = new TDstPixel[5];
-            var cvt = Pixel.GetByteConverter(srcFmt, dstFmt);
+            var cvt = Pixel.GetByteCopyConverter(srcFmt, dstFmt);
 
             for (int i = 0; i < 5; ++i)
             {
                 src[i] = default(TSrcPixel).From(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
             }
 
-            Pixel.GetPixelConverter<TSrcPixel, TDstPixel>().Invoke(src, dst);
+            Pixel.GetPixelCopyConverter<TSrcPixel, TDstPixel>().Invoke(src, dst);
 
             for (int i = 0; i < 5; ++i)
             {

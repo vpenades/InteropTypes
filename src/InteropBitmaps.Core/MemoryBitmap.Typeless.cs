@@ -41,9 +41,9 @@ namespace InteropBitmaps
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height) : this(width, height, Pixel.Format.TryIdentifyPixel<TPixel>()) { }
+        public MemoryBitmap(int width, int height) : this(width, height, PixelFormat.TryIdentifyPixel<TPixel>()) { }
 
-        public unsafe MemoryBitmap(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)            
+        public unsafe MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
 
@@ -54,9 +54,9 @@ namespace InteropBitmaps
         }        
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, int stepByteSize = 0)
-            : this(data, width, height, Pixel.Format.CreateUndefined<TPixel>(), stepByteSize) { }
+            : this(data, width, height, PixelFormat.CreateUndefined<TPixel>(), stepByteSize) { }
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)            
+        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
 
@@ -96,7 +96,7 @@ namespace InteropBitmaps
         /// <summary>
         /// Gets the pixel format of the bitmap.
         /// </summary>
-        public Pixel.Format PixelFormat => _Info.PixelFormat;
+        public PixelFormat PixelFormat => _Info.PixelFormat;
 
         /// <summary>
         /// Gets the size of the bitmap, in pixels.
@@ -216,7 +216,7 @@ namespace InteropBitmaps
             }
         }
 
-        public MemoryBitmap<TPixel> ToMemoryBitmap(Pixel.Format? fmtOverride = null)
+        public MemoryBitmap<TPixel> ToMemoryBitmap(PixelFormat? fmtOverride = null)
         {
             return this.AsSpanBitmap().ToMemoryBitmap(fmtOverride);
         }

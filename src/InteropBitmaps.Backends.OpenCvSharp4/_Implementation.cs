@@ -18,7 +18,7 @@ namespace InteropBitmaps
 
         #region pixel format
 
-        public static bool TryGetExactPixelFormat(CVDEPTHTYPE inFmt, out Pixel.Format outFmt)
+        public static bool TryGetExactPixelFormat(CVDEPTHTYPE inFmt, out PixelFormat outFmt)
         {
             if (inFmt.IsInteger)
             {
@@ -38,7 +38,7 @@ namespace InteropBitmaps
             return false;
         }
 
-        public static bool TryGetExactPixelFormat(Pixel.Format src, out CVDEPTHTYPE dst)
+        public static bool TryGetExactPixelFormat(PixelFormat src, out CVDEPTHTYPE dst)
         {
             switch(src.PackedFormat)
             {
@@ -58,7 +58,7 @@ namespace InteropBitmaps
             return false;
         }
 
-        public static CVDEPTHTYPE GetCompatiblePixelFormat(Pixel.Format src)
+        public static CVDEPTHTYPE GetCompatiblePixelFormat(PixelFormat src)
         {
             if (TryGetExactPixelFormat(src, out var cvFmt)) return cvFmt;
 

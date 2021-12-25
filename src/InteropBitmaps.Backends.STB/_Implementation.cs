@@ -10,7 +10,7 @@ namespace InteropBitmaps
     /// <see href="https://github.com/StbSharp/StbImageLib"/>
     static class _Implementation
     {
-        public static bool TryGetPixelFormat(STBREAD.ColorComponents components, int bitsPerChannel, out Pixel.Format fmt)
+        public static bool TryGetPixelFormat(STBREAD.ColorComponents components, int bitsPerChannel, out PixelFormat fmt)
         {
             if (bitsPerChannel == 8)
             {
@@ -27,7 +27,7 @@ namespace InteropBitmaps
             return false;
         }
 
-        public static bool TryGetPixelFormat(STBWRITE.ColorComponents components, out Pixel.Format fmt)
+        public static bool TryGetPixelFormat(STBWRITE.ColorComponents components, out PixelFormat fmt)
         {            
             switch (components)
             {
@@ -41,7 +41,7 @@ namespace InteropBitmaps
             return false;
         }
 
-        public static STBWRITE.ColorComponents GetCompatibleFormat(Pixel.Format fmt)
+        public static STBWRITE.ColorComponents GetCompatibleFormat(PixelFormat fmt)
         {
             switch(fmt.PackedFormat)
             {

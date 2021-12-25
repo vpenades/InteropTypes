@@ -6,7 +6,7 @@ using System.Drawing;
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
 using GDIPTR = System.Drawing.Imaging.BitmapData;
 
-using INTEROPFMT = InteropBitmaps.Pixel.Format;
+using INTEROPFMT = InteropBitmaps.PixelFormat;
 
 namespace InteropBitmaps
 {

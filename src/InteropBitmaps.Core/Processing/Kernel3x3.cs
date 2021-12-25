@@ -128,7 +128,7 @@ namespace InteropBitmaps
 
                 var xrow = new TPixel[w];
 
-                var converter = Pixel.GetPixelConverter<TSrcPixel, TPixel>();
+                var converter = Pixel.GetPixelCopyConverter<TSrcPixel, TPixel>();
                 
 
                 var rows = new _RollingRows(w);
@@ -168,7 +168,7 @@ namespace InteropBitmaps
 
                 var xrow = new TPixel[w];
 
-                var converter = Pixel.GetPixelConverter<TSrcPixel, TPixel>();
+                var converter = Pixel.GetPixelCopyConverter<TSrcPixel, TPixel>();
 
 
                 var rows = new _RollingRows(w);
@@ -205,7 +205,7 @@ namespace InteropBitmaps
                 Guard.AreEqual(nameof(dstBitmap.Width), srcBitmap.Width, dstBitmap.Width);
                 Guard.AreEqual(nameof(dstBitmap.Height), srcBitmap.Height, dstBitmap.Height);
 
-                var converter = Pixel.GetPixelConverter<TSrcPixel, TPixel>();
+                var converter = Pixel.GetPixelCopyConverter<TSrcPixel, TPixel>();
 
                 var w = dstBitmap.Width;
 

@@ -12,7 +12,7 @@ namespace InteropVision.With
     /// <see href="https://github.com/micjahn/ZXing.Net"/>
     static class _Implementation
     {
-        public static ZXing.RGBLuminanceSource.BitmapFormat ToZXing(this Pixel.Format enc)
+        public static ZXing.RGBLuminanceSource.BitmapFormat ToZXing(this PixelFormat enc)
         {
             switch (enc.PackedFormat)
             {

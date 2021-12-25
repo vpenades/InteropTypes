@@ -10,7 +10,7 @@ namespace InteropBitmaps
     public interface IBitmapInfo
     {
         BitmapInfo Info { get; }
-        Pixel.Format PixelFormat { get; }
+        PixelFormat PixelFormat { get; }
         SIZE Size { get; }
         int Width { get; }
         int Height { get; }

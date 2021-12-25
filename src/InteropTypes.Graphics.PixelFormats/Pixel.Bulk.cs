@@ -10,14 +10,50 @@ namespace InteropBitmaps
         /// Callback that copies the pixels from src to dst,<br/>
         /// while aplying the appropiate conversion.
         /// </summary>
+        /// <remarks>
+        /// src and dst memory blocks should not overlap.
+        /// </remarks>
         /// <param name="src">The source pixels.</param>
         /// <param name="dst">The target pixels.</param>
-        public delegate void BulkConverterCallback<TSrc,TDst>(ReadOnlySpan<TSrc> src, Span<TDst> dst);        
+        public delegate void CopyConverterCallback<TSrc,TDst>(ReadOnlySpan<TSrc> src, Span<TDst> dst);
 
-        public static BulkConverterCallback<Byte,Byte> GetByteConverter(Format srcFmt, Format dstFmt)
+        public static unsafe CopyConverterCallback<TSrc, TDst> GetPixelCopyConverter<TSrc, TDst>()
+            where TSrc : unmanaged
+            where TDst : unmanaged
         {
             // direct converter
-            if (srcFmt == dstFmt) return (a, b) => a.CopyTo(b);
+            if (typeof(TSrc) == typeof(TDst)) return (a, b) => { a.AsBytes().CopyTo(b.AsBytes()); };
+
+            if (default(TDst) is IPixelFactory<TSrc, TDst> dstFty)
+            {
+                return (ReadOnlySpan<TSrc> src, Span<TDst> dst) =>
+                {
+                    while(dst.Length > 0)
+                    {
+                        dst[0] = dstFty.From(src[0]);
+                        src = src.Slice(sizeof(TSrc));
+                        dst = dst.Slice(sizeof(TDst));
+                    }
+                };
+            }
+
+            var srcFmt = PixelFormat.TryIdentifyPixel<TSrc>();
+            var dstFmt = PixelFormat.TryIdentifyPixel<TDst>();
+
+            var byteConverter = GetByteCopyConverter(srcFmt, dstFmt);
+
+            return (ReadOnlySpan<TSrc> src, Span<TDst> dst) =>
+            {
+                var srcBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<TSrc, byte>(src);
+                var dstBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<TDst, byte>(dst);
+                byteConverter(srcBytes, dstBytes);
+            };
+        }
+
+        public static CopyConverterCallback<Byte,Byte> GetByteCopyConverter(PixelFormat srcFmt, PixelFormat dstFmt)
+        {
+            // direct converter
+            if (srcFmt == dstFmt) return (a, b) => { a.AssertNoOverlapWith(b); a.CopyTo(b); };
 
             // common converters
 
@@ -49,28 +85,13 @@ namespace InteropBitmaps
             return _converter;
         }
 
-        public static BulkConverterCallback<TSrc, TDst> GetPixelConverter<TSrc, TDst>()
-            where TSrc : unmanaged
-            where TDst : unmanaged
-        {
-            var srcFmt = Format.TryIdentifyPixel<TSrc>();
-            var dstFmt = Format.TryIdentifyPixel<TDst>();
+        
 
-            var byteConverter = GetByteConverter(srcFmt, dstFmt);
-
-            return (ReadOnlySpan<TSrc> src, Span<TDst> dst) =>
-            {
-                var srcBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<TSrc, byte>(src);
-                var dstBytes = System.Runtime.InteropServices.MemoryMarshal.Cast<TDst, byte>(dst);
-                byteConverter(srcBytes, dstBytes);
-            };
-        }
-
-        public static BulkConverterCallback<Byte, Byte> GetByteConverter<TSrcPixel, TDstPixel>()
+        public static CopyConverterCallback<Byte, Byte> GetByteConverter<TSrcPixel, TDstPixel>()
             where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
             where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
         {
-            if (typeof(TSrcPixel) == typeof(TDstPixel)) { return (a, b) => a.CopyTo(b); }
+            if (typeof(TSrcPixel) == typeof(TDstPixel)) return (a, b) => { a.AssertNoOverlapWith(b); a.CopyTo(b); };
 
             void _converter(ReadOnlySpan<Byte> srcBytes, Span<Byte> dstBytes)
             {
@@ -106,7 +127,7 @@ namespace InteropBitmaps
         /// <param name="dstFmt"></param>
         /// <param name="src"></param>
         /// <param name="srcFmt"></param>
-        private static void _ConvertPixels(Span<Byte> dst, Format dstFmt, ReadOnlySpan<Byte> src, Format srcFmt)
+        private static void _ConvertPixels(Span<Byte> dst, PixelFormat dstFmt, ReadOnlySpan<Byte> src, PixelFormat srcFmt)
         {
             if (dstFmt == srcFmt) { src.CopyTo(dst); return; }
 
@@ -132,7 +153,7 @@ namespace InteropBitmaps
             }
         }
 
-        private static void _ConvertPixels(Span<RGBA128F> dst, ReadOnlySpan<Byte> src, Format srcFmt)
+        private static void _ConvertPixels(Span<RGBA128F> dst, ReadOnlySpan<Byte> src, PixelFormat srcFmt)
         {
             switch (srcFmt.PackedFormat)
             {
@@ -158,7 +179,7 @@ namespace InteropBitmaps
             }
         }
 
-        private static void _ConvertPixels(Span<Byte> dst, Format dstFmt, ReadOnlySpan<RGBA128F> src)
+        private static void _ConvertPixels(Span<Byte> dst, PixelFormat dstFmt, ReadOnlySpan<RGBA128F> src)
         {
             switch (dstFmt.PackedFormat)
             {

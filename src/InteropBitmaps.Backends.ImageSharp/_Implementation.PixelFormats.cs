@@ -11,7 +11,7 @@ namespace InteropBitmaps
 {
     partial class _Implementation
     {
-        public static bool TryGetExactPixelFormat<TPixel>(out Pixel.Format fmt)
+        public static bool TryGetExactPixelFormat<TPixel>(out PixelFormat fmt)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             if (typeof(TPixel) == typeof(A8)) { fmt = Pixel.Alpha8.Format; return true; }
@@ -36,7 +36,7 @@ namespace InteropBitmaps
             return false;
         }
 
-        public static bool TryGetExactPixelType(Pixel.Format fmt, out Type type)
+        public static bool TryGetExactPixelType(PixelFormat fmt, out Type type)
         {
             switch (fmt.PackedFormat)
             {

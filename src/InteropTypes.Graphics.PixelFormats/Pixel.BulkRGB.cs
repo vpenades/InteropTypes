@@ -4,11 +4,11 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    using PEF = Pixel.Format.ElementID;
+    using PEF = PixelFormat.ElementID;
 
     partial class Pixel
     {
-        private static BulkConverterCallback<Byte, Byte> GetConverterToRGB(Format srcFmt, Format dstFmt)
+        private static CopyConverterCallback<Byte, Byte> GetConverterToRGB(PixelFormat srcFmt, PixelFormat dstFmt)
         {
             if (srcFmt.All(PEF.Red8, PEF.Green8, PEF.Blue8))
             {
@@ -37,7 +37,7 @@ namespace InteropBitmaps
             return null;
         }
 
-        private static BulkConverterCallback<Byte, Byte> GetConverterByteToRGB<TDstPixel>(Format srcFmt)
+        private static CopyConverterCallback<Byte, Byte> GetConverterByteToRGB<TDstPixel>(PixelFormat srcFmt)
             where TDstPixel : unmanaged, _IPixelBulkRGB<TDstPixel, Byte>
         {
             if (srcFmt.HasPremul) return null;
@@ -49,6 +49,8 @@ namespace InteropBitmaps
 
             return (src, dst) =>
             {
+                src.AssertNoOverlapWith(dst);
+
                 var srcR = src.Slice(srcIdxR);
                 var srcG = src.Slice(srcIdxG);
                 var srcB = src.Slice(srcIdxB);
@@ -58,7 +60,7 @@ namespace InteropBitmaps
             };
         }
 
-        private static BulkConverterCallback<Byte, Byte> GetConverterFloatToRGB<TDstPixel>(Format srcFmt)
+        private static CopyConverterCallback<Byte, Byte> GetConverterFloatToRGB<TDstPixel>(PixelFormat srcFmt)
             where TDstPixel : unmanaged, _IPixelBulkRGB<TDstPixel,float>
         {
             if (srcFmt.HasPremul) return null;
@@ -70,6 +72,8 @@ namespace InteropBitmaps
 
             return (src, dst) =>
             {
+                src.AssertNoOverlapWith(dst);
+
                 var srcR = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxR));
                 var srcG = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxG));
                 var srcB = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(src.Slice(srcIdxB));

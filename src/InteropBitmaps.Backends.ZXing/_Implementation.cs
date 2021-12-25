@@ -10,7 +10,7 @@ namespace InteropBitmaps
     /// <see href="https://github.com/micjahn/ZXing.Net"/>
     class _Implementation
     {
-        public static ZXing.RGBLuminanceSource.BitmapFormat ToZXing(Pixel.Format enc)
+        public static ZXing.RGBLuminanceSource.BitmapFormat ToZXing(PixelFormat enc)
         {
             switch (enc.PackedFormat)
             {

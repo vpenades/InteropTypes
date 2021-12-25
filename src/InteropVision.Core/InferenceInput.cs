@@ -228,7 +228,7 @@ namespace InteropVision
             PinBitmap(ptrBmp => onInputPinned((this.CaptureDevice, this.CaptureTime, ptrBmp)));
         }
 
-        public void PinInput(InteropBitmaps.Pixel.Format expectedFormat, Action<InferenceInput<PTRBMP>> onInputPinned)
+        public void PinInput(InteropBitmaps.PixelFormat expectedFormat, Action<InferenceInput<PTRBMP>> onInputPinned)
         {
             PinBitmap(expectedFormat, ptrBmp => onInputPinned((this.CaptureDevice, this.CaptureTime, ptrBmp)));
         }
@@ -279,12 +279,12 @@ namespace InteropVision
         /// </summary>
         /// <param name="expectedFormat">The pixel format required to be used by the pointer bitmap.</param>
         /// <param name="onBitmapPinned">Action called to provide the pointer bitmap.</param>
-        protected virtual void PinBitmap(InteropBitmaps.Pixel.Format expectedFormat, Action<PTRBMP> onBitmapPinned)
+        protected virtual void PinBitmap(InteropBitmaps.PixelFormat expectedFormat, Action<PTRBMP> onBitmapPinned)
         {
             PinBitmap(ptrBmp => _OnPin(expectedFormat, ptrBmp, onBitmapPinned));            
         }
 
-        private void _OnPin(InteropBitmaps.Pixel.Format expectedFormat, PTRBMP srcBitmap, Action<PTRBMP> onBitmapPinned)
+        private void _OnPin(InteropBitmaps.PixelFormat expectedFormat, PTRBMP srcBitmap, Action<PTRBMP> onBitmapPinned)
         {
             if (srcBitmap.PixelFormat == expectedFormat) { onBitmapPinned(srcBitmap); return; }
 

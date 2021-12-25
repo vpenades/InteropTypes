@@ -143,7 +143,7 @@ namespace InteropWith
             _Graphics.Unmap(srcTexture);
         }
 
-        private static InteropBitmaps.Pixel.Format From(PixelFormat srcFmt)
+        private static InteropBitmaps.PixelFormat From(PixelFormat srcFmt)
         {
             switch(srcFmt)
             {

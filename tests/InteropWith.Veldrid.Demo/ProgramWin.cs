@@ -46,7 +46,7 @@ namespace InteropWith
 
             var options = new GraphicsDeviceOptions(
                 debug: false,
-                swapchainDepthFormat: PixelFormat.R16_UNorm,
+                swapchainDepthFormat: Veldrid.PixelFormat.R16_UNorm,
                 syncToVerticalBlank: true,
                 resourceBindingModel: ResourceBindingModel.Improved,
                 preferDepthRangeZeroToOne: true,

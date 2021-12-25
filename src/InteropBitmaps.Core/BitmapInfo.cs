@@ -29,27 +29,27 @@ namespace InteropBitmaps
 
         #region constructor helpers
 
-        public static implicit operator BitmapInfo((SIZE s, Pixel.Format fmt) binfo)
+        public static implicit operator BitmapInfo((SIZE s, PixelFormat fmt) binfo)
         {
             return new BitmapInfo(binfo.s, binfo.fmt);
         }
 
-        public static implicit operator BitmapInfo((int w, int h, Pixel.Format fmt) binfo)
+        public static implicit operator BitmapInfo((int w, int h, PixelFormat fmt) binfo)
         {
             return new BitmapInfo(binfo.w, binfo.h, binfo.fmt);
         }
 
-        public BitmapInfo WithPixelFormat(Pixel.Format format) { return new BitmapInfo(this.Width, this.Height, format, this.StepByteSize); }
+        public BitmapInfo WithPixelFormat(PixelFormat format) { return new BitmapInfo(this.Width, this.Height, format, this.StepByteSize); }
 
         public BitmapInfo WithPixelFormat<TPixel>() where TPixel:unmanaged
         {
-            var fmt = Pixel.Format.TryIdentifyPixel<TPixel>();
+            var fmt = PixelFormat.TryIdentifyPixel<TPixel>();
             return this.WithPixelFormat(fmt);
         }
 
-        public BitmapInfo WithPixelFormat<TPixel>(Pixel.Format format) where TPixel : unmanaged
+        public BitmapInfo WithPixelFormat<TPixel>(PixelFormat format) where TPixel : unmanaged
         {
-            var fmt = Pixel.Format.TryIdentifyPixel<TPixel>();
+            var fmt = PixelFormat.TryIdentifyPixel<TPixel>();
             if (format == default) return this.WithPixelFormat(fmt);
 
             if (fmt.ByteCount != format.ByteCount) throw new Diagnostics.PixelFormatNotSupportedException(format, nameof(format));
@@ -66,10 +66,10 @@ namespace InteropBitmaps
 
         #region constructors
 
-        public BitmapInfo(SIZE size, Pixel.Format pixelFormat, int stepByteSize = 0)
+        public BitmapInfo(SIZE size, PixelFormat pixelFormat, int stepByteSize = 0)
             : this(size.Width,size.Height,pixelFormat,stepByteSize) { }
         
-        public BitmapInfo(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
+        public BitmapInfo(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
             var pixelByteSize = pixelFormat.ByteCount;
 
@@ -107,7 +107,7 @@ namespace InteropBitmaps
         /// <summary>
         /// format of the pixel.
         /// </summary>
-        public readonly Pixel.Format PixelFormat;
+        public readonly PixelFormat PixelFormat;
 
         /// <summary>
         /// Byte size of a single pixel.
@@ -181,7 +181,7 @@ namespace InteropBitmaps
         /// </summary>
         public bool IsContinuous => Width * PixelByteSize == StepByteSize;
 
-        public (SIZE Size, Pixel.Format Format) Layout => (Size, PixelFormat);
+        public (SIZE Size, PixelFormat Format) Layout => (Size, PixelFormat);
 
         #endregion
 
@@ -270,7 +270,7 @@ namespace InteropBitmaps
                 return false;
             }
 
-            var tformat = Pixel.Format.TryIdentifyPixel<TPixel>();
+            var tformat = PixelFormat.TryIdentifyPixel<TPixel>();
 
             return this.PixelFormat == tformat;
         }

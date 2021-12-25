@@ -13,7 +13,7 @@ namespace InteropBitmaps
         [Test]
         public void TestFormatMemoryFootprint()
         {            
-            Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Pixel.Format)));
+            Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat)));
         }
 
         [Test]

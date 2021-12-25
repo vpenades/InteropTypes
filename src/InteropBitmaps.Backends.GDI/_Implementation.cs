@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
-using INTEROPFMT = InteropBitmaps.Pixel.Format;
+using INTEROPFMT = InteropBitmaps.PixelFormat;
 
 using GDIICON = System.Drawing.Icon;
 using GDIIMAGE = System.Drawing.Image;

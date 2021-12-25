@@ -80,7 +80,7 @@ namespace InteropBitmaps
         /// <summary>
         /// Gets the pixel format of the bitmap.
         /// </summary>
-        public Pixel.Format PixelFormat => _Info.PixelFormat;
+        public PixelFormat PixelFormat => _Info.PixelFormat;
 
         /// <summary>
         /// Gets the size of the bitmap, in pixels.

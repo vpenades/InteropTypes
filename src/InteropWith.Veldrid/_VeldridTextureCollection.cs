@@ -90,7 +90,7 @@ namespace InteropWith
             return _AddTexture(tex);
         }        
 
-        public static PixelFormat From(InteropBitmaps.Pixel.Format fmt)
+        public static PixelFormat From(InteropBitmaps.PixelFormat fmt)
         {
             switch(fmt.PackedFormat)
             {

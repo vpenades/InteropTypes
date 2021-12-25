@@ -42,13 +42,13 @@ namespace InteropBitmaps
             _Writable = null;
         }
 
-        public SpanBitmap(Span<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
+        public SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
+        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Readable = data.Slice(0, _Info.BitmapByteSize);
@@ -101,7 +101,7 @@ namespace InteropBitmaps
         /// <summary>
         /// Gets the pixel format of the bitmap.
         /// </summary>
-        public Pixel.Format PixelFormat => _Info.PixelFormat;
+        public PixelFormat PixelFormat => _Info.PixelFormat;
 
         /// <summary>
         /// Gets the size of the bitmap, in pixels.
@@ -187,7 +187,7 @@ namespace InteropBitmaps
         /// </summary>
         /// <param name="fmtOverride">Format override.</param>
         /// <returns>A new <see cref="MemoryBitmap"/>.</returns>
-        public MemoryBitmap ToMemoryBitmap(Pixel.Format? fmtOverride = null)
+        public MemoryBitmap ToMemoryBitmap(PixelFormat? fmtOverride = null)
         {
             fmtOverride = fmtOverride ?? this.PixelFormat;
 
@@ -387,7 +387,7 @@ namespace InteropBitmaps
         {
             var newFormat = dst.PixelFormat.IsDefined
                 ? dst.PixelFormat
-                : Pixel.Format.TryIdentifyPixel<TPixel>();
+                : PixelFormat.TryIdentifyPixel<TPixel>();
 
             var newInfo = this.Info.WithPixelFormat(newFormat);
 
@@ -404,7 +404,7 @@ namespace InteropBitmaps
             return refreshed;
         }
 
-        public bool CopyTo(ref MemoryBitmap dst, Pixel.Format format)
+        public bool CopyTo(ref MemoryBitmap dst, PixelFormat format)
         {
             var newInfo = this.Info.WithPixelFormat(format);
 
@@ -439,7 +439,7 @@ namespace InteropBitmaps
         /// <returns>true if the conversion was successful</returns>
         public bool TrySetPixelsFormatRGBX(out SpanBitmap newBitmap)
         {
-            if (!Pixel.TryGetFormatAsRGBX(this.PixelFormat, out var newFmt))
+            if (!PixelFormat.TryGetFormatAsRGBX(this.PixelFormat, out var newFmt))
             {
                 newBitmap = default;
                 return false;
@@ -456,7 +456,7 @@ namespace InteropBitmaps
         /// <returns>true if the conversion was successful</returns>
         public bool TrySetPixelsFormatBGRX(out SpanBitmap newBitmap)
         {
-            if (!Pixel.TryGetFormatAsBGRX(this.PixelFormat, out var newFmt))
+            if (!PixelFormat.TryGetFormatAsBGRX(this.PixelFormat, out var newFmt))
             {
                 newBitmap = default;
                 return false;
@@ -466,7 +466,7 @@ namespace InteropBitmaps
             return true;
         }
 
-        public bool TrySetPixelsFormat(Pixel.Format newFormat, out SpanBitmap newBitmap)
+        public bool TrySetPixelsFormat(PixelFormat newFormat, out SpanBitmap newBitmap)
         {
             if (this.PixelFormat.ByteCount != newFormat.ByteCount)
             {
@@ -474,7 +474,7 @@ namespace InteropBitmaps
                 return false;
             }
 
-            var converter = Pixel.GetByteConverter(this.PixelFormat, newFormat);
+            var converter = Pixel.GetByteCopyConverter(this.PixelFormat, newFormat);
 
             Span<byte> tmpRow = stackalloc byte[this.StepByteSize];
 

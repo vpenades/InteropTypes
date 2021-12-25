@@ -30,14 +30,14 @@ namespace InteropBitmaps
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
+        public MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             var bytes = new byte[_Info.BitmapByteSize];            
             _Data = bytes;
         }        
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, Pixel.Format pixelFormat, int stepByteSize = 0)
+        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
             _Data = data.Slice(0, _Info.BitmapByteSize);
@@ -74,7 +74,7 @@ namespace InteropBitmaps
         /// <summary>
         /// Gets the pixel format of the bitmap.
         /// </summary>
-        public Pixel.Format PixelFormat => _Info.PixelFormat;
+        public PixelFormat PixelFormat => _Info.PixelFormat;
 
         /// <summary>
         /// Gets the size of the bitmap, in pixels.
@@ -189,7 +189,7 @@ namespace InteropBitmaps
             return true;
         }
 
-        public MemoryBitmap ToMemoryBitmap(Pixel.Format? fmtOverride = null)
+        public MemoryBitmap ToMemoryBitmap(PixelFormat? fmtOverride = null)
         {
             return this.AsSpanBitmap().ToMemoryBitmap(fmtOverride);
         }
@@ -222,7 +222,7 @@ namespace InteropBitmaps
             }
         }
 
-        public bool TrySetPixelsFormat(Pixel.Format newFormat, out MemoryBitmap newBitmap)
+        public bool TrySetPixelsFormat(PixelFormat newFormat, out MemoryBitmap newBitmap)
         {
             if (this.AsSpanBitmap().TrySetPixelsFormat(newFormat, out var newSpan))
             {

@@ -107,7 +107,7 @@ namespace InteropBitmaps
             _Implementation.TransferSpan(src, dst, (s, d) => d.FitPixels(s));
         }
 
-        public static bool CopyTo(this GDIBITMAP src, ref MemoryBitmap dst, Pixel.Format? fmtOverride = null)
+        public static bool CopyTo(this GDIBITMAP src, ref MemoryBitmap dst, PixelFormat? fmtOverride = null)
         {
             if (src == null)
             {
@@ -123,7 +123,7 @@ namespace InteropBitmaps
             return refreshed;
         }
 
-        public static bool CopyTo(this GDIPTR src, ref MemoryBitmap dst, Pixel.Format? fmtOverride = null)
+        public static bool CopyTo(this GDIPTR src, ref MemoryBitmap dst, PixelFormat? fmtOverride = null)
         {
             if (src == null)
             {
@@ -143,12 +143,12 @@ namespace InteropBitmaps
 
         #region Specific API
 
-        public static MemoryBitmap ToMemoryBitmap(this TextureBrush brush, Pixel.Format? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this TextureBrush brush, PixelFormat? fmtOverride = null)
         {
             return brush.Image.ToMemoryBitmap(fmtOverride);
         }
 
-        public static MemoryBitmap ToMemoryBitmap(this GDIIMAGE img, Pixel.Format? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this GDIIMAGE img, PixelFormat? fmtOverride = null)
         {
             using (var bmp = new GDIBITMAP(img))
             {
@@ -156,7 +156,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static MemoryBitmap ToMemoryBitmap(this GDIICON icon, Pixel.Format? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this GDIICON icon, PixelFormat? fmtOverride = null)
         {
             using (var bmp = icon.ToBitmap())
             {
@@ -164,7 +164,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static MemoryBitmap ToMemoryBitmap(this GDIBITMAP bmp, Pixel.Format? fmtOverride = null)
+        public static MemoryBitmap ToMemoryBitmap(this GDIBITMAP bmp, PixelFormat? fmtOverride = null)
         {
             MemoryBitmap dst = default;
             return CopyTo(bmp, ref dst, fmtOverride) ? dst : throw new ArgumentException(nameof(bmp));

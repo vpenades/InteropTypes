@@ -63,7 +63,7 @@ namespace InteropBitmaps
             else
             // conversion required
             {
-                var converter = Pixel.GetByteConverter(srcCrop.PixelFormat, dstCrop.PixelFormat);
+                var converter = Pixel.GetByteCopyConverter(srcCrop.PixelFormat, dstCrop.PixelFormat);
 
                 for (int y = 0; y < dstCrop.Height; ++y)
                 {

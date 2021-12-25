@@ -6,6 +6,18 @@ namespace InteropBitmaps
 {
     internal static class _Implementation
     {
+        [System.Diagnostics.Conditional("DEBUG")]
+        public static void AssertNoOverlapWith<T>(this Span<T> a, ReadOnlySpan<T> b)
+        {
+            System.Diagnostics.Debug.Assert(!a.Overlaps(b),"Memory should not overlap");
+        }
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        public static void AssertNoOverlapWith<T>(this ReadOnlySpan<T> a, ReadOnlySpan<T> b)
+        {
+            System.Diagnostics.Debug.Assert(!a.Overlaps(b), "Memory should not overlap");
+        }
+
         public static Span<T> OfType<T>(this Span<Byte> span)
             where T:unmanaged
         {
@@ -16,6 +28,18 @@ namespace InteropBitmaps
             where T : unmanaged
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, T>(span);
+        }
+
+        public static Span<Byte> AsBytes<T>(this Span<T> span)
+            where T : unmanaged
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<T, byte>(span);
+        }
+
+        public static ReadOnlySpan<Byte> AsBytes<T>(this ReadOnlySpan<T> span)
+            where T : unmanaged
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<T, byte>(span);
         }
 
         /// <summary>

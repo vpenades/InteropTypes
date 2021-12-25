@@ -22,7 +22,7 @@ namespace InteropTensors
             return _Buffer.Slice(y * this._Dimensions.Dim0, this._Dimensions.Dim0);
         }
 
-        public SpanBitmap<T> AsSpanBitmap(Pixel.Format fmt)
+        public SpanBitmap<T> AsSpanBitmap(PixelFormat fmt)
         {
             return new SpanBitmap<T>(this._Buffer, BitmapSize.Width, BitmapSize.Height, fmt);
         }
@@ -34,10 +34,10 @@ namespace InteropTensors
             if (l == 1) return AsSpanBitmap(Pixel.Luminance8.Format);
             if (l == 3) return AsSpanBitmap(Pixel.BGR24.Format);
 
-            if (typeof(T) == typeof(Single)) return AsSpanBitmap(Pixel.Format.CreateFromDepthAndChannels(typeof(float), 1));
-            if (typeof(T) == typeof(Vector2)) return AsSpanBitmap(Pixel.Format.CreateFromDepthAndChannels(typeof(float), 2));
-            if (typeof(T) == typeof(Vector3)) return AsSpanBitmap(Pixel.Format.CreateFromDepthAndChannels(typeof(float), 3));
-            if (typeof(T) == typeof(Vector4)) return AsSpanBitmap(Pixel.Format.CreateFromDepthAndChannels(typeof(float), 4));
+            if (typeof(T) == typeof(Single)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 1));
+            if (typeof(T) == typeof(Vector2)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 2));
+            if (typeof(T) == typeof(Vector3)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 3));
+            if (typeof(T) == typeof(Vector4)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 4));
 
             throw new NotImplementedException();
         }
@@ -48,7 +48,7 @@ namespace InteropTensors
             if (sizeof(T) != sizeof(TPixel)) throw new ArgumentException(nameof(TPixel));
 
             var data = System.Runtime.InteropServices.MemoryMarshal.Cast<T, TPixel>(this._Buffer);
-            var pfmt = Pixel.Format.TryIdentifyPixel<TPixel>();
+            var pfmt = PixelFormat.TryIdentifyPixel<TPixel>();
 
             return new SpanBitmap<TPixel>(data, BitmapSize.Width, BitmapSize.Height, pfmt);
         }

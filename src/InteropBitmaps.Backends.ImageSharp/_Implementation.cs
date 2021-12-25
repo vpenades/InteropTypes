@@ -74,7 +74,7 @@ namespace InteropBitmaps
             return Image.WrapMemory(memMngr, src.Width, src.Height);
         }
 
-        public static Image CreateImageSharp(Pixel.Format fmt, int width, int height)
+        public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
         {
             switch (fmt.PackedFormat)
             {

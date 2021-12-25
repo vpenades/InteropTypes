@@ -75,7 +75,7 @@ namespace InteropBitmaps
             Guard.AreEqual(nameof(src), dst.Width, src.Width);
             Guard.AreEqual(nameof(src), dst.Height, src.Height);
 
-            var rowConverter = Pixel.GetByteConverter(src.PixelFormat, dst.PixelFormat);
+            var rowConverter = Pixel.GetByteCopyConverter(src.PixelFormat, dst.PixelFormat);
 
             for (int y = 0; y < dst.Height; ++y)
             {

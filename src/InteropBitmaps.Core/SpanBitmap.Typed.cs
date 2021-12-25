@@ -45,14 +45,14 @@ namespace InteropBitmaps
             _Writable = null;
         }
 
-        public unsafe SpanBitmap(Span<Byte> data, int width, int height, Pixel.Format pixelFormat, int scanlineSize = 0)
+        public unsafe SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
             Guard.IsValidPixelFormat<TPixel>(_Info);
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public unsafe SpanBitmap(Span<TPixel> data, int width, int height, Pixel.Format pixelFormat, int scanlineSize = 0)
+        public unsafe SpanBitmap(Span<TPixel> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(data);
 
@@ -61,7 +61,7 @@ namespace InteropBitmaps
             _Readable = _Writable = span.Slice(0, _Info.BitmapByteSize);
         }
 
-        public unsafe SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, Pixel.Format pixelFormat, int scanlineSize = 0)
+        public unsafe SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
             Guard.IsValidPixelFormat<TPixel>(_Info);
@@ -104,7 +104,7 @@ namespace InteropBitmaps
         /// <summary>
         /// Gets the pixel format of the bitmap.
         /// </summary>
-        public Pixel.Format PixelFormat => _Info.PixelFormat;
+        public PixelFormat PixelFormat => _Info.PixelFormat;
 
         /// <summary>
         /// Gets the size of the bitmap, in pixels.
@@ -189,7 +189,7 @@ namespace InteropBitmaps
             return _Writable.IsEmpty ? new SpanBitmap(_Readable, _Info) : new SpanBitmap(_Writable, _Info);
         }
         
-        public MemoryBitmap<TPixel> ToMemoryBitmap(Pixel.Format? fmtOverride = null)
+        public MemoryBitmap<TPixel> ToMemoryBitmap(PixelFormat? fmtOverride = null)
         {
             fmtOverride = fmtOverride ?? this.PixelFormat;
 
@@ -300,7 +300,7 @@ namespace InteropBitmaps
             _Implementation.ApplyPixels(this, dstX, dstY, src, pixelFunc);
         }
 
-        public MemoryBitmap<TDstPixel> ToMemoryBitmap<TDstPixel>(Pixel.Format fmt, Converter<TPixel, TDstPixel> pixelConverter)
+        public MemoryBitmap<TDstPixel> ToMemoryBitmap<TDstPixel>(PixelFormat fmt, Converter<TPixel, TDstPixel> pixelConverter)
             where TDstPixel:unmanaged
         {
             var dst = new MemoryBitmap<TDstPixel>(this.Width, this.Height, fmt);

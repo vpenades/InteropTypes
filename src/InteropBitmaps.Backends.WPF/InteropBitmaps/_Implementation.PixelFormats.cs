@@ -10,7 +10,7 @@
 using WIC_FORMAT = System.Windows.Media.PixelFormat;
 using WIC_FORMATS = System.Windows.Media.PixelFormats;
 
-using INTEROPFMT = InteropBitmaps.Pixel.Format;
+using INTEROPFMT = InteropBitmaps.PixelFormat;
 
 namespace InteropBitmaps
 {
