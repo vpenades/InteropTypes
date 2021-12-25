@@ -236,7 +236,7 @@ namespace InteropBitmaps
 
         public void SetPixels(System.Drawing.Color color)
         {
-            switch(Info.PixelFormat.PackedFormat)
+            switch(Info.PixelFormat.Code)
             {
                 case Pixel.Alpha8.Code: SetPixels(Pixel.GetColor<Pixel.Alpha8>(color));break;
                 case Pixel.Luminance8.Code: SetPixels(Pixel.GetColor<Pixel.Luminance8>(color)); break;
@@ -289,7 +289,7 @@ namespace InteropBitmaps
         {
             if (src.PixelFormat != this.PixelFormat) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
 
-            switch(this.PixelFormat.PackedFormat)
+            switch(this.PixelFormat.Code)
             {
                 case Pixel.Alpha8.Code: this.OfType<Pixel.Alpha8>().SetPixels(dstSRT, src.OfType<Pixel.Alpha8>()); break;
 

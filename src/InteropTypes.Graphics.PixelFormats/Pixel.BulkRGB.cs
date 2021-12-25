@@ -12,7 +12,7 @@ namespace InteropBitmaps
         {
             if (srcFmt.All(PEF.Red8, PEF.Green8, PEF.Blue8))
             {
-                switch (dstFmt.PackedFormat)
+                switch (dstFmt.Code)
                 {
                     case BGR565.Code: return GetConverterByteToRGB<BGR565>(srcFmt);
                     case BGR24.Code: return GetConverterByteToRGB<BGR24>(srcFmt);
@@ -24,7 +24,7 @@ namespace InteropBitmaps
 
             if (srcFmt.All(PEF.Red32F, PEF.Green32F, PEF.Blue32F))
             {
-                switch (dstFmt.PackedFormat)
+                switch (dstFmt.Code)
                 {
                     case BGR565.Code: return GetConverterFloatToRGB<BGR565>(srcFmt);
                     case BGR24.Code: return GetConverterFloatToRGB<BGR24>(srcFmt);

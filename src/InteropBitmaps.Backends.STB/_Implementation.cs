@@ -43,7 +43,7 @@ namespace InteropBitmaps
 
         public static STBWRITE.ColorComponents GetCompatibleFormat(PixelFormat fmt)
         {
-            switch(fmt.PackedFormat)
+            switch(fmt.Code)
             {
                 case Pixel.Luminance8.Code:
                 case Pixel.Luminance16.Code:

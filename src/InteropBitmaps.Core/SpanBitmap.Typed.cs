@@ -274,7 +274,7 @@ namespace InteropBitmaps
 
         public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap src, float opacity)
         {
-            switch(src.PixelFormat.PackedFormat)
+            switch(src.PixelFormat.Code)
             {
                 case Pixel.RGBA32.Code: this.SetPixels(dstSRT, src.OfType<Pixel.RGBA32>(), opacity); break;
                 case Pixel.BGRA32.Code: this.SetPixels(dstSRT, src.OfType<Pixel.BGRA32>(), opacity); break;

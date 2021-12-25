@@ -14,7 +14,7 @@ namespace InteropVision.With
     {
         public static ZXing.RGBLuminanceSource.BitmapFormat ToZXing(this PixelFormat enc)
         {
-            switch (enc.PackedFormat)
+            switch (enc.Code)
             {
                 case Pixel.Luminance8.Code: return ZXing.RGBLuminanceSource.BitmapFormat.Gray8;
                 case Pixel.Luminance16.Code: return ZXing.RGBLuminanceSource.BitmapFormat.Gray16;

@@ -43,7 +43,7 @@ namespace InteropBitmaps
         
         public static bool TryGetExactPixelFormat(INTEROPFMT inFmt, out WIC_FORMAT outFmt)
         {
-            switch (inFmt.PackedFormat)
+            switch (inFmt.Code)
             {
                 case Pixel.Luminance8.Code: outFmt= WIC_FORMATS.Gray8; return true;
                 case Pixel.Luminance16.Code: outFmt = WIC_FORMATS.Gray16; return true;
@@ -67,7 +67,7 @@ namespace InteropBitmaps
         {
             if (TryGetExactPixelFormat(fmt, out var exact)) return exact;
 
-            switch (fmt.PackedFormat)
+            switch (fmt.Code)
             {
                 case Pixel.Alpha8.Code:
                 case Pixel.BGRA4444.Code:

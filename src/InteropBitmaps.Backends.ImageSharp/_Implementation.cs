@@ -76,7 +76,7 @@ namespace InteropBitmaps
 
         public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
         {
-            switch (fmt.PackedFormat)
+            switch (fmt.Code)
             {
                 case Pixel.Alpha8.Code: return new Image<A8>(width, height);
                 case Pixel.Luminance8.Code: return new Image<L8>(width, height);

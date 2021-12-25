@@ -38,7 +38,7 @@ namespace InteropBitmaps
 
         public static bool TryGetExactPixelType(PixelFormat fmt, out Type type)
         {
-            switch (fmt.PackedFormat)
+            switch (fmt.Code)
             {
                 case Pixel.Alpha8.Code: type = typeof(A8); return true;
 

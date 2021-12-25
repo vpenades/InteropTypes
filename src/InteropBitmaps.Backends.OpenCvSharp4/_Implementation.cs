@@ -40,7 +40,7 @@ namespace InteropBitmaps
 
         public static bool TryGetExactPixelFormat(PixelFormat src, out CVDEPTHTYPE dst)
         {
-            switch(src.PackedFormat)
+            switch(src.Code)
             {
                 case Pixel.Luminance8.Code: { dst = CVDEPTHTYPE.CV_8UC1; return true; }
                 case Pixel.Luminance16.Code: { dst = CVDEPTHTYPE.CV_16UC1; return true; }
@@ -62,7 +62,7 @@ namespace InteropBitmaps
         {
             if (TryGetExactPixelFormat(src, out var cvFmt)) return cvFmt;
 
-            switch (src.PackedFormat)
+            switch (src.Code)
             {
                 case Pixel.BGR565.Code:
                 case Pixel.RGB24.Code:

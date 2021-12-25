@@ -48,7 +48,7 @@ namespace InteropBitmaps.Processing
             {
                 var dstX = dst.OfType<Pixel.BGR24>();
 
-                switch (src.PixelFormat.PackedFormat)
+                switch (src.PixelFormat.Code)
                 {
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;                    
@@ -66,7 +66,7 @@ namespace InteropBitmaps.Processing
             {
                 var dstX = dst.OfType<Pixel.RGB24>();
 
-                switch (src.PixelFormat.PackedFormat)
+                switch (src.PixelFormat.Code)
                 {
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
@@ -84,7 +84,7 @@ namespace InteropBitmaps.Processing
             {
                 var dstX = dst.OfType<Pixel.BGR96F>();
 
-                switch (src.PixelFormat.PackedFormat)
+                switch (src.PixelFormat.Code)
                 {
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
@@ -102,7 +102,7 @@ namespace InteropBitmaps.Processing
             {
                 var dstX = dst.OfType<Pixel.RGB96F>();
 
-                switch (src.PixelFormat.PackedFormat)
+                switch (src.PixelFormat.Code)
                 {
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;

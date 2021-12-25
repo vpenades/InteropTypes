@@ -155,7 +155,7 @@ namespace InteropBitmaps
 
         private static void _ConvertPixels(Span<RGBA128F> dst, ReadOnlySpan<Byte> src, PixelFormat srcFmt)
         {
-            switch (srcFmt.PackedFormat)
+            switch (srcFmt.Code)
             {
                 case Alpha8.Code: _ConvertPixels(dst, src.OfType<Alpha8>()); break;
                 case Luminance8.Code: _ConvertPixels(dst, src.OfType<Luminance8>()); break;
@@ -181,7 +181,7 @@ namespace InteropBitmaps
 
         private static void _ConvertPixels(Span<Byte> dst, PixelFormat dstFmt, ReadOnlySpan<RGBA128F> src)
         {
-            switch (dstFmt.PackedFormat)
+            switch (dstFmt.Code)
             {
                 case Alpha8.Code: _ConvertPixels(dst.OfType<Alpha8>(), src); break;
                 case Luminance8.Code: _ConvertPixels(dst.OfType<Luminance8>(), src); break;

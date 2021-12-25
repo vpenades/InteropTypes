@@ -60,7 +60,7 @@ namespace InteropBitmaps
                 return new InteropDrawing.Backends._MemoryDrawingContext<TPixel>(bitmap.OfType<TPixel>(), c => Pixel.GetColor<TPixel>(c));
             }
 
-            switch (bitmap.PixelFormat.PackedFormat)
+            switch (bitmap.PixelFormat.Code)
             {
                 case Pixel.Alpha8.Code: return _Create<Pixel.Alpha8>();
 

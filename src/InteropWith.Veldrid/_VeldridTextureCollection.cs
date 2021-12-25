@@ -92,7 +92,7 @@ namespace InteropWith
 
         public static PixelFormat From(InteropBitmaps.PixelFormat fmt)
         {
-            switch(fmt.PackedFormat)
+            switch(fmt.Code)
             {
                 case InteropBitmaps.Pixel.RGBA32.Code: return PixelFormat.R8_G8_B8_A8_UNorm;
                 case InteropBitmaps.Pixel.BGRA32.Code: return PixelFormat.B8_G8_R8_A8_UNorm;                

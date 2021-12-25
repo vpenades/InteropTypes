@@ -28,7 +28,7 @@ namespace InteropBitmaps
 
         #region constructors
 
-        public static implicit operator UInt32(PixelFormat fmt) { return fmt.PackedFormat; }
+        public static implicit operator UInt32(PixelFormat fmt) { return fmt.Code; }
 
         /// <summary>
         /// Creates a new <see cref="PixelFormat"/> from a packed value.
@@ -36,7 +36,7 @@ namespace InteropBitmaps
         /// <param name="packedFormat">a raw packed value.</param>
         public PixelFormat(UInt32 packedFormat) : this()
         {
-            PackedFormat = packedFormat;
+            Code = packedFormat;
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace InteropBitmaps
         {
             newFmt = default;
 
-            switch (fmt.PackedFormat)
+            switch (fmt.Code)
             {
                 case Pixel.RGB24.Code: newFmt = Pixel.RGB24.Format; break;
                 case Pixel.BGR24.Code: newFmt = Pixel.RGB24.Format; break;
@@ -238,7 +238,7 @@ namespace InteropBitmaps
         {
             newFmt = default;
 
-            switch (fmt.PackedFormat)
+            switch (fmt.Code)
             {
                 case Pixel.RGB24.Code: newFmt = Pixel.BGR24.Format; break;
                 case Pixel.BGR24.Code: newFmt = Pixel.BGR24.Format; break;
@@ -267,7 +267,7 @@ namespace InteropBitmaps
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly UInt32 PackedFormat;
+        public readonly UInt32 Code;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Runtime.InteropServices.FieldOffset(0)]
@@ -286,17 +286,17 @@ namespace InteropBitmaps
         private readonly Byte _Element3;
 
         /// <inheritdoc />
-        public override int GetHashCode() { return PackedFormat.GetHashCode(); }
+        public override int GetHashCode() { return Code.GetHashCode(); }
 
         /// <inheritdoc />
         public override bool Equals(object obj) { return obj is PixelFormat other && this.Equals(other); }
 
         /// <inheritdoc />
-        public bool Equals(PixelFormat other) { return this.PackedFormat == other.PackedFormat; }
+        public bool Equals(PixelFormat other) { return this.Code == other.Code; }
 
-        public static bool operator ==(PixelFormat a, PixelFormat b) { return a.PackedFormat == b.PackedFormat; }
+        public static bool operator ==(PixelFormat a, PixelFormat b) { return a.Code == b.Code; }
 
-        public static bool operator !=(PixelFormat a, PixelFormat b) { return a.PackedFormat != b.PackedFormat; }
+        public static bool operator !=(PixelFormat a, PixelFormat b) { return a.Code != b.Code; }
 
         #endregion
 
@@ -368,7 +368,7 @@ namespace InteropBitmaps
         {
             get
             {
-                if (PackedFormat == 0) return false;
+                if (Code == 0) return false;
                 if (_Element0 > 0 && Element0.IsUndefined) return false;
                 if (_Element1 > 0 && Element1.IsUndefined) return false;
                 if (_Element2 > 0 && Element2.IsUndefined) return false;
@@ -521,7 +521,7 @@ namespace InteropBitmaps
 
         public Type GetDefaultPixelType()
         {
-            switch (PackedFormat)
+            switch (Code)
             {
                 case Pixel.Alpha8.Code: return typeof(Pixel.Alpha8);
 
