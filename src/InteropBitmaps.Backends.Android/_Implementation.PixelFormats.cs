@@ -9,7 +9,7 @@ namespace InteropBitmaps
 {
     partial class _Implementation
     {
-        public static bool TryGetPixelFormat(ANDROIDGFX.Format src, bool srcIsPremultiplied, out Pixel.Format dst)
+        public static bool TryGetPixelFormat(ANDROIDGFX.Format src, bool srcIsPremultiplied, out PixelFormat dst)
         {
             if (srcIsPremultiplied) throw new Diagnostics.PixelFormatNotSupportedException(src, nameof(src));
 
@@ -27,7 +27,7 @@ namespace InteropBitmaps
             return false;
         }
 
-        public static Pixel.Format ToInterop(ANDROIDGFX.Format fmt, Pixel.Format? defFmt = null)
+        public static PixelFormat ToInterop(ANDROIDGFX.Format fmt, PixelFormat? defFmt = null)
         {
             switch (fmt)
             {
@@ -43,7 +43,7 @@ namespace InteropBitmaps
             throw new Diagnostics.PixelFormatNotSupportedException(fmt, nameof(fmt));
         }
 
-        public static Pixel.Format ToInterop(ANDROIDBITMAP.Config fmt, bool isPremultiplied, Pixel.Format? defFmt = null)
+        public static PixelFormat ToInterop(ANDROIDBITMAP.Config fmt, bool isPremultiplied, PixelFormat? defFmt = null)
         {
             if (isPremultiplied) throw new Diagnostics.PixelFormatNotSupportedException(fmt, nameof(fmt));
 
@@ -56,9 +56,9 @@ namespace InteropBitmaps
             throw new Diagnostics.PixelFormatNotSupportedException(fmt, nameof(fmt));
         }
 
-        public static ANDROIDBITMAP.Config ToAndroidBitmapConfig(Pixel.Format fmt, ANDROIDBITMAP.Config defval = null)
+        public static ANDROIDBITMAP.Config ToAndroidBitmapConfig(PixelFormat fmt, ANDROIDBITMAP.Config defval = null)
         {
-            switch (fmt.PackedFormat)
+            switch (fmt.Code)
             {
                 case Pixel.Alpha8.Code: return ANDROIDBITMAP.Config.Alpha8;
                 case Pixel.BGR565.Code: return ANDROIDBITMAP.Config.Rgb565;

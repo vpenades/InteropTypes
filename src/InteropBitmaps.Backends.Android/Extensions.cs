@@ -13,19 +13,19 @@ namespace InteropBitmaps
 {
     public static class AndroidToolkit
     {
-        public static Pixel.Format ToInterop(this ANDROIDGFX.Format fmt, Pixel.Format? defFmt = null)
+        public static PixelFormat ToInterop(this ANDROIDGFX.Format fmt, PixelFormat? defFmt = null)
         {
             return _Implementation.ToInterop(fmt, defFmt);
         }
 
-        public static Pixel.Format ToInterop(this ANDROIDBITMAP.Config fmt, bool isAlphaPremul = false, Pixel.Format? defFmt = null)
+        public static PixelFormat ToInterop(this ANDROIDBITMAP.Config fmt, bool isAlphaPremul = false, PixelFormat? defFmt = null)
         {
             if (fmt == null) throw new ArgumentNullException(nameof(fmt));
 
             return _Implementation.ToInterop(fmt, isAlphaPremul, defFmt);
         }
 
-        public static BitmapInfo ToInterop(this ANDROIDGFX.AndroidBitmapInfo info, Pixel.Format? defFmt = null)
+        public static BitmapInfo ToInterop(this ANDROIDGFX.AndroidBitmapInfo info, PixelFormat? defFmt = null)
         {
             return _Implementation.TryGetBitmapInfo(info, false, out var fmt)
                 ? fmt
