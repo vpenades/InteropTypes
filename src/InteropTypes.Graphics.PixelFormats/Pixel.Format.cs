@@ -19,7 +19,7 @@ namespace InteropBitmaps
             var ptype = GetDefaultPixelType();
             if (ptype != null) return ptype.Name;
 
-            var elements = Elements.Select(item => item.Id);
+            var elements = Components.Select(item => item.Id);
 
             return string.Join("-", elements);
         }
@@ -101,10 +101,10 @@ namespace InteropBitmaps
         private void _Validate()
         {
             int l = 0;
-            l += Element0.BitCount;
-            l += Element1.BitCount;
-            l += Element2.BitCount;
-            l += Element3.BitCount;
+            l += Component0.BitCount;
+            l += Component1.BitCount;
+            l += Component2.BitCount;
+            l += Component3.BitCount;
 
             if (l == 0) throw new InvalidOperationException("Format must not have a zero length");
             if ((l & 7) != 0) throw new InvalidOperationException("Format must have a length multiple of 8");
@@ -302,13 +302,13 @@ namespace InteropBitmaps
 
         #region properties
 
-        public Element Element0 => new Element(_Element0);
+        public Element Component0 => new Element(_Element0);
 
-        public Element Element1 => new Element(_Element1);
+        public Element Component1 => new Element(_Element1);
 
-        public Element Element2 => new Element(_Element2);
+        public Element Component2 => new Element(_Element2);
 
-        public Element Element3 => new Element(_Element3);
+        public Element Component3 => new Element(_Element3);
 
         /// <summary>
         /// Gets the number of bytes required to store this pixel format
@@ -330,32 +330,32 @@ namespace InteropBitmaps
         /// returns the sequence of non empty elements.
         /// </summary>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public IEnumerable<Element> Elements
+        public IEnumerable<Element> Components
         {
             get
             {
-                if (Element0.IsEmpty) yield break;
-                yield return Element0;
-                if (Element1.IsEmpty) yield break;
-                yield return Element1;
-                if (Element2.IsEmpty) yield break;
-                yield return Element2;
-                if (Element3.IsEmpty) yield break;
-                yield return Element3;
+                if (Component0.IsEmpty) yield break;
+                yield return Component0;
+                if (Component1.IsEmpty) yield break;
+                yield return Component1;
+                if (Component2.IsEmpty) yield break;
+                yield return Component2;
+                if (Component3.IsEmpty) yield break;
+                yield return Component3;
             }
         }
 
         /// <summary>
         /// Gets the number of bits used by the largest element in the format.
         /// </summary>
-        public int MaxElementBitLength
+        public int MaxComponentBitLength
         {
             get
             {
-                var l = Element0.BitCount;
-                l = Math.Max(l, Element1.BitCount);
-                l = Math.Max(l, Element2.BitCount);
-                l = Math.Max(l, Element3.BitCount);
+                var l = Component0.BitCount;
+                l = Math.Max(l, Component1.BitCount);
+                l = Math.Max(l, Component2.BitCount);
+                l = Math.Max(l, Component3.BitCount);
                 return l;
             }
         }
@@ -369,10 +369,10 @@ namespace InteropBitmaps
             get
             {
                 if (Code == 0) return false;
-                if (_Element0 > 0 && Element0.IsUndefined) return false;
-                if (_Element1 > 0 && Element1.IsUndefined) return false;
-                if (_Element2 > 0 && Element2.IsUndefined) return false;
-                if (_Element3 > 0 && Element3.IsUndefined) return false;
+                if (_Element0 > 0 && Component0.IsUndefined) return false;
+                if (_Element1 > 0 && Component1.IsUndefined) return false;
+                if (_Element2 > 0 && Component2.IsUndefined) return false;
+                if (_Element3 > 0 && Component3.IsUndefined) return false;
                 return true;
             }
         }
@@ -380,12 +380,12 @@ namespace InteropBitmaps
         /// <summary>
         /// True if one of the elements is non premultiplied alpha.
         /// </summary>
-        public bool HasAlpha => Element0.IsAlpha | Element1.IsAlpha | Element2.IsAlpha | Element3.IsAlpha;
+        public bool HasAlpha => Component0.IsAlpha | Component1.IsAlpha | Component2.IsAlpha | Component3.IsAlpha;
 
         /// <summary>
         /// True if one of the elements is premultiplied alpha.
         /// </summary>
-        public bool HasPremul => Element0.IsPremul | Element1.IsPremul | Element2.IsPremul | Element3.IsPremul;
+        public bool HasPremul => Component0.IsPremul | Component1.IsPremul | Component2.IsPremul | Component3.IsPremul;
 
         /// <summary>
         /// True if one of the elements is alpha (premultiplied or not).
@@ -395,7 +395,11 @@ namespace InteropBitmaps
         /// <summary>
         /// true if all the elements are floating point values.
         /// </summary>
-        public bool IsFloating => Element0.IsFloating && Element1.IsFloating && Element2.IsFloating && Element3.IsFloating;
+        public bool IsFloating => Component0.IsFloating && Component1.IsFloating && Component2.IsFloating && Component3.IsFloating;
+
+        public bool IsQuantized => !IsFloating;
+
+        public bool Is8BitOrLess => Component0.Is8BitOrLess && Component1.Is8BitOrLess && Component2.Is8BitOrLess && Component3.Is8BitOrLess;
 
         #endregion
 
@@ -413,32 +417,32 @@ namespace InteropBitmaps
 
         public int GetBitOffset(PEF pef)
         {
-            if (Element0 == pef) return 0;
+            if (Component0 == pef) return 0;
 
-            int l = Element0.BitCount;
-            if (Element1 == pef) return l;
+            int l = Component0.BitCount;
+            if (Component1 == pef) return l;
 
-            l += Element1.BitCount;
-            if (Element2 == pef) return l;
+            l += Component1.BitCount;
+            if (Component2 == pef) return l;
 
-            l += Element2.BitCount;
-            if (Element3 == pef) return l;
+            l += Component2.BitCount;
+            if (Component3 == pef) return l;
 
             return -1;
         }
 
         public int GetByteOffset(PEF pef)
         {
-            if (Element0 == pef) return 0;
+            if (Component0 == pef) return 0;
 
-            int l = Element0.ByteCount;
-            if (Element1 == pef) return l;
+            int l = Component0.ByteCount;
+            if (Component1 == pef) return l;
 
-            l += Element1.ByteCount;
-            if (Element2 == pef) return l;
+            l += Component1.ByteCount;
+            if (Component2 == pef) return l;
 
-            l += Element2.ByteCount;
-            if (Element3 == pef) return l;
+            l += Component2.ByteCount;
+            if (Component3 == pef) return l;
 
             return -1;
         }
@@ -446,29 +450,29 @@ namespace InteropBitmaps
         private int _GetByteLength()
         {
             int l = 0;
-            l += Element0.BitCount;
-            l += Element1.BitCount;
-            l += Element2.BitCount;
-            l += Element3.BitCount;
+            l += Component0.BitCount;
+            l += Component1.BitCount;
+            l += Component2.BitCount;
+            l += Component3.BitCount;
             return l / 8;
         }
 
         private int _FindIndex(PEF pef)
         {
-            if (Element0.Id == pef) return 0;
-            if (Element1.Id == pef) return 1;
-            if (Element2.Id == pef) return 2;
-            if (Element3.Id == pef) return 3;
+            if (Component0.Id == pef) return 0;
+            if (Component1.Id == pef) return 1;
+            if (Component2.Id == pef) return 2;
+            if (Component3.Id == pef) return 3;
             return -1;
         }
 
         private int _GetEmptyCount()
         {
             int count = 0;
-            if (Element0.Id == PEF.Empty) ++count;
-            if (Element1.Id == PEF.Empty) ++count;
-            if (Element2.Id == PEF.Empty) ++count;
-            if (Element3.Id == PEF.Empty) ++count;
+            if (Component0.Id == PEF.Empty) ++count;
+            if (Component1.Id == PEF.Empty) ++count;
+            if (Component2.Id == PEF.Empty) ++count;
+            if (Component3.Id == PEF.Empty) ++count;
             return count;
         }
 
@@ -476,20 +480,20 @@ namespace InteropBitmaps
         {
             switch (byteIndex)
             {
-                case 0: return Element0;
-                case 1: return Element1;
-                case 2: return Element2;
-                case 3: return Element3;
+                case 0: return Component0;
+                case 1: return Component1;
+                case 2: return Component2;
+                case 3: return Component3;
                 default: return PEF.Empty;
             }
         }
 
         public Type GetDepthType()
         {
-            var e0Len = Element0.BitCount;
-            var e1Len = Element1.BitCount; if (e1Len != 0 && e1Len != e0Len) return null;
-            var e2Len = Element2.BitCount; if (e2Len != 0 && e2Len != e0Len) return null;
-            var e3Len = Element3.BitCount; if (e3Len != 0 && e3Len != e0Len) return null;
+            var e0Len = Component0.BitCount;
+            var e1Len = Component1.BitCount; if (e1Len != 0 && e1Len != e0Len) return null;
+            var e2Len = Component2.BitCount; if (e2Len != 0 && e2Len != e0Len) return null;
+            var e3Len = Component3.BitCount; if (e3Len != 0 && e3Len != e0Len) return null;
 
             if (e0Len == 8) return typeof(Byte);
             if (e0Len == 16) return typeof(UInt16);
@@ -502,14 +506,14 @@ namespace InteropBitmaps
         {
             int ch = 1;
 
-            var len = Element0.BitCount;
-            var next = Element1.BitCount;
+            var len = Component0.BitCount;
+            var next = Component1.BitCount;
             if (next != 0) { if (next == len) ++ch; else return (null, 0); }
 
-            next = Element2.BitCount;
+            next = Component2.BitCount;
             if (next != 0) { if (next == len) ++ch; else return (null, 0); }
 
-            next = Element3.BitCount;
+            next = Component3.BitCount;
             if (next != 0) { if (next == len) ++ch; else return (null, 0); }
 
             if (len == 8) return (typeof(Byte), ch);

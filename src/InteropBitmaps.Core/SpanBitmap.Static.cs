@@ -177,7 +177,7 @@ namespace InteropBitmaps
 
         public static void SplitPixels(SpanBitmap<Vector3> src, SpanBitmap<Single> dstB, SpanBitmap<Single> dstG, SpanBitmap<Single> dstR)
         {
-            if (src.PixelFormat.Element0.IsBlue)
+            if (src.PixelFormat.Component0.IsBlue)
             {
                 for (int y = 0; y < src.Height; ++y)
                 {
@@ -196,7 +196,7 @@ namespace InteropBitmaps
                 }
             }
 
-            if (src.PixelFormat.Element0.IsRed)
+            if (src.PixelFormat.Component0.IsRed)
             {
                 for (int y = 0; y < src.Height; ++y)
                 {

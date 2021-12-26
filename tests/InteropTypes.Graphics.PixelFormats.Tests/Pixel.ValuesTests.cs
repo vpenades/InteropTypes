@@ -13,6 +13,7 @@ namespace InteropBitmaps
         [Test]
         public void CheckPixelValues()
         {
+
             CheckImageSharp<Pixel.BGR565, SixLabors.ImageSharp.PixelFormats.Bgr565>();
             CheckImageSharp<Pixel.BGRA4444, SixLabors.ImageSharp.PixelFormats.Bgra4444>();
             CheckImageSharp<Pixel.BGRA5551, SixLabors.ImageSharp.PixelFormats.Bgra5551>();

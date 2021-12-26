@@ -259,6 +259,8 @@ namespace InteropBitmaps
 
             public bool IsFloating => Id >= PEF.Undefined32F;
 
+            public bool Is8BitOrLess => Id < PEF.Undefined16;
+
             #endregion
         }
     }
