@@ -19,7 +19,7 @@ namespace InteropBitmaps
         [Test]
         public void TestAllFormats()
         {
-            foreach(var fmt in Pixel.Formats)
+            foreach(var fmt in PixelFormat.AllFormats)
             {
                 TestContext.WriteLine($"{fmt} {fmt.ToString()} {fmt.GetDebuggerDisplay()}");
 

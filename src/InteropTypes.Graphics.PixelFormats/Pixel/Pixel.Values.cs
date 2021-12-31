@@ -41,9 +41,13 @@ namespace InteropBitmaps
         {
             #region constants
 
-            const uint RLuminanceWeight = 19562;
-            const uint GLuminanceWeight = 38550;
-            const uint BLuminanceWeight = 7424;
+            const uint RLuminanceWeight16 = 19562;
+            const uint GLuminanceWeight16 = 38550;
+            const uint BLuminanceWeight16 = 7424;
+
+            const float RLuminanceWeightF = 0.2989f;
+            const float GLuminanceWeightF = 0.5870f;
+            const float BLuminanceWeightF = 0.1140f;
 
             #endregion
 
@@ -54,9 +58,9 @@ namespace InteropBitmaps
             {
                 uint accum = 0;
 
-                accum += RLuminanceWeight * (uint)color.R;
-                accum += GLuminanceWeight * (uint)color.G;
-                accum += BLuminanceWeight * (uint)color.B;
+                accum += RLuminanceWeight16 * (uint)color.R;
+                accum += GLuminanceWeight16 * (uint)color.G;
+                accum += BLuminanceWeight16 * (uint)color.B;
 
                 accum >>= 16;
 
@@ -65,7 +69,7 @@ namespace InteropBitmaps
 
             public Luminance8(RGBA128F color)
             {
-                float accum = color.R * 0.2989f + color.G * 0.5870f + color.B * 0.1140f;
+                float accum = color.R * RLuminanceWeightF + color.G * GLuminanceWeightF + color.B * BLuminanceWeightF;
                 accum *= 255f;
 
                 L = (Byte)accum;
@@ -92,9 +96,13 @@ namespace InteropBitmaps
         {
             #region constants            
 
-            const uint RLuminanceWeight = 19562;
-            const uint GLuminanceWeight = 38550;
-            const uint BLuminanceWeight = 7424;
+            const uint RLuminanceWeight16 = 19562;
+            const uint GLuminanceWeight16 = 38550;
+            const uint BLuminanceWeight16 = 7424;
+
+            const float RLuminanceWeightF = 0.2989f;
+            const float GLuminanceWeightF = 0.5870f;
+            const float BLuminanceWeightF = 0.1140f;
 
             #endregion
 
@@ -105,9 +113,9 @@ namespace InteropBitmaps
             {
                 uint accum = 0;
 
-                accum += RLuminanceWeight * (uint)color.R;
-                accum += GLuminanceWeight * (uint)color.G;
-                accum += BLuminanceWeight * (uint)color.B;
+                accum += RLuminanceWeight16 * (uint)color.R;
+                accum += GLuminanceWeight16 * (uint)color.G;
+                accum += BLuminanceWeight16 * (uint)color.B;
 
                 accum >>= 8;
 
@@ -116,7 +124,7 @@ namespace InteropBitmaps
 
             public Luminance16(RGBA128F color)
             {
-                float accum = color.R * 0.2989f + color.G * 0.5870f + color.B * 0.1140f;
+                float accum = color.R * RLuminanceWeightF + color.G * GLuminanceWeightF + color.B * BLuminanceWeightF;
                 accum *= 65535f;
 
                 L = (UInt16)accum;
@@ -141,28 +149,27 @@ namespace InteropBitmaps
         [System.Diagnostics.DebuggerDisplay("{L}")]
         public readonly partial struct Luminance32F
         {
+            #region constants                        
+
+            const float RLuminanceWeightF = 0.2989f;
+            const float GLuminanceWeightF = 0.5870f;
+            const float BLuminanceWeightF = 0.1140f;
+
+            #endregion
+
             #region constructors
             public Luminance32F(UInt16 luminance) { L = luminance; }
 
             public Luminance32F(BGRA32 color)
             {
-                float accum = 0;
+                float accum = color.R * RLuminanceWeightF + color.G * GLuminanceWeightF + color.B * BLuminanceWeightF;                
 
-                accum += 0.2989f * color.R;
-                accum += 0.5870f * color.G;
-                accum += 0.1140f * color.B;
-
-                accum /= 255;
-
-                L = accum;
+                L = accum / 255f;
             }
 
             public Luminance32F(RGBA128F color)
             {
-                float accum = color.R * 0.2989f + color.G * 0.5870f + color.B * 0.1140f;
-                accum *= 65535f;
-
-                L = accum;
+                L = color.R * RLuminanceWeightF + color.G * GLuminanceWeightF + color.B * BLuminanceWeightF;
             }
 
             #endregion
@@ -252,6 +259,10 @@ namespace InteropBitmaps
 
             private static UInt16 _PackRGBA(int red, int green, int blue, Boolean alpha)
             {
+                System.Diagnostics.Debug.Assert(red >= 0 && red < 256);
+                System.Diagnostics.Debug.Assert(green >= 0 && green < 256);
+                System.Diagnostics.Debug.Assert(blue >= 0 && blue < 256);
+
                 var x = blue >> 3;
                 x |= (green >> 3) << 5;
                 x |= (red >> 3) << 10;
@@ -305,6 +316,11 @@ namespace InteropBitmaps
 
             private static UInt16 _PackRGBA(int red, int green, int blue, int alpha)
             {
+                System.Diagnostics.Debug.Assert(red >= 0 && red < 256);
+                System.Diagnostics.Debug.Assert(green >= 0 && green < 256);
+                System.Diagnostics.Debug.Assert(blue >= 0 && blue < 256);
+                System.Diagnostics.Debug.Assert(alpha >= 0 && alpha < 256);
+
                 var x = blue >> 4;
                 x |= (green >> 4) << 4;
                 x |= (red >> 4) << 8;
@@ -417,6 +433,11 @@ namespace InteropBitmaps
 
             public BGRA32(int red, int green, int blue, int alpha = 255)
             {
+                System.Diagnostics.Debug.Assert(red >= 0 && red < 256);
+                System.Diagnostics.Debug.Assert(green >= 0 && green < 256);
+                System.Diagnostics.Debug.Assert(blue >= 0 && blue < 256);
+                System.Diagnostics.Debug.Assert(alpha >= 0 && alpha < 256);
+
                 B = (byte)blue;
                 G = (byte)green;
                 R = (byte)red;

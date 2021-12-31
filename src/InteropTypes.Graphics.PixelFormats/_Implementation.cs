@@ -42,6 +42,18 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<T, byte>(span);
         }
 
+        public static Span<Single> AsSingles<T>(this Span<T> span)
+            where T : unmanaged
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<T, Single>(span);
+        }
+
+        public static ReadOnlySpan<Single> AsSingles<T>(this ReadOnlySpan<T> span)
+            where T : unmanaged
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<T, Single>(span);
+        }
+
         /// <summary>
         /// divides an integer by 255
         /// </summary>
@@ -54,6 +66,39 @@ namespace InteropBitmaps
         public static int DivideBy255(this int value)
         {
             return (value + ((value + 257) >> 8)) >> 8;
+        }
+    }
+
+    /// <remarks>
+    /// <see href="http://lolengine.net/blog/2011/3/20/understanding-fast-float-integer-conversions"/>
+    /// </remarks>
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
+    struct FastByteToFloat
+    {
+        [System.Runtime.InteropServices.FieldOffset(0)]
+        private float f;
+        [System.Runtime.InteropServices.FieldOffset(0)]
+        private uint u;
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static float ToFloat(Byte b)
+        {
+            FastByteToFloat x;
+            x.u = 0;
+            x.f = 32768.0f;
+            x.u |= b;
+            return x.f - 32768.0f;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static byte ToByte(float v)
+        {
+            System.Diagnostics.Debug.Assert(v >= 0f && v <= 1f);
+
+            FastByteToFloat x;
+            x.u = 0;
+            x.f = 32768.0f + v * (255.0f / 256.0f);
+            return (byte)x.u;
         }
     }
 }

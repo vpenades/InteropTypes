@@ -9,164 +9,11 @@ namespace InteropBitmaps
 
     static class _SpanSingleExtensions
     {
-        private static Span<Vector4> _ToVector4(Span<Single> span)
-        {
-            var fourCount = span.Length & ~3;
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, fourCount));
-        }
-
-        private static ReadOnlySpan<Vector4> _ToVector4(ReadOnlySpan<Single> span)
-        {
-            var fourCount = span.Length & ~3;
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, fourCount));
-        }
-
-        private static Single _Min(Single a, Single b, Single c, Single d)
-        {
-            var min = a;
-            if (min > b) min = b;
-            if (min > c) min = c;
-            if (min > d) min = d;
-            return min;
-        }
-
-        private static Single _Max(Single a, Single b, Single c, Single d)
-        {
-            var min = a;
-            if (min < b) min = b;
-            if (min < c) min = c;
-            if (min < d) min = d;
-            return min;
-        }
-
-        public static Single Min(ReadOnlySpan<Single> span)
-        {
-            var vectSpan = _ToVector4(span);
-            var fourMin = Min(vectSpan);
-            var min = _Min(fourMin.X, fourMin.Y, fourMin.Z, fourMin.W);
-
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
-            {
-                var v = span[i];
-                if (min > v) min = v;
-            }
-
-            return min;
-        }
-
-        public static Single Max(ReadOnlySpan<Single> span)
-        {
-            var vectSpan = _ToVector4(span);
-            var fourMax = Max(vectSpan);
-            var max = _Max(fourMax.X, fourMax.Y, fourMax.Z, fourMax.W);
-
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
-            {
-                var v = span[i];
-                if (max < v) max = v;
-            }
-
-            return max;
-        }
-
-        public static Vector4 Min(ReadOnlySpan<Vector4> span)
-        {
-            var min = new Vector4(float.PositiveInfinity);
-
-            for (int i = 0; i < span.Length; ++i)
-            {
-                min = Vector4.Min(min, span[i]);
-            }
-
-            return min;
-        }
-
-        public static Vector4 Max(ReadOnlySpan<Vector4> span)
-        {
-            var max = new Vector4(float.NegativeInfinity);
-
-            for (int i = 0; i < span.Length; ++i)
-            {
-                max = Vector4.Max(max, span[i]);
-            }
-
-            return max;
-        }
-
-        public static (Single Min, Single Max) MinMax(ReadOnlySpan<Single> span)
-        {
-            var vectSpan = _ToVector4(span);
-            var (fourMin, fourMax) = MinMax(vectSpan);
-            var min = _Min(fourMin.X, fourMin.Y, fourMin.Z, fourMin.W);
-            var max = _Max(fourMax.X, fourMax.Y, fourMax.Z, fourMax.W);
-
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
-            {
-                var v = span[i];
-                if (min > v) min = v;
-                if (max < v) max = v;
-            }
-
-            return (min, max);
-        }
-
-        public static (Vector4 Min, Vector4 Max) MinMax(ReadOnlySpan<Vector4> span)
-        {
-            var min = new Vector4(float.PositiveInfinity);
-            var max = new Vector4(float.NegativeInfinity);
-
-            for (int i = 0; i < span.Length; ++i)
-            {
-                min = Vector4.Min(min, span[i]);
-                max = Vector4.Max(max, span[i]);
-            }
-
-            return (min, max);
-        }
-
         public static void FitBetweenZeroAndOne(Span<Single> span)
         {
-            var (min, max) = MinMax(span);
-            AddAndMultiply(span, -min, 1.0f / (max - min));
-        }
-
-        public static void MultiplyAndAdd(Span<Single> span, Single mul, Single add)
-        {
-            var vectSpan = _ToVector4(span);
-            var vectMul = new Vector4(mul);
-            var vectAdd = new Vector4(add);
-
-            for (int i = 0; i < vectSpan.Length; ++i)
-            {
-                vectSpan[i] *= vectMul;
-                vectSpan[i] += vectAdd;
-            }
-
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
-            {
-                span[i] *= mul;
-                span[i] += add;
-            }
-        }
-
-        public static void AddAndMultiply(Span<Single> span, Single add, Single mul)
-        {
-            var vectSpan = _ToVector4(span);
-            var vectMul = new Vector4(mul);
-            var vectAdd = new Vector4(add);
-
-            for (int i = 0; i < vectSpan.Length; ++i)
-            {
-                vectSpan[i] += vectAdd;
-                vectSpan[i] *= vectMul;
-            }
-
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
-            {
-                span[i] += add;
-                span[i] *= mul;
-            }
-        }
+            var (min, max) = Vector4Streaming.MinMax(span);
+            Vector4Streaming.AddAndMultiply(span, -min, 1.0f / (max - min));
+        }        
 
         public static void CopyPixels(ReadOnlySpan<Single> src, Span<Byte> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
@@ -285,97 +132,22 @@ namespace InteropBitmaps
             }
         }
 
-
-
-        public static bool SequenceEqual(ReadOnlySpan<float> a, ReadOnlySpan<float> b)
-        {
-            // We could use a.SequenceEqual, but we could not benefit from vectorized comparison (Proof needed!)
-
-            if (a.Length != b.Length) return false;
-
-            var av = _ToVector4(a);
-            var bv = _ToVector4(b);
-
-            for(int i=0; i < av.Length; ++i)
-            {
-                if (av[i] != bv[i]) return false;
-            }
-
-            for (int i = av.Length * 4; i < a.Length; ++i)
-            {
-                if (a[i] != b[i]) return false;
-            }
-
-            return true;
-        }
-
-        public static void ApplyClamp(Span<Single> span, Single min, Single max)
-        {
-            var vectSpan = _ToVector4(span);
-            var vectMin = new Vector4(min);
-            var vectMax = new Vector4(max);
-
-            for (int i = 0; i < vectSpan.Length; ++i)
-            {
-                vectSpan[i] = Vector4.Max(Vector4.Min(vectSpan[i], vectMax), vectMin);
-            }
-
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
-            {
-                span[i] = Math.Max(Math.Min(span[i], max), min);
-            }
-        }
-
-
         public static void LerpArray<T>(ReadOnlySpan<T> left, ReadOnlySpan<T> right, float amount, Span<T> dst)
             where T:unmanaged
         {
-            LerpArray
-                (System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(left)
-                , System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(right)
-                , amount
-                , System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(dst)
-                );
-
-        }
-
-        public static void LerpArray(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<float> dst)
-        {
-            var l = _ToVector4(left);
-            var r = _ToVector4(right);
-            var d = _ToVector4(dst);
-
-            for(int i=0; i < d.Length; ++i)
+            if (typeof(T) == typeof(float))
             {
-                d[i] = Vector4.Lerp(l[i], r[i], amount);
+                Vector4Streaming.Lerp
+                    (System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(left)
+                    , System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(right)
+                    , amount
+                    , System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(dst)
+                    );
+
+                return;
             }
 
-            for (int i = d.Length * 4; i < dst.Length; ++i)
-            {
-                dst[i] = left[i] * (1 - amount) + right[i] * amount;
-            }
-        }
-
-        public static void LerpArray(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<Byte> dst)
-        {
-            var l = _ToVector4(left);
-            var r = _ToVector4(right);
-            var d = dst.Length / 4;
-
-            for (int i = 0; i < d; ++i)
-            {
-                var v = Vector4.Lerp(l[i], r[i], amount);
-
-                dst[i * 4 + 0] = (Byte)v.X;
-                dst[i * 4 + 1] = (Byte)v.Y;
-                dst[i * 4 + 2] = (Byte)v.Z;
-                dst[i * 4 + 3] = (Byte)v.W;
-            }
-
-            for (int i = d * 4; i < dst.Length; ++i)
-            {
-                dst[i] = (Byte)(left[i] * (1 - amount) + right[i] * amount);
-            }
-        }
+            throw new NotImplementedException();
+        }        
     }
 }

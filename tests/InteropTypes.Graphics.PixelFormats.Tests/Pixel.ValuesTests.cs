@@ -11,6 +11,17 @@ namespace InteropBitmaps
     internal class PixelValuesTests
     {
         [Test]
+        public void Swap()
+        {
+            var a = 1;
+            var b = 17;
+
+            a ^= b;
+            b ^= a;
+            a ^= b;
+        }
+
+        [Test]
         public void CheckPixelValues()
         {
 

@@ -21,7 +21,7 @@ namespace InteropBitmaps
             {
                 var srcRow = src.GetScanlinePixels(y);
                 
-                var (rMin, rMax) = _SpanSingleExtensions.MinMax(srcRow);
+                var (rMin, rMax) = Vector4Streaming.MinMax(srcRow);
 
                 if (min > rMin) min = rMin;
                 if (max < rMax) max = rMax;
@@ -236,7 +236,7 @@ namespace InteropBitmaps
                     var bRow = b.UseScanlineBytes(y);
                     var aFlt = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, float>(aRow);
                     var bFlt = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, float>(bRow);
-                    if (!_SpanSingleExtensions.SequenceEqual(aFlt, bFlt)) return false;
+                    if (!Vector4Streaming.SequenceEqual(aFlt, bFlt)) return false;
                 }
 
                 return true;
@@ -263,7 +263,7 @@ namespace InteropBitmaps
             for (int y = 0; y < target.Height; ++y)
             {
                 var row = target.UseScanlinePixels(y);
-                _SpanSingleExtensions.AddAndMultiply(row, add, multiply);
+                Vector4Streaming.AddAndMultiply(row, add, multiply);
             }
         }
 
@@ -272,7 +272,7 @@ namespace InteropBitmaps
             for (int y = 0; y < target.Height; ++y)
             {
                 var row = target.UseScanlinePixels(y);
-                _SpanSingleExtensions.MultiplyAndAdd(row, multiply, add);
+                Vector4Streaming.MultiplyAndAdd(row, multiply, add);
             }
         }
 
@@ -282,7 +282,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
-                _SpanSingleExtensions.AddAndMultiply(fRow, add, multiply);
+                Vector4Streaming.AddAndMultiply(fRow, add, multiply);
             }
         }
 
@@ -305,7 +305,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
-                _SpanSingleExtensions.MultiplyAndAdd(fRow, multiply, add);
+                Vector4Streaming.MultiplyAndAdd(fRow, multiply, add);
             }
         }
 
@@ -315,7 +315,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, Single>(row);
-                _SpanSingleExtensions.AddAndMultiply(fRow, add, multiply);
+                Vector4Streaming.AddAndMultiply(fRow, add, multiply);
             }
         }
 
@@ -325,7 +325,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, float>(row);
-                _SpanSingleExtensions.MultiplyAndAdd(fRow, multiply, add);
+                Vector4Streaming.MultiplyAndAdd(fRow, multiply, add);
             }
         }        
     }

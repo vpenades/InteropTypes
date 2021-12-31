@@ -2,7 +2,8 @@
 
 ### TODO:
 - Handle YUV and other non RGB formats
-- use System.Runtime.Intrinsics whenever possible
+- use System.Runtime.Intrinsics whenever possible  
+- use MathF when applicable
 
 ### Todo, color spaces:
 

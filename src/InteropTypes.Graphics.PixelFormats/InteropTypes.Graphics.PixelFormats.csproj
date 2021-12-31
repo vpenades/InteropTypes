@@ -32,23 +32,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Pixel.Interfaces.IPixelConvertible.tt">
+    <None Update="Pixel\Pixel.Interfaces.IPixelConvertible.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Pixel.Interfaces.IPixelConvertible.cs</LastGenOutput>
     </None>
-    <None Update="Pixel.Interfaces.IPixelFactory.tt">
+    <None Update="Pixel\Pixel.Interfaces.IPixelFactory.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Pixel.Interfaces.IPixelFactory.cs</LastGenOutput>
     </None>
   </ItemGroup>  
 
   <ItemGroup>
-    <Compile Update="Pixel.Interfaces.IPixelConvertible.cs">
+    <Compile Update="Pixel\Pixel.Interfaces.IPixelConvertible.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Interfaces.IPixelConvertible.tt</DependentUpon>
     </Compile>
-    <Compile Update="Pixel.Interfaces.IPixelFactory.cs">
+    <Compile Update="Pixel\Pixel.Interfaces.IPixelFactory.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Interfaces.IPixelFactory.tt</DependentUpon>

@@ -1,0 +1,140 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+
+namespace InteropBitmaps
+{
+    partial class Pixel    
+    {
+        public interface IPixelFactory<TSrcPixel, TDstPixel>
+            where TSrcPixel: unmanaged
+            where TDstPixel: unmanaged
+        {
+            TDstPixel From(TSrcPixel color);
+
+            void Copy(ReadOnlySpan<TSrcPixel> src, Span<TDstPixel> dst);
+        }
+
+<#
+        // https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
+
+        var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGBP32","BGRP32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP128F" };
+        var pixelFormatSrcNames = new string[] { "BGRA32", "RGBA128F" };
+        var pixelFormatSrc8Names = new string[] { "BGR565","BGRA5551","BGRA4444","RGB24","BGR24","RGBA32","ARGB32" };
+
+        var digits = new char[] { '0','1','2','3','4','5','6','7','8','9'};
+
+        (string Channels, string Size) _getChannels(string format)
+        {
+            var idx = format.IndexOfAny(digits);
+            var a = format.Substring(0,idx);
+            var b = format.Substring(idx);
+            return(a,b);            
+        }
+
+        void _writeFrom(string pixelFmtName, string pixelSrcName, string cvtFunc)
+        {
+            var eval = pixelFmtName == pixelSrcName
+                ? "return color;"
+                : $"return new {pixelFmtName}({cvtFunc});";
+
+            eval = "{ " + eval + " }";
+
+            WriteLine($"{pixelFmtName} IPixelFactory<{pixelSrcName},{pixelFmtName}>.From({pixelSrcName} color) {eval}");   
+        }
+
+        void _writeCopyArray(string pixelFmtName, string pixelSrcName, string cvtFunc)
+        {
+            WriteLine($"unsafe void IPixelFactory<{pixelSrcName},{pixelFmtName}>.Copy(ReadOnlySpan<{pixelSrcName}> src, Span<{pixelFmtName}> dst)");                
+            WriteLine("{"); PushIndent("    ");
+
+            var (srcChan,srcSize) = _getChannels(pixelSrcName);
+            var (dstChan,dstSize) = _getChannels(pixelFmtName);
+
+            if (pixelFmtName == pixelSrcName)
+            {
+                WriteLine("src.CopyTo(dst);");
+            }
+            else if ( srcChan == dstChan &&  pixelSrcName.EndsWith("24") && pixelFmtName.EndsWith("96F"))
+            {
+                WriteLine("Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());");
+            }
+            else if ( srcChan == dstChan &&  pixelSrcName.EndsWith("32") && pixelFmtName.EndsWith("128F"))
+            {
+                WriteLine("Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());");
+            }
+            else 
+            {
+                WriteLine("while(dst.Length > 0)");
+                WriteLine("{"); PushIndent("    ");
+                WriteLine($"dst[0] = new {pixelFmtName}({cvtFunc});");
+                WriteLine($"src = src.Slice(sizeof({pixelSrcName}));");
+                WriteLine($"dst = dst.Slice(sizeof({pixelFmtName}));");
+                PopIndent(); WriteLine("}");
+            }
+
+            PopIndent(); WriteLine("}");           
+        }
+
+        foreach(var pixelFmtName in pixelFormatAllNames)
+        {
+            ClearIndent();
+            PushIndent("    ");
+            PushIndent("    ");            
+
+            WriteLine($"partial struct {pixelFmtName}");            
+
+            PushIndent("    ");
+
+            for(int i=0; i < pixelFormatSrcNames.Length; ++i)
+            {
+                var src = pixelFormatSrcNames[i];
+                var tmp = (i == 0 ? ": " : ", ") + $"IPixelFactory<{src},{pixelFmtName}>";
+                WriteLine(tmp);
+            }
+
+            for(int i=0; i < pixelFormatSrc8Names.Length; ++i)
+            {
+                var src = pixelFormatSrc8Names[i];
+                var tmp = ", " + $"IPixelFactory<{src},{pixelFmtName}>";
+                WriteLine(tmp);
+            }
+
+            PopIndent();
+
+            WriteLine("{");PushIndent("    ");
+        
+            foreach(var pixelSrcName in pixelFormatSrcNames)            
+            {
+                _writeFrom(pixelFmtName,pixelSrcName,"color");
+            }
+
+            foreach(var pixelSrcName in pixelFormatSrc8Names)            
+            {
+                var cvtFunc = "new BGRA32(color)";
+                if (pixelFmtName == "BGRA32") cvtFunc = "color";
+
+                _writeFrom(pixelFmtName,pixelSrcName,cvtFunc);
+            }
+
+            foreach(var pixelSrcName in pixelFormatSrcNames)            
+            {
+                _writeCopyArray(pixelFmtName,pixelSrcName,"src[0]");
+            }
+
+            foreach(var pixelSrcName in pixelFormatSrc8Names)            
+            {
+                var cvtFunc = "new BGRA32(src[0])";
+                if (pixelFmtName == "BGRA32") cvtFunc = "src[0]";
+
+                _writeCopyArray(pixelFmtName,pixelSrcName,cvtFunc);
+            }
+
+            PopIndent(); WriteLine("}");
+        }
+
+        ClearIndent();
+#>
+    }
+}

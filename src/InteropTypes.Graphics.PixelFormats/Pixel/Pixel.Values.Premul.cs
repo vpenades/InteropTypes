@@ -344,6 +344,7 @@ namespace InteropBitmaps
             public RGBP128F(RGBA32 color) : this(color.R, color.G, color.B, color.A) { }
             public RGBP128F(BGRA32 color) : this(color.R, color.G, color.B, color.A) { }
             public RGBP128F(ARGB32 color) : this(color.R, color.G, color.B, color.A) { }
+
             public RGBP128F(byte r, byte g, byte b, byte a) : this()
             {                
                 PreRGBA = new XYZA(r, g, b, a) / 255f;
@@ -360,9 +361,35 @@ namespace InteropBitmaps
 
             #region premultiplied constructors
 
+            public RGBP128F(in BGR96F color) : this()
+            {
+                PreRGBA = new XYZA(color.R,color.G,color.B, 1);
+            }
+
+            public RGBP128F(in RGB96F color) : this()
+            {
+                PreRGBA = new XYZA(color.RGB, 1);
+            }
+
             public RGBP128F(in RGBA128F color) : this()
             {
                 PreRGBA = new XYZA(color.RGB * color.A, color.A);
+            }
+
+            public RGBP128F(in BGRA128F color) : this()
+            {
+                PreRGBA = new XYZA(color.R, color.G, color.B, color.A);
+                PreRGB *= color.A;
+            }
+
+            public RGBP128F(RGBP32 color) : this()
+            {
+                PreRGBA = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
+            }
+
+            public RGBP128F(BGRP32 color) : this()
+            {
+                PreRGBA = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
             }
 
             public RGBP128F(in XYZ v) : this()
