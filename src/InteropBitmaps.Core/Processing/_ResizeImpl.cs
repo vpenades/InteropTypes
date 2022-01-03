@@ -118,7 +118,7 @@ namespace InteropBitmaps.Processing
 
             // TODO: for pixels with alpha support, alpha premultiplication should be required.
 
-            throw new NotImplementedException($"{dst.PixelFormat.GetDebuggerDisplay()} format not inplemented on {nameof(dst)}.");
+            throw new NotImplementedException($"{dst.PixelFormat} format not inplemented on {nameof(dst)}.");
         }       
 
         private static void _FitPixels3<TSrcPixel,TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)

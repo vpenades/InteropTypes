@@ -209,24 +209,27 @@ namespace InteropBitmaps
             ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
             ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
 
-            for(int i=0; i < dst.Length; ++i)
+            int dLen = dst.Length;
+
+            while (dLen > 0)
             {
+                --dLen;
                 dPtr = _ByteToFloatLUT[sPtr];
                 sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1);
-                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);                
             }
         }
 
         public static void CopyByteToUnit(ReadOnlySpan<byte> src, Span<float> dst)
         {
-            var d = _ToVector4(dst);
+            var dst4 = _ToVector4(dst);
 
-            for (int i = 0; i < d.Length; ++i)
+            for (int i = 0; i < dst4.Length; ++i)
             {
-                d[i] = new Vector4(src[i + 0], src[i + 1], src[i + 2], src[i + 3]) / 255f;
+                dst4[i] = new Vector4(src[i + 0], src[i + 1], src[i + 2], src[i + 3]) / 255f;
             }
 
-            for (int i = d.Length * 4; i < dst.Length; ++i)
+            for (int i = dst4.Length * 4; i < dst.Length; ++i)
             {
                 dst[i] = ((float)src[i]) / 255f;
             }

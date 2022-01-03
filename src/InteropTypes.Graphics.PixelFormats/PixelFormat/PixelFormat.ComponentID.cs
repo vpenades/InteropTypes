@@ -9,7 +9,7 @@ namespace InteropBitmaps
     {
         /// <summary>
         /// Represents the meaning of a <see cref="PixelFormat"/>'s channel.<br/>
-        /// It can be wrapped by a <see cref="Element"/> for additional information.
+        /// It can be wrapped by a <see cref="Component"/> for additional information.
         /// </summary>
         /// <remarks>
         /// <para>This enumeration is required to be in the range of 0-255 to fit in 1 byte.</para>
@@ -18,7 +18,7 @@ namespace InteropBitmaps
         /// it is recomended to serialize the values as strings.
         /// </para>
         /// </remarks>
-        public enum ElementID
+        public enum ComponentID
         {
             // 0 bits
             Empty = 0,

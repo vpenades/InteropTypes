@@ -5,24 +5,28 @@ using System.Numerics;
 
 namespace InteropBitmaps
 {
-    using PEF = PixelFormat.ElementID;
+    using PFCID = PixelFormat.ComponentID;
 
-    // TODO: Rename to PixelEncoding
+    /// <summary>
+    /// Represents the pixel reflection type, which provides information about the pixel compontents layout and size.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This structure is designed so it must have a fixed sizeof of 4 bytes.
+    /// </para>
+    /// <para>
+    /// ⚠️ This value is not serializable ⚠️<br/>
+    /// <see cref="PixelFormat"/> depends on <see cref="PFCID"/> values, which
+    /// is in continuous evolution, so serialization roundtrips are dangerous.
+    /// </para>
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
     public readonly partial struct PixelFormat : IEquatable<PixelFormat>
     {
         #region diagnostics
 
-        public string GetDebuggerDisplay()
-        {
-            var ptype = GetDefaultPixelType();
-            if (ptype != null) return ptype.Name;
-
-            var elements = Components.Select(item => item.Id);
-
-            return string.Join("-", elements);
-        }
+        private string GetDebuggerDisplay() { return ToString(); }
 
         #endregion
 
@@ -40,60 +44,60 @@ namespace InteropBitmaps
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with one <see cref="PEF"/> channel.
+        /// Creates a new <see cref="PixelFormat"/> with one <see cref="PFCID"/> channel.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
-        public PixelFormat(PEF e0) : this()
+        public PixelFormat(PFCID e0) : this()
         {
-            _Element0 = (Byte)e0;
-            _Element1 = _Element2 = _Element3 = (Byte)PEF.Empty;
+            _Component0 = (Byte)e0;
+            _Component1 = _Component2 = _Component3 = (Byte)PFCID.Empty;
 
             _Validate();
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with two <see cref="PEF"/> channels.
+        /// Creates a new <see cref="PixelFormat"/> with two <see cref="PFCID"/> channels.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
         /// <param name="e1">The second channel format.</param>
-        public PixelFormat(PEF e0, PEF e1) : this()
+        public PixelFormat(PFCID e0, PFCID e1) : this()
         {
-            _Element0 = (Byte)e0;
-            _Element1 = (Byte)e1;
-            _Element2 = _Element3 = (Byte)PEF.Empty;
+            _Component0 = (Byte)e0;
+            _Component1 = (Byte)e1;
+            _Component2 = _Component3 = (Byte)PFCID.Empty;
 
             _Validate();
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with three <see cref="PEF"/> channels.
+        /// Creates a new <see cref="PixelFormat"/> with three <see cref="PFCID"/> channels.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
         /// <param name="e1">The second channel format.</param>
         /// <param name="e2">The third channel format.</param>
-        public PixelFormat(PEF e0, PEF e1, PEF e2) : this()
+        public PixelFormat(PFCID e0, PFCID e1, PFCID e2) : this()
         {
-            _Element0 = (Byte)e0;
-            _Element1 = (Byte)e1;
-            _Element2 = (Byte)e2;
-            _Element3 = (Byte)PEF.Empty;
+            _Component0 = (Byte)e0;
+            _Component1 = (Byte)e1;
+            _Component2 = (Byte)e2;
+            _Component3 = (Byte)PFCID.Empty;
 
             _Validate();
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with four <see cref="PEF"/> channels.
+        /// Creates a new <see cref="PixelFormat"/> with four <see cref="PFCID"/> channels.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
         /// <param name="e1">The second channel format.</param>
         /// <param name="e2">The third channel format.</param>
         /// <param name="e3">The fourth channel format.</param>
-        public PixelFormat(PEF e0, PEF e1, PEF e2, PEF e3) : this()
+        public PixelFormat(PFCID e0, PFCID e1, PFCID e2, PFCID e3) : this()
         {
-            _Element0 = (Byte)e0;
-            _Element1 = (Byte)e1;
-            _Element2 = (Byte)e2;
-            _Element3 = (Byte)e3;
+            _Component0 = (Byte)e0;
+            _Component1 = (Byte)e1;
+            _Component2 = (Byte)e2;
+            _Component3 = (Byte)e3;
 
             _Validate();
         }
@@ -114,10 +118,10 @@ namespace InteropBitmaps
         {
             var tp = typeof(TPixel);
 
-            if (tp == typeof(float)) return new PixelFormat(PEF.Undefined32F);
-            if (tp == typeof(Vector2)) return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F);
-            if (tp == typeof(Vector3)) return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
-            if (tp == typeof(Vector4)) return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
+            if (tp == typeof(float)) return new PixelFormat(PFCID.Undefined32F);
+            if (tp == typeof(Vector2)) return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F);
+            if (tp == typeof(Vector3)) return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
+            if (tp == typeof(Vector4)) return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
 
             return CreateUndefinedOfSize(sizeof(TPixel));
         }
@@ -126,13 +130,13 @@ namespace InteropBitmaps
         {
             switch (byteCount)
             {
-                case 1: return new PixelFormat(PEF.Undefined8);
-                case 2: return new PixelFormat(PEF.Undefined8, PEF.Undefined8);
-                case 3: return new PixelFormat(PEF.Undefined8, PEF.Undefined8, PEF.Undefined8);
-                case 4: return new PixelFormat(PEF.Undefined8, PEF.Undefined8, PEF.Undefined8, PEF.Undefined8);
-                case 8: return new PixelFormat(PEF.Undefined16, PEF.Undefined16, PEF.Undefined16, PEF.Undefined16);
-                case 12: return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
-                case 16: return new PixelFormat(PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F, PEF.Undefined32F);
+                case 1: return new PixelFormat(PFCID.Undefined8);
+                case 2: return new PixelFormat(PFCID.Undefined8, PFCID.Undefined8);
+                case 3: return new PixelFormat(PFCID.Undefined8, PFCID.Undefined8, PFCID.Undefined8);
+                case 4: return new PixelFormat(PFCID.Undefined8, PFCID.Undefined8, PFCID.Undefined8, PFCID.Undefined8);
+                case 8: return new PixelFormat(PFCID.Undefined16, PFCID.Undefined16, PFCID.Undefined16, PFCID.Undefined16);
+                case 12: return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
+                case 16: return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
                 default: throw new NotImplementedException();
             }
         }
@@ -149,8 +153,8 @@ namespace InteropBitmaps
             if (depth == typeof(UInt16))
             {
                 if (channels == 1) return Pixel.Luminance16.Format;
-                if (channels == 3) return new PixelFormat(PEF.Blue16, PEF.Green16, PEF.Red16);
-                if (channels == 4) return new PixelFormat(PEF.Blue16, PEF.Green16, PEF.Red16, PEF.Alpha16);
+                if (channels == 3) return new PixelFormat(PFCID.Blue16, PFCID.Green16, PFCID.Red16);
+                if (channels == 4) return new PixelFormat(PFCID.Blue16, PFCID.Green16, PFCID.Red16, PFCID.Alpha16);
             }
 
             if (depth == typeof(Single))
@@ -271,19 +275,19 @@ namespace InteropBitmaps
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Runtime.InteropServices.FieldOffset(0)]
-        private readonly Byte _Element0;
+        private readonly Byte _Component0;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Runtime.InteropServices.FieldOffset(1)]
-        private readonly Byte _Element1;
+        private readonly Byte _Component1;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Runtime.InteropServices.FieldOffset(2)]
-        private readonly Byte _Element2;
+        private readonly Byte _Component2;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Runtime.InteropServices.FieldOffset(3)]
-        private readonly Byte _Element3;
+        private readonly Byte _Component3;
 
         /// <inheritdoc />
         public override int GetHashCode() { return Code.GetHashCode(); }
@@ -294,43 +298,49 @@ namespace InteropBitmaps
         /// <inheritdoc />
         public bool Equals(PixelFormat other) { return this.Code == other.Code; }
 
+        /// <inheritdoc />
         public static bool operator ==(PixelFormat a, PixelFormat b) { return a.Code == b.Code; }
 
+        /// <inheritdoc />
         public static bool operator !=(PixelFormat a, PixelFormat b) { return a.Code != b.Code; }
 
         #endregion
 
         #region properties
 
-        public Element Component0 => new Element(_Element0);
+        public Component this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0: return Component0;
+                    case 1: return Component1;
+                    case 2: return Component2;
+                    case 3: return Component3;
+                    default: return PFCID.Empty;
+                }
+            }
+        }
 
-        public Element Component1 => new Element(_Element1);
+        public Component Component0 => new Component(_Component0);
 
-        public Element Component2 => new Element(_Element2);
+        public Component Component1 => new Component(_Component1);
 
-        public Element Component3 => new Element(_Element3);
+        public Component Component2 => new Component(_Component2);
+
+        public Component Component3 => new Component(_Component3);
 
         /// <summary>
         /// Gets the number of bytes required to store this pixel format
         /// </summary>
-        public int ByteCount => _GetByteLength();
-
-        /// <summary>
-        /// Gets the pixel format used by the Odd scanlines.
-        /// </summary>
-        /// <remarks>
-        /// Some formats use a byte pattern where odd and even scanlines reverse the byte ordering.
-        /// </remarks>
-        public PixelFormat ScanlineOddFormat
-        {
-            get => this;
-        }
+        public int ByteCount => _GetByteLength();        
 
         /// <summary>
         /// returns the sequence of non empty elements.
         /// </summary>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public IEnumerable<Element> Components
+        public IEnumerable<Component> Components
         {
             get
             {
@@ -369,31 +379,31 @@ namespace InteropBitmaps
             get
             {
                 if (Code == 0) return false;
-                if (_Element0 > 0 && Component0.IsUndefined) return false;
-                if (_Element1 > 0 && Component1.IsUndefined) return false;
-                if (_Element2 > 0 && Component2.IsUndefined) return false;
-                if (_Element3 > 0 && Component3.IsUndefined) return false;
+                if (_Component0 > 0 && Component0.IsUndefined) return false;
+                if (_Component1 > 0 && Component1.IsUndefined) return false;
+                if (_Component2 > 0 && Component2.IsUndefined) return false;
+                if (_Component3 > 0 && Component3.IsUndefined) return false;
                 return true;
             }
         }
 
         /// <summary>
-        /// True if one of the elements is non premultiplied alpha.
+        /// True if one of the components is non premultiplied alpha.
         /// </summary>
         public bool HasAlpha => Component0.IsAlpha | Component1.IsAlpha | Component2.IsAlpha | Component3.IsAlpha;
 
         /// <summary>
-        /// True if one of the elements is premultiplied alpha.
+        /// True if one of the components is premultiplied alpha.
         /// </summary>
         public bool HasPremul => Component0.IsPremul | Component1.IsPremul | Component2.IsPremul | Component3.IsPremul;
 
         /// <summary>
-        /// True if one of the elements is alpha (premultiplied or not).
+        /// True if one of the components is alpha (premultiplied or not).
         /// </summary>
         public bool HasAlphaOrPremul => HasAlpha | HasPremul;
 
         /// <summary>
-        /// true if all the elements are floating point values.
+        /// true if all the components are floating point values.
         /// </summary>
         public bool IsFloating => Component0.IsFloating && Component1.IsFloating && Component2.IsFloating && Component3.IsFloating;
 
@@ -441,17 +451,26 @@ namespace InteropBitmaps
 
         #region API
 
-        public bool All(PEF a) { return _FindIndex(a) >= 0; }
-        public bool All(PEF a, PEF b) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0; }
-        public bool All(PEF a, PEF b, PEF c) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0; }
-        public bool All(PEF a, PEF b, PEF c, PEF d) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0 && _FindIndex(d) >= 0; }
+        private int _FindIndex(PFCID pef)
+        {
+            if (Component0.Id == pef) return 0;
+            if (Component1.Id == pef) return 1;
+            if (Component2.Id == pef) return 2;
+            if (Component3.Id == pef) return 3;
+            return -1;
+        }
 
-        public bool Any(PEF a) { return _FindIndex(a) >= 0; }
-        public bool Any(PEF a, PEF b) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0; }
-        public bool Any(PEF a, PEF b, PEF c) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0; }
-        public bool Any(PEF a, PEF b, PEF c, PEF d) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0 || _FindIndex(d) >= 0; }
+        public bool All(PFCID a) { return _FindIndex(a) >= 0; }
+        public bool All(PFCID a, PFCID b) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0; }
+        public bool All(PFCID a, PFCID b, PFCID c) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0; }
+        public bool All(PFCID a, PFCID b, PFCID c, PFCID d) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0 && _FindIndex(d) >= 0; }
 
-        public int GetBitOffset(PEF pef)
+        public bool Any(PFCID a) { return _FindIndex(a) >= 0; }
+        public bool Any(PFCID a, PFCID b) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0; }
+        public bool Any(PFCID a, PFCID b, PFCID c) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0; }
+        public bool Any(PFCID a, PFCID b, PFCID c, PFCID d) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0 || _FindIndex(d) >= 0; }
+
+        public int GetBitOffset(PFCID pef)
         {
             if (Component0 == pef) return 0;
 
@@ -467,7 +486,7 @@ namespace InteropBitmaps
             return -1;
         }
 
-        public int GetByteOffset(PEF pef)
+        public int GetByteOffset(PFCID pef)
         {
             if (Component0 == pef) return 0;
 
@@ -491,38 +510,17 @@ namespace InteropBitmaps
             l += Component2.BitCount;
             l += Component3.BitCount;
             return l / 8;
-        }
-
-        private int _FindIndex(PEF pef)
-        {
-            if (Component0.Id == pef) return 0;
-            if (Component1.Id == pef) return 1;
-            if (Component2.Id == pef) return 2;
-            if (Component3.Id == pef) return 3;
-            return -1;
-        }
+        }        
 
         private int _GetEmptyCount()
         {
             int count = 0;
-            if (Component0.Id == PEF.Empty) ++count;
-            if (Component1.Id == PEF.Empty) ++count;
-            if (Component2.Id == PEF.Empty) ++count;
-            if (Component3.Id == PEF.Empty) ++count;
+            if (Component0.Id == PFCID.Empty) ++count;
+            if (Component1.Id == PFCID.Empty) ++count;
+            if (Component2.Id == PFCID.Empty) ++count;
+            if (Component3.Id == PFCID.Empty) ++count;
             return count;
-        }
-
-        private Element _GetComponentAt(int byteIndex)
-        {
-            switch (byteIndex)
-            {
-                case 0: return Component0;
-                case 1: return Component1;
-                case 2: return Component2;
-                case 3: return Component3;
-                default: return PEF.Empty;
-            }
-        }
+        }        
 
         public Type GetDepthType()
         {
@@ -588,13 +586,28 @@ namespace InteropBitmaps
                 case Pixel.BGR96F.Code: return typeof(Pixel.BGR96F);
 
                 case Pixel.RGBA128F.Code: return typeof(Pixel.RGBA128F);
-                case Pixel.RGBP128F.Code: return typeof(Pixel.RGBP128F);
-
                 case Pixel.BGRA128F.Code: return typeof(Pixel.BGRA128F);
+
+                case Pixel.RGBP128F.Code: return typeof(Pixel.RGBP128F);                
                 case Pixel.BGRP128F.Code: return typeof(Pixel.BGRP128F);
             }
 
             return null;
+        }
+
+        #endregion
+
+        #region serialization
+
+        /// <inheritdoc />        
+        public override string ToString()
+        {
+            var ptype = GetDefaultPixelType();
+            if (ptype != null) return ptype.Name;
+
+            var components = Components.Select(item => item.Id);
+
+            return string.Join("-", components);
         }
 
         #endregion

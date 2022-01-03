@@ -21,7 +21,7 @@ namespace InteropBitmaps
         {
             foreach(var fmt in PixelFormat.AllFormats)
             {
-                TestContext.WriteLine($"{fmt} {fmt.ToString()} {fmt.GetDebuggerDisplay()}");
+                TestContext.WriteLine($"{fmt}");
 
                 var pixelType = fmt.GetDefaultPixelType();
                 Assert.NotNull(pixelType);

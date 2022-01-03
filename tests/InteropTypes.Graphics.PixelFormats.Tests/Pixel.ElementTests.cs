@@ -8,14 +8,14 @@ using NUnit.Framework;
 
 namespace InteropBitmaps
 {
-    using PEF = PixelFormat.ElementID;
+    using PEF = PixelFormat.ComponentID;
 
     public class ElementTests
     {
         [Test]
         public void TestElementMemoryFootprint()
         {
-            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat.Element)));            
+            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat.Component)));            
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace InteropBitmaps
         {
             #if DEBUG // requires debug mode
 
-            Assert.AreEqual(PEF.Empty, default(PixelFormat.Element).Id);
+            Assert.AreEqual(PEF.Empty, default(PixelFormat.Component).Id);
 
             // PixelFormat._GetBitLen(c);
 
@@ -43,7 +43,7 @@ namespace InteropBitmaps
             foreach (var c in values)
             {
                 var name = c.ToString();
-                var element = new PixelFormat.Element(c);
+                var element = new PixelFormat.Component(c);
 
                 var blen = element.BitCount;
 
@@ -68,7 +68,11 @@ namespace InteropBitmaps
 
                 Assert.AreEqual(xlen, blen, "Reported bit length and suffix must match.");
                 Assert.GreaterOrEqual(xlen, lastLen, "Bit lengths must be declared in ascending order.");
-                Assert.AreEqual(xflt, element.IsFloating, "Reported bit length and suffix must match.");
+
+                if (!name.StartsWith("Millimeter"))
+                {
+                    Assert.AreEqual(xflt, element.IsFloating, "Reported bit length and suffix must match.");
+                }                
 
                 lastLen = xlen;
             }

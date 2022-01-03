@@ -18,15 +18,18 @@ namespace InteropBitmaps
 <#
         // https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
 
-        var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP32","BGRP32","RGBP128F" };        
-        var pixelFormatDst8Names = new string[] { "BGR565","BGRA5551","BGRA4444","RGB24","BGR24","RGBA32","BGRA32","ARGB32", "BGRP32", "RGBP32" };
-        var pixelFormatDstFNames = new string[] { "RGB96F","BGR96F","RGBA128F","BGRA128F", "RGBP128F" };
+        var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGBP32","BGRP32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP128F" };
+        var pixelFormatDst8Names = new string[] { "Alpha8", "Luminance8", "BGR565","BGRA5551","BGRA4444","RGB24","BGR24","RGBA32","BGRA32","ARGB32", "BGRP32", "RGBP32" };
+        var pixelFormatDstFNames = new string[] { "Luminance32F", "RGB96F","BGR96F","RGBA128F","BGRA128F", "RGBP128F" };
 
         void _writeToPixel(string pixelSrcName, string pixelDstName, string cvtFunc = "this")
         {
+            if (pixelSrcName == "Luminance8" && pixelDstName == "Alpha8") cvtFunc = "this.L";
+            if (pixelSrcName == "Alpha8" && pixelDstName == "Luminance8") cvtFunc = "this.A";
+
             var eval = pixelSrcName == pixelDstName
                     ? "return this;"
-                    : $"return new {pixelDstName}({cvtFunc});";
+                    : $"return new {pixelDstName}({cvtFunc});";            
 
             eval = "{ " + eval + " }";
 
