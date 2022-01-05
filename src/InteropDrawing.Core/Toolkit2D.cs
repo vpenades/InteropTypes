@@ -17,6 +17,12 @@ namespace InteropDrawing
 {
     public static partial class Toolkit
     {
+        #region data
+
+        private static readonly System.Threading.ThreadLocal<Model2D> _Model2DBounds = new System.Threading.ThreadLocal<Model2D>(() => new Model2D());
+
+        #endregion
+
         #region 2D transforms
 
         public static IDrawing2D CreateTransformed(IDrawing2D target, Point2 physicalSize, Point2 virtualSize, XFORM2 xform)
@@ -47,8 +53,10 @@ namespace InteropDrawing
         {            
             if (asset is Model2D model2D) return model2D.BoundingRect;
             if (asset is IDrawable2D drawable)
-            {
-                var mdl = new Model2D();
+            {                
+                var mdl = _Model2DBounds.Value;
+                mdl.Clear();
+
                 drawable.DrawTo(mdl);
                 return mdl.BoundingRect;
             }
@@ -61,7 +69,9 @@ namespace InteropDrawing
             if (asset is Model2D model2D) return model2D.BoundingCircle;
             if (asset is IDrawable2D drawable)
             {
-                var mdl = new Model2D();
+                var mdl = _Model2DBounds.Value;
+                mdl.Clear();
+
                 drawable.DrawTo(mdl);
                 return mdl.BoundingCircle;
             }

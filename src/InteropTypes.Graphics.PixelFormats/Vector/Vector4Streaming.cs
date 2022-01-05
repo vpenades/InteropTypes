@@ -40,11 +40,11 @@ namespace InteropBitmaps
 
         public static Single Min(ReadOnlySpan<Single> span)
         {
-            var vectSpan = _ToVector4(span);
-            var fourMin = Min(vectSpan);
-            var min = _Min(fourMin.X, fourMin.Y, fourMin.Z, fourMin.W);
+            var span4 = _ToVector4(span);
+            var min4 = Min(span4);
+            var min = _Min(min4.X, min4.Y, min4.Z, min4.W);
 
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
+            for (int i = span4.Length * 4; i < span.Length; ++i)
             {
                 var v = span[i];
                 if (min > v) min = v;
@@ -55,11 +55,11 @@ namespace InteropBitmaps
 
         public static Single Max(ReadOnlySpan<Single> span)
         {
-            var vectSpan = _ToVector4(span);
-            var fourMax = Max(vectSpan);
-            var max = _Max(fourMax.X, fourMax.Y, fourMax.Z, fourMax.W);
+            var span4 = _ToVector4(span);
+            var max4 = Max(span4);
+            var max = _Max(max4.X, max4.Y, max4.Z, max4.W);
 
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
+            for (int i = span4.Length * 4; i < span.Length; ++i)
             {
                 var v = span[i];
                 if (max < v) max = v;
@@ -94,12 +94,12 @@ namespace InteropBitmaps
 
         public static (Single Min, Single Max) MinMax(ReadOnlySpan<Single> span)
         {
-            var vectSpan = _ToVector4(span);
-            var (fourMin, fourMax) = MinMax(vectSpan);
-            var min = _Min(fourMin.X, fourMin.Y, fourMin.Z, fourMin.W);
-            var max = _Max(fourMax.X, fourMax.Y, fourMax.Z, fourMax.W);
+            var span4 = _ToVector4(span);
+            var (min4, max4) = MinMax(span4);
+            var min = _Min(min4.X, min4.Y, min4.Z, min4.W);
+            var max = _Max(max4.X, max4.Y, max4.Z, max4.W);
 
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
+            for (int i = span4.Length * 4; i < span.Length; ++i)
             {
                 var v = span[i];
                 if (min > v) min = v;
@@ -129,17 +129,17 @@ namespace InteropBitmaps
 
             if (a.Length != b.Length) return false;
 
-            var av = _ToVector4(a);
-            var bv = _ToVector4(b);
+            var a4 = _ToVector4(a);
+            var b4 = _ToVector4(b);
 
             // vector4
-            for (int i = 0; i < av.Length; ++i)
+            for (int i = 0; i < a4.Length; ++i)
             {
-                if (av[i] != bv[i]) return false;
+                if (a4[i] != b4[i]) return false;
             }
 
             // remainder
-            for (int i = av.Length * 4; i < a.Length; ++i)
+            for (int i = a4.Length * 4; i < a.Length; ++i)
             {
                 if (a[i] != b[i]) return false;
             }
@@ -149,62 +149,68 @@ namespace InteropBitmaps
 
         public static void Clamp(Span<Single> span, Single min, Single max)
         {
-            var vectSpan = _ToVector4(span);
-            var vectMin = new Vector4(min);
-            var vectMax = new Vector4(max);
+            var span4 = _ToVector4(span);
+            var min4 = new Vector4(min);
+            var max4 = new Vector4(max);
 
             // vector4
-            for (int i = 0; i < vectSpan.Length; ++i)
+            for (int i = 0; i < span4.Length; ++i)
             {
-                vectSpan[i] = Vector4.Max(Vector4.Min(vectSpan[i], vectMax), vectMin);
+                span4[i] = Vector4.Max(Vector4.Min(span4[i], max4), min4);
             }
 
             // remainder
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
+            for (int i = span4.Length * 4; i < span.Length; ++i)
             {
                 span[i] = Math.Max(Math.Min(span[i], max), min);
             }
         }
 
-        public static void MultiplyAndAdd(Span<Single> span, Single mul, Single add)
+        public static void FitToUnits(Span<Single> span)
         {
-            var vectSpan = _ToVector4(span);
-            var vectMul = new Vector4(mul);
-            var vectAdd = new Vector4(add);
+            var (min, max) = MinMax(span);
+            AddMultiply(span, -min, 1.0f / (max - min));
+        }
 
-            for (int i = 0; i < vectSpan.Length; ++i)
+        public static void MultiplyAdd(Span<Single> span, Single mul, Single add)
+        {
+            var span4 = _ToVector4(span);
+            var mul4 = new Vector4(mul);
+            var add4 = new Vector4(add);
+
+            for (int i = 0; i < span4.Length; ++i)
             {
-                vectSpan[i] *= vectMul;
-                vectSpan[i] += vectAdd;
+                span4[i] *= mul4;
+                span4[i] += add4;
             }
 
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
+            for (int i = span4.Length * 4; i < span.Length; ++i)
             {
                 span[i] *= mul;
                 span[i] += add;
             }
         }
 
-        public static void AddAndMultiply(Span<Single> span, Single add, Single mul)
+        public static void AddMultiply(Span<Single> span, Single add, Single mul)
         {
-            var vectSpan = _ToVector4(span);
-            var vectMul = new Vector4(mul);
-            var vectAdd = new Vector4(add);
+            var span4 = _ToVector4(span);
+            var mul4 = new Vector4(mul);
+            var add4 = new Vector4(add);
 
-            for (int i = 0; i < vectSpan.Length; ++i)
+            for (int i = 0; i < span4.Length; ++i)
             {
-                vectSpan[i] += vectAdd;
-                vectSpan[i] *= vectMul;
+                span4[i] += add4;
+                span4[i] *= mul4;
             }
 
-            for (int i = vectSpan.Length * 4; i < span.Length; ++i)
+            for (int i = span4.Length * 4; i < span.Length; ++i)
             {
                 span[i] += add;
                 span[i] *= mul;
             }
         }
 
-        public static void CopyByteToUnitLUT(ReadOnlySpan<byte> src, Span<float> dst)
+        public static void BytesToUnitsLUT(ReadOnlySpan<byte> src, Span<float> dst)
         {
             ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
             ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
@@ -220,7 +226,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void CopyByteToUnit(ReadOnlySpan<byte> src, Span<float> dst)
+        public static void BytesToUnits(ReadOnlySpan<byte> src, Span<float> dst)
         {
             var dst4 = _ToVector4(dst);
 

@@ -263,7 +263,7 @@ namespace InteropBitmaps
             for (int y = 0; y < target.Height; ++y)
             {
                 var row = target.UseScanlinePixels(y);
-                Vector4Streaming.AddAndMultiply(row, add, multiply);
+                Vector4Streaming.AddMultiply(row, add, multiply);
             }
         }
 
@@ -272,7 +272,7 @@ namespace InteropBitmaps
             for (int y = 0; y < target.Height; ++y)
             {
                 var row = target.UseScanlinePixels(y);
-                Vector4Streaming.MultiplyAndAdd(row, multiply, add);
+                Vector4Streaming.MultiplyAdd(row, multiply, add);
             }
         }
 
@@ -282,7 +282,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
-                Vector4Streaming.AddAndMultiply(fRow, add, multiply);
+                Vector4Streaming.AddMultiply(fRow, add, multiply);
             }
         }
 
@@ -305,7 +305,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
-                Vector4Streaming.MultiplyAndAdd(fRow, multiply, add);
+                Vector4Streaming.MultiplyAdd(fRow, multiply, add);
             }
         }
 
@@ -315,7 +315,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, Single>(row);
-                Vector4Streaming.AddAndMultiply(fRow, add, multiply);
+                Vector4Streaming.AddMultiply(fRow, add, multiply);
             }
         }
 
@@ -325,7 +325,7 @@ namespace InteropBitmaps
             {
                 var row = target.UseScanlinePixels(y);
                 var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, float>(row);
-                Vector4Streaming.MultiplyAndAdd(fRow, multiply, add);
+                Vector4Streaming.MultiplyAdd(fRow, multiply, add);
             }
         }        
     }

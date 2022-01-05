@@ -18,6 +18,12 @@ namespace InteropDrawing
 {
     public static partial class Toolkit
     {
+        #region data
+
+        private static readonly System.Threading.ThreadLocal<Model3D> _Model3DBounds = new System.Threading.ThreadLocal<Model3D>(() => new Model3D());
+
+        #endregion
+
         #region 3D transforms
 
         public static IDrawing2D CreateTransformed2D(this IDrawing2D t, XFORM2 xform)
@@ -93,6 +99,51 @@ namespace InteropDrawing
         #endregion
 
         #region drawing        
+
+        public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
+        {
+            if (asset is Model3D model3D) return model3D.BoundingBox;
+            if (asset is IDrawable3D drawable)
+            {
+                var mdl = _Model3DBounds.Value;
+                mdl.Clear();
+
+                drawable.DrawTo(mdl);
+                return mdl.BoundingBox;
+            }
+
+            return null;
+        }
+
+        public static BBOX? GetAssetBoundingMatrix(Object asset)
+        {
+            if (asset is Model3D model3D) return model3D.BoundingMatrix;
+            if (asset is IDrawable3D drawable)
+            {
+                var mdl = _Model3DBounds.Value;
+                mdl.Clear();
+
+                drawable.DrawTo(mdl);
+                return mdl.BoundingMatrix;
+            }
+
+            return null;
+        }
+
+        public static (VECTOR3 Center, Single Radius)? GetAssetBoundingSphere(Object asset)
+        {
+            if (asset is Model3D model3D) return model3D.BoundingSphere;
+            if (asset is IDrawable3D drawable)
+            {
+                var mdl = _Model3DBounds.Value;
+                mdl.Clear();
+
+                drawable.DrawTo(mdl);
+                return mdl.BoundingSphere;
+            }
+
+            return null;
+        }
 
         public static void DrawSurface(this ISurfaceDrawing3D dc, SurfaceStyle brush, params Point3[] points)
         {
@@ -184,41 +235,7 @@ namespace InteropDrawing
             vertices[2] = corners[2 + 4];
             vertices[3] = corners[3 + 4];
             dc.DrawSurface(vertices, style[idx]);
-        }
-
-        public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
-        {
-            if (asset is Model3D model3D) return model3D.BoundingBox;
-            if (asset is IDrawable3D drawable)
-            {
-                var mdl = new Model3D();
-                drawable.DrawTo(mdl);
-                return mdl.BoundingBox;
-            }
-
-            return null;
-        }
-
-        public static BBOX? GetAssetBoundingMatrix(Object asset)
-        {
-            if (asset is Model3D model3D) return model3D.BoundingMatrix;
-            if (asset is IDrawable3D drawable)
-            {
-                var mdl = new Model3D();
-                drawable.DrawTo(mdl);
-                return mdl.BoundingMatrix;
-            }
-
-            return null;
-        }
-
-         public static (VECTOR3 Center,Single Radius)? GetAssetBoundingSphere(Object asset)
-        {
-            if (asset is Model3D model3D) return model3D.BoundingSphere;            
-
-            return null;
-        }
-        
+        }        
 
         public static void DrawCamera(this IDrawing3D dc, XFORM4 pivot, float cameraSize)
         {

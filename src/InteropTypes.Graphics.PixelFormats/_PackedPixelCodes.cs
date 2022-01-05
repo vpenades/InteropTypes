@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    using PFCID = PixelFormat.ComponentID;
+    using PFCID = PixelComponentID;
 
     /// <summary>
     /// Predefined pixel formats encoded as const UInt32 values,

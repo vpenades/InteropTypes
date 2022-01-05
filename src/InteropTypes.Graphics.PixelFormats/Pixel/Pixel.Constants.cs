@@ -3,17 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
-
 namespace InteropBitmaps
 {
-    
-
     public static partial class Pixel
     {
-        
-        
-
         partial struct Millimeter16
         {
             public const uint Code = _PackedPixelCodes.Millimeter16;

@@ -9,11 +9,7 @@ namespace InteropBitmaps
 
     static class _SpanSingleExtensions
     {
-        public static void FitBetweenZeroAndOne(Span<Single> span)
-        {
-            var (min, max) = Vector4Streaming.MinMax(span);
-            Vector4Streaming.AddAndMultiply(span, -min, 1.0f / (max - min));
-        }        
+              
 
         public static void CopyPixels(ReadOnlySpan<Single> src, Span<Byte> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {

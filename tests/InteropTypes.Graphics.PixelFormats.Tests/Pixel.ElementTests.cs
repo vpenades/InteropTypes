@@ -8,14 +8,14 @@ using NUnit.Framework;
 
 namespace InteropBitmaps
 {
-    using PEF = PixelFormat.ComponentID;
+    using PEF = PixelComponentID;
 
     public class ElementTests
     {
         [Test]
         public void TestElementMemoryFootprint()
         {
-            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat.Component)));            
+            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelComponent)));            
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace InteropBitmaps
         {
             #if DEBUG // requires debug mode
 
-            Assert.AreEqual(PEF.Empty, default(PixelFormat.Component).Id);
+            Assert.AreEqual(PEF.Empty, default(PixelComponent).Id);
 
             // PixelFormat._GetBitLen(c);
 
@@ -43,7 +43,7 @@ namespace InteropBitmaps
             foreach (var c in values)
             {
                 var name = c.ToString();
-                var element = new PixelFormat.Component(c);
+                var element = new PixelComponent(c);
 
                 var blen = element.BitCount;
 

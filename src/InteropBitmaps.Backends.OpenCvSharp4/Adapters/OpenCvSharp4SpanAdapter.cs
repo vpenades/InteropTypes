@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 
 using OpenCvSharp;
-using OpenCvSharp.Extensions;
 
 namespace InteropBitmaps.Adapters
 {

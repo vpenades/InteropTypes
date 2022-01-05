@@ -97,6 +97,7 @@ namespace InteropBitmaps
             throw new NotImplementedException();
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public static CopyConverterCallback<Byte, Byte> GetByteCopyConverter<TSrc, TDst>()
             where TSrc : unmanaged
             where TDst : unmanaged

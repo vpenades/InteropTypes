@@ -6,79 +6,6 @@ namespace InteropBitmaps.Processing
 {
     static class _BitmapTransformImplementation
     {
-        struct _PixelTransformIterator
-        {
-            const int BITSHIFT = 14; // 16384
-            const int BITMASK = (1 << BITSHIFT) -1;
-
-            /// <summary>
-            /// creates a new interator for a row drawing
-            /// </summary>
-            /// <param name="dstY">The destination row.</param>
-            /// <param name="srcXform">the transform to apply.</param>
-            /// <param name="srcW">The source image width in pixels.</param>
-            /// <param name="srcH">The source image height in pixels.</param>
-            public _PixelTransformIterator(float dstY, System.Numerics.Matrix3x2 srcXform, int srcW, int srcH)
-            {
-                var origin = System.Numerics.Vector2.Transform(new System.Numerics.Vector2(0, dstY), srcXform);
-                var delta = System.Numerics.Vector2.TransformNormal(System.Numerics.Vector2.UnitX, srcXform);
-
-                origin *= 1 << BITSHIFT;
-                delta *= 1 << BITSHIFT;
-
-                _X = (int)origin.X;
-                _Y = (int)origin.Y;
-                _Dx = (int)delta.X;
-                _Dy = (int)delta.Y;
-                _W = srcW - 1;
-                _H = srcH - 1;
-
-                _X += 1 << (BITSHIFT - 1);
-                _Y += 1 << (BITSHIFT - 1);
-            }
-
-            private int _X;
-            private int _Y;
-
-            private readonly int _Dx;            
-            private readonly int _Dy;
-            private readonly int _W;
-            private readonly int _H;
-
-            public int X => Math.Max(0, Math.Min(_W, _X >> BITSHIFT));
-            public int Y => Math.Max(0, Math.Min(_H, _Y >> BITSHIFT));
-
-            public void MoveNext()
-            {
-                _X += _Dx;
-                _Y += _Dy;
-            }
-
-            public bool MoveNext(out int x, out int y)
-            {
-                x = _X >> BITSHIFT;
-                y = _Y >> BITSHIFT;
-
-                _X += _Dx;
-                _Y += _Dy;
-
-                return x >= 0 & x <= _W & y >= 0 & y <= _H;
-            }
-
-            public bool MoveNext(out int x, out int y, out float fpx, out float fpy)
-            {
-                x = _X >> BITSHIFT;
-                y = _Y >> BITSHIFT;
-                fpx = (_X & BITMASK) / (float)(BITMASK + 1);
-                fpy = (_Y & BITMASK) / (float)(BITMASK + 1);
-
-                _X += _Dx;
-                _Y += _Dy;
-
-                return x >= 0 & x <= _W & y >= 0 & y <= _H;
-            }
-        }
-
         #region set
 
         public static void SetPixelsNearest<TPixel>(SpanBitmap<TPixel> dst, SpanBitmap<TPixel> src, System.Numerics.Matrix3x2 srcXform)
@@ -251,6 +178,83 @@ namespace InteropBitmaps.Processing
                         dstRow[x] = dstRow[x].AlphaBlendWith(srcABCD, opacity);
                     }
                 }
+            }
+        }
+
+        #endregion
+
+        #region nested types
+
+        struct _PixelTransformIterator
+        {
+            const int BITSHIFT = 14; // 16384
+            const int BITMASK = (1 << BITSHIFT) - 1;
+
+            /// <summary>
+            /// creates a new interator for a row drawing
+            /// </summary>
+            /// <param name="dstY">The destination row.</param>
+            /// <param name="srcXform">the transform to apply.</param>
+            /// <param name="srcW">The source image width in pixels.</param>
+            /// <param name="srcH">The source image height in pixels.</param>
+            public _PixelTransformIterator(float dstY, System.Numerics.Matrix3x2 srcXform, int srcW, int srcH)
+            {
+                var origin = System.Numerics.Vector2.Transform(new System.Numerics.Vector2(0, dstY), srcXform);
+                var delta = System.Numerics.Vector2.TransformNormal(System.Numerics.Vector2.UnitX, srcXform);
+
+                origin *= 1 << BITSHIFT;
+                delta *= 1 << BITSHIFT;
+
+                _X = (int)origin.X;
+                _Y = (int)origin.Y;
+                _Dx = (int)delta.X;
+                _Dy = (int)delta.Y;
+                _W = srcW - 1;
+                _H = srcH - 1;
+
+                _X += 1 << (BITSHIFT - 1);
+                _Y += 1 << (BITSHIFT - 1);
+            }
+
+            private int _X;
+            private int _Y;
+
+            private readonly int _Dx;
+            private readonly int _Dy;
+            private readonly int _W;
+            private readonly int _H;
+
+            public int X => Math.Max(0, Math.Min(_W, _X >> BITSHIFT));
+            public int Y => Math.Max(0, Math.Min(_H, _Y >> BITSHIFT));
+
+            public void MoveNext()
+            {
+                _X += _Dx;
+                _Y += _Dy;
+            }
+
+            public bool MoveNext(out int x, out int y)
+            {
+                x = _X >> BITSHIFT;
+                y = _Y >> BITSHIFT;
+
+                _X += _Dx;
+                _Y += _Dy;
+
+                return x >= 0 & x <= _W & y >= 0 & y <= _H;
+            }
+
+            public bool MoveNext(out int x, out int y, out float fpx, out float fpy)
+            {
+                x = _X >> BITSHIFT;
+                y = _Y >> BITSHIFT;
+                fpx = (_X & BITMASK) / (float)(BITMASK + 1);
+                fpy = (_Y & BITMASK) / (float)(BITMASK + 1);
+
+                _X += _Dx;
+                _Y += _Dy;
+
+                return x >= 0 & x <= _W & y >= 0 & y <= _H;
             }
         }
 

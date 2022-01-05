@@ -1326,7 +1326,7 @@ namespace InteropBitmaps
             {
                 System.Diagnostics.Debug.Assert(src.Length == dst.Length);
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
-                Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());
+                Vector4Streaming.BytesToUnits(src.AsBytes(), dst.AsSingles());
             }
             /// <inheritdoc />
             unsafe void IPixelFactory<BGR565,Luminance32F>.Copy(ReadOnlySpan<BGR565> src, Span<Luminance32F> dst)
@@ -6136,7 +6136,7 @@ namespace InteropBitmaps
             {
                 System.Diagnostics.Debug.Assert(src.Length == dst.Length);
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
-                Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());
+                Vector4Streaming.BytesToUnits(src.AsBytes(), dst.AsSingles());
             }
             /// <inheritdoc />
             unsafe void IPixelFactory<BGR24,RGB96F>.Copy(ReadOnlySpan<BGR24> src, Span<RGB96F> dst)
@@ -6548,7 +6548,7 @@ namespace InteropBitmaps
             {
                 System.Diagnostics.Debug.Assert(src.Length == dst.Length);
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
-                Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());
+                Vector4Streaming.BytesToUnits(src.AsBytes(), dst.AsSingles());
             }
             /// <inheritdoc />
             unsafe void IPixelFactory<RGBA32,BGR96F>.Copy(ReadOnlySpan<RGBA32> src, Span<BGR96F> dst)
@@ -6980,7 +6980,7 @@ namespace InteropBitmaps
             {
                 System.Diagnostics.Debug.Assert(src.Length == dst.Length);
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
-                Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());
+                Vector4Streaming.BytesToUnits(src.AsBytes(), dst.AsSingles());
             }
             /// <inheritdoc />
             unsafe void IPixelFactory<ARGB32,BGRA128F>.Copy(ReadOnlySpan<ARGB32> src, Span<BGRA128F> dst)
@@ -7352,7 +7352,7 @@ namespace InteropBitmaps
             {
                 System.Diagnostics.Debug.Assert(src.Length == dst.Length);
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
-                Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());
+                Vector4Streaming.BytesToUnits(src.AsBytes(), dst.AsSingles());
             }
             /// <inheritdoc />
             unsafe void IPixelFactory<BGRA32,RGBA128F>.Copy(ReadOnlySpan<BGRA32> src, Span<RGBA128F> dst)
@@ -7824,7 +7824,7 @@ namespace InteropBitmaps
             {
                 System.Diagnostics.Debug.Assert(src.Length == dst.Length);
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
-                Vector4Streaming.CopyByteToUnit(src.AsBytes(), dst.AsSingles());
+                Vector4Streaming.BytesToUnits(src.AsBytes(), dst.AsSingles());
             }
             /// <inheritdoc />
             unsafe void IPixelFactory<Luminance32F,RGBP128F>.Copy(ReadOnlySpan<Luminance32F> src, Span<RGBP128F> dst)

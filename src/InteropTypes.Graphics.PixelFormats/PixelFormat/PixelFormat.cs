@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace InteropBitmaps
 {
-    using PFCID = PixelFormat.ComponentID;
+    using PCID = PixelComponentID;
 
     /// <summary>
     /// Represents the pixel reflection type, which provides information about the pixel compontents layout and size.
@@ -16,7 +16,7 @@ namespace InteropBitmaps
     /// </para>
     /// <para>
     /// ⚠️ This value is not serializable ⚠️<br/>
-    /// <see cref="PixelFormat"/> depends on <see cref="PFCID"/> values, which
+    /// <see cref="PixelFormat"/> depends on <see cref="PCID"/> values, which
     /// is in continuous evolution, so serialization roundtrips are dangerous.
     /// </para>
     /// </remarks>
@@ -44,55 +44,55 @@ namespace InteropBitmaps
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with one <see cref="PFCID"/> channel.
+        /// Creates a new <see cref="PixelFormat"/> with one <see cref="PCID"/> channel.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
-        public PixelFormat(PFCID e0) : this()
+        public PixelFormat(PCID e0) : this()
         {
             _Component0 = (Byte)e0;
-            _Component1 = _Component2 = _Component3 = (Byte)PFCID.Empty;
+            _Component1 = _Component2 = _Component3 = (Byte)PCID.Empty;
 
             _Validate();
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with two <see cref="PFCID"/> channels.
+        /// Creates a new <see cref="PixelFormat"/> with two <see cref="PCID"/> channels.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
         /// <param name="e1">The second channel format.</param>
-        public PixelFormat(PFCID e0, PFCID e1) : this()
+        public PixelFormat(PCID e0, PCID e1) : this()
         {
             _Component0 = (Byte)e0;
             _Component1 = (Byte)e1;
-            _Component2 = _Component3 = (Byte)PFCID.Empty;
+            _Component2 = _Component3 = (Byte)PCID.Empty;
 
             _Validate();
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with three <see cref="PFCID"/> channels.
+        /// Creates a new <see cref="PixelFormat"/> with three <see cref="PCID"/> channels.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
         /// <param name="e1">The second channel format.</param>
         /// <param name="e2">The third channel format.</param>
-        public PixelFormat(PFCID e0, PFCID e1, PFCID e2) : this()
+        public PixelFormat(PCID e0, PCID e1, PCID e2) : this()
         {
             _Component0 = (Byte)e0;
             _Component1 = (Byte)e1;
             _Component2 = (Byte)e2;
-            _Component3 = (Byte)PFCID.Empty;
+            _Component3 = (Byte)PCID.Empty;
 
             _Validate();
         }
 
         /// <summary>
-        /// Creates a new <see cref="PixelFormat"/> with four <see cref="PFCID"/> channels.
+        /// Creates a new <see cref="PixelFormat"/> with four <see cref="PCID"/> channels.
         /// </summary>
         /// <param name="e0">The first channel format.</param>
         /// <param name="e1">The second channel format.</param>
         /// <param name="e2">The third channel format.</param>
         /// <param name="e3">The fourth channel format.</param>
-        public PixelFormat(PFCID e0, PFCID e1, PFCID e2, PFCID e3) : this()
+        public PixelFormat(PCID e0, PCID e1, PCID e2, PCID e3) : this()
         {
             _Component0 = (Byte)e0;
             _Component1 = (Byte)e1;
@@ -118,10 +118,10 @@ namespace InteropBitmaps
         {
             var tp = typeof(TPixel);
 
-            if (tp == typeof(float)) return new PixelFormat(PFCID.Undefined32F);
-            if (tp == typeof(Vector2)) return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F);
-            if (tp == typeof(Vector3)) return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
-            if (tp == typeof(Vector4)) return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
+            if (tp == typeof(float)) return new PixelFormat(PCID.Undefined32F);
+            if (tp == typeof(Vector2)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F);
+            if (tp == typeof(Vector3)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
+            if (tp == typeof(Vector4)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
 
             return CreateUndefinedOfSize(sizeof(TPixel));
         }
@@ -130,13 +130,13 @@ namespace InteropBitmaps
         {
             switch (byteCount)
             {
-                case 1: return new PixelFormat(PFCID.Undefined8);
-                case 2: return new PixelFormat(PFCID.Undefined8, PFCID.Undefined8);
-                case 3: return new PixelFormat(PFCID.Undefined8, PFCID.Undefined8, PFCID.Undefined8);
-                case 4: return new PixelFormat(PFCID.Undefined8, PFCID.Undefined8, PFCID.Undefined8, PFCID.Undefined8);
-                case 8: return new PixelFormat(PFCID.Undefined16, PFCID.Undefined16, PFCID.Undefined16, PFCID.Undefined16);
-                case 12: return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
-                case 16: return new PixelFormat(PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F, PFCID.Undefined32F);
+                case 1: return new PixelFormat(PCID.Undefined8);
+                case 2: return new PixelFormat(PCID.Undefined8, PCID.Undefined8);
+                case 3: return new PixelFormat(PCID.Undefined8, PCID.Undefined8, PCID.Undefined8);
+                case 4: return new PixelFormat(PCID.Undefined8, PCID.Undefined8, PCID.Undefined8, PCID.Undefined8);
+                case 8: return new PixelFormat(PCID.Undefined16, PCID.Undefined16, PCID.Undefined16, PCID.Undefined16);
+                case 12: return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
+                case 16: return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
                 default: throw new NotImplementedException();
             }
         }
@@ -153,8 +153,8 @@ namespace InteropBitmaps
             if (depth == typeof(UInt16))
             {
                 if (channels == 1) return Pixel.Luminance16.Format;
-                if (channels == 3) return new PixelFormat(PFCID.Blue16, PFCID.Green16, PFCID.Red16);
-                if (channels == 4) return new PixelFormat(PFCID.Blue16, PFCID.Green16, PFCID.Red16, PFCID.Alpha16);
+                if (channels == 3) return new PixelFormat(PCID.Blue16, PCID.Green16, PCID.Red16);
+                if (channels == 4) return new PixelFormat(PCID.Blue16, PCID.Green16, PCID.Red16, PCID.Alpha16);
             }
 
             if (depth == typeof(Single))
@@ -308,7 +308,7 @@ namespace InteropBitmaps
 
         #region properties
 
-        public Component this[int index]
+        public PixelComponent this[int index]
         {
             get
             {
@@ -318,18 +318,18 @@ namespace InteropBitmaps
                     case 1: return Component1;
                     case 2: return Component2;
                     case 3: return Component3;
-                    default: return PFCID.Empty;
+                    default: return PCID.Empty;
                 }
             }
         }
 
-        public Component Component0 => new Component(_Component0);
+        public PixelComponent Component0 => new PixelComponent(_Component0);
 
-        public Component Component1 => new Component(_Component1);
+        public PixelComponent Component1 => new PixelComponent(_Component1);
 
-        public Component Component2 => new Component(_Component2);
+        public PixelComponent Component2 => new PixelComponent(_Component2);
 
-        public Component Component3 => new Component(_Component3);
+        public PixelComponent Component3 => new PixelComponent(_Component3);
 
         /// <summary>
         /// Gets the number of bytes required to store this pixel format
@@ -340,7 +340,7 @@ namespace InteropBitmaps
         /// returns the sequence of non empty elements.
         /// </summary>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public IEnumerable<Component> Components
+        public IEnumerable<PixelComponent> Components
         {
             get
             {
@@ -451,7 +451,7 @@ namespace InteropBitmaps
 
         #region API
 
-        private int _FindIndex(PFCID pef)
+        private int _FindIndex(PCID pef)
         {
             if (Component0.Id == pef) return 0;
             if (Component1.Id == pef) return 1;
@@ -460,17 +460,17 @@ namespace InteropBitmaps
             return -1;
         }
 
-        public bool All(PFCID a) { return _FindIndex(a) >= 0; }
-        public bool All(PFCID a, PFCID b) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0; }
-        public bool All(PFCID a, PFCID b, PFCID c) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0; }
-        public bool All(PFCID a, PFCID b, PFCID c, PFCID d) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0 && _FindIndex(d) >= 0; }
+        public bool All(PCID a) { return _FindIndex(a) >= 0; }
+        public bool All(PCID a, PCID b) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0; }
+        public bool All(PCID a, PCID b, PCID c) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0; }
+        public bool All(PCID a, PCID b, PCID c, PCID d) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0 && _FindIndex(d) >= 0; }
 
-        public bool Any(PFCID a) { return _FindIndex(a) >= 0; }
-        public bool Any(PFCID a, PFCID b) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0; }
-        public bool Any(PFCID a, PFCID b, PFCID c) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0; }
-        public bool Any(PFCID a, PFCID b, PFCID c, PFCID d) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0 || _FindIndex(d) >= 0; }
+        public bool Any(PCID a) { return _FindIndex(a) >= 0; }
+        public bool Any(PCID a, PCID b) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0; }
+        public bool Any(PCID a, PCID b, PCID c) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0; }
+        public bool Any(PCID a, PCID b, PCID c, PCID d) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0 || _FindIndex(d) >= 0; }
 
-        public int GetBitOffset(PFCID pef)
+        public int GetBitOffset(PCID pef)
         {
             if (Component0 == pef) return 0;
 
@@ -486,7 +486,7 @@ namespace InteropBitmaps
             return -1;
         }
 
-        public int GetByteOffset(PFCID pef)
+        public int GetByteOffset(PCID pef)
         {
             if (Component0 == pef) return 0;
 
@@ -515,10 +515,10 @@ namespace InteropBitmaps
         private int _GetEmptyCount()
         {
             int count = 0;
-            if (Component0.Id == PFCID.Empty) ++count;
-            if (Component1.Id == PFCID.Empty) ++count;
-            if (Component2.Id == PFCID.Empty) ++count;
-            if (Component3.Id == PFCID.Empty) ++count;
+            if (Component0.Id == PCID.Empty) ++count;
+            if (Component1.Id == PCID.Empty) ++count;
+            if (Component2.Id == PCID.Empty) ++count;
+            if (Component3.Id == PCID.Empty) ++count;
             return count;
         }        
 
