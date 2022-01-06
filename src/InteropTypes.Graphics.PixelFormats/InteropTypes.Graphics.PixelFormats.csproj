@@ -20,11 +20,25 @@
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>InteropTypes.Graphics.PixelFormats.Tests</_Parameter1>
+    </AssemblyAttribute>    
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>InteropTypes.Graphics.PixelFormats.Benchmark</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pixel\Pixel.Equality.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Equality.tt</DependentUpon>
+    </None>
   </ItemGroup>
   
   <ItemGroup>
@@ -32,6 +46,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Pixel\Pixel.Interfaces.Copy.tt">
+      <LastGenOutput>Pixel.Interfaces.Copy.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Pixel\Pixel.Equality.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Pixel.Equality.cs</LastGenOutput>
+    </None>
     <None Update="Pixel\Pixel.Interfaces.IPixelConvertible.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Pixel.Interfaces.IPixelConvertible.cs</LastGenOutput>
@@ -43,6 +65,16 @@
   </ItemGroup>  
 
   <ItemGroup>
+    <Compile Update="Pixel\Pixel.Interfaces.Copy.cs">
+      <DependentUpon>Pixel.Interfaces.Copy.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Pixel\Pixel.Equality.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Equality.tt</DependentUpon>
+    </Compile>
     <Compile Update="Pixel\Pixel.Interfaces.IPixelConvertible.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

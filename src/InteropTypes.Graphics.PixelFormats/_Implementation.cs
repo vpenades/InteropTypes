@@ -18,6 +18,7 @@ namespace InteropBitmaps
             System.Diagnostics.Debug.Assert(!a.Overlaps(b), "Memory should not overlap");
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static Span<T> OfType<T>(this Span<Byte> span)
             where T:unmanaged
@@ -25,6 +26,7 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, T>(span);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> OfType<T>(this ReadOnlySpan<Byte> span)
             where T : unmanaged
@@ -32,6 +34,7 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, T>(span);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static Span<Byte> AsBytes<T>(this Span<T> span)
             where T : unmanaged
@@ -39,6 +42,7 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<T, byte>(span);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<Byte> AsBytes<T>(this ReadOnlySpan<T> span)
             where T : unmanaged
@@ -46,6 +50,7 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<T, byte>(span);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static Span<Single> AsSingles<T>(this Span<T> span)
             where T : unmanaged
@@ -53,6 +58,7 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<T, Single>(span);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<Single> AsSingles<T>(this ReadOnlySpan<T> span)
             where T : unmanaged

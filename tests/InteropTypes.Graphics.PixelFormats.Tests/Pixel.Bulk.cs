@@ -121,5 +121,21 @@ namespace InteropBitmaps
                 Assert.AreEqual(srcP.A, dstP.A, 1);
             }
         }
+
+
+        [Test]
+        public void SamplerTests()
+        {
+
+            var a = new Pixel.RGBA32(255, 255, 255, 255);
+            var b = new Pixel.RGBA32(  0, 255, 255, 255);
+            var c = new Pixel.RGBA32(255,   0, 255, 255);
+            var d = new Pixel.RGBA32(255,   0,   0, 0);
+
+            var sampler = Pixel.TryGetQuadSampler<Pixel.RGBA32, Pixel.RGBA32>();
+
+            var x = sampler(a, b, c, d, 8192, 8192);
+
+        }
     }
 }

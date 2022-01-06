@@ -6,13 +6,25 @@ namespace InteropBitmaps
 {
     partial class Pixel
     {
-        public interface IPixelIntegetLerpOperator<TPixel>
+        public delegate TDst QuadSamplerDelegate<TSrc, TDst>(in TSrc p00, in TSrc p01, in TSrc p10, in TSrc p11, int x, int y);
+
+        public static QuadSamplerDelegate<TSrc,TDst> TryGetQuadSampler<TSrc,TDst>()
+        {
+            var instance = default(TSrc) as IDelegateProvider<QuadSamplerDelegate<TSrc, TDst>>;
+            return instance?.GetDelegate();
+        }
+
+        public interface IPixelLerpQuantizedOperator<TPixel>
         {
             TPixel LerpTo(TPixel value, int amount);
         }
 
-        partial struct RGBA32 : IPixelIntegetLerpOperator<RGBA32>
+        partial struct RGBA32
+            : IPixelLerpQuantizedOperator<RGBA32>
+            , IDelegateProvider<QuadSamplerDelegate<RGBA32,RGBA32>>
         {
+            QuadSamplerDelegate<RGBA32, RGBA32> IDelegateProvider<QuadSamplerDelegate<RGBA32, RGBA32>>.GetDelegate() { return BilinearSample; }
+
             public RGBA32 LerpTo(RGBA32 other, int amount)
             {
                 var thisWeight = (255 - amount) * this.A;
@@ -27,7 +39,45 @@ namespace InteropBitmaps
                 var b = (this.B * thisWeight + other.B * otherWeight) / div;
 
                 return new RGBA32(r, g, b, a);                
-            }
+            }            
+
+            public static RGBA32 BilinearSample(in RGBA32 p00, in RGBA32 p01, in RGBA32 p10, in RGBA32 p11, int rx, int by)
+            {
+                // calculate quantized weights
+                var lx = 16384 - rx;
+                var ty = 16384 - by;
+                var w00 = lx * ty / 16384;
+                var w01 = rx * ty / 16384;
+                var w10 = lx * by / 16384;
+                var w11 = rx * by / 16384;
+
+                System.Diagnostics.Debug.Assert((w00 + w01 + w10 + w11) == 16384);
+
+                // calculate final alpha
+
+                int a = (p00.A * w00 + p01.A * w01 + p10.A * w10 + p11.A * w11) / 16384;
+
+                if (a == 0) return default;
+
+                // calculate premultiplied RGB
+
+                w00 *= p00.A;
+                w01 *= p01.A;
+                w10 *= p10.A;
+                w11 *= p11.A;
+
+                int r = (p00.R * w00 + p01.R * w01 + p10.R * w10 + p11.R * w11) / 16384;
+                int g = (p00.G * w00 + p01.G * w01 + p10.G * w10 + p11.G * w11) / 16384;
+                int b = (p00.B * w00 + p01.B * w01 + p10.B * w10 + p11.B * w11) / 16384;
+
+                // unpremultiply RGB
+
+                r /= a;
+                g /= a;
+                b /= a;
+
+                return new RGBA32(r, g, b, a);
+            }            
         }
 
         public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)

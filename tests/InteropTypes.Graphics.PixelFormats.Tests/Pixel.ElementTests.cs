@@ -10,16 +10,16 @@ namespace InteropBitmaps
 {
     using PEF = PixelComponentID;
 
-    public class ElementTests
+    public class ComponentsTests
     {
         [Test]
-        public void TestElementMemoryFootprint()
+        public void TestComponentMemoryFootprint()
         {
             Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelComponent)));            
         }
 
         [Test]
-        public void TestElementID()
+        public void TestComponentID()
         {
             #if DEBUG // requires debug mode
 
@@ -55,14 +55,21 @@ namespace InteropBitmaps
                 var xflt = false;
 
                 if (name.EndsWith("1")) xlen = 1;
-                if (name.EndsWith("4")) xlen = 4;
+                if (name.EndsWith("3")) xlen = 3;                
                 if (name.EndsWith("5")) xlen = 5;
+                if (name.EndsWith("7")) xlen = 7;
                 if (name.EndsWith("8")) xlen = 8;
 
                 if (name.EndsWith("16")) xlen = 16;
                 else if (name.EndsWith("6")) xlen = 6;
 
+                if (name.EndsWith("24")) xlen = 24;
+                else if (name.EndsWith("4")) xlen = 4;
+
                 if (name.EndsWith("32")) xlen = 32;
+                else if (name.EndsWith("2")) xlen = 2;
+
+
                 if (name.EndsWith("32F")) { xlen = 32; xflt = true; }
                 if (name.EndsWith("64F")) { xlen = 64; xflt = true; }
 

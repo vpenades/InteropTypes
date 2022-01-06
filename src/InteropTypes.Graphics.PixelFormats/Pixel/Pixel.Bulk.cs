@@ -17,6 +17,7 @@ namespace InteropBitmaps
         /// <param name="dst">The target pixels.</param>
         public delegate void CopyConverterCallback<TSrc, TDst>(ReadOnlySpan<TSrc> src, Span<TDst> dst);
 
+        [System.Diagnostics.DebuggerStepThrough]
         public static CopyConverterCallback<Byte, Byte> GetByteCopyConverter(PixelFormat srcFmt, PixelFormat dstFmt)
         {
             // direct converter
@@ -53,11 +54,12 @@ namespace InteropBitmaps
 
                 case RGBP128F.Code: return _GetByteCopyConverter<RGBP128F>(dstFmt);
                 case BGRP128F.Code: return _GetByteCopyConverter<BGRP128F>(dstFmt);
-            }
 
-            throw new NotImplementedException();
+                default: throw new NotImplementedException();
+            }            
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         private static CopyConverterCallback<Byte, Byte> _GetByteCopyConverter<TSrc>(PixelFormat dstFmt)
             where TSrc : unmanaged
         {
@@ -92,9 +94,9 @@ namespace InteropBitmaps
 
                 case RGBP128F.Code: return GetByteCopyConverter<TSrc, RGBP128F>();
                 case BGRP128F.Code: return GetByteCopyConverter<TSrc, BGRP128F>();
-            }
 
-            throw new NotImplementedException();
+                default: throw new NotImplementedException();
+            }            
         }
 
         [System.Diagnostics.DebuggerStepThrough]
@@ -105,16 +107,23 @@ namespace InteropBitmaps
             var pixelConverter = GetPixelCopyConverter<TSrc, TDst>();
 
             return (s, d) => pixelConverter(s.OfType<TSrc>(), d.OfType<TDst>());
-        }        
+        }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public static CopyConverterCallback<TSrc, TDst> GetPixelCopyConverter<TSrc, TDst>()
             where TSrc : unmanaged
             where TDst : unmanaged
         {
             // direct converter
-            if (typeof(TSrc) == typeof(TDst)) return (a, b) => { a.AsBytes().CopyTo(b.AsBytes()); };
+            if (typeof(TSrc) == typeof(TDst)) return (src, dst) =>
+            {
+                System.Diagnostics.Debug.Assert(src.Length == dst.Length);
+                System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
+                var r = src.AsBytes().TryCopyTo(dst.AsBytes());
+                System.Diagnostics.Debug.Assert(r);
+            };
 
-            if (default(TDst) is IPixelFactory<TSrc, TDst> dstFty) return dstFty.Copy;
+            if (default(TSrc) is ICopyConverterDelegateProvider<TSrc, TDst> srcProvider) return srcProvider.GetCopyConverterDelegate();
 
             throw new NotImplementedException();
         }

@@ -96,7 +96,7 @@ namespace InteropBitmaps.Core
 
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");            
             var cat = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
-            var cat00 = cat.OfType<Pixel.RGBA32>().Slice((36,54,99,123)).AsSpanBitmap();
+            var cat00 = cat.OfType<Pixel.RGBA32>().AsSpanBitmap();
 
             for(float r=0; r < 1; r+=0.3f)
             {

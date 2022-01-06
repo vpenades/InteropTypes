@@ -107,7 +107,7 @@ namespace InteropBitmaps.Processing
         #region composition
 
         public static void SetPixelsNearest<TDstPixel,TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, System.Numerics.Matrix3x2 srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IPixelIntegerComposition<TDstPixel>
+            where TSrcPixel : unmanaged, Pixel.IPixelQuantizedComposition<TDstPixel>
             where TDstPixel : unmanaged            
         {
             _PixelTransformIterator iter;
@@ -140,7 +140,7 @@ namespace InteropBitmaps.Processing
         }
 
         public static void SetPixelsBilinear<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, System.Numerics.Matrix3x2 srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IPixelIntegerComposition<TDstPixel> , Pixel.IPixelBlendOps<TSrcPixel,TSrcPixel>, Pixel.IPixelConvertible<Pixel.RGBP128F>
+            where TSrcPixel : unmanaged, Pixel.IPixelQuantizedComposition<TDstPixel> , Pixel.IPixelBlendOps<TSrcPixel,TSrcPixel>, Pixel.IPixelConvertible<Pixel.RGBP128F>
             where TDstPixel : unmanaged, Pixel.IPixelPremulComposition<TDstPixel>
         {
             _PixelTransformIterator iter;
@@ -166,10 +166,10 @@ namespace InteropBitmaps.Processing
                         var cx1 = Math.Min(cx0 + 1, src.Info.Width - 1);
                         var cy1 = Math.Min(cy0 + 1, src.Info.Height - 1);
 
-                        var srcA = src.GetPixel(cx0, cy0).ToPixel().PreRGBA;
-                        var srcB = src.GetPixel(cx1, cy0).ToPixel().PreRGBA;
-                        var srcC = src.GetPixel(cx0, cy1).ToPixel().PreRGBA;
-                        var srcD = src.GetPixel(cx1, cy1).ToPixel().PreRGBA;
+                        var srcA = src.GetPixel(cx0, cy0).ToPixel().RGBP;
+                        var srcB = src.GetPixel(cx1, cy0).ToPixel().RGBP;
+                        var srcC = src.GetPixel(cx0, cy1).ToPixel().RGBP;
+                        var srcD = src.GetPixel(cx1, cy1).ToPixel().RGBP;
 
                         var srcAB = System.Numerics.Vector4.Lerp(srcA, srcB, fx);
                         var srcCD = System.Numerics.Vector4.Lerp(srcC, srcD, fx);
@@ -237,6 +237,19 @@ namespace InteropBitmaps.Processing
             {
                 x = _X >> BITSHIFT;
                 y = _Y >> BITSHIFT;
+
+                _X += _Dx;
+                _Y += _Dy;
+
+                return x >= 0 & x <= _W & y >= 0 & y <= _H;
+            }
+
+            public bool MoveNext(out int x, out int y, out int fpx, out int fpy)
+            {
+                x = _X >> BITSHIFT;
+                y = _Y >> BITSHIFT;
+                fpx = _X & BITMASK;
+                fpy = _Y & BITMASK;
 
                 _X += _Dx;
                 _Y += _Dy;

@@ -10,6 +10,8 @@ namespace InteropBitmaps
     {
         private static readonly float[] _ByteToFloatLUT = Enumerable.Range(0, 256).Select(idx => (float)idx / 255f).ToArray();
 
+        private const float _Reciprocal255 = 1f / 255f;
+
         private static Span<Vector4> _ToVector4(Span<Single> span)
         {            
             return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, span.Length & ~3));
@@ -210,36 +212,24 @@ namespace InteropBitmaps
             }
         }
 
-        public static void BytesToUnitsLUT(ReadOnlySpan<byte> src, Span<float> dst)
-        {
-            ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-            ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-
-            int dLen = dst.Length;
-
-            while (dLen > 0)
-            {
-                --dLen;
-                dPtr = _ByteToFloatLUT[sPtr];
-                sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1);
-                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);                
-            }
-        }
-
         public static void BytesToUnits(ReadOnlySpan<byte> src, Span<float> dst)
         {
             var dst4 = _ToVector4(dst);
 
             for (int i = 0; i < dst4.Length; ++i)
             {
-                dst4[i] = new Vector4(src[i + 0], src[i + 1], src[i + 2], src[i + 3]) / 255f;
+                dst4[i] = new Vector4(src[i + 0], src[i + 1], src[i + 2], src[i + 3]) * _Reciprocal255;
             }
 
             for (int i = dst4.Length * 4; i < dst.Length; ++i)
             {
-                dst[i] = ((float)src[i]) / 255f;
+                dst[i] = ((float)src[i]) * _Reciprocal255;
             }
         }
+
+        
+
+        
 
         public static void Lerp(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<float> dst)
         {
@@ -300,6 +290,29 @@ namespace InteropBitmaps
                 data[2] ^= data[0];
                 data[0] ^= data[2];
                 data = data.Slice(4);
+            }
+        }
+
+        public static void Noise(Span<byte> data, Random randomizer)
+        {
+            var data2 = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, ushort>(data.Slice(0, data.Length & ~1));
+
+            for (int i = 0; i < data2.Length; ++i)
+            {
+                data2[i] = (ushort)randomizer.Next(65536);
+            }
+
+            for (int i = data.Length * 2; i < data.Length; ++i)
+            {
+                data[i] = (byte)randomizer.Next(256);
+            }
+        }
+
+        public static void Noise(Span<float> data, Random randomizer)
+        {
+            for (int i = 0; i < data.Length; ++i)
+            {
+                data[i] = (float)randomizer.NextDouble(); // net6 has a NextSingle
             }
         }
     }

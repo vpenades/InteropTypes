@@ -286,7 +286,7 @@ namespace InteropBitmaps
         }
 
         public void SetPixels<TSrcPixel>(in Matrix3x2 dstSRT, SpanBitmap<TSrcPixel> src, float opacity)
-            where TSrcPixel:unmanaged, Pixel.IPixelIntegerComposition<TPixel>
+            where TSrcPixel:unmanaged, Pixel.IPixelQuantizedComposition<TPixel>
         {
             // TODO: if dstSRT has no rotation, use _NearestResizeImplementation
 

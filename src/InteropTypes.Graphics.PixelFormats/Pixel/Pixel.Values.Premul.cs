@@ -161,7 +161,7 @@ namespace InteropBitmaps
             public RGBA128F(RGBP128F color)
             {
                 this = default;
-                this.RGBA = color.PreRGBA;
+                this.RGBA = color.RGBP;
                 ApplyUnpremul(ref this.RGBA);
             }
 
@@ -244,10 +244,7 @@ namespace InteropBitmaps
 
             public Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
             public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
-            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return RGBP.GetHashCode(); }
+            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);            
 
             #endregion
         }
@@ -315,10 +312,7 @@ namespace InteropBitmaps
 
             public Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
             public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
-            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return BGRP.GetHashCode(); }
+            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);            
 
             #endregion
         }
@@ -347,13 +341,13 @@ namespace InteropBitmaps
 
             public RGBP128F(byte r, byte g, byte b, byte a) : this()
             {                
-                PreRGBA = new XYZA(r, g, b, a) / 255f;
+                RGBP = new XYZA(r, g, b, a) / 255f;
                 PreRGB *= a;
             }
 
             public RGBP128F(Single r, Single g, Single b, Single a) : this()
             {             
-                PreRGBA = new XYZA(r, g, b, a);
+                RGBP = new XYZA(r, g, b, a);
                 PreRGB *= a;
             }
 
@@ -363,48 +357,48 @@ namespace InteropBitmaps
 
             public RGBP128F(in BGR96F color) : this()
             {
-                PreRGBA = new XYZA(color.R,color.G,color.B, 1);
+                RGBP = new XYZA(color.R,color.G,color.B, 1);
             }
 
             public RGBP128F(in RGB96F color) : this()
             {
-                PreRGBA = new XYZA(color.RGB, 1);
+                RGBP = new XYZA(color.RGB, 1);
             }
 
             public RGBP128F(in RGBA128F color) : this()
             {
-                PreRGBA = new XYZA(color.RGB * color.A, color.A);
+                RGBP = new XYZA(color.RGB * color.A, color.A);
             }
 
             public RGBP128F(in BGRA128F color) : this()
             {
-                PreRGBA = new XYZA(color.R, color.G, color.B, color.A);
+                RGBP = new XYZA(color.R, color.G, color.B, color.A);
                 PreRGB *= color.A;
             }
 
             public RGBP128F(RGBP32 color) : this()
             {
-                PreRGBA = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
+                RGBP = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
             }
 
             public RGBP128F(BGRP32 color) : this()
             {
-                PreRGBA = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
+                RGBP = new XYZA(color.PreR, color.PreG, color.PreB, color.A) / 255f;
             }
 
             public RGBP128F(in XYZ v) : this()
             {                
-                PreRGBA = new XYZA(v, 1);
+                RGBP = new XYZA(v, 1);
             }
 
             public RGBP128F(in XYZ prergb, float a) : this()
             {             
-                PreRGBA = new XYZA(prergb, a);
+                RGBP = new XYZA(prergb, a);
             }
 
             public RGBP128F(in XYZA prergba) : this()
             {             
-                PreRGBA = prergba;
+                RGBP = prergba;
             }
 
             #endregion
@@ -412,7 +406,7 @@ namespace InteropBitmaps
             #region data
 
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly XYZA PreRGBA;
+            public readonly XYZA RGBP;
 
             [System.Runtime.InteropServices.FieldOffset(0)]
             public readonly XYZ PreRGB;
@@ -433,10 +427,7 @@ namespace InteropBitmaps
 
             public Single R => A == 0 ? 0 : PreR / A;
             public Single G => A == 0 ? 0 : PreG / A;
-            public Single B => A == 0 ? 0 : PreB / A;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return PreRGBA.GetHashCode(); }
+            public Single B => A == 0 ? 0 : PreB / A;            
 
             #endregion      
         }

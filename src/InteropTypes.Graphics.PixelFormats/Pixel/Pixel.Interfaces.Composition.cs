@@ -12,7 +12,7 @@ namespace InteropBitmaps
             TPixel AlphaBlendWith(in Vector4 premulRGBA, float opacity);
         }
 
-        public interface IPixelIntegerComposition<TDstPixel>
+        public interface IPixelQuantizedComposition<TDstPixel>
         {
             TDstPixel AlphaBlendWith(TDstPixel dst, int opacity);
         }
@@ -31,13 +31,13 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region integer alpha
+        #region quantized alpha
 
         private const int _INTEGEROPACITY_MAXVALUE = 65536;
 
         partial struct BGRA32
-            : IPixelIntegerComposition<BGR24>
-            , IPixelIntegerComposition<RGB24>
+            : IPixelQuantizedComposition<BGR24>
+            , IPixelQuantizedComposition<RGB24>
         {
             public RGB24 AlphaBlendWith(RGB24 dst, int opacity)
             {
@@ -61,8 +61,8 @@ namespace InteropBitmaps
         }
 
         partial struct RGBA32
-            : IPixelIntegerComposition<BGR24>
-            , IPixelIntegerComposition<RGB24>
+            : IPixelQuantizedComposition<BGR24>
+            , IPixelQuantizedComposition<RGB24>
         {
             public RGB24 AlphaBlendWith(RGB24 dst, int opacity)
             {
@@ -86,8 +86,8 @@ namespace InteropBitmaps
         }
 
         partial struct ARGB32
-            : IPixelIntegerComposition<BGR24>
-            , IPixelIntegerComposition<RGB24>
+            : IPixelQuantizedComposition<BGR24>
+            , IPixelQuantizedComposition<RGB24>
         {
             public RGB24 AlphaBlendWith(RGB24 dst, int opacity)
             {
@@ -115,8 +115,8 @@ namespace InteropBitmaps
         #region integer premultiplied
 
         partial struct BGRP32
-            : IPixelIntegerComposition<BGR24>
-            , IPixelIntegerComposition<RGB24>
+            : IPixelQuantizedComposition<BGR24>
+            , IPixelQuantizedComposition<RGB24>
         {
             public BGR24 AlphaBlendWith(BGR24 dst, int opacity)
             {

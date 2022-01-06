@@ -11,29 +11,10 @@ namespace InteropBitmaps
 {
     partial class Pixel    
     {
-        internal static IPixelFactory<TSrcPixel, TDstPixel> TryGetPixelFactory<TSrcPixel,TDstPixel>()
-            where TSrcPixel: unmanaged
-            where TDstPixel: unmanaged
+        interface ICopyConverterDelegateProvider<TSrc,TDst>
         {
-            return default(TDstPixel) as IPixelFactory<TSrcPixel,TDstPixel>;
+            CopyConverterCallback<TSrc,TDst> GetCopyConverterDelegate();
         }
-
-        
-        /// <summary>
-        /// Represents an interface to a factory that is able to
-        /// convert pixel values from one pixel type to another.
-        /// </summary>
-        /// <typeparam name="TSrcPixel">The source pixel type.</typeparam>
-        /// <typeparam name="TDstPixel">The target pixel type.</typeparam>
-        public interface IPixelFactory<TSrcPixel, TDstPixel>
-            where TSrcPixel: unmanaged
-            where TDstPixel: unmanaged
-        {
-            /// <remarks>
-            /// Creates a new value of <typeparamref name="TDstPixel"/> type, which is converted from a <typeparamref name="TSrcPixel"/> value.
-            /// </remarks>            
-            TDstPixel From(TSrcPixel color);            
-        }        
 
 <# //-------------------------------------------------------------------------------------------------------------------
 
@@ -51,35 +32,35 @@ namespace InteropBitmaps
             var a = format.Substring(0,idx);
             var b = format.Substring(idx);
             return(a,b);            
-        }
+        }        
 
-        void _writeFrom(string pixelFmtName, string pixelSrcName, string cvtFunc)
+        void _writeCopyArray(string pixelSrcName, string pixelDstName, string cvtFunc)
         {
-            var eval = pixelFmtName == pixelSrcName
-                ? "return color;"
-                : $"return new {pixelFmtName}({cvtFunc});";
+            WriteLine("");
 
-            eval = "{ " + eval + " }";
+            var delegateName = $"CopyConverterCallback<{pixelSrcName},{pixelDstName}>";
 
-            WriteLine("/// <inheritdoc />");
-            WriteLine($"{pixelFmtName} IPixelFactory<{pixelSrcName},{pixelFmtName}>.From({pixelSrcName} color) {eval}");   
-        }
+            WriteLine($"{delegateName} ICopyConverterDelegateProvider<{pixelSrcName},{pixelDstName}>.GetCopyConverterDelegate() {{ return Copy; }}");            
 
-        void _writeCopyArray(string pixelFmtName, string pixelSrcName, string cvtFunc)
-        {
+            WriteLine("");
             
-            WriteLine($"public static void Copy(ReadOnlySpan<{pixelSrcName}> src, Span<{pixelFmtName}> dst)");                
-            WriteLine("{"); PushIndent("    ");           
+            WriteLine("/// <summary>");
+            WriteLine("/// Copies all the values of <paramref name=\"src\"/> into <paramref name=\"dst\"/>.");
+            WriteLine("/// </summary>");
+            WriteLine("/// <param name=\"src\">The source buffer.</param>");
+            WriteLine("/// <param name=\"dst\">The target buffer.</param>");
+            WriteLine($"public static void Copy(ReadOnlySpan<{pixelSrcName}> src, Span<{pixelDstName}> dst)");                
+            WriteLine("{"); PushIndent("    ");
 
             WriteLine("System.Diagnostics.Debug.Assert(src.Length == dst.Length);");
             WriteLine("System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));");
             
-            _writeCopyArrayFunc(pixelFmtName, pixelSrcName, cvtFunc);
+            _writeCopyArrayFunc(pixelSrcName, pixelDstName, cvtFunc);
 
-            PopIndent(); WriteLine("}");           
+            PopIndent(); WriteLine("}");
         }
 
-        void _writeCopyArrayFunc(string pixelFmtName, string pixelSrcName, string cvtFunc)
+        void _writeCopyArrayFunc(string pixelSrcName, string pixelFmtName, string cvtFunc)
         {
             var (srcChan,srcSize) = _getChannels(pixelSrcName);
             var (dstChan,dstSize) = _getChannels(pixelFmtName);
@@ -172,11 +153,8 @@ namespace InteropBitmaps
                     
                     PopIndent(); WriteLine("}");
                     return;
-                }
-            
-            }
-
-            
+                }            
+            }            
 
             cvtFunc = cvtFunc.Replace("*","sPtr");
 
@@ -222,53 +200,34 @@ namespace InteropBitmaps
 
             for(int i=0; i < allFormats.Length; ++i)
             {
-                var src = allFormats[i];
-                var tmp = (i == 0 ? ": " : ", ") + $"IPixelFactory<{src},{pixelFmtName}>";
+                var dst = allFormats[i];                
+
+                var tmp = (i == 0 ? ": " : ", ") + $"ICopyConverterDelegateProvider<{pixelFmtName}, {dst}>";
                 WriteLine(tmp);
             }            
 
             PopIndent();
 
-            WriteLine("{");PushIndent("    ");            
+            WriteLine("{");PushIndent("    ");
 
-            foreach(var pixelSrcName in pixelFormatSrc8Names)            
-            {
-                var cvtFunc = "new BGRA32(color)";
-                if (pixelFmtName == "BGRA32") cvtFunc = "color";
-                if (pixelSrcName == "BGRA32") cvtFunc = "color";                
-
-                _writeFrom(pixelFmtName,pixelSrcName,cvtFunc);
-            }
-
-            foreach(var pixelSrcName in pixelFormatSrcFNames)            
-            {
-                var cvtFunc = "new RGBA128F(color)";
-                if (pixelFmtName == "RGBA128F") cvtFunc = "color";
-                if (pixelSrcName == "RGBA128F") cvtFunc = "color";
-                if (pixelFmtName == "RGBP128F") cvtFunc = "color";
-
-                _writeFrom(pixelFmtName,pixelSrcName,cvtFunc);
-            }            
-
-            /*
-            foreach(var pixelSrcName in pixelFormatSrc8Names)            
+            foreach(var pixelDstName in pixelFormatSrc8Names)            
             {
                 var cvtFunc = "new BGRA32(*)";
                 if (pixelFmtName == "BGRA32") cvtFunc = "*";
-                if (pixelSrcName == "BGRA32") cvtFunc = "*";                
+                if (pixelDstName == "BGRA32") cvtFunc = "*";                
 
-                _writeCopyArray(pixelFmtName,pixelSrcName,cvtFunc);
+                _writeCopyArray(pixelFmtName,pixelDstName,cvtFunc);
             }
 
-            foreach(var pixelSrcName in pixelFormatSrcFNames)            
+            foreach(var pixelDstName in pixelFormatSrcFNames)            
             {
                 var cvtFunc = "new RGBA128F(*)";
                 if (pixelFmtName == "RGBA128F") cvtFunc = "*";
-                if (pixelSrcName == "RGBA128F") cvtFunc = "*";
-                if (pixelFmtName == "RGBP128F") cvtFunc = "*";                
+                if (pixelDstName == "RGBA128F") cvtFunc = "*";
+                if (pixelDstName == "RGBP128F") cvtFunc = "*";                
 
-                _writeCopyArray(pixelFmtName,pixelSrcName,cvtFunc);
-            }*/
+                _writeCopyArray(pixelFmtName,pixelDstName,cvtFunc);
+            }
 
             PopIndent(); WriteLine("}");
         }

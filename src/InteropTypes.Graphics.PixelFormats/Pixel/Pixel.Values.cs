@@ -24,10 +24,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly Byte A;
-
-            /// <inheritdoc />            
-            public override int GetHashCode() { return A.GetHashCode(); }
+            public readonly Byte A;            
 
             #endregion            
         }
@@ -81,9 +78,6 @@ namespace InteropBitmaps
 
             public readonly Byte L;
 
-            /// <inheritdoc />
-            public override int GetHashCode() { return L.GetHashCode(); }
-
             #endregion
         }
 
@@ -136,9 +130,6 @@ namespace InteropBitmaps
 
             public readonly UInt16 L;
 
-            /// <inheritdoc />
-            public override int GetHashCode() { return L.GetHashCode(); }
-
             #endregion            
         }
 
@@ -177,9 +168,6 @@ namespace InteropBitmaps
             #region data
 
             public readonly float L;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return L.GetHashCode(); }
 
             #endregion            
         }
@@ -226,10 +214,7 @@ namespace InteropBitmaps
 
             public int R { get { var p = (BGR >> 11) & 0x1f; return (p * 8) | (p >> 2); } }
             public int G { get { var p = (BGR >> 5) & 0x3f; return (p * 4) | (p >> 4); } }
-            public int B { get { var p = BGR & 0x1f; return (p * 8) | (p >> 2); } }
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return BGR.GetHashCode(); }
+            public int B { get { var p = BGR & 0x1f; return (p * 8) | (p >> 2); } }            
 
             #endregion            
         }
@@ -281,10 +266,7 @@ namespace InteropBitmaps
             public int R { get { var p = (BGRA >> 10) & 0x1f; return p * 8 + (p >> 2); } }
             public int G { get { var p = (BGRA >> 5) & 0x1f; return p * 8 + (p >> 2); } }
             public int B { get { var p = BGRA & 0x1f; return p * 8 + (p >> 2); } }
-            public int A => (BGRA >> 15) * 255;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return IsTransparent ? 0 : BGRA.GetHashCode(); }
+            public int A => (BGRA >> 15) * 255;            
 
             #endregion
 
@@ -339,10 +321,7 @@ namespace InteropBitmaps
             public int A { get { var p = ((BGRA >> 12) & 0xf); return p * 17; } }
             public int R { get { var p = ((BGRA >> 8) & 0xf); return p * 17; } }
             public int G { get { var p = ((BGRA >> 4) & 0xf); return p * 17; } }
-            public int B { get { var p = BGRA & 0xf; return p * 17; } }
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return IsTransparent ? 0 : BGRA.GetHashCode(); }
+            public int B { get { var p = BGRA & 0xf; return p * 17; } }            
 
             #endregion
 
@@ -460,10 +439,7 @@ namespace InteropBitmaps
             public readonly Byte B;
             public readonly Byte G;
             public readonly Byte R;
-            public readonly Byte A;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return A == 0 ? 0 : BGRA.GetHashCode(); }
+            public readonly Byte A;            
 
             #endregion
         }
@@ -520,10 +496,7 @@ namespace InteropBitmaps
             public readonly Byte R;
             public readonly Byte G;
             public readonly Byte B;
-            public readonly Byte A;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return A == 0 ? 0 : RGBA.GetHashCode(); }
+            public readonly Byte A;            
 
             #endregion
         }
@@ -580,10 +553,7 @@ namespace InteropBitmaps
             public readonly Byte A;
             public readonly Byte R;
             public readonly Byte G;
-            public readonly Byte B;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return A == 0 ? 0 : ARGB.GetHashCode(); }
+            public readonly Byte B;            
 
             #endregion
         }
@@ -635,10 +605,7 @@ namespace InteropBitmaps
 
             public readonly Byte B;
             public readonly Byte G;
-            public readonly Byte R;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return ((R<<16) | (G<<8) | B).GetHashCode(); }
+            public readonly Byte R;            
 
             #endregion
         }
@@ -683,10 +650,7 @@ namespace InteropBitmaps
 
             public readonly Byte R;
             public readonly Byte G;
-            public readonly Byte B;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return ((R << 16) | (G << 8) | B).GetHashCode(); }
+            public readonly Byte B;            
 
             #endregion
         }
@@ -709,13 +673,9 @@ namespace InteropBitmaps
             #region data
 
             public readonly XYZ RGB;
-
             public Single R => RGB.X;
             public Single G => RGB.Y;
-            public Single B => RGB.Z;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return RGB.GetHashCode(); }
+            public Single B => RGB.Z;            
 
             #endregion
         }
@@ -742,10 +702,7 @@ namespace InteropBitmaps
 
             public Single B => BGR.X;
             public Single G => BGR.Y;
-            public Single R => BGR.Z;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return BGR.GetHashCode(); }
+            public Single R => BGR.Z;            
 
             #endregion
         }
@@ -770,10 +727,7 @@ namespace InteropBitmaps
             public Single B => BGRA.X;            
             public Single G => BGRA.Y;
             public Single R => BGRA.Z;
-            public Single A => BGRA.W;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return A == 0 ? 0 : BGRA.GetHashCode(); }
+            public Single A => BGRA.W;            
 
             #endregion
         }
@@ -828,10 +782,7 @@ namespace InteropBitmaps
             public readonly Single B;
 
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public readonly Single A;
-
-            /// <inheritdoc />
-            public override int GetHashCode() { return A == 0 ? 0 : RGBA.GetHashCode(); }
+            public readonly Single A;            
 
             #endregion
 
