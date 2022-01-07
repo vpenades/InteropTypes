@@ -49,7 +49,8 @@ namespace InteropDrawing.Backends
 
         private System.Numerics.Matrix3x2 _View;
         private System.Numerics.Matrix3x2 _Screen;
-        private System.Numerics.Matrix3x2 _Final;
+        private System.Numerics.Matrix3x2 _FinalForward;
+        private System.Numerics.Matrix3x2 _FinalInverse;
 
         #endregion        
 
@@ -73,10 +74,12 @@ namespace InteropDrawing.Backends
             _Device.SamplerStates[0] = attr.Sampler ?? SamplerState.LinearClamp;
         }
 
+        /// <inheritdoc />
         public void Begin(int virtualWidth, int virtualHeight, bool keepAspect)
         {
             _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);
-            _Final = _View * _Screen;
+            _FinalForward = _View * _Screen;
+            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
 
             _PrevState = GlobalState.GetCurrent(_Device);
             GlobalState.CreateSpriteState().ApplyTo(_Device);
@@ -84,12 +87,21 @@ namespace InteropDrawing.Backends
             _VectorsBatch.SpriteCoordsBleed = 0;
         }
 
+        /// <inheritdoc />
         public void SetCamera(System.Numerics.Matrix3x2 camera)
         {
             System.Numerics.Matrix3x2.Invert(camera, out _View);
-            _Final = _View * _Screen;
+            _FinalForward = _View * _Screen;
+            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
         }
 
+        /// <inheritdoc />
+        public void TransformForward(Span<Point2> points) { Point2.Transform(points, _FinalForward); }
+
+        /// <inheritdoc />
+        public void TransformInverse(Span<Point2> points) { Point2.Transform(points, _FinalInverse); }
+
+        /// <inheritdoc />
         public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, ColorStyle style)
         {
             if (!style.IsVisible) return;            
@@ -99,6 +111,7 @@ namespace InteropDrawing.Backends
             _VectorsBatch.DrawAsset(transform, asset);
         }
 
+        /// <inheritdoc />
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             if (!style.IsVisible) return;
@@ -106,6 +119,7 @@ namespace InteropDrawing.Backends
             _VectorsBatch.DrawLines(points, diameter, style);
         }
 
+        /// <inheritdoc />
         public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
         {
             if (!style.IsVisible) return;
@@ -113,13 +127,15 @@ namespace InteropDrawing.Backends
             _VectorsBatch.DrawEllipse(center, width, height, style);
         }
 
+        /// <inheritdoc />
         public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
         {
             if (!style.IsVisible) return;
             SetTexture(null);
             _VectorsBatch.DrawPolygon(points, style);
-        }        
+        }
 
+        /// <inheritdoc />
         public void DrawSprite(in System.Numerics.Matrix3x2 transform, in SpriteStyle style)
         {
             if (!style.IsVisible) return;
@@ -129,6 +145,7 @@ namespace InteropDrawing.Backends
             _VectorsBatch.DrawSprite(transform, style);
         }
 
+        /// <inheritdoc />
         public (Texture2D tex, SpriteTextureAttributes bleed) FetchTexture(Object imageSource)
         {
             if (imageSource is Texture2D xnaTex) return (xnaTex, SpriteTextureAttributes.Default);
@@ -140,13 +157,14 @@ namespace InteropDrawing.Backends
             return _SpriteTextures[imageSource] = xtex;
         }
 
+        
         public void Flush()
         {
             if (_VectorsBatch.IsEmpty) return;
 
             if (_Effect == null || _Effect.IsDisposed) _Effect = new SpriteEffect(_Device);
 
-            _Effect.TransformMatrix = _Final.ToXna();
+            _Effect.TransformMatrix = _FinalForward.ToXna();
 
             foreach (var pass in _Effect.CurrentTechnique.Passes)
             {
@@ -160,6 +178,7 @@ namespace InteropDrawing.Backends
             _VectorsBatch.Clear();
         }
 
+        /// <inheritdoc />
         public void End()
         {
             Flush();

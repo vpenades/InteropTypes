@@ -1,0 +1,132 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+using System;
+
+namespace InteropBitmaps
+{
+    partial class Pixel    
+    {
+<#
+        // https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
+
+        var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGBP32","BGRP32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP128F" };                
+
+        var digits = new char[] { '0','1','2','3','4','5','6','7','8','9'};
+
+        (string Channels, string Size) _getChannels(string format)
+        {
+            var idx = format.IndexOfAny(digits);
+            var a = format.Substring(0,idx);
+            var b = format.Substring(idx);
+            return(a,b);            
+        }
+
+        foreach(var pixelFmtName in pixelFormatAllNames)
+        {
+            ClearIndent();
+            PushIndent("    ");
+            PushIndent("    ");            
+
+            WriteLine($"partial struct {pixelFmtName} : IEquatable<{pixelFmtName}>");            
+
+            WriteLine("{");PushIndent("    ");            
+
+            WriteLine("/// <inheritdoc>");
+            WriteLine($"public static bool operator ==(in {pixelFmtName} a,in {pixelFmtName} b) {{ return a.Equals(b); }}");
+
+            WriteLine("/// <inheritdoc>");
+            WriteLine($"public static bool operator !=(in {pixelFmtName} a,in {pixelFmtName} b) {{ return !a.Equals(b); }}");
+
+            _writeEquals(pixelFmtName);
+
+            WriteLine("/// <inheritdoc>");
+            WriteLine($"public override bool Equals(Object obj) {{ return obj is {pixelFmtName} other && Equals(other); }}");
+
+            _writeHashCode(pixelFmtName);
+
+            PopIndent(); WriteLine("}");
+        }
+
+        void _writeEquals(string pixelFmt)
+        {
+            WriteLine("/// <inheritdoc>");
+            WriteLine($"public bool Equals({pixelFmt} other)");
+            WriteLine("{");PushIndent("    ");
+
+            var (ccc,s) = _getChannels(pixelFmt);
+            if (ccc == "Alpha") ccc="A";
+            if (ccc == "Luminance") ccc="L";
+
+            if (ccc.Length == 1) WriteLine($"return this.{ccc} == other.{ccc};");
+            else
+            {
+                var isPremul = ccc.Contains('P');
+            
+                if (ccc.Length > 1 && ccc.Contains("A")) WriteLine("if (this.A == 0 && other.A == 0) return true;");
+
+                if (pixelFmt != "BGR24" && pixelFmt != "RGB24") { WriteLine($"return this.{ccc} == other.{ccc};"); ccc = string.Empty; }
+                
+                foreach(var c in ccc)
+                {
+                    var cc = c.ToString();
+                    cc = cc == "P"
+                        ? "A"
+                        : (isPremul? "Pre" + cc : cc);
+
+                    WriteLine($"if (this.{cc} != other.{cc}) return false;");
+                }                
+
+                if (ccc.Length > 0) WriteLine("return true;");
+            }
+                                  
+
+            PopIndent(); WriteLine("}");
+        }
+
+        void _writeHashCode(string pixelFmt)
+        {
+            WriteLine("/// <inheritdoc>");
+            WriteLine($"public override int GetHashCode()");
+            WriteLine("{");PushIndent("    ");
+
+            var (ccc,size) = _getChannels(pixelFmt);
+            if (ccc == "Alpha") ccc="A";
+            if (ccc == "Luminance") ccc="L";
+
+            if (ccc.Length == 1) WriteLine($"return this.{ccc}.GetHashCode();");
+            else
+            {
+                var isPremul = ccc.Contains('P');
+            
+                if (ccc.Length > 1 && ccc.Contains("A")) WriteLine("if (this.A == 0) return 0;");
+
+                if (pixelFmt != "BGR24" && pixelFmt != "RGB24") { WriteLine($"return this.{ccc}.GetHashCode();"); ccc = string.Empty; }
+
+                if (ccc.Length > 0) WriteLine("int h = 0;");
+                
+                foreach(var c in ccc)
+                {
+                    var cc = c.ToString();
+                    cc = cc == "P"
+                        ? "A"
+                        : (isPremul? "Pre" + cc : cc);
+
+                    if (size.EndsWith("F")) WriteLine($"h ^= this.{cc}.GetHashCode();");
+                    else WriteLine($"h ^= this.{cc}; h <<= 8;");
+                }                
+
+                if (ccc.Length > 0) WriteLine("return h;");
+            }
+                                  
+
+            PopIndent(); WriteLine("}");
+        }
+
+        ClearIndent();
+#>
+    }
+}
+

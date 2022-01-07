@@ -16,9 +16,7 @@ namespace InteropBitmaps
             /// <remarks>
             /// result = (this + other) / 2;
             /// </remarks>
-            TDstPixel AverageWith(TSrcPixel other);
-
-            // TODO: TDstPixel LerpWith(TSrcPixel other);            
+            TDstPixel AverageWith(TSrcPixel other);            
         }
 
         partial struct Alpha8 : IPixelBlendOps<Alpha8, Alpha8>

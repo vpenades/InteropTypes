@@ -10,7 +10,7 @@ using VECTOR2 = System.Numerics.Vector2;
 
 namespace InteropDrawing.Transforms
 {
-    public readonly struct Decompose2D : IDrawing2D
+    public readonly struct Decompose2D : IDrawing2D, POINT2.ITransform
     {
         #region lifecycle
 
@@ -29,7 +29,7 @@ namespace InteropDrawing.Transforms
 
         #endregion
 
-        #region API - IDrawing2D
+        #region API - IDrawing2D        
 
         public void DrawAsset(in Matrix3x2 transform, ASSET asset, ColorStyle style)
         {
@@ -75,6 +75,22 @@ namespace InteropDrawing.Transforms
             {
                 _RenderTarget.DrawPolygon(points, style);
             }            
+        }
+
+        #endregion
+
+        #region API - point transform
+
+        /// <inheritdoc />
+        public void TransformForward(Span<POINT2> points)
+        {
+            if (_RenderTarget is POINT2.ITransform xform) xform.TransformForward(points);
+        }
+
+        /// <inheritdoc />
+        public void TransformInverse(Span<POINT2> points)
+        {
+            if (_RenderTarget is POINT2.ITransform xform) xform.TransformInverse(points);
         }
 
         #endregion
@@ -137,7 +153,7 @@ namespace InteropDrawing.Transforms
             Parametric.ShapeFactory.FillEllipseVertices(points, center, width, height);
 
             dc.DrawPolygon(points, style);
-        }
+        }        
 
         #endregion
     }

@@ -1,104 +1,88 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace InteropBitmaps
 {
-    partial class Pixel
+    partial class Pixel    
     {
-        public delegate TDst QuadSamplerDelegate<TSrc, TDst>(in TSrc p00, in TSrc p01, in TSrc p10, in TSrc p11, int x, int y);
+        
 
-        public static QuadSamplerDelegate<TSrc,TDst> TryGetQuadSampler<TSrc,TDst>()
+        partial struct Alpha8
         {
-            var instance = default(TSrc) as IDelegateProvider<QuadSamplerDelegate<TSrc, TDst>>;
-            return instance?.GetDelegate();
-        }
-
-        public interface IPixelLerpQuantizedOperator<TPixel>
-        {
-            TPixel LerpTo(TPixel value, int amount);
-        }
-
-        partial struct RGBA32
-            : IPixelLerpQuantizedOperator<RGBA32>
-            , IDelegateProvider<QuadSamplerDelegate<RGBA32,RGBA32>>
-        {
-            QuadSamplerDelegate<RGBA32, RGBA32> IDelegateProvider<QuadSamplerDelegate<RGBA32, RGBA32>>.GetDelegate() { return BilinearSample; }
-
-            public RGBA32 LerpTo(RGBA32 other, int amount)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<Alpha8> left, ReadOnlySpan<Alpha8> right, int amount, Span<Alpha8> dst)
             {
-                var thisWeight = (255 - amount) * this.A;
-                var otherWeight = amount * other.A;
-
-                var div = thisWeight + otherWeight;
-                if (div == 0) return default;
-
-                var a = (this.A * (255-amount) + other.A * amount) / 255;
-                var r = (this.R * thisWeight + other.R * otherWeight) / div;
-                var g = (this.G * thisWeight + other.G * otherWeight) / div;
-                var b = (this.B * thisWeight + other.B * otherWeight) / div;
-
-                return new RGBA32(r, g, b, a);                
-            }            
-
-            public static RGBA32 BilinearSample(in RGBA32 p00, in RGBA32 p01, in RGBA32 p10, in RGBA32 p11, int rx, int by)
-            {
-                // calculate quantized weights
-                var lx = 16384 - rx;
-                var ty = 16384 - by;
-                var w00 = lx * ty / 16384;
-                var w01 = rx * ty / 16384;
-                var w10 = lx * by / 16384;
-                var w11 = rx * by / 16384;
-
-                System.Diagnostics.Debug.Assert((w00 + w01 + w10 + w11) == 16384);
-
-                // calculate final alpha
-
-                int a = (p00.A * w00 + p01.A * w01 + p10.A * w10 + p11.A * w11) / 16384;
-
-                if (a == 0) return default;
-
-                // calculate premultiplied RGB
-
-                w00 *= p00.A;
-                w01 *= p01.A;
-                w10 *= p10.A;
-                w11 *= p11.A;
-
-                int r = (p00.R * w00 + p01.R * w01 + p10.R * w10 + p11.R * w11) / 16384;
-                int g = (p00.G * w00 + p01.G * w01 + p10.G * w10 + p11.G * w11) / 16384;
-                int b = (p00.B * w00 + p01.B * w01 + p10.B * w10 + p11.B * w11) / 16384;
-
-                // unpremultiply RGB
-
-                r /= a;
-                g /= a;
-                b /= a;
-
-                return new RGBA32(r, g, b, a);
-            }            
+                Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());
+            }
         }
-
-        public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)
-            where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
-            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
+        partial struct Luminance8
         {
-            for (int i = 0; i < dst.Length; ++i)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<Luminance8> left, ReadOnlySpan<Luminance8> right, int amount, Span<Luminance8> dst)
             {
-                var v = System.Numerics.Vector4.Lerp(left[i].ToPixel().RGBA, right[i].ToPixel().RGBA, amount);
-                dst[i] = default(TDstPixel).From(new RGBA128F(v));
+                Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());
+            }
+        }
+        partial struct BGR24
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<BGR24> left, ReadOnlySpan<BGR24> right, int amount, Span<BGR24> dst)
+            {
+                Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());
+            }
+        }
+        partial struct RGB24
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<RGB24> left, ReadOnlySpan<RGB24> right, int amount, Span<RGB24> dst)
+            {
+                Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());
+            }
+        }
+        partial struct RGBP32
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<RGBP32> left, ReadOnlySpan<RGBP32> right, int amount, Span<RGBP32> dst)
+            {
+                Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());
+            }
+        }
+        partial struct BGRP32
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<BGRP32> left, ReadOnlySpan<BGRP32> right, int amount, Span<BGRP32> dst)
+            {
+                Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());
+            }
+        }
+        partial struct RGB96F
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<RGB96F> left, ReadOnlySpan<RGB96F> right, int amount, Span<RGB96F> dst)
+            {
+                Vector4Streaming.Lerp(left.AsSingles(), right.AsSingles(), amount, dst.AsSingles());
+            }
+        }
+        partial struct BGR96F
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<BGR96F> left, ReadOnlySpan<BGR96F> right, int amount, Span<BGR96F> dst)
+            {
+                Vector4Streaming.Lerp(left.AsSingles(), right.AsSingles(), amount, dst.AsSingles());
+            }
+        }
+        partial struct RGBP128F
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<RGBP128F> left, ReadOnlySpan<RGBP128F> right, int amount, Span<RGBP128F> dst)
+            {
+                Vector4Streaming.Lerp(left.AsSingles(), right.AsSingles(), amount, dst.AsSingles());
             }
         }
 
-        public static void LerpArray<TDstPixel>(ReadOnlySpan<System.Numerics.Vector3> left, ReadOnlySpan<System.Numerics.Vector3> right, float amount, Span<TDstPixel> dst)
-            where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
-        {
-            for (int i = 0; i < dst.Length; ++i)
-            {
-                var v = System.Numerics.Vector3.Lerp(left[i], right[i], amount);
-                dst[i] = default(TDstPixel).From(new RGBA128F(v));
-            }
-        }
     }
 }

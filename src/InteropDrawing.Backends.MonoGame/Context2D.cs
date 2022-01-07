@@ -56,9 +56,10 @@ namespace InteropDrawing.Backends
 
         private MeshBuilder _VectorsBatch = new MeshBuilder(false);
 
-        private System.Numerics.Matrix3x2 _View;
+        private System.Numerics.Matrix3x2 _View; // CameraInverse
         private System.Numerics.Matrix3x2 _Screen;
-        private System.Numerics.Matrix3x2 _Final;
+        private System.Numerics.Matrix3x2 _FinalForward;
+        private System.Numerics.Matrix3x2 _FinalInverse;
 
         public float SpriteCoordsBleed { get; set; }
 
@@ -84,18 +85,29 @@ namespace InteropDrawing.Backends
             return _Textures[imagePath] = tex;
         }
 
+        /// <inheritdoc />
         public void Begin(int virtualWidth, int virtualHeight, bool keepAspect)
         {
-            _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);
-            _Final = _View * _Screen;
+            _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);            
+            _FinalForward = _View * _Screen;
+            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
         }
 
+        /// <inheritdoc />
         public void SetCamera(System.Numerics.Matrix3x2 camera)
         {
             System.Numerics.Matrix3x2.Invert(camera, out _View);
-            _Final = _View * _Screen;
+            _FinalForward = _View * _Screen;
+            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
         }
 
+        /// <inheritdoc />
+        public void TransformForward(Span<Point2> points) { Point2.Transform(points, _FinalForward); }
+
+        /// <inheritdoc />
+        public void TransformInverse(Span<Point2> points) { Point2.Transform(points, _FinalInverse); }
+
+        /// <inheritdoc />
         public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, ColorStyle style)
         {
             if (!style.IsVisible) return;
@@ -106,6 +118,7 @@ namespace InteropDrawing.Backends
             _VectorsBatch.DrawAsset(transform, asset);
         }
 
+        /// <inheritdoc />
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             if (!style.IsVisible) return;
@@ -113,6 +126,7 @@ namespace InteropDrawing.Backends
             _VectorsBatch.DrawLines(points, diameter, style);
         }
 
+        /// <inheritdoc />
         public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
         {
             if (!style.IsVisible) return;
@@ -120,13 +134,15 @@ namespace InteropDrawing.Backends
             _VectorsBatch.DrawEllipse(center, width, height, style);
         }
 
+        /// <inheritdoc />
         public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
         {
             if (!style.IsVisible) return;
             if (_SpritesDirty) Flush();
             _VectorsBatch.DrawPolygon(points, style);
-        }        
+        }
 
+        /// <inheritdoc />
         public void DrawSprite(in System.Numerics.Matrix3x2 transform, in SpriteStyle style)
         {
             if (!style.IsVisible) return;
@@ -150,7 +166,7 @@ namespace InteropDrawing.Backends
             var tex = FetchTexture(sprite.Source);
             if (tex == null) return;
 
-            var xform = transform * _Final;
+            var xform = transform * _FinalForward;
 
             xform.Decompose(out V2 s, out float r, out V2 t);
 
@@ -178,7 +194,7 @@ namespace InteropDrawing.Backends
             {
                 if (_VectorsEffect == null || _VectorsEffect.IsDisposed) _VectorsEffect = new SpriteEffect(_Device);
 
-                _VectorsEffect.TransformMatrix = _Final.ToXna();
+                _VectorsEffect.TransformMatrix = _FinalForward.ToXna();
 
                 foreach (var pass in _VectorsEffect.CurrentTechnique.Passes)
                 {
@@ -201,6 +217,7 @@ namespace InteropDrawing.Backends
             }
         }
 
+        /// <inheritdoc />
         public void End()
         {
             Flush();
@@ -209,8 +226,6 @@ namespace InteropDrawing.Backends
         #endregion
 
         #region utils        
-
-        
 
         private static void _PremultiplyAlpha(Texture2D texture)
         {
@@ -237,7 +252,7 @@ namespace InteropDrawing.Backends
         {
             _Device.Textures[0] = _OldTexture;
             _OldTexture = null;
-        }
+        }        
 
         #endregion
     }

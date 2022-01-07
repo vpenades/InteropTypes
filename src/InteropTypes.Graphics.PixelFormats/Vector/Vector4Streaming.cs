@@ -212,24 +212,75 @@ namespace InteropBitmaps
             }
         }
 
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static void BytesToUnits(ReadOnlySpan<byte> src, Span<float> dst)
         {
-            var dst4 = _ToVector4(dst);
+            System.Diagnostics.Debug.Assert(dst.Length <= src.Length);
 
-            for (int i = 0; i < dst4.Length; ++i)
-            {
-                dst4[i] = new Vector4(src[i + 0], src[i + 1], src[i + 2], src[i + 3]) * _Reciprocal255;
-            }
+            ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+            ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+            var l = dst.Length;
 
-            for (int i = dst4.Length * 4; i < dst.Length; ++i)
+            while (l-- > 0)
             {
-                dst[i] = ((float)src[i]) * _Reciprocal255;
+                dPtr = sPtr * _Reciprocal255;
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
+                sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1);                
             }
         }
 
-        
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static void BytesToUnitsZYX(ReadOnlySpan<byte> src, Span<float> dst)
+        {
+            if (dst.Length < src.Length) throw new ArgumentException(nameof(dst));
 
-        
+            ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+            ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+            var l = dst.Length;
+
+            while (l >= 3)
+            {
+                l -= 3;
+                dPtr = System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 2) * _Reciprocal255;
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
+                dPtr = System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1) * _Reciprocal255;
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
+                dPtr = System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 0) * _Reciprocal255;
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
+                sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 3);
+            }
+        }
+
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static void Lerp(ReadOnlySpan<Byte> left, ReadOnlySpan<Byte> right, float amount, Span<Byte> dst)
+        {
+            Lerp(left, right, (int)(amount * 16384f), dst);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static void Lerp(ReadOnlySpan<Byte> left, ReadOnlySpan<Byte> right, int amount, Span<Byte> dst)
+        {            
+            System.Diagnostics.Debug.Assert(dst.Length <= left.Length);
+            System.Diagnostics.Debug.Assert(dst.Length <= right.Length);
+
+            var lweight = 16384 - amount;
+
+            ref byte lPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(left);
+            ref byte rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(right);
+            ref byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+
+            var l = dst.Length;
+
+            while (l-- > 0)
+            {
+                dPtr = (byte)((lPtr * lweight + rPtr * amount) / 16384);
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
+                lPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref lPtr, 1);
+                rPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref rPtr, 1);                
+            }
+        }
 
         public static void Lerp(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<float> dst)
         {
@@ -271,7 +322,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void SwapX0Z(Span<Byte> data)
+        public static void SwapZYX(Span<Byte> data)
         {
             while(data.Length >= 3)
             {
@@ -282,7 +333,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void SwapX0Z0(Span<Byte> data)
+        public static void SwapZYXW(Span<Byte> data)
         {
             while (data.Length >= 4)
             {

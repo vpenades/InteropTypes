@@ -1,0 +1,73 @@
+﻿<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using System.Runtime.CompilerServices;
+
+namespace InteropBitmaps
+{
+    partial class Pixel    
+    {
+        
+
+<# //-------------------------------------------------------------------------------------------------------------------
+
+        // https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
+
+        var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGBP32","BGRP32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP128F" };
+        var pixelFormatSrc8Names = new string[] { "Alpha8", "Luminance8", "BGR565","BGRA5551","BGRA4444","RGB24","BGR24","RGBA32","BGRA32","ARGB32", "BGRP32", "RGBP32" };        
+        var pixelFormatSrcFNames = new string[] { "Luminance32F", "RGB96F","BGR96F","RGBA128F","BGRA128F", "RGBP128F" };
+
+        var digits = new char[] { '0','1','2','3','4','5','6','7','8','9'};
+
+        (string Channels, string Size) _getChannels(string format)
+        {
+            var idx = format.IndexOfAny(digits);
+            var a = format.Substring(0,idx);
+            var b = format.Substring(idx);
+            return(a,b);            
+        }
+
+        void _writeLerpArray(string pixelFmtName, Action body)
+        {
+            ClearIndent();
+            PushIndent("    ");
+            PushIndent("    ");            
+
+            WriteLine($"partial struct {pixelFmtName}");
+            WriteLine("{");PushIndent("    ");
+
+            WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"public static void Lerp(ReadOnlySpan<{pixelFmtName}> left, ReadOnlySpan<{pixelFmtName}> right, int amount, Span<{pixelFmtName}> dst)");
+            WriteLine("{");
+            PushIndent("    ");
+            body();
+            PopIndent();
+            WriteLine("}");
+
+            PopIndent(); WriteLine("}");
+        }
+
+        void _writeByteLerpArray() { WriteLine("Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());"); }
+        void _writeSingleLerpArray() { WriteLine("Vector4Streaming.Lerp(left.AsSingles(), right.AsSingles(), amount, dst.AsSingles());"); }
+
+        _writeLerpArray("Alpha8", _writeByteLerpArray);
+        _writeLerpArray("Luminance8", _writeByteLerpArray);
+        _writeLerpArray("BGR24", _writeByteLerpArray);
+        _writeLerpArray("RGB24", _writeByteLerpArray);
+        _writeLerpArray("RGBP32", _writeByteLerpArray);
+        _writeLerpArray("BGRP32", _writeByteLerpArray);
+
+        _writeLerpArray("RGB96F", _writeSingleLerpArray);
+        _writeLerpArray("BGR96F", _writeSingleLerpArray);
+        _writeLerpArray("RGBP128F", _writeSingleLerpArray);
+
+        ClearIndent();
+
+// ---------------------------------------------------------------------------------------------------------------------------- #>
+
+    }
+}

@@ -9,13 +9,13 @@ using BenchmarkDotNet.Attributes;
 
 namespace InteropBitmaps
 {
-    [MonoJob]
+    [MonoJob("Mono x64", @"C:\Program Files\Mono\bin\mono.exe")]
     [SimpleJob(BenchmarkDotNet.Jobs.RuntimeMoniker.Net472), SimpleJob(BenchmarkDotNet.Jobs.RuntimeMoniker.Net60)]
-    public class CopyConvert
+    public class CopyBytesToUnits
     {
         #region init
 
-        public CopyConvert()
+        public CopyBytesToUnits()
         {
             var rnd = new Random(117);
             Vector4Streaming.Noise(_RGBA32Pixels.AsSpan().AsBytes(), rnd);
@@ -26,33 +26,24 @@ namespace InteropBitmaps
 
         #region data
 
-        private readonly Pixel.RGBA32[] _RGBA32Pixels = new Pixel.RGBA32[65536];
-        private readonly Pixel.RGBA128F[] _RGBA128FPixels = new Pixel.RGBA128F[65536];
-        private readonly Pixel.CopyConverterCallback<Pixel.RGBA32, Pixel.RGBA128F> _Function = Pixel.GetPixelCopyConverter<Pixel.RGBA32, Pixel.RGBA128F>();
-
-        
+        private readonly Pixel.RGBA32[] _RGBA32Pixels = new Pixel.RGBA32[258];
+        private readonly Pixel.RGBA128F[] _RGBA128FPixels = new Pixel.RGBA128F[258];        
 
         #endregion
 
         #region tests
 
         [Benchmark]
-        public void TestCopy()
-        {
-            _Function(_RGBA32Pixels, _RGBA128FPixels);
-        }
-
-        [Benchmark]
-        public void TestDirect()
+        public void TestProductionAPI()
         {
             var src = _RGBA32Pixels.AsSpan().AsBytes();
             var dst = _RGBA128FPixels.AsSpan().AsSingles();
 
             Vector4Streaming.BytesToUnits(src, dst);
-        }
+        }        
 
         [Benchmark]
-        public void TestDirectNaive()
+        public void TestReferenceNaive()
         {
             var src = _RGBA32Pixels.AsSpan().AsBytes();
             var dst = _RGBA128FPixels.AsSpan().AsSingles();
@@ -61,25 +52,34 @@ namespace InteropBitmaps
         }
 
         [Benchmark]
-        public void TestDirectFastConvert()
+        public void TestReferenceNaivePtr()
         {
             var src = _RGBA32Pixels.AsSpan().AsBytes();
             var dst = _RGBA128FPixels.AsSpan().AsSingles();
 
-            BytesToUnitsFastConvert(src, dst);
-        }
+            BytesToUnitsNaivePtr(src, dst);
+        }        
 
         [Benchmark]
-        public void TestDirectPtr()
+        public void TestReferenceVectPtr()
         {
             var src = _RGBA32Pixels.AsSpan().AsBytes();
             var dst = _RGBA128FPixels.AsSpan().AsSingles();
 
-            BytesToUnitsPtr(src, dst);
+            BytesToUnitsVectPtr(src, dst);
         }
 
         [Benchmark]
-        public void TestDirectLUT()
+        public void TestReferenceFastConvert()
+        {
+            var src = _RGBA32Pixels.AsSpan().AsBytes();
+            var dst = _RGBA128FPixels.AsSpan().AsSingles();
+
+            BytesToUnitsFastConvertPtr(src, dst);
+        }
+
+        [Benchmark]
+        public void TestReferenceLUT()
         {
             var src = _RGBA32Pixels.AsSpan().AsBytes();
             var dst = _RGBA128FPixels.AsSpan().AsSingles();
@@ -95,15 +95,11 @@ namespace InteropBitmaps
 
         private static readonly float[] _ByteToFloatLUT = Enumerable.Range(0, 256).Select(idx => (float)idx / 255f).ToArray();
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private static Span<Vector4> _ToVector4(Span<Single> span)
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, span.Length & ~3));
-        }
-
-        private static ReadOnlySpan<Vector4> _ToVector4(ReadOnlySpan<Single> span)
-        {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, span.Length & ~3));
-        }
+        }        
 
         public static void BytesToUnitsNaive(ReadOnlySpan<byte> src, Span<float> dst)
         {
@@ -113,13 +109,37 @@ namespace InteropBitmaps
             }
         }
 
-        public static void BytesToUnitsFastConvert(ReadOnlySpan<byte> src, Span<float> dst)
+        public static void BytesToUnitsNaivePtr(ReadOnlySpan<byte> src, Span<float> dst)
         {
-            for (int i = 0; i < dst.Length; ++i)
+            if (dst.Length < src.Length) throw new ArgumentException();
+
+            ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+            ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+            var l = dst.Length;
+
+            while(l-- > 0)
             {
-                dst[i] = FastByteToFloat.ToFloat(src[i]);
+                dPtr = sPtr * _Reciprocal255;
+                sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1);
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
             }
         }        
+
+        public static void BytesToUnitsFastConvertPtr(ReadOnlySpan<byte> src, Span<float> dst)
+        {
+            if (dst.Length < src.Length) throw new ArgumentException();
+
+            ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+            ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+            var l = dst.Length;
+
+            while (l-- > 0)
+            {
+                dPtr = FastByteToFloat.ToFloat(sPtr);
+                sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1);
+                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
+            }
+        }
 
         public static void BytesToUnitsLUT(ReadOnlySpan<byte> src, Span<float> dst)
         {
@@ -137,7 +157,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void BytesToUnitsPtr(ReadOnlySpan<byte> src, Span<float> dst)
+        public static void BytesToUnitsVectPtr(ReadOnlySpan<byte> src, Span<float> dst)
         {
             if (dst.Length < src.Length) throw new ArgumentException();
 

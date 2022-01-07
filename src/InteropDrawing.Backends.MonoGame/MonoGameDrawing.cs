@@ -8,7 +8,7 @@ using XNACOLOR = Microsoft.Xna.Framework.Color;
 
 namespace InteropDrawing.Backends
 {
-    public interface IMonoGameDrawing2D : IDrawingContext2D
+    public interface IMonoGameDrawing2D : IDrawingContext2D, Point2.ITransform
     {
         void Begin(int virtualWidth, int virtualHeight, bool keepAspect);
         void SetCamera(System.Numerics.Matrix3x2 camera);

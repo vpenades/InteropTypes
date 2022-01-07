@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace InteropDrawing.Transforms
 {
-    public readonly struct Drawing2DTransform : IDrawing2D, IDrawing3D
+    public readonly struct Drawing2DTransform : IDrawing2D, IDrawing3D, Point2.ITransform
     {
         #region constructors
 
@@ -80,8 +80,8 @@ namespace InteropDrawing.Transforms
         private Drawing2DTransform(IDrawing2D t, Matrix3x2 xform)
         {
             _Target = t;
-            _Transform = xform;
-            _TransformScale = xform.DecomposeScale();
+            _TransformForward = xform;
+            _TransformScaleForward = xform.DecomposeScale();
             Matrix3x2.Invert(xform, out _TransformInverse);            
         }        
 
@@ -90,19 +90,25 @@ namespace InteropDrawing.Transforms
         #region data
 
         private readonly IDrawing2D _Target;
-        private readonly Matrix3x2 _Transform;
-        private readonly Single _TransformScale;
-        private readonly Matrix3x2 _TransformInverse;        
+        private readonly Matrix3x2 _TransformForward;
+        private readonly Matrix3x2 _TransformInverse;
+        private readonly Single _TransformScaleForward;        
 
         #endregion
 
         #region API
 
-        private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _TransformScale; }
+        private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _TransformScaleForward; }
 
-        private Point2 _GetTransformed(Point2 point) { return Point2.Transform(point, _Transform); }
+        private Point2 _GetTransformed(Point2 point)
+        {
+            return Point2.Transform(point, _TransformForward);
+        }
 
-        private Point2 _GetTransformed(Point3 point) { return Point2.Transform(point.SelectXY(), _Transform); }
+        private Point2 _GetTransformed(Point3 point)
+        {
+            return Point2.Transform(point.SelectXY(), _TransformForward);
+        }
 
         /// <summary>
         /// This matrix is used to convert a point from viewport space to scene space.
@@ -116,7 +122,7 @@ namespace InteropDrawing.Transforms
 
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
-            _Target.DrawAsset(transform * _Transform, asset, brush);
+            _Target.DrawAsset(transform * _TransformForward, asset, brush);
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float strokeWidth, LineStyle brush)
@@ -152,8 +158,8 @@ namespace InteropDrawing.Transforms
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
         {
-            _Target.DrawSprite(transform * _Transform, style);
-        }
+            _Target.DrawSprite(transform * _TransformForward, style);
+        }        
 
         #endregion
 
@@ -196,7 +202,25 @@ namespace InteropDrawing.Transforms
         }
 
         #endregion
-    }    
+
+        #region point transform
+
+        /// <inheritdoc />
+        public void TransformForward(Span<Point2> points)
+        {            
+            Point2.Transform(points, _TransformForward);
+            if (_Target is Point2.ITransform xform) xform.TransformForward(points);
+        }
+
+        /// <inheritdoc />
+        public void TransformInverse(Span<Point2> points)
+        {
+            if (_Target is Point2.ITransform xform) xform.TransformInverse(points);
+            Point2.Transform(points, _TransformInverse);            
+        }
+
+        #endregion
+    }
 
     /*
     public struct SpriteDrawing2DTransform : ISpritesDrawing2D

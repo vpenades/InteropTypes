@@ -196,6 +196,18 @@ namespace InteropDrawing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Transform(Span<Point2> points, in System.Numerics.Matrix3x2 xform)
+        {
+            var v2 = AsNumerics(points);
+
+            while(v2.Length > 0)
+            {
+                v2[0] = VECTOR2.Transform(v2[0], xform);
+                v2 = v2.Slice(1);
+            }     
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<VECTOR2> AsNumerics(Span<Point2> points)
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point2, VECTOR2>(points);
@@ -213,7 +225,17 @@ namespace InteropDrawing
             return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR2, Point2>(points);
         }
 
-        public override string ToString() { return ToNumerics().ToString(); }        
+        public override string ToString() { return ToNumerics().ToString(); }
+
+        #endregion
+
+        #region nested types
+
+        public interface ITransform
+        {
+            void TransformForward(Span<Point2> points);
+            void TransformInverse(Span<Point2> points);
+        }
 
         #endregion
     }

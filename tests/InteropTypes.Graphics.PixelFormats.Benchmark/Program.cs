@@ -18,7 +18,9 @@ namespace InteropBitmaps
             var cfg = BenchmarkDotNet.Configs.DefaultConfig.Instance;
             #endif            
 
-            var summary = BenchmarkRunner.Run<CopyConvert>(cfg);
+            var summary = BenchmarkSwitcher
+                .FromAssembly(typeof(Program).Assembly)
+                .Run(args);
         }
     }
 }
