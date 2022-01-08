@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    public static class Vector4Streaming
+    public static partial class Vector4Streaming
     {
         private static readonly float[] _ByteToFloatLUT = Enumerable.Range(0, 256).Select(idx => (float)idx / 255f).ToArray();
 

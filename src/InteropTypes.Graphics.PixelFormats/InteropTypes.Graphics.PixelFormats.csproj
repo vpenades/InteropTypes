@@ -11,6 +11,20 @@
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
+    <SupportsRuntimeIntrinsics>true</SupportsRuntimeIntrinsics>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(SupportsRuntimeIntrinsics)' != 'true' ">
+    <Compile Remove="**/*.intrinsics.cs" />
+    <None Include="**/*.intrinsics.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(SupportsRuntimeIntrinsics)' == 'true' ">
+    <Compile Remove="**/*.fallback.cs" />
+    <None Include="**/*.fallback.cs" />
+  </ItemGroup>
+
   <PropertyGroup>
     <Description>
       Defines pixel types, formats, conversions and processing operations.
@@ -22,11 +36,7 @@
       <_Parameter1>InteropTypes.Graphics.PixelFormats.Tests</_Parameter1>
     </AssemblyAttribute>    
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Pixel.Equality.cs" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>InteropTypes.Graphics.PixelFormats.Benchmark</_Parameter1>
@@ -35,20 +45,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.Memory" Version="4.5.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pixel.Equality.cs">
-      <DependentUpon>Pixel.Equality.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </None>
-    <None Include="Pixel\Pixel.Equality.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Equality.tt</DependentUpon>
-    </None>
-  </ItemGroup>
+  </ItemGroup>  
   
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
