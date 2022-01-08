@@ -6,64 +6,242 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace InteropBitmaps
 {
     partial class Pixel    
-    {
-        
+    {        
 
 <# //-------------------------------------------------------------------------------------------------------------------
 
+        void _writeOpenBlock() { WriteLine("{"); PushIndent("    "); }
+
+        void _writeCloseBlock() { PopIndent(); WriteLine("}"); }
+
+        void _writeComment(string comment) { WriteLine(""); WriteLine($"// {comment}"); }
+
         // https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
 
-        var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGBP32","BGRP32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP128F" };
-        var pixelFormatSrc8Names = new string[] { "Alpha8", "Luminance8", "BGR565","BGRA5551","BGRA4444","RGB24","BGR24","RGBA32","BGRA32","ARGB32", "BGRP32", "RGBP32" };        
-        var pixelFormatSrcFNames = new string[] { "Luminance32F", "RGB96F","BGR96F","RGBA128F","BGRA128F", "RGBP128F" };
+         
 
-        var digits = new char[] { '0','1','2','3','4','5','6','7','8','9'};
+        string currentPixelFormatName;
 
-        (string Channels, string Size) _getChannels(string format)
+        void _writeClassBegin(string fmt)
         {
-            var idx = format.IndexOfAny(digits);
-            var a = format.Substring(0,idx);
-            var b = format.Substring(idx);
-            return(a,b);            
-        }
+            currentPixelFormatName = fmt;
 
-        void _writeLerpArray(string pixelFmtName, Action body)
-        {
             ClearIndent();
             PushIndent("    ");
             PushIndent("    ");            
 
-            WriteLine($"partial struct {pixelFmtName}");
-            WriteLine("{");PushIndent("    ");
+            WriteLine($"partial struct {fmt}");
+            _writeOpenBlock();
+        }
 
+        void _writeLerpArrayFloatAmount()
+        {
             WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"public static void Lerp(ReadOnlySpan<{pixelFmtName}> left, ReadOnlySpan<{pixelFmtName}> right, int amount, Span<{pixelFmtName}> dst)");
-            WriteLine("{");
-            PushIndent("    ");
-            body();
-            PopIndent();
-            WriteLine("}");
+            WriteLine($"public static void Lerp(ReadOnlySpan<{currentPixelFormatName}> left, ReadOnlySpan<{currentPixelFormatName}> right, float amount, Span<{currentPixelFormatName}> dst)");
+            _writeOpenBlock();
+            WriteLine("Lerp(left,right,(int)(amount * 16384f),dst);");
+            _writeCloseBlock();
+        }
 
-            PopIndent(); WriteLine("}");
+        void _writeLerpArray(Action body, string amountType = "int")
+        {
+            WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"public static void Lerp(ReadOnlySpan<{currentPixelFormatName}> left, ReadOnlySpan<{currentPixelFormatName}> right, {amountType} amount, Span<{currentPixelFormatName}> dst)");
+            _writeOpenBlock();
+            body();
+            _writeCloseBlock();
+        }
+
+        void _writeLerpArrayLoop()
+        {
+            WriteLine("");
+            WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"public static void Lerp(ReadOnlySpan<{currentPixelFormatName}> left, ReadOnlySpan<{currentPixelFormatName}> right, int amount, Span<{currentPixelFormatName}> dst)");
+            _writeOpenBlock();
+            WriteLine("ref var lPtr = ref MemoryMarshal.GetReference(left);");
+            WriteLine("ref var rPtr = ref MemoryMarshal.GetReference(right);");
+            WriteLine("ref var dPtr = ref MemoryMarshal.GetReference(dst);");
+            WriteLine("var len = dst.Length;");
+
+            _writeComment("old school loop");
+            WriteLine("while(len-- > 0)");
+            _writeOpenBlock();
+            WriteLine("dPtr = Lerp(lPtr,rPtr,amount);");
+            WriteLine("dPtr = Unsafe.Add(ref dPtr,1);");
+            WriteLine("lPtr = Unsafe.Add(ref lPtr,1);");
+            WriteLine("rPtr = Unsafe.Add(ref rPtr,1);");
+            _writeCloseBlock();
+
+            _writeCloseBlock();
         }
 
         void _writeByteLerpArray() { WriteLine("Vector4Streaming.Lerp(left.AsBytes(), right.AsBytes(), amount, dst.AsBytes());"); }
         void _writeSingleLerpArray() { WriteLine("Vector4Streaming.Lerp(left.AsSingles(), right.AsSingles(), amount, dst.AsSingles());"); }
 
-        _writeLerpArray("Alpha8", _writeByteLerpArray);
-        _writeLerpArray("Luminance8", _writeByteLerpArray);
-        _writeLerpArray("BGR24", _writeByteLerpArray);
-        _writeLerpArray("RGB24", _writeByteLerpArray);
-        _writeLerpArray("RGBP32", _writeByteLerpArray);
-        _writeLerpArray("BGRP32", _writeByteLerpArray);
+        void _writeAlphaQuantizedLerp()
+        {
+            var fmt = currentPixelFormatName;
+            WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"public static {fmt} Lerp({fmt} p00, {fmt} p01, int rx)");
 
-        _writeLerpArray("RGB96F", _writeSingleLerpArray);
-        _writeLerpArray("BGR96F", _writeSingleLerpArray);
-        _writeLerpArray("RGBP128F", _writeSingleLerpArray);
+            _writeOpenBlock();
+            _writeComment("calculate quantized weights");
+            WriteLine("var lx = 16384 - rx;");                       
+
+            WriteLine("System.Diagnostics.Debug.Assert((lx + rx) == 16384);");
+
+            _writeComment("calculate final alpha");
+            WriteLine("int a = (p00.A * lx + p01.A * rx) / 16384;");
+
+            WriteLine("if (a == 0) return default;");
+
+            _writeComment("calculate premultiplied RGB");
+            WriteLine("lx *= p00.A;");
+            WriteLine("rx *= p01.A;");        
+
+            WriteLine("int r = (p00.R * lx + p01.R * rx) / 16384;");
+            WriteLine("int g = (p00.G * lx + p01.G * rx) / 16384;");
+            WriteLine("int b = (p00.B * lx + p01.B * rx) / 16384;");
+
+            _writeComment("unpremultiply RGB");            
+            WriteLine($"return new {fmt}(r / a, g / a, b / a, a);");
+            _writeCloseBlock();
+        }
+
+        void _writeQuantizedLerp(params string[] channels)
+        {
+            var fmt = currentPixelFormatName;
+            WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"public static {fmt} Lerp({fmt} left, {fmt} right, int rx)");
+
+            _writeOpenBlock();
+            _writeComment("calculate quantized weights");
+            WriteLine("var lx = 16384 - rx;");                       
+
+            WriteLine("System.Diagnostics.Debug.Assert((lx + rx) == 16384);");
+
+            foreach(var c in channels)
+            {
+                WriteLine($"var {c} = (left.{c} * lx + right.{c} * rx) / 16384;");
+            }
+
+            var ccc = String.Join(", ", channels);
+
+            WriteLine($"return new {fmt}({ccc});");
+            
+            _writeCloseBlock();
+        }
+
+        void _writeQuantizedLerpGeneric(params string[] channels)
+        {
+            var fmt = currentPixelFormatName;
+            WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"public static TDst Lerp<TDst>({fmt} left, {fmt} right, int rx)");
+            WriteLine($"    where TDst: unmanaged, IPixelFactory<BGRA32, TDst>");
+
+            _writeOpenBlock();
+            _writeComment("calculate quantized weights");
+            WriteLine("var lx = 16384 - rx;");                       
+
+            WriteLine("System.Diagnostics.Debug.Assert((lx + rx) == 16384);");
+
+            foreach(var c in channels)
+            {
+                WriteLine($"var {c} = (left.{c} * lx + right.{c} * rx) / 16384;");
+            }
+
+            var ccc = String.Join(", ", channels);
+
+            WriteLine($"return default(TDst).From( new BGRA32({ccc}));");
+            
+            _writeCloseBlock();
+        }
+
+
+        _writeClassBegin("Alpha8");        
+        _writeQuantizedLerp("A");
+        _writeLerpArrayFloatAmount();
+        _writeLerpArray(_writeByteLerpArray);
+        _writeCloseBlock();
+
+        _writeClassBegin("Luminance8");
+
+        _writeQuantizedLerp("L");
+        _writeLerpArrayFloatAmount();
+        _writeLerpArray(_writeByteLerpArray);
+        _writeCloseBlock();
+
+        _writeClassBegin("BGR24");
+        _writeQuantizedLerp("R","G","B");
+        _writeQuantizedLerpGeneric("R","G","B");
+        _writeLerpArrayFloatAmount();
+        _writeLerpArray(_writeByteLerpArray);
+        _writeCloseBlock();
+
+        _writeClassBegin("RGB24");
+        _writeQuantizedLerp("R","G","B");
+        _writeLerpArrayFloatAmount();
+        _writeLerpArray(_writeByteLerpArray);
+        _writeCloseBlock();
+
+        _writeClassBegin("BGRA5551");
+        _writeAlphaQuantizedLerp();
+        _writeLerpArrayFloatAmount();
+        _writeLerpArrayLoop();
+        _writeCloseBlock();
+
+        _writeClassBegin("BGRA4444");
+        _writeAlphaQuantizedLerp();
+        _writeLerpArrayFloatAmount();
+        _writeLerpArrayLoop();
+        _writeCloseBlock();
+
+        _writeClassBegin("RGBA32");
+        _writeAlphaQuantizedLerp();
+        _writeLerpArrayFloatAmount();
+        _writeLerpArrayLoop();
+        _writeCloseBlock();
+
+        _writeClassBegin("BGRA32");
+        _writeAlphaQuantizedLerp();
+        _writeLerpArrayFloatAmount();
+        _writeLerpArrayLoop();
+        _writeCloseBlock();
+
+        _writeClassBegin("ARGB32");
+        _writeAlphaQuantizedLerp();
+        _writeLerpArrayFloatAmount();
+        _writeLerpArrayLoop();
+        _writeCloseBlock();
+
+        _writeClassBegin("RGBP32");
+        _writeQuantizedLerp("PreR","PreG","PreB","A");
+        _writeLerpArrayFloatAmount();
+        _writeLerpArray(_writeByteLerpArray);
+        _writeCloseBlock();
+
+        _writeClassBegin("BGRP32");
+        _writeQuantizedLerp("PreR","PreG","PreB","A");
+        _writeLerpArrayFloatAmount();
+        _writeLerpArray(_writeByteLerpArray);
+        _writeCloseBlock();
+
+        _writeClassBegin("RGB96F");
+        _writeLerpArray(_writeSingleLerpArray,"float");
+        _writeCloseBlock();
+
+        _writeClassBegin("BGR96F");
+        _writeLerpArray(_writeSingleLerpArray,"float");
+        _writeCloseBlock();
+
+        _writeClassBegin("RGBP128F");
+        _writeLerpArray(_writeSingleLerpArray,"float");
+        _writeCloseBlock();
 
         ClearIndent();
 

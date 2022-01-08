@@ -123,9 +123,9 @@ namespace InteropBitmaps
 
                     WriteLine(string.Empty);
                     WriteLine("// Get pointer references.");
-                    WriteLine($"ref {pixelSrcName} sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);");
-                    WriteLine($"ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());");
-                    WriteLine("int dLen = dst.Length;");
+                    WriteLine("ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);");
+                    WriteLine("ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());");
+                    WriteLine("var dLen = dst.Length;");
 
                     WriteLine(string.Empty);
                     WriteLine("// Old school pointer copy loop.");
@@ -160,9 +160,9 @@ namespace InteropBitmaps
 
             WriteLine(string.Empty);
             WriteLine("// Get pointer references.");
-            WriteLine($"ref {pixelSrcName} sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);");
-            WriteLine($"ref {pixelFmtName} dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);");
-            WriteLine("int dLen = dst.Length;");
+            WriteLine("ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);");
+            WriteLine("ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);");
+            WriteLine("var dLen = dst.Length;");
 
             WriteLine(string.Empty);
             WriteLine("// Old school pointer copy loop.");

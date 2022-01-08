@@ -27,51 +27,10 @@ namespace InteropBitmaps
 
             public RGBA32 LerpTo(RGBA32 other, int amount)
             {
-                var thisWeight = (255 - amount) * this.A;
-                var otherWeight = amount * other.A;
-
-                var div = thisWeight + otherWeight;
-                if (div == 0) return default;
-
-                var a = (this.A * (255-amount) + other.A * amount) / 255;
-                var r = (this.R * thisWeight + other.R * otherWeight) / div;
-                var g = (this.G * thisWeight + other.G * otherWeight) / div;
-                var b = (this.B * thisWeight + other.B * otherWeight) / div;
-
-                return new RGBA32(r, g, b, a);
+                return Lerp(this,other,amount);
             }
 
-            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public static RGBA32 Lerp(in RGBA32 p00, in RGBA32 p01, int rx)
-            {
-                // calculate quantized weights
-                var lx = 16384 - rx;                                
-
-                System.Diagnostics.Debug.Assert((lx + rx) == 16384);
-
-                // calculate final alpha
-
-                int a = (p00.A * lx + p01.A * rx) / 16384;
-
-                if (a == 0) return default;
-
-                // calculate premultiplied RGB
-
-                lx *= p00.A;
-                rx *= p01.A;                
-
-                int r = (p00.R * lx + p01.R * rx) / 16384;
-                int g = (p00.G * lx + p01.G * rx) / 16384;
-                int b = (p00.B * lx + p01.B * rx) / 16384;
-
-                // unpremultiply RGB
-
-                r /= a;
-                g /= a;
-                b /= a;
-
-                return new RGBA32(r, g, b, a);
-            }
+            
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
             public static RGBA32 Lerp(in RGBA32 p00, in RGBA32 p01, in RGBA32 p10, in RGBA32 p11, int rx, int by)

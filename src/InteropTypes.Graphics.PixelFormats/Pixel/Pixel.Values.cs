@@ -20,6 +20,8 @@ namespace InteropBitmaps
             public Alpha8(BGRA32 color) { A = color.A; }
             public Alpha8(RGBA128F color) { A = (Byte)(color.A / 255f); }
             public Alpha8(Byte alpha) { A = alpha; }
+            public Alpha8(int alpha) { A = (Byte)alpha; }
+
             #endregion
 
             #region data
@@ -51,6 +53,8 @@ namespace InteropBitmaps
             #region constructors
 
             public Luminance8(Byte luminance) { L = luminance; }
+
+            public Luminance8(int luminance) { L = (Byte)luminance; }
             public Luminance8(BGRA32 color)
             {
                 uint accum = 0;
@@ -234,6 +238,8 @@ namespace InteropBitmaps
 
             public BGRA5551(in RGBA128F color) : this(_PackRGBA(color.RGBA)) { }
 
+            public BGRA5551(int red, int green, int blue, int alpha) : this(red,green,blue, alpha >=128) { }
+
             public BGRA5551(int red, int green, int blue, Boolean alpha) : this(_PackRGBA(red, green, blue, alpha)) { }
 
             private static UInt16 _PackRGBA(XYZA rgba)
@@ -318,10 +324,10 @@ namespace InteropBitmaps
 
             public readonly UInt16 BGRA;
 
-            public int A { get { var p = ((BGRA >> 12) & 0xf); return p * 17; } }
-            public int R { get { var p = ((BGRA >> 8) & 0xf); return p * 17; } }
-            public int G { get { var p = ((BGRA >> 4) & 0xf); return p * 17; } }
-            public int B { get { var p = BGRA & 0xf; return p * 17; } }            
+            public int A => ((BGRA >> 12) & 0xf) * 17;
+            public int R => ((BGRA >> 8) & 0xf) * 17;
+            public int G => ((BGRA >> 4) & 0xf) * 17;
+            public int B => (BGRA & 0xf) * 17;
 
             #endregion
 

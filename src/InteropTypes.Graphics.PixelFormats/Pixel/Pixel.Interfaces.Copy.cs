@@ -78,9 +78,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -105,9 +105,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -132,9 +132,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -159,9 +159,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -192,9 +192,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -225,9 +225,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -260,9 +260,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -295,9 +295,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -330,9 +330,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -357,9 +357,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -384,9 +384,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -411,9 +411,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -438,9 +438,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -465,9 +465,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -492,9 +492,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -519,9 +519,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Alpha8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -597,9 +597,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -624,9 +624,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -651,9 +651,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -678,9 +678,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -705,9 +705,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -732,9 +732,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -759,9 +759,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -786,9 +786,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -813,9 +813,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -840,9 +840,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -881,9 +881,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -908,9 +908,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -935,9 +935,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -962,9 +962,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -989,9 +989,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance8 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1037,9 +1037,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1064,9 +1064,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1091,9 +1091,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1118,9 +1118,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1145,9 +1145,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1172,9 +1172,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1199,9 +1199,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1226,9 +1226,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1253,9 +1253,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1280,9 +1280,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1307,9 +1307,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1334,9 +1334,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1361,9 +1361,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1388,9 +1388,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1415,9 +1415,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1442,9 +1442,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1469,9 +1469,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1496,9 +1496,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance16 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1544,9 +1544,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1571,9 +1571,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1598,9 +1598,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1625,9 +1625,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1652,9 +1652,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1679,9 +1679,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1706,9 +1706,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1733,9 +1733,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1760,9 +1760,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1787,9 +1787,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1814,9 +1814,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1841,9 +1841,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1883,9 +1883,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1910,9 +1910,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1937,9 +1937,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1964,9 +1964,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -1991,9 +1991,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref Luminance32F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2039,9 +2039,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2066,9 +2066,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2108,9 +2108,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2135,9 +2135,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2162,9 +2162,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2195,9 +2195,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2228,9 +2228,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2263,9 +2263,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2298,9 +2298,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2333,9 +2333,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2360,9 +2360,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2387,9 +2387,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2414,9 +2414,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2441,9 +2441,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2468,9 +2468,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2495,9 +2495,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2522,9 +2522,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR565 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2570,9 +2570,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2597,9 +2597,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2624,9 +2624,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2651,9 +2651,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2678,9 +2678,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2705,9 +2705,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2753,9 +2753,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2788,9 +2788,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2823,9 +2823,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2858,9 +2858,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2885,9 +2885,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2912,9 +2912,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2939,9 +2939,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -2980,9 +2980,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3007,9 +3007,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3034,9 +3034,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3082,9 +3082,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3109,9 +3109,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3136,9 +3136,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3163,9 +3163,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3190,9 +3190,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3232,9 +3232,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3265,9 +3265,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3300,9 +3300,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3335,9 +3335,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3370,9 +3370,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3397,9 +3397,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3424,9 +3424,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3465,9 +3465,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3492,9 +3492,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3519,9 +3519,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3546,9 +3546,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB24 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3594,9 +3594,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3621,9 +3621,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3648,9 +3648,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3690,9 +3690,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3717,9 +3717,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3750,9 +3750,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3783,9 +3783,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3818,9 +3818,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3853,9 +3853,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3888,9 +3888,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3915,9 +3915,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3942,9 +3942,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3969,9 +3969,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -3996,9 +3996,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4023,9 +4023,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4050,9 +4050,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4077,9 +4077,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA5551 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4125,9 +4125,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4152,9 +4152,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4179,9 +4179,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4206,9 +4206,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4248,9 +4248,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4281,9 +4281,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4314,9 +4314,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4349,9 +4349,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4384,9 +4384,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4419,9 +4419,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4446,9 +4446,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4473,9 +4473,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4500,9 +4500,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4527,9 +4527,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4554,9 +4554,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4581,9 +4581,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4608,9 +4608,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA4444 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4656,9 +4656,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4683,9 +4683,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4710,9 +4710,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4737,9 +4737,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4764,9 +4764,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4791,9 +4791,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4824,9 +4824,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4857,9 +4857,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4907,9 +4907,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4942,9 +4942,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4969,9 +4969,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -4996,9 +4996,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5023,9 +5023,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5050,9 +5050,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5077,9 +5077,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5118,9 +5118,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5166,9 +5166,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5193,9 +5193,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5220,9 +5220,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5247,9 +5247,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5274,9 +5274,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5301,9 +5301,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5334,9 +5334,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5382,9 +5382,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5417,9 +5417,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5452,9 +5452,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5479,9 +5479,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5506,9 +5506,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5533,9 +5533,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5560,9 +5560,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5601,9 +5601,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5628,9 +5628,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5676,9 +5676,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5703,9 +5703,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5730,9 +5730,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5757,9 +5757,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5784,9 +5784,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5811,9 +5811,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5844,9 +5844,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5877,9 +5877,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5912,9 +5912,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst.AsBytes());
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5962,9 +5962,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -5989,9 +5989,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6016,9 +6016,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6043,9 +6043,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6070,9 +6070,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6097,9 +6097,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6124,9 +6124,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6151,9 +6151,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref ARGB32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6199,9 +6199,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6226,9 +6226,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6253,9 +6253,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6280,9 +6280,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6307,9 +6307,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6334,9 +6334,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6361,9 +6361,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6388,9 +6388,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6415,9 +6415,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6442,9 +6442,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6469,9 +6469,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6511,9 +6511,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6538,9 +6538,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6565,9 +6565,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6592,9 +6592,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6619,9 +6619,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6681,9 +6681,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6708,9 +6708,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6735,9 +6735,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6762,9 +6762,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6789,9 +6789,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6816,9 +6816,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6843,9 +6843,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6870,9 +6870,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6897,9 +6897,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6924,9 +6924,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6966,9 +6966,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -6993,9 +6993,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7020,9 +7020,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7047,9 +7047,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7074,9 +7074,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7101,9 +7101,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7128,9 +7128,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRP32 sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7176,9 +7176,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7203,9 +7203,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7230,9 +7230,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7257,9 +7257,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7284,9 +7284,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7311,9 +7311,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7338,9 +7338,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7365,9 +7365,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7392,9 +7392,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7419,9 +7419,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7446,9 +7446,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7473,9 +7473,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7500,9 +7500,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7542,9 +7542,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7569,9 +7569,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7596,9 +7596,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7623,9 +7623,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGB96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7671,9 +7671,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7698,9 +7698,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7725,9 +7725,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7752,9 +7752,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7779,9 +7779,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7806,9 +7806,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7833,9 +7833,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7860,9 +7860,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7887,9 +7887,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7914,9 +7914,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7941,9 +7941,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7968,9 +7968,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -7995,9 +7995,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8022,9 +8022,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8064,9 +8064,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8091,9 +8091,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8118,9 +8118,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGR96F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8166,9 +8166,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8193,9 +8193,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8220,9 +8220,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8247,9 +8247,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8274,9 +8274,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8301,9 +8301,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8328,9 +8328,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8355,9 +8355,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8382,9 +8382,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8409,9 +8409,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8436,9 +8436,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8463,9 +8463,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8490,9 +8490,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8517,9 +8517,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8544,9 +8544,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8571,9 +8571,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8613,9 +8613,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref BGRA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8661,9 +8661,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8688,9 +8688,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8715,9 +8715,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8742,9 +8742,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8769,9 +8769,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8796,9 +8796,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8823,9 +8823,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8850,9 +8850,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8877,9 +8877,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8904,9 +8904,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8931,9 +8931,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8958,9 +8958,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -8985,9 +8985,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9012,9 +9012,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9039,9 +9039,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9081,9 +9081,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9108,9 +9108,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBA128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9156,9 +9156,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Alpha8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9183,9 +9183,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance8 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9210,9 +9210,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR565 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9237,9 +9237,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA5551 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9264,9 +9264,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA4444 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9291,9 +9291,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9318,9 +9318,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR24 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9345,9 +9345,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9372,9 +9372,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9399,9 +9399,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref ARGB32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9426,9 +9426,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9453,9 +9453,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBP32 dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9480,9 +9480,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref Luminance32F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9507,9 +9507,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGB96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9534,9 +9534,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGR96F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9561,9 +9561,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref RGBA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)
@@ -9588,9 +9588,9 @@ namespace InteropBitmaps
                 System.Diagnostics.Debug.Assert(!src.AsBytes().Overlaps(dst.AsBytes()));
 
                 // Get pointer references.
-                ref RGBP128F sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
-                ref BGRA128F dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
-                int dLen = dst.Length;
+                ref var sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
+                ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+                var dLen = dst.Length;
 
                 // Old school pointer copy loop.
                 while(dLen > 0)

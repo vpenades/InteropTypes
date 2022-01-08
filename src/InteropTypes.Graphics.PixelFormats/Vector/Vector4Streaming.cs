@@ -267,9 +267,9 @@ namespace InteropBitmaps
 
             var lweight = 16384 - amount;
 
-            ref byte lPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(left);
-            ref byte rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(right);
-            ref byte dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+            ref var lPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(left);
+            ref var rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(right);
+            ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
 
             var l = dst.Length;
 
