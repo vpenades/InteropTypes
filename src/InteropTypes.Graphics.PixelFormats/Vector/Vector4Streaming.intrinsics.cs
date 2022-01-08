@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace InteropBitmaps
@@ -7,9 +10,6 @@ namespace InteropBitmaps
     partial class Vector4Streaming
     {
 
-        static void Test()
-        {
-            System.Runtime.Intrinsics.X86.Avx2
-        }
+        // https://github.com/saucecontrol/PhotoSauce/tree/master/src/MagicScaler/Magic/Processors
     }
 }
