@@ -8,11 +8,23 @@ using System.Runtime.InteropServices;
 
 namespace InteropBitmaps
 {
+
     partial class Pixel    
-    {        
+    {
+        public delegate void QuantizedSpanLerpCallback<TSrc,TDst>(ReadOnlySpan<TSrc>left ,ReadOnlySpan<TSrc> right, int amount, Span<TDst> dst);
+
+        interface ISpanLerpDelegateProvider<TSrc,TDst>
+        {
+            QuantizedSpanLerpCallback<TSrc,TDst> GetQuantizedSpanLerpDelegate();
+        }
 
         partial struct Alpha8
+            : ISpanLerpDelegateProvider<Alpha8,Alpha8>
         {
+            QuantizedSpanLerpCallback<Alpha8,Alpha8> ISpanLerpDelegateProvider<Alpha8,Alpha8>.GetQuantizedSpanLerpDelegate()
+            {
+                return Lerp;
+            }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Alpha8 Lerp(Alpha8 left, Alpha8 right, int rx)
             {
@@ -35,7 +47,12 @@ namespace InteropBitmaps
             }
         }
         partial struct Luminance8
+            : ISpanLerpDelegateProvider<Luminance8,Luminance8>
         {
+            QuantizedSpanLerpCallback<Luminance8,Luminance8> ISpanLerpDelegateProvider<Luminance8,Luminance8>.GetQuantizedSpanLerpDelegate()
+            {
+                return Lerp;
+            }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static Luminance8 Lerp(Luminance8 left, Luminance8 right, int rx)
             {
@@ -58,7 +75,12 @@ namespace InteropBitmaps
             }
         }
         partial struct BGR24
+            : ISpanLerpDelegateProvider<BGR24,BGR24>
         {
+            QuantizedSpanLerpCallback<BGR24,BGR24> ISpanLerpDelegateProvider<BGR24,BGR24>.GetQuantizedSpanLerpDelegate()
+            {
+                return Lerp;
+            }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static BGR24 Lerp(BGR24 left, BGR24 right, int rx)
             {
@@ -96,7 +118,12 @@ namespace InteropBitmaps
             }
         }
         partial struct RGB24
+            : ISpanLerpDelegateProvider<RGB24,RGB24>
         {
+            QuantizedSpanLerpCallback<RGB24,RGB24> ISpanLerpDelegateProvider<RGB24,RGB24>.GetQuantizedSpanLerpDelegate()
+            {
+                return Lerp;
+            }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static RGB24 Lerp(RGB24 left, RGB24 right, int rx)
             {
@@ -217,7 +244,12 @@ namespace InteropBitmaps
             }
         }
         partial struct RGBA32
+            : ISpanLerpDelegateProvider<RGBA32,RGBA32>
         {
+            QuantizedSpanLerpCallback<RGBA32,RGBA32> ISpanLerpDelegateProvider<RGBA32,RGBA32>.GetQuantizedSpanLerpDelegate()
+            {
+                return Lerp;
+            }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static RGBA32 Lerp(RGBA32 p00, RGBA32 p01, int rx)
             {

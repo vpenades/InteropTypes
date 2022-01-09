@@ -10,8 +10,15 @@ using System.Runtime.InteropServices;
 
 namespace InteropBitmaps
 {
+
     partial class Pixel    
-    {        
+    {
+        public delegate void QuantizedSpanLerpCallback<TSrc,TDst>(ReadOnlySpan<TSrc>left ,ReadOnlySpan<TSrc> right, int amount, Span<TDst> dst);
+
+        interface ISpanLerpDelegateProvider<TSrc,TDst>
+        {
+            QuantizedSpanLerpCallback<TSrc,TDst> GetQuantizedSpanLerpDelegate();
+        }
 
 <# //-------------------------------------------------------------------------------------------------------------------
 
@@ -27,15 +34,24 @@ namespace InteropBitmaps
 
         string currentPixelFormatName;
 
-        void _writeClassBegin(string fmt)
+        void _writeClassBegin(string fmt, params string [] interfaces)
         {
             currentPixelFormatName = fmt;
 
             ClearIndent();
             PushIndent("    ");
-            PushIndent("    ");            
+            PushIndent("    ");
 
             WriteLine($"partial struct {fmt}");
+
+            PushIndent("    ");
+            for(int i=0; i < interfaces.Length; ++i)
+            {
+                var sep = i==0 ? ":" : ",";
+                WriteLine($"{sep} {interfaces[i]}");
+            }
+            PopIndent();
+
             _writeOpenBlock();
         }
 
@@ -162,28 +178,40 @@ namespace InteropBitmaps
             _writeCloseBlock();
         }
 
+        void _writeSpanLerpInterfaceMethod(string fmt, string dst)
+        {
+         
+            WriteLine($"QuantizedSpanLerpCallback<{fmt},{dst}> ISpanLerpDelegateProvider<{fmt},{dst}>.GetQuantizedSpanLerpDelegate()");
+            _writeOpenBlock();
+            WriteLine("return Lerp;");
+            _writeCloseBlock();
+        }
 
-        _writeClassBegin("Alpha8");        
+
+        _writeClassBegin("Alpha8", "ISpanLerpDelegateProvider<Alpha8,Alpha8>");
+        _writeSpanLerpInterfaceMethod("Alpha8","Alpha8");
         _writeQuantizedLerp("A");
         _writeLerpArrayFloatAmount();
         _writeLerpArray(_writeByteLerpArray);
         _writeCloseBlock();
 
-        _writeClassBegin("Luminance8");
-
+        _writeClassBegin("Luminance8", "ISpanLerpDelegateProvider<Luminance8,Luminance8>");
+        _writeSpanLerpInterfaceMethod("Luminance8","Luminance8");
         _writeQuantizedLerp("L");
         _writeLerpArrayFloatAmount();
         _writeLerpArray(_writeByteLerpArray);
         _writeCloseBlock();
 
-        _writeClassBegin("BGR24");
+        _writeClassBegin("BGR24", "ISpanLerpDelegateProvider<BGR24,BGR24>");
+        _writeSpanLerpInterfaceMethod("BGR24","BGR24");
         _writeQuantizedLerp("R","G","B");
         _writeQuantizedLerpGeneric("R","G","B");
         _writeLerpArrayFloatAmount();
         _writeLerpArray(_writeByteLerpArray);
         _writeCloseBlock();
 
-        _writeClassBegin("RGB24");
+        _writeClassBegin("RGB24", "ISpanLerpDelegateProvider<RGB24,RGB24>");
+        _writeSpanLerpInterfaceMethod("RGB24","RGB24");
         _writeQuantizedLerp("R","G","B");
         _writeLerpArrayFloatAmount();
         _writeLerpArray(_writeByteLerpArray);
@@ -201,7 +229,8 @@ namespace InteropBitmaps
         _writeLerpArrayLoop();
         _writeCloseBlock();
 
-        _writeClassBegin("RGBA32");
+        _writeClassBegin("RGBA32", "ISpanLerpDelegateProvider<RGBA32,RGBA32>");
+        _writeSpanLerpInterfaceMethod("RGBA32","RGBA32");
         _writeAlphaQuantizedLerp();
         _writeLerpArrayFloatAmount();
         _writeLerpArrayLoop();
