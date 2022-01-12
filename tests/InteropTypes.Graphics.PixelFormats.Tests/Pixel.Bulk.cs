@@ -58,8 +58,8 @@ namespace InteropBitmaps
         }
 
         public void ConversionTest<TSrcPixel,TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32,TSrcPixel>
-            where TDstPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32,TSrcPixel>
+            where TDstPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>
         {
             var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
@@ -90,8 +90,8 @@ namespace InteropBitmaps
         }
 
         public void ConversionPremulTest<TSrcPixel, TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32, TSrcPixel>
-            where TDstPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32, TSrcPixel>
+            where TDstPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>
         {
             var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
@@ -120,22 +120,6 @@ namespace InteropBitmaps
                 Assert.AreEqual(srcP.PreB, dstP.PreB, 1);
                 Assert.AreEqual(srcP.A, dstP.A, 1);
             }
-        }
-
-
-        [Test]
-        public void SamplerTests()
-        {
-
-            var a = new Pixel.RGBA32(255, 255, 255, 255);
-            var b = new Pixel.RGBA32(  0, 255, 255, 255);
-            var c = new Pixel.RGBA32(255,   0, 255, 255);
-            var d = new Pixel.RGBA32(255,   0,   0, 0);
-
-            var sampler = Pixel.TryGetQuadSampler<Pixel.RGBA32, Pixel.RGBA32>();
-
-            var x = sampler(a, b, c, d, 8192, 8192);
-
-        }
+        }        
     }
 }

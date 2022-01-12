@@ -17,6 +17,9 @@ namespace InteropBitmaps
         public readonly partial struct Alpha8 
         {
             #region constructors
+            public static implicit operator Alpha8(Byte a) { return new Alpha8(a); }
+
+            public static implicit operator Alpha8(int a) { return new Alpha8(a); }
             public Alpha8(BGRA32 color) { A = color.A; }
             public Alpha8(RGBA128F color) { A = (Byte)(color.A / 255f); }
             public Alpha8(Byte alpha) { A = alpha; }
@@ -26,9 +29,9 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly Byte A;            
+            public readonly Byte A;
 
-            #endregion            
+            #endregion
         }
 
         /// <summary>
@@ -218,9 +221,9 @@ namespace InteropBitmaps
 
             public int R { get { var p = (BGR >> 11) & 0x1f; return (p * 8) | (p >> 2); } }
             public int G { get { var p = (BGR >> 5) & 0x3f; return (p * 4) | (p >> 4); } }
-            public int B { get { var p = BGR & 0x1f; return (p * 8) | (p >> 2); } }            
+            public int B { get { var p = BGR & 0x1f; return (p * 8) | (p >> 2); } }
 
-            #endregion            
+            #endregion
         }
 
         /// <summary>
@@ -347,6 +350,9 @@ namespace InteropBitmaps
         {
             #region constructors
 
+            public static implicit operator BGRA32(in (int R, int G, int B) color) { return new BGRA32(color.R, color.G, color.B); }
+            public static implicit operator BGRA32(in (int R, int G, int B, int A) color) { return new BGRA32(color.R, color.G, color.B, color.A); }
+
             public BGRA32(in System.Drawing.Color color) { R = color.R; G = color.G;B = color.B;A = color.A; }
             public BGRA32(Alpha8 color) { B = 0; G = 0; R = 0; A = color.A; }
             public BGRA32(Luminance8 color) { B = color.L; G = color.L; R = color.L; A = 255; }
@@ -458,6 +464,9 @@ namespace InteropBitmaps
         public readonly partial struct RGBA32
         {
             #region constructors
+
+            public static implicit operator RGBA32(in (int R, int G, int B) color) { return new RGBA32(color.R, color.G, color.B); }
+            public static implicit operator RGBA32(in (int R, int G, int B, int A) color) { return new RGBA32(color.R, color.G, color.B, color.A); }
 
             public RGBA32(BGRA32 color)
             {
@@ -573,6 +582,8 @@ namespace InteropBitmaps
         {
             #region constructors
 
+            public static implicit operator BGR24(in (int R, int G, int B) color) { return new BGR24(color.R, color.G, color.B); }
+
             public BGR24(in RGBA128F rgba)
             {
                 var v = rgba.RGBA * 255f;
@@ -624,6 +635,8 @@ namespace InteropBitmaps
         public readonly partial struct RGB24
         {
             #region constructors
+
+            public static implicit operator RGB24(in (int R, int G, int B) color) { return new RGB24(color.R, color.G, color.B); }
 
             public RGB24(BGRA32 color)
             {

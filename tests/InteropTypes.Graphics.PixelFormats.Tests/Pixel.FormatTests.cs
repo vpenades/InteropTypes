@@ -28,12 +28,12 @@ namespace InteropBitmaps
 
                 var pixel = Activator.CreateInstance(pixelType);
 
-                if (pixel is Pixel.IPixelConvertible<Pixel.BGRA32> pixelToRGBA32)
+                if (pixel is Pixel.IConvertible<Pixel.BGRA32> pixelToRGBA32)
                 {
                     var dstp = pixelToRGBA32.ToPixel();
                 }
 
-                if (pixel is Pixel.IPixelConvertible<Pixel.RGBA128F> pixelToRGBA128F)
+                if (pixel is Pixel.IConvertible<Pixel.RGBA128F> pixelToRGBA128F)
                 {
                     var dstp = pixelToRGBA128F.ToPixel();
                 }

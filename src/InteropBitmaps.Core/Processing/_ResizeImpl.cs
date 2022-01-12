@@ -122,7 +122,7 @@ namespace InteropBitmaps.Processing
         }       
 
         private static void _FitPixels3<TSrcPixel,TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)
-            where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.RGBA128F>
+            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.RGBA128F>
             where TDstPixel : unmanaged, Pixel.IPixelFactory<Pixel.RGBA128F, TDstPixel>
         {
             var (colPairs, rowPairs) = _BilinearSampleSource.Create(src.Info, dst.Info);
@@ -149,7 +149,7 @@ namespace InteropBitmaps.Processing
         /// <summary>
         /// Takes an input <see cref="SpanBitmap"/> and exposes its rows, resized according to a <see cref="_BilinearSampleSource"/> table.
         /// </summary>
-        ref struct _RowBlendKernel3<TSrcPixel> where TSrcPixel : unmanaged, Pixel.IPixelConvertible<Pixel.RGBA128F>
+        ref struct _RowBlendKernel3<TSrcPixel> where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.RGBA128F>
         {
             #region constructor
 

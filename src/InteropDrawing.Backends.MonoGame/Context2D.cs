@@ -94,6 +94,12 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc />
+        public void SetSpriteFlip(bool hflip, bool vflip)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public void SetCamera(System.Numerics.Matrix3x2 camera)
         {
             System.Numerics.Matrix3x2.Invert(camera, out _View);

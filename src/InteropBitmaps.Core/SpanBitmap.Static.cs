@@ -75,6 +75,8 @@ namespace InteropBitmaps
             Guard.AreEqual(nameof(src), dst.Width, src.Width);
             Guard.AreEqual(nameof(src), dst.Height, src.Height);
 
+            src = src.AsReadOnly();
+
             var rowConverter = Pixel.GetByteCopyConverter(src.PixelFormat, dst.PixelFormat);
 
             for (int y = 0; y < dst.Height; ++y)
@@ -88,6 +90,8 @@ namespace InteropBitmaps
         public static void CopyPixels(SpanBitmap<Byte> src, SpanBitmap<Single> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
+
+            src = src.AsReadOnly();
 
             System.Diagnostics.Debug.Assert(dst.Width == src.Width);
             System.Diagnostics.Debug.Assert(dst.Height == src.Height);            
@@ -104,6 +108,8 @@ namespace InteropBitmaps
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
 
+            src = src.AsReadOnly();
+
             for (int y = 0; y < dst.Height; ++y)
             {
                 var srcRow = src.GetScanlinePixels(y);
@@ -115,6 +121,8 @@ namespace InteropBitmaps
         public static void CopyPixels(SpanBitmap src, SpanBitmap<Vector3> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
+
+            src = src.AsReadOnly();
 
             if (src.PixelByteSize == 3)
             {
@@ -139,6 +147,8 @@ namespace InteropBitmaps
         public static void CopyPixels(SpanBitmap<Vector3> src, SpanBitmap dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
             Guard.AreEqual(nameof(dst.Info.Bounds), dst.Info.Bounds, src.Info.Bounds);
+
+            src = src.AsReadOnly();
 
             if (dst.PixelByteSize == 3)
             {
@@ -173,10 +183,24 @@ namespace InteropBitmaps
             }
 
             throw new NotImplementedException();
-        }          
+        }
+
+
+        public static void CopyPixels<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, in Matrix3x2 srcXform, float opacity = 1)
+            where TSrcPixel : unmanaged
+            where TDstPixel : unmanaged, Pixel.IQuantizedComposition<TSrcPixel, TDstPixel>
+        {
+            src = src.AsReadOnly();
+
+            Matrix3x2.Invert(srcXform, out var invXform);
+
+            Processing._BitmapTransformImplementation.SetPixelsNearestFast(dst, src, invXform, opacity);
+        }
 
         public static void SplitPixels(SpanBitmap<Vector3> src, SpanBitmap<Single> dstB, SpanBitmap<Single> dstG, SpanBitmap<Single> dstR)
         {
+            src = src.AsReadOnly();
+
             if (src.PixelFormat.Component0.IsBlue)
             {
                 for (int y = 0; y < src.Height; ++y)
@@ -218,6 +242,8 @@ namespace InteropBitmaps
 
         public static void FitPixels(SpanBitmap src, SpanBitmap dst, (Single offset, Single scale) transform)
         {
+            src = src.AsReadOnly();
+
             Processing._BilinearResizeImplementation.FitPixels(src, dst, transform);
         }
 

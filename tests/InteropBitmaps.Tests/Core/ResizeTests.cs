@@ -96,7 +96,7 @@ namespace InteropBitmaps.Core
 
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");            
             var cat = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
-            var cat00 = cat.OfType<Pixel.RGBA32>().AsSpanBitmap();
+            var cat00 = cat.OfType<Pixel.RGBA32>();
 
             for(float r=0; r < 1; r+=0.3f)
             {
@@ -105,7 +105,7 @@ namespace InteropBitmaps.Core
                 // offset
                 xform = Matrix3x2.CreateTranslation(-50, -50) * xform * Matrix3x2.CreateTranslation(50, 50);
 
-                dst.AsSpanBitmap().SetPixels(xform, cat00, r);
+                SpanBitmap.CopyPixels(dst.AsSpanBitmap(), cat00.AsSpanBitmap(), xform, r);                
             }
 
             

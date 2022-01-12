@@ -1,38 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace InteropBitmaps
 {
     partial class Pixel
     {
-        public delegate TDst QuadSamplerDelegate<TSrc, TDst>(in TSrc p00, in TSrc p01, in TSrc p10, in TSrc p11, int x, int y);
 
-        public static QuadSamplerDelegate<TSrc,TDst> TryGetQuadSampler<TSrc,TDst>()
+        delegate TDst QuadSamplerDelegate<TSrc, TDst>(in TSrc p00, in TSrc p01, in TSrc p10, in TSrc p11, int x, int y);
+
+        static QuadSamplerDelegate<TSrc,TDst> TryGetQuadSampler<TSrc,TDst>()
         {
             var instance = default(TSrc) as IDelegateProvider<QuadSamplerDelegate<TSrc, TDst>>;
             return instance?.GetDelegate();
         }
 
-        public interface IPixelLerpQuantizedOperator<TPixel>
+        
+
+        interface ILerpFactory<TSrc, TDst>
         {
-            TPixel LerpTo(TPixel value, int amount);
+            TDst Lerp(TSrc left, TSrc right, float amount);
         }
 
-        partial struct RGBA32
-            : IPixelLerpQuantizedOperator<RGBA32>
-            , IDelegateProvider<QuadSamplerDelegate<RGBA32,RGBA32>>
+        interface IQuantizedLerpFactory<TSrc>
+            where TSrc : unmanaged
+        {
+            BGRP32 Lerp(TSrc left, TSrc right, int amount);
+        }
+
+        interface IQuantizedLerpFactory<TSrc,TDst>
+            where TSrc:unmanaged, IConvertible<BGRP32>
+            where TDst:unmanaged, IPixelFactory<BGRP32, TDst>
+        {
+            TDst Lerp(TSrc left, TSrc right, int amount);
+        }        
+
+        partial struct RGBA32            
+            : IDelegateProvider<QuadSamplerDelegate<RGBA32,RGBA32>>
         {
             QuadSamplerDelegate<RGBA32, RGBA32> IDelegateProvider<QuadSamplerDelegate<RGBA32, RGBA32>>.GetDelegate() { return Lerp; }
 
-            public RGBA32 LerpTo(RGBA32 other, int amount)
-            {
+            public RGBA32 LerpTo(RGBA32 other, int amount) {
                 return Lerp(this,other,amount);
             }
 
             
 
-            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+            public static void Lerp(ReadOnlySpan<RGBA32> left, ReadOnlySpan<RGBA32> right, int rx, int yd, Span<RGBA32> dst)
+            {
+                var sy = 0;
+
+                ref var dPtr = ref dst[0];
+                int l = dst.Length;
+
+                while (l-- > 0)
+                {
+                    var y = sy / 16384;
+
+                    ref readonly var p00 = ref left[y];
+                    ref readonly var p10 = ref right[y];
+
+                    sy += yd;
+                    y = sy / 16384;
+
+                    ref readonly var p01 = ref left[y];
+                    ref readonly var p11 = ref right[y];
+
+                    sy += yd;
+
+                    dPtr = Lerp(p00, p01, p10, p11, rx & 16383, sy & 16383);
+                    dPtr = Unsafe.Add(ref dPtr, 1);
+                }
+            }
+
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static RGBA32 Lerp(in RGBA32 p00, in RGBA32 p01, in RGBA32 p10, in RGBA32 p11, int rx, int by)
             {
                 // calculate quantized weights
@@ -73,7 +116,7 @@ namespace InteropBitmaps
         }
 
         public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)
-            where TSrcPixel : unmanaged, IPixelConvertible<RGBA128F>
+            where TSrcPixel : unmanaged, IConvertible<RGBA128F>
             where TDstPixel : unmanaged, IPixelFactory<RGBA128F, TDstPixel>
         {
             for (int i = 0; i < dst.Length; ++i)
@@ -92,5 +135,8 @@ namespace InteropBitmaps
                 dst[i] = default(TDstPixel).From(new RGBA128F(v));
             }
         }
+
+
+        
     }
 }

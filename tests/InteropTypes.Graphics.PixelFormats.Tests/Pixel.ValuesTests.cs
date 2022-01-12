@@ -19,6 +19,9 @@ namespace InteropBitmaps
             a ^= b;
             b ^= a;
             a ^= b;
+
+            Assert.AreEqual(17, a);
+            Assert.AreEqual(1, b);
         }
 
         [Test]
@@ -38,7 +41,7 @@ namespace InteropBitmaps
         }
 
         private static unsafe void CheckImageSharp<TPixel,TRefPixel>()
-            where TPixel : unmanaged, Pixel.IPixelConvertible<Pixel.BGRA32>
+            where TPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>
             where TRefPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TRefPixel>
         {
             Assert.AreEqual(sizeof(TRefPixel), sizeof(TPixel));

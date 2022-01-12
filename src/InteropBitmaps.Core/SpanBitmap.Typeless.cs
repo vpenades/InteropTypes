@@ -174,6 +174,7 @@ namespace InteropBitmaps
         /// <remarks>
         /// This is the opposite operation of <see cref="SpanBitmap{TPixel}.AsTypeless"/>
         /// </remarks>
+        [System.Diagnostics.DebuggerStepThrough]
         public unsafe SpanBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged
         {

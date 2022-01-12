@@ -4,6 +4,8 @@ using System.Text;
 
 namespace InteropBitmaps.Processing
 {
+    using TRANSFORM = System.Numerics.Matrix3x2;
+
     static class _BitmapTransformImplementation
     {
         #region set
@@ -34,7 +36,7 @@ namespace InteropBitmaps.Processing
                     }
                 }
             }
-        }        
+        }
 
         public static void FillPixelsNearest<TPixel>(SpanBitmap<TPixel> dst, SpanBitmap<TPixel> src, System.Numerics.Matrix3x2 srcXform)
             where TPixel : unmanaged
@@ -96,9 +98,9 @@ namespace InteropBitmaps.Processing
                 for (int x = 0; x < dst.Width; ++x)
                 {
                     var srcRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TSrcPixel>(srcBytes.Slice(srcStride * iter.Y));
-                    dstRow[x] = srcRow[iter.X].AverageWith(tmpRow[iter.X]);                    
+                    dstRow[x] = srcRow[iter.X].AverageWith(tmpRow[iter.X]);
                     iter.MoveNext();
-                }                
+                }
             }
         }
 
@@ -106,9 +108,12 @@ namespace InteropBitmaps.Processing
 
         #region composition
 
-        public static void SetPixelsNearest<TDstPixel,TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, System.Numerics.Matrix3x2 srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IPixelQuantizedComposition<TDstPixel>
-            where TDstPixel : unmanaged            
+
+        
+
+        public static void SetPixelsNearestFast<TDstPixel,TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
+            where TSrcPixel : unmanaged
+            where TDstPixel : unmanaged, Pixel.IQuantizedComposition<TSrcPixel, TDstPixel>
         {
             _PixelTransformIterator iter;
 
@@ -120,7 +125,7 @@ namespace InteropBitmaps.Processing
             var dstStride = dst.Info.StepByteSize;
             var dstWidth = dst.Info.RowByteSize;
 
-            var integerOpacity = Math.Max(0, Math.Min(65536, (int)(opacity * 65536f)));
+            var opacityQ = Pixel.ToQuantizedAmount(opacity);
 
             for (int y = 0; y < dst.Height; ++y)
             {
@@ -133,15 +138,15 @@ namespace InteropBitmaps.Processing
                     if (iter.MoveNext(out int cx, out int cy))
                     {
                         var srcRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TSrcPixel>(srcBytes.Slice(srcStride * cy, srcWidth));
-                        dstRow[x] = srcRow[cx].AlphaBlendWith(dstRow[x], integerOpacity);
+                        dstRow[x] = dstRow[x].AlphaBlendWith(srcRow[cx], opacityQ);
                     }
                 }
             }
         }
 
-        public static void SetPixelsBilinear<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, System.Numerics.Matrix3x2 srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IPixelQuantizedComposition<TDstPixel> , Pixel.IPixelBlendOps<TSrcPixel,TSrcPixel>, Pixel.IPixelConvertible<Pixel.RGBP128F>
-            where TDstPixel : unmanaged, Pixel.IPixelPremulComposition<TDstPixel>
+        public static void SetPixelsBilinear<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
+            where TSrcPixel : unmanaged
+            where TDstPixel : unmanaged, Pixel.IQuantizedComposition<TSrcPixel, TDstPixel>
         {
             _PixelTransformIterator iter;
 
@@ -163,6 +168,9 @@ namespace InteropBitmaps.Processing
                 {
                     if (iter.MoveNext(out int cx0, out int cy0, out float fx, out float fy))
                     {
+                        throw new NotImplementedException();
+
+                        /*
                         var cx1 = Math.Min(cx0 + 1, src.Info.Width - 1);
                         var cy1 = Math.Min(cy0 + 1, src.Info.Height - 1);
 
@@ -176,6 +184,7 @@ namespace InteropBitmaps.Processing
                         var srcABCD = System.Numerics.Vector4.Lerp(srcAB, srcCD, fy);
 
                         dstRow[x] = dstRow[x].AlphaBlendWith(srcABCD, opacity);
+                        */
                     }
                 }
             }

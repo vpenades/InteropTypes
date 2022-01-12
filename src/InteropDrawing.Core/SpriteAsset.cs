@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using XY = System.Numerics.Vector2;
+
 namespace InteropDrawing
 {
     /// <summary>
@@ -36,60 +38,53 @@ namespace InteropDrawing
         {
             this._Source = source;           
 
-            this.Pivot = pivot.ToNumerics();
+            this._Pivot = pivot.ToNumerics();
             
             this._SourceUVMin = origin.ToNumerics();
-            this._SourceUVMax = this._SourceUVMin + size.ToNumerics();            
+            this._SourceUVMax = this._SourceUVMin + size.ToNumerics();
+
+            this._CalculateMatrices();
         }
 
         public SpriteAsset() { }
 
         public SpriteAsset WithPivot(int x, int y)
         {
-            Pivot = new System.Numerics.Vector2(x, y);
+            _Pivot = new XY(x, y);
+            this._CalculateMatrices();
             return this;
         }
 
         public SpriteAsset WithScale(float scale)
         {
-            Scale = scale;
+            _Scale = scale;
+            this._CalculateMatrices();
             return this;
         }
 
-        public void CopyTo(SpriteAsset other, System.Numerics.Vector2 pivotOffset)
+        public void CopyTo(SpriteAsset other, XY pivotOffset)
         {
             other._Source = this.Source;
             other._SourceUVMin = this._SourceUVMin;
             other._SourceUVMax = this._SourceUVMax;
-            other.Scale = this.Scale;
-            other.Pivot = this.Pivot + pivotOffset; // should multiply by this.Scale ??
-        }
+            other._Scale = this.Scale;
+            other._Pivot = this.Pivot + pivotOffset; // should multiply by this.Scale ??
+            other._CalculateMatrices();
+        }        
 
         #endregion
 
         #region data
 
         private object _Source;
-        private System.Numerics.Vector2 _SourceUVMin;
-        private System.Numerics.Vector2 _SourceUVMax;        
+        private XY _SourceUVMin;
+        private XY _SourceUVMax;
 
-        /// <summary>
-        /// Gets the coordinates of the center of the sprite, in pixels, relative to <see cref="Top"/> and <see cref="Left"/>.
-        /// </summary>
-        /// <example>
-        /// We could define a sprite of size (20,20) with the rotation pivot located at its center like this:
-        ///     Top: 33
-        ///     Left: 55
-        ///     Width: 20
-        ///     Height: 20
-        ///     Pivot: (10,10)        
-        /// </example>
-        public System.Numerics.Vector2 Pivot { get; private set; }
+        private XY _Pivot;
 
-        /// <summary>
-        /// Gets the rendering scale of the sprite.
-        /// </summary>
-        public float Scale { get; private set; } = 1;
+        private float _Scale = 1f;
+
+        private readonly System.Numerics.Matrix3x2[] _Transforms = new System.Numerics.Matrix3x2[4];        
 
         #endregion
 
@@ -112,6 +107,24 @@ namespace InteropDrawing
         public Object Source => _Source;
 
         /// <summary>
+        /// Gets the coordinates of the center of the sprite, in pixels, relative to <see cref="Top"/> and <see cref="Left"/>.
+        /// </summary>
+        /// <example>
+        /// We could define a sprite of size (20,20) with the rotation pivot located at its center like this:
+        ///     Top: 33
+        ///     Left: 55
+        ///     Width: 20
+        ///     Height: 20
+        ///     Pivot: (10,10)        
+        /// </example>
+        public XY Pivot => _Pivot;
+
+        /// <summary>
+        /// Gets the rendering scale of the sprite.
+        /// </summary>
+        public float Scale => _Scale;
+
+        /// <summary>
         /// Gets the Left pixel coordinate within the <see cref="Source"/> asset.
         /// </summary>
         public float Left => _SourceUVMin.X;
@@ -124,17 +137,17 @@ namespace InteropDrawing
         /// <summary>
         /// Gets the width of the sprite, in pixels.
         /// </summary>
-        public float Width => (_SourceUVMax.X - _SourceUVMin.X);
+        public float Width => _SourceUVMax.X - _SourceUVMin.X;
 
         /// <summary>
         /// Gets the Height of the sprite, in pixels.
         /// </summary>
-        public float Height => (_SourceUVMax.Y - _SourceUVMin.Y);
+        public float Height => _SourceUVMax.Y - _SourceUVMin.Y;
 
-        public System.Numerics.Vector2 UV0 => _SourceUVMin;
-        public System.Numerics.Vector2 UV1 => new System.Numerics.Vector2(_SourceUVMax.X, _SourceUVMin.Y);
-        public System.Numerics.Vector2 UV2 => _SourceUVMax;
-        public System.Numerics.Vector2 UV3 => new System.Numerics.Vector2(_SourceUVMin.X, _SourceUVMax.Y);
+        public XY UV0 => _SourceUVMin;
+        public XY UV1 => new XY(_SourceUVMax.X, _SourceUVMin.Y);
+        public XY UV2 => _SourceUVMax;
+        public XY UV3 => new XY(_SourceUVMin.X, _SourceUVMax.Y);
 
         /// <summary>
         /// Gets a value indicating whether this asset can be rendered.
@@ -154,16 +167,39 @@ namespace InteropDrawing
 
         #region API
 
-        public System.Numerics.Matrix3x2 GetSpriteMatrix(bool hflip, bool vflip)
+        private void _CalculateMatrices()
+        {
+            _Transforms[0] = _GetSpriteMatrix(false, false);
+            _Transforms[1] = _GetSpriteMatrix(false, true);
+            _Transforms[2] = _GetSpriteMatrix(true, false);
+            _Transforms[3] = _GetSpriteMatrix(true, true);
+
+        }
+
+        private System.Numerics.Matrix3x2 _GetSpriteMatrix(bool hflip, bool vflip)
         {
             var sx = hflip ? -Scale : +Scale;
             var sy = vflip ? -Scale : +Scale;
 
             var final = System.Numerics.Matrix3x2.CreateScale(Width, Height);
             final *= System.Numerics.Matrix3x2.CreateTranslation(-Pivot);
-            final *= System.Numerics.Matrix3x2.CreateScale(sx,sy);
+            final *= System.Numerics.Matrix3x2.CreateScale(sx, sy);
             return final;
-        }        
+        }
+
+        public System.Numerics.Matrix3x2 GetSpriteMatrix(bool hflip, bool vflip)
+        {
+            var index = (hflip ? 2 : 0) | (vflip ? 1 : 0);
+
+            return _Transforms[index];
+        }
+
+        public void PrependTransform(ref System.Numerics.Matrix3x2 xform, bool hflip, bool vflip)
+        {
+            var index = (hflip ? 2 : 0) | (vflip ? 1 : 0);
+
+            xform = _Transforms[index] * xform;
+        }
 
         #endregion
     }

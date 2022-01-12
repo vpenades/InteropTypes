@@ -1,0 +1,58 @@
+﻿<#
+
+void _writeOpenBlock() { WriteLine("{"); PushIndent("    "); }
+
+void _writeCloseBlock() { PopIndent(); WriteLine("}"); }
+
+void _writeComment(string comment) { WriteLine(""); WriteLine($"// {comment}"); }
+
+void _writeFastestMethodAttribute() { WriteLine("[MethodImpl(_PrivateConstants.Fastest)]"); }
+
+// https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
+
+void _writeDocInherit() 
+{
+    WriteLine("");
+    WriteLine("/// <inheritdoc/>");
+}
+
+void _writeDocSummary(params string[] summary) 
+{
+    WriteLine("");
+    WriteLine("/// <summary>");
+    foreach(var l in summary) WriteLine($"/// {l}");
+    WriteLine("/// </summary>");
+}
+
+Stack<string> __CurrentClassName = new Stack<string>();
+
+string GetCurrentClassName() { return __CurrentClassName.Peek(); }
+
+void _writeStructBegin(string name, params string [] interfaces)
+{
+    __CurrentClassName.Push(name);
+
+    ClearIndent();
+    PushIndent("    ");
+    PushIndent("    ");
+
+    WriteLine($"partial struct {name}");
+
+    PushIndent("    ");
+    for(int i=0; i < interfaces.Length; ++i)
+    {
+        var sep = i==0 ? ":" : ",";
+        WriteLine($"{sep} {interfaces[i]}");
+    }
+    PopIndent();
+
+    _writeOpenBlock();
+}
+
+void _writeEnd()
+{
+    __CurrentClassName.Pop();
+    _writeCloseBlock();
+}
+
+#>

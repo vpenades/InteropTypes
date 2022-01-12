@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using XYZ = System.Numerics.Vector3;
@@ -108,10 +109,10 @@ namespace InteropBitmaps
                 if (color.A == 0) this = default;
                 else
                 {
-                    var x = (255 * 256) / color.A;
-                    R = (Byte)((color.PreR * x) / 256);
-                    G = (Byte)((color.PreG * x) / 256);
-                    B = (Byte)((color.PreB * x) / 256);
+                    var rcpA = (255 * 256) / color.A;
+                    R = (Byte)((color.PreR * rcpA) / 256);
+                    G = (Byte)((color.PreG * rcpA) / 256);
+                    B = (Byte)((color.PreB * rcpA) / 256);
                     A = color.A;
                 }
             }
@@ -121,10 +122,10 @@ namespace InteropBitmaps
                 if (color.A == 0) this = default;
                 else
                 {
-                    var x = (255 * 256) / color.A;
-                    R = (Byte)((color.PreR * x) / 256);
-                    G = (Byte)((color.PreG * x) / 256);
-                    B = (Byte)((color.PreB * x) / 256);
+                    var rcpA = (255 * 256) / color.A;
+                    R = (Byte)((color.PreR * rcpA) / 256);
+                    G = (Byte)((color.PreG * rcpA) / 256);
+                    B = (Byte)((color.PreB * rcpA) / 256);
                     A = color.A;
                 }
             }
@@ -301,7 +302,7 @@ namespace InteropBitmaps
                 get
                 {
                     var tmp = this;
-                    return System.Runtime.CompilerServices.Unsafe.As<BGRP32, uint>(ref tmp);
+                    return Unsafe.As<BGRP32, uint>(ref tmp);
                 }
             }
 
@@ -312,7 +313,90 @@ namespace InteropBitmaps
 
             public Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
             public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
-            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);            
+            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);
+
+            #endregion
+
+            #region API - Lerps
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static BGRP32 Lerp(RGB24 left, RGB24 right, int rx)
+            {
+                // calculate quantized weights
+                var lx = 16384 - rx;
+                System.Diagnostics.Debug.Assert((lx + rx) == 16384);
+                var R = (left.R * lx + right.R * rx) / 16384;
+                var G = (left.G * lx + right.G * rx) / 16384;
+                var B = (left.B * lx + right.B * rx) / 16384;
+                return new BGRP32(R, G, B, 255);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static BGRP32 Lerp(BGR24 left, BGR24 right, int rx)
+            {
+                // calculate quantized weights
+                var lx = 16384 - rx;
+                System.Diagnostics.Debug.Assert((lx + rx) == 16384);
+                var B = (left.B * lx + right.B * rx) / 16384;
+                var G = (left.G * lx + right.G * rx) / 16384;
+                var R = (left.R * lx + right.R * rx) / 16384;                
+                return new BGRP32(R, G, B, 255);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static BGRP32 Lerp(RGBA32 p00, RGBA32 p01, int rx)
+            {
+                // calculate quantized weights
+                var lx = 16384 - rx;
+                System.Diagnostics.Debug.Assert((lx + rx) == 16384);
+
+                // calculate final alpha
+                int a = (p00.A * lx + p01.A * rx) / 16384;
+                if (a == 0) return default;
+
+                // calculate premultiplied RGB
+                lx *= p00.A;
+                rx *= p01.A;
+                int r = (p00.R * lx + p01.R * rx) / (16384 * 255);
+                int g = (p00.G * lx + p01.G * rx) / (16384 * 255);
+                int b = (p00.B * lx + p01.B * rx) / (16384 * 255);
+
+                // unpremultiply RGB
+                return new BGRP32(r , g , b , a);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static BGRP32 Lerp(in RGBA32 p00, in RGBA32 p01, in RGBA32 p10, in RGBA32 p11, int rx, int by)
+            {
+                // calculate quantized weights
+                var lx = 16384 - rx;
+                var ty = 16384 - by;
+                var w00 = lx * ty / 16384;
+                var w01 = rx * ty / 16384;
+                var w10 = lx * by / 16384;
+                var w11 = rx * by / 16384;
+
+                System.Diagnostics.Debug.Assert((w00 + w01 + w10 + w11) == 16384);
+
+                // calculate final alpha
+
+                int a = (p00.A * w00 + p01.A * w01 + p10.A * w10 + p11.A * w11) / 16384;
+
+                if (a == 0) return default;
+
+                // calculate premultiplied RGB
+
+                w00 *= p00.A;
+                w01 *= p01.A;
+                w10 *= p10.A;
+                w11 *= p11.A;
+
+                int r = (p00.R * w00 + p01.R * w01 + p10.R * w10 + p11.R * w11) / (16384 * 255);
+                int g = (p00.G * w00 + p01.G * w01 + p10.G * w10 + p11.G * w11) / (16384 * 255);
+                int b = (p00.B * w00 + p01.B * w01 + p10.B * w10 + p11.B * w11) / (16384 * 255);                
+
+                return new BGRP32(r, g, b, a);
+            }
 
             #endregion
         }

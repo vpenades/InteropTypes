@@ -18,6 +18,8 @@ namespace InteropBitmaps
 
 <# //-------------------------------------------------------------------------------------------------------------------
 
+        void _writeFastestMethodAttribute() { WriteLine("[MethodImpl(_PrivateConstants.Fastest)]"); }
+
         // https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
 
         var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGBP32","BGRP32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP128F" };

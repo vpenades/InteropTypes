@@ -40,10 +40,10 @@ namespace InteropBitmaps
             WriteLine("/// <inheritdoc>");
             WriteLine($"public static bool operator !=(in {pixelFmtName} a,in {pixelFmtName} b) {{ return !a.Equals(b); }}");
 
-            _writeEquals(pixelFmtName);
-
             WriteLine("/// <inheritdoc>");
             WriteLine($"public override bool Equals(Object obj) {{ return obj is {pixelFmtName} other && Equals(other); }}");
+
+            _writeEquals(pixelFmtName);            
 
             _writeHashCode(pixelFmtName);
 

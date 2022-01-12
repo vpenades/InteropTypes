@@ -12,7 +12,7 @@ namespace InteropDrawing.Backends
     {
         void Begin(int virtualWidth, int virtualHeight, bool keepAspect);
         void SetCamera(System.Numerics.Matrix3x2 camera);
-        
+        void SetSpriteFlip(bool hflip, bool vflip);
         void End();
     }
 

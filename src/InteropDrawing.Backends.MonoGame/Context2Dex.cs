@@ -50,7 +50,7 @@ namespace InteropDrawing.Backends
         private System.Numerics.Matrix3x2 _View;
         private System.Numerics.Matrix3x2 _Screen;
         private System.Numerics.Matrix3x2 _FinalForward;
-        private System.Numerics.Matrix3x2 _FinalInverse;
+        private System.Numerics.Matrix3x2 _FinalInverse;        
 
         #endregion        
 
@@ -93,6 +93,12 @@ namespace InteropDrawing.Backends
             System.Numerics.Matrix3x2.Invert(camera, out _View);
             _FinalForward = _View * _Screen;
             System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
+        }
+
+        /// <inheritdoc />
+        public void SetSpriteFlip(bool hflip, bool vflip)
+        {
+            _VectorsBatch.SetSpriteGlobalFlip(hflip, vflip);
         }
 
         /// <inheritdoc />
@@ -141,7 +147,8 @@ namespace InteropDrawing.Backends
             if (!style.IsVisible) return;
             var (tex,attr) = FetchTexture(style.Bitmap.Source);
             if (tex == null) return;
-            SetTexture(tex, attr);
+            SetTexture(tex, attr);            
+
             _VectorsBatch.DrawSprite(transform, style);
         }
 
@@ -187,6 +194,8 @@ namespace InteropDrawing.Backends
 
             _PrevState.ApplyTo(_Device);
         }
+
+        
 
         #endregion
     }

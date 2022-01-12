@@ -270,28 +270,13 @@ namespace InteropBitmaps
 
             Matrix3x2.Invert(dstSRT, out var iform);
             Processing._BitmapTransformImplementation.SetPixelsNearest(this, src, iform);
-        }
+        }        
 
-        public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap src, float opacity)
+        public void SetPixelsTo<TDstPixel>(SpanBitmap<TDstPixel> dst, in Matrix3x2 srcSRT, float opacity)
+            where TDstPixel: unmanaged, Pixel.IQuantizedComposition<TPixel,TDstPixel>
         {
-            switch(src.PixelFormat.Code)
-            {
-                case Pixel.RGBA32.Code: this.SetPixels(dstSRT, src.OfType<Pixel.RGBA32>(), opacity); break;
-                case Pixel.BGRA32.Code: this.SetPixels(dstSRT, src.OfType<Pixel.BGRA32>(), opacity); break;
-                case Pixel.ARGB32.Code: this.SetPixels(dstSRT, src.OfType<Pixel.ARGB32>(), opacity); break;
-                case Pixel.RGBP32.Code: this.SetPixels(dstSRT, src.OfType<Pixel.RGBP32>(), opacity); break;
-                case Pixel.BGRP32.Code: this.SetPixels(dstSRT, src.OfType<Pixel.BGRP32>(), opacity); break;
-                default: throw new NotImplementedException();
-            }
-        }
-
-        public void SetPixels<TSrcPixel>(in Matrix3x2 dstSRT, SpanBitmap<TSrcPixel> src, float opacity)
-            where TSrcPixel:unmanaged, Pixel.IPixelQuantizedComposition<TPixel>
-        {
-            // TODO: if dstSRT has no rotation, use _NearestResizeImplementation
-
-            Matrix3x2.Invert(dstSRT, out var iform);
-            Processing._BitmapTransformImplementation.SetPixelsNearest(this, src, iform, opacity);
+            Matrix3x2.Invert(srcSRT, out var iform);
+            Processing._BitmapTransformImplementation.SetPixelsNearestFast(dst, this, iform, opacity);
         }
 
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)

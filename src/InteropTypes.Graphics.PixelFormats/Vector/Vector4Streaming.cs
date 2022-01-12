@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace InteropBitmaps
@@ -12,16 +13,19 @@ namespace InteropBitmaps
 
         private const float _Reciprocal255 = 1f / 255f;
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         private static Span<Vector4> _ToVector4(Span<Single> span)
         {            
             return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, span.Length & ~3));
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         private static ReadOnlySpan<Vector4> _ToVector4(ReadOnlySpan<Single> span)
         {            
             return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, span.Length & ~3));
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         private static Single _Min(Single a, Single b, Single c, Single d)
         {
             var min = a;
@@ -31,6 +35,7 @@ namespace InteropBitmaps
             return min;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         private static Single _Max(Single a, Single b, Single c, Single d)
         {
             var min = a;
@@ -40,6 +45,7 @@ namespace InteropBitmaps
             return min;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static Single Min(ReadOnlySpan<Single> span)
         {
             var span4 = _ToVector4(span);
@@ -55,6 +61,7 @@ namespace InteropBitmaps
             return min;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static Single Max(ReadOnlySpan<Single> span)
         {
             var span4 = _ToVector4(span);
@@ -70,6 +77,7 @@ namespace InteropBitmaps
             return max;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static Vector4 Min(ReadOnlySpan<Vector4> span)
         {
             var min = new Vector4(float.PositiveInfinity);
@@ -82,6 +90,7 @@ namespace InteropBitmaps
             return min;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static Vector4 Max(ReadOnlySpan<Vector4> span)
         {
             var max = new Vector4(float.NegativeInfinity);
@@ -94,6 +103,7 @@ namespace InteropBitmaps
             return max;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static (Single Min, Single Max) MinMax(ReadOnlySpan<Single> span)
         {
             var span4 = _ToVector4(span);
@@ -111,6 +121,7 @@ namespace InteropBitmaps
             return (min, max);
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static (Vector4 Min, Vector4 Max) MinMax(ReadOnlySpan<Vector4> span)
         {
             var min = new Vector4(float.PositiveInfinity);
@@ -149,6 +160,7 @@ namespace InteropBitmaps
             return true;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void Clamp(Span<Single> span, Single min, Single max)
         {
             var span4 = _ToVector4(span);
@@ -174,6 +186,7 @@ namespace InteropBitmaps
             AddMultiply(span, -min, 1.0f / (max - min));
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void MultiplyAdd(Span<Single> span, Single mul, Single add)
         {
             var span4 = _ToVector4(span);
@@ -193,6 +206,7 @@ namespace InteropBitmaps
             }
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void AddMultiply(Span<Single> span, Single add, Single mul)
         {
             var span4 = _ToVector4(span);
@@ -213,7 +227,7 @@ namespace InteropBitmaps
         }
 
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void BytesToUnits(ReadOnlySpan<byte> src, Span<float> dst)
         {
             System.Diagnostics.Debug.Assert(dst.Length <= src.Length);
@@ -230,7 +244,7 @@ namespace InteropBitmaps
             }
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void BytesToUnitsZYX(ReadOnlySpan<byte> src, Span<float> dst)
         {
             if (dst.Length < src.Length) throw new ArgumentException(nameof(dst));
@@ -242,24 +256,21 @@ namespace InteropBitmaps
             while (l >= 3)
             {
                 l -= 3;
-                dPtr = System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 2) * _Reciprocal255;
-                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
-                dPtr = System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1) * _Reciprocal255;
-                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
-                dPtr = System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 0) * _Reciprocal255;
-                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
-                sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 3);
+                dPtr = Unsafe.Add(ref sPtr, 2) * _Reciprocal255; dPtr = ref Unsafe.Add(ref dPtr, 1);
+                dPtr = Unsafe.Add(ref sPtr, 1) * _Reciprocal255; dPtr = ref Unsafe.Add(ref dPtr, 1);
+                dPtr = Unsafe.Add(ref sPtr, 0) * _Reciprocal255; dPtr = ref Unsafe.Add(ref dPtr, 1);
+                sPtr = ref Unsafe.Add(ref sPtr, 3);
             }
         }
 
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void Lerp(ReadOnlySpan<Byte> left, ReadOnlySpan<Byte> right, float amount, Span<Byte> dst)
         {
             Lerp(left, right, (int)(amount * 16384f), dst);
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void Lerp(ReadOnlySpan<Byte> left, ReadOnlySpan<Byte> right, int amount, Span<Byte> dst)
         {            
             System.Diagnostics.Debug.Assert(dst.Length <= left.Length);
@@ -276,12 +287,13 @@ namespace InteropBitmaps
             while (l-- > 0)
             {
                 dPtr = (byte)((lPtr * lweight + rPtr * amount) / 16384);
-                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
-                lPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref lPtr, 1);
-                rPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref rPtr, 1);                
+                dPtr = ref Unsafe.Add(ref dPtr, 1);
+                lPtr = ref Unsafe.Add(ref lPtr, 1);
+                rPtr = ref Unsafe.Add(ref rPtr, 1);                
             }
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static void Lerp(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<float> dst)
         {
             var l = _ToVector4(left);
@@ -299,7 +311,8 @@ namespace InteropBitmaps
             }
         }
 
-        public static void Lerp(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, float scale, Span<Byte> dst)
+        [MethodImpl(_PrivateConstants.Fastest)]
+        public static void Lerp(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<Byte> dst, float scale)
         {
             var l = _ToVector4(left);
             var r = _ToVector4(right);
@@ -319,6 +332,29 @@ namespace InteropBitmaps
             for (int i = d * 4; i < dst.Length; ++i)
             {
                 dst[i] = (Byte)((left[i] * (1 - amount) + right[i] * amount) *scale);
+            }
+        }
+
+        [MethodImpl(_PrivateConstants.Fastest)]
+        public static void Lerp(ReadOnlySpan<Byte> left, ReadOnlySpan<Byte> right, int amount, Span<float> dst, float dstScale)
+        {
+            System.Diagnostics.Debug.Assert(dst.Length <= left.Length);
+            System.Diagnostics.Debug.Assert(dst.Length <= right.Length);
+
+            var lweight = 16384 - amount;
+
+            ref var lPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(left);
+            ref var rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(right);
+            ref var dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);
+
+            var l = dst.Length;
+
+            while (l-- > 0)
+            {
+                dPtr = dstScale * (float)((lPtr * lweight + rPtr * amount) / 16384);
+                dPtr = ref Unsafe.Add(ref dPtr, 1);
+                lPtr = ref Unsafe.Add(ref lPtr, 1);
+                rPtr = ref Unsafe.Add(ref rPtr, 1);
             }
         }
 

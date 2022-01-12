@@ -170,8 +170,10 @@ namespace InteropBitmaps
 
         public static implicit operator MemoryBitmap(MemoryBitmap<TPixel> bmp) { return new MemoryBitmap(bmp._Data, bmp._Info); }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public SpanBitmap<TPixel> AsSpanBitmap() { return this; }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public MemoryBitmap AsTypeless() { return new MemoryBitmap(this._Data, this._Info); }
 
         #endregion

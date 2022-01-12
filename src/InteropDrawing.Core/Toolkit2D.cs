@@ -25,6 +25,22 @@ namespace InteropDrawing
 
         #region 2D transforms
 
+        public static POINT2 TransformForward(this POINT2.ITransform dc, Point2 point)
+        {
+            Span<POINT2> span = stackalloc POINT2[1];
+            span[0] = point;
+            dc.TransformForward(span);
+            return span[0];
+        }
+
+        public static POINT2 TransformInverse(this POINT2.ITransform dc, Point2 point)
+        {
+            Span<POINT2> span = stackalloc POINT2[1];
+            span[0] = point;
+            dc.TransformInverse(span);
+            return span[0];
+        }
+
         public static IDrawing2D CreateTransformed(IDrawing2D target, Point2 physicalSize, Point2 virtualSize, XFORM2 xform)
         {
             return Transforms.Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);

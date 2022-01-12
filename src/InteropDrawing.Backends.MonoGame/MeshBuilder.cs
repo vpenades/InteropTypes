@@ -35,6 +35,8 @@ namespace InteropDrawing.Backends
         private XY _SpriteUv2Bleed = XY.Zero;
         private XY _SpriteUv3Bleed = XY.Zero;
         private XY _SpriteCoordInvScale;
+        private bool _SpriteHFlip;
+        private bool _SpriteVFlip;
 
         private readonly LinesBuffer _Lines = new LinesBuffer();
         private readonly TrianglesBuffer _Triangles = new TrianglesBuffer();
@@ -69,6 +71,12 @@ namespace InteropDrawing.Backends
         #endregion
 
         #region Drawing2D
+
+        public void SetSpriteGlobalFlip(bool hflip, bool vflip)
+        {
+            _SpriteHFlip = hflip;
+            _SpriteVFlip = vflip;
+        }
 
         public void SetSpriteTextureSize(int width, int height)
         {
@@ -141,7 +149,8 @@ namespace InteropDrawing.Backends
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
         {
-            var xform = style.Transform * transform;
+            var xform = transform;
+            style.PrependTransform(ref xform, _SpriteHFlip,_SpriteVFlip);
             var color = style.Color.ToXna();
 
             var v1 = _Triangles.UseVertex(XY.Transform(XY.Zero, xform), _DepthZ, color, (style.Bitmap.UV0 + _SpriteUv0Bleed) * _SpriteCoordInvScale);

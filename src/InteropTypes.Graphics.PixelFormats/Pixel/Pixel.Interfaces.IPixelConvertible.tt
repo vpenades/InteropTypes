@@ -10,7 +10,7 @@ namespace InteropBitmaps
 {
     partial class Pixel    
     {
-        public interface IPixelConvertible<TPixel>
+        public interface IConvertible<TPixel>
         {
             TPixel ToPixel();
         }
@@ -34,7 +34,7 @@ namespace InteropBitmaps
             eval = "{ " + eval + " }";
 
             WriteLine("/// <inheritdoc />");
-            WriteLine($"{pixelDstName} IPixelConvertible<{pixelDstName}>.ToPixel() {eval}");
+            WriteLine($"{pixelDstName} IConvertible<{pixelDstName}>.ToPixel() {eval}");
         }
 
         foreach(var pixelFmtName in pixelFormatAllNames)
@@ -52,7 +52,7 @@ namespace InteropBitmaps
             for(int i=0; i < allFormats.Length; ++i)
             {
                 var dst = allFormats[i];
-                var tmp = (i == 0 ? ": " : ", ") + $"IPixelConvertible<{dst}>";                
+                var tmp = (i == 0 ? ": " : ", ") + $"IConvertible<{dst}>";                
                 WriteLine(tmp);                
             }
 

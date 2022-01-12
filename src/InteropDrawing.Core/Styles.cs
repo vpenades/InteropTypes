@@ -462,8 +462,10 @@ namespace InteropDrawing
         {
             this.Bitmap = bitmap;
             this.Color = color;
-            this.FlipHorizontal = flipHorizontal;
-            this.FlipVertical = flipVertical;
+
+            _Orientation = Orientation.None;
+            _Orientation |= flipHorizontal ? Orientation.FlipHorizontal : Orientation.None;
+            _Orientation |= flipVertical ? Orientation.FlipVertical : Orientation.None;
         }
 
         #endregion
@@ -473,8 +475,8 @@ namespace InteropDrawing
         public SpriteAsset Bitmap;
 
         public COLOR Color;
-        public bool FlipHorizontal;
-        public bool FlipVertical;
+
+        internal Orientation _Orientation;        
 
         #endregion
 
@@ -482,11 +484,45 @@ namespace InteropDrawing
 
         public bool IsVisible => Bitmap.IsVisible && Color.A > 0;
 
+        public bool FlipHorizontal
+        {
+            get => _Orientation.HasFlag(Orientation.FlipHorizontal);
+            set => _Orientation = (_Orientation & ~Orientation.FlipHorizontal) | (value ? Orientation.FlipHorizontal : Orientation.None);
+        }
+
+        public bool FlipVertical
+        {
+            get => _Orientation.HasFlag(Orientation.FlipVertical);
+            set => _Orientation = (_Orientation & ~Orientation.FlipVertical) | (value ? Orientation.FlipVertical : Orientation.None);
+        }
+
         #endregion
 
         #region API
 
         public System.Numerics.Matrix3x2 Transform => Bitmap.GetSpriteMatrix(FlipHorizontal, FlipVertical);
+
+        public System.Numerics.Matrix3x2 GetTransform(bool hflip, bool vflip)
+        {
+            return Bitmap.GetSpriteMatrix(FlipHorizontal ^ hflip, FlipVertical ^ vflip);
+        }
+
+        public void PrependTransform(ref System.Numerics.Matrix3x2 xform, bool hflip, bool vflip)
+        {
+            Bitmap.PrependTransform(ref xform, FlipHorizontal ^ hflip, FlipVertical ^ vflip);
+        }
+
+        #endregion
+
+        #region nested types
+
+        [Flags]
+        internal enum Orientation
+        {
+            None = 0,
+            FlipHorizontal =1,
+            FlipVertical = 2
+        }
 
         #endregion
     }
