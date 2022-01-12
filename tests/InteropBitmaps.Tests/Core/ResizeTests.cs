@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
+using XY = System.Numerics.Vector2;
+
 namespace InteropBitmaps.Core
 {
     [Category("Core")]
@@ -76,6 +78,18 @@ namespace InteropBitmaps.Core
             }
         }
 
+
+        [Test]
+        public void TestSampler()
+        {
+            var map = new MemoryBitmap<Pixel.BGRA32>(16,16);
+            map.SetPixels(new Pixel.BGRA32(255,127,63,31));
+
+            var sampler = new Processing._BitmapTransformImplementation.SpanNearestSampler<Pixel.BGRA32>(map);
+
+            var pix = sampler.GetPixelZero(8, 8);
+        }
+
         [Test]
         public void TestTransform()
         {
@@ -98,19 +112,52 @@ namespace InteropBitmaps.Core
             var cat = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
             var cat00 = cat.OfType<Pixel.RGBA32>();
 
-            for(float r=0; r < 1; r+=0.3f)
+            for(float r=0.1f; r < 1; r+=0.2f)
             {
-                var xform = Matrix3x2.CreateRotation(r) * Matrix3x2.CreateTranslation(50, 15);
+                // 1st API
 
-                // offset
+                var xform = Matrix3x2.CreateRotation(r) * Matrix3x2.CreateTranslation(50, 15);                
                 xform = Matrix3x2.CreateTranslation(-50, -50) * xform * Matrix3x2.CreateTranslation(50, 50);
+                xform = xform * Matrix3x2.CreateScale(3, 3);                
 
-                SpanBitmap.CopyPixels(dst.AsSpanBitmap(), cat00.AsSpanBitmap(), xform, r);                
+                SpanBitmap.CopyPixels(dst.AsSpanBitmap(), cat00.AsSpanBitmap(), xform, r);
+                DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
+
+                // 2nd API
+
+                xform *= Matrix3x2.CreateTranslation(0, 150);
+
+                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), r);
+                DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
             }
 
             
 
             dst.AttachToCurrentTest("transformed.png");
+        }
+
+
+        public static void DrawBounds<TPixel>(MemoryBitmap<TPixel> target, in BitmapBounds bounds, in Matrix3x2 xform, TPixel color)
+            where TPixel : unmanaged
+        {
+            DrawBounds(target.AsSpanBitmap(), bounds, xform, color);
+        }
+
+        public static void DrawBounds<TPixel>(SpanBitmap<TPixel> target, in BitmapBounds bounds, in Matrix3x2 xform, TPixel color)
+            where TPixel : unmanaged
+        {
+            var p0 = new XY(bounds.X, bounds.Y);
+            var p1 = new XY(bounds.Width, bounds.Height);            
+
+            var pa = XY.Transform(p0, xform);
+            var pb = pa + XY.TransformNormal(p1 * XY.UnitX, xform);
+            var pc = pa + XY.TransformNormal(p1 * XY.One, xform);
+            var pd = pa + XY.TransformNormal(p1 * XY.UnitY, xform);
+            
+            target.DrawPixelLine(pa, pb, color);
+            target.DrawPixelLine(pb, pc, color);
+            target.DrawPixelLine(pc, pd, color);
+            target.DrawPixelLine(pd, pa, color);
         }
     }
 }

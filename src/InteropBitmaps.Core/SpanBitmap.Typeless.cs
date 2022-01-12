@@ -16,7 +16,14 @@ namespace InteropBitmaps
     public readonly ref partial struct SpanBitmap
     {
         #region lifecycle
-        
+
+        public SpanBitmap(SpanBitmap other, bool isReadOnly = false)
+        {
+            _Info = other.Info;
+            _Readable = other._Readable;
+            _Writable = isReadOnly ? null : other._Writable;
+        }
+
         public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
         {
             Guard.NotNull(nameof(data), data);
@@ -140,7 +147,9 @@ namespace InteropBitmaps
         #endregion        
 
         #region API - Buffers
-        public SpanBitmap AsReadOnly() { return new SpanBitmap(_Readable, _Info); }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public SpanBitmap AsReadOnly() { return new SpanBitmap(this, true); }
         public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }
         public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }
 
@@ -160,7 +169,7 @@ namespace InteropBitmaps
             SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
         }
 
-        public unsafe TResult PinReadablePointer<TResult>(Func<PointerBitmap, TResult> onPin)
+        public unsafe TResult PinReadablePointer<TResult>(PointerBitmap.Function1<TResult> onPin)
         {
             Guard.IsFalse(nameof(SpanBitmap), _Readable.IsEmpty);
             return SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
@@ -523,11 +532,6 @@ namespace InteropBitmaps
 
         #endregion
 
-        #region nested types
-
-        public delegate void Action1(SpanBitmap sb);
-        public delegate void Action2(SpanBitmap sb1, SpanBitmap sb2);
-
-        #endregion
+        
     }
 }

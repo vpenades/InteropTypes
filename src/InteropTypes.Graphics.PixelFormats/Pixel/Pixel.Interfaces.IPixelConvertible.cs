@@ -8,7 +8,7 @@ namespace InteropBitmaps
 {
     partial class Pixel    
     {
-        public interface IConvertible<TPixel>
+        public interface IConvertible<out TPixel>
         {
             TPixel ToPixel();
         }

@@ -187,6 +187,8 @@ namespace InteropBitmaps
 
         #region API
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(int x, int y)
         {
             if (x < 0) return false;
@@ -195,6 +197,7 @@ namespace InteropBitmaps
             if (y >= Height) return false;
             return true;
         }
+
 
         public (int Offset, BitmapInfo Info) Slice(in BitmapBounds rect)
         {
@@ -211,11 +214,15 @@ namespace InteropBitmaps
             return (offset, info);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public WSPAN UseScanlineBytes(WSPAN bitmap, int y)
         {
             return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Span<TPixel> UseScanlinePixels<TPixel>(WSPAN bitmap, int y)
             where TPixel : unmanaged
         {
@@ -223,11 +230,15 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(scanline);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RSPAN GetScanlineBytes(RSPAN bitmap, int y)
         {
             return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ReadOnlySpan<TPixel> GetScanlinePixels<TPixel>(RSPAN bitmap, int y)
             where TPixel : unmanaged
         {
@@ -235,11 +246,15 @@ namespace InteropBitmaps
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(scanline);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public WSPAN UsePixel(WSPAN bitmap, int x, int y)
         {
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public WSPAN UsePixels(WSPAN bitmap, int x, int y, int pixelCount)
         {
             if (pixelCount - x > Width) throw new ArgumentOutOfRangeException(nameof(pixelCount));
@@ -247,16 +262,68 @@ namespace InteropBitmaps
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RSPAN GetPixel(RSPAN bitmap, int x, int y)
         {
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RSPAN GetPixels(RSPAN bitmap, int x, int y, int pixelCount)
         {
             if (pixelCount - x > Width) throw new ArgumentOutOfRangeException(nameof(pixelCount));
 
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe TPixel GetPixelZero<TPixel>(RSPAN data, int x, int y)
+            where TPixel: unmanaged
+        {
+            System.Diagnostics.Debug.Assert(sizeof(TPixel) == PixelByteSize, $"pixel type size mismatch, expected {PixelByteSize}, but found {sizeof(TPixel)}");
+
+            if (x < 0 || x >= Width) return default;
+            if (y < 0 || y >= Height) return default;
+
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, TPixel>(data.Slice(y * StepByteSize))[x];
+
+            // ref var rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(data);
+            // rPtr = Unsafe.Add(ref rPtr, y * StepByteSize + x * sizeof(TPixel));
+            // return Unsafe.As<Byte, TPixel>(ref rPtr);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe TPixel GetPixelClamp<TPixel>(RSPAN data, int x, int y)
+            where TPixel : unmanaged
+        {
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x >= Width) x = Width - 1;
+            if (y >= Height) y = Height - 1;
+
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, TPixel>(data.Slice(y * StepByteSize))[x];
+
+            // ref var rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(data);
+            // rPtr = Unsafe.Add(ref rPtr, y * StepByteSize + x * sizeof(TPixel));
+            // return Unsafe.As<Byte, TPixel>(ref rPtr);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe TPixel GetPixelWrap<TPixel>(RSPAN data, int x, int y)
+            where TPixel : unmanaged
+        {
+            x &= ~0x10000000;
+            x %= Width;
+            y &= ~0x10000000;
+            y %= Height;
+
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, TPixel>(data.Slice(y * StepByteSize))[x];
+
+            // ref var rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(data);
+            // rPtr = Unsafe.Add(ref rPtr, y * StepByteSize + x * sizeof(TPixel));
+            // return Unsafe.As<Byte, TPixel>(ref rPtr);
         }
 
         #endregion

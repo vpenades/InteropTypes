@@ -97,8 +97,14 @@ namespace InteropBitmaps
         {
             dc.DrawFont(origin, 0.4f, text, FontStyle.Gray.With(color, 1));
         }
-        
+
         public static void DrawPixelLine<TPixel>(this MemoryBitmap<TPixel> bitmap, POINT a, POINT b, TPixel color)
+            where TPixel : unmanaged
+        {
+            bitmap.AsSpanBitmap().DrawPixelLine(a, b, color);
+        }
+
+        public static void DrawPixelLine<TPixel>(this SpanBitmap<TPixel> bitmap, POINT a, POINT b, TPixel color)
             where TPixel:unmanaged
         {
             var bounds = bitmap.Info;            

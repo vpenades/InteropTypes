@@ -24,6 +24,14 @@ void _writeDocSummary(params string[] summary)
     WriteLine("/// </summary>");
 }
 
+void _writeExpanded(string mainText, params string[] replacements)
+{
+    foreach(var r in replacements)
+    {
+        WriteLine(mainText.Replace("@",r));
+    }
+}
+
 Stack<string> __CurrentClassName = new Stack<string>();
 
 string GetCurrentClassName() { return __CurrentClassName.Peek(); }

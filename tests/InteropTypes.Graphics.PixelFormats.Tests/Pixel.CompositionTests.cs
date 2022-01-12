@@ -30,7 +30,7 @@ namespace InteropBitmaps
         
         private TDstPixel ComposeFast<TSrcPixel, TDstPixel>(TSrcPixel src, TDstPixel dst, int amount)
             where TSrcPixel : unmanaged
-            where TDstPixel : unmanaged, Pixel.IQuantizedComposition<TSrcPixel, TDstPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<TSrcPixel, TDstPixel>
         {            
             return dst.AlphaBlendWith(src, amount);
         }
@@ -38,7 +38,7 @@ namespace InteropBitmaps
 
         private TDstPixel ComposeSlow<TSrcPixel,TDstPixel>(TSrcPixel src, TDstPixel dst, int amount)
             where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRP32>
-            where TDstPixel : unmanaged, Pixel.IQuantizedComposition<Pixel.BGRP32, TDstPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<Pixel.BGRP32, TDstPixel>
         {            
             return dst.AlphaBlendWith(src.ToPixel(), amount);
         }

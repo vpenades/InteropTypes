@@ -71,6 +71,8 @@ namespace InteropBitmaps
 
             #region data
 
+            // a better data setup would be ReadOnlySpan<TPixel> Row0, Row1, Row2;
+
             public readonly TPixel P11;
             public readonly TPixel P12;
             public readonly TPixel P13;

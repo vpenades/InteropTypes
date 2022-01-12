@@ -89,26 +89,6 @@ namespace InteropBitmaps
             }
         }
 
-
-        /*
-        static void CopyPixels<TSrc, TDst>(SpanBitmap<TDst> dst, int dstX, int dstY, SpanBitmap<TSrc> src)
-            where TSrc:unmanaged
-            where TDst:unmanaged
-        {
-            throw new NotImplementedException();
-
-            // first problem: Vector<T> does not support ReadOnlySpan<T>
-
-            var srcSpan = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TSrc>(src.WritableSpan);
-            var dstSpan = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TDst>(dst.WritableSpan);
-
-            var srcVector = new System.Numerics.Vector<TSrc>(srcSpan);
-            var dstVector = new System.Numerics.Vector<TDst>(dstSpan);
-
-            // second problem: to allow bulk conversions, it is still not possible to do a srcVector.CopyTo(dstVector);
-        }*/        
-
-
         public static int CalculateHashCode(ReadOnlySpan<Byte> data, in BitmapInfo info)
         {
             if (info.IsEmpty) return 0;            

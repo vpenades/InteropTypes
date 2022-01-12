@@ -81,6 +81,23 @@ namespace InteropBitmaps
             this.Height = Math.Max(0, size.Height);
         }
 
+        public BitmapBounds(System.Numerics.Matrix3x2 srcXform, float srcW, float srcH)
+        {
+            var a = srcXform.Translation;
+            var b = XY.Transform(new XY(srcW, 0), srcXform);
+            var c = XY.Transform(new XY(srcW, srcH), srcXform);
+            var d = XY.Transform(new XY(0, srcH), srcXform);
+
+            var min = XY.Min(XY.Min(XY.Min(a, b), c), d);
+            var max = XY.Max(XY.Max(XY.Max(a, b), c), d);
+
+            this.X = (int)min.X;
+            this.Y = (int)min.Y;
+
+            this.Width = (int)max.X + 1 - this.X;
+            this.Height = (int)max.Y + 1 - this.Y;            
+        }
+
         #endregion
 
         #region operators

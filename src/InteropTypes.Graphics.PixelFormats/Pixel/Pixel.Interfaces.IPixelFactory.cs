@@ -23,7 +23,7 @@ namespace InteropBitmaps
         /// </summary>
         /// <typeparam name="TSrcPixel">The source pixel type.</typeparam>
         /// <typeparam name="TDstPixel">The target pixel type.</typeparam>
-        public interface IPixelFactory<TSrcPixel, TDstPixel>
+        public interface IPixelFactory<in TSrcPixel, out TDstPixel>
             where TSrcPixel: unmanaged
             where TDstPixel: unmanaged
         {

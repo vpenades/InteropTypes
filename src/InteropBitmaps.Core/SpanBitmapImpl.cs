@@ -32,7 +32,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static unsafe TResult PinReadablePointer<TResult>(ReadOnlySpan<Byte> readable, in BitmapInfo binfo, Func<PointerBitmap, TResult> onPinned)
+        public static unsafe TResult PinReadablePointer<TResult>(ReadOnlySpan<Byte> readable, in BitmapInfo binfo, PointerBitmap.Function1<TResult> onPinned)
         {
             if (readable.IsEmpty) throw new ArgumentNullException(nameof(readable));
             if (onPinned == null) throw new ArgumentNullException(nameof(onPinned));
@@ -45,7 +45,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static unsafe void PinTransferPointers(SpanBitmap src, SpanBitmap dst, Action<PointerBitmap, PointerBitmap> onPinned)
+        public static unsafe void PinTransferPointers(SpanBitmap src, SpanBitmap dst, PointerBitmap.Action2 onPinned)
         {
             if (src.ReadableBytes.IsEmpty) throw new ArgumentNullException(nameof(src));
             if (src.WritableBytes.IsEmpty) throw new ArgumentNullException(nameof(dst));

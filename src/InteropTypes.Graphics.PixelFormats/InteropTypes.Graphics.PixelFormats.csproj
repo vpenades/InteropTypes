@@ -7,6 +7,10 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
@@ -45,6 +49,14 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pixel\Pixel.Interfaces.Composition.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.Composition.tt</DependentUpon>
+    </None>
   </ItemGroup>  
   
   <ItemGroup>
@@ -55,6 +67,10 @@
     <None Update="Pixel.Equality.tt">
       <LastGenOutput>Pixel.Equality.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Pixel\Pixel.Interfaces.Composition.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Pixel.Interfaces.Composition.cs</LastGenOutput>
     </None>
     <None Update="Pixel\Pixel.Interfaces.Lerp.tt">
       <LastGenOutput>Pixel.Interfaces.Lerp.cs</LastGenOutput>
@@ -79,6 +95,11 @@
   </ItemGroup>  
 
   <ItemGroup>
+    <Compile Update="Pixel\Pixel.Interfaces.Composition.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.Composition.tt</DependentUpon>
+    </Compile>
     <Compile Update="Pixel\Pixel.Interfaces.Lerp.cs">
       <DependentUpon>Pixel.Interfaces.Lerp.tt</DependentUpon>
       <DesignTime>True</DesignTime>

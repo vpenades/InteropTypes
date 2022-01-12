@@ -7,7 +7,8 @@ namespace InteropBitmaps
 {
     partial struct SpanBitmap
     {
-        public static void PinTransferPointers(SpanBitmap src, SpanBitmap dst, Action<PointerBitmap,PointerBitmap> onPinned)
+        
+        public static void PinTransferPointers(SpanBitmap src, SpanBitmap dst, PointerBitmap.Action2 onPinned)
         {
             SpanBitmapImpl.PinTransferPointers(src, dst, onPinned);
         }
@@ -188,13 +189,11 @@ namespace InteropBitmaps
 
         public static void CopyPixels<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, in Matrix3x2 srcXform, float opacity = 1)
             where TSrcPixel : unmanaged
-            where TDstPixel : unmanaged, Pixel.IQuantizedComposition<TSrcPixel, TDstPixel>
+            where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<TSrcPixel, TDstPixel>
         {
-            src = src.AsReadOnly();
+            src = src.AsReadOnly();            
 
-            Matrix3x2.Invert(srcXform, out var invXform);
-
-            Processing._BitmapTransformImplementation.SetPixelsNearestFast(dst, src, invXform, opacity);
+            Processing._BitmapTransformImplementation.ComposePixelsNearestFast(dst, src, srcXform, opacity);
         }
 
         public static void SplitPixels(SpanBitmap<Vector3> src, SpanBitmap<Single> dstB, SpanBitmap<Single> dstG, SpanBitmap<Single> dstR)

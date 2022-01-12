@@ -1,0 +1,111 @@
+﻿<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#@ include file="..\\CodeGenUtils.t4" #>
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+namespace InteropBitmaps
+{
+
+    partial class Pixel    
+    {
+
+        public interface IComposerApplicatorQ<TDstPixel>
+        {
+            void ApplyCompositionTo(ref TDstPixel dst, int opacity);
+        }
+
+        public interface IComposerApplicatorF<TDstPixel>
+        {
+            void ApplyCompositionTo(ref TDstPixel dst, float opacity);
+        }
+
+<#
+//-------------------------------------------------------------------------------------------------------------------
+
+
+void _writeApply24To24(string dstFtm)
+{
+    _writeDocInherit();
+    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity)");
+    _writeOpenBlock();
+    WriteLine("var x = 16384 - opacity;");
+    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity) / 16384;", "R", "G", "B");
+    WriteLine($"dst = new {dstFtm}(_R, _G, _B);");
+    _writeCloseBlock();
+}
+
+void _writeApply32ATo24(string dstFtm)
+{
+    _writeDocInherit();
+    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity)");
+    _writeOpenBlock();
+    WriteLine("if (this.A == 0) return;");
+    WriteLine("opacity = opacity * this.A / 255;");
+    WriteLine("var x = 16384 - opacity;");
+    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity) / 16384;", "R", "G", "B");
+    WriteLine($"dst = new {dstFtm}(_R, _G, _B);");
+    _writeCloseBlock();
+}
+
+void _writeApply32PTo24(string dstFtm)
+{
+    _writeDocInherit();
+    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity)");
+    _writeOpenBlock();
+    WriteLine("if (this.A == 0) return;");
+    WriteLine("var x = 16384 - opacity;");
+    WriteLine("opacity = opacity * this.A / 255;");    
+    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity) / 16384;", "R", "G", "B");
+    WriteLine($"dst = new {dstFtm}(_R, _G, _B);");
+    _writeCloseBlock();
+}
+
+_writeStructBegin("BGR24", "IComposerApplicatorQ<BGR24>", "IComposerApplicatorQ<RGB24>");        
+_writeApply24To24("BGR24");
+_writeApply24To24("RGB24");
+_writeEnd();
+
+_writeStructBegin("RGB24", "IComposerApplicatorQ<BGR24>", "IComposerApplicatorQ<RGB24>");        
+_writeApply24To24("BGR24");
+_writeApply24To24("RGB24");
+_writeEnd();
+
+_writeStructBegin("BGRA32", "IComposerApplicatorQ<BGR24>", "IComposerApplicatorQ<RGB24>");        
+_writeApply32ATo24("BGR24");
+_writeApply32ATo24("RGB24");
+_writeEnd();
+
+_writeStructBegin("RGBA32", "IComposerApplicatorQ<BGR24>", "IComposerApplicatorQ<RGB24>");        
+_writeApply32ATo24("BGR24");
+_writeApply32ATo24("RGB24");
+_writeEnd();
+
+_writeStructBegin("ARGB32", "IComposerApplicatorQ<BGR24>", "IComposerApplicatorQ<RGB24>");        
+_writeApply32ATo24("BGR24");
+_writeApply32ATo24("RGB24");
+_writeEnd();
+
+_writeStructBegin("BGRP32", "IComposerApplicatorQ<BGR24>", "IComposerApplicatorQ<RGB24>");        
+_writeApply32PTo24("BGR24");
+_writeApply32PTo24("RGB24");
+_writeEnd();
+
+_writeStructBegin("RGBP32", "IComposerApplicatorQ<BGR24>", "IComposerApplicatorQ<RGB24>");        
+_writeApply32PTo24("BGR24");
+_writeApply32PTo24("RGB24");
+_writeEnd();
+
+ClearIndent();
+// ----------------------------------------------------------------------------------------------------------------------------
+#>
+
+    }
+}

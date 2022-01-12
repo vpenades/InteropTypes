@@ -9,8 +9,7 @@ using CVDEPTHTYPE = OpenCvSharp.MatType;
 namespace InteropBitmaps
 {
     public delegate void TransferCvAction(CVMATRIX src, CVMATRIX dst);
-    public delegate void TransferPtrAction(PointerBitmap src, PointerBitmap dst);
-    public delegate void TransferSpanAction(SpanBitmap src, SpanBitmap dst);
+        
 
     static class _Implementation
     {
@@ -251,16 +250,11 @@ namespace InteropBitmaps
 
         #region extras
 
-        public static InteropDrawing.Point2 ToPoint2(this OpenCvSharp.Point2f p) { return new InteropDrawing.Point2(p.X, p.Y); }
+        public static InteropDrawing.Point2 ToPoint2(this OpenCvSharp.Point2f p) { return new InteropDrawing.Point2(p.X, p.Y); }        
 
-        public static void TransferPtr(SpanBitmap src, SpanBitmap dst, TransferPtrAction action)
+        public static void TransferSpan(SpanBitmap src, SpanBitmap dst, SpanBitmap.Action2 action)
         {
-            SpanBitmap.PinTransferPointers(src, dst, (s,d) => action(s,d));
-        }
-
-        public static void TransferSpan(SpanBitmap src, SpanBitmap dst, TransferSpanAction action)
-        {
-            SpanBitmap.PinTransferPointers(src, dst, (s, d) => action(s, d));
+            action(src, dst);
         }
 
         public static void TransferCv(SpanBitmap src, SpanBitmap dst, TransferCvAction action)
@@ -272,7 +266,7 @@ namespace InteropBitmaps
                 {
                     action(cvSrc, cvDst);
                 }
-            }
+            }            
 
             SpanBitmap.PinTransferPointers(src, dst, _onPin);
         }

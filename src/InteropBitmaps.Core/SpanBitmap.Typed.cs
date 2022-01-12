@@ -15,7 +15,14 @@ namespace InteropBitmaps
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
     public readonly ref partial struct SpanBitmap<TPixel> where TPixel : unmanaged
     {
-        #region lifecycle        
+        #region lifecycle
+
+        public SpanBitmap(SpanBitmap<TPixel> other, bool isReadOnly = false)
+        {
+            _Info = other.Info;
+            _Readable = other._Readable;
+            _Writable = isReadOnly ? null : other._Writable;
+        }
 
         public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
         {
@@ -144,7 +151,8 @@ namespace InteropBitmaps
 
         #region API - Buffers
 
-        public SpanBitmap<TPixel> AsReadOnly() { return new SpanBitmap<TPixel>(_Readable, _Info); }
+        [System.Diagnostics.DebuggerStepThrough]
+        public SpanBitmap<TPixel> AsReadOnly() { return new SpanBitmap<TPixel>(this, true); }
         public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }        
         public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Readable, y); }        
         public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }        
@@ -166,7 +174,7 @@ namespace InteropBitmaps
             SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
         }
 
-        public unsafe TResult PinReadablePointer<TResult>(Func<PointerBitmap, TResult> onPin)
+        public unsafe TResult PinReadablePointer<TResult>(PointerBitmap.Function1<TResult> onPin)
         {
             Guard.IsFalse(nameof(SpanBitmap), _Readable.IsEmpty);
             return SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
@@ -267,16 +275,20 @@ namespace InteropBitmaps
         public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap<TPixel> src)
         {
             // TODO: if dstSRT has no rotation, use _NearestResizeImplementation
+            
+            Processing._BitmapTransformImplementation.SetPixelsNearest(this, src, dstSRT);
+        }
 
-            Matrix3x2.Invert(dstSRT, out var iform);
-            Processing._BitmapTransformImplementation.SetPixelsNearest(this, src, iform);
-        }        
+        public void SetPixels<TSrcPixel>(in Matrix3x2 dstSRT, SpanBitmap<TSrcPixel> src, float opacity)
+            where TSrcPixel: unmanaged, Pixel.IConvertible<Pixel.BGRP32>
+        {
+            Processing._BitmapTransformImplementation.ComposePixelsNearest(this, src, dstSRT, opacity);
+        }
 
         public void SetPixelsTo<TDstPixel>(SpanBitmap<TDstPixel> dst, in Matrix3x2 srcSRT, float opacity)
-            where TDstPixel: unmanaged, Pixel.IQuantizedComposition<TPixel,TDstPixel>
-        {
-            Matrix3x2.Invert(srcSRT, out var iform);
-            Processing._BitmapTransformImplementation.SetPixelsNearestFast(dst, this, iform, opacity);
+            where TDstPixel: unmanaged, Pixel.IPixelCompositionQ<TPixel,TDstPixel>
+        {            
+            Processing._BitmapTransformImplementation.ComposePixelsNearestFast(dst, this, srcSRT, opacity);
         }
 
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)
