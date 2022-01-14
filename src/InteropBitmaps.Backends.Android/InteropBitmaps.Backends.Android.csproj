@@ -3,7 +3,8 @@
   <!-- https://github.com/xamarin/xamarin-android/blob/main/Documentation/guides/OneDotNetSingleProject.md -->
 
   <PropertyGroup>
-    <TargetFramework>net6.0-android</TargetFramework>        
+    <TargetFramework>net6.0-android30.0</TargetFramework>
+    <SupportedOSPlatformVersion>30</SupportedOSPlatformVersion>
   </PropertyGroup>
   
   <Import Project="..\Package.props" />

@@ -20,7 +20,7 @@
     <PackageReference Include="System.Memory" Version="4.5.4" />    
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>InteropDrawing.Tests</_Parameter1>
     </AssemblyAttribute>    

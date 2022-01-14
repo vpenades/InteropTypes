@@ -4,7 +4,7 @@ using System.Numerics;
 namespace InteropDrawing.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
-    sealed class _MemoryDrawingContext<TPixel> : IDrawing2D
+    class _MemoryDrawingContext<TPixel> : IDrawing2D
         where TPixel: unmanaged
     {
         #region debug
@@ -31,7 +31,7 @@ namespace InteropDrawing.Backends
 
         #region data
 
-        private readonly InteropBitmaps.MemoryBitmap<TPixel> _Target;
+        internal readonly InteropBitmaps.MemoryBitmap<TPixel> _Target;
         private readonly Converter<System.Drawing.Color, TPixel> _ColorConverter;
 
         private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;
@@ -49,7 +49,51 @@ namespace InteropDrawing.Backends
 
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
         {
-            throw new NotImplementedException();
+            var dst = _Target.AsSpanBitmap();
+            var xform = style.GetTransform() * transform;
+            float opacity = style.Color.A;
+            opacity /= 255f;
+
+            if (style.Bitmap.Source is InteropBitmaps.IMemoryBitmap typeless)
+            {
+                var tsrc = typeless.AsSpanBitmap();
+
+                xform = Matrix3x2.CreateScale(1f / tsrc.Width, 1f / tsrc.Height) * xform;
+
+                switch (typeless.PixelFormat.Code)
+                {
+                    case InteropBitmaps.Pixel.BGRP32.Code:
+                        {
+                            var src = tsrc.OfType<InteropBitmaps.Pixel.BGRP32>();
+                            dst.SetPixels(xform, src, opacity); return;
+                        }
+                    case InteropBitmaps.Pixel.RGBP32.Code:
+                        {
+                            var src = tsrc.OfType<InteropBitmaps.Pixel.RGBP32>();
+                            dst.SetPixels(xform, src, opacity); return;
+                        }
+                    case InteropBitmaps.Pixel.BGRA32.Code:
+                        {
+                            var src = tsrc.OfType<InteropBitmaps.Pixel.BGRA32>();
+                            dst.SetPixels(xform, src, opacity); return;
+                        }
+                    case InteropBitmaps.Pixel.RGBA32.Code:
+                        {
+                            var src = tsrc.OfType<InteropBitmaps.Pixel.RGBA32>();
+                            dst.SetPixels(xform, src, opacity); return;
+                        }
+                    case InteropBitmaps.Pixel.BGR24.Code:
+                        {
+                            var src = tsrc.OfType<InteropBitmaps.Pixel.BGR24>();
+                            dst.SetPixels(xform, src, opacity); return;
+                        }
+                    case InteropBitmaps.Pixel.RGB24.Code:
+                        {
+                            var src = tsrc.OfType<InteropBitmaps.Pixel.RGB24>();
+                            dst.SetPixels(xform, src, opacity); return;
+                        }
+                }
+            }            
         }
 
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
@@ -111,5 +155,4 @@ namespace InteropDrawing.Backends
         #endregion
     }
 
-    
 }

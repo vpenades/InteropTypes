@@ -6,6 +6,8 @@
     <RootNamespace>InteropBitmaps</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>8.0</LangVersion>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   
   <ItemGroup>
@@ -29,21 +31,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropBitmaps.Backends.FFmpeg.AutoGen.csproj" />    
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropWith.WPF.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropBitmaps.Backends.FFmpeg.AutoGen.csproj" />        
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropWith.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropBitmaps.Backends.SkiaSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.VideoLAN\InteropBitmaps.Backends.VideoLAN.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropWith.WPF.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.VideoLAN\InteropBitmaps.Backends.VideoLAN.csproj" />    
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropBitmaps.Drawing.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>  
 
 </Project>

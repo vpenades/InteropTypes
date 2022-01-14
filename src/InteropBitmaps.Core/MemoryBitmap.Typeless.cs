@@ -12,7 +12,10 @@ namespace InteropBitmaps
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
-    public readonly struct MemoryBitmap<TPixel> : IBitmap<TPixel> where TPixel : unmanaged        
+    public readonly struct MemoryBitmap<TPixel>
+        : IMemoryBitmap
+        , IBitmap<TPixel>
+        where TPixel : unmanaged        
     {
         #region debug
 
@@ -88,31 +91,21 @@ namespace InteropBitmaps
 
         #region properties - Info
 
-        /// <summary>
-        /// Gets the layout information of the bitmap; Width, Height, PixelFormat, etc.
-        /// </summary>
+        /// <inheritdoc/>
         public BitmapInfo Info => _Info;
 
-        /// <summary>
-        /// Gets the pixel format of the bitmap.
-        /// </summary>
+        /// <inheritdoc/>
         public PixelFormat PixelFormat => _Info.PixelFormat;
 
-        /// <summary>
-        /// Gets the size of the bitmap, in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public SIZE Size => _Info.Size;
 
-        /// <summary>
-        /// Gets the width of the bitmap, in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Width => _Info.Width;
 
-        /// <summary>
-        /// Gets the height of the bitmap, in pixels.
-        /// </summary>
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Height => _Info.Height;
 
@@ -172,6 +165,10 @@ namespace InteropBitmaps
 
         [System.Diagnostics.DebuggerStepThrough]
         public SpanBitmap<TPixel> AsSpanBitmap() { return this; }
+
+        /// <inheritdoc />        
+        [System.Diagnostics.DebuggerStepThrough]
+        SpanBitmap IMemoryBitmap.AsSpanBitmap() { return this; }
 
         [System.Diagnostics.DebuggerStepThrough]
         public MemoryBitmap AsTypeless() { return new MemoryBitmap(this._Data, this._Info); }

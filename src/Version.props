@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+<!--
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+-->
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>  

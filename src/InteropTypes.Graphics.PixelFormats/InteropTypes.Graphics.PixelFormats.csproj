@@ -35,7 +35,7 @@
     </Description>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>InteropTypes.Graphics.PixelFormats.Tests</_Parameter1>
     </AssemblyAttribute>    

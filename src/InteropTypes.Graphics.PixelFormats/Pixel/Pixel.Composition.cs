@@ -11,7 +11,7 @@ namespace InteropBitmaps
 
         public static int ToQuantizedAmount(float value)
         {            
-            return ((int)(value * (float)_INTEGEROPACITY_MAXVALUE)) & 16383;            
+            return (int)(value * (float)_INTEGEROPACITY_MAXVALUE);            
         }        
 
         public interface IPixelCompositionQ<TSrcPixel, TDstPixel>

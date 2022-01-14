@@ -68,9 +68,11 @@ namespace InteropBitmaps.Codecs
                 case CodecFormat.Png: return Android.Graphics.Bitmap.CompressFormat.Png;
                 case CodecFormat.Jpeg: return Android.Graphics.Bitmap.CompressFormat.Jpeg;
 
+                #pragma warning disable CS0618 // Type or member is obsolete
                 case CodecFormat.Webp: return Android.Graphics.Bitmap.CompressFormat.Webp;
-                case CodecFormat.WebpLossy: return Android.Graphics.Bitmap.CompressFormat.Webp;
-                case CodecFormat.WebpLossless: return Android.Graphics.Bitmap.CompressFormat.Webp;
+                #pragma warning restore CS0618 // Type or member is obsolete
+                case CodecFormat.WebpLossy: return Android.Graphics.Bitmap.CompressFormat.WebpLossy;
+                case CodecFormat.WebpLossless: return Android.Graphics.Bitmap.CompressFormat.WebpLossless;
 
                 default: return null;
             }

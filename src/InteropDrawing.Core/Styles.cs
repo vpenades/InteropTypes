@@ -502,9 +502,19 @@ namespace InteropDrawing
 
         public System.Numerics.Matrix3x2 Transform => Bitmap.GetSpriteMatrix(FlipHorizontal, FlipVertical);
 
+        public System.Numerics.Matrix3x2 GetTransform()
+        {
+            return Bitmap.GetSpriteMatrix(FlipHorizontal, FlipVertical);
+        }
+
         public System.Numerics.Matrix3x2 GetTransform(bool hflip, bool vflip)
         {
             return Bitmap.GetSpriteMatrix(FlipHorizontal ^ hflip, FlipVertical ^ vflip);
+        }
+
+        public void PrependTransform(ref System.Numerics.Matrix3x2 xform)
+        {
+            Bitmap.PrependTransform(ref xform, FlipHorizontal, FlipVertical);
         }
 
         public void PrependTransform(ref System.Numerics.Matrix3x2 xform, bool hflip, bool vflip)

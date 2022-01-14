@@ -35,6 +35,9 @@ namespace InteropBitmaps.Drawing
         {
             var bmp = new MemoryBitmap<Pixel.BGR24>(512, 512);
 
+            var cat = MemoryBitmap.Load("Resources\\cat.png", Codecs.GDICodec.Default);
+            var asset = new SpriteAsset(cat, (0, 0), (32,35), (15,15));
+
             var dc = bmp.CreateDrawingContext();
 
             dc.DrawConsoleFont((10, 10), "Hello World 0123456789-+/*", System.Drawing.Color.White);
@@ -46,6 +49,8 @@ namespace InteropBitmaps.Drawing
             dc.DrawFont(Matrix3x2.CreateRotation(1,new Vector2(10,350)), "Abc123", FontStyle.White.With(3));
 
             dc.DrawEllipse((200, 200), 50, 50, (System.Drawing.Color.Red, System.Drawing.Color.Blue,3));
+
+            dc.DrawSprite(Matrix3x2.CreateScale(3) * Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(70, 150), asset);
 
             bmp.AttachToCurrentTest("result.png");
         }

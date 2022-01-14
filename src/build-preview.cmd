@@ -1,5 +1,7 @@
 @echo off
 
+:: ============================================= Define Version suffix
+
 set GETTIMEKEY=powershell get-date -format "{yyyyMMdd-HHmm}"
 for /f %%i in ('%GETTIMEKEY%') do set TIMEKEY=%%i
 
@@ -7,12 +9,18 @@ set VERSIONSUFFIX=Preview-%TIMEKEY%
 
 echo Building 1.0.0-%VERSIONSUFFIX%
 
-rem dotnet pack -restore:true -c:Release --version-suffix %VERSIONSUFFIX% /p:NoWarn=1591 /p:Authors=vpenades ..\InteropTypes.sln
+:: ============================================= DOTNET builder
 
-set MSBUILDPROPERTIES=Configuration=Release;VersionSuffix=%VERSIONSUFFIX%;NoWarn=1591
+dotnet build -restore:true -c:Release --version-suffix %VERSIONSUFFIX% /p:NoWarn=1591 /p:Authors=vpenades ..\InteropTypes.sln
+dotnet pack -c:Release --version-suffix %VERSIONSUFFIX% /p:NoWarn=1591 /p:Authors=vpenades ..\InteropTypes.sln
 
-msbuild -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
-msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
+:: ============================================= MSBUILD builder
+
+rem set MSBUILDPROPERTIES=Configuration=Release;VersionSuffix=%VERSIONSUFFIX%;NoWarn=1591
+rem msbuild -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
+rem msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
+
+:: ============================================= Copy output
 
 md bin
 
