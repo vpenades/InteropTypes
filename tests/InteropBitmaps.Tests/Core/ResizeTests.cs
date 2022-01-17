@@ -120,7 +120,7 @@ namespace InteropBitmaps.Core
                 xform = Matrix3x2.CreateTranslation(-50, -50) * xform * Matrix3x2.CreateTranslation(50, 50);
                 xform = xform * Matrix3x2.CreateScale(3, 3);                
 
-                SpanBitmap.CopyPixels(dst.AsSpanBitmap(), cat00.AsSpanBitmap(), xform, r);
+                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), r);
                 DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
 
                 // 2nd API

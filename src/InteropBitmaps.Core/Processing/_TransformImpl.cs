@@ -44,110 +44,53 @@ namespace InteropBitmaps.Processing
             _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
         }
 
-        public static void ComposePixelsNearestFast<TDstPixel,TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged
-            where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<TSrcPixel, TDstPixel>
-        {
-            var opacityQ = Pixel.ToQuantizedAmount(opacity);
-
-            void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
-            {
-                for (int i = 0; i < dst.Length; ++i)
-                {
-                    if (srcIterator.MoveNext(out int sx, out int sy))
-                    {
-                        var pix = src.GetPixelZero(sx, sy);
-
-                        dst[i] = dst[i].AlphaBlendWith(pix, opacityQ);
-                    }
-                }
-            }
-
-            _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
-        }
-
-        public static void ComposePixelsNearestFast2<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IComposerApplicatorQ<TDstPixel>
+        public static void ComposePixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
+            where TSrcPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
             where TDstPixel : unmanaged
         {
-            var opacityQ = Pixel.ToQuantizedAmount(opacity);
+            var typeInfo = default(TDstPixel) as Pixel.IReflection;
+            if (typeInfo == null) return;
 
-            void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
+            switch(typeInfo.GetCode())
             {
-                for (int i = 0; i < dst.Length; ++i)
-                {
-                    if (srcIterator.MoveNext(out int sx, out int sy))
-                    {
-                        src.GetPixelZero(sx, sy).ApplyCompositionTo(ref dst[i], opacityQ);
-                    }
-                }
-            }
+                case Pixel.BGR24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGR24.Writeable>(), src, srcXform, opacity); break;
+                case Pixel.RGB24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGB24.Writeable>(), src, srcXform, opacity); break;
+                case Pixel.BGRA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRA32.Writeable>(), src, srcXform, opacity); break;
+                case Pixel.RGBA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBA32.Writeable>(), src, srcXform, opacity); break;
+                // case Pixel.ARGB32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.ARGB32.Writeable>(), src, srcXform, opacity); break;
+                case Pixel.BGRP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRP32.Writeable>(), src, srcXform, opacity); break;
+                case Pixel.RGBP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBP32.Writeable>(), src, srcXform, opacity); break;
+                default:throw new NotImplementedException($"{typeof(TDstPixel)} not supported as target of ComposePixelsNearest");
 
-            _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
-        }
-
-
-        public static void ComposePixelsNearest<TSrcPixel>(SpanBitmap dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRP32>
-        {
-            switch(dst.PixelFormat.Code)
-            {
-                case Pixel.BGR24.Code: ComposePixelsNearest(dst.OfType<Pixel.BGR24>(), src, srcXform, opacity); break;
-                // case Pixel.RGB24.Code: ComposePixelsNearestSlow(dst.OfType<Pixel.RGB24>(), src, srcXform, opacity); break;
-                default: throw new NotImplementedException();
             }
         }
 
-        public static void ComposePixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRP32>
-            where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<Pixel.BGRP32, TDstPixel>
+        static void _ComposePixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
+            where TSrcPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
+            where TDstPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>, Pixel.IValueSetter<Pixel.QVectorBGRP>
         {
-            var opacityQ = Pixel.ToQuantizedAmount(opacity);
+            uint opacityQ = Pixel.QVectorBGRP.FromFloat(opacity);
 
             void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
             {
-                for (int i = 0; i < dst.Length; ++i)
-                {
-                    if (srcIterator.MoveNext(out int sx, out int sy))
-                    {
-                        var pix = src.GetPixelZero(sx, sy).ToPixel();
-
-                        if (pix.A == 0) continue;
-
-                        // pix.ApplyBlendTo(ref dst[i], opacityQ);
-
-                        dst[i] = dst[i].AlphaBlendWith(pix, opacityQ);
-                    }
-                }
-            }
-
-            _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
-        }
-
-        public static void ComposePixelsNearestSlow<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRP32>
-            where TDstPixel : unmanaged, Pixel.IConvertible<Pixel.BGR24>, Pixel.IPixelFactory<Pixel.BGR24, TDstPixel>
-        {
-            var opacityQ = Pixel.ToQuantizedAmount(opacity);
-
-            void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
-            {
-                Pixel.BGRP32 tmp0;
-                Pixel.BGR24 tmp1;
-                var f = default(TDstPixel);
+                var tmps = new Pixel.QVectorBGRP();
+                var tmpd = new Pixel.QVectorBGRP();                
 
                 for (int i = 0; i < dst.Length; ++i)
                 {
                     if (srcIterator.MoveNext(out int sx, out int sy))
-                    {
-                        tmp0 = src.GetPixelZero(sx, sy).ToPixel(); // sample src pixel
-                        if (tmp0.A == 0) continue;
+                    {                        
+                        src.GetPixelZero(sx, sy).CopyTo(ref tmps);
 
-                        tmp1 = dst[i].ToPixel(); // sample dst pixel
-                        
-                        tmp0.ApplyCompositionTo(ref tmp1, opacityQ); // compose
+                        if (tmps.A == 0) continue;
+                        tmps.A *= opacityQ;
+                        tmps.A /= FixedMath.UnitValue;
 
-                        dst[i] = f.From(tmp1); // set result
+                        ref var dstx = ref dst[i];
+
+                        dstx.CopyTo(ref tmpd); // get
+                        tmpd.SourceOver(tmps); // compose
+                        dstx.SetValue(tmpd);
                     }
                 }
             }
@@ -200,7 +143,7 @@ namespace InteropBitmaps.Processing
             private readonly BitmapInfo _BInfo;
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public unsafe TPixel GetPixelZero(int x, int y) { return _BInfo.GetPixelZero<TPixel>(_Bytes, x, y); }
+            public TPixel GetPixelZero(int x, int y) { return _BInfo.GetPixelZero<TPixel>(_Bytes, x, y); }
         }
 
         [Obsolete("WIP")]
@@ -378,3 +321,4 @@ namespace InteropBitmaps.Processing
         #endregion
     }
 }
+

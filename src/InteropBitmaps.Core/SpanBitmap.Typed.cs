@@ -192,9 +192,21 @@ namespace InteropBitmaps
         /// <remarks>
         /// This is the opposite operation of <see cref="SpanBitmap.OfType{TPixel}"/>
         /// </remarks>
-        public unsafe SpanBitmap AsTypeless()
+        public SpanBitmap AsTypeless()
         {
-            return _Writable.IsEmpty ? new SpanBitmap(_Readable, _Info) : new SpanBitmap(_Writable, _Info);
+            return _Writable.IsEmpty
+                ? new SpanBitmap(_Readable, _Info)
+                : new SpanBitmap(_Writable, _Info);
+        }
+
+        public unsafe SpanBitmap<TDstPixel> ReinterpretOfType<TDstPixel>()
+            where TDstPixel : unmanaged
+        {
+            if (sizeof(TPixel) != sizeof(TDstPixel)) throw new ArgumentException("pixels size mismatch.");
+
+            return _Writable.IsEmpty
+                ? new SpanBitmap<TDstPixel>(_Readable, _Info)
+                : new SpanBitmap<TDstPixel>(_Writable, _Info);
         }
         
         public MemoryBitmap<TPixel> ToMemoryBitmap(PixelFormat? fmtOverride = null)
@@ -280,16 +292,10 @@ namespace InteropBitmaps
         }
 
         public void SetPixels<TSrcPixel>(in Matrix3x2 dstSRT, SpanBitmap<TSrcPixel> src, float opacity)
-            where TSrcPixel: unmanaged, Pixel.IConvertible<Pixel.BGRP32>
+            where TSrcPixel: unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
         {
             Processing._BitmapTransformImplementation.ComposePixelsNearest(this, src, dstSRT, opacity);
-        }
-
-        public void SetPixelsTo<TDstPixel>(SpanBitmap<TDstPixel> dst, in Matrix3x2 srcSRT, float opacity)
-            where TDstPixel: unmanaged, Pixel.IPixelCompositionQ<TPixel,TDstPixel>
-        {            
-            Processing._BitmapTransformImplementation.ComposePixelsNearestFast(dst, this, srcSRT, opacity);
-        }
+        }        
 
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)
             where TSrcPixel: unmanaged

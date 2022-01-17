@@ -7,13 +7,6 @@ namespace InteropBitmaps
 {
     partial class Pixel
     {
-        private const int _INTEGEROPACITY_MAXVALUE = 16384; // must change to 16384
-
-        public static int ToQuantizedAmount(float value)
-        {            
-            return (int)(value * (float)_INTEGEROPACITY_MAXVALUE);            
-        }        
-
         public interface IPixelCompositionQ<TSrcPixel, TDstPixel>
         {
             TDstPixel AlphaBlendWith(TSrcPixel src, int opacity);
@@ -95,6 +88,20 @@ namespace InteropBitmaps
                 var b = (this.B * x + src.B * opacity) / 16384;
                 return new BGR24(r, g, b);
             }
+        }
+
+        partial struct BGRP32
+        {
+            public void ApplyCompositionTo(ref BGR24 dst)
+            {
+                if (this.A == 0) return;
+                var opacity = 16384 * this.A / 255;
+                var x = 16384 - opacity;                
+                var _R = (dst.R * x + this.R * opacity) / 16384;
+                var _G = (dst.G * x + this.G * opacity) / 16384;
+                var _B = (dst.B * x + this.B * opacity) / 16384;
+                dst = new BGR24(_R, _G, _B);
+            }            
         }
     }
 }

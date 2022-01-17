@@ -187,14 +187,7 @@ namespace InteropBitmaps
         }
 
 
-        public static void CopyPixels<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, in Matrix3x2 srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged
-            where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<TSrcPixel, TDstPixel>
-        {
-            src = src.AsReadOnly();            
-
-            Processing._BitmapTransformImplementation.ComposePixelsNearestFast(dst, src, srcXform, opacity);
-        }
+        
 
         public static void SplitPixels(SpanBitmap<Vector3> src, SpanBitmap<Single> dstB, SpanBitmap<Single> dstG, SpanBitmap<Single> dstR)
         {
