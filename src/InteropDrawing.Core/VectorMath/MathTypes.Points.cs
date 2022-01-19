@@ -231,9 +231,21 @@ namespace InteropDrawing
 
         #region nested types
 
+        /// <summary>
+        /// Optionally implemented on <see cref="IDrawable2D"/>
+        /// </summary>
         public interface ITransform
         {
+            /// <summary>
+            /// Transforms the given points from virtual space to screen space.
+            /// </summary>
+            /// <param name="points"></param>
             void TransformForward(Span<Point2> points);
+
+            /// <summary>
+            /// Transforms the given points from screen space to virtual space.
+            /// </summary>
+            /// <param name="points"></param>
             void TransformInverse(Span<Point2> points);
         }
 

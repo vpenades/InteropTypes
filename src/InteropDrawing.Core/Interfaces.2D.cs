@@ -10,8 +10,7 @@ using POINT2 = InteropDrawing.Point2;
 
 namespace InteropDrawing
 {
-    [Obsolete]
-    public delegate void Drawing2DAction(IDrawing2D context, POINT2 viewport);
+    
 
     /// <summary>
     /// Represents an object that can be drawn to a <see cref="IDrawing2D"/>.
@@ -71,6 +70,8 @@ namespace InteropDrawing
 
         void DrawSprite(in XFORM2 transform, in SpriteStyle style);
     }
+
+    public interface ICanvas2D : IDrawable2D { }
 
     public interface IDrawingContext2D : IDrawing2D, IDisposable { }
     

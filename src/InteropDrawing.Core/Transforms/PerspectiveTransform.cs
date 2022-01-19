@@ -20,7 +20,9 @@ namespace InteropDrawing.Transforms
     /// </list>
     /// </para>
     /// </remarks>
-    public class PerspectiveTransform : IDrawing3D
+    public class PerspectiveTransform :
+        IDrawing3D,
+        IServiceProvider
     {
         #region lifecycle
 
@@ -91,6 +93,12 @@ namespace InteropDrawing.Transforms
         #endregion
 
         #region API
+
+        /// <inheritdoc/>
+        public object GetService(Type serviceType)
+        {            
+            return this.TryGetService(serviceType, _RenderTarget);
+        }
 
         public Vector4 GetProjection(Point3 v)
         {

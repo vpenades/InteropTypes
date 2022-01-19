@@ -63,6 +63,10 @@ namespace InteropDrawing.Backends
 
         public float SpriteCoordsBleed { get; set; }
 
+        public int PixelsWidth => _Device.Viewport.Width;
+
+        public int PixelsHeight => _Device.Viewport.Height;        
+
         #endregion
 
         #region API
@@ -258,7 +262,12 @@ namespace InteropDrawing.Backends
         {
             _Device.Textures[0] = _OldTexture;
             _OldTexture = null;
-        }        
+        }
+
+        public object GetService(Type serviceType)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }

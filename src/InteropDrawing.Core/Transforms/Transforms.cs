@@ -7,7 +7,12 @@ using System.Linq;
 
 namespace InteropDrawing.Transforms
 {
-    public readonly struct Drawing2DTransform : IDrawing2D, IDrawing3D, Point2.ITransform
+    public readonly struct Drawing2DTransform :
+        IDrawing2D,
+        IDrawing3D,
+        Point2.ITransform,
+        IServiceProvider
+
     {
         #region constructors
 
@@ -92,11 +97,17 @@ namespace InteropDrawing.Transforms
         private readonly IDrawing2D _Target;
         private readonly Matrix3x2 _TransformForward;
         private readonly Matrix3x2 _TransformInverse;
-        private readonly Single _TransformScaleForward;        
+        private readonly Single _TransformScaleForward;
 
         #endregion
 
         #region API
+
+        /// <inheritdoc/>        
+        public object GetService(Type serviceType)
+        {
+            return this.TryGetService(serviceType, _Target);
+        }
 
         private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _TransformScaleForward; }
 
@@ -217,7 +228,7 @@ namespace InteropDrawing.Transforms
         {
             if (_Target is Point2.ITransform xform) xform.TransformInverse(points);
             Point2.Transform(points, _TransformInverse);            
-        }
+        }        
 
         #endregion
     }
@@ -257,7 +268,10 @@ namespace InteropDrawing.Transforms
         #endregion
     }*/
 
-    public struct Drawing3DTransform : IDrawing2D, IDrawing3D
+    public struct Drawing3DTransform :
+        IDrawing2D,
+        IDrawing3D,
+        IServiceProvider
     {
         #region constructors
 
@@ -284,6 +298,12 @@ namespace InteropDrawing.Transforms
         #endregion
 
         #region API
+
+        /// <inheritdoc/>        
+        public object GetService(Type serviceType)
+        {
+            return this.TryGetService(serviceType, _Target);
+        }
 
         private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _SizeScale; }
 

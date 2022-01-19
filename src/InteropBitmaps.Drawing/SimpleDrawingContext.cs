@@ -4,7 +4,11 @@ using System.Numerics;
 namespace InteropDrawing.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
-    class _MemoryDrawingContext<TPixel> : IDrawing2D
+    class _MemoryDrawingContext<TPixel> :
+        IDrawing2D,        
+        IBackendViewportInfo,
+        IServiceProvider
+
         where TPixel: unmanaged
     {
         #region debug
@@ -40,13 +44,32 @@ namespace InteropDrawing.Backends
 
         #endregion
 
-        #region API        
+        #region properties
 
+        public int PixelsWidth => _Target.Width;
+
+        public int PixelsHeight => _Target.Height;
+
+        #endregion
+
+        #region API
+
+        /// <inheritdoc/>
+        public object GetService(Type serviceType)
+        {
+            if (serviceType == typeof(InteropBitmaps.MemoryBitmap<TPixel>)) return _Target;
+            if (serviceType == typeof(Transforms.Decompose2D)) return _Collapse;
+            if (serviceType.IsAssignableFrom(this.GetType())) return this;
+            return null;
+        }        
+
+        /// <inheritdoc/>
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
             _Collapse.DrawAsset(transform, asset, style);
         }
 
+        /// <inheritdoc/>
         public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
         {
             var dst = _Target.AsSpanBitmap();
@@ -96,6 +119,7 @@ namespace InteropDrawing.Backends
             }            
         }
 
+        /// <inheritdoc/>
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             if (diameter > 1)
@@ -116,11 +140,13 @@ namespace InteropDrawing.Backends
             }
         }
 
+        /// <inheritdoc/>
         public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
         {
             _Collapse.DrawEllipse(center, width, height, style);
-        }        
+        }
 
+        /// <inheritdoc/>
         public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
         {
             if (style.HasFill)
@@ -150,7 +176,7 @@ namespace InteropDrawing.Backends
 
                 InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, points[points.Length - 1], points[0], outColor);
             }
-        }
+        }        
 
         #endregion
     }

@@ -16,7 +16,9 @@ namespace InteropDrawing.Transforms
     public delegate XYZ ProjectPointCallback(XYZ worldPoint);
 
     [Obsolete("Use PerspectiveTransform instead.")]
-    class _RenderTarget2D : IDrawing3D
+    class _RenderTarget2D :
+        IDrawing3D,
+        IServiceProvider
     {
         #region lifecycle
 
@@ -63,10 +65,16 @@ namespace InteropDrawing.Transforms
         /// projection abstraction, converts points from world space to viewSpace (in pixels)
         /// </summary>
         private readonly ProjectPointCallback _Proj3Func;
-        
+
         #endregion
 
         #region API
+
+        /// <inheritdoc/>        
+        public object GetService(Type serviceType)
+        {
+            return this.TryGetService(serviceType);
+        }
 
         /*
         public void Draw(Model3D batch)

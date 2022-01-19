@@ -10,6 +10,11 @@ namespace InteropDrawing
     public enum Quadrant
     {
         /// <summary>
+        /// quadrant is not known
+        /// </summary>
+        Undefined,
+
+        /// <summary>
         /// Quadrant I
         /// </summary>
         TopRight,

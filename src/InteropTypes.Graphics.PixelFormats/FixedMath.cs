@@ -5,84 +5,86 @@ using System.Text;
 
 namespace InteropBitmaps
 {
-    internal static class FixedMath
+    /// <summary>
+    /// Contains methods for 12+12+8 fixed math.
+    /// </summary>
+    internal static class FixedMathCC8
     {
         #region constants
 
-        public const int UnitShift = 14;
-        public const uint UnitValue = (1 << UnitShift);
-        public const uint Q8Value = 255 << UnitShift;
-
-        public const int RcpShift8 = 16;
+        public const int UnitShift = 12;
+        public const int UnitToByteShift = UnitShift - 8;
+        public const uint UnitValue = (1 << UnitShift) -1;
 
         #endregion
 
         #region API
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static uint FromFloat(float value)
         {
-            uint integet = (uint)(value * (float)UnitValue);
-            if (integet < 0) integet = 0;
-            else if (integet > UnitValue) integet = UnitValue;
-            return integet;
+            value = Math.Max(0, value);            
+            return Math.Min(UnitValue, (uint)(value * UnitValue));
         }
 
         [MethodImpl(_PrivateConstants.Fastest)]
-        internal static uint From255(uint value)
+        public static uint FromByte(uint value)
         {
-            System.Diagnostics.Debug.Assert(value < 256, $"Value is out of range. Expected less than 256, found {value}");
-            
-            value <<= 8;
-            value |= 255;
-            value >>= (16 - UnitShift);
-
-            return value;
+            System.Diagnostics.Debug.Assert(value < 256);
+            return (value << UnitToByteShift) | (value >> (8- UnitToByteShift));
         }
 
         [MethodImpl(_PrivateConstants.Fastest)]
-        internal static Byte To255(uint value)
+        public static Byte ToByte(uint value)
         {
-            System.Diagnostics.Debug.Assert(value <= UnitValue, $"Value is out of range. Expected less than {UnitValue}, found {value}");
-
-            return (Byte)(value >> (UnitShift - 8));            
+            System.Diagnostics.Debug.Assert(value <= UnitValue);
+            return (Byte)(value >> UnitToByteShift);
         }
 
-        /// <summary>
-        /// Converts <paramref name="value"/> to a 255 range value, applying the reciprocal alpha provided by <see cref="GetUnboundedReciprocal8(uint)"/>
-        /// </summary>
-        /// <param name="value">A value in the range </param>
-        /// <param name="rcpa"></param>
-        /// <returns></returns>
         [MethodImpl(_PrivateConstants.Fastest)]
-        internal static Byte To255(uint value, uint rcpa)
+        public static Byte ToByte(uint value, uint reciprocalByte)
         {
-            System.Diagnostics.Debug.Assert(value <= UnitValue, $"Value is out of range. Expected less or equal to {UnitValue}, found {value}");
+            System.Diagnostics.Debug.Assert(value <= UnitValue);
+            System.Diagnostics.Debug.Assert(reciprocalByte <= 256 * UnitValue); // could be 256 * 4095 too
 
-            return (Byte)((value * rcpa) >> UnitShift);
+            return (Byte)Math.Min(255, (value * reciprocalByte) >> UnitShift);
         }
 
-        /// <summary>
-        /// Gets the reciprocal of <paramref name="value"/>, multiplied by 255 and shifted up by <see cref="RcpShift8"/>
-        /// </summary>
-        /// <param name="value">A value between 1 and <see cref="UnitValue"/> inclusive.</param>
-        /// <returns>The reciprocal of alpha.</returns>
         [MethodImpl(_PrivateConstants.Fastest)]
-        internal static uint GetUnboundedReciprocal8(uint value)
+        public static uint ToReciprocalByte(uint dividend)
         {
-            System.Diagnostics.Debug.Assert(value != 0, "Value must not be zero.");
-            System.Diagnostics.Debug.Assert(value <= UnitValue, $"Value is out of range. Expected less or equal to {UnitValue}, found {value}");            
+            System.Diagnostics.Debug.Assert(dividend > 0);
+            System.Diagnostics.Debug.Assert(dividend <= UnitValue);
 
-            value = (1<<UnitShift) / (value >> 8);
+            const uint unitByte = 256 * UnitValue;
 
-            return value;
+            return unitByte / dividend;
         }
 
         #endregion
 
         #region old but useful
 
+        [MethodImpl(_PrivateConstants.Fastest)]
+        public static uint From255To65535(uint value)
+        {
+            System.Diagnostics.Debug.Assert(value < 256);
+
+            return value | (value << 8);
+        }
+
+        [MethodImpl(_PrivateConstants.Fastest)]
+        public static uint From65535To255(uint value)
+        {
+            System.Diagnostics.Debug.Assert(value < 65536);
+            return value >> 8;
+        }
+
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static uint From255To16384(uint value)
         {
+            System.Diagnostics.Debug.Assert(value < 256);
+
             const int SHIFT = 14;
             const int EXTRA = SHIFT - 8;
 
@@ -94,8 +96,11 @@ namespace InteropBitmaps
             return value;
         }
 
+        [MethodImpl(_PrivateConstants.Fastest)]
         public static byte From16384To255(uint value)
         {
+            System.Diagnostics.Debug.Assert(value <= 16384);
+
             return (Byte)((value * 255) >> 14);
 
             // value -= value >> 13;

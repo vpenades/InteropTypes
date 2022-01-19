@@ -25,6 +25,53 @@ namespace InteropDrawing
 
         #region 2D transforms
 
+        public static bool TryGetQuadrant(this IDrawing2D dc, out Quadrant quadrant)
+        {
+            if (dc is POINT2.ITransform xform)
+            {
+                Span<Point2> points = stackalloc Point2[2];
+                points[0] = VECTOR2.Zero;
+                points[1] = VECTOR2.One;
+                xform.TransformForward(points);
+                quadrant = GetQuadrant(points[1].ToNumerics() - points[0].ToNumerics());
+                return true;
+            }
+            else
+            {
+                quadrant = default;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Determines the predominant quadrant from a given transform matrix.
+        /// </summary>
+        /// <param name="transform">The viewport transform matrix</param>
+        /// <returns>The positive quadrant</returns>
+        public static Quadrant GetQuadrant(in XFORM2 transform)
+        {
+            var p0 = VECTOR2.Transform(VECTOR2.Zero,transform);
+            var p1 = VECTOR2.Transform(VECTOR2.One, transform);
+
+            return GetQuadrant(p1 - p0);
+        }
+
+        public static Quadrant GetQuadrant(in VECTOR2 direction)
+        {
+            if (direction.Y > 0)
+            {
+                return direction.X > 0
+                    ? Quadrant.BottomRight
+                    : Quadrant.BottomLeft;
+            }
+            else
+            {
+                return direction.X > 0
+                    ? Quadrant.TopRight
+                    : Quadrant.TopLeft;
+            }
+        }
+
         public static POINT2 TransformForward(this POINT2.ITransform dc, Point2 point)
         {
             Span<POINT2> span = stackalloc POINT2[1];
@@ -200,10 +247,15 @@ namespace InteropDrawing
         public static void DrawFont(this IDrawing2D dc, XFORM2 xform, String text, FontStyle style)
         {
             float xflip = 1;
-            float yflip = 1;
+            float yflip = 1;            
 
             if (style.Alignment.HasFlag(FontAlignStyle.FlipHorizontal)) { xflip = -1; }
-            if (style.Alignment.HasFlag(FontAlignStyle.FlipVertical)) { yflip = -1; }
+            if (style.Alignment.HasFlag(FontAlignStyle.FlipVertical)) { yflip = -1; }            
+
+            if (style.Alignment.HasFlag(FontAlignStyle.FlipAuto) && dc.TryGetQuadrant(out var q))
+            {
+                if (q == Quadrant.TopRight) yflip *= -1;
+            }            
 
             style = style.With(style.Alignment & ~(FontAlignStyle.FlipHorizontal | FontAlignStyle.FlipVertical));
 

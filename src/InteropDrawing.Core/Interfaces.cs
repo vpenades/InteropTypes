@@ -1,16 +1,29 @@
 ﻿using System;
 
-using ASSET = System.Object;
-using SCALAR = System.Single;
-
-using XFORM2 = System.Numerics.Matrix3x2;
-using POINT2 = InteropDrawing.Point2;
-
-using XFORM3 = System.Numerics.Matrix4x4;
-using POINT3 = InteropDrawing.Point3;
-
 namespace InteropDrawing
 {
+    /// <summary>
+    /// provides additional information about the rendering backend
+    /// </summary>
+    /// <remarks>
+    /// This interface must be implemented by the final rendering backend, and
+    /// queried through any exposed <see cref="IDrawable2D"/> casted to a
+    /// <see cref="IServiceProvider"/>
+    /// </remarks>
+    public interface IBackendViewportInfo
+    {
+        /// <summary>
+        /// The viewport width i pixels
+        /// </summary>
+        int PixelsWidth { get; }
+
+        /// <summary>
+        /// The viewport height in pixels
+        /// </summary>
+        int PixelsHeight { get; }
+    }
+
+
     /// <summary>
     /// defines an objects that exposes a unique key that doesn't change as long as
     /// the object itself doesn't change, and can be used by other objects to determine

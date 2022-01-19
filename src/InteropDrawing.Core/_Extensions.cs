@@ -15,6 +15,27 @@ namespace InteropDrawing
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     static partial class _PrivateExtensions
     {
+        #region service provider
+
+        public static object TryGetService(this IServiceProvider owner, Type serviceType, Object parent = null)
+        {
+            if (parent is IServiceProvider psp)
+            {
+                // service provider has preference
+                if (serviceType == typeof(IServiceProvider)) return psp;
+
+                return serviceType.IsAssignableFrom(owner.GetType())
+                ? owner
+                : (psp?.GetService(serviceType));
+            }
+
+            return serviceType.IsAssignableFrom(owner.GetType())
+                ? owner
+                : null;
+        }
+
+        #endregion
+
         #region drawing
 
         public static XY ToVector2(this System.Drawing.PointF point) { return new XY(point.X, point.Y); }

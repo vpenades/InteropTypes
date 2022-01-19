@@ -10,7 +10,10 @@ using VECTOR2 = System.Numerics.Vector2;
 
 namespace InteropDrawing.Transforms
 {
-    public readonly struct Decompose2D : IDrawing2D, POINT2.ITransform
+    public readonly struct Decompose2D :
+        IDrawing2D,
+        POINT2.ITransform,
+        IServiceProvider
     {
         #region lifecycle
 
@@ -26,6 +29,16 @@ namespace InteropDrawing.Transforms
 
         private readonly IPolygonDrawing2D _RenderTarget;        
         private readonly bool _DecomposePolygonOutlines;
+
+        #endregion
+
+        #region API
+
+        /// <inheritdoc/>
+        public object GetService(Type serviceType)
+        {
+            return this.TryGetService(serviceType, _RenderTarget);
+        }
 
         #endregion
 

@@ -73,24 +73,23 @@ namespace InteropBitmaps.Processing
 
             void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
             {
-                var tmps = new Pixel.QVectorBGRP();
-                var tmpd = new Pixel.QVectorBGRP();                
+                var srcQ = new Pixel.QVectorBGRP();
+                var dstQ = new Pixel.QVectorBGRP();                
 
                 for (int i = 0; i < dst.Length; ++i)
                 {
                     if (srcIterator.MoveNext(out int sx, out int sy))
                     {                        
-                        src.GetPixelZero(sx, sy).CopyTo(ref tmps);
+                        src.GetPixelZero(sx, sy).CopyTo(ref srcQ); // sample src
 
-                        if (tmps.A == 0) continue;
-                        tmps.A *= opacityQ;
-                        tmps.A /= FixedMath.UnitValue;
+                        if (srcQ.A == 0) continue;
+                        srcQ.ScaleAlpha(opacityQ);
 
-                        ref var dstx = ref dst[i];
+                        ref var dstI = ref dst[i];
 
-                        dstx.CopyTo(ref tmpd); // get
-                        tmpd.SourceOver(tmps); // compose
-                        dstx.SetValue(tmpd);
+                        dstI.CopyTo(ref dstQ);  // get
+                        dstQ.SourceOver(srcQ);  // compose
+                        dstI.SetValue(dstQ);    // set
                     }
                 }
             }

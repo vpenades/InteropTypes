@@ -11,7 +11,9 @@ using VECTOR3 = System.Numerics.Vector3;
 
 namespace InteropDrawing.Transforms
 {
-    public readonly struct Decompose3D : IDrawing3D
+    public readonly struct Decompose3D :
+        IDrawing3D,
+        IServiceProvider
     {
         #region lifecycle
         public Decompose3D(ISurfaceDrawing3D renderTarget)
@@ -38,6 +40,16 @@ namespace InteropDrawing.Transforms
         private readonly bool _DecomposeSurfaceOutlines;
         private readonly int _CylinderLod;
         private readonly int _SphereLod;
+
+        #endregion
+
+        #region API
+
+        /// <inheritdoc/>
+        public object GetService(Type serviceType)
+        {            
+            return this.TryGetService(serviceType, _RenderTarget);
+        }
 
         #endregion
 

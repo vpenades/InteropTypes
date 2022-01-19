@@ -372,7 +372,7 @@ namespace InteropDrawing
         {
             Style = color;
             Strength = strength;
-            Alignment = FontAlignStyle.None;
+            Alignment = FontAlignStyle.FlipAuto;
         }
 
         public FontStyle(ColorStyle color, float strength, FontAlignStyle align)
@@ -572,16 +572,21 @@ namespace InteropDrawing
     public enum FontAlignStyle
     {
         None,
-        FlipHorizontal = 1,
-        FlipVertical = 2,
+
+        /// <summary>
+        /// Flips the text based on the underlaying <see cref="IDrawing2D"/>'s <see cref="Quadrant"/>
+        /// </summary>
+        FlipAuto = 1,
+        FlipHorizontal = 2,
+        FlipVertical = 4,
 
         // to determine the text origin, calculate the points of the 4 corners, and
         // based on the values below, apply weights to the points.
 
-        DockLeft = 4,
-        DockRight = 8,
-        DockTop = 16,
-        DockBottom = 32,
+        DockLeft = 8,
+        DockRight = 16,
+        DockTop = 32,
+        DockBottom = 64,
         Center = DockLeft | DockRight | DockLeft | DockBottom
     }
 }

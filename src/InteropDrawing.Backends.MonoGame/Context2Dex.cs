@@ -52,7 +52,26 @@ namespace InteropDrawing.Backends
         private System.Numerics.Matrix3x2 _FinalForward;
         private System.Numerics.Matrix3x2 _FinalInverse;        
 
-        #endregion        
+        #endregion
+
+        #region service provider
+
+        /// <inheritdoc/>        
+        public object GetService(Type serviceType)
+        {
+            if (serviceType.IsAssignableFrom(this.GetType())) return this;
+            return null;
+        }
+
+        #endregion
+
+        #region API - Windows
+
+        public int PixelsWidth => _Device.Viewport.Width;
+
+        public int PixelsHeight => _Device.Viewport.Height;        
+
+        #endregion
 
         #region API       
 
@@ -78,10 +97,9 @@ namespace InteropDrawing.Backends
         public void Begin(int virtualWidth, int virtualHeight, bool keepAspect)
         {
             _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);
-            _FinalForward = _View * _Screen;
-            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
+            _UpdateMatrices();
 
-            _PrevState = GlobalState.GetCurrent(_Device);
+             _PrevState = GlobalState.GetCurrent(_Device);
             GlobalState.CreateSpriteState().ApplyTo(_Device);
 
             _VectorsBatch.SpriteCoordsBleed = 0;
@@ -91,8 +109,13 @@ namespace InteropDrawing.Backends
         public void SetCamera(System.Numerics.Matrix3x2 camera)
         {
             System.Numerics.Matrix3x2.Invert(camera, out _View);
+            _UpdateMatrices();
+        }
+
+        private void _UpdateMatrices()
+        {
             _FinalForward = _View * _Screen;
-            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
+            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);            
         }
 
         /// <inheritdoc />
@@ -194,8 +217,6 @@ namespace InteropDrawing.Backends
 
             _PrevState.ApplyTo(_Device);
         }
-
-        
 
         #endregion
     }

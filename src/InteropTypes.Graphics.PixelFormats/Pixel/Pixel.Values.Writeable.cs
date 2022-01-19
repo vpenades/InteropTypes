@@ -59,10 +59,10 @@ namespace InteropBitmaps
                 public void SetValue(QVectorBGRP value)
                 {
                     if (value.A == 0) { this = default; return; }
-                    var rcpa = FixedMath.GetUnboundedReciprocal8(value.A);
-                    B = FixedMath.To255(value.B, rcpa);
-                    G = FixedMath.To255(value.G, rcpa);
-                    R = FixedMath.To255(value.R, rcpa);
+                    var rcpa = FixedMathCC8.ToReciprocalByte(value.A);
+                    B = FixedMathCC8.ToByte(value.B, rcpa);
+                    G = FixedMathCC8.ToByte(value.G, rcpa);
+                    R = FixedMathCC8.ToByte(value.R, rcpa);
                     A = value.AQ8;
                 }
             }
@@ -82,10 +82,10 @@ namespace InteropBitmaps
                 {
                     if (value.A == 0) { this = default; return; }
 
-                    var rcpa = FixedMath.GetUnboundedReciprocal8(value.A);
-                    B = FixedMath.To255(value.B, rcpa);
-                    G = FixedMath.To255(value.G, rcpa);
-                    R = FixedMath.To255(value.R, rcpa);
+                    var rcpa = FixedMathCC8.ToReciprocalByte(value.A);
+                    B = FixedMathCC8.ToByte(value.B, rcpa);
+                    G = FixedMathCC8.ToByte(value.G, rcpa);
+                    R = FixedMathCC8.ToByte(value.R, rcpa);
                     A = value.AQ8;
                 }
             }
@@ -105,10 +105,10 @@ namespace InteropBitmaps
                 {
                     if (value.A == 0) { this = default; return; }
 
-                    var rcpa = FixedMath.GetUnboundedReciprocal8(value.A);
-                    B = FixedMath.To255(value.B, rcpa);
-                    G = FixedMath.To255(value.G, rcpa);
-                    R = FixedMath.To255(value.R, rcpa);
+                    var rcpa = FixedMathCC8.ToReciprocalByte(value.A);
+                    B = FixedMathCC8.ToByte(value.B, rcpa);
+                    G = FixedMathCC8.ToByte(value.G, rcpa);
+                    R = FixedMathCC8.ToByte(value.R, rcpa);
                     A = value.AQ8;
                 }
             }

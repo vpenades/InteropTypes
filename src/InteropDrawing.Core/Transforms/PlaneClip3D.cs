@@ -5,7 +5,10 @@ using System.Text;
 
 namespace InteropDrawing.Transforms
 {
-    public class PlaneClip3D : IDrawing3D
+    public class PlaneClip3D :
+        IDrawing3D,
+        IServiceProvider
+
     {
         #region lifecycle
 
@@ -28,6 +31,13 @@ namespace InteropDrawing.Transforms
         #endregion
 
         #region interface
+
+        /// <inheritdoc/>
+        public object GetService(Type serviceType)
+        {
+            if (serviceType == typeof(Decompose3D)) return _DecomposedTarget;
+            return this.TryGetService(serviceType, _Target);
+        }
 
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
         {

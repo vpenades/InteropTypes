@@ -45,6 +45,8 @@ namespace InteropDrawing
         void DrawSphere(POINT3 center, SCALAR diameter, ColorStyle style);
     }
 
+    public interface IScene3D : IDrawing3D { }
+
 
     public interface IDrawingContext3D : IDrawing3D, IDisposable { }
 
