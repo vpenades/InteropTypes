@@ -238,10 +238,10 @@ namespace InteropBitmaps
                 }
             }
 
-            public readonly Byte PreR;
-            public readonly Byte PreG;
-            public readonly Byte PreB;
-            public readonly Byte A;
+            public Byte PreR;
+            public Byte PreG;
+            public Byte PreB;
+            public Byte A;
 
             public Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
             public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
@@ -306,10 +306,10 @@ namespace InteropBitmaps
                 }
             }
 
-            public readonly Byte PreB;
-            public readonly Byte PreG;
-            public readonly Byte PreR;
-            public readonly Byte A;
+            public Byte PreB;
+            public Byte PreG;
+            public Byte PreR;
+            public Byte A;
 
             public Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
             public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);

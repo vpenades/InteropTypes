@@ -53,13 +53,13 @@ namespace InteropBitmaps.Processing
 
             switch(typeInfo.GetCode())
             {
-                case Pixel.BGR24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGR24.Writeable>(), src, srcXform, opacity); break;
-                case Pixel.RGB24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGB24.Writeable>(), src, srcXform, opacity); break;
-                case Pixel.BGRA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRA32.Writeable>(), src, srcXform, opacity); break;
-                case Pixel.RGBA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBA32.Writeable>(), src, srcXform, opacity); break;
-                // case Pixel.ARGB32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.ARGB32.Writeable>(), src, srcXform, opacity); break;
-                case Pixel.BGRP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRP32.Writeable>(), src, srcXform, opacity); break;
-                case Pixel.RGBP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBP32.Writeable>(), src, srcXform, opacity); break;
+                case Pixel.BGR24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGR24>(), src, srcXform, opacity); break;
+                case Pixel.RGB24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGB24>(), src, srcXform, opacity); break;
+                case Pixel.BGRA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRA32>(), src, srcXform, opacity); break;
+                case Pixel.RGBA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBA32>(), src, srcXform, opacity); break;
+                // case Pixel.ARGB32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.ARGB32>(), src, srcXform, opacity); break;
+                case Pixel.BGRP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRP32>(), src, srcXform, opacity); break;
+                case Pixel.RGBP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBP32>(), src, srcXform, opacity); break;
                 default:throw new NotImplementedException($"{typeof(TDstPixel)} not supported as target of ComposePixelsNearest");
 
             }

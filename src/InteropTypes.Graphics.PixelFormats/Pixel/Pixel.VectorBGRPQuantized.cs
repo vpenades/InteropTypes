@@ -21,17 +21,7 @@ namespace InteropBitmaps
             public BGR24 CreateFrom(in QVectorBGR value) { return new BGR24(value.RQ8, value.GQ8, value.BQ8); }
 
             [MethodImpl(_PrivateConstants.Fastest)]
-            public BGR24 CreateFrom(in QVectorBGRP value) { return new BGR24(value.PreRQ8, value.PreGQ8, value.PreBQ8); }
-
-            
-            partial struct Writeable : ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>
-            {
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGR value) { value.SetValue(this); }
-
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-            }
+            public BGR24 CreateFrom(in QVectorBGRP value) { return new BGR24(value.PreRQ8, value.PreGQ8, value.PreBQ8); }            
         }
 
         partial struct RGB24 :
@@ -49,15 +39,6 @@ namespace InteropBitmaps
 
             [MethodImpl(_PrivateConstants.Fastest)]
             public RGB24 CreateFrom(in QVectorBGRP value) { return new RGB24(value.PreRQ8, value.PreGQ8, value.PreBQ8); }
-
-            partial struct Writeable : ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>
-            {
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGR value) { value.SetValue(this); }
-
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-            }
         }
 
         partial struct BGRP32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<BGRP32>
@@ -66,13 +47,7 @@ namespace InteropBitmaps
             public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
 
             [MethodImpl(_PrivateConstants.Fastest)]
-            public BGRP32 CreateFrom(in QVectorBGRP value) { return new BGRP32(value.PreRQ8, value.PreGQ8, value.PreBQ8, value.AQ8); }
-
-            partial struct Writeable : ICopyValueTo<QVectorBGRP>
-            {
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-            }
+            public BGRP32 CreateFrom(in QVectorBGRP value) { return new BGRP32(value.PreRQ8, value.PreGQ8, value.PreBQ8, value.AQ8); }            
         }
 
         partial struct RGBP32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<RGBP32>
@@ -81,13 +56,7 @@ namespace InteropBitmaps
             public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
 
             [MethodImpl(_PrivateConstants.Fastest)]
-            public RGBP32 CreateFrom(in QVectorBGRP value) { return new RGBP32(value.PreRQ8, value.PreGQ8, value.PreBQ8, value.AQ8); }
-
-            partial struct Writeable : ICopyValueTo<QVectorBGRP>
-            {
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-            }
+            public RGBP32 CreateFrom(in QVectorBGRP value) { return new RGBP32(value.PreRQ8, value.PreGQ8, value.PreBQ8, value.AQ8); }            
         }
 
         partial struct BGRA32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<BGRA32>
@@ -106,13 +75,7 @@ namespace InteropBitmaps
                     FixedMathCC8.ToByte(value.G, rcpa),
                     FixedMathCC8.ToByte(value.B, rcpa),
                     value.AQ8);                
-            }
-
-            partial struct Writeable : ICopyValueTo<QVectorBGRP>
-            {
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-            }
+            }            
         }
 
         partial struct RGBA32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<RGBA32>
@@ -131,13 +94,7 @@ namespace InteropBitmaps
                     FixedMathCC8.ToByte(value.G, rcpa),
                     FixedMathCC8.ToByte(value.B, rcpa),
                     value.AQ8);
-            }
-
-            partial struct Writeable : ICopyValueTo<QVectorBGRP>
-            {
-                [MethodImpl(_PrivateConstants.Fastest)]
-                public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-            }
+            }            
         }
 
         public struct QVectorBGR :
@@ -188,21 +145,7 @@ namespace InteropBitmaps
                 B = FixedMathCC8.FromByte(value.B);
                 G = FixedMathCC8.FromByte(value.G);
                 R = FixedMathCC8.FromByte(value.R);
-            }
-
-            public void SetValue(RGB24.Writeable value)
-            {
-                B = FixedMathCC8.FromByte(value.B);
-                G = FixedMathCC8.FromByte(value.G);
-                R = FixedMathCC8.FromByte(value.R);
-            }
-
-            public void SetValue(BGR24.Writeable value)
-            {
-                B = FixedMathCC8.FromByte(value.B);
-                G = FixedMathCC8.FromByte(value.G);
-                R = FixedMathCC8.FromByte(value.R);
-            }
+            }            
 
             [MethodImpl(_PrivateConstants.Fastest)]
             public static void Lerp(BGR24 left, BGR24 right, uint rx, out QVectorBGR result)
@@ -430,57 +373,7 @@ namespace InteropBitmaps
                 B = (FixedMathCC8.FromByte(value.B) * A) >> FixedMathCC8.UnitShift;
                 G = (FixedMathCC8.FromByte(value.G) * A) >> FixedMathCC8.UnitShift;
                 R = (FixedMathCC8.FromByte(value.R) * A) >> FixedMathCC8.UnitShift;
-            }
-
-            public void SetValue(RGB24.Writeable value)
-            {
-                A = FixedMathCC8.UnitValue;
-                B = FixedMathCC8.FromByte(value.B);
-                G = FixedMathCC8.FromByte(value.G);
-                R = FixedMathCC8.FromByte(value.R);
-            }
-
-            public void SetValue(BGR24.Writeable value)
-            {
-                A = FixedMathCC8.UnitValue;
-                B = FixedMathCC8.FromByte(value.B);
-                G = FixedMathCC8.FromByte(value.G);
-                R = FixedMathCC8.FromByte(value.R);
-            }
-
-            public void SetValue(RGBP32.Writeable value)
-            {
-                B = FixedMathCC8.FromByte(value.B);
-                G = FixedMathCC8.FromByte(value.G);
-                R = FixedMathCC8.FromByte(value.R);
-                A = FixedMathCC8.FromByte(value.A);
-            }
-
-            public void SetValue(BGRP32.Writeable value)
-            {
-                B = FixedMathCC8.FromByte(value.B);
-                G = FixedMathCC8.FromByte(value.G);
-                R = FixedMathCC8.FromByte(value.R);
-                A = FixedMathCC8.FromByte(value.A);
-            }
-
-            public void SetValue(RGBA32.Writeable value)
-            {
-                if (value.A == 0) { this = default; return; }
-                A = FixedMathCC8.FromByte(value.A);
-                B = (FixedMathCC8.FromByte(value.B) * A) >> FixedMathCC8.UnitShift;
-                G = (FixedMathCC8.FromByte(value.G) * A) >> FixedMathCC8.UnitShift;
-                R = (FixedMathCC8.FromByte(value.R) * A) >> FixedMathCC8.UnitShift;
-            }
-
-            public void SetValue(BGRA32.Writeable value)
-            {
-                if (value.A == 0) { this = default; return; }
-                A = FixedMathCC8.FromByte(value.A);
-                B = (FixedMathCC8.FromByte(value.B) * A) >> FixedMathCC8.UnitShift;
-                G = (FixedMathCC8.FromByte(value.G) * A) >> FixedMathCC8.UnitShift;
-                R = (FixedMathCC8.FromByte(value.R) * A) >> FixedMathCC8.UnitShift;
-            }
+            }            
 
 
             [MethodImpl(_PrivateConstants.Fastest)]

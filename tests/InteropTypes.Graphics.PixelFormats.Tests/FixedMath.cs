@@ -202,7 +202,7 @@ namespace InteropBitmaps
                 Assert.AreEqual(q1.GQ8, rp.G, 255 - rp.A);
                 Assert.AreEqual(q1.BQ8, rp.B, 255 - rp.A);
 
-                var rgba = default(Pixel.BGRA32.Writeable); rgba.SetValue(q1);
+                var rgba = default(Pixel.BGRA32); rgba.SetValue(q1);
                 Assert.AreEqual(rgba.A, rp.A);
                 Assert.AreEqual(rgba.R, rp.R, 255 - rp.A);
                 Assert.AreEqual(rgba.G, rp.G, 255 - rp.A);
