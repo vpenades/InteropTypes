@@ -14,7 +14,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{A}")]
-        public readonly partial struct Alpha8 
+        public partial struct Alpha8 
         {
             #region constructors
             public static implicit operator Alpha8(Byte a) { return new Alpha8(a); }
@@ -29,7 +29,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly Byte A;
+            public Byte A;
 
             #endregion
         }
@@ -39,7 +39,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{L}")]
-        public readonly partial struct Luminance8
+        public partial struct Luminance8
         {
             #region constants
 
@@ -83,7 +83,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly Byte L;
+            public Byte L;
 
             #endregion
         }
@@ -93,7 +93,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{L}")]
-        public readonly partial struct Luminance16
+        public partial struct Luminance16
         {
             #region constants            
 
@@ -135,7 +135,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly UInt16 L;
+            public UInt16 L;
 
             #endregion            
         }
@@ -145,7 +145,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{L}")]
-        public readonly partial struct Luminance32F
+        public partial struct Luminance32F
         {
             #region constants                        
 
@@ -174,7 +174,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly float L;
+            public float L;
 
             #endregion            
         }
@@ -184,7 +184,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct BGR565
+        public partial struct BGR565
         {
             #region constructors
 
@@ -217,7 +217,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly UInt16 BGR;
+            public UInt16 BGR;
 
             public int R { get { var p = (BGR >> 11) & 0x1f; return (p * 8) | (p >> 2); } }
             public int G { get { var p = (BGR >> 5) & 0x3f; return (p * 4) | (p >> 4); } }
@@ -231,7 +231,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA5551
+        public partial struct BGRA5551
         {
             #region constructors
 
@@ -270,7 +270,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly UInt16 BGRA;
+            public UInt16 BGRA;
 
             public int R { get { var p = (BGRA >> 10) & 0x1f; return p * 8 + (p >> 2); } }
             public int G { get { var p = (BGRA >> 5) & 0x1f; return p * 8 + (p >> 2); } }
@@ -291,7 +291,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA4444
+        public partial struct BGRA4444
         {
             #region constructors
 
@@ -325,7 +325,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly UInt16 BGRA;
+            public UInt16 BGRA;
 
             public int A => ((BGRA >> 12) & 0xf) * 17;
             public int R => ((BGRA >> 8) & 0xf) * 17;
@@ -346,7 +346,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA32
+        public partial struct BGRA32
         {
             #region constructors
 
@@ -448,10 +448,10 @@ namespace InteropBitmaps
                 }
             }
 
-            public readonly Byte B;
-            public readonly Byte G;
-            public readonly Byte R;
-            public readonly Byte A;            
+            public Byte B;
+            public Byte G;
+            public Byte R;
+            public Byte A;            
 
             #endregion
         }
@@ -461,7 +461,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct RGBA32
+        public partial struct RGBA32
         {
             #region constructors
 
@@ -508,10 +508,10 @@ namespace InteropBitmaps
                 }
             }
 
-            public readonly Byte R;
-            public readonly Byte G;
-            public readonly Byte B;
-            public readonly Byte A;            
+            public Byte R;
+            public Byte G;
+            public Byte B;
+            public Byte A;            
 
             #endregion
         }
@@ -521,7 +521,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct ARGB32
+        public partial struct ARGB32
         {
             #region constructors
 
@@ -565,10 +565,10 @@ namespace InteropBitmaps
                 }
             }
 
-            public readonly Byte A;
-            public readonly Byte R;
-            public readonly Byte G;
-            public readonly Byte B;            
+            public Byte A;
+            public Byte R;
+            public Byte G;
+            public Byte B;            
 
             #endregion
         }
@@ -578,7 +578,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct BGR24
+        public partial struct BGR24
         {
             #region constructors
 
@@ -620,9 +620,9 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly Byte B;
-            public readonly Byte G;
-            public readonly Byte R;            
+            public Byte B;
+            public Byte G;
+            public Byte R;            
 
             #endregion
         }
@@ -632,7 +632,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct RGB24
+        public partial struct RGB24
         {
             #region constructors
 
@@ -667,9 +667,9 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly Byte R;
-            public readonly Byte G;
-            public readonly Byte B;            
+            public Byte R;
+            public Byte G;
+            public Byte B;            
 
             #endregion
         }
@@ -679,7 +679,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct RGB96F
+        public partial struct RGB96F
         {
             #region constructors
             public RGB96F(in RGBA128F color) { RGB = color.RGB; }
@@ -691,7 +691,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly XYZ RGB;
+            public XYZ RGB;
             public Single R => RGB.X;
             public Single G => RGB.Y;
             public Single B => RGB.Z;            
@@ -704,7 +704,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
-        public readonly partial struct BGR96F
+        public partial struct BGR96F
         {
             #region constructors
 
@@ -717,7 +717,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly XYZ BGR;
+            public XYZ BGR;
 
             public Single B => BGR.X;
             public Single G => BGR.Y;
@@ -731,7 +731,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct BGRA128F
+        public partial struct BGRA128F
         {
             #region constructors
             public BGRA128F(BGRA32 color) { BGRA = new XYZA(color.B, color.G, color.R, color.A) / 255f; }
@@ -742,7 +742,7 @@ namespace InteropBitmaps
 
             #region data
 
-            public readonly XYZA BGRA;
+            public XYZA BGRA;
             public Single B => BGRA.X;            
             public Single G => BGRA.Y;
             public Single R => BGRA.Z;
@@ -756,7 +756,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct RGBA128F
+        public partial struct RGBA128F
         {
             #region constructors
             public RGBA128F(Alpha8 alpha) : this() { RGBA = new XYZA(0, 0, 0, alpha.A) / 255f; }
@@ -786,22 +786,22 @@ namespace InteropBitmaps
             #region data
 
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly XYZA RGBA;
+            public XYZA RGBA;
 
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly XYZ RGB;
+            public XYZ RGB;
 
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Single R;
+            public Single R;
             
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public readonly Single G;
+            public Single G;
 
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public readonly Single B;
+            public Single B;
 
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public readonly Single A;            
+            public Single A;            
 
             #endregion
 

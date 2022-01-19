@@ -187,7 +187,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
-        public readonly partial struct RGBP32
+        public partial struct RGBP32
         {
             #region constructors
 
@@ -255,7 +255,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
-        public readonly partial struct BGRP32
+        public partial struct BGRP32
         {
             #region constructors
 
@@ -406,7 +406,7 @@ namespace InteropBitmaps
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
-        public readonly partial struct RGBP128F
+        public partial struct RGBP128F
         {
             #region RGB constructors            
 
@@ -490,22 +490,22 @@ namespace InteropBitmaps
             #region data
 
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly XYZA RGBP;
+            public XYZA RGBP;
 
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly XYZ PreRGB;
+            public XYZ PreRGB;
 
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public readonly Single PreR;
+            public Single PreR;
 
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public readonly Single PreG;
+            public Single PreG;
 
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public readonly Single PreB;
+            public Single PreB;
 
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public readonly Single A;
+            public Single A;
 
             public XYZ RGB => A == 0 ? XYZ.Zero : PreRGB / A;
 
