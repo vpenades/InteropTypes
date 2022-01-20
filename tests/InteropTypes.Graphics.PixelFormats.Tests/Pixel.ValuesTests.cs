@@ -41,7 +41,7 @@ namespace InteropBitmaps
         }
 
         private static unsafe void CheckImageSharp<TPixel,TRefPixel>()
-            where TPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>
+            where TPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>
             where TRefPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TRefPixel>
         {
             Assert.AreEqual(sizeof(TRefPixel), sizeof(TPixel));
@@ -53,7 +53,7 @@ namespace InteropBitmaps
             var cr = new SixLabors.ImageSharp.PixelFormats.Rgba32(255, 127, 63, 31);
             pixRef[0].FromRgba32(cr);
 
-            var cv = pixVal[0].ToPixel();
+            var cv = pixVal[0].GetValue();
             var f = PixelFormat.TryIdentifyPixel<TPixel>();
 
             TestContext.WriteLine($"{cv.R} {cv.G} {cv.B} {cv.A}");

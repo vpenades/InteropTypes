@@ -1,0 +1,27 @@
+﻿// GENERATED CODE: using Pixel.Constants.t4
+<#
+
+IReadOnlyList<string> PixelFormatsAllNames = new string[]
+	{
+	"Alpha8",
+	"Luminance8", "Luminance16", "Luminance32F",
+	"BGR565", "BGRA5551", "BGRA4444",
+	"BGR24","RGB24",
+	"BGRA32", "RGBA32", "ARGB32",
+	"RGBP32","BGRP32",
+	"RGB96F", "BGR96F",
+	"BGRA128F", "RGBA128F",
+	"RGBP128F"
+	};
+
+	var __digits = new char[] { '0','1','2','3','4','5','6','7','8','9'};
+
+    (string Channels, string Size) GetPixelFormatChannels(string format)
+    {		
+        var idx = format.IndexOfAny(__digits);
+        var a = format.Substring(0,idx);
+        var b = format.Substring(idx);
+        return(a,b);            
+    }
+
+#>

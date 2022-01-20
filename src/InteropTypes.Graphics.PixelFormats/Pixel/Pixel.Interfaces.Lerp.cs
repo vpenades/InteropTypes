@@ -191,7 +191,7 @@ namespace InteropBitmaps
 
             [MethodImpl(_PrivateConstants.Fastest)]
             public static TDst Lerp<TDst>(BGR24 left, BGR24 right, int rx)
-                where TDst: unmanaged, IPixelFactory<BGRA32, TDst>
+                where TDst: unmanaged, IValueSetter<BGRA32>
             {
 
                 // calculate quantized weights
@@ -200,7 +200,10 @@ namespace InteropBitmaps
                 var R = (left.R * lx + right.R * rx) / 16384;
                 var G = (left.G * lx + right.G * rx) / 16384;
                 var B = (left.B * lx + right.B * rx) / 16384;
-                return default(TDst).From( new BGRA32(R, G, B));
+
+                var dst = default(TDst);
+                dst.SetValue(new BGRA32(R, G, B));
+                return dst;
             }
 
             /// <inheritdoc/>

@@ -1,0 +1,485 @@
+﻿<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#@ include file="..\\CodeGenUtils.t4" #>
+<#@ include file="Pixel.Constants.t4" #>
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Numerics;
+
+namespace InteropBitmaps
+{
+
+    partial class Pixel    
+    {        
+
+<# //-------------------------------------------------------------------------------------------------------------------
+    
+
+    string _WriteCommonInterface()
+    {
+        string iface ="_IAllSetters";
+
+        var all = PixelFormatsAllNames.Select(item => $"IValueSetter<{item}>" ).ToArray();
+        _writeInternalInterfaceBegin(iface, all);        
+        _writeEnd();
+        return iface;        
+    }
+
+    string __selfType;
+
+    void _WriteSetterSelf(string type)
+    {
+        __selfType = type;
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({type} value)");
+        _writeOpenBlock();
+        WriteLine("this = value;");        
+        _writeCloseBlock();
+    }
+
+    void _WriteSetterNotImpl(string srcType)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();
+        WriteLine($"throw new NotImplementedException(\"Setting {srcType} not implemented.\");");
+        _writeCloseBlock();
+    }    
+
+    void _WriteSetterNotImplAll()
+    {
+        foreach(var fmt in PixelFormatsAllNames)
+        {
+            _WriteSetterNotImpl(fmt);
+        }
+    }    
+
+    void __WriteComponent(string left, string right)
+    {
+        if (right.Contains("@")) right = right.Replace("@","value."); 
+        else if (!Char.IsNumber(right[0])) right = "value." + right;                
+
+        WriteLine($"this.{left} = {right};");
+    }
+
+    void _WriteSetterLines(string srcType, params string[] lines)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();        
+        foreach(var l in lines) WriteLine(l);
+        _writeCloseBlock();
+    }
+
+    void _WriteSetterXYZ(string srcType, (string x, string y, string z) dst, (string x, string y, string z) src, params string[] presuf)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();        
+        foreach(var s in presuf.Where(item => item.StartsWith("S=>"))) WriteLine(s.Substring(3).Trim());
+        __WriteComponent(dst.x, src.x);
+        __WriteComponent(dst.y, src.y);
+        __WriteComponent(dst.z, src.z);
+        foreach(var s in presuf.Where(item => item.StartsWith("E=>"))) WriteLine(s.Substring(3).Trim());
+        _writeCloseBlock();
+    }    
+
+    void _WriteSetterXYZW(string srcType,(string x, string y, string z, string w) dst, (string x, string y, string z, string w) src, params string[] presuf)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();
+        foreach(var s in presuf.Where(item => item.StartsWith("S=>"))) WriteLine(s.Substring(3).Trim());
+        __WriteComponent(dst.x, src.x);
+        __WriteComponent(dst.y, src.y);
+        __WriteComponent(dst.z, src.z);
+        __WriteComponent(dst.w, src.w);
+        foreach(var s in presuf.Where(item => item.StartsWith("E=>"))) WriteLine(s.Substring(3).Trim());        
+        _writeCloseBlock();
+    }  
+
+    void _WriteSetterCmps(string srcType, params string[] components)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();
+        for(int i=0; i < components.Length; i+=2)
+        {            
+            __WriteComponent(components[i+0], components[i+1]);
+        }
+        _writeCloseBlock();
+    }    
+
+    void _WriteSetterUnpremul32(string srcType, params string[] components)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();
+        WriteLine("if (value.A == 0) this = default;");
+        WriteLine("else");
+        _writeOpenBlock();
+
+        WriteLine("uint rcpA = (255 * 256) / (uint)value.A;");
+
+        foreach(var c in components)
+        {
+            if (c == "A") WriteLine("A = value.A;");
+            else WriteLine($"{c} = (Byte)Math.Min(255, (uint)value.Pre{c} * rcpA / 256);");
+        }        
+
+        _writeCloseBlock();
+        _writeCloseBlock();
+    }
+
+//-------------------------------------------------------------------------------------------------------------------
+
+        var commonInterface = _WriteCommonInterface();
+
+        WriteLine("");
+        WriteLine("");
+        WriteLine("");
+
+        var remainingNotImplemented = PixelFormatsAllNames.ToList();
+
+        remainingNotImplemented.Remove("Alpha8");
+        _writeStructBegin("Alpha8", commonInterface);
+        _WriteSetterSelf("Alpha8");
+
+        _WriteSetterCmps("Alpha8","A","A");
+        _WriteSetterCmps("Luminance8","A","255");
+        _WriteSetterCmps("Luminance16","A","255");
+        _WriteSetterCmps("Luminance32F","A","255");
+        _WriteSetterCmps("BGR565","A","255");
+        _WriteSetterCmps("BGRA5551","A","(Byte)@A");
+        _WriteSetterCmps("BGRA4444","A","(Byte)@A");
+        _WriteSetterCmps("BGR24","A","255");
+        _WriteSetterCmps("RGB24","A","255");
+        _WriteSetterCmps("BGRA32","A","A");
+        _WriteSetterCmps("RGBA32","A","A");
+        _WriteSetterCmps("ARGB32","A","A");
+        _WriteSetterCmps("BGRP32","A","A");
+        _WriteSetterCmps("RGBP32","A","A");
+        _WriteSetterCmps("BGR96F","A","255");
+        _WriteSetterCmps("RGB96F","A","255");
+        _WriteSetterCmps("BGRA128F","A","(Byte)(@A*255f)");
+        _WriteSetterCmps("RGBA128F","A","(Byte)(@A*255f)");        
+        _WriteSetterCmps("RGBP128F","A","(Byte)(@A*255f)");
+        _writeEnd();
+
+
+
+        remainingNotImplemented.Remove("Luminance8");        
+        _writeStructBegin("Luminance8", commonInterface);
+        _WriteSetterSelf("Luminance8");
+
+        _WriteSetterCmps("Alpha8","L","A");
+        _WriteSetterCmps("Luminance8","L","L");
+        _WriteSetterCmps("Luminance16","L","(Byte)(@L >> 8)");
+        _WriteSetterCmps("Luminance32F","L","(Byte)(@L*255f)");
+        _WriteSetterCmps("BGR565","L","_FromRGB((uint)@R,(uint)@G,(uint)@B)");
+        _WriteSetterCmps("BGRA5551","L","(Byte)@A");
+        _WriteSetterCmps("BGRA4444","L","(Byte)@A");
+        _WriteSetterCmps("BGR24","L","_FromRGB((uint)@R,(uint)@G,(uint)@B)");
+        _WriteSetterCmps("RGB24","L","_FromRGB((uint)@R,(uint)@G,(uint)@B)");
+        _WriteSetterCmps("BGRA32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGBA32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("ARGB32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("BGRP32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGBP32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("BGR96F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGB96F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("BGRA128F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGBA128F","L","_FromRGB(@R,@G,@B)");        
+        _WriteSetterCmps("RGBP128F","L","_FromRGB(@R,@G,@B)");
+        _writeEnd();        
+
+        foreach(var dstType in new [] {"BGR24", "RGB24"})        
+        {
+            remainingNotImplemented.Remove(dstType);            
+
+            var dst = ("B","G","R");
+            var src = ("0","0","0");
+
+            _writeStructBegin(dstType, commonInterface);
+            _WriteSetterSelf(dstType);
+
+            _WriteSetterXYZ("Alpha8", dst, ("0","0","0") );
+            _WriteSetterXYZ("Luminance8", dst, ("L","L","L") );
+            _WriteSetterNotImpl("Luminance16");
+            _WriteSetterNotImpl("Luminance32F");
+
+            src = ("(Byte)@B", "(Byte)@G", "(Byte)@R");
+            _WriteSetterXYZ("BGR565", dst, src );
+            _WriteSetterXYZ("BGRA5551", dst, src );
+            _WriteSetterXYZ("BGRA4444", dst, src );
+
+            src = ("B", "G", "R");
+            _WriteSetterXYZ("BGR24", dst, src );
+            _WriteSetterXYZ("RGB24", dst, src );
+            _WriteSetterXYZ("BGRA32", dst, src );
+            _WriteSetterXYZ("RGBA32", dst, src );
+            _WriteSetterXYZ("ARGB32", dst, src );
+
+            _WriteSetterUnpremul32("BGRP32", "B", "G", "R");
+            _WriteSetterUnpremul32("RGBP32", "R", "G", "B");
+
+            src = ("(Byte)(@B*255f)","(Byte)(@G*255f)","(Byte)(@R*255f)");
+            _WriteSetterXYZ("BGR96F",  dst, src);
+            _WriteSetterXYZ("RGB96F",  dst, src );
+            _WriteSetterXYZ("BGRA128F",dst, src );
+            _WriteSetterXYZ("RGBA128F",dst, src );        
+            _WriteSetterXYZ("RGBP128F",dst, src );
+            _writeEnd();
+        }
+
+        foreach(var dstType in new [] {"BGRA32", "RGBA32", "ARGB32"})
+        {
+            remainingNotImplemented.Remove(dstType);
+
+            var dst = ("B","G","R","A");
+            var src =("0","0","0","0");
+
+            _writeStructBegin(dstType, commonInterface);
+            _WriteSetterSelf(dstType);
+
+            _WriteSetterXYZW("Alpha8", dst, ("0","0","0","A") );
+            _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255"));
+            _WriteSetterNotImpl("Luminance16");
+            _WriteSetterNotImpl("Luminance32F");
+            _WriteSetterXYZW("BGR565", dst, ("(Byte)@B","(Byte)@G","(Byte)@R", "255") );
+
+            src = ("(Byte)@B","(Byte)@G","(Byte)@R", "(Byte)@A");
+            _WriteSetterXYZW("BGRA5551", dst, src );
+            _WriteSetterXYZW("BGRA4444",dst, src );
+
+            src = ("B", "G", "R", "255");
+            _WriteSetterXYZW("BGR24", dst, src );
+            _WriteSetterXYZW("RGB24", dst, src );
+
+            src = ("B", "G", "R", "A");
+            _WriteSetterXYZW("BGRA32", dst, src );
+            _WriteSetterXYZW("RGBA32", dst, src );
+            _WriteSetterXYZW("ARGB32", dst, src );
+           
+
+            src = ("(Byte)@B", "(Byte)@G", "(Byte)@R", "255");
+            _WriteSetterXYZW("BGR96F", dst, src, "S=> value.BGR *= 255f; // shift up");
+            _WriteSetterXYZW("RGB96F", dst, src, "S=> value.RGB *= 255f; // shift up");
+
+            src = ("(Byte)@B", "(Byte)@G", "(Byte)@R", "(Byte)@A");
+            _WriteSetterXYZW("BGRA128F", dst, src, "S=> value.BGRA *= 255f; // shift up");
+            _WriteSetterXYZW("RGBA128F", dst, src, "S=> value.RGBA *= 255f; // shift up");        
+
+            _WriteSetterUnpremul32("BGRP32","B", "G", "R", "A");
+            _WriteSetterUnpremul32("RGBP32","B", "G", "R", "A");
+
+            // _WriteSetterXYZW("RGBP128F", dst, src);
+            _WriteSetterNotImpl("RGBP128F");
+
+            _writeEnd();
+        }
+
+        foreach(var dstType in new [] {"BGRP32", "RGBP32"})
+        {
+            remainingNotImplemented.Remove(dstType);
+
+            var dst = ("PreB","PreG","PreR","A");
+            var src =("0","0","0","0");
+
+            _writeStructBegin(dstType, commonInterface);
+            _WriteSetterSelf(dstType);
+
+            _WriteSetterXYZW("Alpha8", dst, ("0","0","0","A") );
+            _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255"));
+            _WriteSetterNotImpl("Luminance16");
+            _WriteSetterNotImpl("Luminance32F");
+            _WriteSetterXYZW("BGR565", dst, ("(Byte)@B","(Byte)@G","(Byte)@R", "255") );
+
+            src = ("B", "G", "R", "255");
+            _WriteSetterXYZW("BGR24", dst, src );
+            _WriteSetterXYZW("RGB24", dst, src );
+
+            src = ("(Byte)(@B*255f)", "(Byte)(@G*255f)", "(Byte)(@R*255f)", "255");
+            _WriteSetterXYZW("BGR96F", dst, src);
+            _WriteSetterXYZW("RGB96F", dst, src);
+
+            // with premul
+
+            _writeComment("Premultiplies a component by a shifted alpha.");
+            _writeFastestMethodAttribute();
+            WriteLine("private static Byte __Premul(uint vv, uint aa) { vv |= vv << 8; return (Byte)((vv * aa) >> 24); }");            
+
+            var premulPrefix = "S=> var aa = (uint)value.A; aa |= aa << 8;";
+
+            src = ("__Premul((uint)@B, aa)","__Premul((uint)@G, aa)","__Premul((uint)@R, aa)","(Byte)@A");
+            _WriteSetterXYZW("BGRA5551", dst, src ,premulPrefix);
+            _WriteSetterXYZW("BGRA4444",dst, src ,premulPrefix);
+            _WriteSetterXYZW("BGRA32", dst, src ,premulPrefix);
+            _WriteSetterXYZW("RGBA32", dst, src ,premulPrefix);
+            _WriteSetterXYZW("ARGB32", dst, src ,premulPrefix);
+            _WriteSetterXYZW("BGRP32", dst, dst);
+            _WriteSetterXYZW("RGBP32", dst, dst);            
+
+            src = ("(Byte)@B", "(Byte)@G", "(Byte)@R","(Byte)@A");
+            _WriteSetterXYZW("BGRA128F",dst,src, "S=> value.BGR *= value.A; // premul", "S=> value.BGRA *= 255f; // shift up");
+            _WriteSetterXYZW("RGBA128F",dst,src, "S=> value.RGB *= value.A; // premul", "S=> value.RGBA *= 255f; // shift up");
+
+            src = ("(Byte)@B", "(Byte)@G", "(Byte)@R","(Byte)@A");
+            _WriteSetterXYZW("RGBP128F", dst, src, "S=> value.RGBP *= 255f; // shift up");
+
+            _writeEnd();
+        }
+
+        foreach(var dstType in new [] {"BGR96F", "RGB96F"})        
+        {
+            remainingNotImplemented.Remove(dstType);            
+
+            var dst = ("B","G","R");
+            var src = ("0","0","0");
+            
+            var suffix = $"E=> {dstType.Substring(0,3)} *= __RCP255;";
+
+            _writeStructBegin(dstType, commonInterface);
+
+            WriteLine("const float __RCP255 = 1f / 255f;");
+
+            _WriteSetterSelf(dstType);
+
+            _WriteSetterXYZ("Alpha8", dst, ("0","0","0"));
+            _WriteSetterXYZ("Luminance8", dst, ("L","L","L") , suffix);
+            _WriteSetterNotImpl("Luminance16");
+            _WriteSetterXYZ("Luminance32F", dst, ("L","L","L") );
+
+            src = ("B", "G", "R");
+            _WriteSetterXYZ("BGR565", dst, src , suffix);
+            _WriteSetterXYZ("BGRA5551", dst, src ,suffix);
+            _WriteSetterXYZ("BGRA4444", dst, src ,suffix);
+
+            src = ("B", "G", "R");
+            _WriteSetterXYZ("BGR24", dst, src, suffix);
+            _WriteSetterXYZ("RGB24", dst, src, suffix);
+
+            _WriteSetterXYZ("BGRA32", dst, src, suffix);
+            _WriteSetterXYZ("RGBA32", dst, src, suffix);
+            _WriteSetterXYZ("ARGB32", dst, src, suffix);            
+
+            src = ("B", "G", "R");
+            _WriteSetterXYZ("BGR96F",  dst, src);
+            _WriteSetterXYZ("RGB96F",  dst, src );
+            _WriteSetterXYZ("BGRA128F", dst, src );
+            _WriteSetterXYZ("RGBA128F", dst, src );        
+            
+
+            src = ("PreB", "PreG", "PreR");
+            _WriteSetterXYZ("BGRP32", dst, src, suffix);
+            _WriteSetterXYZ("RGBP32", dst, src, suffix);
+            _WriteSetterXYZ("RGBP128F", dst, src );
+
+            _writeEnd();
+        }
+
+        foreach(var dstType in new [] {"BGRA128F", "RGBA128F"})        
+        {
+            remainingNotImplemented.Remove(dstType);            
+
+            var dst = ("B","G","R","A");
+            var src = ("0","0","0","0");
+            
+            var suffix = $"E=> {dstType.Substring(0,4)} *= __RCP255;";
+
+            _writeStructBegin(dstType, commonInterface);
+
+            WriteLine("const float __RCP255 = 1f / 255f;");
+
+            _WriteSetterSelf(dstType);
+
+            _WriteSetterXYZW("Alpha8", dst, ("0","0","0","A"), suffix);
+            _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255") , suffix);
+            _WriteSetterNotImpl("Luminance16");
+            _WriteSetterXYZW("Luminance32F", dst, ("L","L","L", "1"));
+
+            src = ("B", "G", "R", "255");
+            _WriteSetterXYZW("BGR565", dst, src , suffix);
+
+            src = ("B", "G", "R", "A");
+            _WriteSetterXYZW("BGRA5551", dst, src ,suffix);
+            _WriteSetterXYZW("BGRA4444", dst, src ,suffix);
+
+            src = ("B", "G", "R", "255");
+            _WriteSetterXYZW("BGR24", dst, src, suffix);
+            _WriteSetterXYZW("RGB24", dst, src, suffix);
+
+            src = ("B", "G", "R", "A");
+            _WriteSetterXYZW("BGRA32", dst, src, suffix);
+            _WriteSetterXYZW("RGBA32", dst, src, suffix);
+            _WriteSetterXYZW("ARGB32", dst, src, suffix);            
+
+            src = ("B", "G", "R", "1");
+            _WriteSetterXYZW("BGR96F",  dst, src);
+            _WriteSetterXYZW("RGB96F",  dst, src );
+
+            src = ("B", "G", "R", "A");
+            _WriteSetterXYZW("BGRA128F", dst, src );
+            _WriteSetterXYZW("RGBA128F", dst, src );        
+            
+
+            var color = dstType.Substring(0,3);
+
+            src = ("PreB", "PreG", "PreR", "A");
+            var prefix = "S=> if (value.A == 0) { this = default; return; }";
+            var suffix2 = $"E=> {color} = Vector3.Min(Vector3.One, {color} / this.A);";
+            _WriteSetterXYZW("BGRP32", dst, src, prefix, suffix, suffix2);
+            _WriteSetterXYZW("RGBP32", dst, src, prefix, suffix, suffix2);
+            _WriteSetterXYZW("RGBP128F", dst, src , prefix, suffix2);
+
+            _writeEnd();
+        }
+
+        WriteLine("");
+        WriteLine("");
+        WriteLine("//---------------------------------------------------------- Not implemented");
+        WriteLine("");
+        WriteLine("");
+
+        foreach(var dstType in remainingNotImplemented)        
+        {
+            _writeStructBegin(dstType, commonInterface);
+            _WriteSetterSelf(dstType);
+            _WriteSetterNotImplAll();
+            _writeEnd();
+        }
+        
+
+        ClearIndent();
+
+// ---------------------------------------------------------------------------------------------------------------------------- #>
+
+    }
+}
+

@@ -53,9 +53,7 @@ namespace InteropBitmaps
         public static IDrawing2D CreateDrawingContext(this MemoryBitmap bitmap)
         {
             IDrawing2D _Create<TPixel>()
-                where TPixel
-                : unmanaged
-                , Pixel.IPixelFactory<Pixel.BGRA32, TPixel>
+                where TPixel : unmanaged , Pixel.IValueSetter<Pixel.BGRA32>
             {                
                 return new InteropDrawing.Backends._MemoryDrawingContext<TPixel>(bitmap.OfType<TPixel>(), c => Pixel.GetColor<TPixel>(c));
             }

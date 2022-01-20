@@ -38,7 +38,7 @@ namespace InteropBitmaps
 
         private TDstPixel ComposeSlow<TSrcPixel,TDstPixel>(TSrcPixel src, TDstPixel dst, float amount)
             where TSrcPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
-            where TDstPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>, Pixel.IPixelFactory<Pixel.QVectorBGRP,TDstPixel>
+            where TDstPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>, Pixel.IValueSetter<Pixel.QVectorBGRP>
         {
             var srcQ = default(Pixel.QVectorBGRP);
             var dstQ = default(Pixel.QVectorBGRP);
@@ -50,7 +50,10 @@ namespace InteropBitmaps
 
             dstQ.SourceOver(srcQ);
 
-            return default(TDstPixel).From(dstQ);
+            var final = default(TDstPixel);
+            final.SetValue(dstQ);
+
+            return final;
         }
     }
 }

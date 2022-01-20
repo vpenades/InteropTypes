@@ -509,14 +509,12 @@ namespace InteropBitmaps
 
             public XYZ RGB => A == 0 ? XYZ.Zero : PreRGB / A;
 
-            public Single R => A == 0 ? 0 : PreR / A;
-            public Single G => A == 0 ? 0 : PreG / A;
-            public Single B => A == 0 ? 0 : PreB / A;            
+            public Single R => A == 0 ? 0 : Math.Min(1, PreR / A);
+            public Single G => A == 0 ? 0 : Math.Min(1, PreG / A);
+            public Single B => A == 0 ? 0 : Math.Min(1, PreB / A);            
 
             #endregion      
         }
-
-
 
         #endregion
     }

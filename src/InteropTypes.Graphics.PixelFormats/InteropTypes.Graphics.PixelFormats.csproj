@@ -57,6 +57,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Interfaces.Composition.tt</DependentUpon>
     </None>
+    <None Include="Pixel\Pixel.Interfaces.IAnyValue.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.IAnyValue.tt</DependentUpon>
+    </None>
+    <None Include="Pixel\Pixel.Interfaces.IValueSetter.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.IValueSetter.tt</DependentUpon>
+    </None>
   </ItemGroup>  
   
   <ItemGroup>
@@ -72,6 +82,14 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Pixel.Interfaces.Composition.cs</LastGenOutput>
     </None>
+    <None Update="Pixel\Pixel.Interfaces.IAnyValue.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Pixel.Interfaces.IAnyValue.cs</LastGenOutput>
+    </None>
+    <None Update="Pixel\Pixel.Interfaces.IValueSetter.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Pixel.Interfaces.IValueSetter.cs</LastGenOutput>
+    </None>
     <None Update="Pixel\Pixel.Interfaces.Lerp.tt">
       <LastGenOutput>Pixel.Interfaces.Lerp.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -84,14 +102,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Pixel.Equality.cs</LastGenOutput>
     </None>
-    <None Update="Pixel\Pixel.Interfaces.IPixelConvertible.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Pixel.Interfaces.IPixelConvertible.cs</LastGenOutput>
-    </None>
-    <None Update="Pixel\Pixel.Interfaces.IPixelFactory.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Pixel.Interfaces.IPixelFactory.cs</LastGenOutput>
-    </None>
   </ItemGroup>  
 
   <ItemGroup>
@@ -99,6 +109,21 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Interfaces.Composition.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Pixel\Pixel.Interfaces.IAnyValue.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.IAnyValue.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Pixel\Pixel.Interfaces.IValueGetter.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.IValueGetter.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Pixel\Pixel.Interfaces.IValueSetter.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Pixel.Interfaces.IValueSetter.tt</DependentUpon>
     </Compile>
     <Compile Update="Pixel\Pixel.Interfaces.Lerp.cs">
       <DependentUpon>Pixel.Interfaces.Lerp.tt</DependentUpon>
@@ -114,16 +139,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Equality.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Pixel\Pixel.Interfaces.IPixelConvertible.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IPixelConvertible.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Pixel\Pixel.Interfaces.IPixelFactory.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IPixelFactory.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

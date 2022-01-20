@@ -1,4 +1,5 @@
-﻿<#
+﻿// GENERATED CODE: using CodeGenUtils.t4
+<#
 
 void _writeOpenBlock() { WriteLine("{"); PushIndent("    "); }
 
@@ -44,15 +45,44 @@ void _writeStructBegin(string name, params string [] interfaces)
     PushIndent("    ");
     PushIndent("    ");
 
-    WriteLine($"partial struct {name}");
-
-    PushIndent("    ");
-    for(int i=0; i < interfaces.Length; ++i)
+    if (interfaces.Length == 1) WriteLine($"partial struct {name} : {interfaces[0]}");
+    else
     {
-        var sep = i==0 ? ":" : ",";
-        WriteLine($"{sep} {interfaces[i]}");
+        WriteLine($"partial struct {name}");
+
+        PushIndent("    ");
+        for(int i=0; i < interfaces.Length; ++i)
+        {
+            var sep = i==0 ? ":" : ",";
+            WriteLine($"{sep} {interfaces[i]}");
+        }
+        PopIndent();
     }
-    PopIndent();
+
+    _writeOpenBlock();
+}
+
+void _writeInternalInterfaceBegin(string name, params string [] interfaces)
+{
+    __CurrentClassName.Push(name);
+
+    ClearIndent();
+    PushIndent("    ");
+    PushIndent("    ");
+
+    if (interfaces.Length == 1) WriteLine($"internal interface {name} : {interfaces[0]}");
+    else
+    {
+        WriteLine($"internal interface {name}");
+
+        PushIndent("    ");
+        for(int i=0; i < interfaces.Length; ++i)
+        {
+            var sep = i==0 ? ":" : ",";
+            WriteLine($"{sep} {interfaces[i]}");
+        }
+        PopIndent();
+    }
 
     _writeOpenBlock();
 }

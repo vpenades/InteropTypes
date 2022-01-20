@@ -14,6 +14,7 @@ namespace InteropBitmaps
             CopyConverterCallback<TSrc,TDst> GetCopyConverterDelegate();
         }
 
+
         partial struct Alpha8
             : ICopyConverterDelegateProvider<Alpha8, Alpha8>
             , ICopyConverterDelegateProvider<Alpha8, Luminance8>

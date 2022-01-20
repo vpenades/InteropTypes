@@ -51,15 +51,16 @@ namespace InteropBitmaps
 
 
         private TDstPixel _TestLerpQuantized<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
-            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRP32>
-            where TDstPixel : unmanaged, Pixel.IPixelFactory<Pixel.BGRP32, TDstPixel>
+            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRP32>
+            where TDstPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
         {
-            var ap = a.ToPixel();
-            var bp = b.ToPixel();
+            var ap = a.GetValue();
+            var bp = b.GetValue();
 
             var rgbp = Pixel.BGRP32.Lerp(ap, bp, 8192);
 
-            var final = default(TDstPixel).From(rgbp);
+            var final = default(TDstPixel);
+            final.SetValue(rgbp);
 
             TestContext.WriteLine($"{a} ^ {b} = {final}");
 
@@ -67,11 +68,11 @@ namespace InteropBitmaps
         }
 
         private TDstPixel _TestLerpFloating<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
-            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRP128F>
-            where TDstPixel : unmanaged, Pixel.IPixelFactory<Pixel.BGRP128F, TDstPixel>
+            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRP128F>
+            where TDstPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP128F>
         {
-            var ap = a.ToPixel();
-            var bp = b.ToPixel();
+            var ap = a.GetValue();
+            var bp = b.GetValue();
 
             // var rgbp = Pixel.BGRP128F.Lerp(ap, bp, 0.5f);
             // var final = default(TDstPixel).From(rgbp);

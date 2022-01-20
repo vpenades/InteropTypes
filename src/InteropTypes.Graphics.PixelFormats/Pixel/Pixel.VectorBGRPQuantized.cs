@@ -7,60 +7,127 @@ namespace InteropBitmaps
 {
     partial class Pixel
     {
-        partial struct BGR24 :
-            ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>,
-            QVectorBGR.IFactory<BGR24>, QVectorBGRP.IFactory<BGR24>
+        partial struct Alpha8 :
+            IValueSetter<QVectorBGR>, IValueSetter<QVectorBGRP>,
+            ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>
         {
+            public void SetValue(QVectorBGR value) { A = 255; }
+            public void SetValue(QVectorBGRP value) { A = value.AQ8; }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void CopyTo(ref QVectorBGR value)
+            {
+                value.R = 0;
+                value.G = 0;
+                value.B = 0;                
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void CopyTo(ref QVectorBGRP value)
+            {
+                value.R = 0;
+                value.G = 0;
+                value.B = 0;
+                value.A = FixedMathCC8.FromByte(A);
+            }
+        }
+
+        partial struct BGR24 :
+            IValueSetter<QVectorBGR>, IValueSetter<QVectorBGRP>,
+            ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>
+            
+        {
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(QVectorBGR value) { B = value.BQ8; G = value.GQ8; R = value.RQ8; }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(QVectorBGRP value) { B = value.PreBQ8; G = value.PreGQ8; R = value.PreRQ8; }
+
             [MethodImpl(_PrivateConstants.Fastest)]
             public void CopyTo(ref QVectorBGR value) { value.SetValue(this); }
 
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo(ref QVectorBGRP value) { value.SetValue(this);}
-
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public BGR24 CreateFrom(in QVectorBGR value) { return new BGR24(value.RQ8, value.GQ8, value.BQ8); }
-
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public BGR24 CreateFrom(in QVectorBGRP value) { return new BGR24(value.PreRQ8, value.PreGQ8, value.PreBQ8); }            
+            public void CopyTo(ref QVectorBGRP value) { value.SetValue(this);}                        
         }
 
         partial struct RGB24 :
-            ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>,
-            QVectorBGR.IFactory<RGB24>, QVectorBGRP.IFactory<RGB24>
+            IValueSetter<QVectorBGR>, IValueSetter<QVectorBGRP>,
+            ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>
+            
         {
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(QVectorBGR value) { B = value.RQ8; G = value.GQ8; R = value.BQ8; }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(QVectorBGRP value) { B = value.PreRQ8; G = value.PreGQ8; R = value.PreBQ8; }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void CopyTo(ref QVectorBGR value) { value.SetValue(this); }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }            
+        }
+
+        partial struct BGRP32 :
+            IValueSetter<QVectorBGR>, IValueSetter<QVectorBGRP>,
+            ICopyValueTo<QVectorBGR>, ICopyValueTo<QVectorBGRP>
+        {
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(QVectorBGR value)
+            {
+                PreB = value.BQ8;
+                PreG = value.GQ8;
+                PreR = value.RQ8;
+                A = 255;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(QVectorBGRP value)
+            {
+                PreB = value.PreBQ8;
+                PreG = value.PreGQ8;
+                PreR = value.PreRQ8;
+                A = value.AQ8;
+            }
+
             [MethodImpl(_PrivateConstants.Fastest)]
             public void CopyTo(ref QVectorBGR value) { value.SetValue(this); }
 
             [MethodImpl(_PrivateConstants.Fastest)]
             public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public RGB24 CreateFrom(in QVectorBGR value) { return new RGB24(value.RQ8, value.GQ8, value.BQ8); }
-
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public RGB24 CreateFrom(in QVectorBGRP value) { return new RGB24(value.PreRQ8, value.PreGQ8, value.PreBQ8); }
         }
 
-        partial struct BGRP32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<BGRP32>
+        partial struct RGBP32 :
+            IValueSetter<QVectorBGRP>,
+            ICopyValueTo<QVectorBGRP>
         {
+            public void SetValue(QVectorBGRP value)
+            {
+                PreR = value.PreRQ8;
+                PreG = value.PreGQ8;
+                PreB = value.PreBQ8;
+                A = value.AQ8;
+            }
+
             [MethodImpl(_PrivateConstants.Fastest)]
             public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
-
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public BGRP32 CreateFrom(in QVectorBGRP value) { return new BGRP32(value.PreRQ8, value.PreGQ8, value.PreBQ8, value.AQ8); }            
+            
         }
 
-        partial struct RGBP32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<RGBP32>
+        partial struct BGRA32 :
+            IValueSetter<QVectorBGRP>,
+            ICopyValueTo<QVectorBGRP>            
         {
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
+            public void SetValue(QVectorBGRP value)
+            {
+                if (value.A == 0) { this = default; return; }
+                var rcpa = FixedMathCC8.ToReciprocalByte(value.A);
+                B = FixedMathCC8.ToByte(value.B, rcpa);
+                G = FixedMathCC8.ToByte(value.G, rcpa);
+                R = FixedMathCC8.ToByte(value.R, rcpa);
+                A = value.AQ8;
+            }
 
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public RGBP32 CreateFrom(in QVectorBGRP value) { return new RGBP32(value.PreRQ8, value.PreGQ8, value.PreBQ8, value.AQ8); }            
-        }
-
-        partial struct BGRA32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<BGRA32>
-        {
             [MethodImpl(_PrivateConstants.Fastest)]
             public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
 
@@ -78,8 +145,21 @@ namespace InteropBitmaps
             }            
         }
 
-        partial struct RGBA32 : ICopyValueTo<QVectorBGRP>, QVectorBGRP.IFactory<RGBA32>
+        partial struct RGBA32 :
+            IValueSetter<QVectorBGRP>,
+            ICopyValueTo<QVectorBGRP>            
         {
+            public void SetValue(QVectorBGRP value)
+            {
+                if (value.A == 0) { this = default; return; }
+
+                var rcpa = FixedMathCC8.ToReciprocalByte(value.A);
+                B = FixedMathCC8.ToByte(value.B, rcpa);
+                G = FixedMathCC8.ToByte(value.G, rcpa);
+                R = FixedMathCC8.ToByte(value.R, rcpa);
+                A = value.AQ8;
+            }
+
             [MethodImpl(_PrivateConstants.Fastest)]
             public void CopyTo(ref QVectorBGRP value) { value.SetValue(this); }
 
@@ -97,9 +177,27 @@ namespace InteropBitmaps
             }            
         }
 
+        partial struct ARGB32 :
+            IValueSetter<QVectorBGRP>
+        {
+            public void SetValue(QVectorBGRP value)
+            {
+                if (value.A == 0) { this = default; return; }
+
+                var rcpa = FixedMathCC8.ToReciprocalByte(value.A);
+                B = FixedMathCC8.ToByte(value.B, rcpa);
+                G = FixedMathCC8.ToByte(value.G, rcpa);
+                R = FixedMathCC8.ToByte(value.R, rcpa);
+                A = value.AQ8;
+            }
+        }
+
+        [System.Diagnostics.DebuggerDisplay("R:{RQ8} G:{GQ8} B:{BQ8}")]
         public struct QVectorBGR :
-                    IValueSetter<RGB24>,
-                    IValueSetter<BGR24>                    
+            IValueSetter<RGB24>,
+            IValueSetter<BGR24>,
+            IValueSetter<RGBP32>,
+            IValueSetter<BGRP32>
         {
             #region data            
 
@@ -133,6 +231,7 @@ namespace InteropBitmaps
 
             #region API
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGB24 value)
             {
                 B = FixedMathCC8.FromByte(value.B);
@@ -140,12 +239,29 @@ namespace InteropBitmaps
                 R = FixedMathCC8.FromByte(value.R);
             }
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGR24 value)
             {
                 B = FixedMathCC8.FromByte(value.B);
                 G = FixedMathCC8.FromByte(value.G);
                 R = FixedMathCC8.FromByte(value.R);
-            }            
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(RGBP32 value)
+            {
+                B = FixedMathCC8.FromByte(value.B);
+                G = FixedMathCC8.FromByte(value.G);
+                R = FixedMathCC8.FromByte(value.R);
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGRP32 value)
+            {
+                B = FixedMathCC8.FromByte(value.B);
+                G = FixedMathCC8.FromByte(value.G);
+                R = FixedMathCC8.FromByte(value.R);
+            }
 
             [MethodImpl(_PrivateConstants.Fastest)]
             public static void Lerp(BGR24 left, BGR24 right, uint rx, out QVectorBGR result)
@@ -184,25 +300,16 @@ namespace InteropBitmaps
             }
 
             #endregion            
-
-            #region nested types
-
-            public interface IFactory<TDstPixel>
-            {
-                TDstPixel CreateFrom(in QVectorBGR value);
-            }
-
-            #endregion
         }
 
         [System.Diagnostics.DebuggerDisplay("R:{RQ8} G:{GQ8} B:{BQ8} A:{AQ8}")]
         public struct QVectorBGRP :
-                    IValueSetter<RGB24>,
-                    IValueSetter<BGR24>,
-                    IValueSetter<RGBA32>,
-                    IValueSetter<RGBP32>,
-                    IValueSetter<BGRA32>,
-                    IValueSetter<BGRP32>   
+            IValueSetter<RGB24>,
+            IValueSetter<BGR24>,
+            IValueSetter<RGBA32>,
+            IValueSetter<RGBP32>,
+            IValueSetter<BGRA32>,
+            IValueSetter<BGRP32>   
         {
             #region data            
 
@@ -462,15 +569,6 @@ namespace InteropBitmaps
                 this.B = this.B * wdst + blend.B * wmix;
                 this.G = this.G * wdst + blend.G * wmix;
                 this.R = this.R * wdst + blend.R * wmix;
-            }
-
-            #endregion
-
-            #region nested types
-
-            public interface IFactory<TDstPixel>
-            {
-                TDstPixel CreateFrom(in QVectorBGRP value);
             }
 
             #endregion

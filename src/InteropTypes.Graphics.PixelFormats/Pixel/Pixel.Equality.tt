@@ -1,7 +1,10 @@
-﻿<#@ assembly name="System.Core" #>
+﻿<#@ assembly name="System.Core.dll" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+
+<#@ include file="..\\CodeGenUtils.t4" #>
+<#@ include file="Pixel.Constants.t4" #>
+
 
 using System;
 
@@ -10,53 +13,38 @@ namespace InteropBitmaps
     partial class Pixel    
     {
 <#
-        // https://docs.microsoft.com/en-us/visualstudio/modeling/text-template-utility-methods?view=vs-2022
 
-        var pixelFormatAllNames = new string[] {"Alpha8", "Luminance8", "Luminance16", "Luminance32F", "BGR565", "BGR24","RGB24", "BGRA5551", "BGRA4444", "BGRA32", "RGBA32", "ARGB32", "RGBP32","BGRP32", "RGB96F", "BGR96F", "BGRA128F", "RGBA128F", "RGBP128F" };                
-
-        var digits = new char[] { '0','1','2','3','4','5','6','7','8','9'};
-
-        (string Channels, string Size) _getChannels(string format)
-        {
-            var idx = format.IndexOfAny(digits);
-            var a = format.Substring(0,idx);
-            var b = format.Substring(idx);
-            return(a,b);            
-        }
-
-        foreach(var pixelFmtName in pixelFormatAllNames)
+        foreach(var pixelFmtName in PixelFormatsAllNames)
         {
             ClearIndent();
             PushIndent("    ");
             PushIndent("    ");            
 
-            WriteLine($"partial struct {pixelFmtName} : IEquatable<{pixelFmtName}>");            
+            _writeStructBegin(pixelFmtName, $"IEquatable<{pixelFmtName}>");
 
-            WriteLine("{");PushIndent("    ");            
-
-            WriteLine("/// <inheritdoc>");
+            _writeDocInherit();
             WriteLine($"public static bool operator ==(in {pixelFmtName} a,in {pixelFmtName} b) {{ return a.Equals(b); }}");
 
-            WriteLine("/// <inheritdoc>");
+            _writeDocInherit();
             WriteLine($"public static bool operator !=(in {pixelFmtName} a,in {pixelFmtName} b) {{ return !a.Equals(b); }}");
 
-            WriteLine("/// <inheritdoc>");
+            _writeDocInherit();
             WriteLine($"public override bool Equals(Object obj) {{ return obj is {pixelFmtName} other && Equals(other); }}");
 
             _writeEquals(pixelFmtName);            
 
             _writeHashCode(pixelFmtName);
 
-            PopIndent(); WriteLine("}");
+            _writeEnd();
         }
 
         void _writeEquals(string pixelFmt)
         {
-            WriteLine("/// <inheritdoc>");
+            _writeDocInherit();
             WriteLine($"public bool Equals({pixelFmt} other)");
-            WriteLine("{");PushIndent("    ");
+            _writeOpenBlock();
 
-            var (ccc,s) = _getChannels(pixelFmt);
+            var (ccc,s) = GetPixelFormatChannels(pixelFmt);
             if (ccc == "Alpha") ccc="A";
             if (ccc == "Luminance") ccc="L";
 
@@ -83,16 +71,16 @@ namespace InteropBitmaps
             }
                                   
 
-            PopIndent(); WriteLine("}");
+            _writeCloseBlock();
         }
 
         void _writeHashCode(string pixelFmt)
         {
-            WriteLine("/// <inheritdoc>");
+            _writeDocInherit();
             WriteLine($"public override int GetHashCode()");
-            WriteLine("{");PushIndent("    ");
+            _writeOpenBlock();
 
-            var (ccc,size) = _getChannels(pixelFmt);
+            var (ccc,size) = GetPixelFormatChannels(pixelFmt);
             if (ccc == "Alpha") ccc="A";
             if (ccc == "Luminance") ccc="L";
 
@@ -122,7 +110,7 @@ namespace InteropBitmaps
             }
                                   
 
-            PopIndent(); WriteLine("}");
+            _writeCloseBlock();
         }
 
         ClearIndent();

@@ -58,8 +58,8 @@ namespace InteropBitmaps
         }
 
         public void ConversionTest<TSrcPixel,TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32,TSrcPixel>
-            where TDstPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
+            where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
         {
             var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
@@ -69,15 +69,15 @@ namespace InteropBitmaps
 
             for(int i=0; i < 5; ++i)
             {
-                src[i] = default(TSrcPixel).From(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
+                src[i].SetValue( new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
             }
             
-            Pixel.GetPixelCopyConverter<TSrcPixel,TDstPixel>().Invoke(src,dst);
-            
+            Pixel.GetPixelCopyConverter<TSrcPixel,TDstPixel>().Invoke(src,dst);            
+
             for (int i = 0; i < 5; ++i)
             {
-                var srcP = src[i].ToPixel();
-                var dstP = dst[i].ToPixel();
+                var srcP = src[i].GetValue();
+                var dstP = dst[i].GetValue();
 
                 if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
                 {
@@ -90,8 +90,8 @@ namespace InteropBitmaps
         }
 
         public void ConversionPremulTest<TSrcPixel, TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>, Pixel.IPixelFactory<Pixel.BGRA32, TSrcPixel>
-            where TDstPixel : unmanaged, Pixel.IConvertible<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
+            where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
         {
             var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
@@ -102,15 +102,15 @@ namespace InteropBitmaps
 
             for (int i = 0; i < 5; ++i)
             {
-                src[i] = default(TSrcPixel).From(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
+                src[i].SetValue(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
             }
 
             Pixel.GetPixelCopyConverter<TSrcPixel, TDstPixel>().Invoke(src, dst);
 
             for (int i = 0; i < 5; ++i)
             {
-                var srcA = src[i].ToPixel();
-                var dstA = dst[i].ToPixel();
+                var srcA = src[i].GetValue();
+                var dstA = dst[i].GetValue();
 
                 var srcP = new Pixel.RGBP32(srcA);
                 var dstP = new Pixel.RGBP32(dstA);

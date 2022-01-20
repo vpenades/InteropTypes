@@ -17,6 +17,7 @@ namespace InteropBitmaps
         public partial struct Alpha8 
         {
             #region constructors
+
             public static implicit operator Alpha8(Byte a) { return new Alpha8(a); }
 
             public static implicit operator Alpha8(int a) { return new Alpha8(a); }
@@ -77,6 +78,24 @@ namespace InteropBitmaps
                 accum *= 255f;
 
                 L = (Byte)accum;
+            }
+
+            internal static Byte _FromRGB(uint r, uint g, uint b)
+            {
+                uint accum = 0;
+
+                accum += RLuminanceWeight16 * r;
+                accum += GLuminanceWeight16 * g;
+                accum += BLuminanceWeight16 * b;
+
+                accum >>= 16;
+
+                return (Byte)accum;
+            }
+
+            internal static Byte _FromRGB(float r, float g, float b)
+            {
+                return (Byte)(Luminance32F._FromRGB(r, g, b) * 255f);
             }
 
             #endregion
@@ -170,13 +189,37 @@ namespace InteropBitmaps
                 L = color.R * RLuminanceWeightF + color.G * GLuminanceWeightF + color.B * BLuminanceWeightF;
             }
 
+            internal static float _FromRGB(float r, float g, float b)
+            {
+                float accum = 0;
+
+                accum += RLuminanceWeightF * r;
+                accum += GLuminanceWeightF * g;
+                accum += BLuminanceWeightF * b;                
+
+                return accum;
+            }
+
             #endregion
 
             #region data
 
             public float L;
 
-            #endregion            
+            #endregion
+
+            #region API
+
+            public void SetFromRGB(float r, float g, float b)
+            {
+                L = 0;
+
+                L += RLuminanceWeightF * r;
+                L += GLuminanceWeightF * g;
+                L += BLuminanceWeightF * b;                
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -192,17 +235,17 @@ namespace InteropBitmaps
 
             public BGR565(in RGBA128F color) : this(_PackRGB(color.RGBA)) { }
 
-            public BGR565(int red, int green, int blue) : this(_PackRGB(red,green,blue)) { }
+            public BGR565(int red, int green, int blue) : this(_PackRGB((uint)red, (uint)green, (uint)blue)) { }
 
             private static UInt16 _PackRGB(XYZA rgba)
             {
                 rgba *= 255f;
-                return _PackRGB((int)rgba.X, (int)rgba.Y, (int)rgba.Z);
+                return _PackRGB((uint)rgba.X, (uint)rgba.Y, (uint)rgba.Z);
             }
 
-            private static UInt16 _PackRGB(int red, int green, int blue)
+            private static UInt16 _PackRGB(uint red, uint green, uint blue)
             {
-                int bgr = red << 8;
+                uint bgr = red << 8;
                 bgr &= 0b1111100000000000;
                 bgr |= green << 3;
                 bgr &= 0b1111111111100000;
@@ -224,6 +267,25 @@ namespace InteropBitmaps
             public int B { get { var p = BGR & 0x1f; return (p * 8) | (p >> 2); } }
 
             #endregion
+
+            #region API
+
+            public void SetFromRGB8(uint red, uint green, uint blue)
+            {
+                System.Diagnostics.Debug.Assert(red < 256);
+                System.Diagnostics.Debug.Assert(green < 256);
+                System.Diagnostics.Debug.Assert(blue < 256);
+
+                uint bgr = red << 8;
+                bgr &= 0b1111100000000000;
+                bgr |= green << 3;
+                bgr &= 0b1111111111100000;
+                bgr |= blue >> 3;
+
+                BGR = (UInt16)bgr;
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -235,7 +297,7 @@ namespace InteropBitmaps
         {
             #region constructors
 
-            const int _ALPHA_THRESHOLD = 96;
+            const uint _ALPHA_THRESHOLD = 96;
 
             public BGRA5551(BGRA32 color) : this(_PackRGBA(color.R,color.G,color.B,color.A >= _ALPHA_THRESHOLD)) { }
 
@@ -282,6 +344,25 @@ namespace InteropBitmaps
             #region properties
 
             public bool IsTransparent => (BGRA & 0x8000) == 0;
+
+            #endregion
+
+            #region API
+
+            public void SetFromRGBA8(uint red, uint green, uint blue, uint alpha)
+            {
+                System.Diagnostics.Debug.Assert(red < 256);
+                System.Diagnostics.Debug.Assert(green < 256);
+                System.Diagnostics.Debug.Assert(blue < 256);
+                System.Diagnostics.Debug.Assert(alpha < 256);
+
+                var x = blue >> 3;
+                x |= (green >> 3) << 5;
+                x |= (red >> 3) << 10;
+                x |= alpha >= _ALPHA_THRESHOLD ? (uint)0x10000000 : (uint)0;
+
+                BGRA = (UInt16)x;
+            }
 
             #endregion
         }
@@ -677,24 +758,33 @@ namespace InteropBitmaps
         /// <summary>
         /// Standard RGB in values between 0-1
         /// </summary>
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
         public partial struct RGB96F
         {
             #region constructors
-            public RGB96F(in RGBA128F color) { RGB = color.RGB; }
-            public RGB96F(Single red, Single green, Single blue) { RGB = new XYZ(red, green, blue); }
-            public RGB96F(Byte red, Byte green, Byte blue) { RGB = new XYZ(red, green, blue) / 255f; }
-            public RGB96F(BGRA32 color) { RGB = new XYZ(color.R, color.G, color.B) / 255f; }
+            public RGB96F(in RGBA128F color) : this() { RGB = color.RGB; }
+            public RGB96F(Single red, Single green, Single blue) : this() { RGB = new XYZ(red, green, blue); }
+            public RGB96F(Byte red, Byte green, Byte blue) : this() { RGB = new XYZ(red, green, blue) / 255f; }
+            public RGB96F(BGRA32 color) : this() { RGB = new XYZ(color.R, color.G, color.B) / 255f; }
+
+            public RGB96F(in XYZ rgb) : this() { RGB = rgb; }
 
             #endregion
 
             #region data
 
+            [System.Runtime.InteropServices.FieldOffset(0)]
             public XYZ RGB;
-            public Single R => RGB.X;
-            public Single G => RGB.Y;
-            public Single B => RGB.Z;            
+
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public Single R;
+
+            [System.Runtime.InteropServices.FieldOffset(4)]
+            public Single G;
+
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public Single B;
 
             #endregion
         }
@@ -702,26 +792,32 @@ namespace InteropBitmaps
         /// <summary>
         /// Standard RGB in values between 0-1
         /// </summary>
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B}")]
         public partial struct BGR96F
         {
             #region constructors
 
-            public BGR96F(RGBA128F color) { BGR = new XYZ(color.B, color.G, color.R); }
-            public BGR96F(BGRA32 color) { BGR = new XYZ(color.B, color.G, color.R) / 255f; }
-            public BGR96F(Single red, Single green, Single blue) { BGR = new XYZ(blue, green, red); }
-            public BGR96F(Byte red, Byte green, Byte blue) { BGR = new XYZ(blue, green, red) / 255f; }            
+            public BGR96F(RGBA128F color) : this() { BGR = new XYZ(color.B, color.G, color.R); }
+            public BGR96F(BGRA32 color) : this() { BGR = new XYZ(color.B, color.G, color.R) / 255f; }
+            public BGR96F(Single red, Single green, Single blue) : this() { BGR = new XYZ(blue, green, red); }
+            public BGR96F(Byte red, Byte green, Byte blue) : this() { BGR = new XYZ(blue, green, red) / 255f; }
 
             #endregion
 
             #region data
 
+            [System.Runtime.InteropServices.FieldOffset(0)]
             public XYZ BGR;
 
-            public Single B => BGR.X;
-            public Single G => BGR.Y;
-            public Single R => BGR.Z;            
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public Single B;
+
+            [System.Runtime.InteropServices.FieldOffset(4)]
+            public Single G;
+
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public Single R;
 
             #endregion
         }
@@ -729,24 +825,36 @@ namespace InteropBitmaps
         /// <summary>
         /// Standard BGRA in values between 0-1
         /// </summary>
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
         [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
         public partial struct BGRA128F
         {
             #region constructors
-            public BGRA128F(BGRA32 color) { BGRA = new XYZA(color.B, color.G, color.R, color.A) / 255f; }
-            public BGRA128F(RGBA128F color) { BGRA = new XYZA(color.B, color.G, color.R, color.A); }
-            public BGRA128F(Single red, Single green, Single blue, Single alpha) { BGRA = new XYZA(blue, green, red, alpha); }            
+            public BGRA128F(BGRA32 color) : this() { BGRA = new XYZA(color.B, color.G, color.R, color.A) / 255f; }
+            public BGRA128F(RGBA128F color) : this() { BGRA = new XYZA(color.B, color.G, color.R, color.A); }
+            public BGRA128F(Single red, Single green, Single blue, Single alpha) : this() { BGRA = new XYZA(blue, green, red, alpha); }
 
             #endregion
 
             #region data
 
+            [System.Runtime.InteropServices.FieldOffset(0)]
             public XYZA BGRA;
-            public Single B => BGRA.X;            
-            public Single G => BGRA.Y;
-            public Single R => BGRA.Z;
-            public Single A => BGRA.W;            
+
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public XYZ BGR;
+
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public Single B;
+
+            [System.Runtime.InteropServices.FieldOffset(4)]
+            public Single G;
+
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public Single R;
+
+            [System.Runtime.InteropServices.FieldOffset(12)]
+            public Single A;
 
             #endregion
         }

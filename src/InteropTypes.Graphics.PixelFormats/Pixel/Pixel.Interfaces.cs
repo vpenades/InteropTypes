@@ -12,20 +12,24 @@ namespace InteropBitmaps
             PixelFormat GetPixelFormat();            
             bool IsOpaque { get; }
             bool IsPremultiplied { get; }            
-        }
+        }        
 
         public interface ICopyValueTo<T> where T : unmanaged
         {
             void CopyTo(ref T value);
         }
-        public interface IValueSetter<T> where T : unmanaged
-        {
-            void SetValue(T value);
-        }
+        
 
         public interface IValueGetter<T> where T : unmanaged
         {
             T GetValue();
+        }
+
+        
+
+        public interface IValueSetter<T> where T : unmanaged
+        {
+            void SetValue(T value);
         }
 
         interface IDelegateProvider<TDelegate>

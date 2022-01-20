@@ -16,6 +16,7 @@ namespace InteropBitmaps
             CopyConverterCallback<TSrc,TDst> GetCopyConverterDelegate();
         }
 
+
 <# //-------------------------------------------------------------------------------------------------------------------
 
         void _writeFastestMethodAttribute() { WriteLine("[MethodImpl(_PrivateConstants.Fastest)]"); }
