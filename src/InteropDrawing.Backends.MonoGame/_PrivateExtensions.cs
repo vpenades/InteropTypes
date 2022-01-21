@@ -77,6 +77,13 @@ namespace InteropDrawing.Backends
             return xform;
         }
 
+        public static float DecomposeScale(this in Matrix3x2 xform)
+        {
+            var det = xform.GetDeterminant();
+            var area = Math.Abs(det);
+            return (float)Math.Sqrt(area);
+        }
+
         public static Vector2 GetScale(this in Matrix3x2 matrix)
         {
             var sx = matrix.M12 == 0 ? Math.Abs(matrix.M11) : new Vector2(matrix.M11, matrix.M12).Length();

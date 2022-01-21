@@ -12,7 +12,7 @@ namespace InteropDrawing.Transforms
 {
     public readonly struct Decompose2D :
         IDrawing2D,
-        POINT2.ITransform,
+        ITransformer2D,
         IServiceProvider
     {
         #region lifecycle
@@ -32,12 +32,52 @@ namespace InteropDrawing.Transforms
 
         #endregion
 
-        #region API
+        #region API - IServiceProvider
 
         /// <inheritdoc/>
         public object GetService(Type serviceType)
         {
             return this.TryGetService(serviceType, _RenderTarget);
+        }
+
+        #endregion
+
+        #region API - ITransformer2D
+
+        /// <inheritdoc />
+        public void TransformForward(Span<POINT2> points)
+        {
+            if (_RenderTarget is ITransformer2D xform) xform.TransformForward(points);
+        }
+
+        /// <inheritdoc />
+        public void TransformInverse(Span<POINT2> points)
+        {
+            if (_RenderTarget is ITransformer2D xform) xform.TransformInverse(points);
+        }
+
+        /// <inheritdoc />
+        public void TransformNormalsForward(Span<POINT2> vectors)
+        {
+            if (_RenderTarget is ITransformer2D xform) xform.TransformNormalsForward(vectors);
+        }
+
+        /// <inheritdoc />
+        public void TransformNormalsInverse(Span<POINT2> vectors)
+        {
+            if (_RenderTarget is ITransformer2D xform) xform.TransformNormalsInverse(vectors);
+        }
+
+        /// <inheritdoc />
+        public void TransformScalarsForward(Span<Single> scalars)
+        {
+            if (_RenderTarget is ITransformer2D xform) xform.TransformScalarsForward(scalars);
+        }
+
+        /// <inheritdoc />
+        public void TransformScalarsInverse(Span<Single> scalars)
+        {
+            if (_RenderTarget is ITransformer2D xform) xform.TransformScalarsInverse(scalars);
         }
 
         #endregion
@@ -90,23 +130,7 @@ namespace InteropDrawing.Transforms
             }            
         }
 
-        #endregion
-
-        #region API - point transform
-
-        /// <inheritdoc />
-        public void TransformForward(Span<POINT2> points)
-        {
-            if (_RenderTarget is POINT2.ITransform xform) xform.TransformForward(points);
-        }
-
-        /// <inheritdoc />
-        public void TransformInverse(Span<POINT2> points)
-        {
-            if (_RenderTarget is POINT2.ITransform xform) xform.TransformInverse(points);
-        }
-
-        #endregion
+        #endregion        
 
         #region API - Static
 

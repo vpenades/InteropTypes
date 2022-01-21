@@ -73,7 +73,7 @@ namespace InteropBitmaps.Codecs
                         var convertedFrame = vfc.Convert(frame);
 
                         state["pts"] = frame.pts;
-                        state["pkt_pts"] = frame.pkt_pts;
+                        // state["pkt_pts"] = frame.pkt_pts;
                         state["pkt_dts"] = frame.pkt_dts;
                         state["best_effort_timestamp"] = frame.best_effort_timestamp;
 

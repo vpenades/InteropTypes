@@ -11,7 +11,7 @@ namespace InteropDrawing.Backends
     public interface IMonoGameDrawing2D :
         IDrawingContext2D,
         IBackendViewportInfo,
-        Point2.ITransform,
+        Transforms.ITransformer2D,
         IServiceProvider
     {
         void Begin(int virtualWidth, int virtualHeight, bool keepAspect);

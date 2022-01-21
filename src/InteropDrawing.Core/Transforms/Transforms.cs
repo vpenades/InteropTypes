@@ -10,7 +10,7 @@ namespace InteropDrawing.Transforms
     public readonly struct Drawing2DTransform :
         IDrawing2D,
         IDrawing3D,
-        Point2.ITransform,
+        ITransformer2D,
         IServiceProvider
 
     {
@@ -85,9 +85,10 @@ namespace InteropDrawing.Transforms
         private Drawing2DTransform(IDrawing2D t, Matrix3x2 xform)
         {
             _Target = t;
-            _TransformForward = xform;
+            _TransformForward = xform;            
+            Matrix3x2.Invert(xform, out _TransformInverse);
             _TransformScaleForward = xform.DecomposeScale();
-            Matrix3x2.Invert(xform, out _TransformInverse);            
+            _TransformScaleInverse = 1f / _TransformScaleForward;
         }        
 
         #endregion
@@ -98,6 +99,7 @@ namespace InteropDrawing.Transforms
         private readonly Matrix3x2 _TransformForward;
         private readonly Matrix3x2 _TransformInverse;
         private readonly Single _TransformScaleForward;
+        private readonly Single _TransformScaleInverse;
 
         #endregion
 
@@ -126,6 +128,52 @@ namespace InteropDrawing.Transforms
         /// </summary>
         /// <returns>A transform matrix</returns>
         public Matrix3x2 GetInverseTransform() { return _TransformInverse; }
+
+        #endregion
+
+        #region ITransformer2D API
+
+        /// <inheritdoc />
+        public void TransformForward(Span<Point2> points)
+        {
+            Point2.Transform(points, _TransformForward);
+            if (_Target is ITransformer2D parentXform) parentXform.TransformForward(points);
+        }
+
+        /// <inheritdoc />
+        public void TransformInverse(Span<Point2> points)
+        {
+            if (_Target is ITransformer2D parentXform) parentXform.TransformInverse(points);
+            Point2.Transform(points, _TransformInverse);
+        }
+
+        /// <inheritdoc />
+        public void TransformNormalsForward(Span<Point2> vectors)
+        {
+            Point2.TransformNormals(vectors, _TransformForward);
+            if (_Target is ITransformer2D parentXform) parentXform.TransformNormalsForward(vectors);
+        }
+
+        /// <inheritdoc />
+        public void TransformNormalsInverse(Span<Point2> vectors)
+        {
+            if (_Target is ITransformer2D parentXform) parentXform.TransformNormalsInverse(vectors);
+            Point2.Transform(vectors, _TransformInverse);
+        }
+
+        /// <inheritdoc />
+        public void TransformScalarsForward(Span<Single> scalars)
+        {
+            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleForward;
+            if (_Target is ITransformer2D parentXform) parentXform.TransformScalarsForward(scalars);
+        }
+
+        /// <inheritdoc />
+        public void TransformScalarsInverse(Span<Single> scalars)
+        {
+            if (_Target is ITransformer2D parentXform) parentXform.TransformScalarsInverse(scalars);
+            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleInverse;
+        }
 
         #endregion
 
@@ -214,23 +262,7 @@ namespace InteropDrawing.Transforms
 
         #endregion
 
-        #region point transform
-
-        /// <inheritdoc />
-        public void TransformForward(Span<Point2> points)
-        {            
-            Point2.Transform(points, _TransformForward);
-            if (_Target is Point2.ITransform xform) xform.TransformForward(points);
-        }
-
-        /// <inheritdoc />
-        public void TransformInverse(Span<Point2> points)
-        {
-            if (_Target is Point2.ITransform xform) xform.TransformInverse(points);
-            Point2.Transform(points, _TransformInverse);            
-        }        
-
-        #endregion
+        
     }
 
     /*

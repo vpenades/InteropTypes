@@ -25,15 +25,41 @@ namespace InteropDrawing
 
         #region 2D transforms
 
+
+        public static bool TryGetBackendViewportBounds(this IDrawing2D dc, out BRECT bounds)
+        {
+            bounds = BRECT.Empty;
+
+            if (!(dc is IServiceProvider srv)) return false;
+
+            var vinfo = srv.GetService(typeof(IBackendViewportInfo)) as IBackendViewportInfo;
+            if (vinfo == null) return false;
+
+            if (!(dc is Transforms.ITransformer2D xform)) return false;
+            
+            Span<POINT2> points = stackalloc POINT2[4];
+            points[0] = (0,0);
+            points[1] = (vinfo.PixelsWidth, 0);
+            points[2] = (0, vinfo.PixelsHeight);
+            points[3] = (vinfo.PixelsWidth, vinfo.PixelsHeight);
+            xform.TransformInverse(points);
+
+            foreach(var p in points)
+            {
+                bounds = BRECT.Union(bounds, new BRECT(p.X, p.Y, 0, 0));
+            }            
+                
+            return true;            
+        }
+
         public static bool TryGetQuadrant(this IDrawing2D dc, out Quadrant quadrant)
         {
-            if (dc is POINT2.ITransform xform)
+            if (dc is Transforms.ITransformer2D xform)
             {
-                Span<Point2> points = stackalloc Point2[2];
-                points[0] = VECTOR2.Zero;
-                points[1] = VECTOR2.One;
-                xform.TransformForward(points);
-                quadrant = GetQuadrant(points[1].ToNumerics() - points[0].ToNumerics());
+                Span<POINT2> points = stackalloc POINT2[1];                
+                points[0] = VECTOR2.One;
+                xform.TransformNormalsForward(points);
+                quadrant = GetQuadrant(points[0].ToNumerics());
                 return true;
             }
             else
@@ -72,7 +98,31 @@ namespace InteropDrawing
             }
         }
 
-        public static POINT2 TransformForward(this POINT2.ITransform dc, Point2 point)
+        public static void TransformForward(this IDrawing2D dc, Span<POINT2> points)
+        {
+            if (dc is Transforms.ITransformer2D xformer) xformer.TransformForward(points);
+        }
+
+        public static void TransformInverse(this IDrawing2D dc, Span<POINT2> points)
+        {
+            if (dc is Transforms.ITransformer2D xformer) xformer.TransformInverse(points);
+        }
+
+        public static POINT2 TransformForward(this IDrawing2D dc, POINT2 point)
+        {
+            return dc is Transforms.ITransformer2D xformer
+                ? xformer._TransformForward(point)
+                : point;
+        }
+
+        public static POINT2 TransformInverse(this IDrawing2D dc, POINT2 point)
+        {
+            return dc is Transforms.ITransformer2D xformer
+                ? xformer._TransformInverse(point)
+                : point;
+        }
+
+        private static POINT2 _TransformForward(this Transforms.ITransformer2D dc, POINT2 point)
         {
             Span<POINT2> span = stackalloc POINT2[1];
             span[0] = point;
@@ -80,7 +130,7 @@ namespace InteropDrawing
             return span[0];
         }
 
-        public static POINT2 TransformInverse(this POINT2.ITransform dc, Point2 point)
+        private static POINT2 _TransformInverse(this Transforms.ITransformer2D dc, POINT2 point)
         {
             Span<POINT2> span = stackalloc POINT2[1];
             span[0] = point;
@@ -88,17 +138,33 @@ namespace InteropDrawing
             return span[0];
         }
 
-        public static IDrawing2D CreateTransformed(IDrawing2D target, Point2 physicalSize, Point2 virtualSize, XFORM2 xform)
+        private static POINT2 _TransformNormalForward(this Transforms.ITransformer2D dc, POINT2 normal)
+        {
+            Span<POINT2> span = stackalloc POINT2[1];
+            span[0] = normal;
+            dc.TransformNormalsForward(span);
+            return span[0];
+        }
+
+        private static POINT2 _TransformNormalInverse(this Transforms.ITransformer2D dc, POINT2 normal)
+        {
+            Span<POINT2> span = stackalloc POINT2[1];
+            span[0] = normal;
+            dc.TransformNormalsInverse(span);
+            return span[0];
+        }
+
+        public static IDrawing2D CreateTransformed(IDrawing2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)
         {
             return Transforms.Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);
         }
 
-        public static IDrawing2D CreateTransformed(IDrawing2D t, Point2 physicalSize, Point2 virtualSize)
+        public static IDrawing2D CreateTransformed(IDrawing2D t, POINT2 physicalSize, POINT2 virtualSize)
         {
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualSize);
         }        
 
-        public static IDrawing2D CreateTransformed(IDrawing2D t, Point2 physicalSize, BRECT virtualBounds)
+        public static IDrawing2D CreateTransformed(IDrawing2D t, POINT2 physicalSize, BRECT virtualBounds)
         {
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualBounds);
         }

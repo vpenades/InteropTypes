@@ -118,6 +118,18 @@ namespace InteropDrawing.Backends
         public void TransformInverse(Span<Point2> points) { Point2.Transform(points, _FinalInverse); }
 
         /// <inheritdoc />
+        public void TransformNormalsForward(Span<Point2> vectors) { Point2.TransformNormals(vectors, _FinalForward); }
+
+        /// <inheritdoc />
+        public void TransformNormalsInverse(Span<Point2> vectors) { Point2.TransformNormals(vectors, _FinalInverse); }
+
+        /// <inheritdoc />
+        public void TransformScalarsForward(Span<Single> scalars) { throw new NotImplementedException(); }
+
+        /// <inheritdoc />
+        public void TransformScalarsInverse(Span<Single> scalars) { throw new NotImplementedException(); }
+
+        /// <inheritdoc />
         public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, ColorStyle style)
         {
             if (!style.IsVisible) return;

@@ -107,9 +107,7 @@ namespace InteropDrawing
             GraphicsDevice.BlendState = BlendState.Opaque;            
 
             _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);
-            _Drawing2D.SetSpriteFlip(false, _FlipSprites);
-
-            
+            _Drawing2D.SetSpriteFlip(false, _FlipSprites);            
 
             var vp = _Drawing2D.TransformInverse(new Point2(mouseState.Position.X, mouseState.Position.Y));
 
@@ -119,10 +117,16 @@ namespace InteropDrawing
             _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, _DynTex);
             _Drawing2D.DrawLine((800, 0), (0, 600), 2, COLOR.Red);
 
-            _Drawing2D.TryGetQuadrant(out var quadrant);
+            if (_Drawing2D.TryGetBackendViewportBounds(out var viewportBounds))
+            {
+                viewportBounds.Inflate(-10, -10);
+                _Drawing2D.DrawRectangle(viewportBounds, (COLOR.Yellow,2) );
+            }
 
-
-            _Drawing2D.DrawFont((10, 70), 1, $"{quadrant}", new FontStyle(COLOR.White));
+            if (_Drawing2D.TryGetQuadrant(out var quadrant))
+            {
+                _Drawing2D.DrawFont((10, 70), 1, $"{quadrant}", new FontStyle(COLOR.White));
+            }            
 
             _Drawing2D.DrawFont((10, 20), 1, $"{(int)vp.X} {(int)vp.Y}", new FontStyle(COLOR.White));
 

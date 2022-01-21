@@ -49,8 +49,10 @@ namespace InteropDrawing.Backends
 
         private System.Numerics.Matrix3x2 _View;
         private System.Numerics.Matrix3x2 _Screen;
-        private System.Numerics.Matrix3x2 _FinalForward;
-        private System.Numerics.Matrix3x2 _FinalInverse;        
+        private System.Numerics.Matrix3x2 _FinalForward;        
+        private System.Numerics.Matrix3x2 _FinalInverse;
+        private float _ScalarForward;
+        private float _ScalarInverse;
 
         #endregion
 
@@ -115,7 +117,10 @@ namespace InteropDrawing.Backends
         private void _UpdateMatrices()
         {
             _FinalForward = _View * _Screen;
-            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);            
+            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
+
+            _ScalarForward = _FinalForward.DecomposeScale();
+            _ScalarInverse = 1f / _ScalarForward;
         }
 
         /// <inheritdoc />
@@ -129,6 +134,18 @@ namespace InteropDrawing.Backends
 
         /// <inheritdoc />
         public void TransformInverse(Span<Point2> points) { Point2.Transform(points, _FinalInverse); }
+
+        /// <inheritdoc />
+        public void TransformNormalsForward(Span<Point2> vectors) { Point2.TransformNormals(vectors, _FinalForward); }
+
+        /// <inheritdoc />
+        public void TransformNormalsInverse(Span<Point2> vectors) { Point2.TransformNormals(vectors, _FinalInverse); }
+
+        /// <inheritdoc />
+        public void TransformScalarsForward(Span<Single> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarForward; } }
+
+        /// <inheritdoc />
+        public void TransformScalarsInverse(Span<Single> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarInverse; } }
 
         /// <inheritdoc />
         public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, ColorStyle style)

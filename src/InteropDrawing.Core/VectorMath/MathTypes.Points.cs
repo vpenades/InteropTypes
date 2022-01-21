@@ -208,6 +208,18 @@ namespace InteropDrawing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void TransformNormals(Span<Point2> points, in System.Numerics.Matrix3x2 xform)
+        {
+            var v2 = AsNumerics(points);
+
+            while (v2.Length > 0)
+            {
+                v2[0] = VECTOR2.TransformNormal(v2[0], xform);
+                v2 = v2.Slice(1);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<VECTOR2> AsNumerics(Span<Point2> points)
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point2, VECTOR2>(points);
@@ -226,28 +238,6 @@ namespace InteropDrawing
         }
 
         public override string ToString() { return ToNumerics().ToString(); }
-
-        #endregion
-
-        #region nested types
-
-        /// <summary>
-        /// Optionally implemented on <see cref="IDrawable2D"/>
-        /// </summary>
-        public interface ITransform
-        {
-            /// <summary>
-            /// Transforms the given points from virtual space to screen space.
-            /// </summary>
-            /// <param name="points"></param>
-            void TransformForward(Span<Point2> points);
-
-            /// <summary>
-            /// Transforms the given points from screen space to virtual space.
-            /// </summary>
-            /// <param name="points"></param>
-            void TransformInverse(Span<Point2> points);
-        }
 
         #endregion
     }
