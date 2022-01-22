@@ -221,7 +221,7 @@ namespace InteropDrawing.Backends
 
         #region static API
 
-        public static void SaveToSVG(string filePath, Model2D scene)
+        public static void SaveToSVG(string filePath, IDrawable2D scene)
         {
             using (var svg = CreateGraphic())
             {

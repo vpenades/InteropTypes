@@ -93,11 +93,11 @@ namespace InteropDrawing
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double ToDegrees(this double radians) => radians * _FloatToDegrees;
+        public static double ToDegrees(this double radians) => radians * _DoubleToDegrees;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double ToRadians(this double degrees) => degrees * _FloatToRadians;
+        public static double ToRadians(this double degrees) => degrees * _DoubleToRadians;
 
         #endregion
 

@@ -10,20 +10,6 @@ using POINT2 = InteropDrawing.Point2;
 
 namespace InteropDrawing
 {
-    
-
-    /// <summary>
-    /// Represents an object that can be drawn to a <see cref="IDrawing2D"/>.
-    /// </summary>
-    public interface IDrawable2D
-    {
-        /// <summary>
-        /// Draws this object into the drawing context.
-        /// </summary>
-        /// <param name="dc">The drawing context.</param>
-        void DrawTo(IDrawing2D dc);
-    }
-
     /// <summary>
     /// Represents a render target context where we can draw 2D polygons.
     /// </summary>
@@ -60,7 +46,7 @@ namespace InteropDrawing
         /// <param name="style">The style to apply to the asset.</param>
         /// <remarks>
         /// Assets are dependant on the implementation, but at the most basic level,
-        /// <see cref="Model2D"/> is supported as an asset.
+        /// <see Model2D is supported as an asset.
         /// </remarks>
         void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
 
@@ -69,10 +55,12 @@ namespace InteropDrawing
         void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, ColorStyle style);
 
         void DrawSprite(in XFORM2 transform, in SpriteStyle style);
-    }
-
-    public interface ICanvas2D : IDrawable2D { }
+    }    
 
     public interface IDrawingContext2D : IDrawing2D, IDisposable { }
-    
+
+
+    public interface ICanvas2D : IDrawing2D { }
+    public interface IDisposableCanvas2D : ICanvas2D, IDisposable { }
+
 }

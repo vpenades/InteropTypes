@@ -44,7 +44,7 @@
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropDrawing.Backends.MonoGame.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropDrawing.Backends.Plotly.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
     <ProjectReference Include="..\..\src\InteropWith.MAUI\InteropWith.MAUI.csproj" />
   </ItemGroup>
 

@@ -5,8 +5,12 @@ using System.Text;
 namespace InteropDrawing
 {
     /// <summary>
-    /// <see href="https://en.wikipedia.org/wiki/Quadrant_(plane_geometry)"/>
+    /// The axes of a two-dimensional Cartesian system divide the plane into four infinite regions,
+    /// called quadrants, each bounded by two half-axes. 
     /// </summary>
+    /// <remarks>
+    /// <see href="https://en.wikipedia.org/wiki/Quadrant_(plane_geometry)">Quadrant (plane geometry)</see>
+    /// </remarks>
     public enum Quadrant
     {
         /// <summary>

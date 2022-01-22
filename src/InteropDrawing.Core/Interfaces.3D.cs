@@ -12,13 +12,7 @@ using POINT3 = InteropDrawing.Point3;
 
 namespace InteropDrawing
 {
-    /// <summary>
-    /// Represents an object that can be drawn to a <see cref="IDrawing3D"/>.
-    /// </summary>
-    public interface IDrawable3D
-    {
-        void DrawTo(IDrawing3D dc);
-    }
+    
 
     public interface IBounds3D
     {
@@ -60,9 +54,5 @@ namespace InteropDrawing
         // TODO: include near/far depth plane distance hints
 
         (XFORM3 Camera, XFORM3 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }
-
-
-
-    
+    }    
 }

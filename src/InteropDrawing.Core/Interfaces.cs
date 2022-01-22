@@ -25,6 +25,26 @@ namespace InteropDrawing
 
 
     /// <summary>
+    /// Represents an object that can be drawn to a <typeparamref name="TContext"/>
+    /// </summary>
+    public interface IDrawingBrush<TContext>
+    {
+        /// <summary>
+        /// Draws this object into the <typeparamref name="TContext"/> context.
+        /// </summary>
+        /// <param name="context">The drawing context.</param>
+        void DrawTo(TContext context);
+    }
+
+    [Obsolete("Use IDrawingBrush<T>")]
+    public interface IDrawable2D : IDrawingBrush<IDrawable2D> { void DrawTo(IDrawing2D dc); }
+
+
+    [Obsolete("Use IDrawingBrush<T>")]
+    public interface IDrawable3D : IDrawingBrush<IDrawable3D> { void DrawTo(IDrawing3D dc); }
+
+
+    /// <summary>
     /// defines an objects that exposes a unique key that doesn't change as long as
     /// the object itself doesn't change, and can be used by other objects to determine
     /// if this object has changed.    

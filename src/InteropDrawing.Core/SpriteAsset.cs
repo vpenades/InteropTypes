@@ -77,6 +77,7 @@ namespace InteropDrawing
         #region data
 
         private object _Source;
+
         private XY _SourceUVMin;
         private XY _SourceUVMax;
 
@@ -117,11 +118,13 @@ namespace InteropDrawing
         ///     Height: 20
         ///     Pivot: (10,10)        
         /// </example>
+        [Obsolete("Use GetSpriteMatrix()")]
         public XY Pivot => _Pivot;
 
         /// <summary>
         /// Gets the rendering scale of the sprite.
         /// </summary>
+        [Obsolete("Use GetSpriteMatrix()")]
         public float Scale => _Scale;
 
         /// <summary>
@@ -157,7 +160,7 @@ namespace InteropDrawing
             get
             {
                 if (this.Source == null) return false;
-                if (this.Scale == 0) return false;                
+                if (this._Scale == 0) return false;                
                 if (this.Width == 0 || this.Height == 0) return false;
                 return true;
             }
@@ -173,16 +176,15 @@ namespace InteropDrawing
             _Transforms[1] = _GetSpriteMatrix(false, true);
             _Transforms[2] = _GetSpriteMatrix(true, false);
             _Transforms[3] = _GetSpriteMatrix(true, true);
-
         }
 
         private System.Numerics.Matrix3x2 _GetSpriteMatrix(bool hflip, bool vflip)
         {
-            var sx = hflip ? -Scale : +Scale;
-            var sy = vflip ? -Scale : +Scale;
+            var sx = hflip ? -_Scale : +_Scale;
+            var sy = vflip ? -_Scale : +_Scale;
 
             var final = System.Numerics.Matrix3x2.CreateScale(Width, Height);
-            final *= System.Numerics.Matrix3x2.CreateTranslation(-Pivot);
+            final *= System.Numerics.Matrix3x2.CreateTranslation(-_Pivot);
             final *= System.Numerics.Matrix3x2.CreateScale(sx, sy);
             return final;
         }
