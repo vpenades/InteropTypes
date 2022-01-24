@@ -16,7 +16,7 @@ namespace InteropDrawing
         [Test]
         public void CreateModel2D()
         {
-            var mdl = new Model2D();
+            var mdl = new Record2D();
             mdl.DrawLine((1, 2), (3, 4), 5, COLOR.Red);
             mdl.DrawCircle((4, 5), 6, COLOR.Blue);
             mdl.DrawPolygon(COLOR.Gray, (1, 1), (2, 2), (3, 3));

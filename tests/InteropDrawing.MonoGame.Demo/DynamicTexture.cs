@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropDrawing
 {
-    class _DynamicTexture : IDrawable2D
+    class _DynamicTexture : IDrawingBrush<IDrawing2D>
     {
         public _DynamicTexture(GraphicsDevice device)
         {
@@ -15,7 +15,7 @@ namespace InteropDrawing
 
         private readonly GraphicsDevice _Device;
 
-        private SpriteAsset _DynAsset;
+        private ImageAsset _DynAsset;
         private Texture2D _DynTexture;
         private readonly Byte[] _DynData = new byte[64 * 64 * 4];
 
@@ -26,12 +26,12 @@ namespace InteropDrawing
             if (_DynTexture == null)
             {
                 _DynTexture = new Texture2D(_Device, 64, 64);
-                _DynAsset = new SpriteAsset(_DynTexture, (0, 0), (64, 64), (32, 32));
+                _DynAsset = new ImageAsset(_DynTexture, (0, 0), (64, 64), (32, 32));
             }
 
             _Randomizer.NextBytes(_DynData);
             _DynTexture.SetData(_DynData);
-            dc.DrawSprite(System.Numerics.Matrix3x2.CreateTranslation(400, 50), _DynAsset);
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(400, 50), _DynAsset);
         }
     }
 }

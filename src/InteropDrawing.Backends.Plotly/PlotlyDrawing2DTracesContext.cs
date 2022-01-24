@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -8,7 +9,7 @@ using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 
 namespace InteropDrawing.Backends
 {
-    class _PlotlyDrawing2DTracesContext : IDrawingContext2D
+    class _PlotlyDrawing2DTracesContext : IDisposableDrawing2D
     {
         #region lifecycle
         public _PlotlyDrawing2DTracesContext(PlotlyDocumentBuilder owner)
@@ -44,33 +45,38 @@ namespace InteropDrawing.Backends
 
         #region API
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        /// <inheritdoc/>
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, InteropDrawing.LineStyle style)
+        /// <inheritdoc/>
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
         {
             if (!style.IsVisible) return;
 
             var lstyle = Plotly.LineProperties.Create(style.Style.FillColor, diameter, style.Style.OutlineColor, style.Style.OutlineWidth);
 
             _Traces.Add(Plotly.TracesFactory.Lines(points, lstyle));
-        }        
+        }
 
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
+        /// <inheritdoc/>
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
         {
             if (!style.IsVisible) return;
 
             _Markers.Add((center, (width + height) * 0.25f, style.FillColor));
         }
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        /// <inheritdoc/>
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             throw new NotSupportedException();
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
+        /// <inheritdoc/>
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
         {
             if (!style.IsVisible) return;
 
@@ -80,10 +86,21 @@ namespace InteropDrawing.Backends
 
                 _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor, ls));
             }
-            else if (style.HasFill)
+            else
             {
-                _Traces.Add(Plotly.TracesFactory.Polygon(points,style.FillColor));
+                if (style.HasFill)
+                {
+                    _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor));
+                }
             }
+        }
+
+        /// <inheritdoc/>
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        {
+            if (color.IsEmpty) return;
+            
+            _Traces.Add(Plotly.TracesFactory.Polygon(points, color));            
         }
 
         #endregion

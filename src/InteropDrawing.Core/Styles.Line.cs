@@ -38,7 +38,7 @@ namespace InteropDrawing
     /// Combines an <see cref="ColorStyle"/> with Line Cap styles.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="IDrawing2D.DrawLines(ReadOnlySpan{Point2}, float, LineStyle)"/>.
+    /// Style used by <see cref="IVectorsDrawing2D.DrawLines(ReadOnlySpan{Point2}, float, LineStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {StartCap} {EndCap}")]
     public readonly struct LineStyle
@@ -113,6 +113,8 @@ namespace InteropDrawing
 
         #region properties
 
+        public COLOR FillColor => Style.FillColor;
+
         public bool IsVisible => Style.IsVisible;
 
         #endregion
@@ -146,6 +148,21 @@ namespace InteropDrawing
         public LineStyle WithOutline(COLOR color, Single ow)
         {
             return new LineStyle(Style.WithOutline(color, ow), StartCap, EndCap);
+        }
+
+        public bool IsSolid(ref float diameter, out COLOR solidColor)
+        {
+            if (diameter < this.Style.OutlineWidth)
+            {
+                diameter = this.Style.OutlineWidth * 2;
+                solidColor = this.Style.OutlineColor;
+                return true;
+            }
+
+            if (!Style.HasOutline) { solidColor = Style.FillColor; return true; }
+
+            solidColor = default;
+            return false;
         }
 
         #endregion

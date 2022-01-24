@@ -12,7 +12,7 @@ namespace InteropDrawing
         private static string AssetsDir => System.IO.Path.Combine(NUnit.Framework.TestContext.CurrentContext.TestDirectory, "Assets");
         
 
-        public static Model3D CreateScene3D(string name)
+        public static Record3D CreateRecord3D(string name)
         {
             switch (name)
             {
@@ -23,9 +23,9 @@ namespace InteropDrawing
             }
         }
 
-        private static Model3D CreateDefaultScene1()
+        private static Record3D CreateDefaultScene1()
         {
-            var context = new Model3D();
+            var context = new Record3D();
 
             context.DrawPivot(Matrix4x4.CreateTranslation(-10, 0, -10), 2);
 
@@ -49,9 +49,9 @@ namespace InteropDrawing
             return context;
         }
 
-        private static Model3D CreateThunderbirdsRocket()
+        private static Record3D CreateThunderbirdsRocket()
         {
-            var context = new Model3D();
+            var context = new Record3D();
 
             var style = new ColorStyle(COLOR.Red, COLOR.Black, 0.1f);
 
@@ -85,9 +85,9 @@ namespace InteropDrawing
             return context;
         }
 
-        private static Model3D CreateDNAScene()
+        private static Record3D CreateDNAScene()
         {
-            var target = new Model3D();
+            var target = new Record3D();
 
             for (int i = 0; i < 20; ++i)
             {
@@ -109,17 +109,17 @@ namespace InteropDrawing
             return target;
         }
 
-        public static Model2D CreateDefaultScene2D()
+        public static Record2D CreateDefaultScene2D()
         {
-            var scene = new Model2D();
+            var scene = new Record2D();
 
             scene.DrawLine((2, 2), (25, 25), 1, COLOR.Green);
             scene.DrawCircle((10, 10), 5, COLOR.Blue);
 
             var charPath = System.IO.Path.Combine(AssetsDir, "Tiles.jpg");
-            var cell = new SpriteAsset(charPath, (0, 0), (64, 64), (32, 32));
+            var cell = new ImageAsset(charPath, (0, 0), (64, 64), (32, 32));
 
-            scene.DrawSprite(Matrix3x2.CreateTranslation(2, 2), cell);            
+            scene.DrawImage(Matrix3x2.CreateTranslation(2, 2), cell);            
 
             return scene;
         }

@@ -10,31 +10,31 @@ namespace InteropDrawing
     /// Represents a graphic resource defined as a bitmap source and a region within that bitmap.
     /// </summary>
     /// <remarks>
-    /// <see cref="SpriteAsset"/> is part of <see cref="SpriteStyle"/>, which can be used with<br/>
-    /// <see cref="IDrawing2D.DrawSprite(in System.Numerics.Matrix3x2, in SpriteStyle)"/>.
+    /// <see cref="ImageAsset"/> is part of <see cref="ImageStyle"/>, which can be used with<br/>
+    /// <see cref="IImageDrawing2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Source} ({Left}, {Top}) ({Width}, {Height}) Scale:{Scale}")]
-    public sealed class SpriteAsset
+    public class ImageAsset
     {
         #region lifecycle
 
-        public static IEnumerable<SpriteAsset> CreateGrid(Object source, Point2 size, Point2 pivot, int count, int stride)
+        public static IEnumerable<ImageAsset> CreateGrid(Object source, Point2 size, Point2 pivot, int count, int stride)
         {
             for (int idx = 0; idx < count; ++idx)
             {
                 var idx_x = idx % stride;
                 var idx_y = idx / stride;
 
-                yield return new SpriteAsset(source, (idx_x * size.X, idx_y * size.Y), (size.X, size.Y), pivot);
+                yield return new ImageAsset(source, (idx_x * size.X, idx_y * size.Y), (size.X, size.Y), pivot);
             }
         }        
 
-        public static SpriteAsset CreateFromBitmap(Object source, Point2 size, Point2 pivot)
+        public static ImageAsset CreateFromBitmap(Object source, Point2 size, Point2 pivot)
         {
-            return new SpriteAsset(source, (0, 0), size, pivot);
+            return new ImageAsset(source, (0, 0), size, pivot);
         }        
 
-        public SpriteAsset(Object source, Point2 origin, Point2 size, Point2 pivot)
+        public ImageAsset(Object source, Point2 origin, Point2 size, Point2 pivot)
         {
             this._Source = source;           
 
@@ -46,23 +46,23 @@ namespace InteropDrawing
             this._CalculateMatrices();
         }
 
-        public SpriteAsset() { }
+        public ImageAsset() { }
 
-        public SpriteAsset WithPivot(int x, int y)
+        public ImageAsset WithPivot(int x, int y)
         {
             _Pivot = new XY(x, y);
             this._CalculateMatrices();
             return this;
         }
 
-        public SpriteAsset WithScale(float scale)
+        public ImageAsset WithScale(float scale)
         {
             _Scale = scale;
             this._CalculateMatrices();
             return this;
         }
 
-        public void CopyTo(SpriteAsset other, XY pivotOffset)
+        public void CopyTo(ImageAsset other, XY pivotOffset)
         {
             other._Source = this.Source;
             other._SourceUVMin = this._SourceUVMin;
@@ -108,23 +108,23 @@ namespace InteropDrawing
         public Object Source => _Source;
 
         /// <summary>
-        /// Gets the coordinates of the center of the sprite, in pixels, relative to <see cref="Top"/> and <see cref="Left"/>.
+        /// Gets the coordinates of the center of the image, in pixels, relative to <see cref="Top"/> and <see cref="Left"/>.
         /// </summary>
         /// <example>
-        /// We could define a sprite of size (20,20) with the rotation pivot located at its center like this:
+        /// We could define a image of size (20,20) with the rotation pivot located at its center like this:
         ///     Top: 33
         ///     Left: 55
         ///     Width: 20
         ///     Height: 20
         ///     Pivot: (10,10)        
         /// </example>
-        [Obsolete("Use GetSpriteMatrix()")]
+        [Obsolete("Use GetImageMatrix()")]
         public XY Pivot => _Pivot;
 
         /// <summary>
-        /// Gets the rendering scale of the sprite.
+        /// Gets the rendering scale of the image.
         /// </summary>
-        [Obsolete("Use GetSpriteMatrix()")]
+        [Obsolete("Use GetImageMatrix()")]
         public float Scale => _Scale;
 
         /// <summary>
@@ -138,12 +138,12 @@ namespace InteropDrawing
         public float Top => _SourceUVMin.Y;
 
         /// <summary>
-        /// Gets the width of the sprite, in pixels.
+        /// Gets the width of the image, in pixels.
         /// </summary>
         public float Width => _SourceUVMax.X - _SourceUVMin.X;
 
         /// <summary>
-        /// Gets the Height of the sprite, in pixels.
+        /// Gets the Height of the image, in pixels.
         /// </summary>
         public float Height => _SourceUVMax.Y - _SourceUVMin.Y;
 
@@ -172,13 +172,13 @@ namespace InteropDrawing
 
         private void _CalculateMatrices()
         {
-            _Transforms[0] = _GetSpriteMatrix(false, false);
-            _Transforms[1] = _GetSpriteMatrix(false, true);
-            _Transforms[2] = _GetSpriteMatrix(true, false);
-            _Transforms[3] = _GetSpriteMatrix(true, true);
+            _Transforms[0] = _GetImageMatrix(false, false);
+            _Transforms[1] = _GetImageMatrix(false, true);
+            _Transforms[2] = _GetImageMatrix(true, false);
+            _Transforms[3] = _GetImageMatrix(true, true);
         }
 
-        private System.Numerics.Matrix3x2 _GetSpriteMatrix(bool hflip, bool vflip)
+        private System.Numerics.Matrix3x2 _GetImageMatrix(bool hflip, bool vflip)
         {
             var sx = hflip ? -_Scale : +_Scale;
             var sy = vflip ? -_Scale : +_Scale;
@@ -189,7 +189,7 @@ namespace InteropDrawing
             return final;
         }
 
-        public System.Numerics.Matrix3x2 GetSpriteMatrix(bool hflip, bool vflip)
+        public System.Numerics.Matrix3x2 GetImageMatrix(bool hflip, bool vflip)
         {
             var index = (hflip ? 2 : 0) | (vflip ? 1 : 0);
 
@@ -204,5 +204,5 @@ namespace InteropDrawing
         }
 
         #endregion
-    }
+    }    
 }

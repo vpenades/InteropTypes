@@ -37,8 +37,7 @@ namespace InteropDrawing
 
         private readonly GraphicsDeviceManager _Graphics;
 
-        private Backends.IMonoGameDrawing2D _Drawing2D;
-        // private IDrawingContext3D _Drawing3D;
+        private Backends.IMonoGameDrawing2D _Drawing2D;        
 
         private _Sprites2D _Sprites = new _Sprites2D();
 

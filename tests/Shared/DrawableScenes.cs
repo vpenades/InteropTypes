@@ -8,7 +8,7 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing
 {
-    struct _Scene2D : IDrawable2D
+    struct _Scene2D : IDrawingBrush<IDrawing2D>
     {
         public void DrawTo(IDrawing2D dc)
         {
@@ -29,14 +29,14 @@ namespace InteropDrawing
         }
     }
 
-    class _Sprites2D : IDrawable2D
+    class _Sprites2D : IDrawingBrush<IDrawing2D>
     {
-        private static readonly SpriteAsset[] _Punk = SpriteAsset.CreateGrid("Assets\\PunkRun.png", (256, 256), (128, 128), 8, 8).ToArray();
-        private static readonly SpriteAsset[] _Tiles = SpriteAsset.CreateGrid("Assets\\Tiles.png", (16, 16), XY.Zero, 63, 9).ToArray();
+        private static readonly ImageAsset[] _Punk = ImageAsset.CreateGrid("Assets\\PunkRun.png", (256, 256), (128, 128), 8, 8).ToArray();
+        private static readonly ImageAsset[] _Tiles = ImageAsset.CreateGrid("Assets\\Tiles.png", (16, 16), XY.Zero, 63, 9).ToArray();
 
         private static readonly BitmapGrid _Map1 = new BitmapGrid(4, 4, _Tiles);
 
-        private static readonly SpriteAsset Beam1 = SpriteAsset.CreateFromBitmap("Assets\\beam1.png", (256, 32), (16, 16));
+        private static readonly ImageAsset Beam1 = ImageAsset.CreateFromBitmap("Assets\\beam1.png", (256, 32), (16, 16));
 
         private static readonly System.Diagnostics.Stopwatch _Timer = System.Diagnostics.Stopwatch.StartNew();
 
@@ -49,9 +49,9 @@ namespace InteropDrawing
                 * System.Numerics.Matrix3x2.CreateRotation(_Time)
                    * System.Numerics.Matrix3x2.CreateTranslation(400, 300);
 
-            var image = SpriteAsset.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
+            var image = ImageAsset.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
 
-            dc.DrawSprite(x, image);
+            dc.DrawImage(x, image);
 
 
 
@@ -59,13 +59,13 @@ namespace InteropDrawing
 
             var idx = (int)(_Time * 25);
 
-            dc.DrawSprite(System.Numerics.Matrix3x2.CreateTranslation(400, 300), _Punk[idx % _Punk.Length]);
-            dc.DrawSprite(System.Numerics.Matrix3x2.CreateTranslation(200, 300), (_Punk[idx % _Punk.Length], COLOR.Red.WithAlpha(128), true, false));
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(400, 300), _Punk[idx % _Punk.Length]);
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(200, 300), (_Punk[idx % _Punk.Length], COLOR.Red.WithAlpha(128), true, false));
 
-            dc.DrawSprite(System.Numerics.Matrix3x2.CreateTranslation(50, 300), _Punk[idx % _Punk.Length]);
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(50, 300), _Punk[idx % _Punk.Length]);
 
-            dc.DrawSprite(System.Numerics.Matrix3x2.CreateTranslation(10, 20), _Tiles[1]);
-            dc.DrawSprite(System.Numerics.Matrix3x2.CreateTranslation(10 + 16, 20), _Tiles[2]);
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(10, 20), _Tiles[1]);
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(10 + 16, 20), _Tiles[2]);
 
             x =
                 System.Numerics.Matrix3x2.CreateScale(1.4224f)
@@ -91,7 +91,7 @@ namespace InteropDrawing
     {
         #region lifecycle
 
-        public BitmapGrid(int width, int height, SpriteAsset[] templates)
+        public BitmapGrid(int width, int height, ImageAsset[] templates)
         {
             _Sprites = templates;
             _Width = width;
@@ -106,7 +106,7 @@ namespace InteropDrawing
 
         #region data
 
-        private readonly SpriteAsset[] _Sprites;
+        private readonly ImageAsset[] _Sprites;
 
         private readonly int _Width;
         private readonly int _Height;
@@ -119,7 +119,7 @@ namespace InteropDrawing
 
         public void DrawTo(IDrawing2D target, System.Numerics.Matrix3x2 transform)
         {
-            var tmp = new SpriteAsset();
+            var tmp = new ImageAsset();
 
             for (int y = 0; y < _Height; ++y)
             {
@@ -131,7 +131,7 @@ namespace InteropDrawing
 
                     _Sprites[idx].CopyTo(tmp, -offset);
 
-                    target.DrawSprite(transform, tmp);
+                    target.DrawImage(transform, tmp);
                 }
             }
         }

@@ -9,7 +9,7 @@ using XYZ = System.Numerics.Vector3;
 
 namespace InteropVision
 {
-    public class Landmarks3D : InteropDrawing.IDrawable3D //, InteropDrawing.IBounds3D
+    public class Landmarks3D : InteropDrawing.IDrawingBrush<InteropDrawing.IDrawing3D> //, InteropDrawing.IBounds3D
     {
         #region lifecycle
 

@@ -59,7 +59,7 @@ namespace InteropDrawing.Transforms
         {
             if (asset is Asset3D a3d) { a3d._DrawAsSurfaces(this); return; }
 
-            if (asset is IDrawable3D drawable) { drawable.DrawTo(this); return; }            
+            if (asset is IDrawingBrush<IDrawing3D> drawable) { drawable.DrawTo(this); return; }            
         }
 
         public void DrawSegment(POINT3 a, POINT3 b, SCALAR diameter, LineStyle style)

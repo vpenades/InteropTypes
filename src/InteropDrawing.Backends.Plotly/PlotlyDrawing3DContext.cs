@@ -5,7 +5,7 @@ using Plotly;
 
 namespace InteropDrawing.Backends
 {
-    class _PlotlyDrawing3DContext : IDrawingContext3D
+    class _PlotlyDrawing3DContext : IDisposableDrawing3D
     {
         #region lifecycle
         public _PlotlyDrawing3DContext(PlotlyDocumentBuilder owner)

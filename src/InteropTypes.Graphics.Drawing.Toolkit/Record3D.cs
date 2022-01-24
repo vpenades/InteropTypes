@@ -13,7 +13,7 @@ namespace InteropDrawing
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IDrawing3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Model3D : IDrawing3D, IDrawable3D, IPseudoImmutable, IBounds3D
+    public class Record3D : IDrawing3D, IDrawingBrush<IDrawing3D>, IPseudoImmutable, IBounds3D
     {
         #region data
 
@@ -29,11 +29,11 @@ namespace InteropDrawing
         
 
         /// <summary>
-        /// This value does not change as long as the content of <see cref="Model3D"/> doesn't change either.
+        /// This value does not change as long as the content of <see cref="Record3D"/> doesn't change either.
         /// </summary>
         /// <remarks>
         /// <see cref="ImmutableKey"/> can be used as a Dictionary Key so a client backend can create an optimized
-        /// renderable resource to be used in place of this <see cref="Model3D"/>
+        /// renderable resource to be used in place of this <see cref="Record3D"/>
         /// </remarks>
         public Object ImmutableKey
         {
@@ -159,7 +159,7 @@ namespace InteropDrawing
             return Matrix4x4.CreateWorld(fromPosition, d, XYZ.UnitY);
         }
 
-        public void CopyTo(Model3D other)
+        public void CopyTo(Record3D other)
         {
             other._Commands.Set(this._Commands);
             other._ImmutableKey = null;
@@ -170,32 +170,32 @@ namespace InteropDrawing
 
     sealed class _Model3DProxy : _CommandStream3D_DebuggerProxy
     {
-        public _Model3DProxy(Model3D src) : base(src._Commands) { ImmutableKey = src.ImmutableKey; }
+        public _Model3DProxy(Record3D src) : base(src._Commands) { ImmutableKey = src.ImmutableKey; }
 
         public object ImmutableKey { get; }
     }
 
     /// <summary>
-    /// Represents the version key of a <see cref="Model3D"/>.
+    /// Represents the version key of a <see cref="Record3D"/>.
     /// </summary>
     /// <remarks>
-    /// Stores computationally expensive resources of a given version of a <see cref="Model3D"/>
-    /// and also serves as <see cref="Model3D.ImmutableKey"/> underlaying object.
+    /// Stores computationally expensive resources of a given version of a <see cref="Record3D"/>
+    /// and also serves as <see cref="Record3D.ImmutableKey"/> underlaying object.
     /// </remarks>
     sealed class Model3DVersionKey
     {
         #region constructor
 
-        public Model3DVersionKey(Model3D model)
+        public Model3DVersionKey(Record3D model)
         {
-            _Source = new WeakReference<Model3D>(model);
+            _Source = new WeakReference<Record3D>(model);
         }
 
         #endregion
 
         #region data
 
-        private readonly WeakReference<Model3D> _Source;
+        private readonly WeakReference<Record3D> _Source;
 
         private int? _ContentHash;
 
@@ -216,7 +216,7 @@ namespace InteropDrawing
             {
                 if (_ContentHash.HasValue) return _ContentHash.Value;
 
-                if (!_Source.TryGetTarget(out Model3D model)) return default;
+                if (!_Source.TryGetTarget(out Record3D model)) return default;
 
                 // create a hash from model _Commands, _Vectors and _References.
 
@@ -245,7 +245,7 @@ namespace InteropDrawing
             {
                 if (_BoundingBox.HasValue) return _BoundingBox.Value;
 
-                if (!_Source.TryGetTarget(out Model3D model)) return default;
+                if (!_Source.TryGetTarget(out Record3D model)) return default;
 
                 _UpdateBounds(model);
 
@@ -259,7 +259,7 @@ namespace InteropDrawing
             {
                 if (_BoundingSphere.HasValue) return _BoundingSphere.Value;
 
-                if (!_Source.TryGetTarget(out Model3D model)) return default;
+                if (!_Source.TryGetTarget(out Record3D model)) return default;
 
                 _UpdateBounds(model);
 
@@ -267,7 +267,7 @@ namespace InteropDrawing
             }
         }
 
-        private void _UpdateBounds(Model3D model)
+        private void _UpdateBounds(Record3D model)
         {
             var (min, max, center, radius) = model._Commands.GetBounds();
             _BoundingBox = (min, max);

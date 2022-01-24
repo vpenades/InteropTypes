@@ -15,8 +15,8 @@ namespace InteropDrawing.Transforms
     /// underlaying <see cref="IDrawing2D"/> surface. So if we need to render the primitives<br/>
     /// from back to front, it's better to render the scene in two steps:
     /// <list type="number">
-    /// <item>Draw the 3D scene to a temporary <see cref="Model3D"/></item>
-    /// <item>Render the temporary <see cref="Model3D"/> using <see cref="DrawScene(Model3D, bool)"/></item>
+    /// <item>Draw the 3D scene to a temporary <see cref="Record3D"/></item>
+    /// <item>Render the temporary <see cref="Record3D"/> using <see cref="DrawScene(Record3D, bool)"/></item>
     /// </list>
     /// </para>
     /// </remarks>
@@ -226,7 +226,7 @@ namespace InteropDrawing.Transforms
         /// Draws the predefined scene using <see href="https://en.wikipedia.org/wiki/Painter%27s_algorithm"/>
         /// </summary>
         /// <param name="scene">the scene to render</param>
-        public void DrawScene(Model3D scene, bool decompose = false)
+        public void DrawScene(Record3D scene, bool decompose = false)
         {
 
             if (true)

@@ -87,8 +87,8 @@ namespace InteropDrawing.Backends
 
         #region properties - the scene
 
-        private static readonly StaticProperty<IDrawable2D> ContentProperty = _PropFactory.Register<IDrawable2D>(nameof(Content), null, _Update);
-        public IDrawable2D Content
+        private static readonly StaticProperty<IDrawingBrush<IDrawing2D>> ContentProperty = _PropFactory.Register<IDrawingBrush<IDrawing2D>>(nameof(Content), null, _Update);
+        public IDrawingBrush<IDrawing2D> Content
         {
             get => ContentProperty.GetValue(this);
             set => ContentProperty.SetValue(this, value);
@@ -177,7 +177,7 @@ namespace InteropDrawing.Backends
 
             var content = this.Content;
             if (content == null) return;
-            if (content is Model2D model && model.IsEmpty) return;            
+            if (content is Record2D model && model.IsEmpty) return;            
             
             _Context2D.SetContext(dc);
             _Context2D.DrawScene(this.RenderSize, _ProjectionMatrix, _CameraMatrix, content);
@@ -191,7 +191,7 @@ namespace InteropDrawing.Backends
         struct _Viewport : ISceneViewport2D
         {
             #region constructor
-            public _Viewport(HorizontalAlignment h, VerticalAlignment v, Matrix3x2 camera, IDrawable2D scene)
+            public _Viewport(HorizontalAlignment h, VerticalAlignment v, Matrix3x2 camera, IDrawingBrush<IDrawing2D> scene)
             {
                 HAlignment = h;
                 VAlignment = v;

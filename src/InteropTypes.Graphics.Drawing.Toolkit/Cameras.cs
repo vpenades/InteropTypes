@@ -30,7 +30,7 @@ namespace InteropDrawing
             };
         }
 
-        public static CameraView3D CreateLookingAt(Model3D scene, XYZ direction)
+        public static CameraView3D CreateLookingAt(Record3D scene, XYZ direction)
         {
             if (direction == XYZ.Zero) direction = -XYZ.UnitZ;
 
@@ -293,7 +293,7 @@ namespace InteropDrawing
 
         #region API
 
-        public void GetProjectionInfo(out Transforms.ProjectPointCallback proj, out PLANE plane, Model3D scene)
+        public void GetProjectionInfo(out Transforms.ProjectPointCallback proj, out PLANE plane, Record3D scene)
         {
             proj = _ProjFunc;
             plane = _NearPlane;

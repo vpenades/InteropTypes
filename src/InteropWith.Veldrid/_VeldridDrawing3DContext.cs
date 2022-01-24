@@ -9,7 +9,7 @@ using Veldrid;
 
 namespace InteropWith
 {
-    public interface IVeldridDrawingContext3D : IDrawingContext3D
+    public interface IVeldridDrawingContext3D : IDisposableDrawing3D
     {
         void FillFrame(System.Drawing.Color color);
     }
@@ -106,7 +106,7 @@ namespace InteropWith
                 vertices[i] = new Vertex3D { Position = points[i].ToNumerics(), Normal =n,  Color = c };
             }
 
-            AddPolygon(vertices, _NullTextureId);
+            AddConvexPolygon(vertices, _NullTextureId);
         }
 
         private static unsafe Vector3 _CalculateNormal(ReadOnlySpan<Point3> points)

@@ -12,7 +12,7 @@ namespace InteropDrawing.Backends.Plotly
         [Test]
         public void DrawVolumes()
         {
-            var scene = new Model3D();
+            var scene = new Record3D();
             scene.DrawPivot(System.Numerics.Matrix4x4.Identity, 2);
             scene.DrawCube(System.Numerics.Matrix4x4.CreateTranslation(5, 0, 0), Color.Red, Color.Green, Color.Blue);
             scene.DrawCube(System.Numerics.Matrix4x4.CreateTranslation(7, 0, 0), (Color.Black, 0.1f));

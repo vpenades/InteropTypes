@@ -18,7 +18,7 @@ namespace InteropDrawing
 
         internal void _DrawAsSurfaces(IDrawing3D target)
         {
-            if (this.PrimaryAsset is Model3D md3d)
+            if (this.PrimaryAsset is Record3D md3d)
             {
                 target.DrawAssetAsSurfaces(this.PrimaryAsset, COLOR.White);
                 return;
@@ -35,7 +35,7 @@ namespace InteropDrawing
 
         internal void _DrawAsPrimitives(IDrawing3D target)
         {
-            if (this.PrimaryAsset is Model3D md3d)
+            if (this.PrimaryAsset is Record3D md3d)
             {
                 target.DrawAssetAsPrimitives(this.PrimaryAsset, COLOR.White);
                 return;

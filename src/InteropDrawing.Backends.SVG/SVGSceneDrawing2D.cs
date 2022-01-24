@@ -92,14 +92,31 @@ namespace InteropDrawing.Backends
 
         #endregion
 
-        #region API
+        #region API - IDrawing2D
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
+        /// <inheritdoc/>
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle brush)
         {
             new Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
+        /// <inheritdoc/>
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        {
+            if (color.IsEmpty) return;
+
+            var ppp = new System.Drawing.PointF[points.Length];
+
+            for (int i = 0; i < ppp.Length; ++i)
+            {
+                ppp[i] = new System.Drawing.PointF(points[i].X, points[i].Y);
+            }
+
+            _Context.FillPolygon(_UseBrush(color), ppp);
+        }
+
+        /// <inheritdoc/>
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle brush)
         {
             var sc = _ToDevice(brush.StartCap);
             var ec = _ToDevice(brush.EndCap);
@@ -122,6 +139,7 @@ namespace InteropDrawing.Backends
             }
         }
 
+        
         private void _DrawLineInternal(ReadOnlySpan<System.Drawing.PointF> points, float diameter, COLOR color, System.Drawing.Drawing2D.LineCap startCap, System.Drawing.Drawing2D.LineCap endCap)
         {
             using (var pen = new System.Drawing.Pen(color, diameter))
@@ -140,7 +158,8 @@ namespace InteropDrawing.Backends
             }
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle brush)
+        /// <inheritdoc/>
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle brush)
         {
             center -= new Point2(width * 0.5f, height * 0.5f);
 
@@ -155,7 +174,8 @@ namespace InteropDrawing.Backends
             }
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle brush)
+        /// <inheritdoc/>
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
         {
             var ppp = new System.Drawing.PointF[points.Length];
 
@@ -178,7 +198,8 @@ namespace InteropDrawing.Backends
             }
         }
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        /// <inheritdoc/>
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             if (!_CanRenderBitmaps) return;
 
@@ -221,7 +242,7 @@ namespace InteropDrawing.Backends
 
         #region static API
 
-        public static void SaveToSVG(string filePath, IDrawable2D scene)
+        public static void SaveToSVG(string filePath, IDrawingBrush<IDrawing2D> scene)
         {
             using (var svg = CreateGraphic())
             {

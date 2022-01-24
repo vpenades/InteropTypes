@@ -14,7 +14,7 @@ namespace InteropWith
 {
     class ProgramWin
     {
-        private static SpriteAsset _Sprite1 = new SpriteAsset("assets\\hieroglyph_sprites_by_asalga.png", (0, 0), (192, 192), (8, 8));
+        private static ImageAsset _Sprite1 = new ImageAsset("assets\\hieroglyph_sprites_by_asalga.png", (0, 0), (192, 192), (8, 8));
 
         public static void Run(string[] args)
         {
@@ -106,7 +106,7 @@ namespace InteropWith
             {
                 dc2.DrawEllipse((40, 40), 50, 50, System.Drawing.Color.Blue);
                 dc2.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White, 2));
-                dc2.DrawSprite(Matrix3x2.CreateTranslation(100, 20), _Sprite1);
+                dc2.DrawImage(Matrix3x2.CreateTranslation(100, 20), _Sprite1);
                 dc2.DrawRectangle((150, 350), (200, 100), (System.Drawing.Color.Yellow, 3), 20, 5);
 
                 _AnimatedScene.DrawTo(dc2);

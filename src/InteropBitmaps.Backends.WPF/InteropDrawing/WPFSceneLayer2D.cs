@@ -14,8 +14,8 @@ namespace InteropDrawing.Backends
 
         private static PropertyFactory<WPFSceneLayer2D> _PropFactory = new PropertyFactory<WPFSceneLayer2D>();
 
-        private static readonly StaticProperty<Model2D> _SceneProperty = _PropFactory.Register<Model2D>(nameof(Scene), null);
-        public Model2D Scene
+        private static readonly StaticProperty<Record2D> _SceneProperty = _PropFactory.Register<Record2D>(nameof(Scene), null);
+        public Record2D Scene
         {
             get => _SceneProperty.GetValue(this);
             set => _SceneProperty.SetValue(this, value);

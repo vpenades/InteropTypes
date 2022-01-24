@@ -20,15 +20,35 @@ namespace InteropDrawing
     {
         #region data
 
-        private static readonly System.Threading.ThreadLocal<Model3D> _Model3DBounds = new System.Threading.ThreadLocal<Model3D>(() => new Model3D());
+        private static readonly System.Threading.ThreadLocal<Record3D> _Model3DBounds = new System.Threading.ThreadLocal<Record3D>(() => new Record3D());
 
         #endregion
 
         #region 3D transforms
 
-        public static IDrawing2D CreateTransformed2D(this IDrawing2D t, XFORM2 xform)
+        public static IAssetDrawing2D CreateTransformed2D(this IAssetDrawing2D source, XFORM2 xform)
         {
-            return xform.IsIdentity ? t : Transforms.Drawing2DTransform.Create(t, xform);
+            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
+        }
+
+        public static IVectorsDrawing2D CreateTransformed2D(this IVectorsDrawing2D source, XFORM2 xform)
+        {
+            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
+        }
+
+        public static IPolygonDrawing2D CreateTransformed2D(this IPolygonDrawing2D source, XFORM2 xform)
+        {
+            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
+        }
+
+        public static IImageDrawing2D CreateTransformed2D(this IImageDrawing2D source, XFORM2 xform)
+        {
+            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
+        }
+
+        public static IDrawing2D CreateTransformed2D(this IDrawing2D source, XFORM2 xform)
+        {
+            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
         }
 
         public static IDrawing2D CreateTransformed2D(this IDrawing3D t, XFORM4 xform)
@@ -66,7 +86,7 @@ namespace InteropDrawing
                 return;
             }
 
-            if (asset is IDrawable3D mdl3D)
+            if (asset is IDrawingBrush<IDrawing3D> mdl3D)
             {
                 mdl3D.DrawTo(dc);
                 return;
@@ -89,7 +109,7 @@ namespace InteropDrawing
                 return;
             }
 
-            if (asset is Model3D mdl3D)
+            if (asset is Record3D mdl3D)
             {
                 mdl3D.DrawTo(dc);
                 return;
@@ -102,8 +122,8 @@ namespace InteropDrawing
 
         public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
         {
-            if (asset is Model3D model3D) return model3D.BoundingBox;
-            if (asset is IDrawable3D drawable)
+            if (asset is Record3D model3D) return model3D.BoundingBox;
+            if (asset is IDrawingBrush<IDrawing3D> drawable)
             {
                 var mdl = _Model3DBounds.Value;
                 mdl.Clear();
@@ -117,8 +137,8 @@ namespace InteropDrawing
 
         public static BBOX? GetAssetBoundingMatrix(Object asset)
         {
-            if (asset is Model3D model3D) return model3D.BoundingMatrix;
-            if (asset is IDrawable3D drawable)
+            if (asset is Record3D model3D) return model3D.BoundingMatrix;
+            if (asset is IDrawingBrush<IDrawing3D> drawable)
             {
                 var mdl = _Model3DBounds.Value;
                 mdl.Clear();
@@ -132,8 +152,8 @@ namespace InteropDrawing
 
         public static (VECTOR3 Center, Single Radius)? GetAssetBoundingSphere(Object asset)
         {
-            if (asset is Model3D model3D) return model3D.BoundingSphere;
-            if (asset is IDrawable3D drawable)
+            if (asset is Record3D model3D) return model3D.BoundingSphere;
+            if (asset is IDrawingBrush<IDrawing3D> drawable)
             {
                 var mdl = _Model3DBounds.Value;
                 mdl.Clear();

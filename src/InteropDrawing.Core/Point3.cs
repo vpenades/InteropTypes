@@ -127,6 +127,15 @@ namespace InteropDrawing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Transform(Span<Point3> dst, ReadOnlySpan<Point2> src, float z)
+        {
+            for (int i = 0; i < dst.Length; ++i)
+            {
+                dst[i] = new Point3(src[i], z);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<VECTOR3> AsNumerics(Span<Point3> points)
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point3, VECTOR3>(points);

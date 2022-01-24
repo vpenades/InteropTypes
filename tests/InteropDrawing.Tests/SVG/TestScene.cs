@@ -37,7 +37,7 @@ namespace InteropDrawing.Backends.SVG
         {
             using var svg = Backends.SVGSceneDrawing2D.CreateGraphic();
 
-            var scene = SceneFactory.CreateScene3D("Scene1");
+            var scene = SceneFactory.CreateRecord3D("Scene1");
 
             scene.DrawTo(svg, 1024, 1024, new Vector3(7, 5, 20));
 

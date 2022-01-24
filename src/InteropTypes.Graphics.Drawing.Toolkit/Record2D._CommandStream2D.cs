@@ -15,7 +15,29 @@ namespace InteropDrawing
     {
         #region constructors 2D
 
-        public unsafe void DrawLines(ReadOnlySpan<Point2> points, Single diameter, LineStyle brush)
+        /// <inheritdoc/>
+        public void DrawAsset(in XFORM2 xform, Object asset, in ColorStyle brush)
+        {
+            var xref = AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset);
+            xref[0].Transform = xform;
+            xref[0].AssetRef = AddReference(asset);
+            xref[0].Style = brush;
+        }
+
+        /// <inheritdoc/>
+        public unsafe void FillConvexPolygon(ReadOnlySpan<POINT2> points, COLOR color)
+        {
+            AddHeader((int)_PrimitiveType.Convex, 4 + sizeof(_PrimitiveConvex) + points.Length * 8);
+
+            var xref = AddStruct<_PrimitiveConvex>();
+            xref[0].Count = points.Length;
+            xref[0].Color = color.ToArgb();
+
+            AddArray(points);
+        }
+
+        /// <inheritdoc/>
+        public unsafe void DrawLines(ReadOnlySpan<POINT2> points, Single diameter, in LineStyle brush)
         {
             if (points.Length > 2)
             {
@@ -38,7 +60,8 @@ namespace InteropDrawing
             }
         }
 
-        public unsafe void DrawEllipse(Point2 center, Single width, Single height, ColorStyle brush)
+        /// <inheritdoc/>
+        public unsafe void DrawEllipse(POINT2 center, Single width, Single height, in ColorStyle brush)
         {
             var xref = AddHeaderAndStruct<_PrimitiveEllipse>((int)_PrimitiveType.Ellipse);
             xref[0].Center = center;
@@ -47,7 +70,8 @@ namespace InteropDrawing
             xref[0].Style = brush;
         }
 
-        public unsafe void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle brush)
+        /// <inheritdoc/>
+        public unsafe void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle brush)
         {
             int count = this.Count;
 
@@ -60,22 +84,15 @@ namespace InteropDrawing
             AddArray(points);
         }
 
-        public void DrawSprite(in XFORM2 xform, in SpriteStyle style)
+        /// <inheritdoc/>
+        public void DrawImage(in XFORM2 xform, in ImageStyle style)
         {
-            var xref = AddHeaderAndStruct<_PrimitiveSprite>((int)_PrimitiveType.Sprite);
+            var xref = AddHeaderAndStruct<_PrimitiveImage>((int)_PrimitiveType.Image);
             xref[0].Transform = xform;
-            xref[0].BitmapCellRef = AddReference(style.Bitmap);
+            xref[0].ImageRef = AddReference(style.Bitmap);
             xref[0].Flags = (style.FlipHorizontal ? 0 : 1) | (style.FlipVertical ? 0 : 2);
             xref[0].Color = style.Color.ToArgb();
-        }
-
-        public void DrawAsset(in XFORM2 xform, Object asset, ColorStyle brush)
-        {
-            var xref = AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset);
-            xref[0].Transform = xform;
-            xref[0].AssetRef = AddReference(asset);
-            xref[0].Style = brush;
-        }
+        }        
 
         #endregion
 
@@ -105,7 +122,7 @@ namespace InteropDrawing
                     case _PrimitiveType.PolyLine: _PrimitiveLine.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Ellipse: _PrimitiveEllipse.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Polygon: _PrimitivePolygon.GetBounds(ref bounds, span); break;
-                    case _PrimitiveType.Sprite: _PrimitiveSprite.GetBounds(ref bounds, span, this.References); break;
+                    case _PrimitiveType.Image: _PrimitiveImage.GetBounds(ref bounds, span, this.References); break;
                     case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, this.References); break;
                 }
             }
@@ -123,10 +140,11 @@ namespace InteropDrawing
                 case _PrimitiveType.PolyLine: { _PrimitivePolyLine.DrawTo(dc, span); break; }
                 case _PrimitiveType.Ellipse: { _PrimitiveEllipse.DrawTo(dc, span); break; }
                 case _PrimitiveType.Polygon: { _PrimitivePolygon.DrawTo(dc, span); break; }
-                case _PrimitiveType.Sprite: { _PrimitiveSprite.DrawTo(dc, span, this.References); break; }
+                case _PrimitiveType.Image: { _PrimitiveImage.DrawTo(dc, span, this.References); break; }
+                case _PrimitiveType.Convex: { _PrimitiveConvex.DrawTo(dc, span); break; }
                 case _PrimitiveType.Asset: { _PrimitiveAsset.DrawTo(dc, span, this.References, collapseAssets); break; }
             }
-        }
+        }        
 
         #endregion
 
@@ -183,10 +201,30 @@ namespace InteropDrawing
             }
         }
 
+        struct _PrimitiveConvex
+        {
+            public int Count;
+            public int Color;
+
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            {
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XY>(command.Slice(sizeof(_PrimitiveConvex)));
+                foreach (var p in pts) bounds.AddVertex(p, 0);
+            }
+
+            public static unsafe void DrawTo(IPolygonDrawing2D dst, ReadOnlySpan<Byte> command)
+            {
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitiveConvex)));
+
+                dst.FillConvexPolygon(pts.Slice(0, src.Count), COLOR.FromArgb(src.Color));
+            }
+        }
+
         struct _PrimitiveLine
         {
-            public Point2 PointA;
-            public Point2 PointB;
+            public POINT2 PointA;
+            public POINT2 PointB;
             public Single Diameter;
             public LineStyle Style;
 
@@ -226,10 +264,10 @@ namespace InteropDrawing
                 foreach (var p in pts) bounds.AddVertex(p, r);
             }
 
-            public static unsafe void DrawTo(IDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IVectorsDrawing2D dst, ReadOnlySpan<Byte> command)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolyLine>(command)[0];
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Point2>(command.Slice(sizeof(_PrimitivePolyLine)));
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitivePolyLine)));
 
                 dst.DrawLines(pts.Slice(0, src.Count), src.Diameter, src.Style);
             }            
@@ -254,17 +292,17 @@ namespace InteropDrawing
                 bounds.AddVertex(c + rr, r);
             }
 
-            public static unsafe void DrawTo(IDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IVectorsDrawing2D dst, ReadOnlySpan<Byte> command)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveEllipse>(command)[0];
                 dst.DrawEllipse(body.Center, body.Width, body.Height, body.Style);
             }            
-        }
+        }        
 
         struct _PrimitivePolygon
         {
             public int Count;            
-            public ColorStyle Style;
+            public PolygonStyle Style;
 
             public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
             {
@@ -276,39 +314,39 @@ namespace InteropDrawing
                 foreach (var p in pts) bounds.AddVertex(p, r);
             }
 
-            public static unsafe void DrawTo(IDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IVectorsDrawing2D dst, ReadOnlySpan<Byte> command)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolygon>(command)[0];
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Point2>(command.Slice(sizeof(_PrimitivePolygon)));
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitivePolygon)));
 
                 dst.DrawPolygon(pts.Slice(0, src.Count), src.Style);
             }            
         }
 
-        struct _PrimitiveSprite
+        struct _PrimitiveImage
         {
             public XFORM2 Transform;
-            public int BitmapCellRef;
+            public int ImageRef;
             public int Flags;
             public int Color;
 
             public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSprite>(command)[0];                
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveImage>(command)[0];                
 
-                var cell = references[src.BitmapCellRef] as SpriteAsset;
+                var img = references[src.ImageRef] as ImageAsset;
 
-                var offset = -cell.Pivot;
+                var offset = -img.Pivot;
 
                 var a = XY.Zero + offset;
-                var b = new XY(cell.Width, 0) + offset;
-                var c = new XY(cell.Width, cell.Height) + offset;
-                var d = new XY(0, cell.Height) + offset;
+                var b = new XY(img.Width, 0) + offset;
+                var c = new XY(img.Width, img.Height) + offset;
+                var d = new XY(0, img.Height) + offset;
 
-                a = XY.Transform(cell.Scale * a, src.Transform);
-                b = XY.Transform(cell.Scale * b, src.Transform);
-                c = XY.Transform(cell.Scale * c, src.Transform);
-                d = XY.Transform(cell.Scale * d, src.Transform);
+                a = XY.Transform(img.Scale * a, src.Transform);
+                b = XY.Transform(img.Scale * b, src.Transform);
+                c = XY.Transform(img.Scale * c, src.Transform);
+                d = XY.Transform(img.Scale * d, src.Transform);
 
                 bounds.AddVertex(a, 0);
                 bounds.AddVertex(b, 0);
@@ -316,14 +354,14 @@ namespace InteropDrawing
                 bounds.AddVertex(d, 0);
             }
 
-            public static void DrawTo(IDrawing2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
+            public static void DrawTo(IImageDrawing2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSprite>(command)[0];
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveImage>(command)[0];
 
-                var xref = (SpriteAsset)references[body.BitmapCellRef];
-                var style = new SpriteStyle(xref, COLOR.FromArgb(body.Color), (body.Flags & 1) != 0, (body.Flags & 2) != 0);
+                var xref = (ImageAsset)references[body.ImageRef];
+                var style = new ImageStyle(xref, COLOR.FromArgb(body.Color), (body.Flags & 1) != 0, (body.Flags & 2) != 0);
 
-                dst.DrawSprite(body.Transform, style);
+                dst.DrawImage(body.Transform, style);
             }            
         }
 
@@ -383,7 +421,8 @@ namespace InteropDrawing
             PolyLine,
             Ellipse,
             Polygon,
-            Sprite,
+            Convex,
+            Image,
             Asset
         }
 

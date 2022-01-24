@@ -7,7 +7,7 @@ namespace InteropDrawing.Fonts
 {
     static class FontDrawing
     {
-        public static void DrawFontAsLines(IDrawing2D dc, in Matrix3x2 xform, string text, FontStyle color)
+        public static void DrawFontAsLines(IVectorsDrawing2D dc, in Matrix3x2 xform, string text, FontStyle color)
         {
             var offset = xform.Translation;
 
@@ -27,7 +27,7 @@ namespace InteropDrawing.Fonts
             }
         }
 
-        public static void DrawGlyphAsLines(IDrawing2D dc, in Matrix3x2 xform, ref Vector2 offset, Char character, FontStyle color)
+        public static void DrawGlyphAsLines(IVectorsDrawing2D dc, in Matrix3x2 xform, ref Vector2 offset, Char character, FontStyle color)
         {
             string glyphCode = VectorFonts.GetSimplexCode(character);
 

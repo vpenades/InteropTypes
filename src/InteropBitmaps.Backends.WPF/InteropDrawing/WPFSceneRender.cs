@@ -24,8 +24,8 @@ namespace InteropDrawing.Backends
 
         private WPFDrawingContext2D _DeviceContext2D = new WPFDrawingContext2D();        
 
-        private Model2D _SafeClone2D = new Model2D();
-        private Model3D _SafeClone3D = new Model3D();
+        private Record2D _SafeClone2D = new Record2D();
+        private Record3D _SafeClone3D = new Record3D();
 
         #endregion
 
@@ -38,12 +38,12 @@ namespace InteropDrawing.Backends
 
         #region API        
 
-        public void Update(int width, int height, SceneView2D xform, Model2D scene)
+        public void Update(int width, int height, SceneView2D xform, Record2D scene)
         {
             Update(new Size(width, height), xform, scene);
         }
 
-        public void Update(Size? renderSize, SceneView2D xform, Model2D scene)
+        public void Update(Size? renderSize, SceneView2D xform, Record2D scene)
         {
             if (CheckAccess()) { _UI_Update(renderSize, xform, scene); return; }
 
@@ -52,7 +52,7 @@ namespace InteropDrawing.Backends
             this.Dispatcher.Invoke(() => _UI_Update(renderSize, xform, _SafeClone2D));
         }
 
-        public void Update(Size? renderSize, SceneView3D xform, Model3D scene)
+        public void Update(Size? renderSize, SceneView3D xform, Record3D scene)
         {
             if (CheckAccess()) { _UI_Update(renderSize, xform, scene); return; }
 
@@ -61,13 +61,13 @@ namespace InteropDrawing.Backends
             this.Dispatcher.Invoke(() => _UI_Update(renderSize, xform, _SafeClone3D));
         }
 
-        private void _UI_Update(Size? renderSize, SceneView2D xform, Model2D scene)
+        private void _UI_Update(Size? renderSize, SceneView2D xform, Record2D scene)
         {
             _DeviceContext2D.DrawScene(_VectorDrawing, renderSize, xform, scene);
             _VectorImage.Drawing = _VectorDrawing.Drawing;
         }
 
-        private void _UI_Update(Size? renderSize, SceneView3D xform, Model3D scene)
+        private void _UI_Update(Size? renderSize, SceneView3D xform, Record3D scene)
         {
             _DeviceContext2D.DrawScene(_VectorDrawing, renderSize, xform, scene);
             _VectorImage.Drawing = _VectorDrawing.Drawing;

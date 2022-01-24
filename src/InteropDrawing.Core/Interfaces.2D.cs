@@ -8,36 +8,14 @@ using SCALAR = System.Single;
 using XFORM2 = System.Numerics.Matrix3x2;
 using POINT2 = InteropDrawing.Point2;
 
+using COLOR = System.Drawing.Color;
+
 namespace InteropDrawing
 {
-    /// <summary>
-    /// Represents a render target context where we can draw 2D polygons.
-    /// </summary>
-    public interface IPolygonDrawing2D
+    public interface IBaseDrawing2D { }
+
+    public interface IAssetDrawing2D : IBaseDrawing2D
     {
-        /// <summary>
-        /// Draws a closed polygon.
-        /// </summary>
-        /// <param name="points">the vertices of the polygon.</param>
-        /// <param name="style">The outline and fill options.</param>
-        /// <remarks>
-        /// Some implementations might be able to handle complex shapes,
-        /// while others might only be able to draw convex shapes.
-        /// </remarks>
-        void DrawPolygon(ReadOnlySpan<POINT2> points, ColorStyle style);
-    }
-
-    /// <summary>
-    /// Represents a render target context where we can draw 2D shapes.
-    /// </summary>
-    public interface IDrawing2D : IPolygonDrawing2D
-    {
-        // methods could return a value:
-        // - a boolean, indicating success or failure/unsupported
-        // - or an object that could be used to fill additional metadata.
-
-        // metadata could be set with Push/Pop methods
-
         /// <summary>
         /// Draws an asset.
         /// </summary>
@@ -48,19 +26,62 @@ namespace InteropDrawing
         /// Assets are dependant on the implementation, but at the most basic level,
         /// <see Model2D is supported as an asset.
         /// </remarks>
-        void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
+        void DrawAsset(in XFORM2 transform, ASSET asset, in ColorStyle style);
+    }
+    
 
-        void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, LineStyle style);
+    /// <summary>
+    /// Represents a drawing canvas where we can draw 2D polygons.
+    /// </summary>
+    public interface IPolygonDrawing2D : IBaseDrawing2D
+    {
+        /// <summary>
+        /// Fills a closed polygon.
+        /// </summary>
+        /// <param name="points">The vertices of the polygon.</param>
+        /// <param name="color">The color of the polygon</param>
+        /// <remarks>
+        /// The caller must ensure the points represent a convex polygon.
+        /// </remarks>
+        void FillConvexPolygon(ReadOnlySpan<POINT2> points, COLOR color);
+    }
 
-        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, ColorStyle style);
+    /// <summary>
+    /// Represents a drawing canvas where we can draw vector graphics.
+    /// </summary>
+    public interface IVectorsDrawing2D : IPolygonDrawing2D
+    {
+        /// <summary>
+        /// Draws a closed polygon.
+        /// </summary>
+        /// <param name="points">The vertices of the polygon.</param>
+        /// <param name="style">The outline and fill style.</param>
+        /// <remarks>
+        /// Some implementations might be able to handle complex shapes,
+        /// while others might only be able to draw convex shapes.
+        /// </remarks>
+        void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle style);
 
-        void DrawSprite(in XFORM2 transform, in SpriteStyle style);
-    }    
+        void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style);
 
-    public interface IDrawingContext2D : IDrawing2D, IDisposable { }
+        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, in ColorStyle style);
+    }
 
+    /// <summary>
+    /// Represents a drawing canvas where we can draw images.
+    /// </summary>
+    public interface IImageDrawing2D : IBaseDrawing2D
+    {
+        /// <summary>
+        /// Draws an image at the location given by <paramref name="transform"/>.
+        /// </summary>
+        /// <param name="transform">The location where to draw the image.</param>
+        /// <param name="style">The image definition.</param>
+        void DrawImage(in XFORM2 transform, in ImageStyle style);        
+    }
 
-    public interface ICanvas2D : IDrawing2D { }
-    public interface IDisposableCanvas2D : ICanvas2D, IDisposable { }
-
+    /// <summary>
+    /// Represents a drawing canvas where we can draw vector graphics and images.
+    /// </summary>
+    public interface IDrawing2D : IAssetDrawing2D, IPolygonDrawing2D, IVectorsDrawing2D, IImageDrawing2D { }
 }

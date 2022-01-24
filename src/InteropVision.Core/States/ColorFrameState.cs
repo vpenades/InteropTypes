@@ -6,10 +6,10 @@ using InteropDrawing;
 
 namespace InteropVision
 {
-    public partial class ColorFrameState : IDrawable2D
+    public partial class ColorFrameState : IDrawingBrush<IDrawing2D>
     {
         private MemoryBitmap _Image;
-        private SpriteAsset _SpriteAsset;
+        private ImageAsset _SpriteAsset;
 
         public MemoryBitmap Image => _Image;
 
@@ -37,10 +37,10 @@ namespace InteropVision
             if (_SpriteAsset == null)
             {
                 var bmp = GetDisplayBitmap();
-                _SpriteAsset = SpriteAsset.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
+                _SpriteAsset = ImageAsset.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
             }
 
-            dc.DrawSprite(Matrix3x2.Identity, _SpriteAsset);
+            dc.DrawImage(Matrix3x2.Identity, _SpriteAsset);
         }
     }
 }

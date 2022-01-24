@@ -28,7 +28,7 @@ namespace InteropDrawing.Backends
 
         #region API        
 
-        public IDrawingContext2D OpenDrawingContext()
+        public IDisposableDrawing2D OpenDrawingContext()
         {
             return new _DrawingContext(_RenderTarget);
         }
@@ -61,7 +61,7 @@ namespace InteropDrawing.Backends
 
         #region nested types
 
-        class _DrawingContext : WPFDrawingContext2D, IDrawingContext2D
+        class _DrawingContext : WPFDrawingContext2D, IDisposableDrawing2D
         {
             #region lifecycle
 
@@ -95,7 +95,7 @@ namespace InteropDrawing.Backends
 
         #region static API
 
-        public static void SaveToBitmap(string filePath, int width, int height, Model2D scene)
+        public static void SaveToBitmap(string filePath, int width, int height, Record2D scene)
         {
             var renderTarget = new WPFRenderTarget(width, height);
 

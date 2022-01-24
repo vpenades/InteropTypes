@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 
 namespace InteropDrawing.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
-    class _MemoryDrawingContext<TPixel> :
-        IDrawing2D,        
-        IBackendViewportInfo,
+    class _MemoryDrawingContext<TPixel> :  
+        Backends.IViewportInfo,
+        Backends.IDrawingBackend2D, IDrawing2D,
         IServiceProvider
 
         where TPixel: unmanaged
@@ -64,13 +65,13 @@ namespace InteropDrawing.Backends
         }        
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
         {
             _Collapse.DrawAsset(transform, asset, style);
         }
 
         /// <inheritdoc/>
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             var dst = _Target.AsSpanBitmap();
             var xform = style.GetTransform() * transform;
@@ -120,62 +121,51 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
+        public float GetThinLinesPixelSize() { return 1; }
+
+        /// <inheritdoc/>
+        public void DrawThinLines(ReadOnlySpan<Point2> points, float width, Color color)
         {
-            if (diameter > 1)
-            {
-                _Collapse.DrawLines(points, diameter, style);
-            }
-            else
-            {
-                var pixColor = _ColorConverter(style.Style.FillColor);
+            var outColor = _ColorConverter(color);
 
-                for (int i = 1; i < points.Length; ++i)
-                {
-                    var a = points[i - 1];
-                    var b = points[i + 0];
+            for (int i = 1; i < points.Length; ++i)
+            {
+                var a = points[i - 1];
+                var b = points[i + 0];
 
-                    InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, a, b, pixColor);
-                }
+                InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, a, b, outColor);
             }
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
         {
-            _Collapse.DrawEllipse(center, width, height, style);
+            var fillColor = _ColorConverter(color);
+
+            foreach (var (y, xmin, xmax) in _PolygonRasterizer.Value.GetScanlines(Point2.AsNumerics(points)))
+            {
+                _Target
+                    .UseScanlinePixels(y)
+                    .Slice(xmin, xmax - xmin)
+                    .Fill(fillColor);
+            }
         }
 
-        /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
         {
-            if (style.HasFill)
-            {
-                var fillColor = _ColorConverter(style.FillColor);
+            Transforms.Decompose2D.DrawPolygon(this, points, style);
+        }
 
-                foreach (var (y, xmin, xmax) in _PolygonRasterizer.Value.GetScanlines(Point2.AsNumerics(points)))
-                {
-                    _Target
-                        .UseScanlinePixels(y)
-                        .Slice(xmin, xmax - xmin)
-                        .Fill(fillColor);
-                }
-            }
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
+        {
+            if (diameter <= GetThinLinesPixelSize()) DrawThinLines(points, diameter, style.FillColor);
 
-            if (style.HasOutline)
-            {
-                var outColor = _ColorConverter(style.OutlineColor);
+            Transforms.Decompose2D.DrawLines(this, points, diameter, style);
+        }
 
-                for (int i = 1; i < points.Length; ++i)
-                {
-                    var a = points[i - 1];
-                    var b = points[i + 0];
-
-                    InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, a, b, outColor);
-                }
-
-                InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, points[points.Length - 1], points[0], outColor);
-            }
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
+        {
+            Transforms.Decompose2D.DrawEllipse(this, center, width, height, style);
         }        
 
         #endregion

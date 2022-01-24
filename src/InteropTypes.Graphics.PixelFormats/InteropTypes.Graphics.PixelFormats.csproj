@@ -36,15 +36,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>InteropTypes.Graphics.PixelFormats.Tests</_Parameter1>
-    </AssemblyAttribute>    
-  </ItemGroup>  
-  
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>InteropTypes.Graphics.PixelFormats.Benchmark</_Parameter1>
-    </AssemblyAttribute>
+    <InternalsVisibleTo Include="InteropTypes.Graphics.PixelFormats.Tests" />
+    <InternalsVisibleTo Include="InteropTypes.Graphics.PixelFormats.Benchmark" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
@@ -68,10 +61,6 @@
       <DependentUpon>Pixel.Interfaces.IValueSetter.tt</DependentUpon>
     </None>
   </ItemGroup>  
-  
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Update="Pixel.Equality.tt">
@@ -140,6 +129,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Equality.tt</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

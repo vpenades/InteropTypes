@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using System.Text;
 
@@ -19,50 +20,72 @@ namespace InteropDrawing.Diagnostics
 
         protected abstract void Write(string line);
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
+        #endregion
+
+        #region API 2D
+
+        /// <inheritdoc />
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle brush)
         {
             Write($"Asset {transform} {asset} {brush}");
         }
+
+        /// <inheritdoc />
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        {
+            Write($"Convex {points.Length} {color}");
+        }
+
+        /// <inheritdoc />
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle brush)
+        {
+            Write($"Ellipse {center} {width} {height} {brush}");
+        }
+
+        /// <inheritdoc />
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle brush)
+        {
+            Write($"Lines {points.Length} {diameter} {brush}");
+        }
+
+        /// <inheritdoc />
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
+        {
+            Write($"Polygon {points.Length} {brush}");
+        }
+
+        /// <inheritdoc />
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        {
+            Write($"Sprite {transform} {style}");
+        }        
+
+        #endregion
+
+        #region API 3D
 
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
         {
             Write($"Asset {transform} {asset} {brush}");
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle brush)
-        {
-            Write($"Ellipse {center} {width} {height} {brush}");
-        }
-
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
-        {
-            Write($"Lines {points.Length} {diameter} {brush}");
-        }
-
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle brush)
-        {
-            Write($"Polygon {points.Length} {brush}");
-        }
-
+        /// <inheritdoc />
         public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
             Write($"Segment {a} {b} {diameter} {brush}");
         }
 
+        /// <inheritdoc />
         public void DrawSphere(Point3 center, float diameter, ColorStyle brush)
         {
             Write($"Sphere {center} {diameter} {brush}");
         }
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
-        {
-            Write($"Sprite {transform} {style}");
-        }
-
+        /// <inheritdoc />
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
             Write($"Surface {vertices.Length} {brush}");
-        }
+        }        
 
         #endregion
 

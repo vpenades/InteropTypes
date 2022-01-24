@@ -17,15 +17,17 @@ namespace InteropDrawing
     {
         #region implicit
 
+        public static implicit operator SurfaceStyle(PolygonStyle brush) { return new SurfaceStyle(brush, true); }
+        public static implicit operator SurfaceStyle((PolygonStyle color, Boolean doubleSided) style) { return new SurfaceStyle(style.color, style.doubleSided); }
+
         public static implicit operator SurfaceStyle(ColorStyle brush) { return new SurfaceStyle(brush, true); }
+        public static implicit operator SurfaceStyle((ColorStyle color, Boolean doubleSided) style) { return new SurfaceStyle(style.color, style.doubleSided); }
 
         public static implicit operator SurfaceStyle(COLOR fillColor) { return new SurfaceStyle(fillColor); }
 
         public static implicit operator SurfaceStyle((COLOR fillColor, Boolean doubleSided) style) { return new SurfaceStyle(style.fillColor, style.doubleSided); }
 
-        public static implicit operator SurfaceStyle((COLOR fillColor, Single outWidth) style) { return new SurfaceStyle(style.fillColor, style.outWidth); }
-
-        public static implicit operator SurfaceStyle((ColorStyle color, Boolean doubleSided) style) { return new SurfaceStyle(style.color, style.doubleSided); }
+        public static implicit operator SurfaceStyle((COLOR fillColor, Single outWidth) style) { return new SurfaceStyle(style.fillColor, style.outWidth); }        
 
         public static implicit operator SurfaceStyle((COLOR fillColor, COLOR outColor, Single outWidth) style) { return new SurfaceStyle(style.fillColor, style.outColor, style.outWidth); }
 
@@ -66,6 +68,13 @@ namespace InteropDrawing
         public SurfaceStyle(ColorStyle color, bool doubleSided)
         {
             Style = color;
+            DoubleSided = doubleSided;
+            SmoothingGroups = 0;
+        }
+
+        public SurfaceStyle(PolygonStyle color, bool doubleSided)
+        {
+            Style = new ColorStyle(color.FillColor, color.OutlineColor, color.OutlineWidth);
             DoubleSided = doubleSided;
             SmoothingGroups = 0;
         }

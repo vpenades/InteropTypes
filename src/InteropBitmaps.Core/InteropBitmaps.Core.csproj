@@ -16,9 +16,7 @@
   <Import Project="..\SourceLink.props" />
 
   <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>InteropBitmaps.Tests</_Parameter1>
-    </AssemblyAttribute>    
+    <InternalsVisibleTo Include="InteropBitmaps.Tests" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">

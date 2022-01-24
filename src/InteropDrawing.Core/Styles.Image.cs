@@ -7,30 +7,30 @@ using COLOR = System.Drawing.Color;
 namespace InteropDrawing
 {
     /// <summary>
-    /// Style used for sprite rendering
+    /// Represents an image with a style applied to it.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="IDrawing2D.DrawSprite(in System.Numerics.Matrix3x2, in SpriteStyle)"/>.
+    /// Style used by <see cref="IImageDrawing2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
     /// </remarks>
-    public struct SpriteStyle
+    public struct ImageStyle
     {
         #region implicit
 
-        public static implicit operator SpriteStyle(SpriteAsset asset) { return new SpriteStyle(asset, COLOR.White, false, false); }
+        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, COLOR.White, false, false); }
 
-        // public static implicit operator SpriteStyle((BitmapCell bitmap, float opacity) args) { return new SpriteStyle(args.bitmap, new COLOR((Byte)255, (Byte)255, (Byte)255, ((Byte)(args.opacity * 255)).Clamp(0, 255)), false, false); }
+        // public static implicit operator ImageStyle((BitmapCell bitmap, float opacity) args) { return new ImageStyle(args.bitmap, new COLOR((Byte)255, (Byte)255, (Byte)255, ((Byte)(args.opacity * 255)).Clamp(0, 255)), false, false); }
 
-        public static implicit operator SpriteStyle((SpriteAsset asset, COLOR color) args) { return new SpriteStyle(args.asset, args.color, false, false); }
+        public static implicit operator ImageStyle((ImageAsset asset, COLOR color) args) { return new ImageStyle(args.asset, args.color, false, false); }
 
-        public static implicit operator SpriteStyle((SpriteAsset, COLOR, bool, bool) tuple) { return new SpriteStyle(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4); }
+        public static implicit operator ImageStyle((ImageAsset, COLOR, bool, bool) tuple) { return new ImageStyle(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4); }
 
-        public static implicit operator SpriteStyle((SpriteAsset, bool, bool) tuple) { return new SpriteStyle(tuple.Item1, COLOR.White, tuple.Item2, tuple.Item3); }
+        public static implicit operator ImageStyle((ImageAsset, bool, bool) tuple) { return new ImageStyle(tuple.Item1, COLOR.White, tuple.Item2, tuple.Item3); }
 
         #endregion
 
         #region constructor
 
-        public SpriteStyle(SpriteAsset bitmap, COLOR color, bool flipHorizontal, bool flipVertical)
+        public ImageStyle(ImageAsset bitmap, COLOR color, bool flipHorizontal, bool flipVertical)
         {
             this.Bitmap = bitmap;
             this.Color = color;
@@ -44,7 +44,7 @@ namespace InteropDrawing
 
         #region data
 
-        public SpriteAsset Bitmap;
+        public ImageAsset Bitmap;
 
         public COLOR Color;
 
@@ -72,16 +72,16 @@ namespace InteropDrawing
 
         #region API
 
-        public System.Numerics.Matrix3x2 Transform => Bitmap.GetSpriteMatrix(FlipHorizontal, FlipVertical);
+        public System.Numerics.Matrix3x2 Transform => Bitmap.GetImageMatrix(FlipHorizontal, FlipVertical);
 
         public System.Numerics.Matrix3x2 GetTransform()
         {
-            return Bitmap.GetSpriteMatrix(FlipHorizontal, FlipVertical);
+            return Bitmap.GetImageMatrix(FlipHorizontal, FlipVertical);
         }
 
         public System.Numerics.Matrix3x2 GetTransform(bool hflip, bool vflip)
         {
-            return Bitmap.GetSpriteMatrix(FlipHorizontal ^ hflip, FlipVertical ^ vflip);
+            return Bitmap.GetImageMatrix(FlipHorizontal ^ hflip, FlipVertical ^ vflip);
         }
 
         public void PrependTransform(ref System.Numerics.Matrix3x2 xform)

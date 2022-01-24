@@ -13,7 +13,9 @@ using VERTEX = Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture;
 
 namespace InteropDrawing.Backends
 {
-    partial class MeshBuilder : IDrawing3D, IDrawing2D
+    partial class MeshBuilder :
+        ISurfaceDrawing3D,
+        Backends.IDrawingBackend2D, IImageDrawing2D
     {
         #region lifecycle
 
@@ -41,6 +43,8 @@ namespace InteropDrawing.Backends
         private readonly LinesBuffer _Lines = new LinesBuffer();
         private readonly TrianglesBuffer _Triangles = new TrianglesBuffer();
 
+        private float _2DLineSize = 1f;
+
         #endregion
 
         #region properties
@@ -51,9 +55,7 @@ namespace InteropDrawing.Backends
 
         public int SphereLOD { get; set; } = 1;
 
-        public bool IsEmpty => _Lines.IsEmpty && _Triangles.IsEmpty;
-
-        private Transforms.Decompose2D _Collapsed2D => new Transforms.Decompose2D(this);
+        public bool IsEmpty => _Lines.IsEmpty && _Triangles.IsEmpty;        
 
         public float  SpriteCoordsBleed
         {
@@ -70,7 +72,7 @@ namespace InteropDrawing.Backends
 
         #endregion
 
-        #region Drawing2D
+        #region API
 
         public void SetSpriteGlobalFlip(bool hflip, bool vflip)
         {
@@ -81,76 +83,47 @@ namespace InteropDrawing.Backends
         public void SetSpriteTextureSize(int width, int height)
         {
             _SpriteCoordInvScale = XY.One / new XY(width, height);
-        }              
-
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
-        {
-            _Collapsed2D.DrawAsset(transform, asset, brush);
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
+        #endregion
+
+        #region API - IDrawing2D        
+
+        public void SetThinLinesPixelSize(float pixelSize) { _2DLineSize = pixelSize; }
+
+        /// <inheritdoc/>
+        public float GetThinLinesPixelSize() { return _2DLineSize; }
+
+        /// <inheritdoc/>
+        public void DrawThinLines(ReadOnlySpan<Point2> points, float thickness, COLOR color)
         {
-            if (brush.Style.HasFill && diameter <= 1)
+            if (color.IsEmpty) return;
+
+            Span<Point3> vertices = stackalloc Point3[points.Length];
+            Point3.Transform(vertices, points, _DepthZ);
+
+            for (int i = 1; i < vertices.Length; ++i)
             {
-                for (int i = 1; i < points.Length; ++i)
-                {
-                    var a = new XYZ(points[i - 1].ToNumerics(), _DepthZ);
-                    var b = new XYZ(points[i - 0].ToNumerics(), _DepthZ);
-
-                    var aa = _Lines.UseVertex(a, brush.Style.FillColor);
-                    var bb = _Lines.UseVertex(b, brush.Style.FillColor);
-                    _Lines.AddLine(aa, bb);
-                }
-
-                brush = brush.With(COLOR.Transparent);
-
-                if (!brush.Style.HasOutline) return;
-            }
-
-            if (diameter < 1) diameter = 1;
-
-            _Collapsed2D.DrawLines(points, diameter, brush);
-        }
-
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle brush)
-        {
-            _Collapsed2D.DrawEllipse(center, width, height, brush);
-        }
-
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle brush)
-        {
-            if (brush.HasOutline && brush.OutlineWidth > 1)
-            {
-                _Collapsed2D.DrawPolygon(points, brush);
-                return;
-            }
-
-            if (brush.HasFill)
-            {
-                Span<Point3> vertices = stackalloc Point3[points.Length];
-
-                for (int i = 0; i < vertices.Length; ++i)
-                {
-                    vertices[i] = new Point3(points[i], _DepthZ);
-                }
-
-                DrawSurface(vertices, brush.FillColor);
-            }
-
-            if (brush.HasOutline)
-            {
-                System.Diagnostics.Debug.Assert(brush.OutlineWidth <= 1);
-
-                this.DrawLines(points, brush.OutlineWidth, brush.OutlineColor);
-                // close the loop
-                this.DrawLine(points[points.Length - 1], points[0], brush.OutlineWidth, brush.OutlineColor);                
+                DrawSegment(vertices[i - 1], vertices[i], color);
             }
         }        
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        /// <inheritdoc/>
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        {
+            if (color.IsEmpty) return;
+
+            Span<Point3> vertices = stackalloc Point3[points.Length];
+            Point3.Transform(vertices, points, _DepthZ);
+
+            DrawSurface(vertices, color);
+        }
+
+        /// <inheritdoc/>
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             var xform = transform;
-            style.PrependTransform(ref xform, _SpriteHFlip,_SpriteVFlip);
+            style.PrependTransform(ref xform, _SpriteHFlip, _SpriteVFlip);
             var color = style.Color.ToXna();
 
             var v1 = _Triangles.UseVertex(XY.Transform(XY.Zero, xform), _DepthZ, color, (style.Bitmap.UV0 + _SpriteUv0Bleed) * _SpriteCoordInvScale);
@@ -164,7 +137,7 @@ namespace InteropDrawing.Backends
 
         #endregion
 
-        #region Drawing3D
+        #region API - IDrawing3D
 
         private Transforms.Decompose3D _Collapsed3D => new Transforms.Decompose3D(this, CylinderLOD, SphereLOD);
 
@@ -175,18 +148,25 @@ namespace InteropDrawing.Backends
 
         public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
         {
-            if (brush.Style.HasFill && diameter <= MinimumSolidLineDiameter)
+            if (brush.Style.HasFill && diameter <= _2DLineSize)
             {
-                var aa = _Lines.UseVertex(a.ToNumerics(), brush.Style.FillColor);
-                var bb = _Lines.UseVertex(b.ToNumerics(), brush.Style.FillColor);
-                _Lines.AddLine(aa, bb);
-
-                if (!brush.Style.HasOutline) return;
-
-                brush = brush.With(COLOR.Transparent);
+                DrawSegment(a,b,diameter,brush);
+                return;
             }
 
             _Collapsed3D.DrawSegment(a, b, diameter, brush);
+        }
+
+        public void DrawSegment(Point3 a, Point3 b, LineStyle brush)
+        {            
+            var aa = _Lines.UseVertex(a.ToNumerics(), brush.Style.FillColor);
+            var bb = _Lines.UseVertex(b.ToNumerics(), brush.Style.FillColor);
+            _Lines.AddLine(aa, bb);
+
+            if (!brush.Style.HasOutline) return;
+
+            brush = brush.With(COLOR.Transparent);
+            
         }
 
         public void DrawSphere(Point3 center, Single diameter, ColorStyle brush)
@@ -246,7 +226,7 @@ namespace InteropDrawing.Backends
         {
             _Lines.Clear();
             _Triangles.Clear();
-        }           
+        }        
 
         #endregion
     }

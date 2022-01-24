@@ -8,10 +8,10 @@ using InteropDrawing;
 
 namespace InteropVision
 {
-    public partial class DepthFrameState : IDrawable2D
+    public partial class DepthFrameState : IDrawingBrush<IDrawing2D>
     {
         private MemoryBitmap<float> _Depth;
-        private SpriteAsset _SpriteAsset;
+        private ImageAsset _SpriteAsset;
 
         public MemoryBitmap<float> Depth => _Depth;
 
@@ -48,10 +48,10 @@ namespace InteropVision
             if (_SpriteAsset == null)
             {
                 var bmp = GetDisplayBitmap();
-                _SpriteAsset = SpriteAsset.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
+                _SpriteAsset = ImageAsset.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
             }
 
-            dc.DrawSprite(Matrix3x2.Identity, _SpriteAsset);
+            dc.DrawImage(Matrix3x2.Identity, _SpriteAsset);
         }
     }
 }

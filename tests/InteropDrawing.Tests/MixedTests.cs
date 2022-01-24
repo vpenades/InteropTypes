@@ -52,13 +52,13 @@ namespace InteropDrawing
         {
             TestContext.CurrentContext.AttachShowDirLink();
 
-            var srcScene = SceneFactory.CreateScene3D(sceneName);
+            var srcScene = SceneFactory.CreateRecord3D(sceneName);
 
             var bounds = srcScene.BoundingMatrix;
 
             for (int i = -1; i <= 1; ++i)
             {
-                var dstScene = new Model3D();
+                var dstScene = new Record3D();
 
                 srcScene.DrawTo(new Transforms.PlaneClip3D(dstScene, new Plane(Vector3.UnitX, i)));
 
@@ -115,7 +115,7 @@ namespace InteropDrawing
             var r = model.BoundingRect;
             // var c = model.CircleBounds;
 
-            var scene = new Model2D();
+            var scene = new Record2D();
 
             scene.DrawAsset(Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(50, 50), model, COLOR.White);
 
@@ -133,10 +133,10 @@ namespace InteropDrawing
             var renderTarget = new Backends.WPFRenderTarget(256, 256);
 
             var charPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Assets\\PunkRun.png");
-            var character = SpriteAsset.CreateGrid(charPath, (256, 256), (128, 128), 8, 8).ToArray();
+            var character = ImageAsset.CreateGrid(charPath, (256, 256), (128, 128), 8, 8).ToArray();
 
             var tilesPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Assets\\Tiles.jpg");
-            var tiles = SpriteAsset.CreateFromBitmap(tilesPath, (1024, 1024), (512, 512));
+            var tiles = ImageAsset.CreateFromBitmap(tilesPath, (1024, 1024), (512, 512));
 
             using (var dc = renderTarget.OpenDrawingContext())
             {
@@ -144,7 +144,7 @@ namespace InteropDrawing
 
                 dc.DrawEllipse(new Vector2(30, 50), 20, 20, COLOR.Violet);
 
-                dc.DrawSprite(Matrix3x2.Identity, tiles);
+                dc.DrawImage(Matrix3x2.Identity, tiles);
             }
 
             var path = TestContext.CurrentContext.UseFilePath("testrender1.png");
@@ -157,7 +157,7 @@ namespace InteropDrawing
         [TestCase("Thunderbird1")]
         public void TestRender3DSceneToBitmap(string sceneName)
         {
-            var scene = SceneFactory.CreateScene3D(sceneName);
+            var scene = SceneFactory.CreateRecord3D(sceneName);
 
             scene.DrawCube(Matrix4x4.Identity, COLOR.Red, COLOR.Green, COLOR.Blue);
 
@@ -174,10 +174,10 @@ namespace InteropDrawing
         {
             var renderTarget = new Backends.WPFRenderTarget(1024, 1024);
 
-            var scene = new Model3D();
+            var scene = new Record3D();
             scene.DrawFloor(new Vector2(-50, -50), new Vector2(100, 100), 10, COLOR.Green, COLOR.DarkGreen);
-            scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, -10), SceneFactory.CreateScene3D(sceneName));
-            scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, 0), SceneFactory.CreateScene3D(sceneName));
+            scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, -10), SceneFactory.CreateRecord3D(sceneName));
+            scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, 0), SceneFactory.CreateRecord3D(sceneName));
             scene.AttachToCurrentTest("scene.glb");
             scene.AttachToCurrentTest("scene.html");
 
@@ -238,7 +238,7 @@ namespace InteropDrawing
         {
             using (var svg = Backends.SVGSceneDrawing2D.CreateGraphic())
             {
-                var scene = SceneFactory.CreateScene3D("Scene1");
+                var scene = SceneFactory.CreateRecord3D("Scene1");
 
                 scene.DrawTo(svg, 1024, 1024, new Vector3(7, 5, 20));
 

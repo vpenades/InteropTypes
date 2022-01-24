@@ -14,12 +14,12 @@ namespace InteropDrawing.Backends
     {
         #region lifecycle
 
-        public static Retyped.dom.HTMLElement ConvertToHtml(Model3D srcModel)
+        public static Retyped.dom.HTMLElement ConvertToHtml(Record3D srcModel)
         {
             return ConvertToPlot(srcModel).Render();
         }
 
-        public static Plot ConvertToPlot(Model3D srcModel)
+        public static Plot ConvertToPlot(Record3D srcModel)
         {
             var dst = new PlotlyDocumentBuilder();
 
@@ -42,7 +42,7 @@ namespace InteropDrawing.Backends
 
         #region API
 
-        public PlotlyDocumentBuilder Draw(params IDrawable3D[] drawables)
+        public PlotlyDocumentBuilder Draw(params IDrawingBrush<IDrawing3D>[] drawables)
         {
             using (var dc = CreateScene3DContext())
             {
@@ -52,7 +52,7 @@ namespace InteropDrawing.Backends
             return this;
         }
 
-        public PlotlyDocumentBuilder Draw(Matrix4x4 xform, params IDrawable3D[] drawables)
+        public PlotlyDocumentBuilder Draw(Matrix4x4 xform, params IDrawingBrush<IDrawing3D>[] drawables)
         {
             using (var dc = CreateScene3DContext())
             {
@@ -64,22 +64,22 @@ namespace InteropDrawing.Backends
         }
 
         /// <summary>
-        /// Creates a new <see cref="IDrawingContext2D"/> context optimized for data sets.
+        /// Creates a new <see cref="IDisposableDrawing2D"/> context optimized for data sets.
         /// </summary>
         /// <returns></returns>
-        public IDrawingContext2D CreateTraces2DContext() { return new _PlotlyDrawing2DTracesContext(this); }
+        public IDisposableDrawing2D CreateTraces2DContext() { return new _PlotlyDrawing2DTracesContext(this); }
 
         // <summary>
-        /// Creates a new <see cref="IDrawingContext2D"/> context optimized for vector graphics.
+        /// Creates a new <see cref="IDisposableDrawing2D"/> context optimized for vector graphics.
         /// </summary>
         /// <returns></returns>
-        public IDrawingContext2D CreateShapes2DContext() { return new _PlotlyDrawing2DShapesContext(this); }
+        public IDisposableDrawing2D CreateShapes2DContext() { return new _PlotlyDrawing2DShapesContext(this); }
 
         /// <summary>
-        /// Creates a new <see cref="IDrawingContext3D"/> context optimized for 3D Scenes.
+        /// Creates a new <see cref="IDisposableDrawing3D"/> context optimized for 3D Scenes.
         /// </summary>
         /// <returns></returns>
-        public IDrawingContext3D CreateScene3DContext() { return new _PlotlyDrawing3DContext(this); }
+        public IDisposableDrawing3D CreateScene3DContext() { return new _PlotlyDrawing3DContext(this); }
 
         public Box<IPlotProperty> ToPlotProperties()
         {

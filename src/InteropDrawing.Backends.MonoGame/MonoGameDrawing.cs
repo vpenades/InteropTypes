@@ -9,8 +9,8 @@ using XNACOLOR = Microsoft.Xna.Framework.Color;
 namespace InteropDrawing.Backends
 {
     public interface IMonoGameDrawing2D :
-        IDrawingContext2D,
-        IBackendViewportInfo,
+        IDisposableDrawing2D,
+        Backends.IViewportInfo,
         Transforms.ITransformer2D,
         IServiceProvider
     {
@@ -20,7 +20,7 @@ namespace InteropDrawing.Backends
         void End();
     }
 
-    public interface IMonoGameDrawing3D : IDrawingContext3D
+    public interface IMonoGameDrawing3D : IDisposableDrawing3D
     {
         void Clear();
         void SetCamera(CameraView3D camera);
@@ -34,10 +34,10 @@ namespace InteropDrawing.Backends
         /// <summary>
         /// Takes a sprite texture image source (a string path, a raw texture, etc) and adds additional attributes
         /// </summary>
-        /// <param name="source">The value of <see cref="SpriteAsset.Source"/></param>
+        /// <param name="source">The value of <see cref="ImageAsset.Source"/></param>
         /// <param name="sampler">The sampler to associate with the image</param>
         /// <param name="textureBleed">the texture bleed to associate with the image</param>
-        /// <returns>A new value that replaces <see cref="SpriteAsset.Source"/></returns>
+        /// <returns>A new value that replaces <see cref="ImageAsset.Source"/></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Object CreateSpriteAssetSource(Object source, SamplerState sampler = null, float textureBleed = 0)
         {
@@ -128,7 +128,7 @@ namespace InteropDrawing.Backends
 
         public static IMonoGameDrawing2D CreateDrawingContext2D(this GraphicsDevice device)
         {
-            return new MonoGameDrawing2Dex(device);
+            return new MonoGameDrawing2D(device);
         }
 
         public static IMonoGameDrawing3D CreateDrawingContext3D(this GraphicsDevice device)

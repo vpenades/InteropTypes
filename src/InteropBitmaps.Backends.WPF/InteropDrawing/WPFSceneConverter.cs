@@ -9,7 +9,7 @@ using System.Windows.Data;
 namespace InteropDrawing.Backends
 {
     /// <summary>
-    /// Converts a <see cref="Model2D"/> scene to a <see cref="System.Windows.Media.ImageSource"/>
+    /// Converts a <see cref="Record2D"/> scene to a <see cref="System.Windows.Media.ImageSource"/>
     /// that can be bound to <see cref="System.Windows.Controls.Image.Source"/>
     /// </summary>
     public class WPFSceneConverter : IValueConverter
@@ -53,7 +53,7 @@ namespace InteropDrawing.Backends
         {
             if (targetType == typeof(System.Windows.Media.ImageSource))
             {
-                if (value is Model2D scene2D)
+                if (value is Record2D scene2D)
                 {
                     var r = _GetViewport(parameter);
                     var v = _GetView2D(parameter);
@@ -61,20 +61,20 @@ namespace InteropDrawing.Backends
                     return _Renderer.VectorImage;
                 }
 
-                if (value is ValueTuple<Matrix3x2, Model2D> scene2Dx)
+                if (value is ValueTuple<Matrix3x2, Record2D> scene2Dx)
                 {
                     var r = _GetViewport(parameter);
                     _Renderer.Update(r, scene2Dx.Item1, scene2Dx.Item2);
                     return _Renderer.VectorImage;
                 }
 
-                if (value is ValueTuple<Size, Matrix3x2, Model2D> scene2Drx)
+                if (value is ValueTuple<Size, Matrix3x2, Record2D> scene2Drx)
                 {
                     _Renderer.Update(scene2Drx.Item1, scene2Drx.Item2, scene2Drx.Item3);
                     return _Renderer.VectorImage;
                 }                
 
-                if (value is Model3D scene3D)
+                if (value is Record3D scene3D)
                 {
                     var r = _GetViewport(parameter);
                     var v = _GetView3D(parameter);
@@ -82,7 +82,7 @@ namespace InteropDrawing.Backends
                     return _Renderer.VectorImage;
                 }
 
-                if (value is ValueTuple<Matrix4x4, Model3D> scene3Dx)
+                if (value is ValueTuple<Matrix4x4, Record3D> scene3Dx)
                 {
                     var r = _GetViewport(parameter);                    
                     _Renderer.Update(r, scene3Dx.Item1, scene3Dx.Item2);

@@ -245,7 +245,7 @@ namespace InteropDrawing.Parametric
 
         #endregion
 
-        #region line cap geometry
+        #region line cap geometry        
 
         public static int GetLineCapVertexCount(LineCapStyle style)
         {

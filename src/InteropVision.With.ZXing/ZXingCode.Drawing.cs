@@ -8,7 +8,7 @@ using InteropDrawing;
 
 namespace InteropVision.With
 {
-    partial class ZXingCode : IDrawable2D
+    partial class ZXingCode : IDrawingBrush<IDrawing2D>
     {
         #region API
 

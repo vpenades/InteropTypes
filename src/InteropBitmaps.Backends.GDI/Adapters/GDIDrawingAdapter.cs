@@ -5,6 +5,8 @@ using System.Text;
 
 using InteropDrawing;
 
+using COLOR = System.Drawing.Color;
+
 namespace InteropBitmaps.Adapters
 {
     class GDIDrawingAdapter : IDrawing2D
@@ -40,12 +42,12 @@ namespace InteropBitmaps.Adapters
             return _PointsX;
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
         {
             var rect = new System.Drawing.RectangleF(center.X - width * 0.5f, center.Y - height * 0.5f, width, height);
 
@@ -65,7 +67,7 @@ namespace InteropBitmaps.Adapters
             }
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
         {
             var gdiPts = _UsePoints(points.Length);
             for (int i = 0; i < points.Length; ++i) gdiPts[i] = points[i].ToGDIPoint();
@@ -76,7 +78,7 @@ namespace InteropBitmaps.Adapters
             }            
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
         {
             var gdiPts = _UsePoints(points.Length);
             for (int i = 0; i < points.Length; ++i) gdiPts[i] = points[i].ToGDIPoint();
@@ -95,11 +97,22 @@ namespace InteropBitmaps.Adapters
                     _Context.DrawPolygon(pen, gdiPts);
                 }
             }
+        }        
+
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        {
+            var gdiPts = _UsePoints(points.Length);
+            for (int i = 0; i < points.Length; ++i) gdiPts[i] = points[i].ToGDIPoint();
+
+            using (var brush = new System.Drawing.SolidBrush(color))
+            {
+                _Context.FillPolygon(brush, gdiPts);
+            }
         }
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
-            
+
         }
     }
 }

@@ -24,7 +24,7 @@ namespace InteropDrawing
             NUnit.Framework.TestContext.AddTestAttachment(fileName);
         }
 
-        public static void AttachToCurrentTest(this Model2D batch, string filePath)
+        public static void AttachToCurrentTest(this Record2D batch, string filePath)
         {
             filePath = NUnit.Framework.TestContext.CurrentContext.UseFilePath(filePath);
 
@@ -45,7 +45,7 @@ namespace InteropDrawing
         }
 
         [Obsolete]
-        public static void AttachToCurrentTestAsPlot(this Model2D batch, string filePath)
+        public static void AttachToCurrentTestAsPlot(this Record2D batch, string filePath)
         {
             throw new NotImplementedException("Switch to Plotly");
 
@@ -58,7 +58,7 @@ namespace InteropDrawing
         }
 
         
-        public static void AttachToCurrentTest(this Model3D batch, string filePath)
+        public static void AttachToCurrentTest(this Record3D batch, string filePath)
         {
             filePath = NUnit.Framework.TestContext.CurrentContext.UseFilePath(filePath);
 

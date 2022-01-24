@@ -22,8 +22,8 @@ namespace InteropDrawing.Backends
 
         private static PropertyFactory<WPFScene3DCanvas> _PropFactory = new PropertyFactory<WPFScene3DCanvas>();
 
-        static readonly StaticProperty<IDrawable3D> SceneProperty = _PropFactory.Register<IDrawable3D>(nameof(Content), null, _Update);
-        public IDrawable3D Content
+        static readonly StaticProperty<IDrawingBrush<IDrawing3D>> SceneProperty = _PropFactory.Register<IDrawingBrush<IDrawing3D>>(nameof(Content), null, _Update);
+        public IDrawingBrush<IDrawing3D> Content
         {
             get => SceneProperty.GetValue(this);
             set => SceneProperty.SetValue(this, value);
@@ -57,7 +57,7 @@ namespace InteropDrawing.Backends
 
             var content = this.Content;
             if (content == null) return;
-            if (content is Model3D model && model.IsEmpty) return;            
+            if (content is Record3D model && model.IsEmpty) return;            
 
             _Context2D.DrawScene(dc, this.RenderSize, Viewport, content);
         }        

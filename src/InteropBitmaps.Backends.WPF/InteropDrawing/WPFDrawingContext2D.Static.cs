@@ -6,7 +6,7 @@ namespace InteropDrawing.Backends
 {
     partial class WPFDrawingContext2D
     {
-        public static RENDERTARGET CreateRenderTargetBitmap(int width, int height, SceneView2D view, IDrawable2D scene)
+        public static RENDERTARGET CreateRenderTargetBitmap(int width, int height, SceneView2D view, IDrawingBrush<IDrawing2D> scene)
         {
             var rt = new RENDERTARGET(width, height, 96, 96, System.Windows.Media.PixelFormats.Default);
             var ctx = new WPFDrawingContext2D();
@@ -14,7 +14,7 @@ namespace InteropDrawing.Backends
             return rt;
         }
 
-        public static RENDERTARGET CreateRenderTargetBitmap(int width, int height, SceneView3D view, IDrawable3D scene)
+        public static RENDERTARGET CreateRenderTargetBitmap(int width, int height, SceneView3D view, IDrawingBrush<IDrawing3D> scene)
         {
             var rt = new RENDERTARGET(width, height, 96, 96, System.Windows.Media.PixelFormats.Default);
             var ctx = new WPFDrawingContext2D();
@@ -22,13 +22,13 @@ namespace InteropDrawing.Backends
             return rt;
         }
 
-        public static void SaveToBitmap(string filePath, int width, int height, SceneView2D view, IDrawable2D scene)
+        public static void SaveToBitmap(string filePath, int width, int height, SceneView2D view, IDrawingBrush<IDrawing2D> scene)
         {
             var rt = CreateRenderTargetBitmap(width, height, view,scene);
             SaveToPNG(rt, filePath);
         }
 
-        public static void SaveToBitmap(string filePath, int width, int height, SceneView3D view, IDrawable3D scene)
+        public static void SaveToBitmap(string filePath, int width, int height, SceneView3D view, IDrawingBrush<IDrawing3D> scene)
         {
             var rt = CreateRenderTargetBitmap(width, height, view, scene);
             SaveToPNG(rt, filePath);

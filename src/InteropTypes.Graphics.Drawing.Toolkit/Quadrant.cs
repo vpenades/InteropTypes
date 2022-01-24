@@ -11,31 +11,34 @@ namespace InteropDrawing
     /// <remarks>
     /// <see href="https://en.wikipedia.org/wiki/Quadrant_(plane_geometry)">Quadrant (plane geometry)</see>
     /// </remarks>
+    [Flags]
     public enum Quadrant
-    {
-        /// <summary>
-        /// quadrant is not known
-        /// </summary>
-        Undefined,
+    {        
+        Origin = 0,
+
+        Top = 1,
+        Left = 2,
+        Right = 4,
+        Bottom = 8,
 
         /// <summary>
         /// Quadrant I
         /// </summary>
-        TopRight,
+        TopRight = Top|Right,
 
         /// <summary>
         /// Quadrant II
         /// </summary>
-        TopLeft,
+        TopLeft = Top|Left,
 
         /// <summary>
         /// Quadrant III
         /// </summary>
-        BottomLeft,
+        BottomLeft = Bottom|Left,
 
         /// <summary>
         /// Quadrant IV
         /// </summary>
-        BottomRight
+        BottomRight = Bottom|Right
     }
 }

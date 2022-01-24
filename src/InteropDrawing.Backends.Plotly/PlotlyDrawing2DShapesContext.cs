@@ -12,10 +12,11 @@ using Plotly.Types;
 // https://plotly.com/javascript/shapes/
 
 using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
+using System.Drawing;
 
 namespace InteropDrawing.Backends
 {
-    class _PlotlyDrawing2DShapesContext : IDrawingContext2D
+    class _PlotlyDrawing2DShapesContext : IDisposableDrawing2D
     {
         #region lifecycle
         public _PlotlyDrawing2DShapesContext(PlotlyDocumentBuilder owner)
@@ -45,17 +46,20 @@ namespace InteropDrawing.Backends
 
         #region API
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        /// <inheritdoc/>
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, InteropDrawing.LineStyle style)
+        /// <inheritdoc/>
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
+        /// <inheritdoc/>
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
         {
             var fill = Shape.fillcolor("rgb(44, 160, 101)");
             var line = Shape.line(Line.color("rgb(44, 160, 101)"));
@@ -73,12 +77,14 @@ namespace InteropDrawing.Backends
             _Shapes.Add(shape);
         }
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        /// <inheritdoc/>
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
+        /// <inheritdoc/>
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
         {
             var sb = new StringBuilder();
 
@@ -105,7 +111,36 @@ namespace InteropDrawing.Backends
                 );            
 
             _Shapes.Add(shape);
-        }        
+        }
+
+        /// <inheritdoc/>
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        {
+            var sb = new StringBuilder();
+
+            // M 1 1 L 1 3 L 4 1 Z            
+
+            foreach (var p in points)
+            {
+                if (sb.Length == 0) sb.Append("M ");
+                else sb.Append("L ");
+                sb.Append(Invariant($"{p.X} {p.Y} "));
+            }
+
+            sb.Append("Z");
+
+            var path = Shape.path(sb.ToString());
+            var fill = Shape.fillcolor("rgb(44, 160, 101)");            
+
+            var shape = Shapes.shape
+                (
+                Shape._type.path(),
+                path,
+                fill
+                );
+
+            _Shapes.Add(shape);
+        }
 
         #endregion
     }

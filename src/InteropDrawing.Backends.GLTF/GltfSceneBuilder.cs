@@ -13,7 +13,7 @@ namespace InteropDrawing.Backends
     {
         #region factory        
 
-        public static SharpGLTF.Scenes.SceneBuilder Convert(Model3D srcModel, GLTFWriteSettings? settings = null)
+        public static SharpGLTF.Scenes.SceneBuilder Convert(Record3D srcModel, GLTFWriteSettings? settings = null)
         {
             var dst = new GltfSceneBuilder();
 
@@ -51,7 +51,7 @@ namespace InteropDrawing.Backends
 
         #region Drawing API
 
-        public GltfSceneBuilder Draw(params IDrawable3D[] drawables)
+        public GltfSceneBuilder Draw(params IDrawingBrush<IDrawing3D>[] drawables)
         {
             using (var dc = CreateDrawing3DContext())
             {
@@ -61,7 +61,7 @@ namespace InteropDrawing.Backends
             return this;
         }
 
-        public GltfSceneBuilder Draw(Matrix4x4 xform, params IDrawable3D[] drawables)
+        public GltfSceneBuilder Draw(Matrix4x4 xform, params IDrawingBrush<IDrawing3D>[] drawables)
         {
             using(var dc = CreateDrawing3DContext(xform))
             {
@@ -71,12 +71,12 @@ namespace InteropDrawing.Backends
             return this;
         }
 
-        public IDrawingContext3D CreateDrawing3DContext()
+        public IDisposableDrawing3D CreateDrawing3DContext()
         {
             return new _GltfDrawing3DContext(this, Matrix4x4.Identity);
         }
 
-        public IDrawingContext3D CreateDrawing3DContext(Matrix4x4 transform)
+        public IDisposableDrawing3D CreateDrawing3DContext(Matrix4x4 transform)
         {
             return new _GltfDrawing3DContext(this, transform);
         }
@@ -172,7 +172,7 @@ namespace InteropDrawing.Backends
     }
 
 
-    sealed class _GltfDrawing3DContext : GltfMeshDrawing3D , IDrawingContext3D
+    sealed class _GltfDrawing3DContext : GltfMeshDrawing3D , IDisposableDrawing3D
     {
         public _GltfDrawing3DContext(GltfSceneBuilder owner, Matrix4x4 xform)
         {

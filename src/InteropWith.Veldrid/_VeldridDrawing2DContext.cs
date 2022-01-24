@@ -9,7 +9,7 @@ using Veldrid;
 
 namespace InteropWith
 {
-    public interface IVeldridDrawingContext2D : IDrawingContext2D
+    public interface IVeldridDrawingContext2D : IDisposableDrawing2D
     {
         void FillFrame(System.Drawing.Color color);
     }
@@ -70,7 +70,7 @@ namespace InteropWith
 
         private InteropDrawing.Transforms.Decompose2D _Collapsed2D => new InteropDrawing.Transforms.Decompose2D(this);
 
-        public unsafe void AddPolygon(ReadOnlySpan<Point2> points, System.Drawing.Color color)
+        public unsafe void AddConvexPolygon(ReadOnlySpan<Point2> points, System.Drawing.Color color)
         {
             if (_Completed) throw new ObjectDisposedException("Context");
 
@@ -83,7 +83,7 @@ namespace InteropWith
                 vertices[i] = new Vertex2D(points[i], c);
             }
             
-            AddPolygon(vertices, _NullTextureId);
+            AddConvexPolygon(vertices, _NullTextureId);
         }
 
         public (int, Vector2) GetTextureInfoFromSource(Object source)
@@ -137,35 +137,40 @@ namespace InteropWith
             _FillColor = color;
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, System.Drawing.Color color)
+        {            
+            this.AddConvexPolygon(points, color);
+        }
+
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
         {
             if (!style.IsVisible) return;
-            if (asset is IDrawable2D drawable) { drawable.DrawTo(this); return; }
+            if (asset is IDrawingBrush<IDrawing2D> drawable) { drawable.DrawTo(this); return; }
             _Collapsed2D.DrawAsset(transform, asset);
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
         {
             if (!style.IsVisible) return;
             _Collapsed2D.DrawEllipse(center, width, height, style);
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
         {
             if (!style.IsVisible) return;
             _Collapsed2D.DrawLines(points, diameter, style);
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
         {
             if (!style.IsVisible) return;
             if (style.HasOutline) { _Collapsed2D.DrawPolygon(points, style); return; }
-            if (style.HasFill) this.AddPolygon(points, style.FillColor);
+            if (style.HasFill) this.AddConvexPolygon(points, style.FillColor);
         }
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
-            var final = style.Bitmap.GetSpriteMatrix(style.FlipHorizontal, style.FlipVertical) * transform;
+            var final = style.Bitmap.GetImageMatrix(style.FlipHorizontal, style.FlipVertical) * transform;
 
             Vertex2D p0 = final.Translation;
             Vertex2D p1 = Vector2.Transform(Vector2.UnitX, final);
@@ -183,6 +188,8 @@ namespace InteropWith
 
             AddQuad(p0, p1, p2, p3, tex.Item1);
         }
+
+        
 
         #endregion
     }

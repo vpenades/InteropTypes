@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using System.Text;
 
@@ -29,6 +30,14 @@ namespace InteropWith.MAUI
             _Canvas.StrokeSize = style.OutlineWidth;
         }
 
+        private void _SetColorStyle(in PolygonStyle style)
+        {
+            _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Normal;
+            _Canvas.FillColor = style.FillColor.ToMaui();
+            _Canvas.StrokeColor = style.OutlineColor.ToMaui();
+            _Canvas.StrokeSize = style.OutlineWidth;
+        }
+
         private void _SetLineStyle(in LineStyle style)
         {
             // _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Overlay;
@@ -37,12 +46,12 @@ namespace InteropWith.MAUI
             _Canvas.StrokeSize = style.Style.OutlineWidth;
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
         {
             _SetColorStyle(style);
 
@@ -57,7 +66,7 @@ namespace InteropWith.MAUI
             }            
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
         {
             using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
             {
@@ -71,7 +80,24 @@ namespace InteropWith.MAUI
             }
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        {
+            using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
+            {
+                for (int i = 1; i < points.Length; ++i)
+                {
+                    path.LineTo(points[i].X, points[i].Y);
+                }
+
+                path.Close();
+
+                _SetColorStyle(color);
+
+                _Canvas.FillPath(path, Microsoft.Maui.Graphics.WindingMode.NonZero);                
+            }
+        }
+
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
         {
             using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
             {
@@ -89,9 +115,9 @@ namespace InteropWith.MAUI
             }
         }
 
-        public void DrawSprite(in Matrix3x2 transform, in SpriteStyle style)
+        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             throw new NotImplementedException();
-        }
+        }        
     }
 }

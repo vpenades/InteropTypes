@@ -17,7 +17,7 @@ namespace InteropDrawing.Parametric
 {
     public static class PathParser
     {
-        public static void DrawPath(IDrawing2D dc, Matrix3x2 xform, string path, ColorStyle style)
+        public static void DrawPath(IVectorsDrawing2D dc, Matrix3x2 xform, string path, ColorStyle style)
         {
             var shapes = ParseShapes(path);
             

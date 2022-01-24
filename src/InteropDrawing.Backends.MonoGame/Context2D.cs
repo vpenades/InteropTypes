@@ -4,14 +4,10 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using V2 = System.Numerics.Vector2;
-
-using XNACOLOR = Microsoft.Xna.Framework.Color;
-using XNAV2 = Microsoft.Xna.Framework.Vector2;
+using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing.Backends
-{    
-    [Obsolete("Use MonoGameDrawing2Dex")]
+{
     class MonoGameDrawing2D : IMonoGameDrawing2D
     {
         #region lifecycle
@@ -25,15 +21,14 @@ namespace InteropDrawing.Backends
         public void Dispose()
         {
             _Device = null;
-
-            System.Threading.Interlocked.Exchange(ref _SpritesBatch, null)?.Dispose();
-            System.Threading.Interlocked.Exchange(ref _VectorsEffect, null)?.Dispose();
+            
+            System.Threading.Interlocked.Exchange(ref _Effect, null)?.Dispose();
             System.Threading.Interlocked.Exchange(ref _WhiteTexture, null)?.Dispose();
 
-            foreach (var tex in _Textures.Values) tex.Dispose();
-            _Textures.Clear();            
-
-            _OldTexture = null;
+            foreach (var tex in _SpriteTextures.Values) tex.Item1.Dispose();
+            _SpriteTextures.Clear();
+            
+            _CurrTexture = null;
 
             _VectorsBatch.Clear();
         }
@@ -43,25 +38,38 @@ namespace InteropDrawing.Backends
         #region data
 
         private GraphicsDevice _Device;
+        private SpriteEffect _Effect;        
 
-        private SpriteEffect _VectorsEffect;
-
-        private SpriteBatch _SpritesBatch;
-        private bool _SpritesDirty;
+        private GlobalState _PrevState;
 
         private Texture2D _WhiteTexture;
-        private Texture _OldTexture;
+        private readonly Dictionary<Object, (Texture2D, SpriteTextureAttributes)> _SpriteTextures = new Dictionary<Object, (Texture2D, SpriteTextureAttributes)>();
 
-        private readonly Dictionary<string, Texture2D> _Textures = new Dictionary<string, Texture2D>();
+        private Texture2D _CurrTexture;        
 
         private MeshBuilder _VectorsBatch = new MeshBuilder(false);
 
-        private System.Numerics.Matrix3x2 _View; // CameraInverse
+        private System.Numerics.Matrix3x2 _View;
         private System.Numerics.Matrix3x2 _Screen;
-        private System.Numerics.Matrix3x2 _FinalForward;
+        private System.Numerics.Matrix3x2 _FinalForward;        
         private System.Numerics.Matrix3x2 _FinalInverse;
+        private float _ScalarForward;
+        private float _ScalarInverse;        
 
-        public float SpriteCoordsBleed { get; set; }
+        #endregion
+
+        #region service provider
+
+        /// <inheritdoc/>        
+        public object GetService(Type serviceType)
+        {
+            if (serviceType.IsAssignableFrom(this.GetType())) return this;
+            return null;
+        }
+
+        #endregion
+
+        #region API - Windows
 
         public int PixelsWidth => _Device.Viewport.Width;
 
@@ -69,47 +77,112 @@ namespace InteropDrawing.Backends
 
         #endregion
 
-        #region API
+        #region API       
 
-        public Texture2D FetchTexture(Object imageSource)
+        private void SetTexture(Texture2D texture, in SpriteTextureAttributes attr = default)
         {
-            if (imageSource is Texture2D xnaTex) return xnaTex;
-
-            var imagePath = imageSource as string;
-
-            if (_Textures.TryGetValue(imagePath, out Texture2D tex)) return tex;
-
-            using (var s = System.IO.File.OpenRead(imagePath))
+            if (texture == null)
             {
-                tex = Texture2D.FromStream(_Device, s);
+                if (_WhiteTexture == null) _WhiteTexture = MonoGameDrawing._CreateSolidTexture(_Device, 16, 16, Color.White);
+                texture = _WhiteTexture;
             }
 
-            _PremultiplyAlpha(tex);
+            if (_CurrTexture == texture) return;
 
-            return _Textures[imagePath] = tex;
+            Flush();            
+            _CurrTexture = texture;
+            _VectorsBatch.SetSpriteTextureSize(_CurrTexture.Width, _CurrTexture.Height);
+
+            _VectorsBatch.SpriteCoordsBleed = attr.TextureBleed;            
+            _Device.SamplerStates[0] = attr.Sampler ?? SamplerState.LinearClamp;
         }
 
         /// <inheritdoc />
         public void Begin(int virtualWidth, int virtualHeight, bool keepAspect)
         {
-            _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);            
-            _FinalForward = _View * _Screen;
-            System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
-        }
+            _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);
+            _UpdateMatrices();
 
-        /// <inheritdoc />
-        public void SetSpriteFlip(bool hflip, bool vflip)
-        {
-            throw new NotImplementedException();
+             _PrevState = GlobalState.GetCurrent(_Device);
+            GlobalState.CreateSpriteState().ApplyTo(_Device);
+
+            _VectorsBatch.SpriteCoordsBleed = 0;
         }
 
         /// <inheritdoc />
         public void SetCamera(System.Numerics.Matrix3x2 camera)
         {
             System.Numerics.Matrix3x2.Invert(camera, out _View);
+            _UpdateMatrices();
+        }
+
+        private void _UpdateMatrices()
+        {
             _FinalForward = _View * _Screen;
             System.Numerics.Matrix3x2.Invert(_FinalForward, out _FinalInverse);
+
+            _ScalarForward = _FinalForward.DecomposeScale();
+            _ScalarInverse = 1f / _ScalarForward;
+
+            Span<float> scalars = stackalloc float[1];
+            scalars[0] = 1;
+            TransformScalarsInverse(scalars);
+
+            _VectorsBatch.SetThinLinesPixelSize(scalars[0] * 1.25f);
         }
+
+        /// <inheritdoc />
+        public void SetSpriteFlip(bool hflip, bool vflip)
+        {
+            _VectorsBatch.SetSpriteGlobalFlip(hflip, vflip);
+        }
+
+        /// <inheritdoc />
+        public (Texture2D tex, SpriteTextureAttributes bleed) FetchTexture(Object imageSource)
+        {
+            if (imageSource is Texture2D xnaTex) return (xnaTex, SpriteTextureAttributes.Default);
+
+            if (_SpriteTextures.TryGetValue(imageSource, out (Texture2D, SpriteTextureAttributes) xtex)) return xtex;
+
+            xtex = MonoGameDrawing.CreateTexture(_Device, imageSource);
+
+            return _SpriteTextures[imageSource] = xtex;
+        }
+
+
+        public void Flush()
+        {
+            if (_VectorsBatch.IsEmpty) return;
+
+            if (_Effect == null || _Effect.IsDisposed) _Effect = new SpriteEffect(_Device);
+
+            _Effect.TransformMatrix = _FinalForward.ToXna();
+
+            foreach (var pass in _Effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+
+                _Device.Textures[0] = _CurrTexture;
+
+                _VectorsBatch.RenderTo(_Effect.GraphicsDevice);
+            }
+
+            _VectorsBatch.Clear();
+        }
+
+        /// <inheritdoc />
+        public void End()
+        {
+            Flush();
+
+            _CurrTexture = null;
+
+            _PrevState.ApplyTo(_Device);
+        }
+
+        #endregion
+
+        #region API - ITransformer2D
 
         /// <inheritdoc />
         public void TransformForward(Span<Point2> points) { Point2.Transform(points, _FinalForward); }
@@ -124,161 +197,67 @@ namespace InteropDrawing.Backends
         public void TransformNormalsInverse(Span<Point2> vectors) { Point2.TransformNormals(vectors, _FinalInverse); }
 
         /// <inheritdoc />
-        public void TransformScalarsForward(Span<Single> scalars) { throw new NotImplementedException(); }
+        public void TransformScalarsForward(Span<Single> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarForward; } }
 
         /// <inheritdoc />
-        public void TransformScalarsInverse(Span<Single> scalars) { throw new NotImplementedException(); }
-
-        /// <inheritdoc />
-        public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, ColorStyle style)
-        {
-            if (!style.IsVisible) return;
-            if (_SpritesDirty) Flush();            
-
-            if (asset is IDrawable2D drawable) { drawable.DrawTo(this); return; }
-
-            _VectorsBatch.DrawAsset(transform, asset);
-        }
-
-        /// <inheritdoc />
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
-        {
-            if (!style.IsVisible) return;
-            if (_SpritesDirty) Flush();
-            _VectorsBatch.DrawLines(points, diameter, style);
-        }
-
-        /// <inheritdoc />
-        public void DrawEllipse(Point2 center, float width, float height, ColorStyle style)
-        {
-            if (!style.IsVisible) return;
-            if (_SpritesDirty) Flush();
-            _VectorsBatch.DrawEllipse(center, width, height, style);
-        }
-
-        /// <inheritdoc />
-        public void DrawPolygon(ReadOnlySpan<Point2> points, ColorStyle style)
-        {
-            if (!style.IsVisible) return;
-            if (_SpritesDirty) Flush();
-            _VectorsBatch.DrawPolygon(points, style);
-        }
-
-        /// <inheritdoc />
-        public void DrawSprite(in System.Numerics.Matrix3x2 transform, in SpriteStyle style)
-        {
-            if (!style.IsVisible) return;
-
-            if (!_VectorsBatch.IsEmpty) Flush();
-
-            if (!_SpritesDirty)
-            {
-                if (_SpritesBatch == null || _SpritesBatch.IsDisposed)
-                {
-                    _SpritesBatch = new SpriteBatch(_Device);
-                }
-
-                // _SpritesBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _ToXna(_Final));
-                _SpritesBatch.Begin();
-                _SpritesDirty = true;
-            }
-
-            var sprite = style.Bitmap;
-
-            var tex = FetchTexture(sprite.Source);
-            if (tex == null) return;
-
-            var xform = transform * _FinalForward;
-
-            xform.Decompose(out V2 s, out float r, out V2 t);
-
-            var offset = sprite.Pivot.ToXna();
-            var scale = s.ToXna() * sprite.Scale;
-            var rotation = r;
-            var translation = t.ToXna();
-            var color = style.Color.ToXnaPremul();
-
-            var effects = SpriteEffects.None;
-            if (style.FlipHorizontal) effects |= SpriteEffects.FlipHorizontally;
-            if (style.FlipVertical) effects |= SpriteEffects.FlipVertically;
-
-            var uvOffset = sprite.UV0;
-            var uvSize = sprite.UV2 - sprite.UV0;
-
-            var rect = new Rectangle((int)uvOffset.X, (int)uvOffset.Y, (int)uvSize.X, (int)uvSize.Y);
-
-            _SpritesBatch.Draw(tex, translation, rect, color, rotation, offset, scale, effects, 0);
-        }
-
-        public void Flush()
-        {
-            if (!_VectorsBatch.IsEmpty)
-            {
-                if (_VectorsEffect == null || _VectorsEffect.IsDisposed) _VectorsEffect = new SpriteEffect(_Device);
-
-                _VectorsEffect.TransformMatrix = _FinalForward.ToXna();
-
-                foreach (var pass in _VectorsEffect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-
-                    this._EnableWhiteTexture();
-
-                    _VectorsBatch.RenderTo(_VectorsEffect.GraphicsDevice);
-
-                    this._DisableWhiteTexture();
-                }
-
-                _VectorsBatch.Clear();
-            }
-
-            if (_SpritesDirty)
-            {
-                _SpritesBatch.End();
-                _SpritesDirty = false;
-            }
-        }
-
-        /// <inheritdoc />
-        public void End()
-        {
-            Flush();
-        }
+        public void TransformScalarsInverse(Span<Single> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarInverse; } }
 
         #endregion
 
-        #region utils        
+        #region API - IDrawing2D
 
-        private static void _PremultiplyAlpha(Texture2D texture)
+        /// <inheritdoc />
+        public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, in ColorStyle style)
         {
-            var data = new XNACOLOR[texture.Width * texture.Height];
-            texture.GetData(data);
+            if (!style.IsVisible) return;            
 
-            // TODO: we could do with a parallels
+            if (asset is IDrawingBrush<IDrawing2D> drawable) { drawable.DrawTo(this); return; }
 
-            for (int i = 0; i != data.Length; ++i) data[i] = XNACOLOR.FromNonPremultiplied(data[i].ToVector4());
-
-            texture.SetData(data);
+            // Transforms.Decompose2D.DrawAsset(_VectorsBatch, transform, asset, style);
         }
 
-
-        private void _EnableWhiteTexture()
+        /// <inheritdoc />
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
         {
-            if (_WhiteTexture == null) _WhiteTexture = MonoGameDrawing._CreateSolidTexture(_Device, 16, 16, Color.White);
+            if (!style.IsVisible) return;
+            SetTexture(null);
 
-            _OldTexture = _Device.Textures[0];
-            _Device.Textures[0] = _WhiteTexture;
+            Transforms.Decompose2D.DrawLines(_VectorsBatch, points, diameter, style);
         }
 
-        private void _DisableWhiteTexture()
+        /// <inheritdoc />
+        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
         {
-            _Device.Textures[0] = _OldTexture;
-            _OldTexture = null;
+            if (!style.IsVisible) return;
+            SetTexture(null);
+            Transforms.Decompose2D.DrawEllipse(_VectorsBatch, center, width, height, style);
         }
 
-        public object GetService(Type serviceType)
+        /// <inheritdoc />
+        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
         {
-            throw new NotImplementedException();
+            if (!style.IsVisible) return;
+            SetTexture(null);
+            Transforms.Decompose2D.DrawPolygon(_VectorsBatch, points, style);
+        }
+
+        /// <inheritdoc />
+        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        {
+            if (color.IsEmpty) return;
+            SetTexture(null);
+            _VectorsBatch.FillConvexPolygon(points, color);
+        }
+
+        /// <inheritdoc />
+        public void DrawImage(in System.Numerics.Matrix3x2 transform, in ImageStyle style)
+        {
+            if (!style.IsVisible) return;
+            var (tex,attr) = FetchTexture(style.Bitmap.Source);
+            if (tex == null) return;
+            SetTexture(tex, attr);            
+
+            _VectorsBatch.DrawImage(transform, style);
         }
 
         #endregion

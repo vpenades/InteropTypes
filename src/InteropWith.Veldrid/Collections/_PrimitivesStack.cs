@@ -80,7 +80,7 @@ namespace InteropWith
             _IndicesArray[_IndicesCount++] = idx;
         }
 
-        public unsafe void AddPolygon(ReadOnlySpan<TVertex> points, int texIdx)
+        public unsafe void AddConvexPolygon(ReadOnlySpan<TVertex> points, int texIdx)
         {
             Span<int> indices = stackalloc int[points.Length];
 

@@ -42,7 +42,7 @@ namespace InteropDrawing
     public interface IScene3D : IDrawing3D { }
 
 
-    public interface IDrawingContext3D : IDrawing3D, IDisposable { }
+    
 
     public interface ISceneViewport2D
     {

@@ -63,7 +63,7 @@ namespace InteropDrawing
     public static class WPFExtensions
     {
         [Obsolete("Use PerspectiveTransform instead.")]
-        public static void Draw(this System.Windows.Media.DrawingContext dc, Model3D scene, CameraProjection3D camera)
+        public static void Draw(this System.Windows.Media.DrawingContext dc, Record3D scene, CameraProjection3D camera)
         {
             throw new NotImplementedException();
 

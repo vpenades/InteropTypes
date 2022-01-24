@@ -19,20 +19,20 @@ namespace InteropDrawing
     {
         #region data
 
-        private static readonly System.Threading.ThreadLocal<Model2D> _Model2DBounds = new System.Threading.ThreadLocal<Model2D>(() => new Model2D());
+        private static readonly System.Threading.ThreadLocal<Record2D> _Model2DBounds = new System.Threading.ThreadLocal<Record2D>(() => new Record2D());
 
         #endregion
 
         #region 2D transforms
 
 
-        public static bool TryGetBackendViewportBounds(this IDrawing2D dc, out BRECT bounds)
+        public static bool TryGetBackendViewportBounds(this IBaseDrawing2D dc, out BRECT bounds)
         {
             bounds = BRECT.Empty;
 
             if (!(dc is IServiceProvider srv)) return false;
 
-            var vinfo = srv.GetService(typeof(IBackendViewportInfo)) as IBackendViewportInfo;
+            var vinfo = srv.GetService(typeof(Backends.IViewportInfo)) as Backends.IViewportInfo;
             if (vinfo == null) return false;
 
             if (!(dc is Transforms.ITransformer2D xform)) return false;
@@ -52,7 +52,7 @@ namespace InteropDrawing
             return true;            
         }
 
-        public static bool TryGetQuadrant(this IDrawing2D dc, out Quadrant quadrant)
+        public static bool TryGetQuadrant(this IBaseDrawing2D dc, out Quadrant quadrant)
         {
             if (dc is Transforms.ITransformer2D xform)
             {
@@ -84,38 +84,34 @@ namespace InteropDrawing
 
         public static Quadrant GetQuadrant(in VECTOR2 direction)
         {
-            if (direction.Y > 0)
-            {
-                return direction.X > 0
-                    ? Quadrant.BottomRight
-                    : Quadrant.BottomLeft;
-            }
-            else
-            {
-                return direction.X > 0
-                    ? Quadrant.TopRight
-                    : Quadrant.TopLeft;
-            }
+            var q = Quadrant.Origin;
+            if (direction.X < 0) q |= Quadrant.Left;
+            else if (direction.X > 0) q |= Quadrant.Right;
+
+            if (direction.Y < 0) q |= Quadrant.Bottom;
+            else if (direction.Y > 0) q |= Quadrant.Top;
+
+            return q;
         }
 
-        public static void TransformForward(this IDrawing2D dc, Span<POINT2> points)
+        public static void TransformForward(this IBaseDrawing2D dc, Span<POINT2> points)
         {
             if (dc is Transforms.ITransformer2D xformer) xformer.TransformForward(points);
         }
 
-        public static void TransformInverse(this IDrawing2D dc, Span<POINT2> points)
+        public static void TransformInverse(this IBaseDrawing2D dc, Span<POINT2> points)
         {
             if (dc is Transforms.ITransformer2D xformer) xformer.TransformInverse(points);
         }
 
-        public static POINT2 TransformForward(this IDrawing2D dc, POINT2 point)
+        public static POINT2 TransformForward(this IBaseDrawing2D dc, POINT2 point)
         {
             return dc is Transforms.ITransformer2D xformer
                 ? xformer._TransformForward(point)
                 : point;
         }
 
-        public static POINT2 TransformInverse(this IDrawing2D dc, POINT2 point)
+        public static POINT2 TransformInverse(this IBaseDrawing2D dc, POINT2 point)
         {
             return dc is Transforms.ITransformer2D xformer
                 ? xformer._TransformInverse(point)
@@ -154,17 +150,17 @@ namespace InteropDrawing
             return span[0];
         }
 
-        public static IDrawing2D CreateTransformed(IDrawing2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)
+        public static Transforms.Drawing2DTransform CreateTransformed(IBaseDrawing2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
         {
             return Transforms.Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);
         }
 
-        public static IDrawing2D CreateTransformed(IDrawing2D t, POINT2 physicalSize, POINT2 virtualSize)
+        public static IDrawing2D CreateTransformed(IBaseDrawing2D t, POINT2 physicalSize, POINT2 virtualSize)
         {
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualSize);
         }        
 
-        public static IDrawing2D CreateTransformed(IDrawing2D t, POINT2 physicalSize, BRECT virtualBounds)
+        public static IDrawing2D CreateTransformed(IBaseDrawing2D t, POINT2 physicalSize, BRECT virtualBounds)
         {
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualBounds);
         }
@@ -180,8 +176,8 @@ namespace InteropDrawing
         
         public static BRECT? GetAssetBoundingRect(Object asset)
         {            
-            if (asset is Model2D model2D) return model2D.BoundingRect;
-            if (asset is IDrawable2D drawable)
+            if (asset is Record2D model2D) return model2D.BoundingRect;
+            if (asset is IDrawingBrush<IDrawing2D> drawable)
             {                
                 var mdl = _Model2DBounds.Value;
                 mdl.Clear();
@@ -195,8 +191,8 @@ namespace InteropDrawing
         
         public static (VECTOR2 Center,Single Radius)? GetAssetBoundingCircle(Object asset)
         {
-            if (asset is Model2D model2D) return model2D.BoundingCircle;
-            if (asset is IDrawable2D drawable)
+            if (asset is Record2D model2D) return model2D.BoundingCircle;
+            if (asset is IDrawingBrush<IDrawing2D> drawable)
             {
                 var mdl = _Model2DBounds.Value;
                 mdl.Clear();
@@ -211,12 +207,27 @@ namespace InteropDrawing
 
         #region drawing        
 
-        public static void DrawLines(this IDrawing2D dc, SCALAR diameter, LineStyle style, params POINT2[] points)
+        public static void DrawLines(this IPolygonDrawing2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
+        {
+            Transforms.Decompose2D.DrawLines(dc, points, diameter, style);
+        }
+
+        public static void DrawPolygons(this IPolygonDrawing2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
+        {
+            Transforms.Decompose2D.DrawPolygon(dc, points, style);
+        }
+
+        public static void DrawEllipse(this IPolygonDrawing2D dc, POINT2 center, float dx, float dy, in ColorStyle style)
+        {
+            Transforms.Decompose2D.DrawEllipse(dc, center, dx, dy, style);
+        }
+
+        public static void DrawLines(this IVectorsDrawing2D dc, SCALAR diameter, LineStyle style, params POINT2[] points)
         {
             dc.DrawLines(points, diameter, style);
         }
 
-        public static void DrawLine(this IDrawing2D dc, POINT2 a, POINT2 b, SCALAR diameter, LineStyle style)
+        public static void DrawLine(this IVectorsDrawing2D dc, POINT2 a, POINT2 b, SCALAR diameter, in LineStyle style)
         {
             Span<POINT2> pp = stackalloc POINT2[2];
             pp[0] = a;
@@ -225,7 +236,7 @@ namespace InteropDrawing
             dc.DrawLines(pp, diameter, style);
         }
 
-        public static void DrawLine(this IDrawing2D dc, POINT2 a, POINT2 b, float diameter, SpriteStyle style)
+        public static void DrawLine(this IImageDrawing2D dc, POINT2 a, POINT2 b, float diameter, in ImageStyle style)
         {
             var aa = a.ToNumerics();
             var ab = b.ToNumerics() - aa;
@@ -241,20 +252,20 @@ namespace InteropDrawing
 
             xform.Translation = aa;
 
-            dc.DrawSprite(xform, style);
+            dc.DrawImage(xform, style);
         }
 
-        public static void DrawCircle(this IDrawing2D dc, POINT2 center, SCALAR diameter, ColorStyle style)
+        public static void DrawCircle(this IVectorsDrawing2D dc, POINT2 center, SCALAR diameter, in ColorStyle style)
         {
             dc.DrawEllipse(center, diameter, diameter, style);
         }
 
-        public static void DrawRectangle(this IDrawing2D dc, BRECT rect, ColorStyle style)
+        public static void DrawRectangle(this IVectorsDrawing2D dc, BRECT rect, in ColorStyle style)
         {
             dc.DrawRectangle(rect.Location, rect.Size, style);
         }
 
-        public static void DrawRectangle(this IDrawing2D dc, XFORM2 rect, ColorStyle style)
+        public static void DrawRectangle(this IVectorsDrawing2D dc, XFORM2 rect, in ColorStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
 
@@ -270,7 +281,7 @@ namespace InteropDrawing
             dc.DrawPolygon(vertices, style);
         }
 
-        public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle style)
+        public static void DrawRectangle(this IVectorsDrawing2D dc, POINT2 origin, POINT2 size, in ColorStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
 
@@ -279,12 +290,12 @@ namespace InteropDrawing
             dc.DrawPolygon(vertices, style);
         }
 
-        public static void DrawRectangle(this IDrawing2D dc, BRECT rect, ColorStyle style, float borderRadius, int arcVertexCount = 6)
+        public static void DrawRectangle(this IVectorsDrawing2D dc, BRECT rect, in ColorStyle style, float borderRadius, int arcVertexCount = 6)
         {
             dc.DrawRectangle(rect.Location, rect.Size, style, borderRadius, arcVertexCount);
         }
 
-        public static void DrawRectangle(this IDrawing2D dc, POINT2 origin, POINT2 size, ColorStyle style, float borderRadius, int arcVertexCount = 6)
+        public static void DrawRectangle(this IVectorsDrawing2D dc, POINT2 origin, POINT2 size, in ColorStyle style, float borderRadius, int arcVertexCount = 6)
         {
             if (borderRadius == 0) arcVertexCount = 0;
 
@@ -295,12 +306,12 @@ namespace InteropDrawing
             dc.DrawPolygon(vertices, style);
         }        
 
-        public static void DrawPolygon(this IDrawing2D dc, ColorStyle style, params POINT2[] points)
+        public static void DrawPolygon(this IVectorsDrawing2D dc, in ColorStyle style, params POINT2[] points)
         {
             dc.DrawPolygon(points, style);
         }        
 
-        public static void DrawFont(this IDrawing2D dc, POINT2 origin, float size, String text, FontStyle style)
+        public static void DrawFont(this IVectorsDrawing2D dc, POINT2 origin, float size, String text, FontStyle style)
         {
             var xform = XFORM2.CreateScale(size);
             xform.Translation = origin.ToNumerics();
@@ -310,7 +321,7 @@ namespace InteropDrawing
             dc.DrawFont(xform, text, style);
         }
 
-        public static void DrawFont(this IDrawing2D dc, XFORM2 xform, String text, FontStyle style)
+        public static void DrawFont(this IVectorsDrawing2D dc, XFORM2 xform, String text, FontStyle style)
         {
             float xflip = 1;
             float yflip = 1;            
@@ -320,7 +331,7 @@ namespace InteropDrawing
 
             if (style.Alignment.HasFlag(FontAlignStyle.FlipAuto) && dc.TryGetQuadrant(out var q))
             {
-                if (q == Quadrant.TopRight) yflip *= -1;
+                if (q.HasFlag(Quadrant.Bottom)) yflip *= -1;
             }            
 
             style = style.With(style.Alignment & ~(FontAlignStyle.FlipHorizontal | FontAlignStyle.FlipVertical));
@@ -330,7 +341,7 @@ namespace InteropDrawing
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
         }
 
-        public static void DrawPath(this IDrawing2D dc, XFORM2 xform, string path, ColorStyle style)
+        public static void DrawPath(this IVectorsDrawing2D dc, XFORM2 xform, string path, ColorStyle style)
         {
             Parametric.PathParser.DrawPath(dc, xform, path, style);
         }
