@@ -7,17 +7,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropDrawing.Backends
 {
-    class MonoGameDrawing3D : IMonoGameDrawing3D
+    class MonoGameDrawing3D : Transforms.Decompose3D.PassThrough, IMonoGameDrawing3D
     {
         #region lifecycle
 
         public MonoGameDrawing3D(GraphicsDevice device, bool flipFaces = false)            
         {
             _Batch = new MeshBuilder(flipFaces);
+            this.SetPassThroughTarget(_Batch);
         }
 
         public void Dispose()
         {
+            this.SetPassThroughTarget(null);
             System.Threading.Interlocked.Exchange(ref _Effect3D, null)?.Dispose();
             _Device = null;
         }
@@ -46,54 +48,7 @@ namespace InteropDrawing.Backends
 
         public bool IsEmpty => _Batch.IsEmpty && _AssetInstances.Count == 0;        
 
-        #endregion
-
-        #region drawing API
-
-        public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
-        {            
-            _Batch.DrawSegment(a, b, diameter, brush);
-        }
-
-        public void DrawSphere(Point3 center, Single diameter, ColorStyle brush)
-        {            
-            _Batch.DrawSphere(center, diameter, brush);
-        }
-
-        public void DrawSurface(ReadOnlySpan<Point3> points, SurfaceStyle brush)
-        {         
-            _Batch.DrawSurface(points, brush);
-        }
-
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
-        {
-            throw new NotImplementedException();
-            /*
-            if (asset is String filePath)
-            {
-                if (filePath.ToLower().EndsWith(".glb")) // use ?Track=WALK;Time=345.3
-                {
-                    var tmr = new ModelRef { Source = filePath };
-
-                    _AssetInstances.Add((tmr, transform));
-                }
-
-                return;
-            }
-
-            if (asset is ModelRef mr)
-            {
-                if (mr.Source.ToLower().EndsWith(".glb"))
-                {
-                    _AssetInstances.Add((mr, transform));
-                    return;
-                }
-            }*/
-            
-            _Batch.DrawAsset(transform, asset, brush);
-        }
-
-        #endregion
+        #endregion        
 
         #region rendering
 

@@ -8,9 +8,9 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing
 {
-    struct _Scene2D : IDrawingBrush<IDrawing2D>
+    struct _Scene2D : IDrawingBrush<ICanvas2D>
     {
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             dc.DrawCircle((0, 0), 50, COLOR.Red);
             dc.DrawCircle((200, 200), 50, COLOR.White);
@@ -29,10 +29,13 @@ namespace InteropDrawing
         }
     }
 
-    class _Sprites2D : IDrawingBrush<IDrawing2D>
+    class _Sprites2D : IDrawingBrush<ICanvas2D>
     {
-        private static readonly ImageAsset[] _Punk = ImageAsset.CreateGrid("Assets\\PunkRun.png", (256, 256), (128, 128), 8, 8).ToArray();
+        private static readonly ImageAsset[] _Punk = ImageAsset.CreateGrid("Assets\\PunkRun.png", (256, 256), (128, 128), false, 8, 8).ToArray();
         private static readonly ImageAsset[] _Tiles = ImageAsset.CreateGrid("Assets\\Tiles.png", (16, 16), XY.Zero, 63, 9).ToArray();
+
+        private static readonly ImageAsset _Offset0 = ImageAsset.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40,108), false).WithScale(0.45f);
+        private static readonly ImageAsset _Offset1 = ImageAsset.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), true).WithScale(0.45f);
 
         private static readonly BitmapGrid _Map1 = new BitmapGrid(4, 4, _Tiles);
 
@@ -42,7 +45,7 @@ namespace InteropDrawing
 
         private float _Time => (float)_Timer.Elapsed.TotalSeconds;
 
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             var x =
                 System.Numerics.Matrix3x2.CreateScale(0.5f)
@@ -52,7 +55,6 @@ namespace InteropDrawing
             var image = ImageAsset.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
 
             dc.DrawImage(x, image);
-
 
 
             // rect.DrawSprite(kk, image);
@@ -80,6 +82,19 @@ namespace InteropDrawing
 
             dc.DrawLine((20, 100), (300, 150), 1, COLOR.Black);
             dc.DrawLine((20, 100), (25, 150), 1, COLOR.Black);
+
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 40), _Offset0);
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 80), (_Offset0,true,false));
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 140), _Offset1);
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 180), (_Offset1, true, false));
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 220), (_Offset1, true, true));
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 260), (_Offset1, false, true));
 
             // rect.Bounds.DrawTo(_Drawing2D, (Color.Red, 1));
         }
@@ -117,7 +132,7 @@ namespace InteropDrawing
 
         #region API
 
-        public void DrawTo(IDrawing2D target, System.Numerics.Matrix3x2 transform)
+        public void DrawTo(ICanvas2D target, System.Numerics.Matrix3x2 transform)
         {
             var tmp = new ImageAsset();
 

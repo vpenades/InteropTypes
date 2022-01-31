@@ -9,7 +9,7 @@ using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 
 namespace InteropDrawing.Backends
 {
-    class _PlotlyDrawing2DTracesContext : IDisposableDrawing2D
+    class _PlotlyDrawing2DTracesContext : IDisposableCanvas2D
     {
         #region lifecycle
         public _PlotlyDrawing2DTracesContext(PlotlyDocumentBuilder owner)
@@ -46,9 +46,17 @@ namespace InteropDrawing.Backends
         #region API
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
+        {
+            if (color.IsEmpty) return;
+
+            _Traces.Add(Plotly.TracesFactory.Polygon(points, color.Color));
         }
 
         /// <inheritdoc/>
@@ -62,7 +70,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
         {
             if (!style.IsVisible) return;
 
@@ -93,15 +101,7 @@ namespace InteropDrawing.Backends
                     _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor));
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
-        {
-            if (color.IsEmpty) return;
-            
-            _Traces.Add(Plotly.TracesFactory.Polygon(points, color));            
-        }
+        }        
 
         #endregion
     }

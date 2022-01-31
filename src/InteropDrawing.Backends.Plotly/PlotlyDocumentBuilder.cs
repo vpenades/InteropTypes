@@ -42,7 +42,7 @@ namespace InteropDrawing.Backends
 
         #region API
 
-        public PlotlyDocumentBuilder Draw(params IDrawingBrush<IDrawing3D>[] drawables)
+        public PlotlyDocumentBuilder Draw(params IDrawingBrush<IScene3D>[] drawables)
         {
             using (var dc = CreateScene3DContext())
             {
@@ -52,7 +52,7 @@ namespace InteropDrawing.Backends
             return this;
         }
 
-        public PlotlyDocumentBuilder Draw(Matrix4x4 xform, params IDrawingBrush<IDrawing3D>[] drawables)
+        public PlotlyDocumentBuilder Draw(Matrix4x4 xform, params IDrawingBrush<IScene3D>[] drawables)
         {
             using (var dc = CreateScene3DContext())
             {
@@ -64,22 +64,22 @@ namespace InteropDrawing.Backends
         }
 
         /// <summary>
-        /// Creates a new <see cref="IDisposableDrawing2D"/> context optimized for data sets.
+        /// Creates a new <see cref="IDisposableCanvas2D"/> context optimized for data sets.
         /// </summary>
         /// <returns></returns>
-        public IDisposableDrawing2D CreateTraces2DContext() { return new _PlotlyDrawing2DTracesContext(this); }
+        public IDisposableCanvas2D CreateTraces2DContext() { return new _PlotlyDrawing2DTracesContext(this); }
 
         // <summary>
-        /// Creates a new <see cref="IDisposableDrawing2D"/> context optimized for vector graphics.
+        /// Creates a new <see cref="IDisposableCanvas2D"/> context optimized for vector graphics.
         /// </summary>
         /// <returns></returns>
-        public IDisposableDrawing2D CreateShapes2DContext() { return new _PlotlyDrawing2DShapesContext(this); }
+        public IDisposableCanvas2D CreateShapes2DContext() { return new _PlotlyDrawing2DShapesContext(this); }
 
         /// <summary>
-        /// Creates a new <see cref="IDisposableDrawing3D"/> context optimized for 3D Scenes.
+        /// Creates a new <see cref="IDisposableScene3D"/> context optimized for 3D Scenes.
         /// </summary>
         /// <returns></returns>
-        public IDisposableDrawing3D CreateScene3DContext() { return new _PlotlyDrawing3DContext(this); }
+        public IDisposableScene3D CreateScene3DContext() { return new _PlotlyDrawing3DContext(this); }
 
         public Box<IPlotProperty> ToPlotProperties()
         {

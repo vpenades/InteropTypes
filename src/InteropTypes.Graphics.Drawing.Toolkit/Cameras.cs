@@ -83,7 +83,7 @@ namespace InteropDrawing
 
         #region API
 
-        public void DrawTo(IDrawing3D dc, float cameraSize)
+        public void DrawTo(IScene3D dc, float cameraSize)
         {
             dc.DrawCamera(WorldMatrix, cameraSize);
 

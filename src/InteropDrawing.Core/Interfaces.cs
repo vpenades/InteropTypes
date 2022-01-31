@@ -13,26 +13,7 @@ namespace InteropDrawing
         /// <param name="context">The drawing context.</param>
         void DrawTo(TContext context);
     }
-
-    [Obsolete("Use IDrawingBrush<T>")]
-    public interface IDrawable2D : IDrawingBrush<IDrawing2D> { }
-
-
-    [Obsolete("Use IDrawingBrush<T>")]
-    public interface IDrawable3D : IDrawingBrush<IDrawing3D> { }
-
-
-    /// <summary>
-    /// Represents a disposable <see cref="IDrawing2D"/>.
-    /// </summary>
-    public interface IDisposableDrawing2D : IDrawing2D, IDisposable { }
-
-    /// <summary>
-    /// Represents a disposable <see cref="IDrawing3D"/>.
-    /// </summary>
-    public interface IDisposableDrawing3D : IDrawing3D, IDisposable { }
-
-
+    
     /// <summary>
     /// defines an objects that exposes a unique key that doesn't change as long as
     /// the object itself doesn't change, and can be used by other objects to determine

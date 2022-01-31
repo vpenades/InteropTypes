@@ -8,7 +8,7 @@ using XFORM2 = System.Numerics.Matrix3x2;
 
 namespace InteropDrawing.Parametric
 {
-    static class ShapeFactory
+    static class ShapeFactory2D
     {
         #region ellipse
         public static void FillEllipseVertices(this Span<Point2> dstVertices, Point2 center, float width, float height)

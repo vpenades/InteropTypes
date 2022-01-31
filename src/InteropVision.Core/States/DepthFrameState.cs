@@ -8,7 +8,7 @@ using InteropDrawing;
 
 namespace InteropVision
 {
-    public partial class DepthFrameState : IDrawingBrush<IDrawing2D>
+    public partial class DepthFrameState : IDrawingBrush<ICanvas2D>
     {
         private MemoryBitmap<float> _Depth;
         private ImageAsset _SpriteAsset;
@@ -43,7 +43,7 @@ namespace InteropVision
             return rgb;
         }
 
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             if (_SpriteAsset == null)
             {

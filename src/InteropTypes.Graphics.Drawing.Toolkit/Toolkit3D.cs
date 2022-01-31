@@ -24,39 +24,24 @@ namespace InteropDrawing
 
         #endregion
 
-        #region 3D transforms
+        #region 3D transforms       
 
-        public static IAssetDrawing2D CreateTransformed2D(this IAssetDrawing2D source, XFORM2 xform)
+        public static ICanvas2D CreateTransformed2D(this ICanvas2D source, XFORM2 xform)
         {
             return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
         }
 
-        public static IVectorsDrawing2D CreateTransformed2D(this IVectorsDrawing2D source, XFORM2 xform)
+        public static IPrimitiveCanvas2D CreateTransformed2D(this IPrimitiveCanvas2D source, XFORM2 xform)
         {
             return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
         }
 
-        public static IPolygonDrawing2D CreateTransformed2D(this IPolygonDrawing2D source, XFORM2 xform)
-        {
-            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
-        }
-
-        public static IImageDrawing2D CreateTransformed2D(this IImageDrawing2D source, XFORM2 xform)
-        {
-            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
-        }
-
-        public static IDrawing2D CreateTransformed2D(this IDrawing2D source, XFORM2 xform)
-        {
-            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
-        }
-
-        public static IDrawing2D CreateTransformed2D(this IDrawing3D t, XFORM4 xform)
+        public static ICanvas2D CreateTransformed2D(this IScene3D t, XFORM4 xform)
         {
             return Transforms.Drawing3DTransform.Create(t, xform);
         }
 
-        public static IDrawing3D CreateTransformed3D(this IDrawing3D t, XFORM4 xform)
+        public static IScene3D CreateTransformed3D(this IScene3D t, XFORM4 xform)
         {
             return xform.IsIdentity ? t : Transforms.Drawing3DTransform.Create(t, xform);
         }
@@ -65,12 +50,9 @@ namespace InteropDrawing
 
         #region assets
 
-        public static void DrawAsset(this IDrawing3D dc, in XFORM4 transform, Object asset)
-        {
-            dc.DrawAsset(transform, asset, COLOR.White);
-        }
+        public static void DrawAsset(this IScene3D dc, in XFORM4 transform, Object asset) { dc.DrawAsset(transform, asset, COLOR.White); }
 
-        public static void DrawAssetAsSurfaces(this IDrawing3D dc, in XFORM4 transform, Object asset, ColorStyle brush)
+        public static void DrawAssetAsSurfaces(this IScene3D dc, in XFORM4 transform, Object asset, OutlineFillStyle brush)
         {
             // TODO: if dc is IAssetDrawing, call directly
 
@@ -78,7 +60,7 @@ namespace InteropDrawing
             dc.DrawAssetAsSurfaces(asset, brush);
         }
 
-        public static void DrawAssetAsSurfaces(this IDrawing3D dc, Object asset, ColorStyle brush)
+        public static void DrawAssetAsSurfaces(this IScene3D dc, Object asset, OutlineFillStyle brush)
         {
             if (asset is Asset3D a3d)
             {
@@ -86,14 +68,20 @@ namespace InteropDrawing
                 return;
             }
 
-            if (asset is IDrawingBrush<IDrawing3D> mdl3D)
+            if (asset is IDrawingBrush<IPrimitiveScene3D> mdl1)
             {
-                mdl3D.DrawTo(dc);
+                mdl1.DrawTo(dc);
+                return;
+            }
+
+            if (asset is IDrawingBrush<IScene3D> mdl2)
+            {
+                mdl2.DrawTo(dc);
                 return;
             }
         }
 
-        public static void DrawAssetAsPrimitives(this IDrawing3D dc, in XFORM4 transform, Object asset, ColorStyle brush)
+        public static void DrawAssetAsPrimitives(this IScene3D dc, in XFORM4 transform, Object asset, OutlineFillStyle brush)
         {
             // TODO: if dc is IAssetDrawing, call directly
 
@@ -101,7 +89,7 @@ namespace InteropDrawing
             dc.DrawAssetAsPrimitives(asset, brush);
         }
 
-        public static void DrawAssetAsPrimitives(this IDrawing3D dc, Object asset, ColorStyle brush)
+        public static void DrawAssetAsPrimitives(this IScene3D dc, Object asset, OutlineFillStyle brush)
         {
             if (asset is Asset3D a3d)
             {
@@ -123,7 +111,7 @@ namespace InteropDrawing
         public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
         {
             if (asset is Record3D model3D) return model3D.BoundingBox;
-            if (asset is IDrawingBrush<IDrawing3D> drawable)
+            if (asset is IDrawingBrush<IScene3D> drawable)
             {
                 var mdl = _Model3DBounds.Value;
                 mdl.Clear();
@@ -138,7 +126,7 @@ namespace InteropDrawing
         public static BBOX? GetAssetBoundingMatrix(Object asset)
         {
             if (asset is Record3D model3D) return model3D.BoundingMatrix;
-            if (asset is IDrawingBrush<IDrawing3D> drawable)
+            if (asset is IDrawingBrush<IScene3D> drawable)
             {
                 var mdl = _Model3DBounds.Value;
                 mdl.Clear();
@@ -153,7 +141,7 @@ namespace InteropDrawing
         public static (VECTOR3 Center, Single Radius)? GetAssetBoundingSphere(Object asset)
         {
             if (asset is Record3D model3D) return model3D.BoundingSphere;
-            if (asset is IDrawingBrush<IDrawing3D> drawable)
+            if (asset is IDrawingBrush<IScene3D> drawable)
             {
                 var mdl = _Model3DBounds.Value;
                 mdl.Clear();
@@ -165,12 +153,12 @@ namespace InteropDrawing
             return null;
         }
 
-        public static void DrawSurface(this ISurfaceDrawing3D dc, SurfaceStyle brush, params Point3[] points)
+        public static void DrawSurface(this IScene3D dc, SurfaceStyle brush, params Point3[] points)
         {
             dc.DrawSurface(points, brush);
         }        
 
-        public static void DrawPivot(this IDrawing3D dc, in XFORM4 pivot, Single size)
+        public static void DrawPivot(this IScene3D dc, in XFORM4 pivot, Single size)
         {
             var center = pivot.Translation;
 
@@ -187,7 +175,7 @@ namespace InteropDrawing
             dc.DrawSegment(center + zzz * size * 0.1f, center + zzz * size, size * 0.1f, (colorZ, LineCapStyle.Round, LineCapStyle.Triangle));
         }
 
-        public static void DrawCube(this ISurfaceDrawing3D dc, in XFORM4 cube, params SurfaceStyle[] style)
+        public static void DrawCube(this IScene3D dc, in XFORM4 cube, params SurfaceStyle[] style)
         {
             Span<POINT3> corners = stackalloc POINT3[8];
 
@@ -257,7 +245,7 @@ namespace InteropDrawing
             dc.DrawSurface(vertices, style[idx]);
         }        
 
-        public static void DrawCamera(this IDrawing3D dc, XFORM4 pivot, float cameraSize)
+        public static void DrawCamera(this IScene3D dc, XFORM4 pivot, float cameraSize)
         {
             if (pivot.GetDeterminant() == 0) return;
 
@@ -288,7 +276,7 @@ namespace InteropDrawing
             dc.DrawSegment(center + zzz * 1.2f, center + zzz * 2.2f, cameraSize * 0.1f, (colorZ, LineCapStyle.Round, LineCapStyle.Triangle));
         }
 
-        public static void DrawProjectedPlane(this IDrawing3D dc, XFORM4 pivot, in XFORM4 projection, Single depth, Single diameter, LineStyle brush)
+        public static void DrawProjectedPlane(this IScene3D dc, XFORM4 pivot, in XFORM4 projection, Single depth, Single diameter, LineStyle brush)
         {
             XFORM4.Invert(projection, out XFORM4 ip);
 
@@ -318,7 +306,7 @@ namespace InteropDrawing
             dc.DrawSegment(d, a, diameter, brush);
         }
 
-        public static void DrawProjectedPlane(this IDrawing3D dc, XFORM4 pivot, in XFORM4 projection, Single diameter, LineStyle brush)
+        public static void DrawProjectedPlane(this IScene3D dc, XFORM4 pivot, in XFORM4 projection, Single diameter, LineStyle brush)
         {
             XFORM4.Invert(projection, out XFORM4 ip);
 
@@ -347,12 +335,12 @@ namespace InteropDrawing
             dc.DrawSegment(d, a, diameter, brush);
         }
 
-        public static void DrawFont(this IDrawing3D dc, XFORM4 xform, String text, COLOR color)
+        public static void DrawFont(this IScene3D dc, XFORM4 xform, String text, COLOR color)
         {
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
         }
 
-        public static void DrawFloor(this IDrawing3D dc, VECTOR2 origin, VECTOR2 size, int divisions, ColorStyle oddStyle, ColorStyle evenStyle)
+        public static void DrawFloor(this IScene3D dc, VECTOR2 origin, VECTOR2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)
         {
             var xdivisions = divisions;
             var ydivisions = divisions;

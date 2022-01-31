@@ -5,9 +5,10 @@ using System.Numerics;
 namespace InteropDrawing.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
-    class _MemoryDrawingContext<TPixel> :  
+    class _MemoryDrawingContext<TPixel> :
+        Transforms.Decompose2D.PassToSelf,
         Backends.IViewportInfo,
-        Backends.IDrawingBackend2D, IDrawing2D,
+        Backends.IDrawingBackend2D,
         IServiceProvider
 
         where TPixel: unmanaged
@@ -47,9 +48,17 @@ namespace InteropDrawing.Backends
 
         #region properties
 
+        /// <inheritdoc/>
         public int PixelsWidth => _Target.Width;
 
+        /// <inheritdoc/>
         public int PixelsHeight => _Target.Height;
+
+        /// <inheritdoc/>
+        public float DotsPerInchX => 96;
+
+        /// <inheritdoc/>
+        public float DotsPerInchY => 96;
 
         #endregion
 
@@ -65,13 +74,7 @@ namespace InteropDrawing.Backends
         }        
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
-        {
-            _Collapse.DrawAsset(transform, asset, style);
-        }
-
-        /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public sealed override void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             var dst = _Target.AsSpanBitmap();
             var xform = style.GetTransform() * transform;
@@ -118,29 +121,12 @@ namespace InteropDrawing.Backends
                         }
                 }
             }            
-        }
+        }        
 
         /// <inheritdoc/>
-        public float GetThinLinesPixelSize() { return 1; }
-
-        /// <inheritdoc/>
-        public void DrawThinLines(ReadOnlySpan<Point2> points, float width, Color color)
+        public sealed override void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
-            var outColor = _ColorConverter(color);
-
-            for (int i = 1; i < points.Length; ++i)
-            {
-                var a = points[i - 1];
-                var b = points[i + 0];
-
-                InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, a, b, outColor);
-            }
-        }
-
-        /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
-        {
-            var fillColor = _ColorConverter(color);
+            var fillColor = _ColorConverter(color.Color);
 
             foreach (var (y, xmin, xmax) in _PolygonRasterizer.Value.GetScanlines(Point2.AsNumerics(points)))
             {
@@ -151,22 +137,22 @@ namespace InteropDrawing.Backends
             }
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
+        /// <inheritdoc/>
+        public float GetPixelsPerUnit() { return 1; }
+
+        /// <inheritdoc/>
+        public void DrawThinLines(ReadOnlySpan<Point2> points, float width, ColorStyle color)
         {
-            Transforms.Decompose2D.DrawPolygon(this, points, style);
+            var outColor = _ColorConverter(color.Color);
+
+            for (int i = 1; i < points.Length; ++i)
+            {
+                var a = points[i - 1];
+                var b = points[i + 0];
+
+                InteropBitmaps.DrawingExtensions.DrawPixelLine(_Target, a, b, outColor);
+            }
         }
-
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
-        {
-            if (diameter <= GetThinLinesPixelSize()) DrawThinLines(points, diameter, style.FillColor);
-
-            Transforms.Decompose2D.DrawLines(this, points, diameter, style);
-        }
-
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
-        {
-            Transforms.Decompose2D.DrawEllipse(this, center, width, height, style);
-        }        
 
         #endregion
     }

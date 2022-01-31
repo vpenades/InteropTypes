@@ -16,9 +16,9 @@ namespace InteropVision
 {
     partial struct DetectedObject
     {
-        public partial class Collection : IDrawingBrush<IDrawing2D>
+        public partial class Collection : IDrawingBrush<ICanvas2D>
         {
-            public virtual void DrawTo(IDrawing2D dc)
+            public virtual void DrawTo(ICanvas2D dc)
             {
                 // draw rectangles
 

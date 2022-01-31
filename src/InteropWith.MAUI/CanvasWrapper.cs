@@ -8,9 +8,9 @@ using InteropDrawing;
 
 namespace InteropWith.MAUI
 {
-    public readonly struct CanvasWrapper : IDrawing2D
+    public readonly struct CanvasWrapper : ICanvas2D
     {
-        public static IDrawing2D Create(Microsoft.Maui.Graphics.ICanvas canvas)
+        public static ICanvas2D Create(Microsoft.Maui.Graphics.ICanvas canvas)
         {
             return new CanvasWrapper(canvas);
         }
@@ -23,6 +23,14 @@ namespace InteropWith.MAUI
         private readonly Microsoft.Maui.Graphics.ICanvas _Canvas;
 
         private void _SetColorStyle(in ColorStyle style)
+        {
+            _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Normal;
+            _Canvas.FillColor = style.Color.ToMaui();
+            _Canvas.StrokeColor = ColorStyle.Transparent.Color.ToMaui();
+            _Canvas.StrokeSize = 0;
+        }
+
+        private void _SetColorStyle(in OutlineFillStyle style)
         {
             _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Normal;
             _Canvas.FillColor = style.FillColor.ToMaui();
@@ -46,12 +54,12 @@ namespace InteropWith.MAUI
             _Canvas.StrokeSize = style.Style.OutlineWidth;
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
         {
             _SetColorStyle(style);
 
@@ -80,7 +88,7 @@ namespace InteropWith.MAUI
             }
         }
 
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
             {

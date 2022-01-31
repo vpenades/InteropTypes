@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InteropDrawing.Diagnostics
 {
-    public abstract class CommandLogger : IDrawing2D, IDrawing3D
+    public abstract class CommandLogger : ICanvas2D, IScene3D
     {
         #region lifecycle
 
@@ -25,19 +25,19 @@ namespace InteropDrawing.Diagnostics
         #region API 2D
 
         /// <inheritdoc />
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle brush)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
         {
-            Write($"Asset {transform} {asset} {brush}");
+            Write($"Asset {transform} {asset} {color}");
         }
 
         /// <inheritdoc />
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             Write($"Convex {points.Length} {color}");
         }
 
         /// <inheritdoc />
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle brush)
+        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle brush)
         {
             Write($"Ellipse {center} {width} {height} {brush}");
         }
@@ -58,11 +58,16 @@ namespace InteropDrawing.Diagnostics
         public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
             Write($"Sprite {transform} {style}");
-        }        
+        }
 
         #endregion
 
         #region API 3D
+
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
+        {
+            Write($"ConvexSrf {vertices.Length} {style}");
+        }
 
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
         {
@@ -76,7 +81,7 @@ namespace InteropDrawing.Diagnostics
         }
 
         /// <inheritdoc />
-        public void DrawSphere(Point3 center, float diameter, ColorStyle brush)
+        public void DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
             Write($"Sphere {center} {diameter} {brush}");
         }

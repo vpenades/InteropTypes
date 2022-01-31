@@ -7,10 +7,10 @@ using COLOR = System.Drawing.Color;
 namespace InteropDrawing
 {
     /// <summary>
-    /// Combines an <see cref="ColorStyle"/> with Double sided surface style.
+    /// Combines an <see cref="OutlineFillStyle"/> with Double sided surface style.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="ISurfaceDrawing3D.DrawSurface(ReadOnlySpan{Point3}, SurfaceStyle)"/>
+    /// Style used by <see cref="IScene3D.DrawSurface(ReadOnlySpan{Point3}, SurfaceStyle)"/>
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {DoubleSided}")]
     public readonly struct SurfaceStyle
@@ -20,8 +20,10 @@ namespace InteropDrawing
         public static implicit operator SurfaceStyle(PolygonStyle brush) { return new SurfaceStyle(brush, true); }
         public static implicit operator SurfaceStyle((PolygonStyle color, Boolean doubleSided) style) { return new SurfaceStyle(style.color, style.doubleSided); }
 
-        public static implicit operator SurfaceStyle(ColorStyle brush) { return new SurfaceStyle(brush, true); }
-        public static implicit operator SurfaceStyle((ColorStyle color, Boolean doubleSided) style) { return new SurfaceStyle(style.color, style.doubleSided); }
+        public static implicit operator SurfaceStyle(OutlineFillStyle brush) { return new SurfaceStyle(brush, true); }
+        public static implicit operator SurfaceStyle((OutlineFillStyle color, Boolean doubleSided) style) { return new SurfaceStyle(style.color, style.doubleSided); }
+
+        public static implicit operator SurfaceStyle(ColorStyle color) { return new SurfaceStyle(color.Color); }
 
         public static implicit operator SurfaceStyle(COLOR fillColor) { return new SurfaceStyle(fillColor); }
 
@@ -46,26 +48,26 @@ namespace InteropDrawing
 
         public SurfaceStyle(COLOR outColor, Single outWidth)
         {
-            Style = new ColorStyle(outColor, outWidth);
+            Style = new OutlineFillStyle(outColor, outWidth);
             DoubleSided = true;
             SmoothingGroups = 0;
         }
 
         public SurfaceStyle(COLOR fillColor, COLOR outColor, Single outWidth)
         {
-            Style = new ColorStyle(fillColor, outColor, outWidth);
+            Style = new OutlineFillStyle(fillColor, outColor, outWidth);
             DoubleSided = true;
             SmoothingGroups = 0;
         }
 
         public SurfaceStyle(COLOR fillColor, bool doubleSided)
         {
-            Style = new ColorStyle(fillColor);
+            Style = new OutlineFillStyle(fillColor);
             DoubleSided = doubleSided;
             SmoothingGroups = 0;
         }
 
-        public SurfaceStyle(ColorStyle color, bool doubleSided)
+        public SurfaceStyle(OutlineFillStyle color, bool doubleSided)
         {
             Style = color;
             DoubleSided = doubleSided;
@@ -74,7 +76,7 @@ namespace InteropDrawing
 
         public SurfaceStyle(PolygonStyle color, bool doubleSided)
         {
-            Style = new ColorStyle(color.FillColor, color.OutlineColor, color.OutlineWidth);
+            Style = new OutlineFillStyle(color.FillColor, color.OutlineColor, color.OutlineWidth);
             DoubleSided = doubleSided;
             SmoothingGroups = 0;
         }
@@ -83,7 +85,7 @@ namespace InteropDrawing
 
         #region data
 
-        public readonly ColorStyle Style;
+        public readonly OutlineFillStyle Style;
         public readonly Boolean DoubleSided;
         public readonly UInt32 SmoothingGroups;
 
@@ -117,7 +119,7 @@ namespace InteropDrawing
         public static readonly SurfaceStyle TwoSides_Green = _TwoSides.With(COLOR.Green);
         public static readonly SurfaceStyle TwoSides_Blue = _TwoSides.With(COLOR.Blue);
 
-        public SurfaceStyle With(ColorStyle style) { return new SurfaceStyle(style, this.DoubleSided); }
+        public SurfaceStyle With(OutlineFillStyle style) { return new SurfaceStyle(style, this.DoubleSided); }
 
         public SurfaceStyle WithOutline(Single outlineWidth)
         {

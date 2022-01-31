@@ -11,9 +11,11 @@ using XFORM3 = System.Numerics.Matrix4x4;
 namespace InteropDrawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream3D_DebuggerProxy))]
-    sealed class _CommandStream3D : Collection.CommandList, IDrawing3D
+    sealed class _CommandStream3D : Collection.CommandList, IScene3D
     {
         #region IDrawing3D
+
+        
 
         public void DrawAsset(in XFORM3 transform, object asset, ColorStyle brush)
         {
@@ -32,7 +34,7 @@ namespace InteropDrawing
             xref[0].Style = brush;
         }
 
-        public void DrawSphere(POINT3 center, float diameter, ColorStyle brush)
+        public void DrawSphere(POINT3 center, float diameter, OutlineFillStyle brush)
         {
             var xref = AddHeaderAndStruct<_PrimitiveSphere>((int)_PrimitiveType.Sphere);
             xref[0].Center = center;            
@@ -47,6 +49,17 @@ namespace InteropDrawing
             var xref = AddStruct<_PrimitiveSurface>();
             xref[0].Count = vertices.Length;
             xref[0].Style = brush;
+
+            AddArray(vertices);
+        }
+
+        public unsafe void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle style)
+        {
+            AddHeader((int)_PrimitiveType.Surface, 4 + sizeof(_PrimitiveConvex) + vertices.Length * 12);
+
+            var xref = AddStruct<_PrimitiveConvex>();
+            xref[0].Count = vertices.Length;
+            xref[0].Style = style;
 
             AddArray(vertices);
         }
@@ -80,7 +93,6 @@ namespace InteropDrawing
             return drawingOrder.Select(item => item.Offset);
         }
 
-
         private ReadOnlySpan<byte> _GetCommandBytes(int offset, out _PrimitiveType type, out int size)
         {
             var span = this.Buffer.Slice(offset);
@@ -101,6 +113,7 @@ namespace InteropDrawing
 
                 switch (type)
                 {
+                    case _PrimitiveType.Convex: _PrimitiveConvex.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Segment: _PrimitiveSegment.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Sphere: _PrimitiveSphere.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Surface: _PrimitiveSurface.GetBounds(ref bounds, span); break;
@@ -117,6 +130,7 @@ namespace InteropDrawing
 
             switch (type)
             {
+                case _PrimitiveType.Convex: return _PrimitiveConvex.GetCenter(span);
                 case _PrimitiveType.Segment: return _PrimitiveSegment.GetCenter(span);
                 case _PrimitiveType.Sphere: return _PrimitiveSphere.GetCenter(span);
                 case _PrimitiveType.Surface: return _PrimitiveSurface.GetCenter(span);
@@ -126,12 +140,13 @@ namespace InteropDrawing
             throw new NotImplementedException();
         }        
 
-        public int DrawTo(int offset, IDrawing3D dc, bool collapseAssets)
+        public int DrawTo(int offset, IScene3D dc, bool collapseAssets)
         {
             var span = _GetCommandBytes(offset, out _PrimitiveType type, out int size);
 
             switch (type)
             {
+                case _PrimitiveType.Convex: { _PrimitiveConvex.DrawTo(dc, span); break; }
                 case _PrimitiveType.Segment: { _PrimitiveSegment.DrawTo(dc, span); break; }
                 case _PrimitiveType.Sphere: { _PrimitiveSphere.DrawTo(dc, span); break; }
                 case _PrimitiveType.Surface: { _PrimitiveSurface.DrawTo(dc, span); break; }
@@ -139,7 +154,7 @@ namespace InteropDrawing
             }
 
             return size;
-        }
+        }        
 
         #endregion
 
@@ -235,7 +250,7 @@ namespace InteropDrawing
                 return (a + b) * 0.5f;
             }           
 
-            public static void DrawTo(IDrawing3D dst, ReadOnlySpan<Byte> command)
+            public static void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSegment>(command)[0];
                 dst.DrawSegment(body.PointA, body.PointB, body.Diameter, body.Style);
@@ -246,7 +261,7 @@ namespace InteropDrawing
         {
             public POINT3 Center;            
             public Single Diameter;
-            public ColorStyle Style;
+            public OutlineFillStyle Style;
 
             public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
             {
@@ -262,10 +277,44 @@ namespace InteropDrawing
                 return src.Center.ToNumerics();
             }
 
-            public static void DrawTo(IDrawing3D dst, ReadOnlySpan<Byte> command)
+            public static void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSphere>(command)[0];
                 dst.DrawSphere(body.Center, body.Diameter, body.Style);
+            }
+        }
+
+        struct _PrimitiveConvex
+        {
+            public int Count;
+            public ColorStyle Style;
+
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            {
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
+
+                foreach (var v in points) bounds.AddVertex(v, 0);
+            }
+
+            public static unsafe XYZ GetCenter(ReadOnlySpan<Byte> command)
+            {
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
+
+                var center = XYZ.Zero;
+
+                for (int i = 0; i < body.Count; ++i) { center += points[i]; }
+
+                return body.Count == 0 ? XYZ.Zero : center / body.Count;
+            }
+
+            public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
+            {
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT3>(command.Slice(sizeof(_PrimitiveConvex)));
+
+                dst.DrawConvexSurface(points.Slice(0, body.Count), body.Style);
             }
         }
 
@@ -294,7 +343,7 @@ namespace InteropDrawing
                 return body.Count == 0 ? XYZ.Zero : center / body.Count;
             }            
 
-            public static unsafe void DrawTo(IDrawing3D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSurface>(command)[0];
                 var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT3>(command.Slice(sizeof(_PrimitiveSurface)));
@@ -342,7 +391,7 @@ namespace InteropDrawing
                 return src.Transform.Translation;
             }
 
-            public static void DrawTo(IDrawing3D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references, bool collapse)
+            public static void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references, bool collapse)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
 
@@ -355,6 +404,7 @@ namespace InteropDrawing
         private enum _PrimitiveType
         {
             None,
+            Convex,
             Segment,
             Sphere,
             Surface,

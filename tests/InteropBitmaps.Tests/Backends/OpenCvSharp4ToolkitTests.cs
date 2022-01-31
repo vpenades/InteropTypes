@@ -76,7 +76,7 @@ namespace InteropBitmaps.Backends
 
             bitmap
                 .CreateDrawingContext()
-                .DrawAsset(System.Numerics.Matrix3x2.Identity, arucoContext, System.Drawing.Color.White);
+                .DrawAsset(System.Numerics.Matrix3x2.Identity, arucoContext, InteropDrawing.ColorStyle.White);
 
             bitmap.AttachToCurrentTest("output.png");
         }

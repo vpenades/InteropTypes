@@ -14,7 +14,7 @@ namespace InteropDrawing
     {
         #region constructors
 
-        public static implicit operator PolygonStyle(ColorStyle style) { return new PolygonStyle(style.FillColor,style.OutlineColor, style.OutlineWidth); }
+        public static implicit operator PolygonStyle(OutlineFillStyle style) { return new PolygonStyle(style.FillColor,style.OutlineColor, style.OutlineWidth); }
 
         public static implicit operator PolygonStyle(COLOR fillColor) { return new PolygonStyle(fillColor); }
 

@@ -11,27 +11,27 @@ using XFORM2 = System.Numerics.Matrix3x2;
 namespace InteropDrawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream2D_DebuggerProxy))]
-    sealed class _CommandStream2D : Collection.CommandList, IDrawing2D
+    sealed class _CommandStream2D : Collection.CommandList, ICanvas2D
     {
         #region constructors 2D
 
         /// <inheritdoc/>
-        public void DrawAsset(in XFORM2 xform, Object asset, in ColorStyle brush)
+        public void DrawAsset(in XFORM2 xform, Object asset, ColorStyle color)
         {
             var xref = AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset);
             xref[0].Transform = xform;
             xref[0].AssetRef = AddReference(asset);
-            xref[0].Style = brush;
+            xref[0].Style = color;
         }
 
         /// <inheritdoc/>
-        public unsafe void FillConvexPolygon(ReadOnlySpan<POINT2> points, COLOR color)
+        public unsafe void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle color)
         {
             AddHeader((int)_PrimitiveType.Convex, 4 + sizeof(_PrimitiveConvex) + points.Length * 8);
 
             var xref = AddStruct<_PrimitiveConvex>();
             xref[0].Count = points.Length;
-            xref[0].Color = color.ToArgb();
+            xref[0].Color = color;
 
             AddArray(points);
         }
@@ -61,7 +61,7 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public unsafe void DrawEllipse(POINT2 center, Single width, Single height, in ColorStyle brush)
+        public unsafe void DrawEllipse(POINT2 center, Single width, Single height, in OutlineFillStyle brush)
         {
             var xref = AddHeaderAndStruct<_PrimitiveEllipse>((int)_PrimitiveType.Ellipse);
             xref[0].Center = center;
@@ -90,7 +90,7 @@ namespace InteropDrawing
             var xref = AddHeaderAndStruct<_PrimitiveImage>((int)_PrimitiveType.Image);
             xref[0].Transform = xform;
             xref[0].ImageRef = AddReference(style.Bitmap);
-            xref[0].Flags = (style.FlipHorizontal ? 0 : 1) | (style.FlipVertical ? 0 : 2);
+            xref[0].Flags = style.Flags;
             xref[0].Color = style.Color.ToArgb();
         }        
 
@@ -130,7 +130,7 @@ namespace InteropDrawing
             return (bounds.Min, bounds.Max, bounds.Circle.Center, bounds.Circle.Radius);
         }
 
-        public unsafe void DrawTo(int offset, IDrawing2D dc, bool collapseAssets)
+        public unsafe void DrawTo(int offset, ICanvas2D dc, bool collapseAssets)
         {
             var span = _GetCommandBytes(offset, out _PrimitiveType type, out _);
 
@@ -204,7 +204,7 @@ namespace InteropDrawing
         struct _PrimitiveConvex
         {
             public int Count;
-            public int Color;
+            public ColorStyle Color;
 
             public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
             {
@@ -212,12 +212,12 @@ namespace InteropDrawing
                 foreach (var p in pts) bounds.AddVertex(p, 0);
             }
 
-            public static unsafe void DrawTo(IPolygonDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<Byte> command)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
                 var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitiveConvex)));
 
-                dst.FillConvexPolygon(pts.Slice(0, src.Count), COLOR.FromArgb(src.Color));
+                dst.DrawConvexPolygon(pts.Slice(0, src.Count), src.Color);
             }
         }
 
@@ -241,7 +241,7 @@ namespace InteropDrawing
                 bounds.AddVertex(b, r);
             }
 
-            public static unsafe void DrawTo(IDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveLine>(command)[0];
                 dst.DrawLine(body.PointA, body.PointB, body.Diameter, body.Style);
@@ -264,7 +264,7 @@ namespace InteropDrawing
                 foreach (var p in pts) bounds.AddVertex(p, r);
             }
 
-            public static unsafe void DrawTo(IVectorsDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolyLine>(command)[0];
                 var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitivePolyLine)));
@@ -278,7 +278,7 @@ namespace InteropDrawing
             public Point2 Center;
             public float Width;
             public float Height;
-            public ColorStyle Style;
+            public OutlineFillStyle Style;
 
             public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
             {
@@ -292,7 +292,7 @@ namespace InteropDrawing
                 bounds.AddVertex(c + rr, r);
             }
 
-            public static unsafe void DrawTo(IVectorsDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveEllipse>(command)[0];
                 dst.DrawEllipse(body.Center, body.Width, body.Height, body.Style);
@@ -314,7 +314,7 @@ namespace InteropDrawing
                 foreach (var p in pts) bounds.AddVertex(p, r);
             }
 
-            public static unsafe void DrawTo(IVectorsDrawing2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolygon>(command)[0];
                 var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitivePolygon)));
@@ -336,17 +336,20 @@ namespace InteropDrawing
 
                 var img = references[src.ImageRef] as ImageAsset;
 
-                var offset = -img.Pivot;
+                var xref = (ImageAsset)references[src.ImageRef];
+                var style = new ImageStyle(xref, COLOR.FromArgb(src.Color), src.Flags);
 
-                var a = XY.Zero + offset;
-                var b = new XY(img.Width, 0) + offset;
-                var c = new XY(img.Width, img.Height) + offset;
-                var d = new XY(0, img.Height) + offset;
+                var xform = style.Transform * src.Transform;
 
-                a = XY.Transform(img.Scale * a, src.Transform);
-                b = XY.Transform(img.Scale * b, src.Transform);
-                c = XY.Transform(img.Scale * c, src.Transform);
-                d = XY.Transform(img.Scale * d, src.Transform);
+                var a = XY.Zero;
+                var b = new XY(img.Width, 0);
+                var c = new XY(img.Width, img.Height);
+                var d = new XY(0, img.Height);
+
+                a = XY.Transform(a, xform);
+                b = XY.Transform(b, xform);
+                c = XY.Transform(c, xform);
+                d = XY.Transform(d, xform);
 
                 bounds.AddVertex(a, 0);
                 bounds.AddVertex(b, 0);
@@ -354,14 +357,14 @@ namespace InteropDrawing
                 bounds.AddVertex(d, 0);
             }
 
-            public static void DrawTo(IImageDrawing2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
+            public static void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveImage>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveImage>(command)[0];
 
-                var xref = (ImageAsset)references[body.ImageRef];
-                var style = new ImageStyle(xref, COLOR.FromArgb(body.Color), (body.Flags & 1) != 0, (body.Flags & 2) != 0);
+                var xref = (ImageAsset)references[src.ImageRef];
+                var style = new ImageStyle(xref, COLOR.FromArgb(src.Color), src.Flags);
 
-                dst.DrawImage(body.Transform, style);
+                dst.DrawImage(src.Transform, style);
             }            
         }
 
@@ -400,7 +403,7 @@ namespace InteropDrawing
 
             }
 
-            public static void DrawTo(IDrawing2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references, bool collapse)
+            public static void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references, bool collapse)
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
 
@@ -410,7 +413,7 @@ namespace InteropDrawing
                     return;
                 }
 
-                dst.DrawAsset(body.Transform, references[body.AssetRef], body.Style);
+                dst.DrawAsset(body.Transform, references[body.AssetRef], ColorStyle.White);
             }
         }
 
@@ -418,12 +421,12 @@ namespace InteropDrawing
         {
             None,
             Line,
-            PolyLine,
-            Ellipse,
-            Polygon,
             Convex,
             Image,
-            Asset
+            Asset,
+            PolyLine,
+            Ellipse,
+            Polygon            
         }
 
         #endregion

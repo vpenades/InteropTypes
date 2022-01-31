@@ -23,7 +23,7 @@ namespace InteropDrawing.Parametric
         /// </param>
         /// <param name="srcVertices"></param>
         /// <param name="plane"></param>
-        /// <returns></returns>
+        /// <returns>the final number of vertices</returns>
         public static int ClipPolygonToPlane(Span<Vector3> dstVertices, ReadOnlySpan<Vector3> srcVertices, in Plane plane)
         {
             var accum = new PolygonClipper3(dstVertices);
@@ -80,7 +80,7 @@ namespace InteropDrawing.Parametric
         private readonly Span<Vector3> _Vertices;
         private int _Count;
 
-        public void AddSegment(Vector3 a, Vector3 b)
+        private void AddSegment(Vector3 a, Vector3 b)
         {
             if (a == b) return;
 
@@ -113,7 +113,7 @@ namespace InteropDrawing.Parametric
         /// </param>
         /// <param name="srcVertices"></param>
         /// <param name="plane"></param>
-        /// <returns></returns>
+        /// <returns>the final number of vertices</returns>
         public static int ClipPolygonToPlane(Span<Vector4> dstVertices, ReadOnlySpan<Vector4> srcVertices, in Plane plane)
         {
             var accum = new PolygonClipper4(dstVertices);
@@ -170,7 +170,7 @@ namespace InteropDrawing.Parametric
         private readonly Span<Vector4> _Vertices;
         private int _Count;
 
-        public void AddSegment(Vector4 a, Vector4 b)
+        private void AddSegment(Vector4 a, Vector4 b)
         {
             if (a == b) return;
 

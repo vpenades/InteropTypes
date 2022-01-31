@@ -8,7 +8,7 @@ using IMAGE = System.Drawing.Image;
 
 namespace InteropDrawing.Backends
 {
-    public class SVGSceneDrawing2D : IDrawing2D, IDisposable
+    public class SVGSceneDrawing2D : ICanvas2D, IDisposable
     {
         #region lifecycle
 
@@ -95,15 +95,15 @@ namespace InteropDrawing.Backends
         #region API - IDrawing2D
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle brush)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
         {
-            new Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
+            new Transforms.Decompose2D(this).DrawAsset(transform, asset, color);
         }
 
         /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
-            if (color.IsEmpty) return;
+            if (!color.IsVisible) return;
 
             var ppp = new System.Drawing.PointF[points.Length];
 
@@ -112,7 +112,7 @@ namespace InteropDrawing.Backends
                 ppp[i] = new System.Drawing.PointF(points[i].X, points[i].Y);
             }
 
-            _Context.FillPolygon(_UseBrush(color), ppp);
+            _Context.FillPolygon(_UseBrush(color.Color), ppp);
         }
 
         /// <inheritdoc/>
@@ -159,7 +159,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle brush)
+        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle brush)
         {
             center -= new Point2(width * 0.5f, height * 0.5f);
 
@@ -214,7 +214,7 @@ namespace InteropDrawing.Backends
 
             if (transform.M12 == 0 && transform.M21 == 0) // no rotation
             {
-                var dstRect = new System.Drawing.RectangleF(transform.M31, transform.M32, transform.M11 * bmp.Scale, transform.M22 * bmp.Scale);                
+                var dstRect = new System.Drawing.RectangleF(transform.M31, transform.M32, transform.M11 * bmp.Scale.X, transform.M22 * bmp.Scale.Y);                
 
                 _Context.DrawImage(img, dstRect, srcRect, System.Drawing.GraphicsUnit.Pixel);
             }
@@ -224,7 +224,7 @@ namespace InteropDrawing.Backends
                 {
                     _Context.MultiplyTransform(matrix);
 
-                    var dstRect = new System.Drawing.RectangleF(transform.M31, transform.M32, transform.M11 * bmp.Scale, transform.M22 * bmp.Scale);
+                    var dstRect = new System.Drawing.RectangleF(transform.M31, transform.M32, transform.M11 * bmp.Scale.X, transform.M22 * bmp.Scale.Y);
                     _Context.DrawImage(img, dstRect, srcRect, System.Drawing.GraphicsUnit.Pixel);
 
                     _Context.ResetTransform();
@@ -242,7 +242,7 @@ namespace InteropDrawing.Backends
 
         #region static API
 
-        public static void SaveToSVG(string filePath, IDrawingBrush<IDrawing2D> scene)
+        public static void SaveToSVG(string filePath, IDrawingBrush<ICanvas2D> scene)
         {
             using (var svg = CreateGraphic())
             {

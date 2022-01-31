@@ -10,7 +10,7 @@ using RECT = System.Drawing.RectangleF;
 namespace InteropDrawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model2DProxy))]
-    public class Record2D : IDrawing2D, IDrawingBrush<IDrawing2D>, IPseudoImmutable
+    public class Record2D : ICanvas2D, IDrawingBrush<ICanvas2D>, IPseudoImmutable
     {
         #region data
 
@@ -72,17 +72,17 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle brush)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
         {
             _ImmutableKey = null;
-            _Commands.DrawAsset(transform, asset, brush);
+            _Commands.DrawAsset(transform, asset, color);
         }
 
         /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             _ImmutableKey = null;
-            _Commands.FillConvexPolygon(points, color);
+            _Commands.DrawConvexPolygon(points, color);
         }
 
         /// <inheritdoc/>
@@ -93,7 +93,7 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float w, float h, in ColorStyle brush)
+        public void DrawEllipse(Point2 center, float w, float h, in OutlineFillStyle brush)
         {
             _ImmutableKey = null;
             _Commands.DrawEllipse(center, w, h, brush);            
@@ -114,7 +114,7 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             foreach(var offset in _Commands.GetCommands())
             {
@@ -124,9 +124,9 @@ namespace InteropDrawing
 
         public IEnumerable<string> ToLog() { return new _Model2DProxy(this).Primitives; }
 
-        public void DrawTo(IDrawing3D dc, Matrix4x4 xform) { this.DrawTo(dc.CreateTransformed2D(xform)); }        
+        public void DrawTo(IScene3D dc, Matrix4x4 xform) { this.DrawTo(dc.CreateTransformed2D(xform)); }        
 
-        public void DrawTo((IDrawing2D target, float width, float height) renderTarget, Matrix3x2 projection, Matrix3x2 camera)
+        public void DrawTo((ICanvas2D target, float width, float height) renderTarget, Matrix3x2 projection, Matrix3x2 camera)
         {
             var context = Transforms.Drawing2DTransform.Create(renderTarget, projection, camera);
 

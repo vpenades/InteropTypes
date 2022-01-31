@@ -38,7 +38,7 @@ namespace InteropDrawing
             context.DrawSurface((COLOR.Red.WithAlpha(180), COLOR.Yellow, 0.25f), new Vector3(-1, 0, 10), new Vector3(1, 0, 10), new Vector3(0, 1, 10));
 
 
-            Transforms.Decompose3D.DrawCylinder(context, Vector3.Zero, diamenter, Vector3.UnitX * 7, diamenter, 4, COLOR.Violet);
+            Transforms.Decompose3D.DrawSegment(context, Vector3.Zero, Vector3.UnitX * 7, diamenter, COLOR.Violet);
 
             context.DrawSegment(new Vector3(9, 0, 0), new Vector3(9, 10, 0), diamenter, ((COLOR.Red, COLOR.Black, 0.1f), LineCapStyle.Round, LineCapStyle.Round));
             context.DrawSphere(new Vector3(-9, 0, 0), 2, (COLOR.Red, COLOR.Blue, 0.1f));
@@ -53,7 +53,7 @@ namespace InteropDrawing
         {
             var context = new Record3D();
 
-            var style = new ColorStyle(COLOR.Red, COLOR.Black, 0.1f);
+            var style = new OutlineFillStyle(COLOR.Red, COLOR.Black, 0.1f);
 
             context.DrawSphere(Vector3.UnitY, 2.5f, style);
 

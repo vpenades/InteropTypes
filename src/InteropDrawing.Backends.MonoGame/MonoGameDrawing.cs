@@ -9,7 +9,7 @@ using XNACOLOR = Microsoft.Xna.Framework.Color;
 namespace InteropDrawing.Backends
 {
     public interface IMonoGameDrawing2D :
-        IDisposableDrawing2D,
+        IDisposableCanvas2D,
         Backends.IViewportInfo,
         Transforms.ITransformer2D,
         IServiceProvider
@@ -20,7 +20,7 @@ namespace InteropDrawing.Backends
         void End();
     }
 
-    public interface IMonoGameDrawing3D : IDisposableDrawing3D
+    public interface IMonoGameDrawing3D : IDisposableScene3D
     {
         void Clear();
         void SetCamera(CameraView3D camera);

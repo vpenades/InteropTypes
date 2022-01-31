@@ -8,13 +8,39 @@ using SCALAR = System.Single;
 using XFORM2 = System.Numerics.Matrix3x2;
 using POINT2 = InteropDrawing.Point2;
 
-using COLOR = System.Drawing.Color;
-
 namespace InteropDrawing
 {
-    public interface IBaseDrawing2D { }
+    /// <summary>
+    /// Represents a drawing canvas where we can draw 2D convex polygons and images
+    /// </summary>
+    public interface IPrimitiveCanvas2D
+    {
+        /// <summary>
+        /// Draws a convex polygon, with the given fill color
+        /// </summary>
+        /// <param name="points">
+        /// The vertices of the polygon.
+        /// If 2 points are passed, it should draw a thin line.
+        /// If 1 point is passed, it should draw a point.
+        /// </param>
+        /// <param name="fillColor">The color of the polygon</param>
+        /// <remarks>        
+        /// The caller must ensure the points represent a convex polygon.
+        /// </remarks>
+        void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle fillColor);
 
-    public interface IAssetDrawing2D : IBaseDrawing2D
+        /// <summary>
+        /// Draws an image at the location given by <paramref name="transform"/>.
+        /// </summary>
+        /// <param name="transform">The location where to draw the image.</param>
+        /// <param name="style">The image style, which also contains the image itself.</param>
+        void DrawImage(in XFORM2 transform, in ImageStyle style);
+    }
+
+    /// <summary>
+    /// Represents a drawing canvas where we can draw vector graphics.
+    /// </summary>
+    public interface ICanvas2D : IPrimitiveCanvas2D
     {
         /// <summary>
         /// Draws an asset.
@@ -26,62 +52,35 @@ namespace InteropDrawing
         /// Assets are dependant on the implementation, but at the most basic level,
         /// <see Model2D is supported as an asset.
         /// </remarks>
-        void DrawAsset(in XFORM2 transform, ASSET asset, in ColorStyle style);
-    }
-    
+        void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
 
-    /// <summary>
-    /// Represents a drawing canvas where we can draw 2D polygons.
-    /// </summary>
-    public interface IPolygonDrawing2D : IBaseDrawing2D
-    {
         /// <summary>
-        /// Fills a closed polygon.
+        /// Draws/Fills a closed polygon.
         /// </summary>
         /// <param name="points">The vertices of the polygon.</param>
-        /// <param name="color">The color of the polygon</param>
-        /// <remarks>
-        /// The caller must ensure the points represent a convex polygon.
-        /// </remarks>
-        void FillConvexPolygon(ReadOnlySpan<POINT2> points, COLOR color);
-    }
-
-    /// <summary>
-    /// Represents a drawing canvas where we can draw vector graphics.
-    /// </summary>
-    public interface IVectorsDrawing2D : IPolygonDrawing2D
-    {
-        /// <summary>
-        /// Draws a closed polygon.
-        /// </summary>
-        /// <param name="points">The vertices of the polygon.</param>
-        /// <param name="style">The outline and fill style.</param>
-        /// <remarks>
-        /// Some implementations might be able to handle complex shapes,
-        /// while others might only be able to draw convex shapes.
-        /// </remarks>
+        /// <param name="style">The outline and fill style.</param>        
         void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle style);
 
+        /// <summary>
+        /// Draws an open polyline.
+        /// </summary>
+        /// <param name="points">The points of the line.</param>
+        /// <param name="diameter">The thickness of the line.</param>
+        /// <param name="style">The style of the line.</param>
         void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style);
 
-        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, in ColorStyle style);
-    }
-
-    /// <summary>
-    /// Represents a drawing canvas where we can draw images.
-    /// </summary>
-    public interface IImageDrawing2D : IBaseDrawing2D
-    {
         /// <summary>
-        /// Draws an image at the location given by <paramref name="transform"/>.
+        /// Draws an ellipse.
         /// </summary>
-        /// <param name="transform">The location where to draw the image.</param>
-        /// <param name="style">The image definition.</param>
-        void DrawImage(in XFORM2 transform, in ImageStyle style);        
+        /// <param name="center">The center of the ellipse.</param>
+        /// <param name="width">The width of the ellipse.</param>
+        /// <param name="height">The height of the ellipse.</param>
+        /// <param name="style">The fill and outline of the ellipse.</param>
+        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style);
     }
 
     /// <summary>
-    /// Represents a drawing canvas where we can draw vector graphics and images.
+    /// Represents a disposable <see cref="ICanvas2D"/>.
     /// </summary>
-    public interface IDrawing2D : IAssetDrawing2D, IPolygonDrawing2D, IVectorsDrawing2D, IImageDrawing2D { }
+    public interface IDisposableCanvas2D : ICanvas2D, IDisposable { }
 }

@@ -28,7 +28,7 @@ namespace InteropDrawing.Backends
 
         #region API        
 
-        public IDisposableDrawing2D OpenDrawingContext()
+        public IDisposableCanvas2D OpenDrawingContext()
         {
             return new _DrawingContext(_RenderTarget);
         }
@@ -61,7 +61,7 @@ namespace InteropDrawing.Backends
 
         #region nested types
 
-        class _DrawingContext : WPFDrawingContext2D, IDisposableDrawing2D
+        class _DrawingContext : WPFDrawingContext2D, IDisposableCanvas2D
         {
             #region lifecycle
 

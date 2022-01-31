@@ -9,7 +9,7 @@ namespace InteropDrawing.Transforms
     /// Exposes an API to transform points, vectors and scalars from virtual space to screen space and back.
     /// </summary>
     /// <remarks>
-    /// Optionally implemented on <see cref="IDrawing2D"/>
+    /// Optionally implemented on <see cref="ICanvas2D"/>
     /// </remarks>
     public interface ITransformer2D
     {

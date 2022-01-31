@@ -17,7 +17,7 @@ namespace InteropDrawing.Transforms
 
     [Obsolete("Use PerspectiveTransform instead.")]
     class _RenderTarget2D :
-        IDrawing3D,
+        IScene3D,
         IServiceProvider
     {
         #region lifecycle
@@ -32,7 +32,7 @@ namespace InteropDrawing.Transforms
             projector.Draw(scene);
         }*/
 
-        private _RenderTarget2D(IDrawing2D dc, ProjectPointCallback prjCallback, PLANE plane)
+        private _RenderTarget2D(ICanvas2D dc, ProjectPointCallback prjCallback, PLANE plane)
         {
             _RenderTarget = dc;
 
@@ -49,7 +49,7 @@ namespace InteropDrawing.Transforms
         /// <summary>
         /// 2D rendering context
         /// </summary>
-        private IDrawing2D _RenderTarget;
+        private ICanvas2D _RenderTarget;
 
         /// <summary>
         /// used to compute thickness
@@ -115,7 +115,7 @@ namespace InteropDrawing.Transforms
 
         private float _ProjectRadius(XYZ p, float radius) { return (_Proj3Func(p) - _Proj3Func(p + _StrafeVector * radius)).Length(); }
 
-        void IDrawing3D.DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
+        void IScene3D.DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
         {
             var aa = a.ToNumerics();
             var bb = b.ToNumerics();
@@ -129,7 +129,7 @@ namespace InteropDrawing.Transforms
             _RenderTarget.DrawLine(pa.SelectXY(), pb.SelectXY(), pt, brush);
         }
 
-        void IDrawing3D.DrawSphere(Point3 center, Single diameter, ColorStyle brush)
+        void IScene3D.DrawSphere(Point3 center, Single diameter, OutlineFillStyle brush)
         {
             var c = center.ToNumerics();
 
@@ -141,7 +141,7 @@ namespace InteropDrawing.Transforms
             _RenderTarget.DrawEllipse(pp, pr, pr, brush);
         }
 
-        void ISurfaceDrawing3D.DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
+        void IScene3D.DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
             Span<XYZ> clippedVertices = stackalloc XYZ[vertices.Length * 2];
 
@@ -167,6 +167,28 @@ namespace InteropDrawing.Transforms
             brush = brush.WithOutline(_ProjectRadius(center, brush.Style.OutlineWidth));
 
             _RenderTarget.DrawPolygon(points, brush.Style);
+        }
+
+        void IPrimitiveScene3D.DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
+        {
+            Span<XYZ> clippedVertices = stackalloc XYZ[vertices.Length * 2];
+
+            var cvertices = _FrustumNearPlane.ClipPolygonToPlane(clippedVertices, Point3.AsNumerics(vertices));
+            if (cvertices < 3) return;
+
+            clippedVertices = clippedVertices.Slice(0, cvertices);
+
+            Span<Point2> points = stackalloc Point2[clippedVertices.Length];            
+
+            for (int i = 0; i < points.Length; ++i)
+            {
+                var v = clippedVertices[i];
+            
+                points[i] = _ProjectPoint(v).SelectXY();
+            }
+            
+
+            _RenderTarget.DrawConvexPolygon(points, style);
         }
 
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)

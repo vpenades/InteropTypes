@@ -12,11 +12,11 @@ namespace InteropDrawing
 
         public Object FallbackAsset { get; protected set; }
 
-        protected abstract void DrawAsSurfaces(IDrawing3D target);
+        protected abstract void DrawAsSurfaces(IScene3D target);
 
-        protected abstract void DrawAsPrimitives(IDrawing3D target);
+        protected abstract void DrawAsPrimitives(IScene3D target);
 
-        internal void _DrawAsSurfaces(IDrawing3D target)
+        internal void _DrawAsSurfaces(IScene3D target)
         {
             if (this.PrimaryAsset is Record3D md3d)
             {
@@ -33,7 +33,7 @@ namespace InteropDrawing
             this.DrawAsSurfaces(target);
         }
 
-        internal void _DrawAsPrimitives(IDrawing3D target)
+        internal void _DrawAsPrimitives(IScene3D target)
         {
             if (this.PrimaryAsset is Record3D md3d)
             {

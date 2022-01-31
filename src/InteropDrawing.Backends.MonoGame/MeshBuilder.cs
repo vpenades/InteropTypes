@@ -14,8 +14,8 @@ using VERTEX = Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture;
 namespace InteropDrawing.Backends
 {
     partial class MeshBuilder :
-        ISurfaceDrawing3D,
-        Backends.IDrawingBackend2D, IImageDrawing2D
+        IPrimitiveScene3D,
+        Backends.IDrawingBackend2D
     {
         #region lifecycle
 
@@ -92,31 +92,39 @@ namespace InteropDrawing.Backends
         public void SetThinLinesPixelSize(float pixelSize) { _2DLineSize = pixelSize; }
 
         /// <inheritdoc/>
-        public float GetThinLinesPixelSize() { return _2DLineSize; }
+        public float GetPixelsPerUnit() { return _2DLineSize; }
 
         /// <inheritdoc/>
-        public void DrawThinLines(ReadOnlySpan<Point2> points, float thickness, COLOR color)
+        public void DrawThinLines(ReadOnlySpan<Point2> points, float thickness, ColorStyle color)
         {
             if (color.IsEmpty) return;
 
             Span<Point3> vertices = stackalloc Point3[points.Length];
             Point3.Transform(vertices, points, _DepthZ);
 
+            var c = color.Color.ToXna();
+
             for (int i = 1; i < vertices.Length; ++i)
             {
-                DrawSegment(vertices[i - 1], vertices[i], color);
+                _DrawThinLine(vertices[i - 1], vertices[i], c);
             }
         }        
 
         /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             if (color.IsEmpty) return;
 
             Span<Point3> vertices = stackalloc Point3[points.Length];
             Point3.Transform(vertices, points, _DepthZ);
 
-            DrawSurface(vertices, color);
+            switch(vertices.Length)
+            {
+                case 0: return;
+                case 1: return;
+                case 2: _DrawThinLine(vertices[0], vertices[1], color.Color.ToXna()); return;
+                default: _DrawConvexSurface(vertices, color.Color.ToXna(), false); return;
+            }            
         }
 
         /// <inheritdoc/>
@@ -137,53 +145,45 @@ namespace InteropDrawing.Backends
 
         #endregion
 
-        #region API - IDrawing3D
+        #region API - IDrawing3D        
 
-        private Transforms.Decompose3D _Collapsed3D => new Transforms.Decompose3D(this, CylinderLOD, SphereLOD);
-
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
-            _Collapsed3D.DrawAsset(transform, asset, brush);
+            var c = style.Color.ToXna();
+
+            _DrawConvexSurface(vertices, c, false);
         }
 
-        public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
+        #endregion
+
+        #region API
+
+        private void _DrawThinLine(Point3 a, Point3 b, Microsoft.Xna.Framework.Color color)
         {
-            if (brush.Style.HasFill && diameter <= _2DLineSize)
+            // add vertices
+
+            var v1 = new VERTEX
             {
-                DrawSegment(a,b,diameter,brush);
-                return;
-            }
+                Position = a.ToXna(),
+                Color = color
+            };
 
-            _Collapsed3D.DrawSegment(a, b, diameter, brush);
-        }
+            var v2 = new VERTEX
+            {
+                Position = b.ToXna(),
+                Color = color
+            };
 
-        public void DrawSegment(Point3 a, Point3 b, LineStyle brush)
-        {            
-            var aa = _Lines.UseVertex(a.ToNumerics(), brush.Style.FillColor);
-            var bb = _Lines.UseVertex(b.ToNumerics(), brush.Style.FillColor);
+            var aa = _Lines.UseVertex(v1);
+            var bb = _Lines.UseVertex(v2);
+
+            // add line
+
             _Lines.AddLine(aa, bb);
-
-            if (!brush.Style.HasOutline) return;
-
-            brush = brush.With(COLOR.Transparent);
-            
         }
 
-        public void DrawSphere(Point3 center, Single diameter, ColorStyle brush)
+        private void _DrawConvexSurface(ReadOnlySpan<Point3> vertices, Microsoft.Xna.Framework.Color color, bool doubleSided)
         {
-            _Collapsed3D.DrawSphere(center, diameter, brush);
-        }
-
-        public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
-        {
-            if (brush.Style.HasOutline)
-            {
-                _Collapsed3D.DrawSurface(vertices, brush);
-                return;
-            }
-            
-            var c = brush.Style.FillColor.ToXna();
-
             // add vertices
 
             Span<int> indices = stackalloc int[vertices.Length];
@@ -195,7 +195,7 @@ namespace InteropDrawing.Backends
                 var v = new VERTEX
                 {
                     Position = srcVrt.ToXna(),
-                    Color = c
+                    Color = color
                 };
 
                 indices[i] = _Triangles.UseVertex(v);
@@ -205,22 +205,17 @@ namespace InteropDrawing.Backends
 
             for (int i = 2; i < vertices.Length; ++i)
             {
-                if (!_FaceFlip || brush.DoubleSided)
+                if (!_FaceFlip || doubleSided)
                 {
                     _Triangles.AddTriangle(indices[0], indices[i - 0], indices[i - 1]);
                 }
 
-                if (_FaceFlip || brush.DoubleSided)
+                if (_FaceFlip || doubleSided)
                 {
                     _Triangles.AddTriangle(indices[0], indices[i - 1], indices[i - 0]);
                 }
             }
-                        
         }
-
-        #endregion
-
-        #region API
 
         public void Clear()
         {

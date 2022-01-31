@@ -13,7 +13,7 @@ namespace InteropBitmaps
     {
         
 
-        public static IDrawing2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, POINT virtualSize)
+        public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, POINT virtualSize)
             where TPixel : unmanaged
         {
             if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
@@ -23,7 +23,7 @@ namespace InteropBitmaps
             return _UseVirtualViewport(dc, (bitmap.Width,bitmap.Height), virtualSize);
         }
 
-        public static IDrawing2D CreateDrawingContext(this MemoryBitmap bitmap, POINT virtualSize)
+        public static ICanvas2D CreateDrawingContext(this MemoryBitmap bitmap, POINT virtualSize)
         {
             if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
             if (virtualSize.Y == 0) throw new ArgumentException(nameof(virtualSize));
@@ -32,7 +32,7 @@ namespace InteropBitmaps
             return _UseVirtualViewport(dc, (bitmap.Width, bitmap.Height), virtualSize);
         }
 
-        private static IDrawing2D _UseVirtualViewport(IDrawing2D dc, POINT bitmapSize, POINT virtualSize)
+        private static ICanvas2D _UseVirtualViewport(ICanvas2D dc, POINT bitmapSize, POINT virtualSize)
         {
             var sx = bitmapSize.X / virtualSize.X;
             var sy = bitmapSize.Y / virtualSize.Y;
@@ -44,15 +44,15 @@ namespace InteropBitmaps
             return InteropDrawing.Transforms.Drawing2DTransform.Create(dc, xform);
         }
 
-        public static IDrawing2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap)
+        public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap)
             where TPixel:unmanaged
         {
             return bitmap.AsTypeless().CreateDrawingContext();
         }
 
-        public static IDrawing2D CreateDrawingContext(this MemoryBitmap bitmap)
+        public static ICanvas2D CreateDrawingContext(this MemoryBitmap bitmap)
         {
-            IDrawing2D _Create<TPixel>()
+            ICanvas2D _Create<TPixel>()
                 where TPixel : unmanaged , Pixel.IValueSetter<Pixel.BGRA32>
             {                
                 return new InteropDrawing.Backends._MemoryDrawingContext<TPixel>(bitmap.OfType<TPixel>(), c => Pixel.GetColor<TPixel>(c));
@@ -85,13 +85,13 @@ namespace InteropBitmaps
             throw new NotImplementedException();
         }
 
-        public static IDrawing2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, Converter<System.Drawing.Color, TPixel> converter)
+        public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, Converter<System.Drawing.Color, TPixel> converter)
             where TPixel : unmanaged
         {
             return new InteropDrawing.Backends._MemoryDrawingContext<TPixel>(bitmap, converter);
         }
 
-        public static void DrawConsoleFont(this IDrawing2D dc, POINT origin, string text, System.Drawing.Color color)
+        public static void DrawConsoleFont(this ICanvas2D dc, POINT origin, string text, System.Drawing.Color color)
         {
             dc.DrawFont(origin, 0.4f, text, FontStyle.Gray.With(color, 1));
         }

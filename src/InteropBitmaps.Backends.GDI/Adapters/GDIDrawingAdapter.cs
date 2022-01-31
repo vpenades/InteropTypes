@@ -9,7 +9,7 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropBitmaps.Adapters
 {
-    class GDIDrawingAdapter : IDrawing2D
+    class GDIDrawingAdapter : ICanvas2D
     {
         public GDIDrawingAdapter(System.Drawing.Graphics context)
         {
@@ -42,12 +42,12 @@ namespace InteropBitmaps.Adapters
             return _PointsX;
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
             throw new NotImplementedException();
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
         {
             var rect = new System.Drawing.RectangleF(center.X - width * 0.5f, center.Y - height * 0.5f, width, height);
 
@@ -99,12 +99,12 @@ namespace InteropBitmaps.Adapters
             }
         }        
 
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             var gdiPts = _UsePoints(points.Length);
             for (int i = 0; i < points.Length; ++i) gdiPts[i] = points[i].ToGDIPoint();
 
-            using (var brush = new System.Drawing.SolidBrush(color))
+            using (var brush = new System.Drawing.SolidBrush(color.Color))
             {
                 _Context.FillPolygon(brush, gdiPts);
             }

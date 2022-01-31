@@ -10,14 +10,14 @@ using POINT = InteropDrawing.Point2;
 
 namespace InteropVision
 {
-    partial class MarkersContext : IDrawingBrush<IDrawing2D>
+    partial class MarkersContext : IDrawingBrush<ICanvas2D>
     {
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             new _MarkersContextDebugView(this).DrawTo(dc);
         }
 
-        readonly struct _MarkersContextDebugView : IDrawingBrush<IDrawing2D>
+        readonly struct _MarkersContextDebugView : IDrawingBrush<ICanvas2D>
         {
             #region constructor
 
@@ -52,7 +52,7 @@ namespace InteropVision
                 return new POINT(_ScreenWidth - p.X, p.Y);
             }
 
-            public void DrawTo(IDrawing2D dc)
+            public void DrawTo(ICanvas2D dc)
             {
                 foreach (var aruco in _Detected)
                 {

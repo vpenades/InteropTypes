@@ -6,13 +6,13 @@ using System.Text;
 namespace InteropDrawing.Transforms
 {
     public class PlaneClip3D :
-        IDrawing3D,
+        IScene3D,
         IServiceProvider
 
     {
         #region lifecycle
 
-        public PlaneClip3D(IDrawing3D target, Plane plane)
+        public PlaneClip3D(IScene3D target, Plane plane)
         {
             _Target = target;
             _DecomposedTarget = new Decompose3D(this, 6, 2);
@@ -23,8 +23,8 @@ namespace InteropDrawing.Transforms
 
         #region data
 
-        private readonly IDrawing3D _Target;
-        private readonly IDrawing3D _DecomposedTarget;
+        private readonly IScene3D _Target;
+        private readonly IScene3D _DecomposedTarget;
         
         private readonly Plane _Plane;
 
@@ -64,7 +64,7 @@ namespace InteropDrawing.Transforms
             */
         }
 
-        public void DrawSphere(Point3 center, float diameter, ColorStyle brush)
+        public void DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
             if (_Plane.IsInPositiveSideOfPlane(center, diameter*0.5f))
             {
@@ -102,6 +102,24 @@ namespace InteropDrawing.Transforms
             clippedVertices = clippedVertices.Slice(0, cvertices);
 
             _Target.DrawSurface(clippedVertices, brush);
+        }
+
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle brush)
+        {
+            if (_Plane.IsInPositiveSideOfPlane(vertices))
+            {
+                _Target.DrawSurface(vertices, brush);
+                return;
+            }
+
+            Span<Point3> clippedVertices = stackalloc Point3[vertices.Length * 2];
+
+            var cvertices = _Plane.ClipPolygonToPlane(clippedVertices, vertices);
+            if (cvertices < 3) return;
+
+            clippedVertices = clippedVertices.Slice(0, cvertices);
+
+            _Target.DrawConvexSurface(clippedVertices, brush);
         }
 
         #endregion

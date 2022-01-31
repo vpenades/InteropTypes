@@ -268,7 +268,7 @@ namespace InteropDrawing
             TestContext.AddTestAttachment(path);
         }
 
-        private static void DrawDirectVsPolygon(IDrawing2D dc)
+        private static void DrawDirectVsPolygon(ICanvas2D dc)
         {
             var l1style = (COLOR.White, LineCapStyle.Flat, LineCapStyle.Round);
             var l2style = ((COLOR.White, COLOR.Red, 5), LineCapStyle.Flat, LineCapStyle.Round);

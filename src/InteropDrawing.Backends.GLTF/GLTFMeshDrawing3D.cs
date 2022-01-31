@@ -14,9 +14,9 @@ namespace InteropDrawing.Backends
     using VERTEXBUILDER = SharpGLTF.Geometry.VertexBuilder<VertexPosition, VertexEmpty, VertexEmpty>;
 
     /// <summary>
-    /// Wraps a <see cref="MESHBUILDER"/> with <see cref="IDrawing3D"/>.
+    /// Wraps a <see cref="MESHBUILDER"/> with <see cref="IScene3D"/>.
     /// </summary>
-    public class GltfMeshDrawing3D : IDrawing3D
+    public class GltfMeshDrawing3D : Transforms.Decompose3D.PassToSelf, IScene3D
     {
         #region data
 
@@ -53,40 +53,17 @@ namespace InteropDrawing.Backends
         #region API
 
         public void Clear() { _Mesh = null; }
-
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        
+        /// <inheritdoc />
+        public override void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle fillColor)
         {
-            this.DrawAssetAsSurfaces(transform, asset, brush);
-        }
-
-        public void DrawSegment(POINT3 a, POINT3 b, Single diameter, LineStyle brush)
-        {
-            if (diameter < 0.0001f && brush.Style.HasFill)
+            switch(vertices.Length)
             {
-                _DrawLine(a, b, brush.Style.FillColor);
-
-                brush = brush.With(COLOR.Transparent);
-            }
-
-            new Transforms.Decompose3D(this, CylinderLOD, SphereLOD).DrawSegment(a,b,diameter,brush);
-        }
-
-        public void DrawSphere(POINT3 center, Single diameter, ColorStyle brush)
-        {
-            new Transforms.Decompose3D(this, CylinderLOD, SphereLOD).DrawSphere(center, diameter, brush);
-        }
-
-        public void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle brush)
-        {
-            if (vertices.Length < 3) return;
-
-            if (brush.Style.HasOutline)
-            {
-                new Transforms.Decompose3D(this, CylinderLOD, SphereLOD).DrawSurface(vertices, brush);
-                return;
-            }
-
-            _DrawSurface(vertices, brush.Style.FillColor, brush.DoubleSided);
+                case 0: return;
+                case 1: return;
+                case 2: _DrawLine(vertices[0], vertices[1], fillColor.Color); return;
+                default: _DrawSurface(vertices, fillColor.Color, false); return;
+            }            
         }
 
         #endregion

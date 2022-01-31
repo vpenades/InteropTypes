@@ -17,16 +17,16 @@ namespace InteropDrawing.Transforms
     /// Represents a drawing canvas filter that translates complex vector drawing calls into basic convex polygons.
     /// </summary>
     /// <remarks>
-    /// <see cref="IVectorsDrawing2D"/> 🡆 <see cref="IPolygonDrawing2D"/>
+    /// <see cref="ICanvas2D"/> 🡆 <see cref="IPrimitiveCanvas2D"/>
     /// </remarks>
     public readonly partial struct Decompose2D :
-        IDrawing2D,        
+        ICanvas2D,        
         ITransformer2D,
         IServiceProvider
     {
         #region lifecycle
 
-        public Decompose2D(IPolygonDrawing2D renderTarget)
+        public Decompose2D(IPrimitiveCanvas2D renderTarget)
         {
             _RenderTarget = renderTarget;            
         }
@@ -35,7 +35,7 @@ namespace InteropDrawing.Transforms
 
         #region data
 
-        private readonly IPolygonDrawing2D _RenderTarget;        
+        private readonly IPrimitiveCanvas2D _RenderTarget;        
 
         #endregion
 
@@ -92,9 +92,9 @@ namespace InteropDrawing.Transforms
         #region API - IPolygonDrawing2D
 
         /// <inheritdoc />
-        public void FillConvexPolygon(ReadOnlySpan<POINT2> points, Color color)
+        public void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle color)
         {
-            _RenderTarget.FillConvexPolygon(points, color);
+            _RenderTarget.DrawConvexPolygon(points, color);
         }
 
         #endregion
@@ -102,26 +102,15 @@ namespace InteropDrawing.Transforms
         #region API - IDrawing2D        
 
         /// <inheritdoc />
-        public void DrawAsset(in Matrix3x2 transform, ASSET asset, in ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, ASSET asset, ColorStyle color)
         {
-            if (asset is IDrawingBrush<IDrawing2D> drawable)
-            {
-                var dc = this.CreateTransformed2D(transform);
-                drawable.DrawTo(dc);
-                return;
-            }
-
-            // if (asset is string text) { this.DrawFont(transform, text, style); return; }
-            // if (asset is StringBuilder text) { this.DrawFont(transform, text.ToString(), style); return; }
-
-            // fallback
-            if (_RenderTarget is IDrawing2D rt) { rt.DrawAsset(transform, asset, style); return; }
+            DrawAsset(_RenderTarget, transform, asset, color);
         }
 
         /// <inheritdoc />
         public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
-            if (_RenderTarget is IImageDrawing2D rt) rt.DrawImage(transform, style);
+            _RenderTarget.DrawImage(transform, style);
         }
 
         /// <inheritdoc />
@@ -131,7 +120,7 @@ namespace InteropDrawing.Transforms
         }
 
         /// <inheritdoc />
-        public void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, in ColorStyle style)
+        public void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
         {
             DrawEllipse(_RenderTarget, center, width, height, style);
         }       

@@ -10,10 +10,10 @@ namespace InteropDrawing
 {
 
     /// <summary>
-    /// Represents a collection of drawing commands that can be replayed against an <see cref="IDrawing3D"/> target.
+    /// Represents a collection of drawing commands that can be replayed against an <see cref="IScene3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Record3D : IDrawing3D, IDrawingBrush<IDrawing3D>, IPseudoImmutable, IBounds3D
+    public class Record3D : IScene3D, IDrawingBrush<IScene3D>, IPseudoImmutable, IBounds3D
     {
         #region data
 
@@ -85,39 +85,52 @@ namespace InteropDrawing
             _Commands.Clear();            
         }
 
-        public void DrawAsset((Quaternion R, XYZ T) transform, object asset, ColorStyle brush)
+        /// <inheritdoc/>        
+        public void DrawAsset((Quaternion R, XYZ T) transform, object asset, ColorStyle style)
         {
             var xform = Matrix4x4.CreateFromQuaternion(transform.R);
             xform.Translation = transform.T;
 
-            DrawAsset(xform, asset, brush);
+            DrawAsset(xform, asset, style);
         }
 
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        /// <inheritdoc/>
+        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
         {
             _ImmutableKey = null;
-            _Commands.DrawAsset(transform, asset, brush);
+            _Commands.DrawAsset(transform, asset, style);
         }
 
-        public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
+        /// <inheritdoc/>
+        public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle style)
         {
             _ImmutableKey = null;
-            _Commands.DrawSegment(a, b, diameter, brush);
+            _Commands.DrawSegment(a, b, diameter, style);
         }
 
-        public void DrawSphere(Point3 center, Single diameter, ColorStyle brush)
+        /// <inheritdoc/>
+        public void DrawSphere(Point3 center, Single diameter, OutlineFillStyle style)
         {
             _ImmutableKey = null;
-            _Commands.DrawSphere(center, diameter, brush);
+            _Commands.DrawSphere(center, diameter, style);
         }
 
-        public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
+        /// <inheritdoc/>
+        public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle style)
         {
             _ImmutableKey = null;
-            _Commands.DrawSurface(vertices, brush);
+            _Commands.DrawSurface(vertices, style);
         }
 
-        public void DrawTo(IDrawing3D dc)
+        /// <inheritdoc/>
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
+        {
+            _ImmutableKey = null;
+            _Commands.DrawConvexSurface(vertices, style);
+        }
+
+        /// <inheritdoc/>
+        public void DrawTo(IScene3D dc)
         {
             foreach (var offset in _Commands.GetCommands())
             {
@@ -125,7 +138,7 @@ namespace InteropDrawing
             }
         }        
 
-        public void DrawTo(IDrawing2D target, float width, float height, XYZ cameraPosition, bool perspective = true)
+        public void DrawTo(ICanvas2D target, float width, float height, XYZ cameraPosition, bool perspective = true)
         {
             var bounds = this.BoundingMatrix;
             var dimensions = bounds.ColumnY() - bounds.ColumnX();
@@ -139,7 +152,7 @@ namespace InteropDrawing
             context.DrawScene(this);            
         }
 
-        public void DrawTo((IDrawing2D target, float width, float height) renderTarget, Matrix4x4 camera, Matrix4x4 projection)
+        public void DrawTo((ICanvas2D target, float width, float height) renderTarget, Matrix4x4 camera, Matrix4x4 projection)
         {
             var context = Transforms.PerspectiveTransform.Create(renderTarget, projection, camera);
 

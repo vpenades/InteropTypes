@@ -9,7 +9,7 @@ using Veldrid;
 
 namespace InteropWith
 {
-    public interface IVeldridDrawingContext2D : IDisposableDrawing2D
+    public interface IVeldridDrawingContext2D : IDisposableCanvas2D
     {
         void FillFrame(System.Drawing.Color color);
     }
@@ -70,11 +70,11 @@ namespace InteropWith
 
         private InteropDrawing.Transforms.Decompose2D _Collapsed2D => new InteropDrawing.Transforms.Decompose2D(this);
 
-        public unsafe void AddConvexPolygon(ReadOnlySpan<Point2> points, System.Drawing.Color color)
+        public unsafe void AddConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             if (_Completed) throw new ObjectDisposedException("Context");
 
-            var c = (UInt32)color.ToArgb(); // color needs to be reversed
+            var c = color.PackedValue; // color needs to be reversed
 
             Span<Vertex2D> vertices = stackalloc Vertex2D[points.Length];
 
@@ -137,19 +137,19 @@ namespace InteropWith
             _FillColor = color;
         }
 
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, System.Drawing.Color color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {            
             this.AddConvexPolygon(points, color);
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
             if (!style.IsVisible) return;
-            if (asset is IDrawingBrush<IDrawing2D> drawable) { drawable.DrawTo(this); return; }
+            if (asset is IDrawingBrush<ICanvas2D> drawable) { drawable.DrawTo(this); return; }
             _Collapsed2D.DrawAsset(transform, asset);
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
         {
             if (!style.IsVisible) return;
             _Collapsed2D.DrawEllipse(center, width, height, style);
@@ -170,7 +170,7 @@ namespace InteropWith
 
         public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
-            var final = style.Bitmap.GetImageMatrix(style.FlipHorizontal, style.FlipVertical) * transform;
+            var final = style.GetTransform(style.FlipHorizontal, style.FlipVertical) * transform;
 
             Vertex2D p0 = final.Translation;
             Vertex2D p1 = Vector2.Transform(Vector2.UnitX, final);

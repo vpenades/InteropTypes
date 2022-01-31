@@ -43,10 +43,10 @@ namespace InteropDrawing.Parametric
 
         private XYZ _Center;
         private Single _Radius;
-        private SurfaceStyle _Brush;
+        private ColorStyle _Color;
         private bool _FaceFlip;
 
-        private ISurfaceDrawing3D _Context;
+        private IPrimitiveScene3D _Context;
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace InteropDrawing.Parametric
 
         // https://en.wikipedia.org/wiki/Platonic_solid
 
-        public static void DrawTetrahedron(ISurfaceDrawing3D dc, XYZ center, Single radius, int lod, COLOR color, Boolean faceFlip)
+        public static void DrawTetrahedron(IPrimitiveScene3D dc, XYZ center, Single radius, int lod, ColorStyle color, Boolean faceFlip)
         {
             if (lod < 0) return;
 
@@ -62,7 +62,7 @@ namespace InteropDrawing.Parametric
             {
                 _Center = center,
                 _Radius = radius,
-                _Brush = new SurfaceStyle(color, false),
+                _Color = color,
                 _FaceFlip = faceFlip,
                 _Context = dc
             };
@@ -73,7 +73,7 @@ namespace InteropDrawing.Parametric
             ctx.DrawTriangle(lod, _TETRAVRT3, _TETRAVRT2, _TETRAVRT1);
         }
         
-        public static void DrawOctahedron(ISurfaceDrawing3D dc, XYZ center, Single radius, int lod, COLOR color, Boolean faceFlip)
+        public static void DrawOctahedron(IPrimitiveScene3D dc, XYZ center, Single radius, int lod, ColorStyle color, Boolean faceFlip)
         {
             if (lod < 0) return;
 
@@ -81,7 +81,7 @@ namespace InteropDrawing.Parametric
             {
                 _Center = center,
                 _Radius = radius,
-                _Brush = new SurfaceStyle(color, false),
+                _Color = color,
                 _FaceFlip = faceFlip,
                 _Context = dc
             };
@@ -100,7 +100,7 @@ namespace InteropDrawing.Parametric
             ctx.DrawTriangle(lod, -XYZ.UnitZ, -XYZ.UnitY, XYZ.UnitX);
         }
         
-        public static void DrawIcosahedron(ISurfaceDrawing3D dc, XYZ center, Single radius, int lod, COLOR color, Boolean faceFlip)
+        public static void DrawIcosahedron(IPrimitiveScene3D dc, XYZ center, Single radius, int lod, ColorStyle color, Boolean faceFlip)
         {
             if (lod < 0) return;
 
@@ -108,7 +108,7 @@ namespace InteropDrawing.Parametric
             {
                 _Center = center,
                 _Radius = radius,
-                _Brush = new SurfaceStyle(color, false),
+                _Color = color,
                 _FaceFlip = faceFlip,
                 _Context = dc
             };
@@ -165,7 +165,7 @@ namespace InteropDrawing.Parametric
                     abc[2] = _Center + c * _Radius;
                 }
 
-                _Context.DrawSurface(abc, _Brush);
+                _Context.DrawConvexSurface(abc, _Color);
 
                 return;
             }

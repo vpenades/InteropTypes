@@ -15,7 +15,7 @@ namespace InteropDrawing
         None,
 
         /// <summary>
-        /// Flips the text based on the underlaying <see cref="IDrawing2D"/>'s <see cref="Quadrant"/>
+        /// Flips the text based on the underlaying <see cref="ICanvas2D"/>'s <see cref="Quadrant"/>
         /// </summary>
         FlipAuto = 1,
         FlipHorizontal = 2,
@@ -35,7 +35,7 @@ namespace InteropDrawing
     /// Style used for font rendering WIP.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="Toolkit.DrawFont(IDrawing2D, System.Numerics.Matrix3x2, string, FontStyle)"/>.
+    /// Style used by <see cref="Toolkit.DrawFont(ICanvas2D, System.Numerics.Matrix3x2, string, FontStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {Strength} {Alignment}")]
     public readonly struct FontStyle
@@ -52,14 +52,14 @@ namespace InteropDrawing
 
         #region constructors
 
-        public FontStyle(ColorStyle color, float strength = 0.1f)
+        public FontStyle(OutlineFillStyle color, float strength = 0.1f)
         {
             Style = color;
             Strength = strength;
             Alignment = FontAlignStyle.FlipAuto;
         }
 
-        public FontStyle(ColorStyle color, float strength, FontAlignStyle align)
+        public FontStyle(OutlineFillStyle color, float strength, FontAlignStyle align)
         {
             Style = color;
             Strength = strength;
@@ -70,7 +70,7 @@ namespace InteropDrawing
 
         #region data
 
-        public readonly ColorStyle Style;
+        public readonly OutlineFillStyle Style;
         public readonly Single Strength;
         public readonly FontAlignStyle Alignment;
 
@@ -102,9 +102,9 @@ namespace InteropDrawing
         public static readonly FontStyle VFlip_Green = _VFlip.With(COLOR.Green);
         public static readonly FontStyle VFlip_Blue = _VFlip.With(COLOR.Blue);
 
-        public FontStyle With(ColorStyle style) { return new FontStyle(style, this.Strength, this.Alignment); }
+        public FontStyle With(OutlineFillStyle style) { return new FontStyle(style, this.Strength, this.Alignment); }
 
-        public FontStyle With(ColorStyle style, float strength) { return new FontStyle(style, strength, this.Alignment); }
+        public FontStyle With(OutlineFillStyle style, float strength) { return new FontStyle(style, strength, this.Alignment); }
 
         public FontStyle With(Single strength) { return new FontStyle(this.Style, strength, this.Alignment); }
 

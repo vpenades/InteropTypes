@@ -12,36 +12,57 @@ using POINT3 = InteropDrawing.Point3;
 
 namespace InteropDrawing
 {
-    
-
     public interface IBounds3D
     {
         (System.Numerics.Vector3 Center, Single Radius) GetBoundingSphere();
     }
 
+    
+
     /// <summary>
     /// Represents a render target context where we can draw 3D surfaces
     /// </summary>
-    public interface ISurfaceDrawing3D
+    public interface IPrimitiveScene3D
     {
-        void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle style);
+        /// <summary>
+        /// Draws a convex polygon, with the given fill color
+        /// </summary>
+        /// <param name="vertices">
+        /// The vertices of the polygon.
+        /// If 2 points are passed, it should draw a thin line.
+        /// If 1 point is passed, it should draw a point.
+        /// </param>        
+        /// <param name="style">The color of the polygon</param>
+        /// <remarks>        
+        /// The caller must ensure the points represent a convex polygon.
+        /// </remarks>
+        void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle style);
     }
 
     /// <summary>
     /// Represents a render target context where we can draw 3D primitives.
     /// </summary>
-    public interface IDrawing3D : ISurfaceDrawing3D
+    public interface IScene3D : IPrimitiveScene3D
     {
         void DrawAsset(in XFORM3 transform, ASSET asset, ColorStyle style);
 
+        void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle style);
+
         void DrawSegment(POINT3 a, POINT3 b, SCALAR diameter, LineStyle style);
 
-        void DrawSphere(POINT3 center, SCALAR diameter, ColorStyle style);
+        void DrawSphere(POINT3 center, SCALAR diameter, OutlineFillStyle style);
     }
 
-    public interface IScene3D : IDrawing3D { }
+    /// <summary>
+    /// Represents a disposable <see cref="IScene3D"/>.
+    /// </summary>
+    public interface IDisposableScene3D : IScene3D, IDisposable { }
 
+    
 
+    
+
+    
     
 
     public interface ISceneViewport2D

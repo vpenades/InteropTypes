@@ -16,7 +16,7 @@ using System.Drawing;
 
 namespace InteropDrawing.Backends
 {
-    class _PlotlyDrawing2DShapesContext : IDisposableDrawing2D
+    class _PlotlyDrawing2DShapesContext : IDisposableCanvas2D
     {
         #region lifecycle
         public _PlotlyDrawing2DShapesContext(PlotlyDocumentBuilder owner)
@@ -47,7 +47,7 @@ namespace InteropDrawing.Backends
         #region API
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
         {
             throw new NotImplementedException();
         }
@@ -59,7 +59,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
         {
             var fill = Shape.fillcolor("rgb(44, 160, 101)");
             var line = Shape.line(Line.color("rgb(44, 160, 101)"));
@@ -114,7 +114,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             var sb = new StringBuilder();
 

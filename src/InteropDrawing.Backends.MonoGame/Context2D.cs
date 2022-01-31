@@ -8,7 +8,7 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing.Backends
 {
-    class MonoGameDrawing2D : IMonoGameDrawing2D
+    class MonoGameDrawing2D : Transforms.Decompose2D.PassImageThrough,  IMonoGameDrawing2D
     {
         #region lifecycle
 
@@ -16,10 +16,13 @@ namespace InteropDrawing.Backends
         {
             _Device = device;
             _View = System.Numerics.Matrix3x2.Identity;
+            this.SetPassImageThroughTarget(_VectorsBatch);
         }
 
         public void Dispose()
         {
+            this.SetPassImageThroughTarget(null);
+
             _Device = null;
             
             System.Threading.Interlocked.Exchange(ref _Effect, null)?.Dispose();
@@ -73,7 +76,11 @@ namespace InteropDrawing.Backends
 
         public int PixelsWidth => _Device.Viewport.Width;
 
-        public int PixelsHeight => _Device.Viewport.Height;        
+        public int PixelsHeight => _Device.Viewport.Height;
+
+        public float DotsPerInchX => 96;
+
+        public float DotsPerInchY => 96;
 
         #endregion
 
@@ -206,58 +213,14 @@ namespace InteropDrawing.Backends
 
         #region API - IDrawing2D
 
-        /// <inheritdoc />
-        public void DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, in ColorStyle style)
+        protected override void SetImage(ImageAsset image)
         {
-            if (!style.IsVisible) return;            
+            if (image == null) { SetTexture(null); return; }
 
-            if (asset is IDrawingBrush<IDrawing2D> drawable) { drawable.DrawTo(this); return; }
+            var (tex, attr) = FetchTexture(image.Source);
+            if (tex == null) { SetTexture(null); return; }
 
-            // Transforms.Decompose2D.DrawAsset(_VectorsBatch, transform, asset, style);
-        }
-
-        /// <inheritdoc />
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
-        {
-            if (!style.IsVisible) return;
-            SetTexture(null);
-
-            Transforms.Decompose2D.DrawLines(_VectorsBatch, points, diameter, style);
-        }
-
-        /// <inheritdoc />
-        public void DrawEllipse(Point2 center, float width, float height, in ColorStyle style)
-        {
-            if (!style.IsVisible) return;
-            SetTexture(null);
-            Transforms.Decompose2D.DrawEllipse(_VectorsBatch, center, width, height, style);
-        }
-
-        /// <inheritdoc />
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
-        {
-            if (!style.IsVisible) return;
-            SetTexture(null);
-            Transforms.Decompose2D.DrawPolygon(_VectorsBatch, points, style);
-        }
-
-        /// <inheritdoc />
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
-        {
-            if (color.IsEmpty) return;
-            SetTexture(null);
-            _VectorsBatch.FillConvexPolygon(points, color);
-        }
-
-        /// <inheritdoc />
-        public void DrawImage(in System.Numerics.Matrix3x2 transform, in ImageStyle style)
-        {
-            if (!style.IsVisible) return;
-            var (tex,attr) = FetchTexture(style.Bitmap.Source);
-            if (tex == null) return;
-            SetTexture(tex, attr);            
-
-            _VectorsBatch.DrawImage(transform, style);
+            SetTexture(tex, attr);
         }
 
         #endregion

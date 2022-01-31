@@ -35,10 +35,10 @@ namespace InteropDrawing
     }
 
     /// <summary>
-    /// Combines an <see cref="ColorStyle"/> with Line Cap styles.
+    /// Combines an <see cref="OutlineFillStyle"/> with Line Cap styles.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="IVectorsDrawing2D.DrawLines(ReadOnlySpan{Point2}, float, LineStyle)"/>.
+    /// Style used by <see cref="IVectorsCanvas2D.DrawLines(ReadOnlySpan{Point2}, float, LineStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {StartCap} {EndCap}")]
     public readonly struct LineStyle
@@ -46,14 +46,15 @@ namespace InteropDrawing
         #region implicit
 
         public static implicit operator LineStyle(COLOR fillColor) { return new LineStyle(fillColor); }
+        public static implicit operator LineStyle(ColorStyle fillColor) { return new LineStyle(fillColor.Color); }
 
         public static implicit operator LineStyle((COLOR, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item2); }
 
         public static implicit operator LineStyle((COLOR, LineCapStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
 
-        public static implicit operator LineStyle((ColorStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item2); }
+        public static implicit operator LineStyle((OutlineFillStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item2); }
 
-        public static implicit operator LineStyle((ColorStyle, LineCapStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator LineStyle((OutlineFillStyle, LineCapStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
 
         public static implicit operator LineStyle((COLOR, Single) style) { return new LineStyle(style.Item1, style.Item2); }
 
@@ -75,24 +76,30 @@ namespace InteropDrawing
 
         public LineStyle(COLOR outColor, Single outWidth)
         {
-            Style = new ColorStyle(outColor, outWidth);
+            Style = new OutlineFillStyle(outColor, outWidth);
             StartCap = EndCap = LineCapStyle.Flat;
         }
 
         public LineStyle(COLOR fillColor, COLOR outColor, Single outWidth)
         {
-            Style = new ColorStyle(fillColor, outColor, outWidth);
+            Style = new OutlineFillStyle(fillColor, outColor, outWidth);
             StartCap = EndCap = LineCapStyle.Flat;
         }
 
         public LineStyle(COLOR fillColor, LineCapStyle startCap, LineCapStyle endCap)
         {
-            Style = new ColorStyle(fillColor);
+            Style = new OutlineFillStyle(fillColor);
             StartCap = startCap;
             EndCap = endCap;
         }
 
-        public LineStyle(ColorStyle color, LineCapStyle startCap, LineCapStyle endCap)
+        public LineStyle(ColorStyle color)
+        {
+            Style = color;
+            StartCap = EndCap = LineCapStyle.Flat;
+        }
+
+        public LineStyle(OutlineFillStyle color, LineCapStyle startCap, LineCapStyle endCap)
         {
             Style = color;
             StartCap = startCap;
@@ -105,7 +112,7 @@ namespace InteropDrawing
 
         #region data
 
-        public readonly ColorStyle Style;
+        public readonly OutlineFillStyle Style;
         public readonly LineCapStyle StartCap;
         public readonly LineCapStyle EndCap;
 
@@ -135,7 +142,7 @@ namespace InteropDrawing
 
         public LineStyle With(LineCapStyle startCap, LineCapStyle endCap) { return new LineStyle(this.Style, startCap, endCap); }
 
-        public LineStyle With(ColorStyle style)
+        public LineStyle With(OutlineFillStyle style)
         {
             return new LineStyle(style, StartCap, EndCap);
         }

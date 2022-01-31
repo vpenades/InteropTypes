@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropDrawing
 {
-    class _DynamicTexture : IDrawingBrush<IDrawing2D>
+    class _DynamicTexture : IDrawingBrush<ICanvas2D>
     {
         public _DynamicTexture(GraphicsDevice device)
         {
@@ -21,7 +21,7 @@ namespace InteropDrawing
 
         private static readonly Random _Randomizer = new Random();
 
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             if (_DynTexture == null)
             {

@@ -8,10 +8,10 @@ using COLOR = System.Drawing.Color;
 namespace InteropDrawing.Backends
 {
     /// <summary>
-    /// Represents an agent able to converts <see cref="IDrawing2D"/> drawing calls to
+    /// Represents an agent able to converts <see cref="ICanvas2D"/> drawing calls to
     /// <see cref="System.Windows.Media.DrawingContext"/> drawing calls.
     /// </summary>
-    public partial class WPFDrawingContext2D : System.Windows.Threading.DispatcherObject, IDrawing2D
+    public partial class WPFDrawingContext2D : System.Windows.Threading.DispatcherObject, ICanvas2D
     {
         #region lifecycle
 
@@ -36,7 +36,7 @@ namespace InteropDrawing.Backends
 
         private System.Windows.Media.Pen _TransparentPen;
 
-        private readonly Dictionary<Int32, System.Windows.Media.SolidColorBrush> _BrushesCache = new Dictionary<Int32, System.Windows.Media.SolidColorBrush>();
+        private readonly Dictionary<UInt32, System.Windows.Media.SolidColorBrush> _BrushesCache = new Dictionary<UInt32, System.Windows.Media.SolidColorBrush>();
 
         private readonly Dictionary<Object, System.Windows.Media.Imaging.BitmapSource> _ImagesCache = new Dictionary<Object, System.Windows.Media.Imaging.BitmapSource>();
 
@@ -49,15 +49,15 @@ namespace InteropDrawing.Backends
             if (_Context == null) throw new InvalidOperationException($"Context is null, call {nameof(SetContext)} first");
         }
 
-        private System.Windows.Media.SolidColorBrush _UseBrush(COLOR color)
+        private System.Windows.Media.SolidColorBrush _UseBrush(ColorStyle color)
         {
-            if (color.A == 0) return null; // todo if Alpha is 0 return null;
+            if (!color.IsVisible) return null; // todo if Alpha is 0 return null;
 
-            if (_BrushesCache.TryGetValue(color.ToArgb(), out System.Windows.Media.SolidColorBrush brush)) return brush;
+            if (_BrushesCache.TryGetValue(color.PackedValue, out System.Windows.Media.SolidColorBrush brush)) return brush;
 
-            brush = color.ToDeviceBrush();
+            brush = color.Color.ToDeviceBrush();
 
-            _BrushesCache[color.ToArgb()] = brush;
+            _BrushesCache[color.PackedValue] = brush;
 
             return brush;
         }
@@ -162,14 +162,14 @@ namespace InteropDrawing.Backends
         #region API - IDrawing2D
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle brush)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
             this.VerifyAccess();
             new Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
         }
 
         /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, COLOR color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -217,7 +217,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 c, Single width, Single height, in ColorStyle brush)
+        public void DrawEllipse(Point2 c, Single width, Single height, in OutlineFillStyle brush)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -316,7 +316,7 @@ namespace InteropDrawing.Backends
             if (viewport.HasValue) _Context.Pop();
         }
 
-        public void DrawScene(Size? viewport, Matrix3x2 prj, Matrix3x2 cam, IDrawingBrush<IDrawing2D> scene)
+        public void DrawScene(Size? viewport, Matrix3x2 prj, Matrix3x2 cam, IDrawingBrush<ICanvas2D> scene)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -329,7 +329,7 @@ namespace InteropDrawing.Backends
             PopClipRect(viewport);
         }
 
-        public void DrawScene(Size? viewport, Matrix4x4 prj, Matrix4x4 cam, IDrawingBrush<IDrawing3D> scene)
+        public void DrawScene(Size? viewport, Matrix4x4 prj, Matrix4x4 cam, IDrawingBrush<IScene3D> scene)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -342,7 +342,7 @@ namespace InteropDrawing.Backends
             PopClipRect(viewport);
         }
 
-        public void DrawScene(Size? viewport, ISceneViewport2D xform, IDrawingBrush<IDrawing2D> scene)
+        public void DrawScene(Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
         {
             if (xform == null)
             {
@@ -358,7 +358,7 @@ namespace InteropDrawing.Backends
             DrawScene(viewport, prj, cam, scene);
         }        
 
-        public void DrawScene(Size? viewport, ISceneViewport3D xform, IDrawingBrush<IDrawing3D> scene)
+        public void DrawScene(Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
         {
             if (xform == null)
             {
@@ -373,7 +373,7 @@ namespace InteropDrawing.Backends
             DrawScene(viewport, prj, cam, scene);
         }
 
-        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, ISceneViewport2D xform, IDrawingBrush<IDrawing2D> scene)
+        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
         {
             this.VerifyAccess();
             SetContext(dc);
@@ -381,7 +381,7 @@ namespace InteropDrawing.Backends
             SetContext(null);
         }
 
-        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IDrawing3D> scene)
+        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
         {
             this.VerifyAccess();
             SetContext(dc);
@@ -389,7 +389,7 @@ namespace InteropDrawing.Backends
             SetContext(null);            
         }
 
-        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, ISceneViewport2D xform, IDrawingBrush<IDrawing2D> scene)
+        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
         {
             if (!this.CheckAccess())
             {
@@ -409,7 +409,7 @@ namespace InteropDrawing.Backends
             _Context = oldDC;
         }
 
-        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IDrawing3D> scene)
+        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
         {
             if (!this.CheckAccess())
             {
@@ -429,7 +429,7 @@ namespace InteropDrawing.Backends
             _Context = oldDC;
         }
 
-        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, ISceneViewport2D xform, IDrawingBrush<IDrawing2D> scene)
+        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
         {
             if (!this.CheckAccess())
             {
@@ -442,7 +442,7 @@ namespace InteropDrawing.Backends
             target.Render(visual);
         }
 
-        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IDrawing3D> scene)
+        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
         {
             if (!this.CheckAccess())
             {

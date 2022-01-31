@@ -10,15 +10,13 @@ namespace InteropDrawing
     /// Represents an image with a style applied to it.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="IImageDrawing2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
+    /// Style used by <see cref="IImagesCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
     /// </remarks>
     public struct ImageStyle
     {
         #region implicit
 
-        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, COLOR.White, false, false); }
-
-        // public static implicit operator ImageStyle((BitmapCell bitmap, float opacity) args) { return new ImageStyle(args.bitmap, new COLOR((Byte)255, (Byte)255, (Byte)255, ((Byte)(args.opacity * 255)).Clamp(0, 255)), false, false); }
+        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, COLOR.White, false, false); }        
 
         public static implicit operator ImageStyle((ImageAsset asset, COLOR color) args) { return new ImageStyle(args.asset, args.color, false, false); }
 
@@ -33,21 +31,38 @@ namespace InteropDrawing
         public ImageStyle(ImageAsset bitmap, COLOR color, bool flipHorizontal, bool flipVertical)
         {
             this.Bitmap = bitmap;
-            this.Color = color;
+            this.Color = color;            
 
             _Orientation = Orientation.None;
             _Orientation |= flipHorizontal ? Orientation.FlipHorizontal : Orientation.None;
             _Orientation |= flipVertical ? Orientation.FlipVertical : Orientation.None;
         }
 
+        public ImageStyle(ImageAsset bitmap, COLOR color, int flags)
+        {
+            this.Bitmap = bitmap;
+            this.Color = color;
+
+            _Orientation = (Orientation)flags;
+        }
+
         #endregion
 
         #region data
 
+        /// <summary>
+        /// The image source.
+        /// </summary>
         public ImageAsset Bitmap;
 
+        /// <summary>
+        /// The color tint to apply to the bitmap.
+        /// </summary>
         public COLOR Color;
 
+        /// <summary>
+        /// The orientation of the bitmap.
+        /// </summary>
         internal Orientation _Orientation;
 
         #endregion
@@ -68,30 +83,34 @@ namespace InteropDrawing
             set => _Orientation = (_Orientation & ~Orientation.FlipVertical) | (value ? Orientation.FlipVertical : Orientation.None);
         }
 
+        public int Flags => (int)_Orientation;
+
         #endregion
 
         #region API
 
-        public System.Numerics.Matrix3x2 Transform => Bitmap.GetImageMatrix(FlipHorizontal, FlipVertical);
+        public System.Numerics.Matrix3x2 Transform => Bitmap.GetImageMatrix(this._Orientation);
 
-        public System.Numerics.Matrix3x2 GetTransform()
-        {
-            return Bitmap.GetImageMatrix(FlipHorizontal, FlipVertical);
-        }
+        public System.Numerics.Matrix3x2 GetTransform() { return Bitmap.GetImageMatrix(this._Orientation); }        
+
+        public void PrependTransform(ref System.Numerics.Matrix3x2 xform) { Bitmap.PrependTransform(ref xform, this._Orientation); }
 
         public System.Numerics.Matrix3x2 GetTransform(bool hflip, bool vflip)
         {
-            return Bitmap.GetImageMatrix(FlipHorizontal ^ hflip, FlipVertical ^ vflip);
-        }
+            var o = this._Orientation;
+            o ^= hflip ? Orientation.FlipHorizontal : Orientation.None;
+            o ^= vflip ? Orientation.FlipVertical : Orientation.None;
 
-        public void PrependTransform(ref System.Numerics.Matrix3x2 xform)
-        {
-            Bitmap.PrependTransform(ref xform, FlipHorizontal, FlipVertical);
+            return Bitmap.GetImageMatrix(o);
         }
 
         public void PrependTransform(ref System.Numerics.Matrix3x2 xform, bool hflip, bool vflip)
         {
-            Bitmap.PrependTransform(ref xform, FlipHorizontal ^ hflip, FlipVertical ^ vflip);
+            var o = this._Orientation;
+            o ^= hflip ? Orientation.FlipHorizontal : Orientation.None;
+            o ^= vflip ? Orientation.FlipVertical : Orientation.None;
+
+            Bitmap.PrependTransform(ref xform, o);
         }
 
         #endregion
@@ -103,7 +122,7 @@ namespace InteropDrawing
         {
             None = 0,
             FlipHorizontal = 1,
-            FlipVertical = 2
+            FlipVertical = 2,
         }
 
         #endregion

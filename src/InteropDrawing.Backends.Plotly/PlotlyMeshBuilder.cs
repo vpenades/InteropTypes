@@ -7,11 +7,11 @@ using VECTOR3 = System.Numerics.Vector3;
 
 namespace InteropDrawing.Backends
 {
-    class _PlotlyMeshBuilder : ISurfaceDrawing3D
+    class _PlotlyMeshBuilder : IPrimitiveScene3D
     {
         private readonly List<(VECTOR3 A, VECTOR3 B, VECTOR3 C, System.Drawing.Color Color)> _Triangles = new List<(VECTOR3 A, VECTOR3 B, VECTOR3 C, System.Drawing.Color Color)>();
 
-        public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle style)
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
             var a = vertices[0].ToNumerics();
 
@@ -20,7 +20,7 @@ namespace InteropDrawing.Backends
                 var b = vertices[i - 1].ToNumerics();
                 var c = vertices[i + 0].ToNumerics();
 
-                var tri = (a, b, c, style.Style.FillColor);
+                var tri = (a, b, c, style.Color);
 
                 _Triangles.Add(tri);
             }

@@ -8,11 +8,11 @@ using InteropDrawing;
 
 namespace InteropVision.With
 {
-    partial class ZXingCode : IDrawingBrush<IDrawing2D>
+    partial class ZXingCode : IDrawingBrush<ICanvas2D>
     {
         #region API
 
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             if (this.Results == null) return;
 
@@ -21,7 +21,7 @@ namespace InteropVision.With
             foreach (var r in this.Results) DrawTo(dc, r, o);
         }
 
-        private static void DrawTo(IDrawing2D dc, ZXing.Result result, Point2 offset)
+        private static void DrawTo(ICanvas2D dc, ZXing.Result result, Point2 offset)
         {
             if (result == null) return;
             if (result.ResultPoints == null || result.ResultPoints.Length == 0) return;

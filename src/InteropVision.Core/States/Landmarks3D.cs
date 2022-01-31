@@ -9,7 +9,7 @@ using XYZ = System.Numerics.Vector3;
 
 namespace InteropVision
 {
-    public class Landmarks3D : InteropDrawing.IDrawingBrush<InteropDrawing.IDrawing3D> //, InteropDrawing.IBounds3D
+    public class Landmarks3D : InteropDrawing.IDrawingBrush<InteropDrawing.IScene3D> //, InteropDrawing.IBounds3D
     {
         #region lifecycle
 
@@ -169,7 +169,7 @@ namespace InteropVision
             return _Size.Value;
         }
 
-        public virtual void DrawTo(InteropDrawing.IDrawing3D dc)
+        public virtual void DrawTo(InteropDrawing.IScene3D dc)
         {
             // ideally this should be half the distance of the two closest points
             // but that's not trivial to calculate.

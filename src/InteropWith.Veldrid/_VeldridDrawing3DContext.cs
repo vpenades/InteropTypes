@@ -9,7 +9,7 @@ using Veldrid;
 
 namespace InteropWith
 {
-    public interface IVeldridDrawingContext3D : IDisposableDrawing3D
+    public interface IVeldridDrawingContext3D : IDisposableScene3D
     {
         void FillFrame(System.Drawing.Color color);
     }
@@ -183,7 +183,7 @@ namespace InteropWith
 
         private InteropDrawing.Transforms.Decompose3D _Collapsed3D => new InteropDrawing.Transforms.Decompose3D(this);
 
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix4x4 transform, object asset, OutlineFillStyle style)
         {
             throw new NotImplementedException();
         }
@@ -205,7 +205,7 @@ namespace InteropWith
             _Collapsed3D.DrawSegment(a, b, diameter, style);
         }
 
-        public void DrawSphere(Point3 center, float diameter, ColorStyle style)
+        public void DrawSphere(Point3 center, float diameter, OutlineFillStyle style)
         {
             _Collapsed3D.DrawSphere(center, diameter, style);
         }
@@ -213,6 +213,11 @@ namespace InteropWith
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle style)
         {
             AddPolygon(vertices, style.Style.FillColor);
+        }
+
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
+        {
+            AddPolygon(vertices, style.Color);
         }
 
 

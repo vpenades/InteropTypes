@@ -10,8 +10,8 @@ namespace InteropDrawing
     /// Represents a graphic resource defined as a bitmap source and a region within that bitmap.
     /// </summary>
     /// <remarks>
-    /// <see cref="ImageAsset"/> is part of <see cref="ImageStyle"/>, which can be used with<br/>
-    /// <see cref="IImageDrawing2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
+    /// <see cref="ImageAsset"/> is part of <see cref="ImageStyle"/>, which can be used at<br/>
+    /// <see cref="IImagesCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Source} ({Left}, {Top}) ({Width}, {Height}) Scale:{Scale}")]
     public class ImageAsset
@@ -20,28 +20,33 @@ namespace InteropDrawing
 
         public static IEnumerable<ImageAsset> CreateGrid(Object source, Point2 size, Point2 pivot, int count, int stride)
         {
+            return CreateGrid(source, size, pivot, false, count, stride);
+        }
+
+        public static IEnumerable<ImageAsset> CreateGrid(Object source, Point2 size, Point2 pivot, bool pivotPrecedence, int count, int stride)
+        {
             for (int idx = 0; idx < count; ++idx)
             {
                 var idx_x = idx % stride;
                 var idx_y = idx / stride;
 
-                yield return new ImageAsset(source, (idx_x * size.X, idx_y * size.Y), (size.X, size.Y), pivot);
+                yield return new ImageAsset(source, (idx_x * size.X, idx_y * size.Y), (size.X, size.Y), pivot, pivotPrecedence);
             }
-        }        
+        }
 
-        public static ImageAsset CreateFromBitmap(Object source, Point2 size, Point2 pivot)
+        public static ImageAsset CreateFromBitmap(Object source, Point2 size, Point2 pivot, bool pivotPrecedence = false)
         {
-            return new ImageAsset(source, (0, 0), size, pivot);
-        }        
+            return new ImageAsset(source, (0, 0), size, pivot, pivotPrecedence);
+        }
 
-        public ImageAsset(Object source, Point2 origin, Point2 size, Point2 pivot)
+        public ImageAsset(Object source, Point2 origin, Point2 size, Point2 pivot, bool pivotPrecedence = false)
         {
-            this._Source = source;           
-
-            this._Pivot = pivot.ToNumerics();
-            
+            this._Source = source;            
             this._SourceUVMin = origin.ToNumerics();
             this._SourceUVMax = this._SourceUVMin + size.ToNumerics();
+
+            this._Pivot = pivot.ToNumerics();
+            _PivotPrecedence = pivotPrecedence;
 
             this._CalculateMatrices();
         }
@@ -57,8 +62,25 @@ namespace InteropDrawing
 
         public ImageAsset WithScale(float scale)
         {
-            _Scale = scale;
+            _Scale = new XY(scale);
             this._CalculateMatrices();
+            return this;
+        }
+
+        public ImageAsset WithExpandedSource(float expand)
+        {
+            var v2exp = new XY(expand);
+            var v2min = _SourceUVMin;
+            var v2siz = _SourceUVMax - _SourceUVMin;
+
+            _SourceUVMin -= v2exp;
+            _SourceUVMin += v2exp;
+
+            var xs = _SourceUVMax - _SourceUVMin;
+            
+            _Scale = _Scale * v2siz / xs;
+            _Pivot = _Pivot * xs / v2siz;
+
             return this;
         }
 
@@ -67,8 +89,9 @@ namespace InteropDrawing
             other._Source = this.Source;
             other._SourceUVMin = this._SourceUVMin;
             other._SourceUVMax = this._SourceUVMax;
-            other._Scale = this.Scale;
-            other._Pivot = this.Pivot + pivotOffset; // should multiply by this.Scale ??
+            other._Scale = this._Scale;
+            other._Pivot = this._Pivot + pivotOffset; // should multiply by this.Scale ??
+            other._PivotPrecedence = this._PivotPrecedence;
             other._CalculateMatrices();
         }        
 
@@ -78,13 +101,34 @@ namespace InteropDrawing
 
         private object _Source;
 
+        /// <summary>
+        /// TopLeft rectangle coordinate of the crop, in pixels
+        /// </summary>
         private XY _SourceUVMin;
+
+        /// <summary>
+        /// BottomRight rectangle coordinate of the crop, in pixels
+        /// </summary>
         private XY _SourceUVMax;
 
+        /// <summary>
+        /// The SRT origin of the image, relative to <see cref="_SourceUVMin"/>
+        /// </summary>
         private XY _Pivot;
 
-        private float _Scale = 1f;
+        /// <summary>
+        /// Determines the flip order and Pivot precedence.
+        /// </summary>
+        private bool _PivotPrecedence = false;
 
+        /// <summary>
+        /// The output scale of the image
+        /// </summary>
+        private XY _Scale = XY.One;
+        
+        /// <summary>
+        /// Matrices baked from pivot, scale, and flip flags
+        /// </summary>
         private readonly System.Numerics.Matrix3x2[] _Transforms = new System.Numerics.Matrix3x2[4];        
 
         #endregion
@@ -125,7 +169,7 @@ namespace InteropDrawing
         /// Gets the rendering scale of the image.
         /// </summary>
         [Obsolete("Use GetImageMatrix()")]
-        public float Scale => _Scale;
+        public XY Scale => _Scale;
 
         /// <summary>
         /// Gets the Left pixel coordinate within the <see cref="Source"/> asset.
@@ -160,7 +204,7 @@ namespace InteropDrawing
             get
             {
                 if (this.Source == null) return false;
-                if (this._Scale == 0) return false;                
+                if (this._Scale.X == 0 || this._Scale.Y == 0) return false;                
                 if (this.Width == 0 || this.Height == 0) return false;
                 return true;
             }
@@ -172,35 +216,46 @@ namespace InteropDrawing
 
         private void _CalculateMatrices()
         {
-            _Transforms[0] = _GetImageMatrix(false, false);
-            _Transforms[1] = _GetImageMatrix(false, true);
-            _Transforms[2] = _GetImageMatrix(true, false);
-            _Transforms[3] = _GetImageMatrix(true, true);
+            for(int i=0; i < _Transforms.Length; ++i)
+            {
+                var flags = (ImageStyle.Orientation)i;
+
+                var h = flags.HasFlag(ImageStyle.Orientation.FlipHorizontal);
+                var v = flags.HasFlag(ImageStyle.Orientation.FlipVertical);                
+
+                _Transforms[i] = _GetImageMatrix(h,v, _PivotPrecedence);
+            }
         }
 
-        private System.Numerics.Matrix3x2 _GetImageMatrix(bool hflip, bool vflip)
+        private System.Numerics.Matrix3x2 _GetImageMatrix(bool hflip, bool vflip, bool fpivot = false)
         {
-            var sx = hflip ? -_Scale : +_Scale;
-            var sy = vflip ? -_Scale : +_Scale;
+            var sx = hflip ? -_Scale.X : +_Scale.X;
+            var sy = vflip ? -_Scale.Y : +_Scale.Y;
 
-            var final = System.Numerics.Matrix3x2.CreateScale(Width, Height);
-            final *= System.Numerics.Matrix3x2.CreateTranslation(-_Pivot);
-            final *= System.Numerics.Matrix3x2.CreateScale(sx, sy);
-            return final;
+            if (fpivot) // pivot after flip
+            {
+                var final = System.Numerics.Matrix3x2.CreateScale(Width * sx, Height * sy);
+                final.Translation += new XY(Math.Max(0, -final.M11), Math.Max(0, -final.M22));
+                final.Translation -= _Pivot * _Scale;
+                return final;
+            }
+            else // pivot before flip
+            {
+                var final = System.Numerics.Matrix3x2.CreateScale(Width, Height);
+                final.Translation = -_Pivot;
+                final *= System.Numerics.Matrix3x2.CreateScale(sx, sy);
+                return final;
+            }
         }
 
-        public System.Numerics.Matrix3x2 GetImageMatrix(bool hflip, bool vflip)
+        internal System.Numerics.Matrix3x2 GetImageMatrix(ImageStyle.Orientation orientation)
         {
-            var index = (hflip ? 2 : 0) | (vflip ? 1 : 0);
-
-            return _Transforms[index];
+            return _Transforms[(int)orientation];
         }
 
-        public void PrependTransform(ref System.Numerics.Matrix3x2 xform, bool hflip, bool vflip)
+        internal void PrependTransform(ref System.Numerics.Matrix3x2 xform, ImageStyle.Orientation orientation)
         {
-            var index = (hflip ? 2 : 0) | (vflip ? 1 : 0);
-
-            xform = _Transforms[index] * xform;
+            xform = _Transforms[(int)orientation] * xform;
         }
 
         #endregion

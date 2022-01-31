@@ -13,8 +13,14 @@ using XFORM2 = System.Numerics.Matrix3x2;
 
 using ASSET = System.Object;
 
+
+
+
 namespace InteropDrawing
 {
+    using PRIMITIVE2D = IPrimitiveCanvas2D;
+    using CANVAS2DEX = ICanvas2D;
+
     public static partial class Toolkit
     {
         #region data
@@ -26,7 +32,7 @@ namespace InteropDrawing
         #region 2D transforms
 
 
-        public static bool TryGetBackendViewportBounds(this IBaseDrawing2D dc, out BRECT bounds)
+        public static bool TryGetBackendViewportBounds(this PRIMITIVE2D dc, out BRECT bounds)
         {
             bounds = BRECT.Empty;
 
@@ -52,7 +58,7 @@ namespace InteropDrawing
             return true;            
         }
 
-        public static bool TryGetQuadrant(this IBaseDrawing2D dc, out Quadrant quadrant)
+        public static bool TryGetQuadrant(this PRIMITIVE2D dc, out Quadrant quadrant)
         {
             if (dc is Transforms.ITransformer2D xform)
             {
@@ -94,24 +100,24 @@ namespace InteropDrawing
             return q;
         }
 
-        public static void TransformForward(this IBaseDrawing2D dc, Span<POINT2> points)
+        public static void TransformForward(this PRIMITIVE2D dc, Span<POINT2> points)
         {
             if (dc is Transforms.ITransformer2D xformer) xformer.TransformForward(points);
         }
 
-        public static void TransformInverse(this IBaseDrawing2D dc, Span<POINT2> points)
+        public static void TransformInverse(this PRIMITIVE2D dc, Span<POINT2> points)
         {
             if (dc is Transforms.ITransformer2D xformer) xformer.TransformInverse(points);
         }
 
-        public static POINT2 TransformForward(this IBaseDrawing2D dc, POINT2 point)
+        public static POINT2 TransformForward(this PRIMITIVE2D dc, POINT2 point)
         {
             return dc is Transforms.ITransformer2D xformer
                 ? xformer._TransformForward(point)
                 : point;
         }
 
-        public static POINT2 TransformInverse(this IBaseDrawing2D dc, POINT2 point)
+        public static POINT2 TransformInverse(this PRIMITIVE2D dc, POINT2 point)
         {
             return dc is Transforms.ITransformer2D xformer
                 ? xformer._TransformInverse(point)
@@ -150,17 +156,17 @@ namespace InteropDrawing
             return span[0];
         }
 
-        public static Transforms.Drawing2DTransform CreateTransformed(IBaseDrawing2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
+        public static Transforms.Drawing2DTransform CreateTransformed(PRIMITIVE2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
         {
             return Transforms.Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);
         }
 
-        public static IDrawing2D CreateTransformed(IBaseDrawing2D t, POINT2 physicalSize, POINT2 virtualSize)
+        public static ICanvas2D CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, POINT2 virtualSize)
         {
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualSize);
         }        
 
-        public static IDrawing2D CreateTransformed(IBaseDrawing2D t, POINT2 physicalSize, BRECT virtualBounds)
+        public static ICanvas2D CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, BRECT virtualBounds)
         {
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualBounds);
         }
@@ -169,15 +175,15 @@ namespace InteropDrawing
 
         #region assets
 
-        public static void DrawAsset(this IDrawing2D dc, in XFORM2 transform, Object asset)
+        public static void DrawAsset(this CANVAS2DEX dc, in XFORM2 transform, Object asset)
         {
-            dc.DrawAsset(transform, asset, COLOR.White);
+            dc.DrawAsset(transform, asset, ColorStyle.White);
         }        
         
         public static BRECT? GetAssetBoundingRect(Object asset)
         {            
             if (asset is Record2D model2D) return model2D.BoundingRect;
-            if (asset is IDrawingBrush<IDrawing2D> drawable)
+            if (asset is IDrawingBrush<CANVAS2DEX> drawable)
             {                
                 var mdl = _Model2DBounds.Value;
                 mdl.Clear();
@@ -192,7 +198,7 @@ namespace InteropDrawing
         public static (VECTOR2 Center,Single Radius)? GetAssetBoundingCircle(Object asset)
         {
             if (asset is Record2D model2D) return model2D.BoundingCircle;
-            if (asset is IDrawingBrush<IDrawing2D> drawable)
+            if (asset is IDrawingBrush<CANVAS2DEX> drawable)
             {
                 var mdl = _Model2DBounds.Value;
                 mdl.Clear();
@@ -207,27 +213,27 @@ namespace InteropDrawing
 
         #region drawing        
 
-        public static void DrawLines(this IPolygonDrawing2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
+        public static void DrawLines(this PRIMITIVE2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
         {
             Transforms.Decompose2D.DrawLines(dc, points, diameter, style);
         }
 
-        public static void DrawPolygons(this IPolygonDrawing2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
+        public static void DrawPolygons(this PRIMITIVE2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
         {
             Transforms.Decompose2D.DrawPolygon(dc, points, style);
         }
 
-        public static void DrawEllipse(this IPolygonDrawing2D dc, POINT2 center, float dx, float dy, in ColorStyle style)
+        public static void DrawEllipse(this PRIMITIVE2D dc, POINT2 center, float dx, float dy, in OutlineFillStyle style)
         {
             Transforms.Decompose2D.DrawEllipse(dc, center, dx, dy, style);
         }
 
-        public static void DrawLines(this IVectorsDrawing2D dc, SCALAR diameter, LineStyle style, params POINT2[] points)
+        public static void DrawLines(this CANVAS2DEX dc, SCALAR diameter, LineStyle style, params POINT2[] points)
         {
             dc.DrawLines(points, diameter, style);
         }
 
-        public static void DrawLine(this IVectorsDrawing2D dc, POINT2 a, POINT2 b, SCALAR diameter, in LineStyle style)
+        public static void DrawLine(this CANVAS2DEX dc, POINT2 a, POINT2 b, SCALAR diameter, in LineStyle style)
         {
             Span<POINT2> pp = stackalloc POINT2[2];
             pp[0] = a;
@@ -236,7 +242,7 @@ namespace InteropDrawing
             dc.DrawLines(pp, diameter, style);
         }
 
-        public static void DrawLine(this IImageDrawing2D dc, POINT2 a, POINT2 b, float diameter, in ImageStyle style)
+        public static void DrawLine(this PRIMITIVE2D dc, POINT2 a, POINT2 b, float diameter, in ImageStyle style)
         {
             var aa = a.ToNumerics();
             var ab = b.ToNumerics() - aa;
@@ -255,17 +261,17 @@ namespace InteropDrawing
             dc.DrawImage(xform, style);
         }
 
-        public static void DrawCircle(this IVectorsDrawing2D dc, POINT2 center, SCALAR diameter, in ColorStyle style)
+        public static void DrawCircle(this CANVAS2DEX dc, POINT2 center, SCALAR diameter, in OutlineFillStyle style)
         {
             dc.DrawEllipse(center, diameter, diameter, style);
         }
 
-        public static void DrawRectangle(this IVectorsDrawing2D dc, BRECT rect, in ColorStyle style)
+        public static void DrawRectangle(this CANVAS2DEX dc, BRECT rect, in OutlineFillStyle style)
         {
             dc.DrawRectangle(rect.Location, rect.Size, style);
         }
 
-        public static void DrawRectangle(this IVectorsDrawing2D dc, XFORM2 rect, in ColorStyle style)
+        public static void DrawRectangle(this CANVAS2DEX dc, XFORM2 rect, in OutlineFillStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
 
@@ -281,37 +287,37 @@ namespace InteropDrawing
             dc.DrawPolygon(vertices, style);
         }
 
-        public static void DrawRectangle(this IVectorsDrawing2D dc, POINT2 origin, POINT2 size, in ColorStyle style)
+        public static void DrawRectangle(this CANVAS2DEX dc, POINT2 origin, POINT2 size, in OutlineFillStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
 
-            Parametric.ShapeFactory.FillRectangleVertices(vertices, origin, size, 0, 0);
+            Parametric.ShapeFactory2D.FillRectangleVertices(vertices, origin, size, 0, 0);
 
             dc.DrawPolygon(vertices, style);
         }
 
-        public static void DrawRectangle(this IVectorsDrawing2D dc, BRECT rect, in ColorStyle style, float borderRadius, int arcVertexCount = 6)
+        public static void DrawRectangle(this CANVAS2DEX dc, BRECT rect, in OutlineFillStyle style, float borderRadius, int arcVertexCount = 6)
         {
             dc.DrawRectangle(rect.Location, rect.Size, style, borderRadius, arcVertexCount);
         }
 
-        public static void DrawRectangle(this IVectorsDrawing2D dc, POINT2 origin, POINT2 size, in ColorStyle style, float borderRadius, int arcVertexCount = 6)
+        public static void DrawRectangle(this CANVAS2DEX dc, POINT2 origin, POINT2 size, in OutlineFillStyle style, float borderRadius, int arcVertexCount = 6)
         {
             if (borderRadius == 0) arcVertexCount = 0;
 
-            Span<POINT2> vertices = stackalloc POINT2[Parametric.ShapeFactory.GetRectangleVertexCount(arcVertexCount)];
+            Span<POINT2> vertices = stackalloc POINT2[Parametric.ShapeFactory2D.GetRectangleVertexCount(arcVertexCount)];
 
-            Parametric.ShapeFactory.FillRectangleVertices(vertices, origin, size, borderRadius, arcVertexCount);
+            Parametric.ShapeFactory2D.FillRectangleVertices(vertices, origin, size, borderRadius, arcVertexCount);
 
             dc.DrawPolygon(vertices, style);
         }        
 
-        public static void DrawPolygon(this IVectorsDrawing2D dc, in ColorStyle style, params POINT2[] points)
+        public static void DrawPolygon(this CANVAS2DEX dc, in OutlineFillStyle style, params POINT2[] points)
         {
             dc.DrawPolygon(points, style);
         }        
 
-        public static void DrawFont(this IVectorsDrawing2D dc, POINT2 origin, float size, String text, FontStyle style)
+        public static void DrawFont(this CANVAS2DEX dc, POINT2 origin, float size, String text, FontStyle style)
         {
             var xform = XFORM2.CreateScale(size);
             xform.Translation = origin.ToNumerics();
@@ -321,7 +327,7 @@ namespace InteropDrawing
             dc.DrawFont(xform, text, style);
         }
 
-        public static void DrawFont(this IVectorsDrawing2D dc, XFORM2 xform, String text, FontStyle style)
+        public static void DrawFont(this CANVAS2DEX dc, XFORM2 xform, String text, FontStyle style)
         {
             float xflip = 1;
             float yflip = 1;            
@@ -341,7 +347,7 @@ namespace InteropDrawing
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
         }
 
-        public static void DrawPath(this IVectorsDrawing2D dc, XFORM2 xform, string path, ColorStyle style)
+        public static void DrawPath(this CANVAS2DEX dc, XFORM2 xform, string path, OutlineFillStyle style)
         {
             Parametric.PathParser.DrawPath(dc, xform, path, style);
         }

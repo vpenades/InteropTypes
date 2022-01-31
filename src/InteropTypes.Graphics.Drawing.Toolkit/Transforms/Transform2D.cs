@@ -8,26 +8,26 @@ using System.Drawing;
 namespace InteropDrawing.Transforms
 {
     public readonly struct Drawing2DTransform :
-        IDrawing2D,
-        IDrawing3D,
+        ICanvas2D,
+        IScene3D,
         ITransformer2D,
         IServiceProvider        
     {
         #region constructors
 
-        public static Drawing2DTransform Create(IBaseDrawing2D t, Matrix3x2 xform)
+        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Matrix3x2 xform)
         {
             return new Drawing2DTransform(t, xform);
         }
 
-        public static Drawing2DTransform Create(IBaseDrawing2D t, Point2 physicalSize, Point2 virtualSize)
+        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, Point2 virtualSize)
         {
             var xform = Matrix3x2.CreateTranslation(virtualSize.ToNumerics() / 2);
 
             return Create(t, physicalSize, virtualSize, xform);
         }
 
-        public static Drawing2DTransform Create(IBaseDrawing2D t, Point2 physicalSize, RectangleF virtualBounds)
+        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, RectangleF virtualBounds)
         {
             var virtualSize = virtualBounds.Size.ToVector2();
             var virtualCenter = virtualBounds.ToCenterVector2();
@@ -37,7 +37,7 @@ namespace InteropDrawing.Transforms
             return Create(t, physicalSize, virtualSize, xform);
         }        
 
-        public static Drawing2DTransform Create(IBaseDrawing2D t, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
+        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
         {
             var xform = Matrix3x2.Identity;
 
@@ -58,30 +58,22 @@ namespace InteropDrawing.Transforms
             return new Drawing2DTransform(t, xform);
         }
 
-        public static Drawing2DTransform Create((IBaseDrawing2D target, float width, float height) viewport, Matrix3x2 projection, Matrix3x2 camera)
+        public static Drawing2DTransform Create((IPrimitiveCanvas2D target, float width, float height) viewport, Matrix3x2 projection, Matrix3x2 camera)
         {
             Matrix3x2.Invert(camera, out Matrix3x2 view);
             return Create(viewport, view * projection);
         }
 
-        public static Drawing2DTransform Create((IBaseDrawing2D target, float width, float height) viewport, Matrix3x2 projview)
+        public static Drawing2DTransform Create((IPrimitiveCanvas2D target, float width, float height) viewport, Matrix3x2 projview)
         {
             var xform = projview * (viewport.width, viewport.height).CreateViewport2D();
             return new Drawing2DTransform(viewport.target, xform);
         }
 
-        private Drawing2DTransform(IBaseDrawing2D t, Matrix3x2 xform) : this(xform)
+        private Drawing2DTransform(IPrimitiveCanvas2D t, Matrix3x2 xform)
         {
-            _Root = t;
-            _Images = t as IImageDrawing2D;
-            _Polygons = t as IPolygonDrawing2D;            
-        }
-
-        private Drawing2DTransform(Matrix3x2 xform)
-        {
-            _Root = default;            
-            _Images = null;            
-            _Polygons = null;                        
+            _Target = t;
+            _TargetEx = t as ICanvas2D;
 
             _TransformForward = xform;
             Matrix3x2.Invert(xform, out _TransformInverse);
@@ -93,12 +85,8 @@ namespace InteropDrawing.Transforms
 
         #region data
 
-        private readonly IBaseDrawing2D _Root;        
-
-        // fast paths
-
-        private readonly IImageDrawing2D _Images;        
-        private readonly IPolygonDrawing2D _Polygons;        
+        private readonly IPrimitiveCanvas2D _Target;        
+        private readonly ICanvas2D _TargetEx;        
 
         // two way transform
 
@@ -114,7 +102,7 @@ namespace InteropDrawing.Transforms
         /// <inheritdoc/>        
         public object GetService(Type serviceType)
         {
-            return this.TryGetService(serviceType, _Root);
+            return this.TryGetService(serviceType, _Target);
         }
 
         private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _TransformScaleForward; }
@@ -143,13 +131,13 @@ namespace InteropDrawing.Transforms
         public void TransformForward(Span<Point2> points)
         {
             Point2.Transform(points, _TransformForward);
-            if (_Root is ITransformer2D xform) xform.TransformForward(points);
+            if (_Target is ITransformer2D xform) xform.TransformForward(points);
         }
 
         /// <inheritdoc />
         public void TransformInverse(Span<Point2> points)
         {
-            if (_Root is ITransformer2D xform) xform.TransformInverse(points);
+            if (_Target is ITransformer2D xform) xform.TransformInverse(points);
             Point2.Transform(points, _TransformInverse);
         }
 
@@ -157,13 +145,13 @@ namespace InteropDrawing.Transforms
         public void TransformNormalsForward(Span<Point2> vectors)
         {
             Point2.TransformNormals(vectors, _TransformForward);
-            if (_Root is ITransformer2D xform) xform.TransformNormalsForward(vectors);
+            if (_Target is ITransformer2D xform) xform.TransformNormalsForward(vectors);
         }
 
         /// <inheritdoc />
         public void TransformNormalsInverse(Span<Point2> vectors)
         {
-            if (_Root is ITransformer2D xform) xform.TransformNormalsInverse(vectors);
+            if (_Target is ITransformer2D xform) xform.TransformNormalsInverse(vectors);
             Point2.Transform(vectors, _TransformInverse);
         }
 
@@ -171,13 +159,13 @@ namespace InteropDrawing.Transforms
         public void TransformScalarsForward(Span<Single> scalars)
         {
             for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleForward;
-            if (_Root is ITransformer2D xform) xform.TransformScalarsForward(scalars);
+            if (_Target is ITransformer2D xform) xform.TransformScalarsForward(scalars);
         }
 
         /// <inheritdoc />
         public void TransformScalarsInverse(Span<Single> scalars)
         {
-            if (_Root is ITransformer2D xform) xform.TransformScalarsInverse(scalars);
+            if (_Target is ITransformer2D xform) xform.TransformScalarsInverse(scalars);
             for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleInverse;
         }
 
@@ -186,11 +174,11 @@ namespace InteropDrawing.Transforms
         #region 2D Drawing API
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, in ColorStyle brush)
+        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
         {
-            if (_Root is IAssetDrawing2D ad)
+            if (_TargetEx != null)
             {
-                ad.DrawAsset(transform * _TransformForward, asset, brush);
+                _TargetEx.DrawAsset(transform * _TransformForward, asset, color);
             }
             else
             {
@@ -199,12 +187,12 @@ namespace InteropDrawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void FillConvexPolygon(ReadOnlySpan<Point2> points, Color color)
+        public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
             Span<Point2> pp = stackalloc Point2[points.Length];
             for (int i = 0; i < pp.Length; ++i) pp[i] = _GetTransformed(points[i]);
 
-            _Polygons.FillConvexPolygon(pp, color);
+            _TargetEx.DrawConvexPolygon(pp, color);
         }
 
         /// <inheritdoc/>
@@ -215,13 +203,13 @@ namespace InteropDrawing.Transforms
 
             var ow = _GetTransformed(brush.OutlineWidth);
 
-            if (_Root is IVectorsDrawing2D vectors)
+            if (_TargetEx != null)
             {
-                vectors.DrawPolygon(pp, brush.WithOutline(ow));
+                _TargetEx.DrawPolygon(pp, brush.WithOutline(ow));
             }
             else
             {
-                Decompose2D.DrawPolygon(_Polygons, pp, brush.WithOutline(ow) );
+                Decompose2D.DrawPolygon(_Target, pp, brush.WithOutline(ow) );
             }
         }
 
@@ -233,18 +221,18 @@ namespace InteropDrawing.Transforms
 
             strokeWidth = _GetTransformed(strokeWidth);
 
-            if (_Root is IVectorsDrawing2D vectors)
+            if (_TargetEx != null)
             {
-                vectors.DrawLines(pp, strokeWidth, brush);
+                _TargetEx.DrawLines(pp, strokeWidth, brush);
             }
             else
             {
-                Decompose2D.DrawLines(_Polygons, pp, strokeWidth, brush);
+                Decompose2D.DrawLines(_Target, pp, strokeWidth, brush);
             }
         }        
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, Single w, Single h, in ColorStyle brush)
+        public void DrawEllipse(Point2 center, Single w, Single h, in OutlineFillStyle brush)
         {
             center = _GetTransformed(center);
             w = _GetTransformed(w);
@@ -252,20 +240,20 @@ namespace InteropDrawing.Transforms
 
             var ow = _GetTransformed(brush.OutlineWidth);
 
-            if (_Root is IVectorsDrawing2D vectors)
+            if (_TargetEx != null)
             {
-                vectors.DrawEllipse(center, w, h, brush.WithOutline(ow));
+                _TargetEx.DrawEllipse(center, w, h, brush.WithOutline(ow));
             }
             else
             {
-                Decompose2D.DrawEllipse(_Polygons, center, w, h, brush.WithOutline(ow));
+                Decompose2D.DrawEllipse(_Target, center, w, h, brush.WithOutline(ow));
             }
         }
 
         /// <inheritdoc/>
         public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
         {
-            _Images.DrawImage(transform * _TransformForward, style);
+            _Target.DrawImage(transform * _TransformForward, style);
         }
 
         #endregion
@@ -289,7 +277,7 @@ namespace InteropDrawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawSphere(Point3 center, float diameter, ColorStyle brush)
+        public void DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
             diameter = _GetTransformed(diameter);
             var ow = _GetTransformed(brush.OutlineWidth);
@@ -310,7 +298,19 @@ namespace InteropDrawing.Transforms
             }
 
             this.DrawPolygon(vvv, brush.Style);
-        }        
+        }
+
+        /// <inheritdoc/>
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
+        {
+            Span<Point2> vvv = stackalloc Point2[vertices.Length];
+
+            for (int i = 0; i < vvv.Length; ++i) vvv[i] = _GetTransformed(vertices[i]);           
+
+            // todo: reverse winding if needed
+
+            this.DrawConvexPolygon(vvv, style);
+        }
 
         #endregion
     } 

@@ -6,7 +6,7 @@ using InteropDrawing;
 
 namespace InteropVision
 {
-    public partial class ColorFrameState : IDrawingBrush<IDrawing2D>
+    public partial class ColorFrameState : IDrawingBrush<ICanvas2D>
     {
         private MemoryBitmap _Image;
         private ImageAsset _SpriteAsset;
@@ -32,7 +32,7 @@ namespace InteropVision
             return _Image; // it's already a BGR24 image!
         }
 
-        public void DrawTo(IDrawing2D dc)
+        public void DrawTo(ICanvas2D dc)
         {
             if (_SpriteAsset == null)
             {

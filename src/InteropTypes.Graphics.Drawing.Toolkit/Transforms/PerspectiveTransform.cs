@@ -7,12 +7,12 @@ using System.Text;
 namespace InteropDrawing.Transforms
 {
     /// <summary>
-    /// Creates a transformation that renders 3D content over a <see cref="IDrawing2D"/> surface.
+    /// Creates a transformation that renders 3D content over a <see cref="ICanvas2D"/> surface.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Direct calls to this <see cref="IDrawing3D"/> will render the primitives directly to the<br/>
-    /// underlaying <see cref="IDrawing2D"/> surface. So if we need to render the primitives<br/>
+    /// Direct calls to this <see cref="IScene3D"/> will render the primitives directly to the<br/>
+    /// underlaying <see cref="ICanvas2D"/> surface. So if we need to render the primitives<br/>
     /// from back to front, it's better to render the scene in two steps:
     /// <list type="number">
     /// <item>Draw the 3D scene to a temporary <see cref="Record3D"/></item>
@@ -21,19 +21,19 @@ namespace InteropDrawing.Transforms
     /// </para>
     /// </remarks>
     public class PerspectiveTransform :
-        IDrawing3D,
+        IScene3D,
         IServiceProvider
     {
         #region lifecycle
 
-        public static PerspectiveTransform CreateLookingAtCenter((IDrawing2D rt, float w, float h) viewport, (float x, float y, float z) cameraPosition)
+        public static PerspectiveTransform CreateLookingAtCenter((ICanvas2D rt, float w, float h) viewport, (float x, float y, float z) cameraPosition)
         {
             var cam = Matrix4x4.CreateWorld(cameraPosition.ToVector(), Vector3.Normalize(-cameraPosition.ToVector()), Vector3.UnitY);
 
             return CreatePerspective(viewport, 1.2f, cam);
         }
 
-        public static PerspectiveTransform CreatePerspective((IDrawing2D rt, float w, float h) viewport, float projectionFOV, Matrix4x4 camera)
+        public static PerspectiveTransform CreatePerspective((ICanvas2D rt, float w, float h) viewport, float projectionFOV, Matrix4x4 camera)
         {
             var nearPlane = 0.1f;
 
@@ -42,7 +42,7 @@ namespace InteropDrawing.Transforms
             return Create(viewport, proj, camera);
         }
 
-        public static PerspectiveTransform Create((IDrawing2D rt, float w, float h) viewport, Matrix4x4 projection, Matrix4x4 camera, Func<Vector2, Vector2> distort = null)
+        public static PerspectiveTransform Create((ICanvas2D rt, float w, float h) viewport, Matrix4x4 projection, Matrix4x4 camera, Func<Vector2, Vector2> distort = null)
         {
             if (!Matrix4x4.Invert(camera, out Matrix4x4 viewMatrix)) throw new ArgumentException(nameof(camera));
 
@@ -56,7 +56,7 @@ namespace InteropDrawing.Transforms
             return new PerspectiveTransform(viewport.rt, distort, vp, viewMatrix * projection, nearPlane);
         }
 
-        private PerspectiveTransform(IDrawing2D renderTarget, Func<Vector2, Vector2> distorsion, Matrix3x2 viewport, Matrix4x4 projview, float nearPlane)
+        private PerspectiveTransform(ICanvas2D renderTarget, Func<Vector2, Vector2> distorsion, Matrix3x2 viewport, Matrix4x4 projview, float nearPlane)
         {
             System.Diagnostics.Debug.Assert(nearPlane > 0);
 
@@ -88,7 +88,7 @@ namespace InteropDrawing.Transforms
 
         private readonly Func<Vector2, Vector2> _Distorsion;
 
-        private readonly IDrawing2D _RenderTarget;
+        private readonly ICanvas2D _RenderTarget;
 
         #endregion
 
@@ -161,7 +161,7 @@ namespace InteropDrawing.Transforms
             _RenderTarget.DrawLine(aaa, bbb, diameter, brush = brush.WithOutline(ow));
         }
 
-        public void DrawSphere(Point3 center, float diameter, ColorStyle brush)
+        public void DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
             var aa = GetProjection(center);
 
@@ -182,6 +182,26 @@ namespace InteropDrawing.Transforms
             Span<Vector4> projected = stackalloc Vector4[vertices.Length];
             for (int i = 0; i < projected.Length; ++i) projected[i] = GetProjection(vertices[i]);
             
+            if (_ClipPlane.IsInPositiveSideOfPlane(projected))
+            {
+                _DrawProjectedPolygon(projected, brush);
+                return;
+            }
+
+            // clip polygon
+            Span<Vector4> clippedProjected = stackalloc Vector4[vertices.Length * 2];
+            var cvertices = _ClipPlane.ClipPolygonToPlane(clippedProjected, projected);
+            if (cvertices < 3) return;
+            clippedProjected = clippedProjected.Slice(0, cvertices);
+
+            _DrawProjectedPolygon(clippedProjected, brush);
+        }
+
+        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle brush)
+        {
+            Span<Vector4> projected = stackalloc Vector4[vertices.Length];
+            for (int i = 0; i < projected.Length; ++i) projected[i] = GetProjection(vertices[i]);
+
             if (_ClipPlane.IsInPositiveSideOfPlane(projected))
             {
                 _DrawProjectedPolygon(projected, brush);
