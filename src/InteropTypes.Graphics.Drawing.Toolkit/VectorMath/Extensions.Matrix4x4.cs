@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     static partial class _SystemNumericsExtensions
     {

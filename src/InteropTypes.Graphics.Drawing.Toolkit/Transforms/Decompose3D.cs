@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
+
 using ASSET = System.Object;
 using SCALAR = System.Single;
-using POINT3 = InteropDrawing.Point3;
-using VECTOR3 = System.Numerics.Vector3;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
-namespace InteropDrawing.Transforms
+
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     public readonly partial struct Decompose3D :
         IScene3D,

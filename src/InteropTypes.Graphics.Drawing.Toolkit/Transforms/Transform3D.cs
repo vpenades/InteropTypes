@@ -5,9 +5,9 @@ using System.Numerics;
 using System.Linq;
 using System.Drawing;
 
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
-    public readonly struct Drawing3DTransform :        
+    public readonly struct Drawing3DTransform :
         ICanvas2D,
         IScene3D,
         IServiceProvider
@@ -34,7 +34,7 @@ namespace InteropDrawing.Transforms
         private readonly IPrimitiveScene3D _Target;
         private readonly IScene3D _TargetEx;
         private readonly Matrix4x4 _Transform;
-        private readonly Single _SizeScale;
+        private readonly float _SizeScale;
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace InteropDrawing.Transforms
             return this.TryGetService(serviceType, _Target);
         }
 
-        private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _SizeScale; }
+        private float _GetTransformed(float size) { return size <= 0 ? size : size * _SizeScale; }
 
         private Point3 _GetTransformed(Point2 point) { return Point3.Transform(new Point3(point, 0), _Transform); }
 
@@ -80,8 +80,8 @@ namespace InteropDrawing.Transforms
                 vertices[i] = _GetTransformed(points[i]);
             }
 
-            _Target.DrawConvexSurface(vertices, color);            
-        }        
+            _Target.DrawConvexSurface(vertices, color);
+        }
 
         /// <inheritdoc/>
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle brush)
@@ -94,7 +94,7 @@ namespace InteropDrawing.Transforms
                 var bb = _GetTransformed(points[i + 0]);
                 var ss = xbrush.GetLineSegmentStyle(points.Length, i);
 
-                this.DrawSegment(aa, bb, diameter, ss);
+                DrawSegment(aa, bb, diameter, ss);
             }
         }
 
@@ -105,7 +105,7 @@ namespace InteropDrawing.Transforms
             height = _GetTransformed(height);
             var ow = _GetTransformed(brush.OutlineWidth);
 
-            this.DrawSphere(_GetTransformed(center), (width + height) * 0.5f, brush.WithOutline(ow));
+            DrawSphere(_GetTransformed(center), (width + height) * 0.5f, brush.WithOutline(ow));
         }
 
         /// <inheritdoc/>
@@ -120,7 +120,7 @@ namespace InteropDrawing.Transforms
                 vertices[i] = _GetTransformed(points[i]);
             }
 
-            this.DrawSurface(vertices, (xbrush, true));
+            DrawSurface(vertices, (xbrush, true));
         }
 
         /// <inheritdoc/>
@@ -177,7 +177,7 @@ namespace InteropDrawing.Transforms
             Span<Point3> vrts = stackalloc Point3[vertices.Length];
             _TransformPoints(vertices, vrts);
 
-            _Target.DrawConvexSurface(vrts, fillColor);            
+            _Target.DrawConvexSurface(vrts, fillColor);
         }
 
         #endregion

@@ -95,7 +95,7 @@ namespace InteropVision
         /// <param name="imageSize">the source image size, in pixels.</param>
         /// <param name="roiToImage">returns a matrix that can convert points in cropped space to points in full image space.</param>
         /// <returns>A tranform from Full image to ROI.</returns>
-        public Matrix3x2 GetImageTransform(InteropDrawing.Point2 imageSize, out Matrix3x2 roiToImage)
+        public Matrix3x2 GetImageTransform(InteropTypes.Graphics.Drawing.Point2 imageSize, out Matrix3x2 roiToImage)
         {            
             var iform = _Inverse *  Matrix3x2.CreateScale(imageSize.X, imageSize.Y);
             Matrix3x2.Invert(iform, out roiToImage);

@@ -5,6 +5,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+
 namespace InteropBitmaps.Drawing
 {
     struct _Triangle
@@ -13,15 +15,15 @@ namespace InteropBitmaps.Drawing
         {
             return new _Triangle()
             {
-                A = new InteropDrawing.Point2(a.x, a.y),
-                B = new InteropDrawing.Point2(b.x, b.y),
-                C = new InteropDrawing.Point2(c.x, c.y)
+                A = new POINT2(a.x, a.y),
+                B = new POINT2(b.x, b.y),
+                C = new POINT2(c.x, c.y)
             };
         }
 
-        public InteropDrawing.Point2 A;
-        public InteropDrawing.Point2 B;
-        public InteropDrawing.Point2 C;        
+        public POINT2 A;
+        public POINT2 B;
+        public POINT2 C;        
 
         // Triangle rasterization rules
         // https://msdn.microsoft.com/en-us/library/windows/desktop/cc627092(v=vs.85).aspx

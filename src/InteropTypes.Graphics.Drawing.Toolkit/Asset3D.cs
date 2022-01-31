@@ -4,13 +4,13 @@ using System.Text;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     public abstract class Asset3D
     {
-        public Object PrimaryAsset { get; protected set; }
+        public object PrimaryAsset { get; protected set; }
 
-        public Object FallbackAsset { get; protected set; }
+        public object FallbackAsset { get; protected set; }
 
         protected abstract void DrawAsSurfaces(IScene3D target);
 
@@ -18,36 +18,36 @@ namespace InteropDrawing
 
         internal void _DrawAsSurfaces(IScene3D target)
         {
-            if (this.PrimaryAsset is Record3D md3d)
+            if (PrimaryAsset is Record3D md3d)
             {
-                target.DrawAssetAsSurfaces(this.PrimaryAsset, COLOR.White);
+                target.DrawAssetAsSurfaces(PrimaryAsset, COLOR.White);
                 return;
             }
 
-            if (this.FallbackAsset != null)
+            if (FallbackAsset != null)
             {
-                target.DrawAssetAsSurfaces(this.FallbackAsset, COLOR.White);
+                target.DrawAssetAsSurfaces(FallbackAsset, COLOR.White);
                 return;
             }
 
-            this.DrawAsSurfaces(target);
+            DrawAsSurfaces(target);
         }
 
         internal void _DrawAsPrimitives(IScene3D target)
         {
-            if (this.PrimaryAsset is Record3D md3d)
+            if (PrimaryAsset is Record3D md3d)
             {
-                target.DrawAssetAsPrimitives(this.PrimaryAsset, COLOR.White);
+                target.DrawAssetAsPrimitives(PrimaryAsset, COLOR.White);
                 return;
             }
 
-            if (this.FallbackAsset != null)
+            if (FallbackAsset != null)
             {
-                target.DrawAssetAsPrimitives(this.FallbackAsset, COLOR.White);
+                target.DrawAssetAsPrimitives(FallbackAsset, COLOR.White);
                 return;
             }
 
-            this.DrawAsPrimitives(target);
+            DrawAsPrimitives(target);
         }
     }
 }

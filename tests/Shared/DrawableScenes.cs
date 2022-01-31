@@ -5,6 +5,7 @@ using System.Linq;
 
 using XY = System.Numerics.Vector2;
 using COLOR = System.Drawing.Color;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropDrawing
 {

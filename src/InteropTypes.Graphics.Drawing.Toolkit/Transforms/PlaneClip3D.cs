@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropDrawing.Transforms
+
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     public class PlaneClip3D :
         IScene3D,
@@ -25,7 +26,7 @@ namespace InteropDrawing.Transforms
 
         private readonly IScene3D _Target;
         private readonly IScene3D _DecomposedTarget;
-        
+
         private readonly Plane _Plane;
 
         #endregion
@@ -66,7 +67,7 @@ namespace InteropDrawing.Transforms
 
         public void DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
-            if (_Plane.IsInPositiveSideOfPlane(center, diameter*0.5f))
+            if (_Plane.IsInPositiveSideOfPlane(center, diameter * 0.5f))
             {
                 _Target.DrawSphere(center, diameter, brush);
             }

@@ -4,7 +4,7 @@ using System.Text;
 
 using XY = System.Numerics.Vector2;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a graphic resource defined as a bitmap source and a region within that bitmap.
@@ -18,12 +18,12 @@ namespace InteropDrawing
     {
         #region lifecycle
 
-        public static IEnumerable<ImageAsset> CreateGrid(Object source, Point2 size, Point2 pivot, int count, int stride)
+        public static IEnumerable<ImageAsset> CreateGrid(object source, Point2 size, Point2 pivot, int count, int stride)
         {
             return CreateGrid(source, size, pivot, false, count, stride);
         }
 
-        public static IEnumerable<ImageAsset> CreateGrid(Object source, Point2 size, Point2 pivot, bool pivotPrecedence, int count, int stride)
+        public static IEnumerable<ImageAsset> CreateGrid(object source, Point2 size, Point2 pivot, bool pivotPrecedence, int count, int stride)
         {
             for (int idx = 0; idx < count; ++idx)
             {
@@ -34,21 +34,21 @@ namespace InteropDrawing
             }
         }
 
-        public static ImageAsset CreateFromBitmap(Object source, Point2 size, Point2 pivot, bool pivotPrecedence = false)
+        public static ImageAsset CreateFromBitmap(object source, Point2 size, Point2 pivot, bool pivotPrecedence = false)
         {
             return new ImageAsset(source, (0, 0), size, pivot, pivotPrecedence);
         }
 
-        public ImageAsset(Object source, Point2 origin, Point2 size, Point2 pivot, bool pivotPrecedence = false)
+        public ImageAsset(object source, Point2 origin, Point2 size, Point2 pivot, bool pivotPrecedence = false)
         {
-            this._Source = source;            
-            this._SourceUVMin = origin.ToNumerics();
-            this._SourceUVMax = this._SourceUVMin + size.ToNumerics();
+            _Source = source;
+            _SourceUVMin = origin.ToNumerics();
+            _SourceUVMax = _SourceUVMin + size.ToNumerics();
 
-            this._Pivot = pivot.ToNumerics();
+            _Pivot = pivot.ToNumerics();
             _PivotPrecedence = pivotPrecedence;
 
-            this._CalculateMatrices();
+            _CalculateMatrices();
         }
 
         public ImageAsset() { }
@@ -56,14 +56,14 @@ namespace InteropDrawing
         public ImageAsset WithPivot(int x, int y)
         {
             _Pivot = new XY(x, y);
-            this._CalculateMatrices();
+            _CalculateMatrices();
             return this;
         }
 
         public ImageAsset WithScale(float scale)
         {
             _Scale = new XY(scale);
-            this._CalculateMatrices();
+            _CalculateMatrices();
             return this;
         }
 
@@ -77,7 +77,7 @@ namespace InteropDrawing
             _SourceUVMin += v2exp;
 
             var xs = _SourceUVMax - _SourceUVMin;
-            
+
             _Scale = _Scale * v2siz / xs;
             _Pivot = _Pivot * xs / v2siz;
 
@@ -86,14 +86,14 @@ namespace InteropDrawing
 
         public void CopyTo(ImageAsset other, XY pivotOffset)
         {
-            other._Source = this.Source;
-            other._SourceUVMin = this._SourceUVMin;
-            other._SourceUVMax = this._SourceUVMax;
-            other._Scale = this._Scale;
-            other._Pivot = this._Pivot + pivotOffset; // should multiply by this.Scale ??
-            other._PivotPrecedence = this._PivotPrecedence;
+            other._Source = Source;
+            other._SourceUVMin = _SourceUVMin;
+            other._SourceUVMax = _SourceUVMax;
+            other._Scale = _Scale;
+            other._Pivot = _Pivot + pivotOffset; // should multiply by this.Scale ??
+            other._PivotPrecedence = _PivotPrecedence;
             other._CalculateMatrices();
-        }        
+        }
 
         #endregion
 
@@ -125,11 +125,11 @@ namespace InteropDrawing
         /// The output scale of the image
         /// </summary>
         private XY _Scale = XY.One;
-        
+
         /// <summary>
         /// Matrices baked from pivot, scale, and flip flags
         /// </summary>
-        private readonly System.Numerics.Matrix3x2[] _Transforms = new System.Numerics.Matrix3x2[4];        
+        private readonly System.Numerics.Matrix3x2[] _Transforms = new System.Numerics.Matrix3x2[4];
 
         #endregion
 
@@ -141,7 +141,7 @@ namespace InteropDrawing
         /// <remarks>
         /// This property can be cast to different data types depending on the context:
         /// <para>
-        /// If it's a <see cref="String"/> or a <see cref="System.IO.FileInfo"/> it can point
+        /// If it's a <see cref="string"/> or a <see cref="System.IO.FileInfo"/> it can point
         /// to an image in the file system.
         /// </para>
         /// <para>
@@ -149,7 +149,7 @@ namespace InteropDrawing
         /// directly as the bitmap source.
         /// </para>
         /// </remarks>
-        public Object Source => _Source;
+        public object Source => _Source;
 
         /// <summary>
         /// Gets the coordinates of the center of the image, in pixels, relative to <see cref="Top"/> and <see cref="Left"/>.
@@ -203,9 +203,9 @@ namespace InteropDrawing
         {
             get
             {
-                if (this.Source == null) return false;
-                if (this._Scale.X == 0 || this._Scale.Y == 0) return false;                
-                if (this.Width == 0 || this.Height == 0) return false;
+                if (Source == null) return false;
+                if (_Scale.X == 0 || _Scale.Y == 0) return false;
+                if (Width == 0 || Height == 0) return false;
                 return true;
             }
         }
@@ -216,14 +216,14 @@ namespace InteropDrawing
 
         private void _CalculateMatrices()
         {
-            for(int i=0; i < _Transforms.Length; ++i)
+            for (int i = 0; i < _Transforms.Length; ++i)
             {
                 var flags = (ImageStyle.Orientation)i;
 
                 var h = flags.HasFlag(ImageStyle.Orientation.FlipHorizontal);
-                var v = flags.HasFlag(ImageStyle.Orientation.FlipVertical);                
+                var v = flags.HasFlag(ImageStyle.Orientation.FlipVertical);
 
-                _Transforms[i] = _GetImageMatrix(h,v, _PivotPrecedence);
+                _Transforms[i] = _GetImageMatrix(h, v, _PivotPrecedence);
             }
         }
 
@@ -259,5 +259,5 @@ namespace InteropDrawing
         }
 
         #endregion
-    }    
+    }
 }

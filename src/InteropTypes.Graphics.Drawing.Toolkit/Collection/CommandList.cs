@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropDrawing.Collection
+using InteropTypes.Graphics.Drawing;
+
+namespace InteropTypes.Graphics.Drawing.Collection
 {
     class CommandList
     {
         #region data
 
-        private Byte[] _Buffer;
+        private byte[] _Buffer;
         private int _Count;
 
-        private List<Object> _References;
+        private List<object> _References;
 
         #endregion
 
@@ -19,9 +21,9 @@ namespace InteropDrawing.Collection
 
         public int Count => _Count;
 
-        public IReadOnlyList<Object> References => _References;
+        public IReadOnlyList<object> References => _References;
 
-        public ReadOnlySpan<Byte> Buffer => _Buffer == null ? ReadOnlySpan<Byte>.Empty : _Buffer.AsSpan(0, _Count);
+        public ReadOnlySpan<byte> Buffer => _Buffer == null ? ReadOnlySpan<byte>.Empty : _Buffer.AsSpan(0, _Count);
 
         #endregion
 
@@ -31,20 +33,20 @@ namespace InteropDrawing.Collection
 
         public void Set(CommandList other)
         {
-            if (other._Buffer == null) { this._Buffer = null; _Count = 0; }
+            if (other._Buffer == null) { _Buffer = null; _Count = 0; }
             else
             {
-                Array.Resize(ref this._Buffer, other._Buffer.Length);
-                other._Buffer.CopyTo(this._Buffer, 0);
-                this._Count = other._Count;
+                Array.Resize(ref _Buffer, other._Buffer.Length);
+                other._Buffer.CopyTo(_Buffer, 0);
+                _Count = other._Count;
             }
 
-            if (other._References == null) { this._References = null; }
+            if (other._References == null) { _References = null; }
             else
             {
-                this._References.Clear();
-                this._References.AddRange(other._References);
-            }            
+                _References.Clear();
+                _References.AddRange(other._References);
+            }
         }
 
         public IEnumerable<int> GetCommands()
@@ -53,13 +55,13 @@ namespace InteropDrawing.Collection
 
             while (offset < Count)
             {
-                var length = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(_Buffer.AsSpan(offset, 4));                
+                var length = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(_Buffer.AsSpan(offset, 4));
                 yield return offset;
                 offset += length + 4;
             }
         }
 
-        public Span<Byte> AddChunk(int byteSize)
+        public Span<byte> AddChunk(int byteSize)
         {
             if ((_Buffer?.Length ?? 0) - _Count < byteSize)
             {
@@ -73,7 +75,7 @@ namespace InteropDrawing.Collection
         }
 
         public Span<T> AddChunk<T>(int byteSize)
-            where T:unmanaged
+            where T : unmanaged
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, T>(AddChunk(byteSize));
         }
@@ -95,16 +97,16 @@ namespace InteropDrawing.Collection
             where T : unmanaged
         {
             var chunk = AddChunk(sizeof(T) + 8);
-            var header = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, int>(chunk.Slice(0, 8));
+            var header = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(chunk.Slice(0, 8));
             header[0] = 4 + sizeof(T);
             header[1] = headerType;
             return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, T>(chunk.Slice(8));
         }
 
         public void AddValue(int value)
-        {            
+        {
             System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(AddChunk(4), value);
-        }        
+        }
 
         public void AddArray(ReadOnlySpan<System.Numerics.Vector2> array)
         {
@@ -135,21 +137,21 @@ namespace InteropDrawing.Collection
         public int AddReference(object o)
         {
             if (_References == null) _References = new List<object>();
-            
+
             _References.Add(o);
             return _References.Count - 1;
-        }        
+        }
 
         public int GetContentHashCode()
         {
-            var buffer = this.Buffer;
+            var buffer = Buffer;
             var ints = buffer.Slice(0, buffer.Length & ~3);
             if (ints.IsEmpty) return 0;
             int h = 0;
-            foreach(var item in ints) { h += item; h *= 17; }
+            foreach (var item in ints) { h += item; h *= 17; }
             return h;
         }
 
         #endregion
-    }    
+    }
 }

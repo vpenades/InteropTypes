@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using InteropTypes.Graphics.Drawing;
 
-using InteropDrawing;
-
-using XY = System.Numerics.Vector2;
-using POINT = InteropDrawing.Point2;
+using POINT = InteropTypes.Graphics.Drawing.Point2;
 
 using SCORE = InteropVision.Score;
-using RECTI = System.Drawing.Rectangle;
-using RECTF = System.Drawing.RectangleF;
 using COLOR = System.Drawing.Color;
 
 namespace InteropVision

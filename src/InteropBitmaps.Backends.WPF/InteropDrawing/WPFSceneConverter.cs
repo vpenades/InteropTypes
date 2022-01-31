@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
+using InteropTypes.Graphics.Drawing;
+
 namespace InteropDrawing.Backends
 {
     /// <summary>

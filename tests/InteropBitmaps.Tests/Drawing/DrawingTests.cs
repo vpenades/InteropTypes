@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
+using InteropTypes.Graphics.Drawing;
 
 using NUnit.Framework;
-
-using InteropDrawing;
-using System.Numerics;
 
 namespace InteropBitmaps.Drawing
 {

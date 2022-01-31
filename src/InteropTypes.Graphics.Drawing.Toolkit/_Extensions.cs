@@ -9,7 +9,8 @@ using XYZW = System.Numerics.Vector4;
 using PLANE = System.Numerics.Plane;
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+
+namespace InteropTypes.Graphics.Drawing
 {
     [System.ComponentModel.Browsable(false)]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -215,17 +216,38 @@ namespace InteropDrawing
 
         public static int ClipPolygonToPlane(this in PLANE plane, Span<Point3> outVertices, ReadOnlySpan<Point3> inVertices)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return Parametric.PolygonClipper3.ClipPolygonToPlane(Point3.AsNumerics(outVertices), Point3.AsNumerics(inVertices), plane);
+After:
+            return PolygonClipper3.ClipPolygonToPlane(Point3.AsNumerics(outVertices), Point3.AsNumerics(inVertices), plane);
+*/
+            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipPolygonToPlane(Point3.AsNumerics(outVertices), Point3.AsNumerics(inVertices), plane);
         }
 
         public static int ClipPolygonToPlane(this in PLANE plane, Span<XYZ> outVertices, ReadOnlySpan<XYZ> inVertices)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return Parametric.PolygonClipper3.ClipPolygonToPlane(outVertices, inVertices, plane);
+After:
+            return PolygonClipper3.ClipPolygonToPlane(outVertices, inVertices, plane);
+*/
+            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipPolygonToPlane(outVertices, inVertices, plane);
         }
 
         public static int ClipPolygonToPlane(this in PLANE plane, Span<XYZW> outVertices, ReadOnlySpan<XYZW> inVertices)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return Parametric.PolygonClipper4.ClipPolygonToPlane(outVertices, inVertices, plane);
+After:
+            return PolygonClipper4.ClipPolygonToPlane(outVertices, inVertices, plane);
+*/
+            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper4.ClipPolygonToPlane(outVertices, inVertices, plane);
         }
 
         /// <summary>
@@ -237,12 +259,26 @@ namespace InteropDrawing
         /// <returns>true if the line is totally or partially in the positive side of the plane</returns>
         public static bool ClipLineToPlane(this in PLANE plane, ref XYZ a, ref XYZ b)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return Parametric.PolygonClipper3.ClipLineToPlane(ref a, ref b, plane);
+After:
+            return PolygonClipper3.ClipLineToPlane(ref a, ref b, plane);
+*/
+            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipLineToPlane(ref a, ref b, plane);
         }
 
         public static bool ClipLineToPlane(this in PLANE plane, ref XYZW a, ref XYZW b)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return Parametric.PolygonClipper4.ClipLineToPlane(ref a, ref b, plane);
+After:
+            return PolygonClipper4.ClipLineToPlane(ref a, ref b, plane);
+*/
+            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper4.ClipLineToPlane(ref a, ref b, plane);
         }
 
         #endregion

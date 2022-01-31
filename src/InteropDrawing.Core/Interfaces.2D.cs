@@ -6,9 +6,18 @@ using ASSET = System.Object;
 using SCALAR = System.Single;
 
 using XFORM2 = System.Numerics.Matrix3x2;
-using POINT2 = InteropDrawing.Point2;
 
-namespace InteropDrawing
+/* Unmerged change from project 'InteropDrawing.Core (netstandard2.1)'
+Before:
+using POINT2 = InteropDrawing.Point2;
+After:
+using POINT2 = InteropDrawing.Point2;
+using InteropDrawing;
+using InteropTypes.Graphics.Drawing;
+*/
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a drawing canvas where we can draw 2D convex polygons and images

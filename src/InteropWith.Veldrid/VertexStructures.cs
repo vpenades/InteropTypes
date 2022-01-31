@@ -16,7 +16,7 @@ namespace InteropWith
             return new Vertex2D(p, UInt32.MaxValue);
         }           
 
-        public Vertex2D(InteropDrawing.Point2 pos, UInt32 color)
+        public Vertex2D(InteropTypes.Graphics.Drawing.Point2 pos, UInt32 color)
         {
             Position = new Vector3(pos.X, pos.Y, -1);
             Color = color;

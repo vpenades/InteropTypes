@@ -1,9 +1,8 @@
 ﻿using System;
 
 using XYZ = System.Numerics.Vector3;
-using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing.Parametric
+namespace InteropTypes.Graphics.Drawing.Parametric
 {
     struct PlatonicFactory
     {
@@ -42,7 +41,7 @@ namespace InteropDrawing.Parametric
         #region data
 
         private XYZ _Center;
-        private Single _Radius;
+        private float _Radius;
         private ColorStyle _Color;
         private bool _FaceFlip;
 
@@ -54,7 +53,7 @@ namespace InteropDrawing.Parametric
 
         // https://en.wikipedia.org/wiki/Platonic_solid
 
-        public static void DrawTetrahedron(IPrimitiveScene3D dc, XYZ center, Single radius, int lod, ColorStyle color, Boolean faceFlip)
+        public static void DrawTetrahedron(IPrimitiveScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
         {
             if (lod < 0) return;
 
@@ -72,8 +71,8 @@ namespace InteropDrawing.Parametric
             ctx.DrawTriangle(lod, _TETRAVRT3, _TETRAVRT1, _TETRAVRT0);
             ctx.DrawTriangle(lod, _TETRAVRT3, _TETRAVRT2, _TETRAVRT1);
         }
-        
-        public static void DrawOctahedron(IPrimitiveScene3D dc, XYZ center, Single radius, int lod, ColorStyle color, Boolean faceFlip)
+
+        public static void DrawOctahedron(IPrimitiveScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
         {
             if (lod < 0) return;
 
@@ -99,8 +98,8 @@ namespace InteropDrawing.Parametric
             ctx.DrawTriangle(lod, -XYZ.UnitX, -XYZ.UnitY, -XYZ.UnitZ);
             ctx.DrawTriangle(lod, -XYZ.UnitZ, -XYZ.UnitY, XYZ.UnitX);
         }
-        
-        public static void DrawIcosahedron(IPrimitiveScene3D dc, XYZ center, Single radius, int lod, ColorStyle color, Boolean faceFlip)
+
+        public static void DrawIcosahedron(IPrimitiveScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
         {
             if (lod < 0) return;
 

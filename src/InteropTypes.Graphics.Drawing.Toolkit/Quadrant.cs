@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// The axes of a two-dimensional Cartesian system divide the plane into four infinite regions,
@@ -13,7 +13,7 @@ namespace InteropDrawing
     /// </remarks>
     [Flags]
     public enum Quadrant
-    {        
+    {
         Origin = 0,
 
         Top = 1,
@@ -24,21 +24,21 @@ namespace InteropDrawing
         /// <summary>
         /// Quadrant I
         /// </summary>
-        TopRight = Top|Right,
+        TopRight = Top | Right,
 
         /// <summary>
         /// Quadrant II
         /// </summary>
-        TopLeft = Top|Left,
+        TopLeft = Top | Left,
 
         /// <summary>
         /// Quadrant III
         /// </summary>
-        BottomLeft = Bottom|Left,
+        BottomLeft = Bottom | Left,
 
         /// <summary>
         /// Quadrant IV
         /// </summary>
-        BottomRight = Bottom|Right
+        BottomRight = Bottom | Right
     }
 }

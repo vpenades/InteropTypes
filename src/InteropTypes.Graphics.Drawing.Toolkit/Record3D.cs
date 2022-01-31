@@ -5,8 +5,7 @@ using System.Numerics;
 using XYZ = System.Numerics.Vector3;
 using BBOX = System.Numerics.Matrix3x2; // Column 0 is Min, Column 1 is Max
 
-
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
 
     /// <summary>
@@ -26,7 +25,7 @@ namespace InteropDrawing
         #region properties
 
         internal IEnumerable<int> Commands => _Commands.GetCommands();
-        
+
 
         /// <summary>
         /// This value does not change as long as the content of <see cref="Record3D"/> doesn't change either.
@@ -35,7 +34,7 @@ namespace InteropDrawing
         /// <see cref="ImmutableKey"/> can be used as a Dictionary Key so a client backend can create an optimized
         /// renderable resource to be used in place of this <see cref="Record3D"/>
         /// </remarks>
-        public Object ImmutableKey
+        public object ImmutableKey
         {
             get
             {
@@ -56,8 +55,8 @@ namespace InteropDrawing
             }
         }
 
-        
-        public (XYZ Center,Single Radius) BoundingSphere
+
+        public (XYZ Center, float Radius) BoundingSphere
         {
             get
             {
@@ -82,7 +81,7 @@ namespace InteropDrawing
         {
             _ImmutableKey = null;
 
-            _Commands.Clear();            
+            _Commands.Clear();
         }
 
         /// <inheritdoc/>        
@@ -102,14 +101,14 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public void DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle style)
+        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)
         {
             _ImmutableKey = null;
             _Commands.DrawSegment(a, b, diameter, style);
         }
 
         /// <inheritdoc/>
-        public void DrawSphere(Point3 center, Single diameter, OutlineFillStyle style)
+        public void DrawSphere(Point3 center, float diameter, OutlineFillStyle style)
         {
             _ImmutableKey = null;
             _Commands.DrawSphere(center, diameter, style);
@@ -136,24 +135,38 @@ namespace InteropDrawing
             {
                 _Commands.DrawTo(offset, dc, false);
             }
-        }        
+        }
 
         public void DrawTo(ICanvas2D target, float width, float height, XYZ cameraPosition, bool perspective = true)
         {
-            var bounds = this.BoundingMatrix;
+            var bounds = BoundingMatrix;
             var dimensions = bounds.ColumnY() - bounds.ColumnX();
 
             var avgsize = (dimensions.X + dimensions.Y + dimensions.Z) / 3;
 
             var cameraWTF = CreateWorldMatrix(cameraPosition, bounds.MinMaxCenter(), avgsize * 2);
 
+
+            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+            Before:
+                        var context = Transforms.PerspectiveTransform.CreatePerspective((target, width, height), 1.2f, cameraWTF);
+            After:
+                        var context = PerspectiveTransform.CreatePerspective((target, width, height), 1.2f, cameraWTF);
+            */
             var context = Transforms.PerspectiveTransform.CreatePerspective((target, width, height), 1.2f, cameraWTF);
 
-            context.DrawScene(this);            
+            context.DrawScene(this);
         }
 
         public void DrawTo((ICanvas2D target, float width, float height) renderTarget, Matrix4x4 camera, Matrix4x4 projection)
         {
+
+            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+            Before:
+                        var context = Transforms.PerspectiveTransform.Create(renderTarget, projection, camera);
+            After:
+                        var context = PerspectiveTransform.Create(renderTarget, projection, camera);
+            */
             var context = Transforms.PerspectiveTransform.Create(renderTarget, projection, camera);
 
             context.DrawScene(this);
@@ -174,9 +187,9 @@ namespace InteropDrawing
 
         public void CopyTo(Record3D other)
         {
-            other._Commands.Set(this._Commands);
+            other._Commands.Set(_Commands);
             other._ImmutableKey = null;
-        }        
+        }
 
         #endregion
     }
@@ -213,7 +226,7 @@ namespace InteropDrawing
         private int? _ContentHash;
 
         private (XYZ Min, XYZ Max)? _BoundingBox;
-        private (XYZ Center, Single Radius)? _BoundingSphere;
+        private (XYZ Center, float Radius)? _BoundingSphere;
 
         private (int, int, int, System.Drawing.Color)[] _Triangles;
 
@@ -251,7 +264,7 @@ namespace InteropDrawing
                 return h;
             }
         }
-        
+
         public (XYZ Min, XYZ Max) BoundingBox
         {
             get
@@ -264,9 +277,9 @@ namespace InteropDrawing
 
                 return _BoundingBox.Value;
             }
-        }       
+        }
 
-        public (XYZ Center, Single Radius) BoundingSphere
+        public (XYZ Center, float Radius) BoundingSphere
         {
             get
             {
@@ -288,5 +301,5 @@ namespace InteropDrawing
         }
 
         #endregion
-    }    
+    }
 }

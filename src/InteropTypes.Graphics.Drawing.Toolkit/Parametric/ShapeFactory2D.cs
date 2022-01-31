@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 
 using VECTOR2 = System.Numerics.Vector2;
-using POINT2 = InteropDrawing.Point2;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 using XFORM2 = System.Numerics.Matrix3x2;
 
-namespace InteropDrawing.Parametric
+namespace InteropTypes.Graphics.Drawing.Parametric
 {
     static class ShapeFactory2D
     {
         #region ellipse
-        public static void FillEllipseVertices(this Span<Point2> dstVertices, Point2 center, float width, float height)
+        public static void FillEllipseVertices(this Span<POINT2> dstVertices, POINT2 center, float width, float height)
         {
             // radius
             width *= 0.5f;
@@ -19,14 +19,14 @@ namespace InteropDrawing.Parametric
 
             for (int i = 0; i < dstVertices.Length; ++i)
             {
-                var angle = (float)i / (float)dstVertices.Length;
+                var angle = i / (float)dstVertices.Length;
 
                 angle *= MathF.PI * 2;
 
                 var x = MathF.Cos(angle) * width;
                 var y = MathF.Sin(angle) * height;
 
-                dstVertices[i] = center + new Point2(x, y);
+                dstVertices[i] = center + new POINT2(x, y);
             }
         }
 
@@ -167,7 +167,7 @@ namespace InteropDrawing.Parametric
         {
             for (int i = 1; i < count; ++i)
             {
-                var factor = (float)i / (float)count;
+                var factor = i / (float)count;
                 var radians = rad0 * (1 - factor) + rad1 * factor;
 
                 var x = MathF.Cos(radians);
@@ -182,7 +182,7 @@ namespace InteropDrawing.Parametric
 
         public static int GetLinesSegmentsVerticesCount(int pointsCount, bool closed) => 4 * pointsCount + (closed ? 0 : -4);
 
-        public static void FillLinesSegments(this Span<Point2> segments, ReadOnlySpan<Point2> points, Single diameter, bool closed)
+        public static void FillLinesSegments(this Span<POINT2> segments, ReadOnlySpan<POINT2> points, float diameter, bool closed)
         {
 
             // create segments
@@ -214,7 +214,7 @@ namespace InteropDrawing.Parametric
             // Todo: if one segment reverses direction in one side, simply merge the two vertices.            
         }
 
-        private static void _WeldSegmentsVertices(Span<Point2> segments, int lidx, int ridx, float diameter)
+        private static void _WeldSegmentsVertices(Span<POINT2> segments, int lidx, int ridx, float diameter)
         {
             var left = segments.Slice(lidx * 4 + 2, 2);
             var right = segments.Slice(ridx * 4, 2);
@@ -229,7 +229,7 @@ namespace InteropDrawing.Parametric
             right[0] = left[1] = c + d;
         }
 
-        private static void _FillSegmentVertices(Span<Point2> dst, Point2 a, Point2 b, Single diameter)
+        private static void _FillSegmentVertices(Span<POINT2> dst, POINT2 a, POINT2 b, float diameter)
         {
             var aa = a.ToNumerics();
             var bb = b.ToNumerics();
@@ -258,7 +258,7 @@ namespace InteropDrawing.Parametric
             }
         }
 
-        public static void FillLineCapVertices(Span<Point2> dst, int dstIdx, VECTOR2 p, VECTOR2 axisX, Single diameter, LineCapStyle style)
+        public static void FillLineCapVertices(Span<POINT2> dst, int dstIdx, VECTOR2 p, VECTOR2 axisX, float diameter, LineCapStyle style)
         {
             var axisY = new VECTOR2(axisX.Y, -axisX.X);
 

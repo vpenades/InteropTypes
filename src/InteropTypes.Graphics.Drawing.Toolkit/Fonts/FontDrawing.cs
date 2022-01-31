@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
-namespace InteropDrawing.Fonts
+namespace InteropTypes.Graphics.Drawing.Fonts
 {
     static class FontDrawing
     {
@@ -11,7 +9,7 @@ namespace InteropDrawing.Fonts
         {
             var offset = xform.Translation;
 
-            foreach(var c in text)
+            foreach (var c in text)
             {
                 DrawGlyphAsLines(dc, xform, ref offset, c, color);
             }
@@ -27,7 +25,7 @@ namespace InteropDrawing.Fonts
             }
         }
 
-        public static void DrawGlyphAsLines(ICanvas2D dc, in Matrix3x2 xform, ref Vector2 offset, Char character, FontStyle color)
+        public static void DrawGlyphAsLines(ICanvas2D dc, in Matrix3x2 xform, ref Vector2 offset, char character, FontStyle color)
         {
             string glyphCode = VectorFonts.GetSimplexCode(character);
 
@@ -43,14 +41,14 @@ namespace InteropDrawing.Fonts
             void _drawPath(ReadOnlySpan<Point2> points)
             {
                 dc.DrawLines(points, color.Strength, color.Style.FillColor);
-            }            
+            }
 
-            glyph.DrawPaths(xformFinal, _drawPath);            
+            glyph.DrawPaths(xformFinal, _drawPath);
 
             offset += Vector2.TransformNormal(new Vector2(glyph.Right, 0), xformFinal);
         }
 
-        public static void DrawGlyphAsLines(IScene3D dc, in Matrix4x4 xform, ref Vector3 offset, Char character, FontStyle color)
+        public static void DrawGlyphAsLines(IScene3D dc, in Matrix4x4 xform, ref Vector3 offset, char character, FontStyle color)
         {
             string glyphCode = VectorFonts.GetSimplexCode(character);
 
@@ -73,8 +71,8 @@ namespace InteropDrawing.Fonts
             offset += Vector3.TransformNormal(new Vector3(glyph.Right, 0, 0), xform);
         }
 
-        
 
-        
+
+
     }
 }

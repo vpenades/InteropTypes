@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Drawing;
+
 using Microsoft.Xna.Framework.Graphics;
 
 using XNACOLOR = Microsoft.Xna.Framework.Color;
@@ -11,7 +13,7 @@ namespace InteropDrawing.Backends
     public interface IMonoGameDrawing2D :
         IDisposableCanvas2D,
         IBackendViewportInfo,
-        Transforms.ITransformer2D,
+        ITransformer2D,
         IServiceProvider
     {
         void Begin(int virtualWidth, int virtualHeight, bool keepAspect);

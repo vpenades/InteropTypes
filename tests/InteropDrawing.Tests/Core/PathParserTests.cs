@@ -5,6 +5,8 @@ using System.Text;
 
 using InteropDrawing.Backends;
 
+using InteropTypes.Graphics.Drawing;
+
 using NUnit.Framework;
 
 namespace InteropDrawing

@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 
+using InteropTypes.Graphics.Drawing;
+
 using RENDERTARGET = System.Windows.Media.Imaging.RenderTargetBitmap;
 
 namespace InteropDrawing.Backends

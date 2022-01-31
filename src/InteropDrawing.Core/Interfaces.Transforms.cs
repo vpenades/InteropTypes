@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing
 {
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace InteropDrawing.Transforms
         /// Transforms the given scalars from virtual space to screen space.
         /// </summary>
         /// <param name="scalars"></param>
-        void TransformScalarsForward(Span<Single> scalars);
+        void TransformScalarsForward(Span<float> scalars);
 
         /// <summary>
         /// Transforms the given points from screen space to virtual space.
@@ -47,6 +47,6 @@ namespace InteropDrawing.Transforms
         /// Transforms the given scalars from virtual space to screen space.
         /// </summary>
         /// <param name="scalars"></param>
-        void TransformScalarsInverse(Span<Single> scalars);
+        void TransformScalarsInverse(Span<float> scalars);
     }
 }

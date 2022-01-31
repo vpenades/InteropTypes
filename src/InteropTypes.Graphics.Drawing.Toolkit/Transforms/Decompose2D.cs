@@ -5,13 +5,9 @@ using System.Text;
 
 using ASSET = System.Object;
 using SCALAR = System.Single;
-using POINT2 = InteropDrawing.Point2;
-using VECTOR2 = System.Numerics.Vector2;
-using System.Drawing;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
-using COLOR = System.Drawing.Color;
-
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     /// <summary>
     /// Represents a drawing canvas filter that translates complex vector drawing calls into basic convex polygons.

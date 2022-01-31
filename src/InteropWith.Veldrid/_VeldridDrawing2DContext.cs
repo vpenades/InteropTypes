@@ -5,6 +5,8 @@ using System.Text;
 
 using InteropDrawing;
 
+using InteropTypes.Graphics.Drawing;
+
 using Veldrid;
 
 namespace InteropWith
@@ -68,7 +70,7 @@ namespace InteropWith
 
         #region core API
 
-        private InteropDrawing.Transforms.Decompose2D _Collapsed2D => new InteropDrawing.Transforms.Decompose2D(this);
+        private InteropTypes.Graphics.Drawing.Transforms.Decompose2D _Collapsed2D => new InteropTypes.Graphics.Drawing.Transforms.Decompose2D(this);
 
         public unsafe void AddConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {

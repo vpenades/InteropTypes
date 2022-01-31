@@ -6,8 +6,10 @@ using System.Text;
 
 using NUnit.Framework;
 
-using POINT2 = InteropDrawing.Point2;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 using COLOR = System.Drawing.Color;
+using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Drawing.Transforms;
 
 namespace InteropDrawing
 {
@@ -60,7 +62,7 @@ namespace InteropDrawing
             {
                 var dstScene = new Record3D();
 
-                srcScene.DrawTo(new Transforms.PlaneClip3D(dstScene, new Plane(Vector3.UnitX, i)));
+                srcScene.DrawTo(new PlaneClip3D(dstScene, new Plane(Vector3.UnitX, i)));
 
                 dstScene.AttachToCurrentTest($"{sceneName}_{i}.glb");
                 dstScene.AttachToCurrentTest($"{sceneName}_{i}.html");
@@ -183,7 +185,7 @@ namespace InteropDrawing
 
             using (var dc = renderTarget.OpenDrawingContext())
             {
-                var perspective = Transforms.PerspectiveTransform.CreateLookingAtCenter((dc, 1024, 1024), (10, 5, 30));
+                var perspective = InteropTypes.Graphics.Drawing.Transforms.PerspectiveTransform.CreateLookingAtCenter((dc, 1024, 1024), (10, 5, 30));
                 perspective.DrawScene(scene);
             }
 
@@ -284,14 +286,14 @@ namespace InteropDrawing
 
             x = 100; dc.DrawFont((x, 30), texts, "Polygonized", FontStyle.VFlip_Gray.With(COLOR.White));
 
-            var dc2x = new Transforms.Decompose2D(dc);
+            var dc2x = new Decompose2D(dc);
 
             dc2x.DrawEllipse((x, 50), 10, 10, COLOR.Yellow);
             dc2x.DrawEllipse((x, 100), 10, 10, (COLOR.Yellow, COLOR.Red, 5));
             dc2x.DrawLines(new[] { new POINT2(x, 150), new POINT2(x, 200) }, 10, l1style);
             dc2x.DrawLines(new[] { new POINT2(x, 250), new POINT2(x, 300) }, 10, l2style);
 
-            var dc3d = Transforms.Drawing2DTransform.Create(dc, Matrix3x2.Identity);
+            var dc3d = Drawing2DTransform.Create(dc, Matrix3x2.Identity);
 
             x = 150; dc.DrawFont((x, 30), texts, "3D", FontStyle.VFlip_Gray.With(COLOR.White));
 
@@ -302,7 +304,7 @@ namespace InteropDrawing
 
             x = 200; dc.DrawFont((x, 30), texts, "3D Polygonized", FontStyle.VFlip_Gray.With(COLOR.White));
 
-            var dc3x = new Transforms.Decompose3D(dc3d, 5, 3);
+            var dc3x = new Decompose3D(dc3d, 5, 3);
             dc3x.DrawSphere(new Vector3(x, 50, 0), 10, COLOR.Yellow);
             dc3x.DrawSphere(new Vector3(x, 100, 0), 10, (COLOR.Yellow, COLOR.Red, 5));
             dc3x.DrawSegment(new Vector3(x, 150, 0), new Vector3(x, 200, 0), 10, l1style);

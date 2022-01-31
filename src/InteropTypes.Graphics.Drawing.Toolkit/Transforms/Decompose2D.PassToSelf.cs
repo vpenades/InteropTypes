@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using ASSET = System.Object;
-using SCALAR = System.Single;
-using POINT2 = InteropDrawing.Point2;
-using VECTOR2 = System.Numerics.Vector2;
-using System.Drawing;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
-using COLOR = System.Drawing.Color;
-
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose2D
     {
@@ -41,7 +35,14 @@ namespace InteropDrawing.Transforms
             /// <inheritdoc/>
             public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, in LineStyle style)
             {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
                 if (this is Backends.IDrawingBackend2D backend) Decompose2D.DrawLines(backend, points, diameter, style);
+After:
+                if (this is IDrawingBackend2D backend) Decompose2D.DrawLines(backend, points, diameter, style);
+*/
+                if (this is InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D backend) Decompose2D.DrawLines(backend, points, diameter, style);
                 else Decompose2D.DrawLines(this, points, diameter, style);
             }
 

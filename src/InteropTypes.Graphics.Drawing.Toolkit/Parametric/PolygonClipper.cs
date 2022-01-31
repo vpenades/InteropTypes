@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropDrawing.Parametric
+namespace InteropTypes.Graphics.Drawing.Parametric
 {
-    
+
     /// <summary>
     /// Utility used to clip a polygon against a plane.
     /// </summary>    
@@ -55,13 +55,13 @@ namespace InteropDrawing.Parametric
 
             if (aw < 0)
             {
-                var u = (bw - aw);
+                var u = bw - aw;
                 u = bw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) a = Vector3.Lerp(b, a, u);// so we only clamp when u is within bounds                    
             }
             else if (bw < 0)
             {
-                var u = (aw - bw);
+                var u = aw - bw;
                 u = aw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) b = Vector3.Lerp(a, b, u); // so we only clamp when u is within bounds
             }
@@ -69,7 +69,7 @@ namespace InteropDrawing.Parametric
             if (a == b) return false;
 
             return true;
-        }        
+        }
 
         private PolygonClipper3(Span<Vector3> vertices)
         {
@@ -145,13 +145,13 @@ namespace InteropDrawing.Parametric
 
             if (aw < 0)
             {
-                var u = (bw - aw);
+                var u = bw - aw;
                 u = bw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) a = Vector4.Lerp(b, a, u);// so we only clamp when u is within bounds                    
             }
             else if (bw < 0)
             {
-                var u = (aw - bw);
+                var u = aw - bw;
                 u = aw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) b = Vector4.Lerp(a, b, u); // so we only clamp when u is within bounds
             }

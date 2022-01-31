@@ -6,6 +6,8 @@ using InteropBitmaps;
 
 using InteropDrawing;
 
+using InteropTypes.Graphics.Drawing;
+
 using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;

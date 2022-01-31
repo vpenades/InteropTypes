@@ -5,6 +5,7 @@ using System.Numerics;
 using COLOR = System.Drawing.Color;
 using BRUSH = System.Drawing.Brush;
 using IMAGE = System.Drawing.Image;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropDrawing.Backends
 {
@@ -97,7 +98,7 @@ namespace InteropDrawing.Backends
         /// <inheritdoc/>
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
         {
-            new Transforms.Decompose2D(this).DrawAsset(transform, asset, color);
+            new InteropTypes.Graphics.Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset, color);
         }
 
         /// <inheritdoc/>

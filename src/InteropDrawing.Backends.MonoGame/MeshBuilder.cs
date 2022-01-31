@@ -10,12 +10,13 @@ using XYZ = System.Numerics.Vector3;
 using COLOR = System.Drawing.Color;
 
 using VERTEX = Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropDrawing.Backends
 {
     partial class MeshBuilder :
         IPrimitiveScene3D,
-        Backends.IDrawingBackend2D
+        InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D
     {
         #region lifecycle
 

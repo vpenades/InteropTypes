@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using InteropTypes.Graphics.Drawing;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,7 +10,9 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing.Backends
 {
-    class MonoGameDrawing2D : Transforms.Decompose2D.PassImageThrough,  IMonoGameDrawing2D
+    class MonoGameDrawing2D :
+        InteropTypes.Graphics.Drawing.Transforms.Decompose2D.PassImageThrough,
+        IMonoGameDrawing2D
     {
         #region lifecycle
 

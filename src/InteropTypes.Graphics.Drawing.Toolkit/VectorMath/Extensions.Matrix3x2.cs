@@ -4,7 +4,7 @@ using System.Text;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     static partial class _SystemNumericsExtensions
     {

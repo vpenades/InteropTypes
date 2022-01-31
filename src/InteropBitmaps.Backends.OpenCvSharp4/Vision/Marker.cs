@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using POINT = InteropDrawing.Point2;
+using POINT = InteropTypes.Graphics.Drawing.Point2;
 
 namespace InteropVision
 {

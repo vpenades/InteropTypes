@@ -4,7 +4,8 @@ using System.Numerics;
 using System.Text;
 
 using InteropBitmaps;
-using InteropDrawing;
+
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropVision
 {

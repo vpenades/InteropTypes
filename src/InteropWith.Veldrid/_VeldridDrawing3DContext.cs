@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropDrawing;
+using InteropTypes.Graphics.Drawing;
 
 using Veldrid;
 
@@ -181,7 +181,7 @@ namespace InteropWith
             _FillColor = color;
         }
 
-        private InteropDrawing.Transforms.Decompose3D _Collapsed3D => new InteropDrawing.Transforms.Decompose3D(this);
+        private InteropTypes.Graphics.Drawing.Transforms.Decompose3D _Collapsed3D => new InteropTypes.Graphics.Drawing.Transforms.Decompose3D(this);
 
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
         {

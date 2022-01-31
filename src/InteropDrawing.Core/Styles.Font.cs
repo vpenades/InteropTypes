@@ -4,7 +4,7 @@ using System.Text;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents the style of a Font. <see cref="FontStyle"/>.
@@ -44,9 +44,9 @@ namespace InteropDrawing
 
         public static implicit operator FontStyle(COLOR fillColor) { return new FontStyle(fillColor); }
 
-        public static implicit operator FontStyle((COLOR, Single) style) { return new FontStyle(style.Item1, style.Item2); }
+        public static implicit operator FontStyle((COLOR, float) style) { return new FontStyle(style.Item1, style.Item2); }
 
-        public static implicit operator FontStyle((COLOR, Single, FontAlignStyle) style) { return new FontStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator FontStyle((COLOR, float, FontAlignStyle) style) { return new FontStyle(style.Item1, style.Item2, style.Item3); }
 
         #endregion
 
@@ -71,7 +71,7 @@ namespace InteropDrawing
         #region data
 
         public readonly OutlineFillStyle Style;
-        public readonly Single Strength;
+        public readonly float Strength;
         public readonly FontAlignStyle Alignment;
 
         #endregion
@@ -102,17 +102,17 @@ namespace InteropDrawing
         public static readonly FontStyle VFlip_Green = _VFlip.With(COLOR.Green);
         public static readonly FontStyle VFlip_Blue = _VFlip.With(COLOR.Blue);
 
-        public FontStyle With(OutlineFillStyle style) { return new FontStyle(style, this.Strength, this.Alignment); }
+        public FontStyle With(OutlineFillStyle style) { return new FontStyle(style, Strength, Alignment); }
 
-        public FontStyle With(OutlineFillStyle style, float strength) { return new FontStyle(style, strength, this.Alignment); }
+        public FontStyle With(OutlineFillStyle style, float strength) { return new FontStyle(style, strength, Alignment); }
 
-        public FontStyle With(Single strength) { return new FontStyle(this.Style, strength, this.Alignment); }
+        public FontStyle With(float strength) { return new FontStyle(Style, strength, Alignment); }
 
         public FontStyle With(FontAlignStyle align)
         {
-            align |= this.Alignment;
+            align |= Alignment;
 
-            return new FontStyle(this.Style, this.Strength, align);
+            return new FontStyle(Style, Strength, align);
         }
 
         #endregion

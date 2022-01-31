@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Linq;
 using System.Text;
 
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     /// <summary>
     /// Creates a transformation that renders 3D content over a <see cref="ICanvas2D"/> surface.
@@ -37,7 +37,7 @@ namespace InteropDrawing.Transforms
         {
             var nearPlane = 0.1f;
 
-            var proj = Matrix4x4.CreatePerspectiveFieldOfView(projectionFOV, viewport.w / viewport.h, nearPlane, 1000);            
+            var proj = Matrix4x4.CreatePerspectiveFieldOfView(projectionFOV, viewport.w / viewport.h, nearPlane, 1000);
 
             return Create(viewport, proj, camera);
         }
@@ -63,7 +63,7 @@ namespace InteropDrawing.Transforms
             _Projection = projview;
             _ProjectionScale = new Vector3(projview.M12, projview.M22, projview.M32).Length(); // we only use the Y Axis to avoid problems with the AspectRatio
 
-            _ClipPlane = new Plane(Vector3.UnitZ, -nearPlane);            
+            _ClipPlane = new Plane(Vector3.UnitZ, -nearPlane);
 
             _Viewport = viewport;
             _ViewportScale = new Vector2(viewport.M12, viewport.M22).Length(); // we only use the Y Axis to avoid problems with the AspectRatio
@@ -79,12 +79,12 @@ namespace InteropDrawing.Transforms
 
         // http://xdpixel.com/decoding-a-projection-matrix/
         private readonly Matrix4x4 _Projection;
-        private readonly Single _ProjectionScale;        
+        private readonly float _ProjectionScale;
 
         private readonly Plane _ClipPlane;
 
         private readonly Matrix3x2 _Viewport;
-        private readonly Single _ViewportScale;
+        private readonly float _ViewportScale;
 
         private readonly Func<Vector2, Vector2> _Distorsion;
 
@@ -96,7 +96,7 @@ namespace InteropDrawing.Transforms
 
         /// <inheritdoc/>
         public object GetService(Type serviceType)
-        {            
+        {
             return this.TryGetService(serviceType, _RenderTarget);
         }
 
@@ -125,7 +125,7 @@ namespace InteropDrawing.Transforms
         }
 
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
-        {            
+        {
             var sphere = Toolkit.GetAssetBoundingSphere(asset);
 
             if (!sphere.HasValue)
@@ -138,7 +138,7 @@ namespace InteropDrawing.Transforms
 
             if (_ClipPlane.IsInPositiveSideOfPlane(center, radius))
             {
-                this.DrawAsset(transform, asset, brush);
+                DrawAsset(transform, asset, brush);
                 return;
             }
 
@@ -181,7 +181,7 @@ namespace InteropDrawing.Transforms
 
             Span<Vector4> projected = stackalloc Vector4[vertices.Length];
             for (int i = 0; i < projected.Length; ++i) projected[i] = GetProjection(vertices[i]);
-            
+
             if (_ClipPlane.IsInPositiveSideOfPlane(projected))
             {
                 _DrawProjectedPolygon(projected, brush);
@@ -227,7 +227,7 @@ namespace InteropDrawing.Transforms
             float www = 0;
 
             Span<Point2> perspective = stackalloc Point2[projected.Length];
-            for(int i=0; i < perspective.Length; ++i)
+            for (int i = 0; i < perspective.Length; ++i)
             {
                 var v = projected[i];
                 www += v.W;
@@ -241,7 +241,7 @@ namespace InteropDrawing.Transforms
             _RenderTarget.DrawPolygon(perspective, brush.Style);
         }
 
-        
+
         /// <summary>
         /// Draws the predefined scene using <see href="https://en.wikipedia.org/wiki/Painter%27s_algorithm"/>
         /// </summary>
@@ -299,7 +299,7 @@ namespace InteropDrawing.Transforms
 
             public int CompareTo(_SortableItem other)
             {
-                return this.Distance.CompareTo(other.Distance);
+                return Distance.CompareTo(other.Distance);
             }
         }
 

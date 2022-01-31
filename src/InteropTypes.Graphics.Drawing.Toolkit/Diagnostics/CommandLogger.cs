@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Numerics;
 using System.Text;
 
-namespace InteropDrawing.Diagnostics
+using InteropTypes.Graphics.Drawing;
+
+namespace InteropTypes.Graphics.Drawing.Diagnostics
 {
     public abstract class CommandLogger : ICanvas2D, IScene3D
     {
@@ -90,7 +92,7 @@ namespace InteropDrawing.Diagnostics
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
             Write($"Surface {vertices.Length} {brush}");
-        }        
+        }
 
         #endregion
 

@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 
 using COLOR = System.Drawing.Color;
 
+using InteropTypes.Graphics.Drawing;
+
 namespace InteropDrawing
 {
     public class Game1 : Game

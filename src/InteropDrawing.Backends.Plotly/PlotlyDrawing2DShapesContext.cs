@@ -13,6 +13,7 @@ using Plotly.Types;
 
 using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
 using System.Drawing;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropDrawing.Backends
 {

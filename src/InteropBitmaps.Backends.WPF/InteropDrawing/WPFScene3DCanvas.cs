@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+using InteropTypes.Graphics.Drawing;
+
 namespace InteropDrawing.Backends
 {
     public class WPFScene3DCanvas : System.Windows.Controls.Canvas

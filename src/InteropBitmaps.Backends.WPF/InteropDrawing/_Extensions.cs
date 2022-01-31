@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Drawing;
+
 using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing

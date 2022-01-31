@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
+using InteropTypes.Graphics.Drawing;
+
 using NUnit.Framework;
 
 namespace InteropDrawing.Backends.Plotly

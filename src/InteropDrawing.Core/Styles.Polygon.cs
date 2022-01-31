@@ -4,7 +4,7 @@ using System.Text;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a Fill Color, an Outline Color, and an Outline Size.
@@ -14,15 +14,15 @@ namespace InteropDrawing
     {
         #region constructors
 
-        public static implicit operator PolygonStyle(OutlineFillStyle style) { return new PolygonStyle(style.FillColor,style.OutlineColor, style.OutlineWidth); }
+        public static implicit operator PolygonStyle(OutlineFillStyle style) { return new PolygonStyle(style.FillColor, style.OutlineColor, style.OutlineWidth); }
 
         public static implicit operator PolygonStyle(COLOR fillColor) { return new PolygonStyle(fillColor); }
 
 
-        public static implicit operator PolygonStyle((COLOR, Single) style) { return new PolygonStyle(style.Item1, style.Item2); }
+        public static implicit operator PolygonStyle((COLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2); }
 
         // this operator can conflict with Color(r,g,b);
-        public static implicit operator PolygonStyle((COLOR, COLOR, Single) style) { return new PolygonStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator PolygonStyle((COLOR, COLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2, style.Item3); }
 
         public PolygonStyle(COLOR fillColor)
         {
@@ -31,14 +31,14 @@ namespace InteropDrawing
             OutlineWidth = 0;
         }
 
-        public PolygonStyle(COLOR outColor, Single outWidth)
+        public PolygonStyle(COLOR outColor, float outWidth)
         {
             _FillColor = COLOR.Transparent.ToArgb();
             _OutlineColor = outColor.ToArgb();
             OutlineWidth = outWidth;
         }
 
-        public PolygonStyle(COLOR fillColor, COLOR outColor, Single outWidth)
+        public PolygonStyle(COLOR fillColor, COLOR outColor, float outWidth)
         {
             _FillColor = fillColor.ToArgb();
             _OutlineColor = outColor.ToArgb();
@@ -49,9 +49,9 @@ namespace InteropDrawing
 
         #region data
 
-        private readonly Int32 _FillColor;
-        private readonly Int32 _OutlineColor;
-        public readonly Single OutlineWidth;
+        private readonly int _FillColor;
+        private readonly int _OutlineColor;
+        public readonly float OutlineWidth;
 
         public COLOR FillColor => COLOR.FromArgb(_FillColor);
         public COLOR OutlineColor => COLOR.FromArgb(_OutlineColor);
@@ -100,22 +100,22 @@ namespace InteropDrawing
 
         public PolygonStyle WithFill(COLOR fillColor)
         {
-            return new PolygonStyle(fillColor, this.OutlineColor, this.OutlineWidth);
+            return new PolygonStyle(fillColor, OutlineColor, OutlineWidth);
         }
 
-        public PolygonStyle WithOutline(COLOR outlineColor, Single ow)
+        public PolygonStyle WithOutline(COLOR outlineColor, float ow)
         {
-            return new PolygonStyle(this.FillColor, outlineColor, ow);
+            return new PolygonStyle(FillColor, outlineColor, ow);
         }
 
         public PolygonStyle WithOutline(COLOR outlineColor)
         {
-            return new PolygonStyle(this.FillColor, outlineColor, this.OutlineWidth);
+            return new PolygonStyle(FillColor, outlineColor, OutlineWidth);
         }
 
-        public PolygonStyle WithOutline(Single ow)
+        public PolygonStyle WithOutline(float ow)
         {
-            return new PolygonStyle(this.FillColor, this.OutlineColor, ow);
+            return new PolygonStyle(FillColor, OutlineColor, ow);
         }
 
         #endregion

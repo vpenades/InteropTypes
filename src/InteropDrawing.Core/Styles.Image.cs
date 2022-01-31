@@ -4,7 +4,7 @@ using System.Text;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents an image with a style applied to it.
@@ -16,7 +16,7 @@ namespace InteropDrawing
     {
         #region implicit
 
-        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, COLOR.White, false, false); }        
+        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, COLOR.White, false, false); }
 
         public static implicit operator ImageStyle((ImageAsset asset, COLOR color) args) { return new ImageStyle(args.asset, args.color, false, false); }
 
@@ -30,8 +30,8 @@ namespace InteropDrawing
 
         public ImageStyle(ImageAsset bitmap, COLOR color, bool flipHorizontal, bool flipVertical)
         {
-            this.Bitmap = bitmap;
-            this.Color = color;            
+            Bitmap = bitmap;
+            Color = color;
 
             _Orientation = Orientation.None;
             _Orientation |= flipHorizontal ? Orientation.FlipHorizontal : Orientation.None;
@@ -40,8 +40,8 @@ namespace InteropDrawing
 
         public ImageStyle(ImageAsset bitmap, COLOR color, int flags)
         {
-            this.Bitmap = bitmap;
-            this.Color = color;
+            Bitmap = bitmap;
+            Color = color;
 
             _Orientation = (Orientation)flags;
         }
@@ -74,13 +74,13 @@ namespace InteropDrawing
         public bool FlipHorizontal
         {
             get => _Orientation.HasFlag(Orientation.FlipHorizontal);
-            set => _Orientation = (_Orientation & ~Orientation.FlipHorizontal) | (value ? Orientation.FlipHorizontal : Orientation.None);
+            set => _Orientation = _Orientation & ~Orientation.FlipHorizontal | (value ? Orientation.FlipHorizontal : Orientation.None);
         }
 
         public bool FlipVertical
         {
             get => _Orientation.HasFlag(Orientation.FlipVertical);
-            set => _Orientation = (_Orientation & ~Orientation.FlipVertical) | (value ? Orientation.FlipVertical : Orientation.None);
+            set => _Orientation = _Orientation & ~Orientation.FlipVertical | (value ? Orientation.FlipVertical : Orientation.None);
         }
 
         public int Flags => (int)_Orientation;
@@ -89,15 +89,15 @@ namespace InteropDrawing
 
         #region API
 
-        public System.Numerics.Matrix3x2 Transform => Bitmap.GetImageMatrix(this._Orientation);
+        public System.Numerics.Matrix3x2 Transform => Bitmap.GetImageMatrix(_Orientation);
 
-        public System.Numerics.Matrix3x2 GetTransform() { return Bitmap.GetImageMatrix(this._Orientation); }        
+        public System.Numerics.Matrix3x2 GetTransform() { return Bitmap.GetImageMatrix(_Orientation); }
 
-        public void PrependTransform(ref System.Numerics.Matrix3x2 xform) { Bitmap.PrependTransform(ref xform, this._Orientation); }
+        public void PrependTransform(ref System.Numerics.Matrix3x2 xform) { Bitmap.PrependTransform(ref xform, _Orientation); }
 
         public System.Numerics.Matrix3x2 GetTransform(bool hflip, bool vflip)
         {
-            var o = this._Orientation;
+            var o = _Orientation;
             o ^= hflip ? Orientation.FlipHorizontal : Orientation.None;
             o ^= vflip ? Orientation.FlipVertical : Orientation.None;
 
@@ -106,7 +106,7 @@ namespace InteropDrawing
 
         public void PrependTransform(ref System.Numerics.Matrix3x2 xform, bool hflip, bool vflip)
         {
-            var o = this._Orientation;
+            var o = _Orientation;
             o ^= hflip ? Orientation.FlipHorizontal : Orientation.None;
             o ^= vflip ? Orientation.FlipVertical : Orientation.None;
 

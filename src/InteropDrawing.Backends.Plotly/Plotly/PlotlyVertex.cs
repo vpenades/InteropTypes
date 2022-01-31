@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-using POINT3 = InteropDrawing.Point3;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 using VECTOR3 = System.Numerics.Vector3;
 
 namespace Plotly

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
+using InteropTypes.Graphics.Drawing;
+
 using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 
 namespace InteropDrawing.Backends

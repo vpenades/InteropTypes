@@ -5,7 +5,9 @@ using System.Text;
 
 using InteropDrawing;
 
-using POINT = InteropDrawing.Point2;
+using InteropTypes.Graphics.Drawing;
+
+using POINT = InteropTypes.Graphics.Drawing.Point2;
 
 namespace InteropBitmaps
 {
@@ -41,7 +43,14 @@ namespace InteropBitmaps
             var xform = System.Numerics.Matrix3x2.CreateScale(sx, sy);
             xform.Translation = new System.Numerics.Vector2(tx, ty);
 
+
+/* Unmerged change from project 'InteropBitmaps.Drawing (netstandard2.1)'
+Before:
             return InteropDrawing.Transforms.Drawing2DTransform.Create(dc, xform);
+After:
+            return Drawing2DTransform.Create(dc, xform);
+*/
+            return InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(dc, xform);
         }
 
         public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap)

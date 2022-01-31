@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents an object that can be drawn to a <typeparamref name="TContext"/>
     /// </summary>
-    public interface IDrawingBrush<TContext>
+    public interface IDrawingBrush<in TContext>
     {
         /// <summary>
         /// Draws this object into the <typeparamref name="TContext"/> context.
@@ -13,7 +13,7 @@ namespace InteropDrawing
         /// <param name="context">The drawing context.</param>
         void DrawTo(TContext context);
     }
-    
+
     /// <summary>
     /// defines an objects that exposes a unique key that doesn't change as long as
     /// the object itself doesn't change, and can be used by other objects to determine
@@ -28,14 +28,14 @@ namespace InteropDrawing
     /// </example>
     public interface IPseudoImmutable
     {
-        Object ImmutableKey { get; }
+        object ImmutableKey { get; }
 
         // void InvalidateImmutableKey();
     }
 
 
 
-    
+
 
 
 }

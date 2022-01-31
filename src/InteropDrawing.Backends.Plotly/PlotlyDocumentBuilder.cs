@@ -7,6 +7,7 @@ using Plotly.Types;
 using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
 using System.Numerics;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropDrawing.Backends
 {

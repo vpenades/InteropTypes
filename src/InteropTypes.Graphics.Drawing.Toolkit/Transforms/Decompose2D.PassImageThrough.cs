@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using ASSET = System.Object;
-using SCALAR = System.Single;
-using POINT2 = InteropDrawing.Point2;
-using VECTOR2 = System.Numerics.Vector2;
-using System.Drawing;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
-using COLOR = System.Drawing.Color;
-
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose2D
     {
@@ -23,7 +17,14 @@ namespace InteropDrawing.Transforms
             #region data
 
             private IPrimitiveCanvas2D _Target;
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             private Backends.IDrawingBackend2D _Backend;
+After:
+            private IDrawingBackend2D _Backend;
+*/
+            private InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D _Backend;
 
             #endregion
 
@@ -37,7 +38,14 @@ namespace InteropDrawing.Transforms
             {
                 if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency.");
                 _Target = target;
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
                 _Backend = target as Backends.IDrawingBackend2D;
+After:
+                _Backend = target as IDrawingBackend2D;
+*/
+                _Backend = target as InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D;
             }
 
             /// <summary>

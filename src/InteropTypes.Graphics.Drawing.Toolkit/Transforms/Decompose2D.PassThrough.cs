@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using ASSET = System.Object;
-using SCALAR = System.Single;
-using POINT2 = InteropDrawing.Point2;
-using VECTOR2 = System.Numerics.Vector2;
-using System.Drawing;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
-using COLOR = System.Drawing.Color;
-
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose2D
     {

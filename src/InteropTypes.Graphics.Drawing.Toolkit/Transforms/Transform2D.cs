@@ -5,13 +5,13 @@ using System.Numerics;
 using System.Linq;
 using System.Drawing;
 
-namespace InteropDrawing.Transforms
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     public readonly struct Drawing2DTransform :
         ICanvas2D,
         IScene3D,
         ITransformer2D,
-        IServiceProvider        
+        IServiceProvider
     {
         #region constructors
 
@@ -35,7 +35,7 @@ namespace InteropDrawing.Transforms
             var xform = Matrix3x2.CreateTranslation(virtualCenter);
 
             return Create(t, physicalSize, virtualSize, xform);
-        }        
+        }
 
         public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
         {
@@ -85,15 +85,15 @@ namespace InteropDrawing.Transforms
 
         #region data
 
-        private readonly IPrimitiveCanvas2D _Target;        
-        private readonly ICanvas2D _TargetEx;        
+        private readonly IPrimitiveCanvas2D _Target;
+        private readonly ICanvas2D _TargetEx;
 
         // two way transform
 
         private readonly Matrix3x2 _TransformForward;
         private readonly Matrix3x2 _TransformInverse;
-        private readonly Single _TransformScaleForward;
-        private readonly Single _TransformScaleInverse;
+        private readonly float _TransformScaleForward;
+        private readonly float _TransformScaleInverse;
 
         #endregion
 
@@ -105,7 +105,7 @@ namespace InteropDrawing.Transforms
             return this.TryGetService(serviceType, _Target);
         }
 
-        private Single _GetTransformed(Single size) { return size <= 0 ? size : size * _TransformScaleForward; }
+        private float _GetTransformed(float size) { return size <= 0 ? size : size * _TransformScaleForward; }
 
         private Point2 _GetTransformed(Point2 point)
         {
@@ -156,14 +156,14 @@ namespace InteropDrawing.Transforms
         }
 
         /// <inheritdoc />
-        public void TransformScalarsForward(Span<Single> scalars)
+        public void TransformScalarsForward(Span<float> scalars)
         {
             for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleForward;
             if (_Target is ITransformer2D xform) xform.TransformScalarsForward(scalars);
         }
 
         /// <inheritdoc />
-        public void TransformScalarsInverse(Span<Single> scalars)
+        public void TransformScalarsInverse(Span<float> scalars)
         {
             if (_Target is ITransformer2D xform) xform.TransformScalarsInverse(scalars);
             for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleInverse;
@@ -183,7 +183,7 @@ namespace InteropDrawing.Transforms
             else
             {
                 // Decompose2D.DrawAsset(_Polygons, transform * _TransformForward, asset, brush);
-            }            
+            }
         }
 
         /// <inheritdoc/>
@@ -209,7 +209,7 @@ namespace InteropDrawing.Transforms
             }
             else
             {
-                Decompose2D.DrawPolygon(_Target, pp, brush.WithOutline(ow) );
+                Decompose2D.DrawPolygon(_Target, pp, brush.WithOutline(ow));
             }
         }
 
@@ -229,10 +229,10 @@ namespace InteropDrawing.Transforms
             {
                 Decompose2D.DrawLines(_Target, pp, strokeWidth, brush);
             }
-        }        
+        }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, Single w, Single h, in OutlineFillStyle brush)
+        public void DrawEllipse(Point2 center, float w, float h, in OutlineFillStyle brush)
         {
             center = _GetTransformed(center);
             w = _GetTransformed(w);
@@ -297,7 +297,7 @@ namespace InteropDrawing.Transforms
                 // TODO: check winding
             }
 
-            this.DrawPolygon(vvv, brush.Style);
+            DrawPolygon(vvv, brush.Style);
         }
 
         /// <inheritdoc/>
@@ -305,13 +305,13 @@ namespace InteropDrawing.Transforms
         {
             Span<Point2> vvv = stackalloc Point2[vertices.Length];
 
-            for (int i = 0; i < vvv.Length; ++i) vvv[i] = _GetTransformed(vertices[i]);           
+            for (int i = 0; i < vvv.Length; ++i) vvv[i] = _GetTransformed(vertices[i]);
 
             // todo: reverse winding if needed
 
-            this.DrawConvexPolygon(vvv, style);
+            DrawConvexPolygon(vvv, style);
         }
 
         #endregion
-    } 
+    }
 }

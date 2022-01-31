@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Linq;
 
 using XY = System.Numerics.Vector2;
-using COLOR = System.Drawing.Color;
 using RECT = System.Drawing.RectangleF;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model2DProxy))]
     public class Record2D : ICanvas2D, IDrawingBrush<ICanvas2D>, IPseudoImmutable
     {
         #region data
 
-        internal readonly _CommandStream2D _Commands = new _CommandStream2D();        
+        internal readonly _CommandStream2D _Commands = new _CommandStream2D();
 
         private Model2DVersionKey _ImmutableKey;
 
@@ -29,7 +27,7 @@ namespace InteropDrawing
         /// <see cref="ImmutableKey"/> can be used as a Dictionary Key so a client backend can create an optimized
         /// renderable resource to be used in place of this <see cref="Record3D"/>
         /// </remarks>
-        public Object ImmutableKey
+        public object ImmutableKey
         {
             get
             {
@@ -49,8 +47,8 @@ namespace InteropDrawing
             }
         }
 
-        
-        public (XY Center, Single Radius) BoundingCircle
+
+        public (XY Center, float Radius) BoundingCircle
         {
             get
             {
@@ -86,7 +84,7 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, Single width, in LineStyle brush)
+        public void DrawLines(ReadOnlySpan<Point2> points, float width, in LineStyle brush)
         {
             _ImmutableKey = null;
             _Commands.DrawLines(points, width, brush);
@@ -96,14 +94,14 @@ namespace InteropDrawing
         public void DrawEllipse(Point2 center, float w, float h, in OutlineFillStyle brush)
         {
             _ImmutableKey = null;
-            _Commands.DrawEllipse(center, w, h, brush);            
+            _Commands.DrawEllipse(center, w, h, brush);
         }
 
         /// <inheritdoc/>
         public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
         {
             _ImmutableKey = null;
-            _Commands.DrawPolygon(points, brush);            
+            _Commands.DrawPolygon(points, brush);
         }
 
         /// <inheritdoc/>
@@ -116,7 +114,7 @@ namespace InteropDrawing
         /// <inheritdoc/>
         public void DrawTo(ICanvas2D dc)
         {
-            foreach(var offset in _Commands.GetCommands())
+            foreach (var offset in _Commands.GetCommands())
             {
                 _Commands.DrawTo(offset, dc, false);
             }
@@ -124,20 +122,27 @@ namespace InteropDrawing
 
         public IEnumerable<string> ToLog() { return new _Model2DProxy(this).Primitives; }
 
-        public void DrawTo(IScene3D dc, Matrix4x4 xform) { this.DrawTo(dc.CreateTransformed2D(xform)); }        
+        public void DrawTo(IScene3D dc, Matrix4x4 xform) { DrawTo(dc.CreateTransformed2D(xform)); }
 
         public void DrawTo((ICanvas2D target, float width, float height) renderTarget, Matrix3x2 projection, Matrix3x2 camera)
         {
+
+            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+            Before:
+                        var context = Transforms.Drawing2DTransform.Create(renderTarget, projection, camera);
+            After:
+                        var context = Drawing2DTransform.Create(renderTarget, projection, camera);
+            */
             var context = Transforms.Drawing2DTransform.Create(renderTarget, projection, camera);
 
-            this.DrawTo(context);
+            DrawTo(context);
         }
 
         public void CopyTo(Record2D other)
         {
-            other._Commands.Set(this._Commands);
+            other._Commands.Set(_Commands);
             other._ImmutableKey = null;
-        }        
+        }
 
         #endregion
     }
@@ -174,7 +179,7 @@ namespace InteropDrawing
         private int? _ContentHash;
 
         private (XY Min, XY Max)? _BoundingBox;
-        private (XY Center,Single Radius)? _BoundingCircle;
+        private (XY Center, float Radius)? _BoundingCircle;
 
         #endregion
 
@@ -190,12 +195,12 @@ namespace InteropDrawing
 
                 int h = 0;
 
-                h ^= model._Commands.GetContentHashCode();                
+                h ^= model._Commands.GetContentHashCode();
                 // h ^= model._References.Count;
                 _ContentHash = h;
                 return h;
             }
-        }        
+        }
 
         public (XY Min, XY Max) BoundingBox
         {
@@ -210,8 +215,8 @@ namespace InteropDrawing
                 return _BoundingBox.Value;
             }
         }
-        
-        public (XY Center, Single Radius) BoundingCircle
+
+        public (XY Center, float Radius) BoundingCircle
         {
             get
             {
@@ -223,15 +228,15 @@ namespace InteropDrawing
 
                 return _BoundingCircle.Value;
             }
-        }        
+        }
 
         private void _UpdateBounds(Record2D model)
         {
-            var (min, max, center, radius) = model._Commands.GetBounds();            
+            var (min, max, center, radius) = model._Commands.GetBounds();
             _BoundingBox = (min, max);
             _BoundingCircle = (center, radius);
         }
 
         #endregion
-    }    
+    }
 }

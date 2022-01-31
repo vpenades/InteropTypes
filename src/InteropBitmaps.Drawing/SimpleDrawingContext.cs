@@ -2,20 +2,15 @@
 using System.Drawing;
 using System.Numerics;
 
+using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Drawing.Transforms;
+
 namespace InteropDrawing.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
     class _MemoryDrawingContext<TPixel> :
-        Transforms.Decompose2D.PassToSelf,
-
-/* Unmerged change from project 'InteropBitmaps.Drawing (netstandard2.1)'
-Before:
-        Backends.IBackendViewportInfo,
-After:
-        IBackendViewportInfo,
-*/
-        InteropDrawing.IBackendViewportInfo,
-        Backends.IDrawingBackend2D,
+        Decompose2D.PassToSelf,
+        InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D,
         IServiceProvider
 
         where TPixel: unmanaged
@@ -37,7 +32,7 @@ After:
 
             _PolygonRasterizer = new Lazy<Helpers.PolygonScanlines>(() => new Helpers.PolygonScanlines(target.Width, target.Height));
 
-            _Collapse = new Transforms.Decompose2D(this);
+            _Collapse = new Decompose2D(this);
         }
 
         #endregion
@@ -49,7 +44,7 @@ After:
 
         private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;
 
-        private readonly Transforms.Decompose2D _Collapse;
+        private readonly Decompose2D _Collapse;
 
         #endregion
 
@@ -75,7 +70,7 @@ After:
         public object GetService(Type serviceType)
         {
             if (serviceType == typeof(InteropBitmaps.MemoryBitmap<TPixel>)) return _Target;
-            if (serviceType == typeof(Transforms.Decompose2D)) return _Collapse;
+            if (serviceType == typeof(Decompose2D)) return _Collapse;
             if (serviceType.IsAssignableFrom(this.GetType())) return this;
             return null;
         }        

@@ -6,11 +6,11 @@ using ASSET = System.Object;
 using SCALAR = System.Single;
 
 using XFORM2 = System.Numerics.Matrix3x2;
-using POINT2 = InteropDrawing.Point2;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// provides additional information about the rendering backend

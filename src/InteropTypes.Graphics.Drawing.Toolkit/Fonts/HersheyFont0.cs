@@ -1,17 +1,17 @@
 using System;
 
-namespace InteropDrawing.Fonts
+namespace InteropTypes.Graphics.Drawing.Fonts
 {
     static partial class VectorFonts
     {
         public static string GetSimplexCode(char character)
         {
-            var idx = (int)character - 32;
+            var idx = character - 32;
 
             idx = _Simplex[idx];
 
             return _HersheyFont0[idx];
-        }        
+        }
 
         // https://github.com/LingDong-/p5-hershey-js/blob/master/p5.hershey.data.js
         private static readonly int[] _Simplex =

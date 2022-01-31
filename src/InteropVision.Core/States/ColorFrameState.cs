@@ -2,7 +2,8 @@
 using System.Numerics;
 
 using InteropBitmaps;
-using InteropDrawing;
+
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropVision
 {

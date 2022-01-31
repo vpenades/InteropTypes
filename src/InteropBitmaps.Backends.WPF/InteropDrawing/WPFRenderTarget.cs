@@ -5,6 +5,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Drawing;
+
 namespace InteropDrawing.Backends
 {
     public class WPFRenderTarget

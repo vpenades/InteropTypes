@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Windows;
 
+using InteropTypes.Graphics.Drawing;
+
 using COLOR = System.Drawing.Color;
 
 namespace InteropDrawing.Backends
@@ -165,7 +167,7 @@ namespace InteropDrawing.Backends
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
             this.VerifyAccess();
-            new Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
+            new InteropTypes.Graphics.Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
         }
 
         /// <inheritdoc/>
@@ -325,7 +327,7 @@ namespace InteropDrawing.Backends
             var h = (float)(viewport?.Height ?? 100);
 
             PushClipRect(viewport);
-            scene.DrawTo(Transforms.Drawing2DTransform.Create((this, w, h), prj, cam));
+            scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create((this, w, h), prj, cam));
             PopClipRect(viewport);
         }
 
@@ -338,7 +340,7 @@ namespace InteropDrawing.Backends
             var h = (float)(viewport?.Height ?? 100);
 
             PushClipRect(viewport);
-            scene.DrawTo(Transforms.PerspectiveTransform.Create((this, w, h), cam, prj));
+            scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.PerspectiveTransform.Create((this, w, h), cam, prj));
             PopClipRect(viewport);
         }
 

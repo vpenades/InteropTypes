@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 using VECTOR3 = System.Numerics.Vector3;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a vector with three single-precision floating-point values.
@@ -90,7 +90,7 @@ namespace InteropDrawing
         #region operators
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator *(Point3 a, Single b) { return new Point3(a.X * b, a.Y * b, a.Z * b); }
+        public static Point3 operator *(Point3 a, float b) { return new Point3(a.X * b, a.Y * b, a.Z * b); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point3 operator +(Point3 a, Point3 b) { return new Point3(a.X + b.X, a.Y + b.Y, a.Z + b.Z); }
@@ -103,13 +103,13 @@ namespace InteropDrawing
         #region API
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3 WithX(float x) { return new Point3(x, this.Y, this.Z); }
+        public Point3 WithX(float x) { return new Point3(x, Y, Z); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3 WithY(float y) { return new Point3(this.X, y, this.Z); }
+        public Point3 WithY(float y) { return new Point3(X, y, Z); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3 WithZ(float z) { return new Point3(this.X, this.Y, z); }
+        public Point3 WithZ(float z) { return new Point3(X, Y, z); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3 Normalized() { return VECTOR3.Normalize(new VECTOR3(X, Y, Z)); }

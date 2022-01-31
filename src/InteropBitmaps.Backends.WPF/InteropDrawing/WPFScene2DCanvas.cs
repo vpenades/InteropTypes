@@ -10,6 +10,8 @@ using System.Windows.Automation.Text;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using InteropTypes.Graphics.Drawing;
+
 namespace InteropDrawing.Backends
 {
     public class WPFScene2DCanvas : Canvas

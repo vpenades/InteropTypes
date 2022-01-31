@@ -5,8 +5,11 @@ using System.Linq;
 
 using SharpGLTF.Geometry.VertexTypes;
 
+using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Drawing.Transforms;
+
 using COLOR = System.Drawing.Color;
-using POINT3 = InteropDrawing.Point3;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
 namespace InteropDrawing.Backends
 {
@@ -16,7 +19,7 @@ namespace InteropDrawing.Backends
     /// <summary>
     /// Wraps a <see cref="MESHBUILDER"/> with <see cref="IScene3D"/>.
     /// </summary>
-    public class GltfMeshDrawing3D : Transforms.Decompose3D.PassToSelf, IScene3D
+    public class GltfMeshDrawing3D : Decompose3D.PassToSelf, IScene3D
     {
         #region data
 

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 using NUnit.Framework;
 
-using InteropDrawing;
 using InteropBitmaps;
-using System.Linq;
+
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropVision.Backends
 {

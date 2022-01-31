@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Text.RegularExpressions;
 
 
 /* https://stackoverflow.com/questions/5115388/parsing-svg-path-elements-with-c-sharp-are-there-libraries-out-there-to-do-t
@@ -13,17 +11,17 @@ using System.Text.RegularExpressions;
  * https://www.w3.org/TR/SVG/paths.html
  */
 
-namespace InteropDrawing.Parametric
+namespace InteropTypes.Graphics.Drawing.Parametric
 {
     public static class PathParser
     {
         public static void DrawPath(ICanvas2D dc, Matrix3x2 xform, string path, OutlineFillStyle style)
         {
             var shapes = ParseShapes(path);
-            
+
             foreach (var shape in shapes)
             {
-                var points = shape.AsSpan();                
+                var points = shape.AsSpan();
 
                 if (points[0].Equals(points[points.Length - 1]))
                 {
@@ -34,7 +32,7 @@ namespace InteropDrawing.Parametric
 
                 if (style.HasFill) dc.DrawPolygon(points, style.FillColor);
                 if (style.HasOutline) dc.DrawLines(points, style.OutlineWidth, style.OutlineColor);
-            }            
+            }
         }
 
         public static IEnumerable<Point2[]> ParseShapes(string path)
@@ -107,7 +105,7 @@ namespace InteropDrawing.Parametric
                         {
                             sequence.Add(tail);
 
-                            (tcpt,tail) = _ApplyCurveTo(sequence, tail, values, cmd.IsRelative);
+                            (tcpt, tail) = _ApplyCurveTo(sequence, tail, values, cmd.IsRelative);
                             break;
                         }
 
@@ -117,7 +115,7 @@ namespace InteropDrawing.Parametric
 
                             (tcpt, tail) = _ApplySmoothCurveTo(sequence, tcpt.ToNumerics(), tail, values, cmd.IsRelative);
                             break;
-                        }                    
+                        }
 
                     default: throw new NotImplementedException();
                 }
@@ -158,7 +156,7 @@ namespace InteropDrawing.Parametric
                 var p1 = tail.ToNumerics();
 
                 var rr = new Vector2(src[i + 0], src[i + 1]);
-                
+
                 var xr = src[i + 2]; // x axis rotation, in degrees (0-360)
                 var lf = src[i + 3]; // large flag
                 var sf = src[i + 4]; // sweep flag
@@ -175,10 +173,10 @@ namespace InteropDrawing.Parametric
 
                 for (int j = 1; j <= 10; ++j)
                 {
-                    var f = (float)j / 10f;
+                    var f = j / 10f;
                     var p = arc.LerpArc(f);
                     dst.Add(p);
-                }                
+                }
             }
 
             return tail;
@@ -191,7 +189,7 @@ namespace InteropDrawing.Parametric
             var mid = p1;
 
             for (int i = 0; i < src.Count; i += 6)
-            {                
+            {
                 var p2 = new Vector2(src[i + 0], src[i + 1]);
                 if (srcIsRelative) p2 += p1;
 
@@ -208,12 +206,12 @@ namespace InteropDrawing.Parametric
                 tail = p4;
             }
 
-            return (mid,tail);
+            return (mid, tail);
         }
 
         private static (Point2, Point2) _ApplySmoothCurveTo(List<Point2> dst, Vector2 p2, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
         {
-            var p1 = tail.ToNumerics();            
+            var p1 = tail.ToNumerics();
 
             for (int i = 0; i < src.Count; i += 4)
             {
@@ -228,7 +226,7 @@ namespace InteropDrawing.Parametric
                 _AddCurvePoints(dst, p1, p2, p3, p4);
 
                 p2 = p3;
-                p1 = p4;                
+                p1 = p4;
                 tail = p4;
             }
 
@@ -238,8 +236,8 @@ namespace InteropDrawing.Parametric
         private static void _AddCurvePoints(List<Point2> dst, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
         {
             for (int i = 1; i <= 5; ++i)
-            {                
-                var f = (float)i / 5f;
+            {
+                var f = i / 5f;
                 var p = (p1, p2, p3, p4).LerpCurve(f);
                 dst.Add(p);
             }
@@ -286,14 +284,14 @@ namespace InteropDrawing.Parametric
             {
                 int offset = 0;
 
-                while(TryParse(src,offset,out var slice, out var next))
+                while (TryParse(src, offset, out var slice, out var next))
                 {
                     System.Diagnostics.Debug.Assert(slice._Length > 0);
 
                     yield return slice;
                     offset = next;
                 }
-            }            
+            }
 
             public static bool TryParse(string src, int head, out PathSlice slice, out int next)
             {
@@ -310,7 +308,7 @@ namespace InteropDrawing.Parametric
 
                 next = tail;
 
-                return true;                
+                return true;
             }
 
             private PathSlice(string src, int ofs, int len)
@@ -321,8 +319,8 @@ namespace InteropDrawing.Parametric
 
                 var c = src[ofs];
                 System.Diagnostics.Debug.Assert(_Commands.Contains(c));
-                _Command = (CommandType)(((int)c) & ~0x20);
-                _IsRelative = c >= (int)'a';                
+                _Command = (CommandType)(c & ~0x20);
+                _IsRelative = c >= 'a';
             }
 
             #endregion
@@ -341,7 +339,7 @@ namespace InteropDrawing.Parametric
             #region properties
 
             public CommandType Command => _Command;
-            public Boolean IsRelative => _IsRelative;
+            public bool IsRelative => _IsRelative;
             public int Count => _Length;
 
             #endregion
@@ -350,29 +348,29 @@ namespace InteropDrawing.Parametric
 
             public void CopyTo(List<float> values)
             {
-                Span<Byte> ascii = stackalloc Byte[_Length - 1];
+                Span<byte> ascii = stackalloc byte[_Length - 1];
 
-                for(int i=0; i < ascii.Length; ++i)
+                for (int i = 0; i < ascii.Length; ++i)
                 {
-                    ascii[i] = (Byte)this._Source[_Offset + i + 1];
+                    ascii[i] = (byte)_Source[_Offset + i + 1];
                 }
 
                 _CopyTo(ascii, values);
             }
 
-            private static void _CopyTo(ReadOnlySpan<Byte> ascii, List<float> values)
+            private static void _CopyTo(ReadOnlySpan<byte> ascii, List<float> values)
             {
-                while(ascii.Length > 0)
+                while (ascii.Length > 0)
                 {
-                    ascii = _SkipWhiteSpacesAndCommas(ascii);                    
+                    ascii = _SkipWhiteSpacesAndCommas(ascii);
 
                     if (!System.Buffers.Text.Utf8Parser.TryParse(ascii, out float value, out int valueLen)) throw new InvalidOperationException();
-                    
+
                     values.Add(value);
 
                     ascii = ascii.Slice(valueLen);
                 }
-            }            
+            }
 
             private static ReadOnlySpan<byte> _SkipWhiteSpacesAndCommas(ReadOnlySpan<byte> ascii)
             {
@@ -384,7 +382,7 @@ namespace InteropDrawing.Parametric
                     var c = ascii[0];
                     System.Diagnostics.Debug.Assert(c < 128, "Invalid character");
                     if (c > 0x20 && c != 0x2c) break;
-                    ascii = ascii.Slice(1);                    
+                    ascii = ascii.Slice(1);
                 }
 
                 return ascii;

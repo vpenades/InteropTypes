@@ -6,6 +6,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
+using InteropTypes.Graphics.Drawing;
+
 namespace InteropDrawing.Backends
 {
     public class WPFSceneLayer2D : DependencyObject , ISceneViewport2D

@@ -15,7 +15,7 @@ using BBOX = System.Numerics.Matrix3x2;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     public struct CameraView3D
     {
@@ -43,7 +43,7 @@ namespace InteropDrawing
             // return CreatePerspective(bounds.Center - direction * bounds.Radius * 2, bounds.Center);
         }
 
-        
+
         public static CameraView3D CreateDefaultFrom(BBOX bounds)
         {
             // if (bounds.IsInvalid) return CreatePerspective(XYZ.UnitZ * 100, XYZ.Zero);
@@ -69,15 +69,15 @@ namespace InteropDrawing
         /// <summary>
         /// If defined, the camera is a perspective matrix
         /// </summary>
-        public Single? VerticalFieldOfView;
+        public float? VerticalFieldOfView;
 
         /// <summary>
         /// if defined, the camera is ortographic camera.
         /// </summary>
-        public Single? OrthographicScale;
+        public float? OrthographicScale;
 
-        public Single? NearPlane;
-        public Single? FarPlane;
+        public float? NearPlane;
+        public float? FarPlane;
 
         #endregion        
 
@@ -89,7 +89,7 @@ namespace InteropDrawing
 
             var p = CreateProjectionMatrix(1);
 
-            dc.DrawProjectedPlane(WorldMatrix, p, cameraSize * 0.05f, COLOR.BlueViolet);            
+            dc.DrawProjectedPlane(WorldMatrix, p, cameraSize * 0.05f, COLOR.BlueViolet);
         }
 
         /// <summary>
@@ -117,8 +117,8 @@ namespace InteropDrawing
 
         public Matrix4x4 CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null)
         {
-            float near = nearPlane ?? this.NearPlane ?? 0.1f;
-            float far = farPlane ?? this.FarPlane ?? 1000f;
+            float near = nearPlane ?? NearPlane ?? 0.1f;
+            float far = farPlane ?? FarPlane ?? 1000f;
 
             if (VerticalFieldOfView.HasValue)
             {
@@ -129,7 +129,7 @@ namespace InteropDrawing
                 return Matrix4x4.CreateOrthographic(OrthographicScale.Value, OrthographicScale.Value, near, far);
             }
         }
-        
+
         #endregion
     }
 
@@ -137,11 +137,11 @@ namespace InteropDrawing
     {
         #region CONSTANTS
 
-        public static readonly CameraProjection3D AutomaticPerspective = new CameraProjection3D(null, default(PLANE));
+        public static readonly CameraProjection3D AutomaticPerspective = new CameraProjection3D(null, default);
 
         // https://en.wikipedia.org/wiki/Orthographic_projection#/media/File:Graphical_projection_comparison.png
 
-        public static readonly CameraProjection3D AutomaticIsometric = new CameraProjection3D(null, default(PLANE));
+        public static readonly CameraProjection3D AutomaticIsometric = new CameraProjection3D(null, default);
 
         #endregion
 
@@ -238,7 +238,14 @@ namespace InteropDrawing
             return new CameraProjection3D(projFunc, frustumNearPlane);
         }
 
-        
+
+
+        /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+        Before:
+                private CameraProjection3D(Transforms.ProjectPointCallback proj, PLANE np)
+        After:
+                private CameraProjection3D(ProjectPointCallback proj, PLANE np)
+        */
         private CameraProjection3D(Transforms.ProjectPointCallback proj, PLANE np)
         {
             _ProjFunc = proj;
@@ -286,6 +293,13 @@ namespace InteropDrawing
 
         #region data
 
+
+        /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+        Before:
+                private Transforms.ProjectPointCallback _ProjFunc;
+        After:
+                private ProjectPointCallback _ProjFunc;
+        */
         private Transforms.ProjectPointCallback _ProjFunc;
         private PLANE _NearPlane;
 
@@ -293,13 +307,20 @@ namespace InteropDrawing
 
         #region API
 
+
+        /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+        Before:
+                public void GetProjectionInfo(out Transforms.ProjectPointCallback proj, out PLANE plane, Record3D scene)
+        After:
+                public void GetProjectionInfo(out ProjectPointCallback proj, out PLANE plane, Record3D scene)
+        */
         public void GetProjectionInfo(out Transforms.ProjectPointCallback proj, out PLANE plane, Record3D scene)
         {
             proj = _ProjFunc;
             plane = _NearPlane;
         }
 
-        public bool IsVisible(Vector3 p)
+        public bool IsVisible(XYZ p)
         {
             var d = PLANE.DotCoordinate(_NearPlane, p);
 

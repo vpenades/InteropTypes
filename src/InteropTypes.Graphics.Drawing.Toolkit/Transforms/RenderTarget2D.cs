@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-
-
-using XY = System.Numerics.Vector2;
-using XYZ = System.Numerics.Vector3;
-using PLANE = System.Numerics.Plane;
-using COLOR = System.Drawing.Color;
 using System.Numerics;
 
-namespace InteropDrawing.Transforms
+using XYZ = System.Numerics.Vector3;
+using PLANE = System.Numerics.Plane;
+
+namespace InteropTypes.Graphics.Drawing.Transforms
 {
     [Obsolete("Use PerspectiveTransform instead.")]
     public delegate XYZ ProjectPointCallback(XYZ worldPoint);
@@ -115,7 +112,7 @@ namespace InteropDrawing.Transforms
 
         private float _ProjectRadius(XYZ p, float radius) { return (_Proj3Func(p) - _Proj3Func(p + _StrafeVector * radius)).Length(); }
 
-        void IScene3D.DrawSegment(Point3 a, Point3 b, Single diameter, LineStyle brush)
+        void IScene3D.DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
             var aa = a.ToNumerics();
             var bb = b.ToNumerics();
@@ -129,7 +126,7 @@ namespace InteropDrawing.Transforms
             _RenderTarget.DrawLine(pa.SelectXY(), pb.SelectXY(), pt, brush);
         }
 
-        void IScene3D.DrawSphere(Point3 center, Single diameter, OutlineFillStyle brush)
+        void IScene3D.DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
             var c = center.ToNumerics();
 
@@ -148,13 +145,13 @@ namespace InteropDrawing.Transforms
             var cvertices = _FrustumNearPlane.ClipPolygonToPlane(clippedVertices, Point3.AsNumerics(vertices));
             if (cvertices < 3) return;
 
-            clippedVertices = clippedVertices.Slice(0, cvertices);            
+            clippedVertices = clippedVertices.Slice(0, cvertices);
 
             Span<Point2> points = stackalloc Point2[clippedVertices.Length];
 
             var center = XYZ.Zero;
 
-            for(int i=0; i < points.Length; ++i)
+            for (int i = 0; i < points.Length; ++i)
             {
                 var v = clippedVertices[i];
 
@@ -162,7 +159,7 @@ namespace InteropDrawing.Transforms
                 points[i] = _ProjectPoint(v).SelectXY();
             }
 
-            center /= points.Length;            
+            center /= points.Length;
 
             brush = brush.WithOutline(_ProjectRadius(center, brush.Style.OutlineWidth));
 
@@ -178,15 +175,15 @@ namespace InteropDrawing.Transforms
 
             clippedVertices = clippedVertices.Slice(0, cvertices);
 
-            Span<Point2> points = stackalloc Point2[clippedVertices.Length];            
+            Span<Point2> points = stackalloc Point2[clippedVertices.Length];
 
             for (int i = 0; i < points.Length; ++i)
             {
                 var v = clippedVertices[i];
-            
+
                 points[i] = _ProjectPoint(v).SelectXY();
             }
-            
+
 
             _RenderTarget.DrawConvexPolygon(points, style);
         }
@@ -209,7 +206,7 @@ namespace InteropDrawing.Transforms
 
             public int CompareTo(_SortableItem other)
             {
-                return -this.Distance.CompareTo(other.Distance);
+                return -Distance.CompareTo(other.Distance);
             }
         }
 

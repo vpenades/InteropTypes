@@ -6,11 +6,12 @@ using ASSET = System.Object;
 using SCALAR = System.Single;
 
 using XFORM2 = System.Numerics.Matrix3x2;
-using POINT2 = InteropDrawing.Point2;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
 using COLOR = System.Drawing.Color;
+using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Drawing.Backends
 {
     /// <summary>
     /// Represents a drawing canvas where we can draw 2D thin lines.
@@ -50,5 +51,5 @@ namespace InteropDrawing.Backends
         void DrawSegment(Point3 a, Point3 b, float diameter, ColorStyle color);
     }
 
-    
+
 }

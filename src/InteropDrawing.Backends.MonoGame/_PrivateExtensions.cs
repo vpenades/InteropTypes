@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
+using InteropTypes.Graphics.Drawing;
+
 using DRWCOLOR = System.Drawing.Color;
 using XNACOLOR = Microsoft.Xna.Framework.Color;
 

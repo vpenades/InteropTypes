@@ -4,8 +4,8 @@ using System.Text;
 
 using static System.FormattableString;
 
-using POINT2 = InteropDrawing.Point2;
-using POINT3 = InteropDrawing.Point3;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
 namespace Plotly
 {

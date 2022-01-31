@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using InteropTypes.Graphics.Drawing;
+
 using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 using VECTOR3 = System.Numerics.Vector3;
 

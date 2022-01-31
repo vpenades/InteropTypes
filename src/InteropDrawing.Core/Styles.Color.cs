@@ -2,23 +2,23 @@
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a style with a single Fill Color.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Color}")]    
+    [System.Diagnostics.DebuggerDisplay("{Color}")]
     public readonly struct ColorStyle
     {
         #region constructors        
 
         public static implicit operator ColorStyle(COLOR fillColor) { return new ColorStyle(fillColor); }
 
-        public ColorStyle(Int32 color) { _Color = color; }
+        public ColorStyle(int color) { _Color = color; }
 
-        public ColorStyle(UInt32 color) { _Color = (int)color; }
+        public ColorStyle(uint color) { _Color = (int)color; }
 
-        public ColorStyle(Byte red, Byte green, Byte blue, Byte alpha)
+        public ColorStyle(byte red, byte green, byte blue, byte alpha)
         {
             _Color = alpha;
             _Color <<= 8;
@@ -35,20 +35,20 @@ namespace InteropDrawing
 
         #region data
 
-        private readonly Int32 _Color;
+        private readonly int _Color;
 
         #endregion
 
         #region properties
 
-        public UInt32 PackedValue => (UInt32)_Color;
+        public uint PackedValue => (uint)_Color;
 
         public COLOR Color => COLOR.FromArgb(_Color);
 
         public bool IsEmpty => !IsVisible;
 
         public bool IsVisible
-        { 
+        {
             get
             {
                 var v = (uint)_Color;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropDrawing;
+using InteropTypes.Graphics.Drawing;
 
 using COLOR = System.Drawing.Color;
 

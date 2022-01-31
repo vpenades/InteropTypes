@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Text;
 
-using InteropDrawing;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropWith.MAUI
 {

@@ -6,6 +6,7 @@ using System.Linq;
 using SharpGLTF.Schema2;
 
 using MESHBUILDER = SharpGLTF.Geometry.IMeshBuilder<SharpGLTF.Materials.MaterialBuilder>;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropDrawing.Backends
 {

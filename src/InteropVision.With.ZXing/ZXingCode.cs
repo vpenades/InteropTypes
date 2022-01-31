@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-using InteropDrawing;
+using InteropTypes.Graphics.Drawing;
 
 namespace InteropVision.With
 {

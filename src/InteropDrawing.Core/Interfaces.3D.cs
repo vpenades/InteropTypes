@@ -8,9 +8,9 @@ using SCALAR = System.Single;
 using XFORM2 = System.Numerics.Matrix3x2;
 
 using XFORM3 = System.Numerics.Matrix4x4;
-using POINT3 = InteropDrawing.Point3;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a render target context where we can draw 3D surfaces
@@ -58,7 +58,7 @@ namespace InteropDrawing
 
     public interface ISceneBounds3D
     {
-        (System.Numerics.Vector3 Center, Single Radius) GetBoundingSphere();
+        (System.Numerics.Vector3 Center, SCALAR Radius) GetBoundingSphere();
     }
 
     public interface ISceneViewport2D
@@ -71,5 +71,5 @@ namespace InteropDrawing
         // TODO: include near/far depth plane distance hints
 
         (XFORM3 Camera, XFORM3 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }    
+    }
 }

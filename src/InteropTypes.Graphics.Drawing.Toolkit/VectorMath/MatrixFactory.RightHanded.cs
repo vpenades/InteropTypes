@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     public static class RightHanded
     {

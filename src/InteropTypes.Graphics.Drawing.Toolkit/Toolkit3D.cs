@@ -7,14 +7,14 @@ using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
 using VECTOR4 = System.Numerics.Vector4;
 
-using POINT3 = InteropDrawing.Point3;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
 using XFORM2 = System.Numerics.Matrix3x2;
 using XFORM4 = System.Numerics.Matrix4x4;
 
 using BBOX = System.Numerics.Matrix3x2; // Column 0 is Min, Column 1 is Max
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     public static partial class Toolkit
     {
@@ -28,22 +28,50 @@ namespace InteropDrawing
 
         public static ICanvas2D CreateTransformed2D(this ICanvas2D source, XFORM2 xform)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
+After:
+            return xform.IsIdentity ? source : Drawing2DTransform.Create(source, xform);
+*/
+            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(source, xform);
         }
 
         public static IPrimitiveCanvas2D CreateTransformed2D(this IPrimitiveCanvas2D source, XFORM2 xform)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
+After:
+            return xform.IsIdentity ? source : Drawing2DTransform.Create(source, xform);
+*/
+            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(source, xform);
         }
 
         public static ICanvas2D CreateTransformed2D(this IScene3D t, XFORM4 xform)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return Transforms.Drawing3DTransform.Create(t, xform);
+After:
+            return Drawing3DTransform.Create(t, xform);
+*/
+            return InteropTypes.Graphics.Drawing.Transforms.Drawing3DTransform.Create(t, xform);
         }
 
         public static IScene3D CreateTransformed3D(this IScene3D t, XFORM4 xform)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             return xform.IsIdentity ? t : Transforms.Drawing3DTransform.Create(t, xform);
+After:
+            return xform.IsIdentity ? t : Drawing3DTransform.Create(t, xform);
+*/
+            return xform.IsIdentity ? t : InteropTypes.Graphics.Drawing.Transforms.Drawing3DTransform.Create(t, xform);
         }
 
         #endregion
@@ -337,7 +365,14 @@ namespace InteropDrawing
 
         public static void DrawFont(this IScene3D dc, XFORM4 xform, String text, COLOR color)
         {
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
+After:
+            FontDrawing.DrawFontAsLines(dc, xform, text, color);
+*/
+            InteropTypes.Graphics.Drawing.Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
         }
 
         public static void DrawFloor(this IScene3D dc, VECTOR2 origin, VECTOR2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)

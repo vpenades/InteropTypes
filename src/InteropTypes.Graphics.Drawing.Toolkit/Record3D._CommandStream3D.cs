@@ -4,18 +4,19 @@ using System.Numerics;
 using System.Linq;
 
 using XYZ = System.Numerics.Vector3;
-using POINT3 = InteropDrawing.Point3;
 using XFORM3 = System.Numerics.Matrix4x4;
 
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
-namespace InteropDrawing
+
+namespace InteropTypes.Graphics.Drawing
 {
-    [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream3D_DebuggerProxy))]
+    [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream3D_DebuggerProxy))]    
     sealed class _CommandStream3D : Collection.CommandList, IScene3D
     {
         #region IDrawing3D
 
-        
+
 
         public void DrawAsset(in XFORM3 transform, object asset, ColorStyle brush)
         {
@@ -37,7 +38,7 @@ namespace InteropDrawing
         public void DrawSphere(POINT3 center, float diameter, OutlineFillStyle brush)
         {
             var xref = AddHeaderAndStruct<_PrimitiveSphere>((int)_PrimitiveType.Sphere);
-            xref[0].Center = center;            
+            xref[0].Center = center;
             xref[0].Diameter = diameter;
             xref[0].Style = brush;
         }
@@ -68,16 +69,16 @@ namespace InteropDrawing
 
         #region API        
 
-        public IEnumerable<int> GetCommandList(Func<XYZ,Single> scoreFunc)
+        public IEnumerable<int> GetCommandList(Func<XYZ, float> scoreFunc)
         {
             var drawingOrder = new List<_SortableItem>();
 
             // We can use BinarySearch to locate the insertion point and do a sorted insertion.
             // Span<_SortableItem> drawingOrder = stackalloc _SortableItem[scene.Commands.Count];            
 
-            foreach (var offset in this.GetCommands())
+            foreach (var offset in GetCommands())
             {
-                var center = this.GetCenter(offset);
+                var center = GetCenter(offset);
 
                 var item = new _SortableItem
                 {
@@ -95,7 +96,7 @@ namespace InteropDrawing
 
         private ReadOnlySpan<byte> _GetCommandBytes(int offset, out _PrimitiveType type, out int size)
         {
-            var span = this.Buffer.Slice(offset);
+            var span = Buffer.Slice(offset);
             size = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(span);
             span = span.Slice(4, size);
 
@@ -103,13 +104,13 @@ namespace InteropDrawing
             return span.Slice(4);
         }
 
-        public (XYZ Min, XYZ Max, XYZ Center, Single Radius) GetBounds()
+        public (XYZ Min, XYZ Max, XYZ Center, float Radius) GetBounds()
         {
             var bounds = _BoundsContext.CreateEmpty();
 
-            foreach (var offset in this.GetCommands())
+            foreach (var offset in GetCommands())
             {
-                var span = _GetCommandBytes(offset, out _PrimitiveType type, out int size);                
+                var span = _GetCommandBytes(offset, out _PrimitiveType type, out int size);
 
                 switch (type)
                 {
@@ -117,11 +118,11 @@ namespace InteropDrawing
                     case _PrimitiveType.Segment: _PrimitiveSegment.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Sphere: _PrimitiveSphere.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Surface: _PrimitiveSurface.GetBounds(ref bounds, span); break;
-                    case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, this.References); break;
+                    case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, References); break;
                 }
             }
 
-            return (bounds.Min, bounds.Max, bounds.Sphere.Center, bounds.Sphere.Radius);            
+            return (bounds.Min, bounds.Max, bounds.Sphere.Center, bounds.Sphere.Radius);
         }
 
         public XYZ GetCenter(int offset)
@@ -138,7 +139,7 @@ namespace InteropDrawing
             }
 
             throw new NotImplementedException();
-        }        
+        }
 
         public int DrawTo(int offset, IScene3D dc, bool collapseAssets)
         {
@@ -154,7 +155,7 @@ namespace InteropDrawing
             }
 
             return size;
-        }        
+        }
 
         #endregion
 
@@ -168,7 +169,7 @@ namespace InteropDrawing
 
             public int CompareTo(_SortableItem other)
             {
-                return this.Score.CompareTo(other.Score);
+                return Score.CompareTo(other.Score);
             }
         }
         struct _BoundsContext
@@ -177,8 +178,8 @@ namespace InteropDrawing
             {
                 return new _BoundsContext
                 {
-                    Min = new XYZ(Single.MaxValue),
-                    Max = new XYZ(Single.MinValue),
+                    Min = new XYZ(float.MaxValue),
+                    Max = new XYZ(float.MinValue),
                     Sphere = (XYZ.Zero, -1)
                 };
             }
@@ -186,9 +187,9 @@ namespace InteropDrawing
             public XYZ Min;
             public XYZ Max;
 
-            public (XYZ Center, Single Radius) Sphere;
+            public (XYZ Center, float Radius) Sphere;
 
-            public void AddVertex(in Point3 vertex, float radius)
+            public void AddVertex(in POINT3 vertex, float radius)
             {
                 var v = vertex.ToNumerics();
 
@@ -202,7 +203,7 @@ namespace InteropDrawing
                 Sphere = _MergeSpheres(Sphere, (v, radius));
             }
 
-            private static (XYZ Center, Single Radius) _MergeSpheres(in (XYZ Center, Single Radius) left, in (XYZ Center, Single Radius) right)
+            private static (XYZ Center, float Radius) _MergeSpheres(in (XYZ Center, float Radius) left, in (XYZ Center, float Radius) right)
             {
                 var relative = right.Center - left.Center;
 
@@ -218,7 +219,7 @@ namespace InteropDrawing
                 float leftRadius = Math.Max(left.Radius - distance, right.Radius);
                 float Rightradius = Math.Max(left.Radius + distance, right.Radius);
 
-                relative = relative + (((leftRadius - Rightradius) / (2 * distance)) * relative);
+                relative = relative + (leftRadius - Rightradius) / (2 * distance) * relative;
 
                 return (left.Center + relative, (leftRadius + Rightradius) / 2);
             }
@@ -228,58 +229,58 @@ namespace InteropDrawing
         {
             public POINT3 PointA;
             public POINT3 PointB;
-            public Single Diameter;
+            public float Diameter;
             public LineStyle Style;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSegment>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSegment>(command)[0];
 
                 var r = src.Diameter * 0.5f + src.Style.Style.OutlineWidth;
                 bounds.AddVertex(src.PointA, r);
                 bounds.AddVertex(src.PointB, r);
             }
 
-            public static XYZ GetCenter(ReadOnlySpan<Byte> command)
+            public static XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSegment>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSegment>(command)[0];
 
                 var a = src.PointA.ToNumerics();
                 var b = src.PointB.ToNumerics();
 
                 return (a + b) * 0.5f;
-            }           
+            }
 
-            public static void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
+            public static void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSegment>(command)[0];
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSegment>(command)[0];
                 dst.DrawSegment(body.PointA, body.PointB, body.Diameter, body.Style);
             }
         }
 
         struct _PrimitiveSphere
         {
-            public POINT3 Center;            
-            public Single Diameter;
+            public POINT3 Center;
+            public float Diameter;
             public OutlineFillStyle Style;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSphere>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSphere>(command)[0];
 
                 var r = src.Diameter * 0.5f + src.Style.OutlineWidth;
-                bounds.AddVertex(src.Center, r);                
+                bounds.AddVertex(src.Center, r);
             }
 
-            public static XYZ GetCenter(ReadOnlySpan<Byte> command)
+            public static XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSphere>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSphere>(command)[0];
                 return src.Center.ToNumerics();
             }
 
-            public static void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
+            public static void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSphere>(command)[0];
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSphere>(command)[0];
                 dst.DrawSphere(body.Center, body.Diameter, body.Style);
             }
         }
@@ -289,18 +290,18 @@ namespace InteropDrawing
             public int Count;
             public ColorStyle Style;
 
-            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
 
                 foreach (var v in points) bounds.AddVertex(v, 0);
             }
 
-            public static unsafe XYZ GetCenter(ReadOnlySpan<Byte> command)
+            public static unsafe XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
 
                 var center = XYZ.Zero;
 
@@ -309,10 +310,10 @@ namespace InteropDrawing
                 return body.Count == 0 ? XYZ.Zero : center / body.Count;
             }
 
-            public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT3>(command.Slice(sizeof(_PrimitiveConvex)));
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT3>(command.Slice(sizeof(_PrimitiveConvex)));
 
                 dst.DrawConvexSurface(points.Slice(0, body.Count), body.Style);
             }
@@ -320,33 +321,33 @@ namespace InteropDrawing
 
         struct _PrimitiveSurface
         {
-            public int Count;            
+            public int Count;
             public SurfaceStyle Style;
 
-            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSurface>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XYZ>(command.Slice(sizeof(_PrimitiveSurface)));
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSurface>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveSurface)));
 
                 foreach (var v in points) bounds.AddVertex(v, src.Style.Style.OutlineWidth);
             }
 
-            public static unsafe XYZ GetCenter(ReadOnlySpan<Byte> command)
+            public static unsafe XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSurface>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XYZ>(command.Slice(sizeof(_PrimitiveSurface)));
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSurface>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveSurface)));
 
-                var center = XYZ.Zero;                
+                var center = XYZ.Zero;
 
-                for(int i=0; i < body.Count; ++i) { center += points[i]; }
+                for (int i = 0; i < body.Count; ++i) { center += points[i]; }
 
                 return body.Count == 0 ? XYZ.Zero : center / body.Count;
-            }            
+            }
 
-            public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveSurface>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT3>(command.Slice(sizeof(_PrimitiveSurface)));
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSurface>(command)[0];
+                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT3>(command.Slice(sizeof(_PrimitiveSurface)));
 
                 dst.DrawSurface(points.Slice(0, body.Count), body.Style);
             }
@@ -358,9 +359,9 @@ namespace InteropDrawing
             public int AssetRef;
             public ColorStyle Style;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveAsset>(command)[0];
                 var xref = references[src.AssetRef];
 
                 if (src.Transform == XFORM3.Identity)
@@ -385,15 +386,15 @@ namespace InteropDrawing
                 }
             }
 
-            public static XYZ GetCenter(ReadOnlySpan<Byte> command)
+            public static XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveAsset>(command)[0];
                 return src.Transform.Translation;
             }
 
-            public static void DrawTo(IScene3D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references, bool collapse)
+            public static void DrawTo(IScene3D dst, ReadOnlySpan<byte> command, IReadOnlyList<object> references, bool collapse)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveAsset>(command)[0];
 
                 if (collapse) { dst.DrawAssetAsSurfaces(body.Transform, references[body.AssetRef], body.Style); return; }
 
@@ -420,6 +421,13 @@ namespace InteropDrawing
         public _CommandStream3D_DebuggerProxy(_CommandStream3D src)
         {
             var sb = new List<string>();
+
+            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+            Before:
+                        var target = Diagnostics.CommandLogger.From(sb);
+            After:
+                        var target = CommandLogger.From(sb);
+            */
             var target = Diagnostics.CommandLogger.From(sb);
 
             foreach (var offset in src.GetCommands())

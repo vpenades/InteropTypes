@@ -2,7 +2,7 @@
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a Fill Color, an Outline Color, and an Outline Size.
@@ -17,10 +17,10 @@ namespace InteropDrawing
         public static implicit operator OutlineFillStyle(ColorStyle fillColor) { return new OutlineFillStyle(fillColor.Color); }
 
 
-        public static implicit operator OutlineFillStyle((COLOR, Single) style) { return new OutlineFillStyle(style.Item1, style.Item2); }
+        public static implicit operator OutlineFillStyle((COLOR, float) style) { return new OutlineFillStyle(style.Item1, style.Item2); }
 
         // this operator can conflict with Color(r,g,b);
-        public static implicit operator OutlineFillStyle((COLOR, COLOR, Single) style) { return new OutlineFillStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator OutlineFillStyle((COLOR, COLOR, float) style) { return new OutlineFillStyle(style.Item1, style.Item2, style.Item3); }
 
         public OutlineFillStyle(COLOR fillColor)
         {
@@ -29,14 +29,14 @@ namespace InteropDrawing
             OutlineWidth = 0;
         }
 
-        public OutlineFillStyle(COLOR outColor, Single outWidth)
+        public OutlineFillStyle(COLOR outColor, float outWidth)
         {
             _FillColor = COLOR.Transparent.ToArgb();
             _OutlineColor = outColor.ToArgb();
             OutlineWidth = outWidth;
         }
 
-        public OutlineFillStyle(COLOR fillColor, COLOR outColor, Single outWidth)
+        public OutlineFillStyle(COLOR fillColor, COLOR outColor, float outWidth)
         {
             _FillColor = fillColor.ToArgb();
             _OutlineColor = outColor.ToArgb();
@@ -47,9 +47,9 @@ namespace InteropDrawing
 
         #region data
 
-        private readonly Int32 _FillColor;
-        private readonly Int32 _OutlineColor;
-        public readonly Single OutlineWidth;
+        private readonly int _FillColor;
+        private readonly int _OutlineColor;
+        public readonly float OutlineWidth;
 
         public COLOR FillColor => COLOR.FromArgb(_FillColor);
         public COLOR OutlineColor => COLOR.FromArgb(_OutlineColor);
@@ -98,24 +98,24 @@ namespace InteropDrawing
 
         public OutlineFillStyle WithFill(COLOR fillColor)
         {
-            return new OutlineFillStyle(fillColor, this.OutlineColor, this.OutlineWidth);
+            return new OutlineFillStyle(fillColor, OutlineColor, OutlineWidth);
         }
 
-        public OutlineFillStyle WithOutline(COLOR outlineColor, Single ow)
+        public OutlineFillStyle WithOutline(COLOR outlineColor, float ow)
         {
-            return new OutlineFillStyle(this.FillColor, outlineColor, ow);
+            return new OutlineFillStyle(FillColor, outlineColor, ow);
         }
 
         public OutlineFillStyle WithOutline(COLOR outlineColor)
         {
-            return new OutlineFillStyle(this.FillColor, outlineColor, this.OutlineWidth);
+            return new OutlineFillStyle(FillColor, outlineColor, OutlineWidth);
         }
 
-        public OutlineFillStyle WithOutline(Single ow)
+        public OutlineFillStyle WithOutline(float ow)
         {
-            return new OutlineFillStyle(this.FillColor, this.OutlineColor, ow);
+            return new OutlineFillStyle(FillColor, OutlineColor, ow);
         }
 
         #endregion
-    }    
+    }
 }

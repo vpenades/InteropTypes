@@ -4,6 +4,8 @@ using System.Numerics;
 using System.Text;
 using System.Windows;
 
+using InteropTypes.Graphics.Drawing;
+
 namespace InteropDrawing.Backends
 {
     public class WPFCamera2D : DependencyObject , ISceneViewport2D

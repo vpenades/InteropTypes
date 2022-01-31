@@ -4,12 +4,11 @@ using System.Numerics;
 using System.Text;
 
 using COLOR = System.Drawing.Color;
-using ASSET = System.Object;
 using SCALAR = System.Single;
-using POINT3 = InteropDrawing.Point3;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 using VECTOR3 = System.Numerics.Vector3;
 
-namespace InteropDrawing.Parametric
+namespace InteropTypes.Graphics.Drawing.Parametric
 {
     internal class ShapeFactory3D
     {
@@ -68,15 +67,15 @@ namespace InteropDrawing.Parametric
             var nx = VECTOR3.Normalize(nz.PerpendicularAxis());
             var ny = VECTOR3.Normalize(VECTOR3.Cross(nz, nx));
 
-            Span<Point3> aa = stackalloc Point3[divisions];
-            Span<Point3> bb = stackalloc Point3[divisions];
+            Span<POINT3> aa = stackalloc POINT3[divisions];
+            Span<POINT3> bb = stackalloc POINT3[divisions];
 
             var brush = new ColorStyle(color);
 
             for (int i = 0; i < divisions; ++i)
             {
                 var angle = -MathF.PI * 2 * i / divisions;
-                var p = (nx * MathF.Cos(angle) + ny * MathF.Sin(angle));
+                var p = nx * MathF.Cos(angle) + ny * MathF.Sin(angle);
                 aa[i] = a + p * aradius;
                 bb[i] = b + p * bradius;
             }
@@ -139,7 +138,7 @@ namespace InteropDrawing.Parametric
             return MathF.Sqrt(circleArea * 2 / divisions * k);
         }
 
-        private static void _DrawCylinderCap(IPrimitiveScene3D dc, ColorStyle fillColor, LineCapStyle cap, VECTOR3 center, VECTOR3 axis, Span<Point3> corners)
+        private static void _DrawCylinderCap(IPrimitiveScene3D dc, ColorStyle fillColor, LineCapStyle cap, VECTOR3 center, VECTOR3 axis, Span<POINT3> corners)
         {
             switch (cap)
             {

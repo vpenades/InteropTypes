@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 
-using InteropDrawing;
+using InteropTypes.Graphics.Drawing;
 
-using POINT = InteropDrawing.Point2;
+using POINT = InteropTypes.Graphics.Drawing.Point2;
 
 namespace InteropVision
 {

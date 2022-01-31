@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 
-namespace InteropDrawing.Fonts
+namespace InteropTypes.Graphics.Drawing.Fonts
 {
     readonly struct HersheyGlyphParser
     {
@@ -25,12 +23,12 @@ namespace InteropDrawing.Fonts
 
             foreach (var c in glyph)
             {
-                if (Char.IsDigit(c))
+                if (char.IsDigit(c))
                 {
                     _CoordCount *= 10;
-                    _CoordCount += (int)(c - '0');
+                    _CoordCount += c - '0';
                     ++_CoordStart;
-                    continue;                    
+                    continue;
                 }
 
                 break;
@@ -41,7 +39,7 @@ namespace InteropDrawing.Fonts
 
         #region data
 
-        private readonly String _Glyph;
+        private readonly string _Glyph;
 
         private readonly int _CoordStart;
         private readonly int _CoordCount;
@@ -50,12 +48,12 @@ namespace InteropDrawing.Fonts
 
         #region properties
 
-        public int Left => (int)(_Glyph[_CoordStart+0] - 'R');
-        public int Right => (int)(_Glyph[_CoordStart+1] - 'R');
+        public int Left => _Glyph[_CoordStart + 0] - 'R';
+        public int Right => _Glyph[_CoordStart + 1] - 'R';
 
         public int Count => _CoordCount - 1;
 
-        public (int,int)? this[int index]
+        public (int, int)? this[int index]
         {
             get
             {
@@ -65,7 +63,7 @@ namespace InteropDrawing.Fonts
                 if (char.IsWhiteSpace(x)) return null;
                 var y = _Glyph[_CoordStart + index * 2 + 1];
 
-                return ((int)(x - 'R'), (int)(y - 'R'));
+                return (x - 'R', y - 'R');
             }
         }
 
@@ -73,11 +71,11 @@ namespace InteropDrawing.Fonts
 
         #region API
 
-        public IEnumerable<((int,int), (int,int))> GetSegments()
-        {            
+        public IEnumerable<((int, int), (int, int))> GetSegments()
+        {
             bool moveTo = true;
 
-            var prev = (0, 0);           
+            var prev = (0, 0);
 
             for (int i = 0; i < Count; ++i)
             {
@@ -89,13 +87,13 @@ namespace InteropDrawing.Fonts
 
                 moveTo = false;
                 prev = p.Value;
-            }            
+            }
         }
 
         public delegate void DrawFontPathCallback(ReadOnlySpan<Point2> points);
         public void DrawPaths(Matrix3x2 xform, DrawFontPathCallback callback)
         {
-            Span<Point2> points = stackalloc Point2[256];            
+            Span<Point2> points = stackalloc Point2[256];
 
             int idx = 0;
 

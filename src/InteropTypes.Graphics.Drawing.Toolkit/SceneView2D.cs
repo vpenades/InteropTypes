@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
-    public class SceneView2D : IPseudoImmutable , ISceneViewport2D
+    public class SceneView2D : IPseudoImmutable, ISceneViewport2D
     {
         #region lifecycle
 
@@ -13,18 +13,18 @@ namespace InteropDrawing
         {
             if (!Matrix3x2.Invert(xform, out Matrix3x2 _)) throw new ArgumentException(nameof(xform));
 
-            return new SceneView2D { _CameraMatrix = xform };            
+            return new SceneView2D { _CameraMatrix = xform };
         }
 
         public SceneView2D WithSceneBounds((Point2 Min, Point2 Max) bounds)
         {
-            this.SetSceneBounds(bounds);
+            SetSceneBounds(bounds);
             return this;
         }
 
         public SceneView2D WithSceneBounds(System.Drawing.RectangleF bounds)
         {
-            this.SetSceneBounds(bounds);
+            SetSceneBounds(bounds);
             return this;
         }
 
@@ -34,9 +34,9 @@ namespace InteropDrawing
 
         private Matrix3x2? _CameraMatrix;
 
-        private (Point2 Min, Point2 Max)? _SceneBounds;        
+        private (Point2 Min, Point2 Max)? _SceneBounds;
 
-        private Object _ImmutableKey;
+        private object _ImmutableKey;
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace InteropDrawing
         {
             get
             {
-                if (_ImmutableKey == null) _ImmutableKey = new Object();
+                if (_ImmutableKey == null) _ImmutableKey = new object();
                 return _ImmutableKey;
             }
         }
@@ -77,8 +77,8 @@ namespace InteropDrawing
         public void Clear()
         {
             _CameraMatrix = null;
-            
-            _SceneBounds = null;            
+
+            _SceneBounds = null;
             _ImmutableKey = null;
         }
 
@@ -86,8 +86,8 @@ namespace InteropDrawing
 
         public void SetSceneBounds((Point2 Min, Point2 Max) bounds)
         {
-            this._SceneBounds = bounds;
-            this._ImmutableKey = null;
+            _SceneBounds = bounds;
+            _ImmutableKey = null;
         }
 
         public void SetSceneBounds(System.Drawing.RectangleF bounds)
@@ -95,8 +95,8 @@ namespace InteropDrawing
             var min = bounds.Location.ToVector2();
             var max = min + bounds.Size.ToVector2();
 
-            this._SceneBounds = (min,max);
-            this._ImmutableKey = null;
+            _SceneBounds = (min, max);
+            _ImmutableKey = null;
         }
 
         #endregion
@@ -105,8 +105,8 @@ namespace InteropDrawing
 
         public virtual (Matrix3x2 Camera, Matrix3x2 Projection) GetMatrices(float renderWidth, float renderHeight)
         {
-            var cam = this.GetCameraMatrix();
-            var prj = this.GetProjectionMatrix(renderWidth, renderHeight);
+            var cam = GetCameraMatrix();
+            var prj = GetProjectionMatrix(renderWidth, renderHeight);
 
             return (cam, prj);
         }
@@ -121,9 +121,9 @@ namespace InteropDrawing
                 var s = Math.Max(ss.X, ss.Y);
 
                 return (s * ar, s).CreateOrthographic2D();
-            }                    
+            }
 
-            return (ar, 1.0f).CreateOrthographic2D();            
+            return (ar, 1.0f).CreateOrthographic2D();
         }
 
         public virtual Matrix3x2 GetCameraMatrix()

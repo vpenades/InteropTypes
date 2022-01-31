@@ -6,6 +6,8 @@ using OPENCV = OpenCvSharp.Cv2;
 using CVMATRIX = OpenCvSharp.Mat;
 using CVDEPTHTYPE = OpenCvSharp.MatType;
 
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+
 namespace InteropBitmaps
 {
     public delegate void TransferCvAction(CVMATRIX src, CVMATRIX dst);
@@ -250,7 +252,7 @@ namespace InteropBitmaps
 
         #region extras
 
-        public static InteropDrawing.Point2 ToPoint2(this OpenCvSharp.Point2f p) { return new InteropDrawing.Point2(p.X, p.Y); }        
+        public static InteropTypes.Graphics.Drawing.Point2 ToPoint2(this OpenCvSharp.Point2f p) { return new POINT2(p.X, p.Y); }        
 
         public static void TransferSpan(SpanBitmap src, SpanBitmap dst, SpanBitmap.Action2 action)
         {

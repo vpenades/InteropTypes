@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Drawing;
+
 using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropDrawing

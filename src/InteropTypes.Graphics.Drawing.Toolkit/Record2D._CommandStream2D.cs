@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 
 using XY = System.Numerics.Vector2;
-
-using COLOR = System.Drawing.Color;
-using POINT2 = InteropDrawing.Point2;
 using XFORM2 = System.Numerics.Matrix3x2;
 
+using COLOR = System.Drawing.Color;
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream2D_DebuggerProxy))]
     sealed class _CommandStream2D : Collection.CommandList, ICanvas2D
@@ -16,7 +15,7 @@ namespace InteropDrawing
         #region constructors 2D
 
         /// <inheritdoc/>
-        public void DrawAsset(in XFORM2 xform, Object asset, ColorStyle color)
+        public void DrawAsset(in XFORM2 xform, object asset, ColorStyle color)
         {
             var xref = AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset);
             xref[0].Transform = xform;
@@ -37,7 +36,7 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public unsafe void DrawLines(ReadOnlySpan<POINT2> points, Single diameter, in LineStyle brush)
+        public unsafe void DrawLines(ReadOnlySpan<POINT2> points, float diameter, in LineStyle brush)
         {
             if (points.Length > 2)
             {
@@ -61,7 +60,7 @@ namespace InteropDrawing
         }
 
         /// <inheritdoc/>
-        public unsafe void DrawEllipse(POINT2 center, Single width, Single height, in OutlineFillStyle brush)
+        public unsafe void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle brush)
         {
             var xref = AddHeaderAndStruct<_PrimitiveEllipse>((int)_PrimitiveType.Ellipse);
             xref[0].Center = center;
@@ -73,12 +72,12 @@ namespace InteropDrawing
         /// <inheritdoc/>
         public unsafe void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle brush)
         {
-            int count = this.Count;
+            int count = Count;
 
             AddHeader((int)_PrimitiveType.Polygon, 4 + sizeof(_PrimitivePolygon) + points.Length * 8);
 
             var xref = AddStruct<_PrimitivePolygon>();
-            xref[0].Count = points.Length;            
+            xref[0].Count = points.Length;
             xref[0].Style = brush;
 
             AddArray(points);
@@ -92,7 +91,7 @@ namespace InteropDrawing
             xref[0].ImageRef = AddReference(style.Bitmap);
             xref[0].Flags = style.Flags;
             xref[0].Color = style.Color.ToArgb();
-        }        
+        }
 
         #endregion
 
@@ -100,7 +99,7 @@ namespace InteropDrawing
 
         private ReadOnlySpan<byte> _GetCommandBytes(int offset, out _PrimitiveType type, out int size)
         {
-            var span = this.Buffer.Slice(offset);
+            var span = Buffer.Slice(offset);
             size = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(span);
             span = span.Slice(4, size);
 
@@ -108,13 +107,13 @@ namespace InteropDrawing
             return span.Slice(4);
         }
 
-        public (XY Min, XY Max, XY Center, Single Radius) GetBounds()
+        public (XY Min, XY Max, XY Center, float Radius) GetBounds()
         {
-            var bounds = _BoundsContext.CreateEmpty();            
+            var bounds = _BoundsContext.CreateEmpty();
 
-            foreach (var offset in this.GetCommands())
+            foreach (var offset in GetCommands())
             {
-                var span = _GetCommandBytes(offset, out _PrimitiveType type, out int size);                
+                var span = _GetCommandBytes(offset, out _PrimitiveType type, out int size);
 
                 switch (type)
                 {
@@ -122,8 +121,8 @@ namespace InteropDrawing
                     case _PrimitiveType.PolyLine: _PrimitiveLine.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Ellipse: _PrimitiveEllipse.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Polygon: _PrimitivePolygon.GetBounds(ref bounds, span); break;
-                    case _PrimitiveType.Image: _PrimitiveImage.GetBounds(ref bounds, span, this.References); break;
-                    case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, this.References); break;
+                    case _PrimitiveType.Image: _PrimitiveImage.GetBounds(ref bounds, span, References); break;
+                    case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, References); break;
                 }
             }
 
@@ -140,11 +139,11 @@ namespace InteropDrawing
                 case _PrimitiveType.PolyLine: { _PrimitivePolyLine.DrawTo(dc, span); break; }
                 case _PrimitiveType.Ellipse: { _PrimitiveEllipse.DrawTo(dc, span); break; }
                 case _PrimitiveType.Polygon: { _PrimitivePolygon.DrawTo(dc, span); break; }
-                case _PrimitiveType.Image: { _PrimitiveImage.DrawTo(dc, span, this.References); break; }
+                case _PrimitiveType.Image: { _PrimitiveImage.DrawTo(dc, span, References); break; }
                 case _PrimitiveType.Convex: { _PrimitiveConvex.DrawTo(dc, span); break; }
-                case _PrimitiveType.Asset: { _PrimitiveAsset.DrawTo(dc, span, this.References, collapseAssets); break; }
+                case _PrimitiveType.Asset: { _PrimitiveAsset.DrawTo(dc, span, References, collapseAssets); break; }
             }
-        }        
+        }
 
         #endregion
 
@@ -156,8 +155,8 @@ namespace InteropDrawing
             {
                 return new _BoundsContext
                 {
-                    Min = new XY(Single.MaxValue),
-                    Max = new XY(Single.MinValue),
+                    Min = new XY(float.MaxValue),
+                    Max = new XY(float.MinValue),
                     Circle = (XY.Zero, -1)
                 };
             }
@@ -165,7 +164,7 @@ namespace InteropDrawing
             public XY Min;
             public XY Max;
 
-            public (XY Center, Single Radius) Circle;
+            public (XY Center, float Radius) Circle;
 
             public void AddVertex(in XY vertex, float radius)
             {
@@ -179,7 +178,7 @@ namespace InteropDrawing
                 Circle = _MergeCircles(Circle, (vertex, radius));
             }
 
-            private static (XY Center, Single Radius) _MergeCircles(in (XY Center, Single Radius) left, in (XY Center, Single Radius) right)
+            private static (XY Center, float Radius) _MergeCircles(in (XY Center, float Radius) left, in (XY Center, float Radius) right)
             {
                 var relative = right.Center - left.Center;
 
@@ -206,16 +205,16 @@ namespace InteropDrawing
             public int Count;
             public ColorStyle Color;
 
-            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XY>(command.Slice(sizeof(_PrimitiveConvex)));
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XY>(command.Slice(sizeof(_PrimitiveConvex)));
                 foreach (var p in pts) bounds.AddVertex(p, 0);
             }
 
-            public static unsafe void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveConvex>(command)[0];
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitiveConvex)));
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT2>(command.Slice(sizeof(_PrimitiveConvex)));
 
                 dst.DrawConvexPolygon(pts.Slice(0, src.Count), src.Color);
             }
@@ -225,12 +224,12 @@ namespace InteropDrawing
         {
             public POINT2 PointA;
             public POINT2 PointB;
-            public Single Diameter;
+            public float Diameter;
             public LineStyle Style;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveLine>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveLine>(command)[0];
 
                 var r = src.Diameter * 0.5f + src.Style.Style.OutlineWidth;
 
@@ -241,86 +240,86 @@ namespace InteropDrawing
                 bounds.AddVertex(b, r);
             }
 
-            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveLine>(command)[0];
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveLine>(command)[0];
                 dst.DrawLine(body.PointA, body.PointB, body.Diameter, body.Style);
-            }            
+            }
         }
 
         struct _PrimitivePolyLine
         {
             public int Count;
-            public Single Diameter;
+            public float Diameter;
             public LineStyle Style;
 
-            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolyLine>(command)[0];
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XY>(command.Slice(sizeof(_PrimitivePolyLine)));
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitivePolyLine>(command)[0];
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XY>(command.Slice(sizeof(_PrimitivePolyLine)));
 
                 var r = src.Diameter * 0.5f + src.Style.Style.OutlineWidth;
 
                 foreach (var p in pts) bounds.AddVertex(p, r);
             }
 
-            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolyLine>(command)[0];
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitivePolyLine)));
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitivePolyLine>(command)[0];
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT2>(command.Slice(sizeof(_PrimitivePolyLine)));
 
                 dst.DrawLines(pts.Slice(0, src.Count), src.Diameter, src.Style);
-            }            
-        }            
+            }
+        }
 
         struct _PrimitiveEllipse
-        {            
-            public Point2 Center;
+        {
+            public POINT2 Center;
             public float Width;
             public float Height;
             public OutlineFillStyle Style;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveEllipse>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveEllipse>(command)[0];
 
                 var c = src.Center.ToNumerics();
                 var r = src.Style.OutlineWidth;
                 var rr = new XY(src.Width, src.Height) * 0.5f;
-                
+
                 bounds.AddVertex(c - rr, r);
                 bounds.AddVertex(c + rr, r);
             }
 
-            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveEllipse>(command)[0];
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveEllipse>(command)[0];
                 dst.DrawEllipse(body.Center, body.Width, body.Height, body.Style);
-            }            
-        }        
+            }
+        }
 
         struct _PrimitivePolygon
         {
-            public int Count;            
+            public int Count;
             public PolygonStyle Style;
 
-            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command)
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolygon>(command)[0];
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, XY>(command.Slice(sizeof(_PrimitivePolygon)));
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitivePolygon>(command)[0];
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XY>(command.Slice(sizeof(_PrimitivePolygon)));
 
                 var r = src.Style.OutlineWidth;
 
                 foreach (var p in pts) bounds.AddVertex(p, r);
             }
 
-            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command)
+            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitivePolygon>(command)[0];
-                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, POINT2>(command.Slice(sizeof(_PrimitivePolygon)));
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitivePolygon>(command)[0];
+                var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT2>(command.Slice(sizeof(_PrimitivePolygon)));
 
                 dst.DrawPolygon(pts.Slice(0, src.Count), src.Style);
-            }            
+            }
         }
 
         struct _PrimitiveImage
@@ -330,9 +329,9 @@ namespace InteropDrawing
             public int Flags;
             public int Color;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveImage>(command)[0];                
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];
 
                 var img = references[src.ImageRef] as ImageAsset;
 
@@ -357,26 +356,26 @@ namespace InteropDrawing
                 bounds.AddVertex(d, 0);
             }
 
-            public static void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
+            public static void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveImage>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];
 
                 var xref = (ImageAsset)references[src.ImageRef];
                 var style = new ImageStyle(xref, COLOR.FromArgb(src.Color), src.Flags);
 
                 dst.DrawImage(src.Transform, style);
-            }            
+            }
         }
 
         struct _PrimitiveAsset
         {
             public XFORM2 Transform;
-            public int AssetRef;            
+            public int AssetRef;
             public ColorStyle Style;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references)
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveAsset>(command)[0];
 
                 var asset = references[src.AssetRef];
 
@@ -388,7 +387,7 @@ namespace InteropDrawing
                     if (rect.HasValue)
                     {
                         bounds.AddVertex(rect.Value.Location.ToVector2(), 0);
-                        bounds.AddVertex((rect.Value.Location.ToVector2() + rect.Value.Size.ToVector2()), 0);
+                        bounds.AddVertex(rect.Value.Location.ToVector2() + rect.Value.Size.ToVector2(), 0);
                     }
                 }
                 else
@@ -403,9 +402,9 @@ namespace InteropDrawing
 
             }
 
-            public static void DrawTo(ICanvas2D dst, ReadOnlySpan<Byte> command, IReadOnlyList<Object> references, bool collapse)
+            public static void DrawTo(ICanvas2D dst, ReadOnlySpan<byte> command, IReadOnlyList<object> references, bool collapse)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, _PrimitiveAsset>(command)[0];
+                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveAsset>(command)[0];
 
                 if (collapse)
                 {
@@ -426,7 +425,7 @@ namespace InteropDrawing
             Asset,
             PolyLine,
             Ellipse,
-            Polygon            
+            Polygon
         }
 
         #endregion
@@ -437,9 +436,16 @@ namespace InteropDrawing
         public _CommandStream2D_DebuggerProxy(_CommandStream2D src)
         {
             var sb = new List<string>();
+
+            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+            Before:
+                        var target = Diagnostics.CommandLogger.From(sb);
+            After:
+                        var target = CommandLogger.From(sb);
+            */
             var target = Diagnostics.CommandLogger.From(sb);
 
-            foreach(var offset in src.GetCommands())
+            foreach (var offset in src.GetCommands())
             {
                 src.DrawTo(offset, target, false);
             }
@@ -450,5 +456,5 @@ namespace InteropDrawing
         public readonly string[] Primitives;
     }
 
-    
+
 }

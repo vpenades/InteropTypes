@@ -8,9 +8,18 @@ using VECTOR2 = System.Numerics.Vector2;
 using GDIPOINT = System.Drawing.Point;
 using GDIPOINTF = System.Drawing.PointF;
 using GDISIZE = System.Drawing.Size;
+
+/* Unmerged change from project 'InteropDrawing.Core (netstandard2.1)'
+Before:
+using GDISIZEF = System.Drawing.SizeF;
+After:
+using GDISIZEF = System.Drawing.SizeF;
+using InteropDrawing;
+using InteropTypes.Graphics.Drawing;
+*/
 using GDISIZEF = System.Drawing.SizeF;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents a vector with two single-precision floating-point values.
@@ -131,10 +140,10 @@ namespace InteropDrawing
         #region operators
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator *(Point2 a, Single b) { return new Point2(a.X * b, a.Y * b); }
+        public static Point2 operator *(Point2 a, float b) { return new Point2(a.X * b, a.Y * b); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator /(Point2 a, Single b) { return new Point2(a.X / b, a.Y / b); }
+        public static Point2 operator /(Point2 a, float b) { return new Point2(a.X / b, a.Y / b); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 operator +(Point2 a, Point2 b) { return new Point2(a.X + b.X, a.Y + b.Y); }
@@ -147,10 +156,10 @@ namespace InteropDrawing
         #region API
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point2 WithX(float x) { return new Point2(x, this.Y); }
+        public Point2 WithX(float x) { return new Point2(x, Y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point2 WithY(float y) { return new Point2(this.X, y); }
+        public Point2 WithY(float y) { return new Point2(X, y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public VECTOR2 ToNumerics() { return new VECTOR2(X, Y); }
@@ -163,13 +172,13 @@ namespace InteropDrawing
 
         public System.Drawing.RectangleF ToGDIRectangleOffCenter(float size)
         {
-            return new System.Drawing.RectangleF(this.X - size / 2f, this.Y - size / 2f, size, size);
+            return new System.Drawing.RectangleF(X - size / 2f, Y - size / 2f, size, size);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 Center(System.Drawing.Rectangle rect)
         {
-            return new Point2(rect.X + (rect.Width / 2f), rect.Y + (rect.Height / 2f));
+            return new Point2(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -189,7 +198,7 @@ namespace InteropDrawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 Center(System.Drawing.RectangleF rect)
         {
-            return new Point2(rect.X + (rect.Width / 2f), rect.Y + (rect.Height / 2f));
+            return new Point2(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
         }
 
         public static Point2 Lerp(Point2 a, Point2 b, float amount)
@@ -254,5 +263,5 @@ namespace InteropDrawing
         public override string ToString() { return ToNumerics().ToString(); }
 
         #endregion
-    }    
+    }
 }

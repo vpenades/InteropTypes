@@ -8,7 +8,7 @@ using System.Numerics;
 using InteropBitmaps;
 
 using XY = System.Numerics.Vector2;
-using POINT = InteropDrawing.Point2;
+using POINT = InteropTypes.Graphics.Drawing.Point2;
 
 using SCORE = InteropVision.Score;
 using RECTI = System.Drawing.Rectangle;

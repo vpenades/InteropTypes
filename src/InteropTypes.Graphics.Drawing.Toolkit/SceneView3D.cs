@@ -5,12 +5,12 @@ using System.Text;
 
 using BBOX = System.Numerics.Matrix3x2;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Defines a Camera in 3D space, that can be used to create Camera and Projection matrices.
     /// </summary>
-    public class SceneView3D : IPseudoImmutable , ISceneViewport3D
+    public class SceneView3D : IPseudoImmutable, ISceneViewport3D
     {
         #region lifecycle
 
@@ -23,13 +23,13 @@ namespace InteropDrawing
 
         public SceneView3D WithSceneBounds((Point3 Min, Point3 Max) bounds)
         {
-            this.SetSceneBounds(bounds);
+            SetSceneBounds(bounds);
             return this;
         }
 
         public SceneView3D WithSceneBounds(in BBOX bounds)
         {
-            this.SetSceneBounds(bounds);
+            SetSceneBounds(bounds);
             return this;
         }
 
@@ -44,9 +44,9 @@ namespace InteropDrawing
 
         // When Positive: Perspective Vertical FOV in radians
         // When Negative: Ortographic Vertical Scale
-        private float _ProjectionFactor = 1.2f;        
+        private float _ProjectionFactor = 1.2f;
 
-        private Object _ImmutableKey;
+        private object _ImmutableKey;
 
         #endregion
 
@@ -56,10 +56,10 @@ namespace InteropDrawing
         {
             get
             {
-                if (_ImmutableKey == null) _ImmutableKey = new Object();
+                if (_ImmutableKey == null) _ImmutableKey = new object();
                 return _ImmutableKey;
             }
-        }        
+        }
 
         public Matrix4x4? CameraMatrix
         {
@@ -100,8 +100,8 @@ namespace InteropDrawing
         {
             _CameraPosition = cameraPosition;
             _CameraMatrix = null;
-            _ImmutableKey = null;            
-        }        
+            _ImmutableKey = null;
+        }
 
         public void SetPerspectiveFOV(float fov)
         {
@@ -126,7 +126,7 @@ namespace InteropDrawing
 
         public void SetSceneBounds(BBOX bounds)
         {
-            _SceneBounds = (bounds.ColumnX(),bounds.ColumnY());
+            _SceneBounds = (bounds.ColumnX(), bounds.ColumnY());
             _ImmutableKey = null;
         }
 
@@ -136,8 +136,8 @@ namespace InteropDrawing
 
         public (Matrix4x4 Camera, Matrix4x4 Projection) GetMatrices(float width, float height)
         {
-            var cam = this.GetCameraMatrix();
-            var prj = this.GetProjectionMatrix(width, height);
+            var cam = GetCameraMatrix();
+            var prj = GetProjectionMatrix(width, height);
 
             return (cam, prj);
         }
@@ -150,7 +150,7 @@ namespace InteropDrawing
                ?
                Matrix4x4.CreatePerspectiveFieldOfView(_ProjectionFactor, ar, 0.1f, 10000)
                :
-               Matrix4x4.CreateOrthographic(-_ProjectionFactor * ar, -this._ProjectionFactor, 0.1f, 10000);
+               Matrix4x4.CreateOrthographic(-_ProjectionFactor * ar, -_ProjectionFactor, 0.1f, 10000);
         }
 
         public Matrix4x4 GetCameraMatrix()
@@ -173,7 +173,7 @@ namespace InteropDrawing
         private static Matrix4x4 _GetOptimalCamera(Point3 min, Point3 max)
         {
             var center = (min + max) * 0.5f;
-            var size = (max - min);
+            var size = max - min;
 
             var distance = (size.X + size.Y + size.Z) / 2.1f;
 

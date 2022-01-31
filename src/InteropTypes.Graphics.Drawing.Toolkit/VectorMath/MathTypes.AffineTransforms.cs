@@ -6,7 +6,7 @@ using XY = System.Numerics.Vector2;
 using XYZ = System.Numerics.Vector3;
 using QROT = System.Numerics.Quaternion;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents an affine transform in 2D space, defined as a Scale, Rotation and Translation.

@@ -4,7 +4,7 @@ using System.Text;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Line cap styles used by <see cref="LineStyle"/>.
@@ -56,13 +56,13 @@ namespace InteropDrawing
 
         public static implicit operator LineStyle((OutlineFillStyle, LineCapStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
 
-        public static implicit operator LineStyle((COLOR, Single) style) { return new LineStyle(style.Item1, style.Item2); }
+        public static implicit operator LineStyle((COLOR, float) style) { return new LineStyle(style.Item1, style.Item2); }
 
-        public static implicit operator LineStyle((COLOR, COLOR, Single) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator LineStyle((COLOR, COLOR, float) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
 
-        public static implicit operator LineStyle((COLOR, COLOR, Single, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item4); }
+        public static implicit operator LineStyle((COLOR, COLOR, float, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item4); }
 
-        public static implicit operator LineStyle((COLOR, COLOR, Single, LineCapStyle, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item5); }
+        public static implicit operator LineStyle((COLOR, COLOR, float, LineCapStyle, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item5); }
 
         #endregion
 
@@ -74,13 +74,13 @@ namespace InteropDrawing
             StartCap = EndCap = LineCapStyle.Flat;
         }
 
-        public LineStyle(COLOR outColor, Single outWidth)
+        public LineStyle(COLOR outColor, float outWidth)
         {
             Style = new OutlineFillStyle(outColor, outWidth);
             StartCap = EndCap = LineCapStyle.Flat;
         }
 
-        public LineStyle(COLOR fillColor, COLOR outColor, Single outWidth)
+        public LineStyle(COLOR fillColor, COLOR outColor, float outWidth)
         {
             Style = new OutlineFillStyle(fillColor, outColor, outWidth);
             StartCap = EndCap = LineCapStyle.Flat;
@@ -138,31 +138,31 @@ namespace InteropDrawing
         public static readonly LineStyle Blue = _Default.With(COLOR.Blue);
         public static readonly LineStyle Yellow = _Default.With(COLOR.Yellow);
 
-        public LineStyle With(LineCapStyle caps) { return new LineStyle(this.Style, caps, caps); }
+        public LineStyle With(LineCapStyle caps) { return new LineStyle(Style, caps, caps); }
 
-        public LineStyle With(LineCapStyle startCap, LineCapStyle endCap) { return new LineStyle(this.Style, startCap, endCap); }
+        public LineStyle With(LineCapStyle startCap, LineCapStyle endCap) { return new LineStyle(Style, startCap, endCap); }
 
         public LineStyle With(OutlineFillStyle style)
         {
             return new LineStyle(style, StartCap, EndCap);
         }
 
-        public LineStyle WithOutline(Single ow)
+        public LineStyle WithOutline(float ow)
         {
             return new LineStyle(Style.WithOutline(ow), StartCap, EndCap);
         }
 
-        public LineStyle WithOutline(COLOR color, Single ow)
+        public LineStyle WithOutline(COLOR color, float ow)
         {
             return new LineStyle(Style.WithOutline(color, ow), StartCap, EndCap);
         }
 
         public bool IsSolid(ref float diameter, out COLOR solidColor)
         {
-            if (diameter < this.Style.OutlineWidth)
+            if (diameter < Style.OutlineWidth)
             {
-                diameter = this.Style.OutlineWidth * 2;
-                solidColor = this.Style.OutlineColor;
+                diameter = Style.OutlineWidth * 2;
+                solidColor = Style.OutlineColor;
                 return true;
             }
 

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
+using InteropTypes.Graphics.Drawing;
+
 using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropDrawing.Backends
 {
-    class MonoGameDrawing3D : Transforms.Decompose3D.PassThrough, IMonoGameDrawing3D
+    class MonoGameDrawing3D :
+        InteropTypes.Graphics.Drawing.Transforms.Decompose3D.PassThrough,
+        IMonoGameDrawing3D
     {
         #region lifecycle
 
