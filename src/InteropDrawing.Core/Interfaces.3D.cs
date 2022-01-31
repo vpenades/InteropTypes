@@ -12,13 +12,6 @@ using POINT3 = InteropDrawing.Point3;
 
 namespace InteropDrawing
 {
-    public interface IBounds3D
-    {
-        (System.Numerics.Vector3 Center, Single Radius) GetBoundingSphere();
-    }
-
-    
-
     /// <summary>
     /// Represents a render target context where we can draw 3D surfaces
     /// </summary>
@@ -58,12 +51,15 @@ namespace InteropDrawing
     /// </summary>
     public interface IDisposableScene3D : IScene3D, IDisposable { }
 
-    
 
-    
 
-    
-    
+
+
+
+    public interface ISceneBounds3D
+    {
+        (System.Numerics.Vector3 Center, Single Radius) GetBoundingSphere();
+    }
 
     public interface ISceneViewport2D
     {

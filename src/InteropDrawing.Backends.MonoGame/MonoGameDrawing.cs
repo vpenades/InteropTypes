@@ -10,7 +10,7 @@ namespace InteropDrawing.Backends
 {
     public interface IMonoGameDrawing2D :
         IDisposableCanvas2D,
-        Backends.IViewportInfo,
+        IBackendViewportInfo,
         Transforms.ITransformer2D,
         IServiceProvider
     {

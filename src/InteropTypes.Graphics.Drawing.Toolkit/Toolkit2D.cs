@@ -13,9 +13,6 @@ using XFORM2 = System.Numerics.Matrix3x2;
 
 using ASSET = System.Object;
 
-
-
-
 namespace InteropDrawing
 {
     using PRIMITIVE2D = IPrimitiveCanvas2D;
@@ -38,7 +35,14 @@ namespace InteropDrawing
 
             if (!(dc is IServiceProvider srv)) return false;
 
-            var vinfo = srv.GetService(typeof(Backends.IViewportInfo)) as Backends.IViewportInfo;
+
+/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
+Before:
+            var vinfo = srv.GetService(typeof(Backends.IBackendViewportInfo)) as Backends.IBackendViewportInfo;
+After:
+            var vinfo = srv.GetService(typeof(IBackendViewportInfo)) as IBackendViewportInfo;
+*/
+            var vinfo = srv.GetService(typeof(InteropDrawing.IBackendViewportInfo)) as InteropDrawing.IBackendViewportInfo;
             if (vinfo == null) return false;
 
             if (!(dc is Transforms.ITransformer2D xform)) return false;

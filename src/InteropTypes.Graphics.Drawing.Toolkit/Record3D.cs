@@ -13,7 +13,7 @@ namespace InteropDrawing
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IScene3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Record3D : IScene3D, IDrawingBrush<IScene3D>, IPseudoImmutable, IBounds3D
+    public class Record3D : IScene3D, IDrawingBrush<IScene3D>, IPseudoImmutable, ISceneBounds3D
     {
         #region data
 

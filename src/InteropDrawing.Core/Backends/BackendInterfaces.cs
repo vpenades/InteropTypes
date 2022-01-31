@@ -10,10 +10,8 @@ using POINT2 = InteropDrawing.Point2;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing.Backends
+namespace InteropDrawing
 {
-    
-
     /// <summary>
     /// provides additional information about the rendering backend
     /// </summary>
@@ -22,7 +20,7 @@ namespace InteropDrawing.Backends
     /// queried through any exposed <see cref="ICanvas2D"/> casted to a
     /// <see cref="IServiceProvider"/>
     /// </remarks>
-    public interface IViewportInfo
+    public interface IBackendViewportInfo
     {
         /// <summary>
         /// The viewport width in pixels
@@ -38,4 +36,6 @@ namespace InteropDrawing.Backends
 
         float DotsPerInchY { get; }
     }
+
+
 }

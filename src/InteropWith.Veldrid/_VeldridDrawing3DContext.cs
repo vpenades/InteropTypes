@@ -183,7 +183,7 @@ namespace InteropWith
 
         private InteropDrawing.Transforms.Decompose3D _Collapsed3D => new InteropDrawing.Transforms.Decompose3D(this);
 
-        public void DrawAsset(in Matrix4x4 transform, object asset, OutlineFillStyle style)
+        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
         {
             throw new NotImplementedException();
         }

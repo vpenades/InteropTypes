@@ -7,7 +7,7 @@ using COLOR = System.Drawing.Color;
 namespace InteropDrawing
 {
     /// <summary>
-    /// Font drawing modes used by <see cref="FontStyle"/>.
+    /// Represents the style of a Font. <see cref="FontStyle"/>.
     /// </summary>
     [Flags]
     public enum FontAlignStyle

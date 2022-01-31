@@ -7,7 +7,14 @@ namespace InteropDrawing.Backends
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
     class _MemoryDrawingContext<TPixel> :
         Transforms.Decompose2D.PassToSelf,
-        Backends.IViewportInfo,
+
+/* Unmerged change from project 'InteropBitmaps.Drawing (netstandard2.1)'
+Before:
+        Backends.IBackendViewportInfo,
+After:
+        IBackendViewportInfo,
+*/
+        InteropDrawing.IBackendViewportInfo,
         Backends.IDrawingBackend2D,
         IServiceProvider
 
