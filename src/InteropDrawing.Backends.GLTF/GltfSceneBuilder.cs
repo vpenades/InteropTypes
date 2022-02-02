@@ -5,10 +5,12 @@ using System.Linq;
 
 using SharpGLTF.Schema2;
 
-using MESHBUILDER = SharpGLTF.Geometry.IMeshBuilder<SharpGLTF.Materials.MaterialBuilder>;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+using MESHBUILDER = SharpGLTF.Geometry.IMeshBuilder<SharpGLTF.Materials.MaterialBuilder>;
+
+
+namespace InteropTypes.Graphics.Backends
 {
     public class GltfSceneBuilder
     {
@@ -18,11 +20,11 @@ namespace InteropDrawing.Backends
         {
             var dst = new GltfSceneBuilder();
 
-            using(var dc = dst.CreateDrawing3DContext())
+            using (var dc = dst.CreateDrawing3DContext())
             {
                 srcModel.DrawTo(dc);
             }
-            
+
             return dst.ToSceneBuilder(settings);
         }
 
@@ -30,8 +32,8 @@ namespace InteropDrawing.Backends
 
         #region data
 
-        private readonly List<(MESHBUILDER Mesh,Matrix4x4 Transform)> _Meshes = new List<(MESHBUILDER, Matrix4x4)>();        
-        
+        private readonly List<(MESHBUILDER Mesh, Matrix4x4 Transform)> _Meshes = new List<(MESHBUILDER, Matrix4x4)>();
+
         private CameraView3D? _Camera;
 
         #endregion
@@ -64,7 +66,7 @@ namespace InteropDrawing.Backends
 
         public GltfSceneBuilder Draw(Matrix4x4 xform, params IDrawingBrush<IScene3D>[] drawables)
         {
-            using(var dc = CreateDrawing3DContext(xform))
+            using (var dc = CreateDrawing3DContext(xform))
             {
                 foreach (var d in drawables) d.DrawTo(dc);
             }
@@ -101,7 +103,7 @@ namespace InteropDrawing.Backends
 
             // add meshes
 
-            foreach (var m in _Meshes) scene.AddRigidMesh(m.Mesh, m.Transform);            
+            foreach (var m in _Meshes) scene.AddRigidMesh(m.Mesh, m.Transform);
 
             // add camera
 
@@ -149,7 +151,7 @@ namespace InteropDrawing.Backends
         {
             var scene = ToSceneBuilder(settings);
             return scene.ToGltf2();
-        }        
+        }
 
         public void Save(string filePath)
         {
@@ -173,7 +175,7 @@ namespace InteropDrawing.Backends
     }
 
 
-    sealed class _GltfDrawing3DContext : GltfMeshDrawing3D , IDisposableScene3D
+    sealed class _GltfDrawing3DContext : GltfMeshDrawing3D, IDisposableScene3D
     {
         public _GltfDrawing3DContext(GltfSceneBuilder owner, Matrix4x4 xform)
         {
@@ -185,12 +187,12 @@ namespace InteropDrawing.Backends
         {
             if (_Owner != null)
             {
-                if (!this.IsEmpty) _Owner._AddMesh(this.Mesh, this._Transform);
-                this.Clear();
+                if (!IsEmpty) _Owner._AddMesh(Mesh, _Transform);
+                Clear();
             }
 
-            _Owner = null;            
-        }        
+            _Owner = null;
+        }
 
         private GltfSceneBuilder _Owner;
         private Matrix4x4 _Transform;

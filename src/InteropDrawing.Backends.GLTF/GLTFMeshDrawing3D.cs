@@ -11,7 +11,7 @@ using InteropTypes.Graphics.Drawing.Transforms;
 using COLOR = System.Drawing.Color;
 using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     using MESHBUILDER = SharpGLTF.Geometry.MeshBuilder<VertexPosition, VertexEmpty, VertexEmpty>;
     using VERTEXBUILDER = SharpGLTF.Geometry.VertexBuilder<VertexPosition, VertexEmpty, VertexEmpty>;
@@ -23,7 +23,7 @@ namespace InteropDrawing.Backends
     {
         #region data
 
-        private MESHBUILDER _Mesh;        
+        private MESHBUILDER _Mesh;
 
         private readonly Dictionary<GltfSolidMaterial, SharpGLTF.Materials.MaterialBuilder> _Materials = new Dictionary<GltfSolidMaterial, SharpGLTF.Materials.MaterialBuilder>();
 
@@ -56,24 +56,24 @@ namespace InteropDrawing.Backends
         #region API
 
         public void Clear() { _Mesh = null; }
-        
+
         /// <inheritdoc />
         public override void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle fillColor)
         {
-            switch(vertices.Length)
+            switch (vertices.Length)
             {
                 case 0: return;
                 case 1: return;
                 case 2: _DrawLine(vertices[0], vertices[1], fillColor.Color); return;
                 default: _DrawSurface(vertices, fillColor.Color, false); return;
-            }            
+            }
         }
 
         #endregion
 
         #region core
 
-        private void _DrawSurface(ReadOnlySpan<POINT3> vertices, COLOR color, Boolean doubleSided)
+        private void _DrawSurface(ReadOnlySpan<POINT3> vertices, COLOR color, bool doubleSided)
         {
             if (_Mesh == null) _Mesh = new MESHBUILDER();
 

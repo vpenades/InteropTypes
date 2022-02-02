@@ -5,18 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 
+using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Collections;
+
 using XY = System.Numerics.Vector2;
 using XYZ = System.Numerics.Vector3;
 using COLOR = System.Drawing.Color;
 
 using VERTEX = Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture;
-using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+
+namespace InteropTypes.Graphics.Backends
 {
     partial class MeshBuilder :
         IPrimitiveScene3D,
-        InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D
+        IDrawingBackend2D
     {
         #region lifecycle
 
@@ -29,7 +32,7 @@ namespace InteropDrawing.Backends
 
         #region data
 
-        private readonly Boolean _FaceFlip = false;
+        private readonly bool _FaceFlip = false;
         private readonly float _DepthZ = 0;
 
         private float _SpriteBleed = 0;
@@ -56,9 +59,9 @@ namespace InteropDrawing.Backends
 
         public int SphereLOD { get; set; } = 1;
 
-        public bool IsEmpty => _Lines.IsEmpty && _Triangles.IsEmpty;        
+        public bool IsEmpty => _Lines.IsEmpty && _Triangles.IsEmpty;
 
-        public float  SpriteCoordsBleed
+        public float SpriteCoordsBleed
         {
             get => _SpriteBleed;
             set
@@ -109,7 +112,7 @@ namespace InteropDrawing.Backends
             {
                 _DrawThinLine(vertices[i - 1], vertices[i], c);
             }
-        }        
+        }
 
         /// <inheritdoc/>
         public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
@@ -119,13 +122,13 @@ namespace InteropDrawing.Backends
             Span<Point3> vertices = stackalloc Point3[points.Length];
             Point3.Transform(vertices, points, _DepthZ);
 
-            switch(vertices.Length)
+            switch (vertices.Length)
             {
                 case 0: return;
                 case 1: return;
                 case 2: _DrawThinLine(vertices[0], vertices[1], color.Color.ToXna()); return;
                 default: _DrawConvexSurface(vertices, color.Color.ToXna(), false); return;
-            }            
+            }
         }
 
         /// <inheritdoc/>
@@ -222,7 +225,7 @@ namespace InteropDrawing.Backends
         {
             _Lines.Clear();
             _Triangles.Clear();
-        }        
+        }
 
         #endregion
     }
@@ -231,7 +234,7 @@ namespace InteropDrawing.Backends
     {
         #region data
 
-        private readonly Collections.ValueListSet<VERTEX> _Vertices = new Collections.ValueListSet<VERTEX>();
+        private readonly ValueListSet<VERTEX> _Vertices = new ValueListSet<VERTEX>();
 
         private readonly List<int> _Indices = new List<int>();
 
@@ -311,13 +314,13 @@ namespace InteropDrawing.Backends
 
             AddIndex(a);
             AddIndex(b);
-        }        
+        }
 
         #endregion
     }
 
     partial class TrianglesBuffer : VertexBuffer
-    {        
+    {
         #region API
 
         public void AddTriangle(int a, int b, int c)
@@ -327,7 +330,7 @@ namespace InteropDrawing.Backends
             AddIndex(a);
             AddIndex(b);
             AddIndex(c);
-        }        
+        }
 
         #endregion
     }

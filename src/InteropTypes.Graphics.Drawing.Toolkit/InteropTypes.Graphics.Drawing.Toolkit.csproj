@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
-    <RootNamespace>InteropDrawing</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -12,22 +12,14 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <Compile Include="..\Interop.MathF.Source\*.cs" LinkBase="MathF" />
-  </ItemGroup>
+  </ItemGroup>  
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>InteropDrawing.Tests</_Parameter1>
-    </AssemblyAttribute>
+  <ItemGroup>    
+    <InternalsVisibleTo Include="InteropDrawing.Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+    <ProjectReference Include="..\InteropDrawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
   </ItemGroup>
 
 </Project>

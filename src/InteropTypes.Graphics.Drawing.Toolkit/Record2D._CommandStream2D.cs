@@ -17,22 +17,18 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         public void DrawAsset(in XFORM2 xform, object asset, ColorStyle color)
         {
-            var xref = AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset);
-            xref[0].Transform = xform;
-            xref[0].AssetRef = AddReference(asset);
-            xref[0].Style = color;
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset)[0];
+            xref.Transform = xform;
+            xref.AssetRef = AddReference(asset);
+            xref.Style = color;
         }
 
         /// <inheritdoc/>
         public unsafe void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle color)
         {
-            AddHeader((int)_PrimitiveType.Convex, 4 + sizeof(_PrimitiveConvex) + points.Length * 8);
-
-            var xref = AddStruct<_PrimitiveConvex>();
-            xref[0].Count = points.Length;
-            xref[0].Color = color;
-
-            AddArray(points);
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveConvex>((int)_PrimitiveType.Convex, points)[0];            
+            xref.Count = points.Length;
+            xref.Color = color;
         }
 
         /// <inheritdoc/>
@@ -40,57 +36,47 @@ namespace InteropTypes.Graphics.Drawing
         {
             if (points.Length > 2)
             {
-                AddHeader((int)_PrimitiveType.PolyLine, 4 + sizeof(_PrimitivePolyLine) + points.Length * 8);
-
-                var xref = AddStruct<_PrimitivePolyLine>();
-                xref[0].Count = points.Length;
-                xref[0].Diameter = diameter;
-                xref[0].Style = brush;
-
-                AddArray(points);
+                ref var xref = ref AddHeaderAndStruct<_PrimitivePolyLine>((int)_PrimitiveType.PolyLine, points)[0];
+                xref.Count = points.Length;
+                xref.Diameter = diameter;
+                xref.Style = brush;
             }
             else
             {
-                var xref = AddHeaderAndStruct<_PrimitiveLine>((int)_PrimitiveType.Line);
-                xref[0].PointA = points[0];
-                xref[0].PointB = points[1];
-                xref[0].Diameter = diameter;
-                xref[0].Style = brush;
+                ref var xref = ref AddHeaderAndStruct<_PrimitiveLine>((int)_PrimitiveType.Line)[0];
+                xref.PointA = points[0];
+                xref.PointB = points[1];
+                xref.Diameter = diameter;
+                xref.Style = brush;
             }
         }
 
         /// <inheritdoc/>
         public unsafe void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle brush)
         {
-            var xref = AddHeaderAndStruct<_PrimitiveEllipse>((int)_PrimitiveType.Ellipse);
-            xref[0].Center = center;
-            xref[0].Width = width;
-            xref[0].Height = height;
-            xref[0].Style = brush;
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveEllipse>((int)_PrimitiveType.Ellipse)[0];
+            xref.Center = center;
+            xref.Width = width;
+            xref.Height = height;
+            xref.Style = brush;
         }
 
         /// <inheritdoc/>
         public unsafe void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle brush)
         {
-            int count = Count;
-
-            AddHeader((int)_PrimitiveType.Polygon, 4 + sizeof(_PrimitivePolygon) + points.Length * 8);
-
-            var xref = AddStruct<_PrimitivePolygon>();
-            xref[0].Count = points.Length;
-            xref[0].Style = brush;
-
-            AddArray(points);
+            ref var xref = ref AddHeaderAndStruct<_PrimitivePolygon>((int)_PrimitiveType.Polygon, points)[0];
+            xref.Count = points.Length;
+            xref.Style = brush;
         }
 
         /// <inheritdoc/>
         public void DrawImage(in XFORM2 xform, in ImageStyle style)
         {
-            var xref = AddHeaderAndStruct<_PrimitiveImage>((int)_PrimitiveType.Image);
-            xref[0].Transform = xform;
-            xref[0].ImageRef = AddReference(style.Bitmap);
-            xref[0].Flags = style.Flags;
-            xref[0].Color = style.Color.ToArgb();
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveImage>((int)_PrimitiveType.Image)[0];
+            xref.Transform = xform;
+            xref.ImageRef = AddReference(style.Bitmap);
+            xref.Flags = style.Flags;
+            xref.Color = style.Color.ToArgb();
         }
 
         #endregion
@@ -436,13 +422,7 @@ namespace InteropTypes.Graphics.Drawing
         public _CommandStream2D_DebuggerProxy(_CommandStream2D src)
         {
             var sb = new List<string>();
-
-            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-            Before:
-                        var target = Diagnostics.CommandLogger.From(sb);
-            After:
-                        var target = CommandLogger.From(sb);
-            */
+            
             var target = Diagnostics.CommandLogger.From(sb);
 
             foreach (var offset in src.GetCommands())

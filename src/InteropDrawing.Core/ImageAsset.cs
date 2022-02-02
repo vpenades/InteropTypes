@@ -11,7 +11,7 @@ namespace InteropTypes.Graphics.Drawing
     /// </summary>
     /// <remarks>
     /// <see cref="ImageAsset"/> is part of <see cref="ImageStyle"/>, which can be used at<br/>
-    /// <see cref="IImagesCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
+    /// <see cref="IPrimitiveCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Source} ({Left}, {Top}) ({Width}, {Height}) Scale:{Scale}")]
     public class ImageAsset
@@ -34,12 +34,17 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        public static ImageAsset CreateFromBitmap(object source, Point2 size, Point2 pivot, bool pivotPrecedence = false)
+        public static ImageAsset CreateFromBitmap(object source, Point2 bitmapSize, Point2 pivot, bool pivotPrecedence = false)
         {
-            return new ImageAsset(source, (0, 0), size, pivot, pivotPrecedence);
+            return new ImageAsset(source, (0, 0), bitmapSize, pivot, pivotPrecedence);
         }
 
-        public ImageAsset(object source, Point2 origin, Point2 size, Point2 pivot, bool pivotPrecedence = false)
+        public static ImageAsset Create(object source, Point2 origin, Point2 size, Point2 pivot, bool pivotPrecedence = false, bool hflip = false, bool vflip = false)
+        {
+            return new ImageAsset(source, origin, size, pivot, pivotPrecedence, hflip, vflip);
+        }
+
+        public ImageAsset(object source, Point2 origin, Point2 size, Point2 pivot, bool pivotPrecedence = false, bool hflip = false, bool vflip = false)
         {
             _Source = source;
             _SourceUVMin = origin.ToNumerics();
@@ -47,6 +52,10 @@ namespace InteropTypes.Graphics.Drawing
 
             _Pivot = pivot.ToNumerics();
             _PivotPrecedence = pivotPrecedence;
+
+            _OrientationMask = ImageStyle.Orientation.None;
+            if (hflip) _OrientationMask |= ImageStyle.Orientation.FlipHorizontal;
+            if (vflip) _OrientationMask |= ImageStyle.Orientation.FlipVertical;
 
             _CalculateMatrices();
         }
@@ -63,6 +72,16 @@ namespace InteropTypes.Graphics.Drawing
         public ImageAsset WithScale(float scale)
         {
             _Scale = new XY(scale);
+            _CalculateMatrices();
+            return this;
+        }
+
+        public ImageAsset WithFlags(bool hflip, bool vflip)
+        {
+            _OrientationMask = ImageStyle.Orientation.None;
+            if (hflip) _OrientationMask |= ImageStyle.Orientation.FlipHorizontal;
+            if (vflip) _OrientationMask |= ImageStyle.Orientation.FlipVertical;
+
             _CalculateMatrices();
             return this;
         }
@@ -86,12 +105,13 @@ namespace InteropTypes.Graphics.Drawing
 
         public void CopyTo(ImageAsset other, XY pivotOffset)
         {
-            other._Source = Source;
-            other._SourceUVMin = _SourceUVMin;
-            other._SourceUVMax = _SourceUVMax;
-            other._Scale = _Scale;
-            other._Pivot = _Pivot + pivotOffset; // should multiply by this.Scale ??
-            other._PivotPrecedence = _PivotPrecedence;
+            other._Source = this.Source;
+            other._SourceUVMin = this._SourceUVMin;
+            other._SourceUVMax = this._SourceUVMax;
+            other._Scale = this._Scale;
+            other._Pivot = this._Pivot + pivotOffset; // should multiply by this.Scale ??
+            other._PivotPrecedence = this._PivotPrecedence;
+            other._OrientationMask = this._OrientationMask;
             other._CalculateMatrices();
         }
 
@@ -125,6 +145,11 @@ namespace InteropTypes.Graphics.Drawing
         /// The output scale of the image
         /// </summary>
         private XY _Scale = XY.One;
+
+        /// <summary>
+        /// Default image orientation
+        /// </summary>
+        private ImageStyle.Orientation _OrientationMask;
 
         /// <summary>
         /// Matrices baked from pivot, scale, and flip flags
@@ -219,6 +244,8 @@ namespace InteropTypes.Graphics.Drawing
             for (int i = 0; i < _Transforms.Length; ++i)
             {
                 var flags = (ImageStyle.Orientation)i;
+
+                flags ^= _OrientationMask;
 
                 var h = flags.HasFlag(ImageStyle.Orientation.FlipHorizontal);
                 var v = flags.HasFlag(ImageStyle.Orientation.FlipVertical);

@@ -7,8 +7,9 @@ using InteropTypes.Graphics.Drawing;
 
 using DRWCOLOR = System.Drawing.Color;
 using XNACOLOR = Microsoft.Xna.Framework.Color;
+using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     static class _PrivateExtensions
     {
@@ -49,7 +50,7 @@ namespace InteropDrawing.Backends
             return new Microsoft.Xna.Framework.Vector3(vector.X, vector.Y, vector.Z);
         }
 
-        public static Microsoft.Xna.Framework.Vector3 ToXna(this in Point3 vector)
+        public static Microsoft.Xna.Framework.Vector3 ToXna(this in POINT3 vector)
         {
             return new Microsoft.Xna.Framework.Vector3(vector.X, vector.Y, vector.Z);
         }
@@ -58,13 +59,13 @@ namespace InteropDrawing.Backends
         {
             var physicalSize = new Vector2(device.Viewport.Width, device.Viewport.Height);
 
-            return CreateVirtualToPhysical(physicalSize, new Vector2(virtualSize.width, virtualSize.height), keepAspect);
+            return physicalSize.CreateVirtualToPhysical(new Vector2(virtualSize.width, virtualSize.height), keepAspect);
         }
 
         public static Matrix3x2 CreateVirtualToPhysical(this Vector2 physicalSize, Vector2 virtualSize, bool keepAspect)
         {
-            var ws = (float)physicalSize.X / Math.Abs(virtualSize.X);
-            var hs = (float)physicalSize.Y / Math.Abs(virtualSize.Y);
+            var ws = physicalSize.X / Math.Abs(virtualSize.X);
+            var hs = physicalSize.Y / Math.Abs(virtualSize.Y);
 
             if (keepAspect) ws = hs;
             var xform = Matrix3x2.CreateScale(ws, hs);
@@ -92,12 +93,12 @@ namespace InteropDrawing.Backends
             var sy = matrix.M21 == 0 ? Math.Abs(matrix.M22) : new Vector2(matrix.M21, matrix.M22).Length();
             if (matrix.GetDeterminant() < 0) sy = -sy;
             return new Vector2(sx, sy);
-        }        
+        }
 
         public static float GetRotation(this in Matrix3x2 matrix)
         {
             return (float)Math.Atan2(matrix.M12, matrix.M11);
-        }        
+        }
 
         public static void Decompose(this Matrix3x2 matrix, out Vector2 scale, out float rotation, out Vector2 translation)
         {

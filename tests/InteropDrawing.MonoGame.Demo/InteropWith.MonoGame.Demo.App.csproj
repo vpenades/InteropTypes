@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest"/>    
+    <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />    
   </ItemGroup>  
   
   <ItemGroup>
@@ -46,7 +46,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropDrawing.Backends.MonoGame.csproj" />
+    <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
   </ItemGroup>
   
 </Project>

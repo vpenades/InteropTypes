@@ -4,7 +4,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework.Graphics;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     partial class MeshBuilder
     {

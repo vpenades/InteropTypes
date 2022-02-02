@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Drawing
         None,
 
         /// <summary>
-        /// Flips the text based on the underlaying <see cref="ICanvas2D"/>'s <see cref="Quadrant"/>
+        /// Flips the text based on the underlaying <see cref="ICanvas2D"/>'s <see cref="Quadrant"/>.
         /// </summary>
         FlipAuto = 1,
         FlipHorizontal = 2,

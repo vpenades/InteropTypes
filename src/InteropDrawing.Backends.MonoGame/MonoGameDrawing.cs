@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using XNACOLOR = Microsoft.Xna.Framework.Color;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     public interface IMonoGameDrawing2D :
         IDisposableCanvas2D,
@@ -29,7 +29,7 @@ namespace InteropDrawing.Backends
         void Render();
     }
 
-    
+
 
     public static class MonoGameDrawing
     {
@@ -41,7 +41,7 @@ namespace InteropDrawing.Backends
         /// <param name="textureBleed">the texture bleed to associate with the image</param>
         /// <returns>A new value that replaces <see cref="ImageAsset.Source"/></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Object CreateSpriteAssetSource(Object source, SamplerState sampler = null, float textureBleed = 0)
+        public static object CreateSpriteAssetSource(object source, SamplerState sampler = null, float textureBleed = 0)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
@@ -56,7 +56,7 @@ namespace InteropDrawing.Backends
             return new MonoGameSpriteTexture(source, sampler ?? SamplerState.LinearClamp, textureBleed);
         }
 
-        internal static (Texture2D Texture, SpriteTextureAttributes Attributes) CreateTexture(GraphicsDevice gd, Object imageSource)
+        internal static (Texture2D Texture, SpriteTextureAttributes Attributes) CreateTexture(GraphicsDevice gd, object imageSource)
         {
             var attr = SpriteTextureAttributes.Default;
 
@@ -64,20 +64,20 @@ namespace InteropDrawing.Backends
             {
                 attr = mgasset.Attributes;
                 imageSource = mgasset.Source;
-            }            
+            }
 
-            if (imageSource is System.IO.FileInfo finfo)
+            if (imageSource is FileInfo finfo)
             {
                 imageSource = finfo.FullName;
-            }            
+            }
 
-            if (imageSource is String texPath)
+            if (imageSource is string texPath)
             {
-                var tex = _loadTexture(gd, () => System.IO.File.OpenRead(texPath));
+                var tex = _loadTexture(gd, () => File.OpenRead(texPath));
                 return (tex, attr);
             }
 
-            if (imageSource is Func<System.IO.Stream> document)
+            if (imageSource is Func<Stream> document)
             {
                 var tex = _loadTexture(gd, document);
                 return (tex, attr);
@@ -86,7 +86,7 @@ namespace InteropDrawing.Backends
             throw new NotImplementedException($"Unknown source: {imageSource}");
         }
 
-        private static Texture2D _loadTexture(GraphicsDevice gd, Func<System.IO.Stream> openDocFunc)
+        private static Texture2D _loadTexture(GraphicsDevice gd, Func<Stream> openDocFunc)
         {
             Texture2D tex;
 
@@ -123,7 +123,7 @@ namespace InteropDrawing.Backends
                 data[i] = 0xffff;
             }
 
-            tex.SetData<ushort>(data);
+            tex.SetData(data);
 
             return tex;
         }

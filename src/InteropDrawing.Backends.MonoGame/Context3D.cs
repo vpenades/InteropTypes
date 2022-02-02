@@ -4,27 +4,28 @@ using System.Linq;
 using System.Numerics;
 
 using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Drawing.Transforms;
 
 using Microsoft.Xna.Framework.Graphics;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     class MonoGameDrawing3D :
-        InteropTypes.Graphics.Drawing.Transforms.Decompose3D.PassThrough,
+        Decompose3D.PassThrough,
         IMonoGameDrawing3D
     {
         #region lifecycle
 
-        public MonoGameDrawing3D(GraphicsDevice device, bool flipFaces = false)            
+        public MonoGameDrawing3D(GraphicsDevice device, bool flipFaces = false)
         {
             _Batch = new MeshBuilder(flipFaces);
-            this.SetPassThroughTarget(_Batch);
+            SetPassThroughTarget(_Batch);
         }
 
         public void Dispose()
         {
-            this.SetPassThroughTarget(null);
-            System.Threading.Interlocked.Exchange(ref _Effect3D, null)?.Dispose();
+            SetPassThroughTarget(null);
+            Interlocked.Exchange(ref _Effect3D, null)?.Dispose();
             _Device = null;
         }
 
@@ -37,9 +38,9 @@ namespace InteropDrawing.Backends
 
         private CameraView3D? _Camera;
 
-        private readonly MeshBuilder _Batch;        
+        private readonly MeshBuilder _Batch;
 
-        private readonly List<(Object, Matrix4x4)> _AssetInstances = new List<(Object, Matrix4x4)>();
+        private readonly List<(object, Matrix4x4)> _AssetInstances = new List<(object, Matrix4x4)>();
 
         #endregion
 
@@ -50,27 +51,27 @@ namespace InteropDrawing.Backends
 
         public CameraView3D? Camera => _Camera;
 
-        public bool IsEmpty => _Batch.IsEmpty && _AssetInstances.Count == 0;        
+        public bool IsEmpty => _Batch.IsEmpty && _AssetInstances.Count == 0;
 
-        #endregion        
+        #endregion
 
         #region rendering
 
         public void Clear()
         {
             _AssetInstances.Clear();
-            _Batch.Clear();            
+            _Batch.Clear();
             _Camera = null;
         }
 
         public void SetCamera(CameraView3D camera) { _Camera = camera; }
 
-        public void Render() { Render(Matrix4x4.Identity); }        
+        public void Render() { Render(Matrix4x4.Identity); }
 
         public void Render(Matrix4x4 sceneWorldMatrix)
         {
             try
-            {                
+            {
                 _DrawBatch(sceneWorldMatrix);
             }
             finally
@@ -79,13 +80,13 @@ namespace InteropDrawing.Backends
             }
         }
 
-        
+
 
         private void _DrawBatch(Matrix4x4 sceneWorldMatrix)
         {
             if (_Batch.IsEmpty) return;
 
-            var effect = this.GetShader3D();
+            var effect = GetShader3D();
 
             ApplyTransformsTo(effect, sceneWorldMatrix);
 
@@ -125,7 +126,7 @@ namespace InteropDrawing.Backends
 
         private (Matrix4x4 proj, Matrix4x4 view) GetMatrices()
         {
-            var aspectRatio = (float)this.Width / (float)this.Height;
+            var aspectRatio = Width / (float)Height;
 
             var cam = _Camera.Value;
 
@@ -148,7 +149,7 @@ namespace InteropDrawing.Backends
             }
 
             return _Effect3D;
-        }
+        }        
 
         #endregion
     }

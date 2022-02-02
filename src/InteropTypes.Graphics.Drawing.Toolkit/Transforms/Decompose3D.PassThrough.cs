@@ -28,7 +28,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             /// <param name="target">The drawing target.</param>
             protected void SetPassThroughTarget(IPrimitiveScene3D target)
             {
-                if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency. Use {nameof(PassToSelf)} class instead.");
+                if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency. Derive from {nameof(PassToSelf)} instead.");
                 _Target = target;
             }
 
@@ -42,16 +42,16 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             #region API - IScene3D
 
             /// <inheritdoc/>
-            public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
-            {
-                _Check(); _Target.DrawConvexSurface(vertices, style);
-            }
-
-            /// <inheritdoc/>
-            public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+            public virtual void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
             {
                 _Check(); Decompose3D.DrawAsset(_Target, transform, asset, style);
             }
+
+            /// <inheritdoc/>
+            public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
+            {
+                _Check(); _Target.DrawConvexSurface(vertices, style);
+            }            
 
             /// <inheritdoc/>
             public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)

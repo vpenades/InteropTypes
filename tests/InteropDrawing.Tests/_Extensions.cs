@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Drawing;
 
 namespace InteropDrawing
@@ -87,7 +88,7 @@ namespace InteropDrawing
 
             if (filePath.ToLower().EndsWith(".gltf") || filePath.ToLower().EndsWith(".glb") || filePath.ToLower().EndsWith(".obj"))
             {
-                Backends.GltfSceneBuilder
+                GltfSceneBuilder
                     .Convert(batch)
                     .ToGltf2()
                     .Save(filePath);

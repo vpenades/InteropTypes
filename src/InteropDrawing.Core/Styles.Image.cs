@@ -10,7 +10,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents an image with a style applied to it.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="IImagesCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
+    /// Style used by <see cref="IPrimitiveCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
     /// </remarks>
     public struct ImageStyle
     {

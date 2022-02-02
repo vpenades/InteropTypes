@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace InteropDrawing.Backends.Collections
+namespace InteropTypes.Graphics.Collections
 {
     /// <summary>
     /// Represents A specialised list that requires all elements to be unique.

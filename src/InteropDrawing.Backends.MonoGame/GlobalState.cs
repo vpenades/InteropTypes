@@ -4,7 +4,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework.Graphics;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     internal struct GlobalState
     {
@@ -16,7 +16,7 @@ namespace InteropDrawing.Backends
                 samplerState = SamplerState.LinearWrap,
                 textureState = null,
                 depthStencilState = DepthStencilState.None,
-                rasterizerState = RasterizerState.CullNone                
+                rasterizerState = RasterizerState.CullNone
             };
         }
 
@@ -46,12 +46,12 @@ namespace InteropDrawing.Backends
 
         public void ApplyTo(GraphicsDevice device)
         {
-            device.BlendState = this.blendState;
-            device.SamplerStates[0] = this.samplerState;
-            device.Textures[0] = this.textureState;
-            device.DepthStencilState = this.depthStencilState;
-            device.RasterizerState = this.rasterizerState;
-        }        
+            device.BlendState = blendState;
+            device.SamplerStates[0] = samplerState;
+            device.Textures[0] = textureState;
+            device.DepthStencilState = depthStencilState;
+            device.RasterizerState = rasterizerState;
+        }
 
         public BlendState blendState;
         public SamplerState samplerState;

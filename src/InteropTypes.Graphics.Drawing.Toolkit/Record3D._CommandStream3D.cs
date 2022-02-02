@@ -14,55 +14,45 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream3D_DebuggerProxy))]    
     sealed class _CommandStream3D : Collection.CommandList, IScene3D
     {
-        #region IDrawing3D
-
-
+        #region IScene3D
 
         public void DrawAsset(in XFORM3 transform, object asset, ColorStyle brush)
         {
-            var xref = AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset);
-            xref[0].Transform = transform;
-            xref[0].AssetRef = AddReference(asset);
-            xref[0].Style = brush;
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset)[0];
+            xref.Transform = transform;
+            xref.AssetRef = AddReference(asset);
+            xref.Style = brush;
         }
 
         public void DrawSegment(POINT3 a, POINT3 b, float diameter, LineStyle brush)
         {
-            var xref = AddHeaderAndStruct<_PrimitiveSegment>((int)_PrimitiveType.Segment);
-            xref[0].PointA = a;
-            xref[0].PointB = b;
-            xref[0].Diameter = diameter;
-            xref[0].Style = brush;
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveSegment>((int)_PrimitiveType.Segment)[0];
+            xref.PointA = a;
+            xref.PointB = b;
+            xref.Diameter = diameter;
+            xref.Style = brush;
         }
 
         public void DrawSphere(POINT3 center, float diameter, OutlineFillStyle brush)
         {
-            var xref = AddHeaderAndStruct<_PrimitiveSphere>((int)_PrimitiveType.Sphere);
-            xref[0].Center = center;
-            xref[0].Diameter = diameter;
-            xref[0].Style = brush;
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveSphere>((int)_PrimitiveType.Sphere)[0];
+            xref.Center = center;
+            xref.Diameter = diameter;
+            xref.Style = brush;
         }
 
         public unsafe void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle brush)
         {
-            AddHeader((int)_PrimitiveType.Surface, 4 + sizeof(_PrimitiveSurface) + vertices.Length * 12);
-
-            var xref = AddStruct<_PrimitiveSurface>();
-            xref[0].Count = vertices.Length;
-            xref[0].Style = brush;
-
-            AddArray(vertices);
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveSurface>((int)_PrimitiveType.Surface, vertices)[0];
+            xref.Count = vertices.Length;
+            xref.Style = brush;            
         }
 
         public unsafe void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle style)
         {
-            AddHeader((int)_PrimitiveType.Surface, 4 + sizeof(_PrimitiveConvex) + vertices.Length * 12);
-
-            var xref = AddStruct<_PrimitiveConvex>();
-            xref[0].Count = vertices.Length;
-            xref[0].Style = style;
-
-            AddArray(vertices);
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveConvex>((int)_PrimitiveType.Convex, vertices)[0];            
+            xref.Count = vertices.Length;
+            xref.Style = style;            
         }
 
         #endregion
@@ -94,13 +84,15 @@ namespace InteropTypes.Graphics.Drawing
             return drawingOrder.Select(item => item.Offset);
         }
 
-        private ReadOnlySpan<byte> _GetCommandBytes(int offset, out _PrimitiveType type, out int size)
+        private ReadOnlySpan<byte> _GetCommandBytes(int offset, out _PrimitiveType type)
         {
             var span = Buffer.Slice(offset);
-            size = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(span);
+            var size = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(span);
+
             span = span.Slice(4, size);
 
             type = (_PrimitiveType)System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(span);
+
             return span.Slice(4);
         }
 
@@ -110,7 +102,7 @@ namespace InteropTypes.Graphics.Drawing
 
             foreach (var offset in GetCommands())
             {
-                var span = _GetCommandBytes(offset, out _PrimitiveType type, out int size);
+                var span = _GetCommandBytes(offset, out _PrimitiveType type);
 
                 switch (type)
                 {
@@ -127,7 +119,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public XYZ GetCenter(int offset)
         {
-            var span = _GetCommandBytes(offset, out _PrimitiveType type, out _);
+            var span = _GetCommandBytes(offset, out _PrimitiveType type);
 
             switch (type)
             {
@@ -141,9 +133,9 @@ namespace InteropTypes.Graphics.Drawing
             throw new NotImplementedException();
         }
 
-        public int DrawTo(int offset, IScene3D dc, bool collapseAssets)
+        public void DrawTo(int offset, IScene3D dc, bool collapseAssets)
         {
-            var span = _GetCommandBytes(offset, out _PrimitiveType type, out int size);
+            var span = _GetCommandBytes(offset, out _PrimitiveType type);
 
             switch (type)
             {
@@ -152,14 +144,32 @@ namespace InteropTypes.Graphics.Drawing
                 case _PrimitiveType.Sphere: { _PrimitiveSphere.DrawTo(dc, span); break; }
                 case _PrimitiveType.Surface: { _PrimitiveSurface.DrawTo(dc, span); break; }
                 case _PrimitiveType.Asset: { _PrimitiveAsset.DrawTo(dc, span, References, collapseAssets); break; }
-            }
-
-            return size;
+            }            
         }
 
         #endregion
 
         #region nested types
+
+        private static unsafe void _GetHeaderAndPoints<THeader>(ReadOnlySpan<byte> stream, ref THeader header, out ReadOnlySpan<POINT3> points)
+            where THeader:unmanaged, IPointsCount
+        {
+            header = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, THeader>(stream)[0];
+
+            points = System.Runtime.InteropServices.MemoryMarshal
+                .Cast<byte, POINT3>(stream.Slice(sizeof(THeader)))
+                .Slice(0, header.GetCount());
+        }
+
+        private static unsafe void _GetHeaderAndVectors<THeader>(ReadOnlySpan<byte> stream, ref THeader header, out ReadOnlySpan<XYZ> points)
+            where THeader : unmanaged, IPointsCount
+        {
+            header = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, THeader>(stream)[0];
+
+            points = System.Runtime.InteropServices.MemoryMarshal
+                .Cast<byte, XYZ>(stream.Slice(sizeof(THeader)))
+                .Slice(0, header.GetCount());
+        }
 
         [System.Diagnostics.DebuggerDisplay("{Index} at {Distance}")]
         struct _SortableItem : IComparable<_SortableItem>
@@ -172,6 +182,7 @@ namespace InteropTypes.Graphics.Drawing
                 return Score.CompareTo(other.Score);
             }
         }
+
         struct _BoundsContext
         {
             public static _BoundsContext CreateEmpty()
@@ -224,6 +235,8 @@ namespace InteropTypes.Graphics.Drawing
                 return (left.Center + relative, (leftRadius + Rightradius) / 2);
             }
         }
+
+        interface IPointsCount { int GetCount(); }
 
         struct _PrimitiveSegment
         {
@@ -285,71 +298,75 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        struct _PrimitiveConvex
+        struct _PrimitiveConvex : IPointsCount
         {
             public int Count;
             public ColorStyle Style;
 
+            int IPointsCount.GetCount() => Count;
+
             public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
+                _PrimitiveConvex header = default;
+                _GetHeaderAndVectors(command, ref header, out var points);
 
                 foreach (var v in points) bounds.AddVertex(v, 0);
             }
 
             public static unsafe XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveConvex)));
+                _PrimitiveConvex header = default;
+                _GetHeaderAndVectors(command, ref header, out var points);
 
                 var center = XYZ.Zero;
 
-                for (int i = 0; i < body.Count; ++i) { center += points[i]; }
+                for (int i = 0; i < header.Count; ++i) { center += points[i]; }
 
-                return body.Count == 0 ? XYZ.Zero : center / body.Count;
+                return header.Count == 0 ? XYZ.Zero : center / header.Count;
             }
 
             public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT3>(command.Slice(sizeof(_PrimitiveConvex)));
+                _PrimitiveConvex header = default;
+                _GetHeaderAndPoints(command, ref header, out var points);
 
-                dst.DrawConvexSurface(points.Slice(0, body.Count), body.Style);
+                dst.DrawConvexSurface(points.Slice(0, header.Count), header.Style);
             }
         }
 
-        struct _PrimitiveSurface
+        struct _PrimitiveSurface : IPointsCount
         {
             public int Count;
             public SurfaceStyle Style;
 
+            int IPointsCount.GetCount() => Count;
+
             public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSurface>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveSurface)));
+                _PrimitiveSurface header = default;
+                _GetHeaderAndPoints(command, ref header, out var points);
 
-                foreach (var v in points) bounds.AddVertex(v, src.Style.Style.OutlineWidth);
+                foreach (var v in points) bounds.AddVertex(v, header.Style.Style.OutlineWidth);
             }
 
             public static unsafe XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSurface>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, XYZ>(command.Slice(sizeof(_PrimitiveSurface)));
+                _PrimitiveSurface header = default;
+                _GetHeaderAndVectors(command, ref header, out var points);
 
                 var center = XYZ.Zero;
 
-                for (int i = 0; i < body.Count; ++i) { center += points[i]; }
+                for (int i = 0; i < header.Count; ++i) { center += points[i]; }
 
-                return body.Count == 0 ? XYZ.Zero : center / body.Count;
+                return header.Count == 0 ? XYZ.Zero : center / header.Count;
             }
 
             public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSurface>(command)[0];
-                var points = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT3>(command.Slice(sizeof(_PrimitiveSurface)));
+                _PrimitiveSurface header = default;
+                _GetHeaderAndPoints(command, ref header, out var points);
 
-                dst.DrawSurface(points.Slice(0, body.Count), body.Style);
+                dst.DrawSurface(points.Slice(0, header.Count), header.Style);
             }
         }
 
@@ -421,13 +438,7 @@ namespace InteropTypes.Graphics.Drawing
         public _CommandStream3D_DebuggerProxy(_CommandStream3D src)
         {
             var sb = new List<string>();
-
-            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-            Before:
-                        var target = Diagnostics.CommandLogger.From(sb);
-            After:
-                        var target = CommandLogger.From(sb);
-            */
+            
             var target = Diagnostics.CommandLogger.From(sb);
 
             foreach (var offset in src.GetCommands())

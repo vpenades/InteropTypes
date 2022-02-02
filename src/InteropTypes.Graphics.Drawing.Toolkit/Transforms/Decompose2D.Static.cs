@@ -13,17 +13,36 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose2D
     {
-        #region API - Static IVectorsDrawing2D        
+        #region API - Static IVectorsDrawing2D
 
-        public static void DrawAsset(IPrimitiveCanvas2D dc, in Matrix3x2 transform, ASSET asset, ColorStyle color)
+        public static bool DrawAsset<TAsset>(IPrimitiveCanvas2D dc, in Matrix3x2 transform, TAsset asset, ColorStyle color)
         {
-            dc = dc.CreateTransformed2D(transform);
+            if (asset == null) return true; // nothing to draw  
 
-            if (asset is IDrawingBrush<IPrimitiveCanvas2D> d1) { d1.DrawTo(dc); return; }
-            if (asset is IDrawingBrush<ICanvas2D> d2) { d2.DrawTo(new Decompose2D(dc)); return; }
+            if (typeof(IDrawingBrush<ICanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICanvas2D>)asset).DrawTo(new Decompose2D(dc.CreateTransformed2D(transform))); return true; }
 
-            // if (asset is string text) { this.DrawFont(transform, text, style); return; }
-            // if (asset is StringBuilder text) { this.DrawFont(transform, text.ToString(), style); return; }            
+            if (typeof(IDrawingBrush<IPrimitiveCanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<IPrimitiveCanvas2D>)asset).DrawTo(dc.CreateTransformed2D(transform)); return true; }
+
+            // fallback
+
+            ASSET xasset = typeof(IPseudoImmutable).IsAssignableFrom(typeof(TAsset))
+                ? ((IPseudoImmutable)asset).ImmutableKey
+                : (ASSET)asset;
+
+            return DrawAsset(dc, transform, xasset, color);
+        }
+
+        public static bool DrawAsset(IPrimitiveCanvas2D dc, in Matrix3x2 transform, ASSET asset, ColorStyle color)
+        {
+            if (asset == null) return true; // nothing to draw            
+
+            if (asset is IDrawingBrush<ICanvas2D> d2) { d2.DrawTo(new Decompose2D(dc.CreateTransformed2D(transform))); return true; }
+
+            if (asset is IDrawingBrush<IPrimitiveCanvas2D> d1) { d1.DrawTo(dc.CreateTransformed2D(transform)); return true; }
+
+            // fallback
+
+            return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey, color);
         }
 
         public static void DrawEllipse(IPrimitiveCanvas2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
@@ -34,25 +53,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             Span<POINT2> points = stackalloc POINT2[count];
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             Parametric.ShapeFactory2D.FillEllipseVertices(points, center, width, height);
-After:
-            ShapeFactory2D.FillEllipseVertices(points, center, width, height);
-*/
-            InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.FillEllipseVertices(points, center, width, height);
 
             DrawPolygon(dc, points, style);
         }
 
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
         public static void DrawEllipse(Backends.IDrawingBackend2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
-After:
-        public static void DrawEllipse(IDrawingBackend2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
-*/
-        public static void DrawEllipse(InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
         {
             // calculate number of vertices based on dimensions
             int count = Math.Max((int)width, (int)height);
@@ -60,13 +67,7 @@ After:
 
             Span<POINT2> points = stackalloc POINT2[count];
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             Parametric.ShapeFactory2D.FillEllipseVertices(points, center, width, height);
-After:
-            ShapeFactory2D.FillEllipseVertices(points, center, width, height);
-*/
-            InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.FillEllipseVertices(points, center, width, height);
 
             DrawPolygon(dc, points, style);
         }
@@ -80,14 +81,7 @@ After:
             if (!style.HasOutline) _DrawSolidLines(dc, points, style.OutlineWidth, style.OutlineColor, true);
         }
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
         public static void DrawPolygon(Backends.IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
-After:
-        public static void DrawPolygon(IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
-*/
-        public static void DrawPolygon(InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
         {
             if (points.Length < 3) return;
 
@@ -108,14 +102,7 @@ After:
             }
         }
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
         public static void DrawLines(Backends.IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
-After:
-        public static void DrawLines(IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
-*/
-        public static void DrawLines(InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
         {
             var xstyle = style.IsSolid(ref diameter, out var solid)
                 ? new LineStyle(solid)
@@ -146,17 +133,8 @@ After:
             if (points.Length == 2) closed = false;
 
             // create segments
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             Span<POINT2> segments = stackalloc POINT2[Parametric.ShapeFactory2D.GetLinesSegmentsVerticesCount(points.Length, closed)];
             Parametric.ShapeFactory2D.FillLinesSegments(segments, points, diameter, closed);
-After:
-            Span<POINT2> segments = stackalloc POINT2[ShapeFactory2D.GetLinesSegmentsVerticesCount(points.Length, closed)];
-            ShapeFactory2D.FillLinesSegments(segments, points, diameter, closed);
-*/
-            Span<POINT2> segments = stackalloc POINT2[InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.GetLinesSegmentsVerticesCount(points.Length, closed)];
-            InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.FillLinesSegments(segments, points, diameter, closed);
 
             // draw segments
             var segment = segments;
@@ -185,17 +163,8 @@ After:
 
         private static void _FillLineAsPolygon(IPrimitiveCanvas2D dc, POINT2 a, POINT2 b, SCALAR diameter, Color color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             var startCapCount = Parametric.ShapeFactory2D.GetLineCapVertexCount(startCapStyle);
             var endCapCount = Parametric.ShapeFactory2D.GetLineCapVertexCount(endCapStyle);
-After:
-            var startCapCount = ShapeFactory2D.GetLineCapVertexCount(startCapStyle);
-            var endCapCount = ShapeFactory2D.GetLineCapVertexCount(endCapStyle);
-*/
-            var startCapCount = InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.GetLineCapVertexCount(startCapStyle);
-            var endCapCount = InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.GetLineCapVertexCount(endCapStyle);
             Span<POINT2> vertices = stackalloc POINT2[startCapCount + endCapCount];
 
             var aa = a.ToNumerics();
@@ -205,17 +174,8 @@ After:
 
             delta = delta.LengthSquared() <= 1 ? VECTOR2.UnitX : VECTOR2.Normalize(delta);
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             Parametric.ShapeFactory2D.FillLineCapVertices(vertices, 0, aa, delta, diameter, startCapStyle);
             Parametric.ShapeFactory2D.FillLineCapVertices(vertices, startCapCount, bb, -delta, diameter, endCapStyle);
-After:
-            ShapeFactory2D.FillLineCapVertices(vertices, 0, aa, delta, diameter, startCapStyle);
-            ShapeFactory2D.FillLineCapVertices(vertices, startCapCount, bb, -delta, diameter, endCapStyle);
-*/
-            InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.FillLineCapVertices(vertices, 0, aa, delta, diameter, startCapStyle);
-            InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.FillLineCapVertices(vertices, startCapCount, bb, -delta, diameter, endCapStyle);
 
             dc.DrawConvexPolygon(vertices, color);
         }        

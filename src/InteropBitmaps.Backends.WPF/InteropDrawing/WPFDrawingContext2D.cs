@@ -55,11 +55,11 @@ namespace InteropDrawing.Backends
         {
             if (!color.IsVisible) return null; // todo if Alpha is 0 return null;
 
-            if (_BrushesCache.TryGetValue(color.PackedValue, out System.Windows.Media.SolidColorBrush brush)) return brush;
+            if (_BrushesCache.TryGetValue(color.Packed, out System.Windows.Media.SolidColorBrush brush)) return brush;
 
             brush = color.Color.ToDeviceBrush();
 
-            _BrushesCache[color.PackedValue] = brush;
+            _BrushesCache[color.Packed] = brush;
 
             return brush;
         }

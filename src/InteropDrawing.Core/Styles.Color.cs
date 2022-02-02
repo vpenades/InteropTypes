@@ -14,11 +14,13 @@ namespace InteropTypes.Graphics.Drawing
 
         public static implicit operator ColorStyle(COLOR fillColor) { return new ColorStyle(fillColor); }
 
-        public ColorStyle(int color) { _Color = color; }
+        public ColorStyle(COLOR fillColor) { _Color = (uint)fillColor.ToArgb(); }
 
-        public ColorStyle(uint color) { _Color = (int)color; }
+        public ColorStyle(int color) { _Color = (uint)color; }
 
-        public ColorStyle(byte red, byte green, byte blue, byte alpha)
+        public ColorStyle(uint color) { _Color = color; }
+
+        public ColorStyle(byte red, byte green, byte blue, byte alpha = 255)
         {
             _Color = alpha;
             _Color <<= 8;
@@ -27,39 +29,37 @@ namespace InteropTypes.Graphics.Drawing
             _Color |= green;
             _Color <<= 8;
             _Color |= blue;
-        }
-
-        public ColorStyle(COLOR fillColor) { _Color = fillColor.ToArgb(); }
+        }        
 
         #endregion
 
         #region data
 
-        private readonly int _Color;
+        private readonly uint _Color;
 
         #endregion
 
         #region properties
 
-        public uint PackedValue => (uint)_Color;
+        public uint Packed => _Color;
 
-        public COLOR Color => COLOR.FromArgb(_Color);
+        public COLOR Color => COLOR.FromArgb((int)_Color);
+
+        public int A => (int)(_Color >> 24);
+
+        public int R => (int)(_Color >> 16) & 255;
+
+        public int G => (int)(_Color >> 8) & 255;
+
+        public int B => (int)(_Color & 255);
 
         public bool IsEmpty => !IsVisible;
 
-        public bool IsVisible
-        {
-            get
-            {
-                var v = (uint)_Color;
-                v >>= 24;
-                return v != 0;
-            }
-        }
+        public bool IsVisible => 0 != (_Color & 0xff000000);
 
         #endregion
 
-        #region defaults        
+        #region constants        
 
         public static readonly ColorStyle Gray = COLOR.Gray;
         public static readonly ColorStyle Black = COLOR.Black;

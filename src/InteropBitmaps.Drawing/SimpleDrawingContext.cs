@@ -10,7 +10,7 @@ namespace InteropDrawing.Backends
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
     class _MemoryDrawingContext<TPixel> :
         Decompose2D.PassToSelf,
-        InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D,
+        InteropTypes.Graphics.Backends.IDrawingBackend2D,
         IServiceProvider
 
         where TPixel: unmanaged

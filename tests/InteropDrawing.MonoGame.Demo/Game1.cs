@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using COLOR = System.Drawing.Color;
 
 using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Backends;
 
 namespace InteropDrawing
 {
@@ -39,7 +40,7 @@ namespace InteropDrawing
 
         private readonly GraphicsDeviceManager _Graphics;
 
-        private Backends.IMonoGameDrawing2D _Drawing2D;        
+        private IMonoGameDrawing2D _Drawing2D;        
 
         private _Sprites2D _Sprites = new _Sprites2D();
 
@@ -51,7 +52,7 @@ namespace InteropDrawing
 
         protected override void LoadContent()
         {
-            _Drawing2D = Backends.MonoGameDrawing.CreateDrawingContext2D(this.GraphicsDevice);            
+            _Drawing2D = MonoGameDrawing.CreateDrawingContext2D(this.GraphicsDevice);            
 
             _DynTex = new _DynamicTexture(this.GraphicsDevice);
         }

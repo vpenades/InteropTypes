@@ -5,7 +5,6 @@ using System.Text;
 
 using InteropBitmaps;
 
-using InteropDrawing;
 using Veldrid;
 
 namespace InteropWith

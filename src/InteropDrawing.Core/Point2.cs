@@ -27,10 +27,10 @@ namespace InteropTypes.Graphics.Drawing
     /// <remarks>
     /// Equivalent to <b>(float,float)</b> <see cref="VECTOR2"/>, <see cref="GDIPOINTF"/> and <see cref="GDISIZEF"/>.
     /// </remarks>
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
     [System.Diagnostics.DebuggerDisplay("{X} {Y}")]
-    public readonly struct Point2
-        : IEquatable<Point2>
+    public readonly struct Point2 : IFormattable
+        , IEquatable<Point2>
         , IEquatable<VECTOR2>
         , IEquatable<GDIPOINTF>
         , IEquatable<GDISIZEF>
@@ -44,7 +44,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <see href="https://github.com/dotnet/runtime/blob/5df6cc63151d937724fa0ce8138e69f933052606/src/libraries/System.Private.CoreLib/src/System/Single.cs#L74">DotNet implementation</see>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsFinite(float val)
+        private static bool _IsFinite(float val)
         {
             return !float.IsNaN(val) && !float.IsInfinity(val);
         }
@@ -76,7 +76,7 @@ namespace InteropTypes.Graphics.Drawing
         #region constructors
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point2(float x, float y) { X = x; Y = y; }
+        public Point2(float x, float y) : this() { X = x; Y = y; }
 
         #endregion
 
@@ -88,11 +88,16 @@ namespace InteropTypes.Graphics.Drawing
 
         public static readonly Point2 One = new Point2(1, 1);
 
+        [System.Runtime.InteropServices.FieldOffset(0)]
         public readonly float X;
+        [System.Runtime.InteropServices.FieldOffset(4)]
         public readonly float Y;
 
+        [System.Runtime.InteropServices.FieldOffset(0)]
+        public readonly VECTOR2 Vector;
+
         /// <inheritdoc/>
-        public override int GetHashCode() => (X, Y).GetHashCode();
+        public override int GetHashCode() => Vector.GetHashCode();
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
@@ -100,56 +105,64 @@ namespace InteropTypes.Graphics.Drawing
             if (obj is Point2 otherP) return AreEqual(this, otherP);
             if (obj is VECTOR2 otherV) return AreEqual(this, otherV);
             if (obj is GDIPOINTF otherGP) return AreEqual(this, otherGP);
-            if (obj is GDISIZEF otherGS) return AreEqual(this, otherGS);
+            if (obj is GDISIZEF otherGS) return AreEqual(this, otherGS);            
             return false;
         }
 
         /// <inheritdoc/>
         public bool Equals(Point2 other) => AreEqual(this, other);
+
         /// <inheritdoc/>
         public bool Equals(VECTOR2 other) => AreEqual(this, other);
+
         /// <inheritdoc/>
         public bool Equals(GDIPOINTF other) => AreEqual(this, other);
+
         /// <inheritdoc/>
         public bool Equals(GDISIZEF other) => AreEqual(this, other);
 
         /// <inheritdoc/>
         public static bool operator ==(in Point2 a, Point2 b) => AreEqual(a, b);
+
         /// <inheritdoc/>
         public static bool operator !=(in Point2 a, Point2 b) => !AreEqual(a, b);
 
         /// <inheritdoc/>
         public static bool operator ==(in Point2 a, VECTOR2 b) => AreEqual(a, b);
+
         /// <inheritdoc/>
         public static bool operator !=(in Point2 a, VECTOR2 b) => !AreEqual(a, b);
 
 
-        public static bool AreEqual(in Point2 a, in Point2 b) { return a.X == b.X && a.Y == b.Y; }
-        public static bool AreEqual(in Point2 a, in VECTOR2 b) { return a.X == b.X && a.Y == b.Y; }
+        public static bool AreEqual(in Point2 a, in Point2 b) { return a.Vector == b.Vector; }
+
+        public static bool AreEqual(in Point2 a, in VECTOR2 b) { return a.Vector == b; }
+
         public static bool AreEqual(in Point2 a, in GDIPOINTF b) { return a.X == b.X && a.Y == b.Y; }
+
         public static bool AreEqual(in Point2 a, in GDISIZEF b) { return a.X == b.Width && a.Y == b.Height; }
 
         #endregion
 
         #region properties
 
-        public bool IsReal => IsFinite(X) && IsFinite(Y);
+        public bool IsFinite => _IsFinite(X) && _IsFinite(Y);
 
         #endregion
 
         #region operators
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator *(Point2 a, float b) { return new Point2(a.X * b, a.Y * b); }
+        public static Point2 operator *(Point2 a, float b) { return a.Vector * b; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator /(Point2 a, float b) { return new Point2(a.X / b, a.Y / b); }
+        public static Point2 operator /(Point2 a, float b) { return a.Vector / b; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator +(Point2 a, Point2 b) { return new Point2(a.X + b.X, a.Y + b.Y); }
+        public static Point2 operator +(Point2 a, Point2 b) { return a.Vector + b.Vector; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator -(Point2 a, Point2 b) { return new Point2(a.X - b.X, a.Y - b.Y); }
+        public static Point2 operator -(Point2 a, Point2 b) { return a.Vector - b.Vector; }
 
         #endregion
 
@@ -160,20 +173,7 @@ namespace InteropTypes.Graphics.Drawing
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2 WithY(float y) { return new Point2(X, y); }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public VECTOR2 ToNumerics() { return new VECTOR2(X, Y); }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public GDIPOINTF ToGDIPoint() { return new GDIPOINTF(X, Y); }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }
-
-        public System.Drawing.RectangleF ToGDIRectangleOffCenter(float size)
-        {
-            return new System.Drawing.RectangleF(X - size / 2f, Y - size / 2f, size, size);
-        }
+        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 Center(System.Drawing.Rectangle rect)
@@ -206,10 +206,14 @@ namespace InteropTypes.Graphics.Drawing
             return VECTOR2.Lerp(a.ToNumerics(), b.ToNumerics(), amount);
         }
 
+        #endregion
+
+        #region API - Bulk
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point2 Transform(Point2 p, in System.Numerics.Matrix3x2 xform)
         {
-            return VECTOR2.Transform(p.ToNumerics(), xform);
+            return VECTOR2.Transform(p.Vector, xform);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -243,6 +247,18 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Point2> AsPoints(Span<VECTOR2> points)
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR2, Point2>(points);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<Point2> AsPoints(ReadOnlySpan<VECTOR2> points)
+        {
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR2, Point2>(points);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<VECTOR2> AsNumerics(Span<Point2> points)
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point2, VECTOR2>(points);
@@ -254,13 +270,29 @@ namespace InteropTypes.Graphics.Drawing
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Point2, VECTOR2>(points);
         }
 
+        #endregion
+
+        #region conversions
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<Point2> AsPoints(ReadOnlySpan<VECTOR2> points)
+        public GDIPOINTF ToGDIPoint() { return new GDIPOINTF(X, Y); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public VECTOR2 ToNumerics() { return new VECTOR2(X, Y); }
+
+        public System.Drawing.RectangleF ToGDIRectangleOffCenter(float size)
         {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR2, Point2>(points);
+            return new System.Drawing.RectangleF(X - size / 2f, Y - size / 2f, size, size);
         }
 
+        /// <inheritdoc/>
         public override string ToString() { return ToNumerics().ToString(); }
+
+        /// <inheritdoc/>
+        public string ToString(string format, IFormatProvider formatProvider) { return ToNumerics().ToString(format, formatProvider); }
 
         #endregion
     }

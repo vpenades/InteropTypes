@@ -4,27 +4,27 @@ using System.Text;
 
 using Microsoft.Xna.Framework.Graphics;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{Source} {Attributes}")]
     sealed class MonoGameSpriteTexture
     {
-        public MonoGameSpriteTexture(Object source, float texbleed = 0)
+        public MonoGameSpriteTexture(object source, float texbleed = 0)
         {
             Source = source;
             Attributes = new SpriteTextureAttributes(null, texbleed);
         }
 
-        public MonoGameSpriteTexture(Object source, SamplerState sampler, float texbleed = 0)
+        public MonoGameSpriteTexture(object source, SamplerState sampler, float texbleed = 0)
         {
             Source = source;
-            Attributes = new SpriteTextureAttributes(sampler,texbleed);
+            Attributes = new SpriteTextureAttributes(sampler, texbleed);
         }
 
-        public Object Source { get; set; }
+        public object Source { get; set; }
 
         public SpriteTextureAttributes Attributes { get; set; }
-        
+
     }
 
     [System.Diagnostics.DebuggerDisplay("{Sampler} {TextureBleed}")]
@@ -40,6 +40,6 @@ namespace InteropDrawing.Backends
         public static readonly SpriteTextureAttributes Default = new SpriteTextureAttributes(SamplerState.LinearClamp, 0);
 
         public SamplerState Sampler { get; }
-        public float TextureBleed { get; }        
+        public float TextureBleed { get; }
     }
 }

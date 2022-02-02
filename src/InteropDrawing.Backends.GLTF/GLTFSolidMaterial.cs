@@ -5,7 +5,7 @@ using System.Text;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{Color} {DoubleSided}")]
     struct GltfSolidMaterial : IEquatable<GltfSolidMaterial>
@@ -17,12 +17,12 @@ namespace InteropDrawing.Backends
         }
 
         public Vector4 Color;
-        public Boolean DoubleSided;
+        public bool DoubleSided;
 
         public bool Equals(GltfSolidMaterial other)
         {
-            if (this.Color != other.Color) return false;
-            if (this.DoubleSided != other.DoubleSided) return false;
+            if (Color != other.Color) return false;
+            if (DoubleSided != other.DoubleSided) return false;
             return true;
         }
 
@@ -38,6 +38,6 @@ namespace InteropDrawing.Backends
                 .WithChannelParam("BaseColor", Color)
                 .WithDoubleSide(DoubleSided)
                 .WithAlpha(Color.W == 1 ? SharpGLTF.Materials.AlphaMode.OPAQUE : SharpGLTF.Materials.AlphaMode.BLEND);
-        }        
+        }
     }
 }

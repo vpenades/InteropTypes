@@ -13,11 +13,19 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose3D
     {
-        public static void DrawAsset(IPrimitiveScene3D dc, in Matrix4x4 transform, ASSET asset, ColorStyle style)
+        public static bool DrawAsset(IPrimitiveScene3D dc, in Matrix4x4 transform, ASSET asset, ColorStyle style)
         {
-            if (asset is IDrawingBrush<IPrimitiveScene3D> a1) { a1.DrawTo(Drawing3DTransform.Create(dc,transform)); return; }
-            if (asset is IDrawingBrush<IScene3D> a2) { a2.DrawTo(new Decompose3D(dc)); return; }
-            if (asset is Asset3D a3) { a3._DrawAsSurfaces(new Decompose3D(dc)); return; }            
+            if (asset == null) return true;
+
+            if (asset is IDrawingBrush<IScene3D> a2) { a2.DrawTo(new Decompose3D(Drawing3DTransform.Create(dc, transform))); return true; }
+
+            if (asset is IDrawingBrush<IPrimitiveScene3D> a1) { a1.DrawTo(Drawing3DTransform.Create(dc,transform)); return true; }
+            
+            if (asset is Asset3D a3) { a3._DrawAsSurfaces(new Decompose3D(Drawing3DTransform.Create(dc, transform))); return true; }
+
+            // fallback
+
+            return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey, style);
         }
 
         public static void DrawSurface(IPrimitiveScene3D dc, ReadOnlySpan<POINT3> vertices, SurfaceStyle style)
@@ -53,39 +61,20 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             {
                 var r = radius + brush.OutlineWidth * 0.5f;
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
                 if (r > 0) Parametric.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.OutlineColor, true);
-After:
-                if (r > 0) PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.OutlineColor, true);
-*/
-                if (r > 0) InteropTypes.Graphics.Drawing.Parametric.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.OutlineColor, true);
             }
 
             if (brush.HasFill)
             {
                 var r = radius - brush.OutlineWidth * 0.5f;
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
                 if (r > 0) Parametric.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.FillColor, false);
-After:
-                if (r > 0) PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.FillColor, false);
-*/
-                if (r > 0) InteropTypes.Graphics.Drawing.Parametric.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.FillColor, false);
             }
         }
 
         public static void DrawSegment(IPrimitiveScene3D dc, POINT3 a, POINT3 b, SCALAR diameter, LineStyle style)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             if (!Parametric.ShapeFactory3D.DrawCylinder(dc, (a, diameter), (b, diameter), 4, style))
-After:
-            if (!ShapeFactory3D.DrawCylinder(dc, (a, diameter), (b, diameter), 4, style))
-*/
-            if (!InteropTypes.Graphics.Drawing.Parametric.ShapeFactory3D.DrawCylinder(dc, (a, diameter), (b, diameter), 4, style))
             {
                 DrawSphere(dc, (a + b) * 0.5f, diameter, 4, style.Style);
             }

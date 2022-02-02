@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Drawing;
+
 using ASSET = System.Object;
 using SCALAR = System.Single;
 
@@ -9,15 +11,14 @@ using XFORM2 = System.Numerics.Matrix3x2;
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
 using COLOR = System.Drawing.Color;
-using InteropTypes.Graphics.Drawing;
 
-namespace InteropTypes.Graphics.Drawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     /// <summary>
     /// Represents a drawing canvas where we can draw 2D thin lines.
     /// </summary>
     /// <remarks>
-    /// When a backend implements this interface, <see cref="IVectorsCanvas2D.DrawLines(ReadOnlySpan{POINT2}, SCALAR, in LineStyle)"/>
+    /// When a backend implements this interface, <see cref="ICanvas2D.DrawLines(ReadOnlySpan{POINT2}, SCALAR, in LineStyle)"/>
     /// should call <see cref="DrawThinLines(ReadOnlySpan{POINT2}, SCALAR, COLOR)"/> when it detects the line thickness is equal or less than 1.
     /// </remarks>
     public interface IDrawingBackend2D : IPrimitiveCanvas2D
@@ -50,6 +51,5 @@ namespace InteropTypes.Graphics.Drawing.Backends
         /// <param name="color">The color of the line.</param>
         void DrawSegment(Point3 a, Point3 b, float diameter, ColorStyle color);
     }
-
 
 }

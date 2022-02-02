@@ -6,7 +6,6 @@ using ASSET = System.Object;
 using SCALAR = System.Single;
 
 using XFORM2 = System.Numerics.Matrix3x2;
-
 using XFORM3 = System.Numerics.Matrix4x4;
 using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
@@ -27,7 +26,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </param>        
         /// <param name="style">The color of the polygon</param>
         /// <remarks>        
-        /// The caller must ensure the points represent a convex polygon.
+        /// The caller must ensure the points represent a non degenerated, convex polygon.
         /// </remarks>
         void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle style);
     }

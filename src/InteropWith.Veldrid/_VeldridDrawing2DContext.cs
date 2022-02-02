@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropDrawing;
-
 using InteropTypes.Graphics.Drawing;
 
 using Veldrid;
@@ -76,7 +74,7 @@ namespace InteropWith
         {
             if (_Completed) throw new ObjectDisposedException("Context");
 
-            var c = color.PackedValue; // color needs to be reversed
+            var c = color.Packed; // color needs to be reversed
 
             Span<Vertex2D> vertices = stackalloc Vertex2D[points.Length];
 

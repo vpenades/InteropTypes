@@ -3,8 +3,11 @@
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents an object that can be drawn to a <typeparamref name="TContext"/>
+    /// Represents an object that can be used as a brush to draw into a context.
     /// </summary>
+    /// <typeparam name="TContext">
+    /// Typically this should be either <see cref="ICanvas2D"/> or <see cref="IScene3D"/>.
+    /// </typeparam>
     public interface IDrawingBrush<in TContext>
     {
         /// <summary>

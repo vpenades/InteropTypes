@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
+    <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
+  </PropertyGroup>
+  
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />  
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">    
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Toolkit" />
+    <InternalsVisibleTo Include="InteropDrawing.Tests" />
+  </ItemGroup>
+
+</Project>

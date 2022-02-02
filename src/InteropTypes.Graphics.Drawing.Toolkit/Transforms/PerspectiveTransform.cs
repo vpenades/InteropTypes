@@ -78,6 +78,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region data
 
         // http://xdpixel.com/decoding-a-projection-matrix/
+
         private readonly Matrix4x4 _Projection;
         private readonly float _ProjectionScale;
 
@@ -102,7 +103,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         public Vector4 GetProjection(Point3 v)
         {
-            System.Diagnostics.Debug.Assert(v.IsReal);
+            System.Diagnostics.Debug.Assert(v.IsFinite);
             return Vector4.Transform(v.ToNumerics(), _Projection);
         }
 
@@ -124,6 +125,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return value * _ProjectionScale * _ViewportScale / w;
         }
 
+        /// <inheritdoc/>
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
         {
             var sphere = Toolkit.GetAssetBoundingSphere(asset);
@@ -145,6 +147,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             this.DrawAssetAsPrimitives(transform, asset, brush);
         }
 
+        /// <inheritdoc/>
         public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
             var aa = GetProjection(a);
@@ -161,6 +164,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _RenderTarget.DrawLine(aaa, bbb, diameter, brush = brush.WithOutline(ow));
         }
 
+        /// <inheritdoc/>
         public void DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
             var aa = GetProjection(center);
@@ -175,6 +179,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _RenderTarget.DrawEllipse(aaa, diameter, diameter, brush.WithOutline(ow));
         }
 
+        /// <inheritdoc/>
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
             brush = brush.WithOutline(brush.Style.OutlineWidth * _ProjectionScale);
@@ -197,6 +202,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _DrawProjectedPolygon(clippedProjected, brush);
         }
 
+        /// <inheritdoc/>
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle brush)
         {
             Span<Vector4> projected = stackalloc Vector4[vertices.Length];

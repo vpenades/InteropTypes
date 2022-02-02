@@ -27,7 +27,26 @@ namespace InteropTypes.Graphics.Drawing.Collection
 
         #endregion
 
-        #region API
+        #region API - Read
+
+        public IEnumerable<int> GetCommands()
+        {
+            int offset = 0;
+
+            while (offset < Count)
+            {
+                var length = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(_Buffer.AsSpan(offset, 4));
+
+                System.Diagnostics.Debug.Assert(length > 8);
+
+                yield return offset;
+                offset += length + 4;
+            }
+        }
+
+        #endregion
+
+        #region API - Write
 
         public void Clear() { _Count = 0; }
 
@@ -47,21 +66,9 @@ namespace InteropTypes.Graphics.Drawing.Collection
                 _References.Clear();
                 _References.AddRange(other._References);
             }
-        }
+        }        
 
-        public IEnumerable<int> GetCommands()
-        {
-            int offset = 0;
-
-            while (offset < Count)
-            {
-                var length = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(_Buffer.AsSpan(offset, 4));
-                yield return offset;
-                offset += length + 4;
-            }
-        }
-
-        public Span<byte> AddChunk(int byteSize)
+        private Span<byte> _AddChunk(int byteSize)
         {
             if ((_Buffer?.Length ?? 0) - _Count < byteSize)
             {
@@ -72,67 +79,52 @@ namespace InteropTypes.Graphics.Drawing.Collection
             var span = _Buffer.AsSpan(_Count, byteSize);
             _Count += byteSize;
             return span;
-        }
-
-        public Span<T> AddChunk<T>(int byteSize)
-            where T : unmanaged
-        {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, T>(AddChunk(byteSize));
-        }
-
-        public void AddHeader(int type, int length)
-        {
-            var hdr = AddChunk<int>(8);
-            hdr[0] = length;
-            hdr[1] = type;
-        }
-
-        public unsafe Span<T> AddStruct<T>()
-            where T : unmanaged
-        {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, T>(AddChunk(sizeof(T)));
-        }
+        }        
 
         public unsafe Span<T> AddHeaderAndStruct<T>(int headerType)
             where T : unmanaged
         {
-            var chunk = AddChunk(sizeof(T) + 8);
+            var chunk = _AddChunk(8 + sizeof(T));
             var header = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(chunk.Slice(0, 8));
             header[0] = 4 + sizeof(T);
             header[1] = headerType;
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, T>(chunk.Slice(8));
+
+            chunk = chunk.Slice(8);
+
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, T>(chunk);
         }
 
-        public void AddValue(int value)
+        public unsafe Span<T> AddHeaderAndStruct<T>(int headerType, ReadOnlySpan<Point2> points)
+            where T : unmanaged
         {
-            System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(AddChunk(4), value);
+            return AddHeaderAndStruct<T, Point2>(headerType, points);
         }
 
-        public void AddArray(ReadOnlySpan<System.Numerics.Vector2> array)
+        public unsafe Span<T> AddHeaderAndStruct<T>(int headerType, ReadOnlySpan<Point3> points)
+            where T : unmanaged
         {
-            var b = AddChunk<System.Numerics.Vector2>(8 * array.Length);
-            array.CopyTo(b);
+            return AddHeaderAndStruct<T,Point3>(headerType, points);
         }
 
-        public void AddArray(ReadOnlySpan<System.Numerics.Vector3> array)
+
+        private unsafe Span<THeader> AddHeaderAndStruct<THeader, TPoint>(int headerType, ReadOnlySpan<TPoint> points)
+            where THeader : unmanaged
+            where TPoint : unmanaged
         {
-            var b = AddChunk<System.Numerics.Vector3>(12 * array.Length);
-            array.CopyTo(b);
+            var len = 8 + sizeof(THeader) + points.Length * sizeof(TPoint);
+
+            var chunk = _AddChunk(len);
+
+            var header = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(chunk.Slice(0, 8));
+            header[0] = len - 4;
+            header[1] = headerType;
+            chunk = chunk.Slice(8);
+
+            var dst = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, TPoint>(chunk.Slice(sizeof(THeader)));
+            points.CopyTo(dst);
+
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, THeader>(chunk);
         }
-
-        public void AddArray(ReadOnlySpan<Point2> array)
-        {
-            var b = AddChunk<Point2>(8 * array.Length);
-            array.CopyTo(b);
-        }
-
-        public void AddArray(ReadOnlySpan<Point3> array)
-        {
-            var b = AddChunk<Point3>(12 * array.Length);
-            array.CopyTo(b);
-        }
-
-
 
         public int AddReference(object o)
         {

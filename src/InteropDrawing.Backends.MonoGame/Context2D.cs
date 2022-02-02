@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 
 using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Drawing.Transforms;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using COLOR = System.Drawing.Color;
-
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     class MonoGameDrawing2D :
-        InteropTypes.Graphics.Drawing.Transforms.Decompose2D.PassImageThrough,
+        Decompose2D.PassImageThrough,
         IMonoGameDrawing2D
     {
         #region lifecycle
@@ -20,21 +19,21 @@ namespace InteropDrawing.Backends
         {
             _Device = device;
             _View = System.Numerics.Matrix3x2.Identity;
-            this.SetPassImageThroughTarget(_VectorsBatch);
+            SetPassImageThroughTarget(_VectorsBatch);
         }
 
         public void Dispose()
         {
-            this.SetPassImageThroughTarget(null);
+            SetPassImageThroughTarget(null);
 
             _Device = null;
-            
-            System.Threading.Interlocked.Exchange(ref _Effect, null)?.Dispose();
-            System.Threading.Interlocked.Exchange(ref _WhiteTexture, null)?.Dispose();
+
+            Interlocked.Exchange(ref _Effect, null)?.Dispose();
+            Interlocked.Exchange(ref _WhiteTexture, null)?.Dispose();
 
             foreach (var tex in _SpriteTextures.Values) tex.Item1.Dispose();
             _SpriteTextures.Clear();
-            
+
             _CurrTexture = null;
 
             _VectorsBatch.Clear();
@@ -45,23 +44,23 @@ namespace InteropDrawing.Backends
         #region data
 
         private GraphicsDevice _Device;
-        private SpriteEffect _Effect;        
+        private SpriteEffect _Effect;
 
         private GlobalState _PrevState;
 
         private Texture2D _WhiteTexture;
-        private readonly Dictionary<Object, (Texture2D, SpriteTextureAttributes)> _SpriteTextures = new Dictionary<Object, (Texture2D, SpriteTextureAttributes)>();
+        private readonly Dictionary<object, (Texture2D, SpriteTextureAttributes)> _SpriteTextures = new Dictionary<object, (Texture2D, SpriteTextureAttributes)>();
 
-        private Texture2D _CurrTexture;        
+        private Texture2D _CurrTexture;
 
         private MeshBuilder _VectorsBatch = new MeshBuilder(false);
 
         private System.Numerics.Matrix3x2 _View;
         private System.Numerics.Matrix3x2 _Screen;
-        private System.Numerics.Matrix3x2 _FinalForward;        
+        private System.Numerics.Matrix3x2 _FinalForward;
         private System.Numerics.Matrix3x2 _FinalInverse;
         private float _ScalarForward;
-        private float _ScalarInverse;        
+        private float _ScalarInverse;
 
         #endregion
 
@@ -70,7 +69,7 @@ namespace InteropDrawing.Backends
         /// <inheritdoc/>        
         public object GetService(Type serviceType)
         {
-            if (serviceType.IsAssignableFrom(this.GetType())) return this;
+            if (serviceType.IsAssignableFrom(GetType())) return this;
             return null;
         }
 
@@ -100,11 +99,11 @@ namespace InteropDrawing.Backends
 
             if (_CurrTexture == texture) return;
 
-            Flush();            
+            Flush();
             _CurrTexture = texture;
             _VectorsBatch.SetSpriteTextureSize(_CurrTexture.Width, _CurrTexture.Height);
 
-            _VectorsBatch.SpriteCoordsBleed = attr.TextureBleed;            
+            _VectorsBatch.SpriteCoordsBleed = attr.TextureBleed;
             _Device.SamplerStates[0] = attr.Sampler ?? SamplerState.LinearClamp;
         }
 
@@ -114,7 +113,7 @@ namespace InteropDrawing.Backends
             _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);
             _UpdateMatrices();
 
-             _PrevState = GlobalState.GetCurrent(_Device);
+            _PrevState = GlobalState.GetCurrent(_Device);
             GlobalState.CreateSpriteState().ApplyTo(_Device);
 
             _VectorsBatch.SpriteCoordsBleed = 0;
@@ -149,7 +148,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc />
-        public (Texture2D tex, SpriteTextureAttributes bleed) FetchTexture(Object imageSource)
+        public (Texture2D tex, SpriteTextureAttributes bleed) FetchTexture(object imageSource)
         {
             if (imageSource is Texture2D xnaTex) return (xnaTex, SpriteTextureAttributes.Default);
 
@@ -208,10 +207,10 @@ namespace InteropDrawing.Backends
         public void TransformNormalsInverse(Span<Point2> vectors) { Point2.TransformNormals(vectors, _FinalInverse); }
 
         /// <inheritdoc />
-        public void TransformScalarsForward(Span<Single> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarForward; } }
+        public void TransformScalarsForward(Span<float> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarForward; } }
 
         /// <inheritdoc />
-        public void TransformScalarsInverse(Span<Single> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarInverse; } }
+        public void TransformScalarsInverse(Span<float> scalars) { for (int i = 0; i < scalars.Length; ++i) { scalars[i] *= _ScalarInverse; } }
 
         #endregion
 

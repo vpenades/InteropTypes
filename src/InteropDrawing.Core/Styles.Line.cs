@@ -38,7 +38,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Combines an <see cref="OutlineFillStyle"/> with Line Cap styles.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="IVectorsCanvas2D.DrawLines(ReadOnlySpan{Point2}, float, LineStyle)"/>.
+    /// Style used by <see cref="ICanvas2D.DrawLines(ReadOnlySpan{Point2}, float, in LineStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {StartCap} {EndCap}")]
     public readonly struct LineStyle

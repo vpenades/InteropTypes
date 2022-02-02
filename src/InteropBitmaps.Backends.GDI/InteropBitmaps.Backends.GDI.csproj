@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
-    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+    <ProjectReference Include="..\InteropDrawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

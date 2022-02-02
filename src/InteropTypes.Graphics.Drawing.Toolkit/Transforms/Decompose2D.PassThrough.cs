@@ -28,7 +28,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             /// <param name="target">The drawing target.</param>
             protected void SetPassThroughTarget(IPrimitiveCanvas2D target)
             {
-                if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency.");
+                if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency. Derive from {nameof(PassToSelf)} instead.");
                 _Target = target;
             }
 
@@ -39,13 +39,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             #endregion
 
-            #region API - ICanvas
-
-            /// <inheritdoc/>
-            public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
-            {
-                _Check(); Decompose2D.DrawAsset(_Target, transform, asset, style);
-            }
+            #region API - IPrimitiveCanvas2D
 
             /// <inheritdoc/>
             public void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle fillColor)
@@ -54,16 +48,26 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
 
             /// <inheritdoc/>
-            public void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle style)
-            {
-                _Check(); Decompose2D.DrawEllipse(_Target, center, width, height, style);
-            }
-
-            /// <inheritdoc/>
             public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
             {
                 _Check(); _Target.DrawImage(transform, style);
             }
+
+            #endregion
+
+            #region API - ICanvas2D
+
+            /// <inheritdoc/>
+            public virtual void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+            {
+                _Check(); Decompose2D.DrawAsset(_Target, transform, asset, style);
+            }            
+
+            /// <inheritdoc/>
+            public void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle style)
+            {
+                _Check(); Decompose2D.DrawEllipse(_Target, center, width, height, style);
+            }            
 
             /// <inheritdoc/>
             public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, in LineStyle style)

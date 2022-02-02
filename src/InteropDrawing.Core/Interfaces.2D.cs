@@ -34,21 +34,21 @@ namespace InteropTypes.Graphics.Drawing
         /// </param>
         /// <param name="fillColor">The color of the polygon</param>
         /// <remarks>        
-        /// The caller must ensure the points represent a convex polygon.
+        /// The caller must ensure the points represent a non degenerated,convex polygon.
         /// </remarks>
         void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle fillColor);
 
         /// <summary>
-        /// Draws an image at the location given by <paramref name="transform"/>.
+        /// Draws an image at the given location.
         /// </summary>
-        /// <param name="transform">The location where to draw the image.</param>
+        /// <param name="transform">The location (SRT) where to draw the image.</param>
         /// <param name="style">The image style, which also contains the image itself.</param>
         void DrawImage(in XFORM2 transform, in ImageStyle style);
     }
 
     /// <summary>
     /// Represents a drawing canvas where we can draw vector graphics.
-    /// </summary>
+    /// </summary>    
     public interface ICanvas2D : IPrimitiveCanvas2D
     {
         /// <summary>
@@ -58,8 +58,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="asset">The asset to draw.</param>
         /// <param name="style">The style to apply to the asset.</param>
         /// <remarks>
-        /// Assets are dependant on the implementation, but at the most basic level,
-        /// <see Model2D is supported as an asset.
+        /// Assets are dependant on the backend implementation.        
         /// </remarks>
         void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
 

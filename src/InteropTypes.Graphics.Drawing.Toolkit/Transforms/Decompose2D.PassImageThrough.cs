@@ -24,7 +24,7 @@ Before:
 After:
             private IDrawingBackend2D _Backend;
 */
-            private InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D _Backend;
+            private InteropTypes.Graphics.Backends.IDrawingBackend2D _Backend;
 
             #endregion
 
@@ -45,7 +45,7 @@ Before:
 After:
                 _Backend = target as IDrawingBackend2D;
 */
-                _Backend = target as InteropTypes.Graphics.Drawing.Backends.IDrawingBackend2D;
+                _Backend = target as Backends.IDrawingBackend2D;
             }
 
             /// <summary>
@@ -64,7 +64,7 @@ After:
             #region API - ICanvas2D
 
             /// <inheritdoc/>
-            public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+            public virtual void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
             {
                 _Check();
                 

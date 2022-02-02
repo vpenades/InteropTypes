@@ -40,8 +40,8 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropWith.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.GLTF\InteropDrawing.Backends.GLTF.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropDrawing.Backends.MonoGame.csproj" />
+    <ProjectReference Include="..\..\src\InteropDrawing.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj" />
+    <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropDrawing.Backends.Plotly.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />

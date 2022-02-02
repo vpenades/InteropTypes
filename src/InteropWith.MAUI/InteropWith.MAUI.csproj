@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+    <ProjectReference Include="..\InteropDrawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
   </ItemGroup>
 
 </Project>
