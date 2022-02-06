@@ -310,5 +310,24 @@ namespace InteropDrawing
             dc3x.DrawSegment(new Vector3(x, 150, 0), new Vector3(x, 200, 0), 10, l1style);
             dc3x.DrawSegment(new Vector3(x, 250, 0), new Vector3(x, 300, 0), 10, l2style);
         }
+
+        [Test]
+        public void  TestDrawMultiSegment()
+        {
+            var scene = new InteropTypes.Graphics.Backends.GltfSceneBuilder();
+
+            using(var dc = scene.CreateDrawing3DContext())
+            {
+                var style = (COLOR.Red, LineCapStyle.Round, LineCapStyle.Triangle);                
+
+                Decompose3D.DrawSegment(dc, Point3.Array( (0,0,0), (17,0,0), (20,10,0), (20, 20, 0)), 5, style);
+
+                Decompose3D.DrawSegment(dc, Point3.Array((0, 0, 20), (0, 15, 20), (30, 0, 20), (0, 0, 20)), 3, style);
+            }
+
+            var path = TestContext.CurrentContext.UseFilePath("extrude1.glb");
+            scene.Save(path);
+            TestContext.AddTestAttachment(path);
+        }
     }
 }

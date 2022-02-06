@@ -18,12 +18,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             public virtual void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
             {
                 Decompose3D.DrawAsset(this, transform, asset, style);
-            }
+            }            
 
             /// <inheritdoc/>
-            public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)
+            public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
             {
-                Decompose3D.DrawSegment(this, a, b, diameter, style);
+                Decompose3D.DrawSegment(this, vertices, diameter, style);
             }
 
             /// <inheritdoc/>

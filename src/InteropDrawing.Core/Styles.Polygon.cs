@@ -14,34 +14,33 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region constructors
 
-        public static implicit operator PolygonStyle(OutlineFillStyle style) { return new PolygonStyle(style.FillColor, style.OutlineColor, style.OutlineWidth); }
-
         public static implicit operator PolygonStyle(COLOR fillColor) { return new PolygonStyle(fillColor); }
-
-
         public static implicit operator PolygonStyle((COLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2); }
-
-        // this operator can conflict with Color(r,g,b);
         public static implicit operator PolygonStyle((COLOR, COLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2, style.Item3); }
 
-        public PolygonStyle(COLOR fillColor)
+        public static implicit operator PolygonStyle(ColorStyle fillColor) { return new PolygonStyle(fillColor); }
+        public static implicit operator PolygonStyle((ColorStyle, float) style) { return new PolygonStyle(style.Item1, style.Item2); }        
+        public static implicit operator PolygonStyle((ColorStyle, ColorStyle, float) style) { return new PolygonStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator PolygonStyle(OutlineFillStyle style) { return new PolygonStyle(style.FillColor, style.OutlineColor, style.OutlineWidth); }
+
+        public PolygonStyle(ColorStyle fillColor)
         {
-            _FillColor = fillColor.ToArgb();
-            _OutlineColor = COLOR.Transparent.ToArgb();
+            FillColor = fillColor;
+            OutlineColor = ColorStyle.Transparent;
             OutlineWidth = 0;
         }
 
-        public PolygonStyle(COLOR outColor, float outWidth)
+        public PolygonStyle(ColorStyle outColor, float outWidth)
         {
-            _FillColor = COLOR.Transparent.ToArgb();
-            _OutlineColor = outColor.ToArgb();
+            FillColor = ColorStyle.Transparent;
+            OutlineColor = outColor;
             OutlineWidth = outWidth;
         }
 
-        public PolygonStyle(COLOR fillColor, COLOR outColor, float outWidth)
+        public PolygonStyle(ColorStyle fillColor, ColorStyle outColor, float outWidth)
         {
-            _FillColor = fillColor.ToArgb();
-            _OutlineColor = outColor.ToArgb();
+            FillColor = fillColor;
+            OutlineColor = outColor;
             OutlineWidth = outWidth;
         }
 
@@ -49,12 +48,9 @@ namespace InteropTypes.Graphics.Drawing
 
         #region data
 
-        private readonly int _FillColor;
-        private readonly int _OutlineColor;
-        public readonly float OutlineWidth;
-
-        public COLOR FillColor => COLOR.FromArgb(_FillColor);
-        public COLOR OutlineColor => COLOR.FromArgb(_OutlineColor);
+        public readonly ColorStyle FillColor;
+        public readonly ColorStyle OutlineColor;
+        public readonly float OutlineWidth;        
 
         #endregion
 
@@ -62,53 +58,25 @@ namespace InteropTypes.Graphics.Drawing
 
         public bool IsVisible => HasFill || HasOutline;
 
-        public bool HasFill
-        {
-            get
-            {
-                var v = (uint)_FillColor;
-                v >>= 24;
+        public bool HasFill => FillColor.IsVisible;
 
-                return v != 0;
-            }
-        }
-
-        public bool HasOutline
-        {
-            get
-            {
-                var v = (uint)_OutlineColor;
-                v >>= 24;
-
-                return v != 0 && OutlineWidth > 0;
-            }
-        }
+        public bool HasOutline => OutlineColor.IsVisible && OutlineWidth > 0;
 
         #endregion
 
-        #region With * API
+        #region With * API        
 
-        private static readonly PolygonStyle _Default = new PolygonStyle(COLOR.Transparent);
-
-        public static readonly PolygonStyle Gray = _Default.WithFill(COLOR.Gray);
-        public static readonly PolygonStyle Black = _Default.WithFill(COLOR.Black);
-        public static readonly PolygonStyle White = _Default.WithFill(COLOR.White);
-        public static readonly PolygonStyle Red = _Default.WithFill(COLOR.Red);
-        public static readonly PolygonStyle Green = _Default.WithFill(COLOR.Green);
-        public static readonly PolygonStyle Blue = _Default.WithFill(COLOR.Blue);
-        public static readonly PolygonStyle Yellow = _Default.WithFill(COLOR.Yellow);
-
-        public PolygonStyle WithFill(COLOR fillColor)
+        public PolygonStyle WithFill(ColorStyle fillColor)
         {
             return new PolygonStyle(fillColor, OutlineColor, OutlineWidth);
         }
 
-        public PolygonStyle WithOutline(COLOR outlineColor, float ow)
+        public PolygonStyle WithOutline(ColorStyle outlineColor, float ow)
         {
             return new PolygonStyle(FillColor, outlineColor, ow);
         }
 
-        public PolygonStyle WithOutline(COLOR outlineColor)
+        public PolygonStyle WithOutline(ColorStyle outlineColor)
         {
             return new PolygonStyle(FillColor, outlineColor, OutlineWidth);
         }

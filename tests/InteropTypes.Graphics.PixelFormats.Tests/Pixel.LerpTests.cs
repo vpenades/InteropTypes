@@ -81,13 +81,5 @@ namespace InteropBitmaps
 
             return default;
         }
-
-
-
-
-
-
-
-
     }
 }

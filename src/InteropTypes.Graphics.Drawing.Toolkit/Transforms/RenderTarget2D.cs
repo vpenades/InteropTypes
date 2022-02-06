@@ -112,7 +112,17 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         private float _ProjectRadius(XYZ p, float radius) { return (_Proj3Func(p) - _Proj3Func(p + _StrafeVector * radius)).Length(); }
 
-        void IScene3D.DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
+        
+
+        void IScene3D.DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle brush)
+        {
+            for(int i=1; i < vertices.Length; ++i)
+            {
+                _DrawSegment(vertices[i-1], vertices[i], diameter, brush);
+            }
+        }
+
+        private void _DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
             var aa = a.ToNumerics();
             var bb = b.ToNumerics();

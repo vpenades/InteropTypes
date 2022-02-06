@@ -84,28 +84,28 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float width, in LineStyle brush)
+        public void DrawLines(ReadOnlySpan<Point2> points, float width, LineStyle brush)
         {
             _ImmutableKey = null;
             _Commands.DrawLines(points, width, brush);
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float w, float h, in OutlineFillStyle brush)
+        public void DrawEllipse(Point2 center, float w, float h, OutlineFillStyle brush)
         {
             _ImmutableKey = null;
             _Commands.DrawEllipse(center, w, h, brush);
         }
 
         /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle brush)
         {
             _ImmutableKey = null;
             _Commands.DrawPolygon(points, brush);
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             _ImmutableKey = null;
             _Commands.DrawImage(transform, style);

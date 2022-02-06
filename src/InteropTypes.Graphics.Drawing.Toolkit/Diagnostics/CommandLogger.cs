@@ -39,25 +39,25 @@ namespace InteropTypes.Graphics.Drawing.Diagnostics
         }
 
         /// <inheritdoc />
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle brush)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle brush)
         {
             Write($"Ellipse {center} {width} {height} {brush}");
         }
 
         /// <inheritdoc />
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle brush)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
         {
             Write($"Lines {points.Length} {diameter} {brush}");
         }
 
         /// <inheritdoc />
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle brush)
         {
             Write($"Polygon {points.Length} {brush}");
         }
 
         /// <inheritdoc />
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             Write($"Sprite {transform} {style}");
         }
@@ -66,20 +66,22 @@ namespace InteropTypes.Graphics.Drawing.Diagnostics
 
         #region API 3D
 
+        /// <inheritdoc />
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
             Write($"ConvexSrf {vertices.Length} {style}");
         }
 
+        /// <inheritdoc />
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
         {
             Write($"Asset {transform} {asset} {brush}");
         }
 
         /// <inheritdoc />
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
+        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
         {
-            Write($"Segment {a} {b} {diameter} {brush}");
+            Write($"Segment {vertices.Length} {style}");
         }
 
         /// <inheritdoc />
@@ -92,7 +94,7 @@ namespace InteropTypes.Graphics.Drawing.Diagnostics
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
             Write($"Surface {vertices.Length} {brush}");
-        }
+        }        
 
         #endregion
 

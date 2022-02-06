@@ -61,12 +61,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (asset is Asset3D a3d) { a3d._DrawAsSurfaces(this); return; }
 
             if (asset is IDrawingBrush<IScene3D> drawable) { drawable.DrawTo(this); return; }            
-        }
+        }        
 
         /// <inheritdoc/>
-        public void DrawSegment(POINT3 a, POINT3 b, SCALAR diameter, LineStyle style)
+        public void DrawSegments(ReadOnlySpan<POINT3> vertices, float diameter, LineStyle style)
         {
-            DrawSegment(_RenderTarget, a, b, diameter, style);
+            DrawSegment(_RenderTarget,vertices, diameter, style);
         }
 
         /// <inheritdoc/>
@@ -95,7 +95,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle style)
         {
             _RenderTarget.DrawConvexSurface(vertices, style);
-        }
+        }        
 
         #endregion
     }

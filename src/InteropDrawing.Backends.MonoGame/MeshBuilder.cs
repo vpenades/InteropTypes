@@ -106,7 +106,7 @@ namespace InteropTypes.Graphics.Backends
             Span<Point3> vertices = stackalloc Point3[points.Length];
             Point3.Transform(vertices, points, _DepthZ);
 
-            var c = color.Color.ToXna();
+            var c = color.ToGDI().ToXna();
 
             for (int i = 1; i < vertices.Length; ++i)
             {
@@ -126,17 +126,17 @@ namespace InteropTypes.Graphics.Backends
             {
                 case 0: return;
                 case 1: return;
-                case 2: _DrawThinLine(vertices[0], vertices[1], color.Color.ToXna()); return;
-                default: _DrawConvexSurface(vertices, color.Color.ToXna(), false); return;
+                case 2: _DrawThinLine(vertices[0], vertices[1], color.ToGDI().ToXna()); return;
+                default: _DrawConvexSurface(vertices, color.ToGDI().ToXna(), false); return;
             }
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             var xform = transform;
             style.PrependTransform(ref xform, _SpriteHFlip, _SpriteVFlip);
-            var color = style.Color.ToXna();
+            var color = style.Color.ToGDI().ToXna();
 
             var v1 = _Triangles.UseVertex(XY.Transform(XY.Zero, xform), _DepthZ, color, (style.Bitmap.UV0 + _SpriteUv0Bleed) * _SpriteCoordInvScale);
             var v2 = _Triangles.UseVertex(XY.Transform(XY.UnitX, xform), _DepthZ, color, (style.Bitmap.UV1 + _SpriteUv1Bleed) * _SpriteCoordInvScale);
@@ -153,7 +153,7 @@ namespace InteropTypes.Graphics.Backends
 
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
-            var c = style.Color.ToXna();
+            var c = style.ToGDI().ToXna();
 
             _DrawConvexSurface(vertices, c, false);
         }

@@ -28,9 +28,14 @@ namespace InteropTypes.Graphics.Drawing
         /// Draws a convex polygon, with the given fill color
         /// </summary>
         /// <param name="points">
+        /// <para>
         /// The vertices of the polygon.
         /// If 2 points are passed, it should draw a thin line.
         /// If 1 point is passed, it should draw a point.
+        /// </para>
+        /// <para>
+        /// Helper builder: <c>Point2.Params( (2,2), (3,5) )</c>
+        /// </para>
         /// </param>
         /// <param name="fillColor">The color of the polygon</param>
         /// <remarks>        
@@ -43,7 +48,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="transform">The location (SRT) where to draw the image.</param>
         /// <param name="style">The image style, which also contains the image itself.</param>
-        void DrawImage(in XFORM2 transform, in ImageStyle style);
+        void DrawImage(in XFORM2 transform, ImageStyle style);
     }
 
     /// <summary>
@@ -67,7 +72,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="points">The vertices of the polygon.</param>
         /// <param name="style">The outline and fill style.</param>        
-        void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle style);
+        void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle style);
 
         /// <summary>
         /// Draws an open polyline.
@@ -75,7 +80,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="points">The points of the line.</param>
         /// <param name="diameter">The thickness of the line.</param>
         /// <param name="style">The style of the line.</param>
-        void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style);
+        void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, LineStyle style);
 
         /// <summary>
         /// Draws an ellipse.
@@ -84,7 +89,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="width">The width of the ellipse.</param>
         /// <param name="height">The height of the ellipse.</param>
         /// <param name="style">The fill and outline of the ellipse.</param>
-        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style);
+        void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, OutlineFillStyle style);
     }
 
     /// <summary>

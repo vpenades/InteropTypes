@@ -33,7 +33,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             dc.DrawConvexSurface(vertices, style.Style.FillColor);
         }
 
-        public static void DrawOutlineAsSegments(IScene3D dc, ReadOnlySpan<POINT3> vertices, Single diameter, COLOR color)
+        public static void DrawOutlineAsSegments(IScene3D dc, ReadOnlySpan<POINT3> vertices, Single diameter, ColorStyle color)
         {
             var c = new LineStyle(color);
 
@@ -45,6 +45,24 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             dc.DrawSegment(vertices[vertices.Length - 1], vertices[0], diameter, c);
         }
 
+        public static void DrawSegment(IPrimitiveScene3D dc, ReadOnlySpan<POINT3> points, SCALAR diameter, LineStyle style)
+        {
+            if (points.Length < 3)
+            {
+                if (!Parametric.ShapeFactory3D.DrawCylinder(dc, (points[0], diameter), (points[1], diameter), 4, style))
+                {
+                    DrawSphere(dc, (points[0] + points[1]) * 0.5f, diameter, 4, style.Style);
+                }
+
+                return;
+            }
+
+            bool closed = false;
+
+            if (points[0] == points[points.Length - 1]) { closed = true; points = points.Slice(0, points.Length - 1); }
+
+            Parametric.ShapeFactory3D.PointNode.Extrude(dc, points, diameter, closed, 5, false, style);
+        }
 
         public static void DrawSphere(IPrimitiveScene3D dc, POINT3 center, SCALAR diameter, OutlineFillStyle brush)
         {
@@ -72,13 +90,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        public static void DrawSegment(IPrimitiveScene3D dc, POINT3 a, POINT3 b, SCALAR diameter, LineStyle style)
-        {
-            if (!Parametric.ShapeFactory3D.DrawCylinder(dc, (a, diameter), (b, diameter), 4, style))
-            {
-                DrawSphere(dc, (a + b) * 0.5f, diameter, 4, style.Style);
-            }
-        }       
+        
+
+        
 
     }
 }

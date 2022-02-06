@@ -47,20 +47,20 @@ namespace InteropDrawing.Backends
         private SvgNet.SvgGdi.IGraphics _Context;
         private bool _CanRenderBitmaps;
 
-        private readonly Dictionary<Int32, BRUSH> _Brushes = new Dictionary<Int32, BRUSH>();
+        private readonly Dictionary<UInt32, BRUSH> _Brushes = new Dictionary<UInt32, BRUSH>();
         private readonly Dictionary<Object, IMAGE> _Images = new Dictionary<Object, IMAGE>();
 
         #endregion
 
         #region resources        
 
-        private BRUSH _UseBrush(COLOR colorKey)
+        private BRUSH _UseBrush(ColorStyle colorKey)
         {
-            var key = colorKey.ToArgb();
+            var key = colorKey.Packed;
 
             if (_Brushes.TryGetValue(key, out BRUSH b)) return b;
 
-            b = new System.Drawing.SolidBrush(colorKey);
+            b = new System.Drawing.SolidBrush(colorKey.ToGDI());
 
             _Brushes[key] = b;
 
@@ -113,11 +113,11 @@ namespace InteropDrawing.Backends
                 ppp[i] = new System.Drawing.PointF(points[i].X, points[i].Y);
             }
 
-            _Context.FillPolygon(_UseBrush(color.Color), ppp);
+            _Context.FillPolygon(_UseBrush(color.ToGDI()), ppp);
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle brush)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
         {
             var sc = _ToDevice(brush.StartCap);
             var ec = _ToDevice(brush.EndCap);
@@ -141,9 +141,9 @@ namespace InteropDrawing.Backends
         }
 
         
-        private void _DrawLineInternal(ReadOnlySpan<System.Drawing.PointF> points, float diameter, COLOR color, System.Drawing.Drawing2D.LineCap startCap, System.Drawing.Drawing2D.LineCap endCap)
+        private void _DrawLineInternal(ReadOnlySpan<System.Drawing.PointF> points, float diameter, ColorStyle color, System.Drawing.Drawing2D.LineCap startCap, System.Drawing.Drawing2D.LineCap endCap)
         {
-            using (var pen = new System.Drawing.Pen(color, diameter))
+            using (var pen = new System.Drawing.Pen(color.ToGDI(), diameter))
             {
                 pen.StartCap = startCap;
                 pen.EndCap = endCap;
@@ -160,7 +160,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle brush)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle brush)
         {
             center -= new Point2(width * 0.5f, height * 0.5f);
 
@@ -168,7 +168,7 @@ namespace InteropDrawing.Backends
 
             if (brush.HasOutline)
             {
-                using (var pen = new System.Drawing.Pen(brush.OutlineColor, brush.OutlineWidth))
+                using (var pen = new System.Drawing.Pen(brush.OutlineColor.ToGDI(), brush.OutlineWidth))
                 {
                     _Context.DrawEllipse(pen, center.X, center.Y, width, height);
                 }
@@ -176,7 +176,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle brush)
         {
             var ppp = new System.Drawing.PointF[points.Length];
 
@@ -192,7 +192,7 @@ namespace InteropDrawing.Backends
 
             if (brush.HasOutline)
             {
-                using (var pen = new System.Drawing.Pen(brush.OutlineColor, brush.OutlineWidth))
+                using (var pen = new System.Drawing.Pen(brush.OutlineColor.ToGDI(), brush.OutlineWidth))
                 {
                     _Context.DrawPolygon(pen, ppp);
                 }
@@ -200,7 +200,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             if (!_CanRenderBitmaps) return;
 

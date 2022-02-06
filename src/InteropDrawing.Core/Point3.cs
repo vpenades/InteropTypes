@@ -4,20 +4,35 @@ using System.Text;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
+using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
+
+using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
+
+
+
 
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents a vector with three single-precision floating-point values.
+    /// Represents an (X,Y,Z) point with three single-precision floating-point values.
     /// </summary>
     /// <remarks>
-    /// Equivalent to <b>(float,float, float)</b> and <see cref="VECTOR3"/>.
+    /// <para>
+    /// <see cref="Point3"/> is not a replacement of <see cref="VECTOR3"/> but a helper
+    /// structure used to simplify the use of (X,Y,Z) values.
+    /// </para>
+    /// <para>
+    /// Equivalent to:<br/>
+    /// <list type="table">
+    /// <item><b>(float,float,float)</b></item>
+    /// <item><see cref="VECTOR3"/></item>    
+    /// </list>
+    /// </para>
     /// </remarks>
-    
-    [System.Diagnostics.DebuggerDisplay("{X} {Y} {Z}")]
+    [System.Diagnostics.DebuggerDisplay("{XYZ}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-    public readonly partial struct Point3
+    public partial struct Point3
         : IFormattable
         , IEquatable<Point3>
         , IEquatable<VECTOR3>
@@ -28,23 +43,53 @@ namespace InteropTypes.Graphics.Drawing
         /// Tells if the value is finite and not NaN
         /// </summary>
         /// <remarks>
-        /// <see href="https://github.com/dotnet/runtime/blob/5df6cc63151d937724fa0ce8138e69f933052606/src/libraries/System.Private.CoreLib/src/System/Single.cs#L74">DotNet implementation</see>
+        /// <see href="https://github.com/dotnet/runtime/blob/5906521ab238e7d5bb8e38ad81e9ce95561b9771/src/libraries/System.Private.CoreLib/src/System/Single.cs#L74">DotNet implementation</see>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool _IsFinite(float val)
-        {
-            return !float.IsNaN(val) && !float.IsInfinity(val);
-        }
+        private static bool _IsFinite(float val) => !float.IsNaN(val) && !float.IsInfinity(val);
 
         #endregion
 
         #region implicit
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Point3(VECTOR3 p) { return new Point3(p.X,p.Y,p.Z); }
+        public static implicit operator Point3(VECTOR3 p)
+        {
+            #if NET5_0_OR_GREATER
+            Unsafe.SkipInit<Point3>(out var pp);
+            pp.XYZ = p;
+            return pp;
+            #else
+            return new Point3(p);
+            #endif
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Point3((float X, float Y, float Z) p) { return new Point3(p.X, p.Y, p.Z); }
+        public static implicit operator Point3((float X, float Y, float Z) p)
+        {
+            #if NET5_0_OR_GREATER
+            Unsafe.SkipInit<Point3>(out var pp);
+            pp.X = p.X;
+            pp.Y = p.Y;
+            pp.Z = p.Z;
+            return pp;
+            #else
+            return new Point3(p.X, p.Y, p.Z);
+            #endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Point3((Point2 XY, float Z) p)
+        {
+            #if NET5_0_OR_GREATER
+            Unsafe.SkipInit<Point3>(out var pp);
+            pp.XY = p.XY.XY;            
+            pp.Z = p.Z;
+            return pp;
+            #else
+            return new Point3(p.XY, p.Z);
+            #endif
+        }
 
         #endregion
 
@@ -54,36 +99,70 @@ namespace InteropTypes.Graphics.Drawing
         public Point3(float x, float y, float z) : this() { X = x; Y = y; Z = z; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3(Point2 xy, float z) : this() { X = xy.X; Y = xy.Y; Z = z; }
+        public Point3(VECTOR3 v) : this() { XYZ = v; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3(Point2 xy, float z) : this() { XY = xy.XY; Z = z; }        
+
+        /// <summary>
+        /// Helper method used to convert point params to an array.
+        /// </summary>
+        /// <param name="points">a sequence of points</param>
+        /// <returns>An array of points</returns>
+        /// <remarks>
+        /// When a function has a <see cref="ReadOnlySpan{Point2}"/> we can
+        /// pass a Point2.Params(...) instead.
+        /// </remarks>
+        public static Point3[] Array(params Point3[] points) { return points; }
 
         #endregion
 
-        #region data
+        #region data        
 
-        public static readonly Point3 Zero = new Point3(0, 0, 0);
-
-        public static readonly Point3 Half = new Point3(0.5f, 0.5f, 0.5f);
-
-        public static readonly Point3 One = new Point3(1, 1, 1);
-
+        /// <summary>
+        /// The X component of the point.
+        /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly float X;
+        public float X;
+
+        /// <summary>
+        /// The Y component of the point.
+        /// </summary>
         [System.Runtime.InteropServices.FieldOffset(4)]
-        public readonly float Y;
-        [System.Runtime.InteropServices.FieldOffset(8)]
-        public readonly float Z;
+        public float Y;
 
+        /// <summary>
+        /// The Z component of the point.
+        /// </summary>
+        [System.Runtime.InteropServices.FieldOffset(8)]
+        public float Z;        
+
+        /// <summary>
+        /// The X and Y component of the point.
+        /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
-        public readonly VECTOR3 Vector;
+        public VECTOR2 XY;
+
+        /// <summary>
+        /// The Y and Z component of the point.
+        /// </summary>
+        [System.Runtime.InteropServices.FieldOffset(4)]
+        public VECTOR2 YZ;
+
+        /// <summary>
+        /// The X, Y and Z component of the point.
+        /// </summary>
+        [System.Runtime.InteropServices.FieldOffset(0)]
+        public VECTOR3 XYZ;
 
         /// <inheritdoc/>
-        public override int GetHashCode() => Vector.GetHashCode();
+        public override int GetHashCode() => XYZ.GetHashCode();
 
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            if (obj is Point3 otherP) return AreEqual(this, otherP);
-            if (obj is VECTOR3 otherV) return AreEqual(this, otherV);            
+            if (obj is Point3 otherP) return this.XYZ == otherP.XYZ;
+            if (obj is VECTOR3 otherV) return this.XYZ == otherV;
             return false;
         }
 
@@ -99,53 +178,154 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         public static bool operator !=(in Point3 a, in Point3 b) => !AreEqual(a, b);
 
-        public static bool AreEqual(in Point3 a, in Point3 b) { return a.Vector == b.Vector; }
+        /// <inheritdoc/>
+        public static bool operator ==(in Point3 a, in VECTOR3 b) => AreEqual(a, b);
 
-        public static bool AreEqual(in Point3 a, in VECTOR3 b) { return a.Vector == b; }
+        /// <inheritdoc/>
+        public static bool operator !=(in Point3 a, in VECTOR3 b) => !AreEqual(a, b);
+
+        public static bool AreEqual(in Point3 a, in Point3 b) { return a.XYZ == b.XYZ; }
+
+        public static bool AreEqual(in Point3 a, in VECTOR3 b) { return a.XYZ == b; }
 
         #endregion
 
         #region properties
 
+        public static Point3 Zero => VECTOR3.Zero;
+        public static Point3 Half => new Point3(0.5f, 0.5f, 0.5f);
+        public static Point3 One => VECTOR3.One;
+        public static Point3 UnitX => VECTOR3.UnitX;
+        public static Point3 UnitY => VECTOR3.UnitY;
+        public static Point3 UnitZ => VECTOR3.UnitZ;
+
         public bool IsFinite => _IsFinite(X) && _IsFinite(Y) && _IsFinite(Z);
 
-        public float Length => Vector.Length();
+        public float Length => XYZ.Length();
+        
+        public VECTOR3 Normalized => VECTOR3.Normalize(this.XYZ);
+
+        public int DominantAxis => X >= Y ? (X >= Z ? 0 : 2) : (Y >= Z ? 1 : 2);
 
         #endregion
 
         #region operators
 
+        /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator *(Point3 a, float b) { return a.Vector * b; }
+        public static Point3 operator -(Point3 a) { return -a.XYZ; }
 
+        /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator +(Point3 a, Point3 b) { return a.Vector + b.Vector; }
+        public static Point3 operator *(Point3 a, float b) { return a.XYZ * b; }
 
+        /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator -(Point3 a, Point3 b) { return a.Vector - b.Vector; }
+        public static Point3 operator /(Point3 a, float b) { return a.XYZ / b; }
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point3 operator *(Point3 a, Point3 b) { return a.XYZ * b; }
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point3 operator /(Point3 a, Point3 b) { return a.XYZ / b; }
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point3 operator +(Point3 a, Point3 b) { return a.XYZ + b.XYZ; }
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point3 operator -(Point3 a, Point3 b) { return a.XYZ - b.XYZ; }
 
         #endregion
 
         #region API
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3 WithX(float x) { return new Point3(x, Y, Z); }
+        public static VECTOR3 Lerp(Point3 a, Point3 b, float amount)
+        {
+            return VECTOR3.Lerp(a.XYZ, b.XYZ, amount);
+        }
+
+        /// <summary>
+        /// Calculates the angle between two vectors.
+        /// </summary>
+        /// <param name="a">the first vector.</param>
+        /// <param name="b">the second vector.</param>
+        /// <returns>The angle, in radians.</returns>
+        public static float AngleInRadians(Point3 a, Point3 b)
+        {
+            var dot = VECTOR3.Dot(a.Normalized, b.Normalized);
+            dot = Math.Min(dot, 1);
+            dot = Math.Max(dot, -1);
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Acos(dot);
+            #else
+            return (float)Math.Acos(dot);
+            #endif
+        }
+
+        #endregion
+
+        #region API - Centroid
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3 WithY(float y) { return new Point3(X, y, Z); }
+        public static VECTOR3 Centroid(Point3[] points) { return Centroid(points.AsSpan()); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3 WithZ(float z) { return new Point3(X, Y, z); }
+        public static VECTOR3 Centroid(VECTOR3[] points) { return Centroid(points.AsSpan()); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3 Normalized() { return VECTOR3.Normalize(new VECTOR3(X, Y, Z)); }
+        public static VECTOR3 Centroid(ReadOnlySpan<Point3> points)
+        {
+            if (points.Length == 0) return VECTOR3.Zero;
+
+            var r = VECTOR3.Zero;
+            foreach (var p in points) { r += p.XYZ; }
+            return r / points.Length;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point2 SelectXY() { return new Point2(X, Y); }
+        public static VECTOR3 Centroid(ReadOnlySpan<VECTOR3> points)
+        {
+            if (points.Length == 0) return VECTOR3.Zero;
+
+            var r = VECTOR3.Zero;
+            foreach (var p in points) { r += p; }
+            return r / points.Length;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static VECTOR3 Centroid(IEnumerable<Point3> points)
+        {
+            var weight = 1;
+            return points.Aggregate(VECTOR3.Zero, (i, j) => { ++weight; return i + j.XYZ; }) / weight;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static VECTOR3 Centroid(IEnumerable<VECTOR3> points)
+        {
+            var weight = 1;
+            return points.Aggregate((i, j) => { ++weight; return i + j; }) / weight;
+        }
 
         #endregion
 
         #region API - Bulk
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Point3> AsPoints(Span<VECTOR3> points) { return MEMMARSHALL.Cast<VECTOR3, Point3>(points); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<Point3> AsPoints(ReadOnlySpan<VECTOR3> points) { return MEMMARSHALL.Cast<VECTOR3, Point3>(points); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<VECTOR3> AsNumerics(Span<Point3> points) { return MEMMARSHALL.Cast<Point3, VECTOR3>(points); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<VECTOR3> AsNumerics(ReadOnlySpan<Point3> points) { return MEMMARSHALL.Cast<Point3, VECTOR3>(points); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point3 Transform(Point3 p, in System.Numerics.Matrix4x4 xform)
@@ -162,36 +342,12 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<Point3> AsPoints(Span<VECTOR3> points)
-        {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR3, Point3>(points);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<Point3> AsPoints(ReadOnlySpan<VECTOR3> points)
-        {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<VECTOR3, Point3>(points);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<VECTOR3> AsNumerics(Span<Point3> points)
-        {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Point3, VECTOR3>(points);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<VECTOR3> AsNumerics(ReadOnlySpan<Point3> points)
-        {
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Point3, VECTOR3>(points);
-        }
-
         #endregion
 
         #region conversions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public VECTOR3 ToNumerics() { return Vector; }
+        public VECTOR3 ToNumerics() { return XYZ; }
 
         /// <inheritdoc/>        
         public override string ToString() { return ToNumerics().ToString(); }

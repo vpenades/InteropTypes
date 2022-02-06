@@ -118,6 +118,7 @@ namespace InteropTypes.Graphics.Drawing.Collection
             var header = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(chunk.Slice(0, 8));
             header[0] = len - 4;
             header[1] = headerType;
+
             chunk = chunk.Slice(8);
 
             var dst = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, TPoint>(chunk.Slice(sizeof(THeader)));

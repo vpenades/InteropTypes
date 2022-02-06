@@ -39,7 +39,7 @@ namespace InteropBitmaps
         /// Luminance (Gray) Quantized to 8 bits.
         /// </summary>
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-        [System.Diagnostics.DebuggerDisplay("{L}")]
+        [System.Diagnostics.DebuggerDisplay("{L}")]        
         public partial struct Luminance8
         {
             #region constants

@@ -22,7 +22,7 @@ namespace InteropDrawing.Backends
                 var b = vertices[i - 1].ToNumerics();
                 var c = vertices[i + 0].ToNumerics();
 
-                var tri = (a, b, c, style.Color);
+                var tri = (a, b, c, style.ToGDI());
 
                 _Triangles.Add(tri);
             }

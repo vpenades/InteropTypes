@@ -54,13 +54,13 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle style)
         {
             var fill = Shape.fillcolor("rgb(44, 160, 101)");
             var line = Shape.line(Line.color("rgb(44, 160, 101)"));
@@ -79,13 +79,13 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle style)
         {
             var sb = new StringBuilder();
 

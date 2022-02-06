@@ -23,12 +23,11 @@ namespace InteropTypes.Graphics.Drawing
             xref.AssetRef = AddReference(asset);
             xref.Style = brush;
         }
-
-        public void DrawSegment(POINT3 a, POINT3 b, float diameter, LineStyle brush)
+        
+        public unsafe void DrawSegments(ReadOnlySpan<POINT3> vertices, float diameter, LineStyle brush)
         {
-            ref var xref = ref AddHeaderAndStruct<_PrimitiveSegment>((int)_PrimitiveType.Segment)[0];
-            xref.PointA = a;
-            xref.PointB = b;
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveSegments>((int)_PrimitiveType.Segments, vertices)[0];
+            xref.Count = vertices.Length;
             xref.Diameter = diameter;
             xref.Style = brush;
         }
@@ -53,7 +52,7 @@ namespace InteropTypes.Graphics.Drawing
             ref var xref = ref AddHeaderAndStruct<_PrimitiveConvex>((int)_PrimitiveType.Convex, vertices)[0];            
             xref.Count = vertices.Length;
             xref.Style = style;            
-        }
+        }        
 
         #endregion
 
@@ -106,11 +105,12 @@ namespace InteropTypes.Graphics.Drawing
 
                 switch (type)
                 {
-                    case _PrimitiveType.Convex: _PrimitiveConvex.GetBounds(ref bounds, span); break;
-                    case _PrimitiveType.Segment: _PrimitiveSegment.GetBounds(ref bounds, span); break;
+                    case _PrimitiveType.Convex: _PrimitiveConvex.GetBounds(ref bounds, span); break;                    
+                    case _PrimitiveType.Segments: _PrimitiveSegments.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Sphere: _PrimitiveSphere.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Surface: _PrimitiveSurface.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, References); break;
+                    default: throw new NotImplementedException();
                 }
             }
 
@@ -123,14 +123,13 @@ namespace InteropTypes.Graphics.Drawing
 
             switch (type)
             {
-                case _PrimitiveType.Convex: return _PrimitiveConvex.GetCenter(span);
-                case _PrimitiveType.Segment: return _PrimitiveSegment.GetCenter(span);
+                case _PrimitiveType.Convex: return _PrimitiveConvex.GetCenter(span);                
+                case _PrimitiveType.Segments: return _PrimitiveSegments.GetCenter(span);
                 case _PrimitiveType.Sphere: return _PrimitiveSphere.GetCenter(span);
                 case _PrimitiveType.Surface: return _PrimitiveSurface.GetCenter(span);
                 case _PrimitiveType.Asset: return _PrimitiveAsset.GetCenter(span);
-            }
-
-            throw new NotImplementedException();
+                default: throw new NotImplementedException();
+            }         
         }
 
         public void DrawTo(int offset, IScene3D dc, bool collapseAssets)
@@ -140,11 +139,12 @@ namespace InteropTypes.Graphics.Drawing
             switch (type)
             {
                 case _PrimitiveType.Convex: { _PrimitiveConvex.DrawTo(dc, span); break; }
-                case _PrimitiveType.Segment: { _PrimitiveSegment.DrawTo(dc, span); break; }
+                case _PrimitiveType.Segments: { _PrimitiveSegments.DrawTo(dc, span); break; }
                 case _PrimitiveType.Sphere: { _PrimitiveSphere.DrawTo(dc, span); break; }
                 case _PrimitiveType.Surface: { _PrimitiveSurface.DrawTo(dc, span); break; }
                 case _PrimitiveType.Asset: { _PrimitiveAsset.DrawTo(dc, span, References, collapseAssets); break; }
-            }            
+                default: throw new NotImplementedException();
+            }        
         }
 
         #endregion
@@ -236,38 +236,44 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        interface IPointsCount { int GetCount(); }
+        interface IPointsCount { int GetCount(); }        
 
-        struct _PrimitiveSegment
+        struct _PrimitiveSegments : IPointsCount
         {
-            public POINT3 PointA;
-            public POINT3 PointB;
+            public int Count;
             public float Diameter;
             public LineStyle Style;
 
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
-            {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSegment>(command)[0];
+            int IPointsCount.GetCount() => Count;
 
-                var r = src.Diameter * 0.5f + src.Style.Style.OutlineWidth;
-                bounds.AddVertex(src.PointA, r);
-                bounds.AddVertex(src.PointB, r);
+            public static unsafe void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
+            {
+                _PrimitiveSegments header = default;
+                _GetHeaderAndPoints(command, ref header, out var points);
+
+                var r = header.Diameter * 0.5f + header.Style.Style.OutlineWidth;
+
+                foreach (var v in points) bounds.AddVertex(v, r);
             }
 
-            public static XYZ GetCenter(ReadOnlySpan<byte> command)
+            public static unsafe XYZ GetCenter(ReadOnlySpan<byte> command)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSegment>(command)[0];
+                _PrimitiveSegments header = default;
+                _GetHeaderAndVectors(command, ref header, out var points);
 
-                var a = src.PointA.ToNumerics();
-                var b = src.PointB.ToNumerics();
+                var center = XYZ.Zero;
 
-                return (a + b) * 0.5f;
+                for (int i = 0; i < header.Count; ++i) { center += points[i]; }
+
+                return header.Count == 0 ? XYZ.Zero : center / header.Count;
             }
 
-            public static void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
+            public static unsafe void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)
             {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSegment>(command)[0];
-                dst.DrawSegment(body.PointA, body.PointB, body.Diameter, body.Style);
+                _PrimitiveSegments header = default;
+                _GetHeaderAndPoints(command, ref header, out var points);
+
+                dst.DrawSegments(points.Slice(0, header.Count), header.Diameter, header.Style);
             }
         }
 
@@ -422,8 +428,8 @@ namespace InteropTypes.Graphics.Drawing
         private enum _PrimitiveType
         {
             None,
-            Convex,
-            Segment,
+            Convex,            
+            Segments,
             Sphere,
             Surface,
             Billboard,

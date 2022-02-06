@@ -47,52 +47,52 @@ namespace InteropBitmaps.Adapters
             throw new NotImplementedException();
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle style)
         {
             var rect = new System.Drawing.RectangleF(center.X - width * 0.5f, center.Y - height * 0.5f, width, height);
 
             if (style.HasFill)
             {
-                using (var brush = new System.Drawing.SolidBrush(style.FillColor))
+                using (var brush = new System.Drawing.SolidBrush(style.FillColor.ToGDI()))
                 {
                     _Context.FillEllipse(brush, rect);
                 }
             }
             if (style.HasOutline)
             {
-                using (var pen = new System.Drawing.Pen(style.OutlineColor, style.OutlineWidth))
+                using (var pen = new System.Drawing.Pen(style.OutlineColor.ToGDI(), style.OutlineWidth))
                 {
                     _Context.DrawEllipse(pen, rect);
                 }
             }
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             var gdiPts = _UsePoints(points.Length);
             for (int i = 0; i < points.Length; ++i) gdiPts[i] = points[i].ToGDIPoint();
             
-            using (var pen = new System.Drawing.Pen(style.Style.FillColor, diameter))
+            using (var pen = new System.Drawing.Pen(style.Style.FillColor.ToGDI(), diameter))
             {
                 _Context.DrawLines(pen, gdiPts);
             }            
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle style)
         {
             var gdiPts = _UsePoints(points.Length);
             for (int i = 0; i < points.Length; ++i) gdiPts[i] = points[i].ToGDIPoint();
 
             if (style.HasFill)
             {
-                using(var brush = new System.Drawing.SolidBrush(style.FillColor))
+                using(var brush = new System.Drawing.SolidBrush(style.FillColor.ToGDI()))
                 {
                     _Context.FillPolygon(brush, gdiPts);
                 }
             }
             if (style.HasOutline)
             {
-                using (var pen = new System.Drawing.Pen(style.OutlineColor, style.OutlineWidth))
+                using (var pen = new System.Drawing.Pen(style.OutlineColor.ToGDI(), style.OutlineWidth))
                 {
                     _Context.DrawPolygon(pen, gdiPts);
                 }
@@ -104,13 +104,13 @@ namespace InteropBitmaps.Adapters
             var gdiPts = _UsePoints(points.Length);
             for (int i = 0; i < points.Length; ++i) gdiPts[i] = points[i].ToGDIPoint();
 
-            using (var brush = new System.Drawing.SolidBrush(color.Color))
+            using (var brush = new System.Drawing.SolidBrush(color.ToGDI()))
             {
                 _Context.FillPolygon(brush, gdiPts);
             }
         }
 
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
 
         }

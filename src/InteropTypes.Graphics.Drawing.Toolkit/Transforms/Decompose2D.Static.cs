@@ -127,7 +127,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region core        
 
-        private static void _DrawSolidLines(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, Color color, bool closed)
+        private static void _DrawSolidLines(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, ColorStyle color, bool closed)
         {
             if (points.Length < 2) return;
             if (points.Length == 2) closed = false;
@@ -145,7 +145,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        private static void _FillLineAsPolygon(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, Color color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
+        private static void _FillLineAsPolygon(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, ColorStyle color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
         {
             var a = startCapStyle;
 
@@ -161,7 +161,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        private static void _FillLineAsPolygon(IPrimitiveCanvas2D dc, POINT2 a, POINT2 b, SCALAR diameter, Color color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
+        private static void _FillLineAsPolygon(IPrimitiveCanvas2D dc, POINT2 a, POINT2 b, SCALAR diameter, ColorStyle color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
         {
             var startCapCount = Parametric.ShapeFactory2D.GetLineCapVertexCount(startCapStyle);
             var endCapCount = Parametric.ShapeFactory2D.GetLineCapVertexCount(endCapStyle);

@@ -48,7 +48,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
 
             /// <inheritdoc/>
-            public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+            public void DrawImage(in Matrix3x2 transform, ImageStyle style)
             {
                 _Check(); _Target.DrawImage(transform, style);
             }
@@ -64,19 +64,19 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }            
 
             /// <inheritdoc/>
-            public void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle style)
+            public void DrawEllipse(POINT2 center, float width, float height, OutlineFillStyle style)
             {
                 _Check(); Decompose2D.DrawEllipse(_Target, center, width, height, style);
             }            
 
             /// <inheritdoc/>
-            public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, in LineStyle style)
+            public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, LineStyle style)
             {
                 _Check(); Decompose2D.DrawLines(_Target, points, diameter, style);
             }
 
             /// <inheritdoc/>
-            public void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle style)
+            public void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle style)
             {
                 _Check(); Decompose2D.DrawPolygon(_Target, points, style);
             }

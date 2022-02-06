@@ -77,7 +77,15 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
+        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle brush)
+        {
+            for(int i=1; i < vertices.Length; i++)
+            {
+                _DrawSegment(vertices[i-1],vertices[i],diameter, brush);
+            }
+        }
+
+        private void _DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
             var aa = a.ToNumerics();
             var bb = b.ToNumerics();
@@ -85,7 +93,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (!_Plane.ClipLineToPlane(ref aa, ref bb)) return;
 
             _Target.DrawSegment(aa, bb, diameter, brush);
-        }
+        }        
 
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {

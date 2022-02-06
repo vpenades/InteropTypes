@@ -58,49 +58,49 @@ namespace InteropDrawing.Backends
         {
             if (color.IsEmpty) return;
 
-            _Traces.Add(Plotly.TracesFactory.Polygon(points, color.Color));
+            _Traces.Add(Plotly.TracesFactory.Polygon(points, color.ToGDI()));
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             if (!style.IsVisible) return;
 
-            var lstyle = Plotly.LineProperties.Create(style.Style.FillColor, diameter, style.Style.OutlineColor, style.Style.OutlineWidth);
+            var lstyle = Plotly.LineProperties.Create(style.Style.FillColor.ToGDI(), diameter, style.Style.OutlineColor.ToGDI(), style.Style.OutlineWidth);
 
             _Traces.Add(Plotly.TracesFactory.Lines(points, lstyle));
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle style)
         {
             if (!style.IsVisible) return;
 
-            _Markers.Add((center, (width + height) * 0.25f, style.FillColor));
+            _Markers.Add((center, (width + height) * 0.25f, style.FillColor.ToGDI()));
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle style)
         {
             if (!style.IsVisible) return;
 
             if (style.HasOutline)
             {
-                var ls = Plotly.LineProperties.Create(style.OutlineColor, style.OutlineWidth);
+                var ls = Plotly.LineProperties.Create(style.OutlineColor.ToGDI(), style.OutlineWidth);
 
-                _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor, ls));
+                _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor.ToGDI(), ls));
             }
             else
             {
                 if (style.HasFill)
                 {
-                    _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor));
+                    _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor.ToGDI()));
                 }
             }
         }        

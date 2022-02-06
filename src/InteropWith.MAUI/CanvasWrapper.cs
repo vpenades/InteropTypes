@@ -25,24 +25,24 @@ namespace InteropWith.MAUI
         private void _SetColorStyle(in ColorStyle style)
         {
             _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Normal;
-            _Canvas.FillColor = style.Color.ToMaui();
-            _Canvas.StrokeColor = ColorStyle.Transparent.Color.ToMaui();
+            _Canvas.FillColor = style.ToGDI().ToMaui();
+            _Canvas.StrokeColor = ColorStyle.Transparent.ToGDI().ToMaui();
             _Canvas.StrokeSize = 0;
         }
 
         private void _SetColorStyle(in OutlineFillStyle style)
         {
             _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Normal;
-            _Canvas.FillColor = style.FillColor.ToMaui();
-            _Canvas.StrokeColor = style.OutlineColor.ToMaui();
+            _Canvas.FillColor = style.FillColor.ToGDI().ToMaui();
+            _Canvas.StrokeColor = style.OutlineColor.ToGDI().ToMaui();
             _Canvas.StrokeSize = style.OutlineWidth;
         }
 
         private void _SetColorStyle(in PolygonStyle style)
         {
             _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Normal;
-            _Canvas.FillColor = style.FillColor.ToMaui();
-            _Canvas.StrokeColor = style.OutlineColor.ToMaui();
+            _Canvas.FillColor = style.FillColor.ToGDI().ToMaui();
+            _Canvas.StrokeColor = style.OutlineColor.ToGDI().ToMaui();
             _Canvas.StrokeSize = style.OutlineWidth;
         }
 
@@ -50,7 +50,7 @@ namespace InteropWith.MAUI
         {
             // _Canvas.BlendMode = Microsoft.Maui.Graphics.BlendMode.Overlay;
             _Canvas.FillColor = new Microsoft.Maui.Graphics.Color(0);
-            _Canvas.StrokeColor = new Microsoft.Maui.Graphics.Color(style.Style.FillColor.ToArgb());
+            _Canvas.StrokeColor = new Microsoft.Maui.Graphics.Color(style.Style.FillColor.ToGDI().ToArgb());
             _Canvas.StrokeSize = style.Style.OutlineWidth;
         }
 
@@ -59,7 +59,7 @@ namespace InteropWith.MAUI
             throw new NotImplementedException();
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle style)
         {
             _SetColorStyle(style);
 
@@ -74,7 +74,7 @@ namespace InteropWith.MAUI
             }            
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
             {
@@ -105,7 +105,7 @@ namespace InteropWith.MAUI
             }
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle style)
         {
             using (var path = new Microsoft.Maui.Graphics.PathF(points[0].X, points[0].Y))
             {
@@ -123,7 +123,7 @@ namespace InteropWith.MAUI
             }
         }
 
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             throw new NotImplementedException();
         }        

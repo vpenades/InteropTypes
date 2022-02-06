@@ -73,7 +73,7 @@ After:
             }
 
             /// <inheritdoc/>
-            public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+            public void DrawImage(in Matrix3x2 transform, ImageStyle style)
             {
                 _Check(); SetImage(style.Bitmap); _Target.DrawImage(transform, style);
             }
@@ -85,7 +85,7 @@ After:
             }            
 
             /// <inheritdoc/>
-            public void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle style)
+            public void DrawEllipse(POINT2 center, float width, float height, OutlineFillStyle style)
             {
                 _Check(); SetImage(null);
 
@@ -94,7 +94,7 @@ After:
             }
 
             /// <inheritdoc/>
-            public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, in LineStyle style)
+            public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, LineStyle style)
             {
                 _Check(); SetImage(null);
 
@@ -103,7 +103,7 @@ After:
             }
 
             /// <inheritdoc/>
-            public void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle style)
+            public void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle style)
             {
                 _Check(); SetImage(null);
 

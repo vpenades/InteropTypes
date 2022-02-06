@@ -14,7 +14,6 @@ using System.Runtime.InteropServices;
 
 namespace InteropBitmaps
 {
-
     partial class Pixel    
     {
         public interface IAnyValueGetter<T> where T : unmanaged
@@ -71,8 +70,13 @@ namespace InteropBitmaps
         foreach(var other in PixelFormatsAllNames)
         {
             _writeDocInherit();
-            _writeFastestMethodAttribute();
-            WriteLine($"{other} IValueGetter<{other}>.GetValue() {{ var t = default({other}); t.SetValue(this); return t; }}");
+            _writeFastestMethodAttribute();            
+
+            WriteLine($"{other} IValueGetter<{other}>.GetValue()");
+            _writeOpenBlock();
+            _WriteSkipInit(other,"t");
+            WriteLine("t.SetValue(this); return t;");
+            _writeCloseBlock();
 
             _writeDocInherit();
             _writeFastestMethodAttribute();

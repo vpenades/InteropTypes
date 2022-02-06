@@ -149,26 +149,26 @@ namespace InteropWith
             _Collapsed2D.DrawAsset(transform, asset);
         }
 
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle style)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle style)
         {
             if (!style.IsVisible) return;
             _Collapsed2D.DrawEllipse(center, width, height, style);
         }
 
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle style)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             if (!style.IsVisible) return;
             _Collapsed2D.DrawLines(points, diameter, style);
         }
 
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle style)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle style)
         {
             if (!style.IsVisible) return;
             if (style.HasOutline) { _Collapsed2D.DrawPolygon(points, style); return; }
             if (style.HasFill) this.AddConvexPolygon(points, style.FillColor);
         }
 
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             var final = style.GetTransform(style.FlipHorizontal, style.FlipVertical) * transform;
 

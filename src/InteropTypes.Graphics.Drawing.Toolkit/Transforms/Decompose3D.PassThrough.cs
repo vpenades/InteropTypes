@@ -54,9 +54,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }            
 
             /// <inheritdoc/>
-            public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)
+            public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
             {
-                _Check(); Decompose3D.DrawSegment(_Target, a, b, diameter, style);
+                _Check(); Decompose3D.DrawSegment(_Target, vertices, diameter, style);
             }
 
             /// <inheritdoc/>

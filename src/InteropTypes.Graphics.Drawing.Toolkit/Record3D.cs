@@ -98,13 +98,13 @@ namespace InteropTypes.Graphics.Drawing
         {
             _ImmutableKey = null;
             _Commands.DrawAsset(transform, asset, style);
-        }
+        }        
 
         /// <inheritdoc/>
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)
+        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
         {
             _ImmutableKey = null;
-            _Commands.DrawSegment(a, b, diameter, style);
+            _Commands.DrawSegments(vertices, diameter, style);
         }
 
         /// <inheritdoc/>

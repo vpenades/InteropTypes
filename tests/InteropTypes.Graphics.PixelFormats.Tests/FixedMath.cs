@@ -108,8 +108,6 @@ namespace InteropBitmaps
         }
 
 
-
-
         [Test]
         public void TestMultiplication()
         {
@@ -161,15 +159,10 @@ namespace InteropBitmaps
             Assert.AreEqual(color, final);            
         }
 
-        
-
-
 
         [Test]
         public void QuantizedMath()
         {
-
-
             var q1 = default(Pixel.QVectorBGRP);
 
             q1.SetValue(new Pixel.BGRA32(255,255,255,255));            

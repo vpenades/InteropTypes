@@ -367,7 +367,12 @@ namespace InteropBitmaps
             {
                 System.Diagnostics.Debug.Assert(amount <= FixedMathCC8.UnitValue);
 
+                #if NET5PLUS
+                Unsafe.SkipInit<QVectorBGRP>(out var r);
+                #else
                 var r = default(QVectorBGRP);
+                #endif
+                
                 r.B = (a.B * amount) >> FixedMathCC8.UnitShift;
                 r.G = (a.G * amount) >> FixedMathCC8.UnitShift;
                 r.R = (a.R * amount) >> FixedMathCC8.UnitShift;
@@ -379,7 +384,12 @@ namespace InteropBitmaps
             {
                 var bb = FixedMathCC8.FromFloat(b);
 
+                #if NET5PLUS
+                Unsafe.SkipInit<QVectorBGRP>(out var r);
+                #else
                 var r = default(QVectorBGRP);
+                #endif
+
                 r.B = (a.B * bb) >> FixedMathCC8.UnitShift;
                 r.G = (a.G * bb) >> FixedMathCC8.UnitShift;
                 r.R = (a.R * bb) >> FixedMathCC8.UnitShift;
@@ -389,7 +399,12 @@ namespace InteropBitmaps
 
             public static QVectorBGRP operator * (in QVectorBGRP a, in QVectorBGRP b)
             {
+                #if NET5PLUS
+                Unsafe.SkipInit<QVectorBGRP>(out var r);
+                #else
                 var r = default(QVectorBGRP);
+                #endif
+
                 r.B = (a.B * b.B) >> FixedMathCC8.UnitShift;
                 r.G = (a.G * b.G) >> FixedMathCC8.UnitShift;
                 r.R = (a.R * b.R) >> FixedMathCC8.UnitShift;
@@ -399,7 +414,12 @@ namespace InteropBitmaps
 
             public static QVectorBGRP operator *(in QVectorBGR a, in QVectorBGRP b)
             {
+                #if NET5PLUS
+                Unsafe.SkipInit<QVectorBGRP>(out var r);
+                #else
                 var r = default(QVectorBGRP);
+                #endif
+
                 r.B = (a.B * b.B) >> FixedMathCC8.UnitShift;
                 r.G = (a.G * b.G) >> FixedMathCC8.UnitShift;
                 r.R = (a.R * b.R) >> FixedMathCC8.UnitShift;
@@ -409,7 +429,12 @@ namespace InteropBitmaps
 
             public static QVectorBGRP operator +(in QVectorBGRP a, in QVectorBGRP b)
             {
+                #if NET5PLUS
+                Unsafe.SkipInit<QVectorBGRP>(out var r);
+                #else
                 var r = default(QVectorBGRP);
+                #endif
+
                 r.B = Math.Min(FixedMathCC8.UnitShift, a.B + b.B);
                 r.G = Math.Min(FixedMathCC8.UnitShift, a.G + b.G);
                 r.R = Math.Min(FixedMathCC8.UnitShift, a.R + b.R);

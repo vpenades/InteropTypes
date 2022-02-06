@@ -64,8 +64,8 @@ namespace InteropTypes.Graphics.Backends
             {
                 case 0: return;
                 case 1: return;
-                case 2: _DrawLine(vertices[0], vertices[1], fillColor.Color); return;
-                default: _DrawSurface(vertices, fillColor.Color, false); return;
+                case 2: _DrawLine(vertices[0], vertices[1], fillColor.ToGDI()); return;
+                default: _DrawSurface(vertices, fillColor.ToGDI(), false); return;
             }
         }
 

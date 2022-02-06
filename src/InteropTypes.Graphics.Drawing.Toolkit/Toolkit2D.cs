@@ -361,16 +361,16 @@ After:
         public static void DrawLine(this PRIMITIVE2D dc, POINT2 a, POINT2 b, float diameter, in ImageStyle style)
         {
             var aa = a.ToNumerics();
-            var ab = b.ToNumerics() - aa;
+            var ab = b.ToNumerics() - aa;            
 
-            var brush = style.Bitmap;
-            var brushLen = brush.Width - brush.Pivot.X * 2;
+            var imageXform = style.GetTransform();
+            var sx = new VECTOR2(imageXform.M11, imageXform.M12).Length();
+            var sy = new VECTOR2(imageXform.M21, imageXform.M22).Length();
+            var sxx = sx + imageXform.M31 * 2; // subtract pivot "head" and "tail"
 
-            var ss = new VECTOR2(ab.Length(), diameter) / new VECTOR2(brushLen, brush.Height);
-            var rr = MathF.Atan2(ab.Y, ab.X);
-
-            var xform = XFORM2.CreateScale(ss);
-            xform *= XFORM2.CreateRotation(rr);
+            var s = new VECTOR2(ab.Length(), diameter) / new VECTOR2(sxx * sx, sy * sy);
+            var r = MathF.Atan2(ab.Y, ab.X);
+            var xform = XFORM2.CreateScale(s) * imageXform * XFORM2.CreateRotation(r);
 
             xform.Translation = aa;
 

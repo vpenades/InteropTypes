@@ -6,8 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using InteropBitmaps;
-
 using InteropDrawing;
+
+using InteropTypes.Graphics.Drawing;
 
 using Veldrid;
 using Veldrid.Sdl2;

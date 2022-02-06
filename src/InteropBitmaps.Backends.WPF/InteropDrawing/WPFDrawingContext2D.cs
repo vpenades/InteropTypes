@@ -57,14 +57,14 @@ namespace InteropDrawing.Backends
 
             if (_BrushesCache.TryGetValue(color.Packed, out System.Windows.Media.SolidColorBrush brush)) return brush;
 
-            brush = color.Color.ToDeviceBrush();
+            brush = color.ToGDI().ToDeviceBrush();
 
             _BrushesCache[color.Packed] = brush;
 
             return brush;
         }
 
-        private System.Windows.Media.Pen _UsePen(COLOR color, Single width, LineCapStyle start, LineCapStyle end)
+        private System.Windows.Media.Pen _UsePen(ColorStyle color, Single width, LineCapStyle start, LineCapStyle end)
         {
             if (width <= 0) return null;
 
@@ -185,7 +185,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle brush)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
         {
             this.VerifyAccess();
             this.VerifyContext();            
@@ -219,7 +219,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 c, Single width, Single height, in OutlineFillStyle brush)
+        public void DrawEllipse(Point2 c, Single width, Single height, OutlineFillStyle brush)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -239,7 +239,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle brush)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -279,18 +279,18 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             var bmp = style.Bitmap;
+            var bmpRect = bmp.GetSourceRect();
 
             var image = _UseImage(bmp.Source);
-
-            var recti = new Int32Rect((int)bmp.Left, (int)bmp.Top, (int)bmp.Width, (int)bmp.Height);
+            var recti = new Int32Rect(bmpRect.X, bmpRect.Y, bmpRect.Width, bmpRect.Height);
             var cropped = new System.Windows.Media.Imaging.CroppedBitmap(image, recti);
 
             // PushMatrix(transform);
 
-            var dstRect = new Rect(0, 0, bmp.Width, bmp.Height);
+            var dstRect = new Rect(0, 0, bmpRect.Width, bmpRect.Height);
             _Context.DrawImage(cropped, dstRect);
 
             // PopMatrix();

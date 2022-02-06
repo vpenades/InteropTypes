@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace InteropBitmaps
 {
-
     partial class Pixel    
     {
         public interface IAnyValueGetter<T> where T : unmanaged
@@ -76,7 +75,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -84,7 +91,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -92,7 +107,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -100,7 +123,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -108,7 +139,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -116,7 +155,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -124,7 +171,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -132,7 +187,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -140,7 +203,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -148,7 +219,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -156,7 +235,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -164,7 +251,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -172,7 +267,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -180,7 +283,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -188,7 +299,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -196,7 +315,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -204,7 +331,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -212,7 +347,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -220,7 +363,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -245,7 +396,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -253,7 +412,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -261,7 +428,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -269,7 +444,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -277,7 +460,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -285,7 +476,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -293,7 +492,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -301,7 +508,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -309,7 +524,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -317,7 +540,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -325,7 +556,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -333,7 +572,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -341,7 +588,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -349,7 +604,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -357,7 +620,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -365,7 +636,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -373,7 +652,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -381,7 +668,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -389,7 +684,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -414,7 +717,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -422,7 +733,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -430,7 +749,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -438,7 +765,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -446,7 +781,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -454,7 +797,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -462,7 +813,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -470,7 +829,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -478,7 +845,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -486,7 +861,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -494,7 +877,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -502,7 +893,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -510,7 +909,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -518,7 +925,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -526,7 +941,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -534,7 +957,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -542,7 +973,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -550,7 +989,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -558,7 +1005,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -583,7 +1038,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -591,7 +1054,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -599,7 +1070,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -607,7 +1086,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -615,7 +1102,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -623,7 +1118,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -631,7 +1134,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -639,7 +1150,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -647,7 +1166,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -655,7 +1182,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -663,7 +1198,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -671,7 +1214,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -679,7 +1230,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -687,7 +1246,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -695,7 +1262,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -703,7 +1278,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -711,7 +1294,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -719,7 +1310,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -727,7 +1326,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -752,7 +1359,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -760,7 +1375,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -768,7 +1391,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -776,7 +1407,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -784,7 +1423,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -792,7 +1439,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -800,7 +1455,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -808,7 +1471,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -816,7 +1487,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -824,7 +1503,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -832,7 +1519,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -840,7 +1535,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -848,7 +1551,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -856,7 +1567,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -864,7 +1583,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -872,7 +1599,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -880,7 +1615,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -888,7 +1631,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -896,7 +1647,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -921,7 +1680,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -929,7 +1696,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -937,7 +1712,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -945,7 +1728,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -953,7 +1744,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -961,7 +1760,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -969,7 +1776,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -977,7 +1792,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -985,7 +1808,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -993,7 +1824,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1001,7 +1840,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1009,7 +1856,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1017,7 +1872,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1025,7 +1888,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1033,7 +1904,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1041,7 +1920,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1049,7 +1936,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1057,7 +1952,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1065,7 +1968,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1090,7 +2001,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1098,7 +2017,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1106,7 +2033,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1114,7 +2049,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1122,7 +2065,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1130,7 +2081,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1138,7 +2097,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1146,7 +2113,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1154,7 +2129,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1162,7 +2145,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1170,7 +2161,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1178,7 +2177,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1186,7 +2193,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1194,7 +2209,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1202,7 +2225,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1210,7 +2241,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1218,7 +2257,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1226,7 +2273,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1234,7 +2289,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1259,7 +2322,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1267,7 +2338,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1275,7 +2354,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1283,7 +2370,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1291,7 +2386,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1299,7 +2402,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1307,7 +2418,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1315,7 +2434,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1323,7 +2450,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1331,7 +2466,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1339,7 +2482,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1347,7 +2498,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1355,7 +2514,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1363,7 +2530,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1371,7 +2546,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1379,7 +2562,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1387,7 +2578,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1395,7 +2594,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1403,7 +2610,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1428,7 +2643,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1436,7 +2659,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1444,7 +2675,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1452,7 +2691,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1460,7 +2707,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1468,7 +2723,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1476,7 +2739,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1484,7 +2755,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1492,7 +2771,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1500,7 +2787,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1508,7 +2803,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1516,7 +2819,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1524,7 +2835,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1532,7 +2851,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1540,7 +2867,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1548,7 +2883,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1556,7 +2899,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1564,7 +2915,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1572,7 +2931,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1597,7 +2964,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1605,7 +2980,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1613,7 +2996,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1621,7 +3012,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1629,7 +3028,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1637,7 +3044,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1645,7 +3060,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1653,7 +3076,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1661,7 +3092,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1669,7 +3108,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1677,7 +3124,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1685,7 +3140,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1693,7 +3156,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1701,7 +3172,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1709,7 +3188,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1717,7 +3204,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1725,7 +3220,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1733,7 +3236,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1741,7 +3252,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1766,7 +3285,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1774,7 +3301,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1782,7 +3317,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1790,7 +3333,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1798,7 +3349,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1806,7 +3365,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1814,7 +3381,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1822,7 +3397,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1830,7 +3413,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1838,7 +3429,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1846,7 +3445,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1854,7 +3461,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1862,7 +3477,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1870,7 +3493,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1878,7 +3509,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1886,7 +3525,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1894,7 +3541,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1902,7 +3557,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1910,7 +3573,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1935,7 +3606,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1943,7 +3622,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1951,7 +3638,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1959,7 +3654,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1967,7 +3670,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1975,7 +3686,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1983,7 +3702,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1991,7 +3718,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1999,7 +3734,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2007,7 +3750,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2015,7 +3766,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2023,7 +3782,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2031,7 +3798,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2039,7 +3814,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2047,7 +3830,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2055,7 +3846,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2063,7 +3862,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2071,7 +3878,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2079,7 +3894,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2104,7 +3927,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2112,7 +3943,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2120,7 +3959,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2128,7 +3975,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2136,7 +3991,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2144,7 +4007,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2152,7 +4023,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2160,7 +4039,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2168,7 +4055,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2176,7 +4071,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2184,7 +4087,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2192,7 +4103,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2200,7 +4119,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2208,7 +4135,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2216,7 +4151,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2224,7 +4167,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2232,7 +4183,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2240,7 +4199,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2248,7 +4215,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2273,7 +4248,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2281,7 +4264,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2289,7 +4280,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2297,7 +4296,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2305,7 +4312,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2313,7 +4328,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2321,7 +4344,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2329,7 +4360,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2337,7 +4376,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2345,7 +4392,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2353,7 +4408,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2361,7 +4424,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2369,7 +4440,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2377,7 +4456,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2385,7 +4472,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2393,7 +4488,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2401,7 +4504,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2409,7 +4520,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2417,7 +4536,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2442,7 +4569,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2450,7 +4585,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2458,7 +4601,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2466,7 +4617,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2474,7 +4633,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2482,7 +4649,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2490,7 +4665,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2498,7 +4681,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2506,7 +4697,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2514,7 +4713,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2522,7 +4729,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2530,7 +4745,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2538,7 +4761,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2546,7 +4777,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2554,7 +4793,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2562,7 +4809,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2570,7 +4825,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2578,7 +4841,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2586,7 +4857,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2611,7 +4890,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2619,7 +4906,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2627,7 +4922,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2635,7 +4938,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2643,7 +4954,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2651,7 +4970,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2659,7 +4986,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2667,7 +5002,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2675,7 +5018,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2683,7 +5034,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2691,7 +5050,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2699,7 +5066,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2707,7 +5082,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2715,7 +5098,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2723,7 +5114,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2731,7 +5130,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2739,7 +5146,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2747,7 +5162,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2755,7 +5178,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2780,7 +5211,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2788,7 +5227,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2796,7 +5243,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2804,7 +5259,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2812,7 +5275,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2820,7 +5291,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2828,7 +5307,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2836,7 +5323,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2844,7 +5339,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2852,7 +5355,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2860,7 +5371,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2868,7 +5387,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2876,7 +5403,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2884,7 +5419,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2892,7 +5435,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2900,7 +5451,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2908,7 +5467,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2916,7 +5483,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2924,7 +5499,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2949,7 +5532,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2957,7 +5548,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2965,7 +5564,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2973,7 +5580,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2981,7 +5596,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2989,7 +5612,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -2997,7 +5628,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3005,7 +5644,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3013,7 +5660,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3021,7 +5676,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3029,7 +5692,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3037,7 +5708,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3045,7 +5724,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3053,7 +5740,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3061,7 +5756,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3069,7 +5772,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3077,7 +5788,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3085,7 +5804,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3093,7 +5820,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3118,7 +5853,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Alpha8 IValueGetter<Alpha8>.GetValue() { var t = default(Alpha8); t.SetValue(this); return t; }
+            Alpha8 IValueGetter<Alpha8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Alpha8>(out var t);
+                #else
+                var t = default(Alpha8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3126,7 +5869,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance8 IValueGetter<Luminance8>.GetValue() { var t = default(Luminance8); t.SetValue(this); return t; }
+            Luminance8 IValueGetter<Luminance8>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance8>(out var t);
+                #else
+                var t = default(Luminance8);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3134,7 +5885,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance16 IValueGetter<Luminance16>.GetValue() { var t = default(Luminance16); t.SetValue(this); return t; }
+            Luminance16 IValueGetter<Luminance16>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance16>(out var t);
+                #else
+                var t = default(Luminance16);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3142,7 +5901,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            Luminance32F IValueGetter<Luminance32F>.GetValue() { var t = default(Luminance32F); t.SetValue(this); return t; }
+            Luminance32F IValueGetter<Luminance32F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<Luminance32F>(out var t);
+                #else
+                var t = default(Luminance32F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3150,7 +5917,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR565 IValueGetter<BGR565>.GetValue() { var t = default(BGR565); t.SetValue(this); return t; }
+            BGR565 IValueGetter<BGR565>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR565>(out var t);
+                #else
+                var t = default(BGR565);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3158,7 +5933,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA5551 IValueGetter<BGRA5551>.GetValue() { var t = default(BGRA5551); t.SetValue(this); return t; }
+            BGRA5551 IValueGetter<BGRA5551>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA5551>(out var t);
+                #else
+                var t = default(BGRA5551);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3166,7 +5949,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA4444 IValueGetter<BGRA4444>.GetValue() { var t = default(BGRA4444); t.SetValue(this); return t; }
+            BGRA4444 IValueGetter<BGRA4444>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA4444>(out var t);
+                #else
+                var t = default(BGRA4444);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3174,7 +5965,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR24 IValueGetter<BGR24>.GetValue() { var t = default(BGR24); t.SetValue(this); return t; }
+            BGR24 IValueGetter<BGR24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR24>(out var t);
+                #else
+                var t = default(BGR24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3182,7 +5981,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB24 IValueGetter<RGB24>.GetValue() { var t = default(RGB24); t.SetValue(this); return t; }
+            RGB24 IValueGetter<RGB24>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB24>(out var t);
+                #else
+                var t = default(RGB24);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3190,7 +5997,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA32 IValueGetter<BGRA32>.GetValue() { var t = default(BGRA32); t.SetValue(this); return t; }
+            BGRA32 IValueGetter<BGRA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA32>(out var t);
+                #else
+                var t = default(BGRA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3198,7 +6013,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA32 IValueGetter<RGBA32>.GetValue() { var t = default(RGBA32); t.SetValue(this); return t; }
+            RGBA32 IValueGetter<RGBA32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA32>(out var t);
+                #else
+                var t = default(RGBA32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3206,7 +6029,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            ARGB32 IValueGetter<ARGB32>.GetValue() { var t = default(ARGB32); t.SetValue(this); return t; }
+            ARGB32 IValueGetter<ARGB32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<ARGB32>(out var t);
+                #else
+                var t = default(ARGB32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3214,7 +6045,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP32 IValueGetter<RGBP32>.GetValue() { var t = default(RGBP32); t.SetValue(this); return t; }
+            RGBP32 IValueGetter<RGBP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP32>(out var t);
+                #else
+                var t = default(RGBP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3222,7 +6061,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRP32 IValueGetter<BGRP32>.GetValue() { var t = default(BGRP32); t.SetValue(this); return t; }
+            BGRP32 IValueGetter<BGRP32>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var t);
+                #else
+                var t = default(BGRP32);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3230,7 +6077,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGB96F IValueGetter<RGB96F>.GetValue() { var t = default(RGB96F); t.SetValue(this); return t; }
+            RGB96F IValueGetter<RGB96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGB96F>(out var t);
+                #else
+                var t = default(RGB96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3238,7 +6093,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGR96F IValueGetter<BGR96F>.GetValue() { var t = default(BGR96F); t.SetValue(this); return t; }
+            BGR96F IValueGetter<BGR96F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGR96F>(out var t);
+                #else
+                var t = default(BGR96F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3246,7 +6109,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            BGRA128F IValueGetter<BGRA128F>.GetValue() { var t = default(BGRA128F); t.SetValue(this); return t; }
+            BGRA128F IValueGetter<BGRA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRA128F>(out var t);
+                #else
+                var t = default(BGRA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3254,7 +6125,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBA128F IValueGetter<RGBA128F>.GetValue() { var t = default(RGBA128F); t.SetValue(this); return t; }
+            RGBA128F IValueGetter<RGBA128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBA128F>(out var t);
+                #else
+                var t = default(RGBA128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -3262,7 +6141,15 @@ namespace InteropBitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            RGBP128F IValueGetter<RGBP128F>.GetValue() { var t = default(RGBP128F); t.SetValue(this); return t; }
+            RGBP128F IValueGetter<RGBP128F>.GetValue()
+            {
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<RGBP128F>(out var t);
+                #else
+                var t = default(RGBP128F);
+                #endif
+                t.SetValue(this); return t;
+            }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]

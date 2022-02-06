@@ -49,7 +49,7 @@ namespace InteropTypes.Graphics.Backends
         /// <param name="b">The point 1</param>
         /// <param name="diameter">The thickness of the line, usually 1 or less.</param>
         /// <param name="color">The color of the line.</param>
-        void DrawSegment(Point3 a, Point3 b, float diameter, ColorStyle color);
+        void DrawSegments(ReadOnlySpan<Point3> points, float diameter, ColorStyle color);
     }
 
 }

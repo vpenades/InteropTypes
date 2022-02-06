@@ -7,55 +7,61 @@ namespace InteropTypes.Graphics.Drawing
     /// <summary>
     /// Represents a style with a single Fill Color.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Color}")]
-    public readonly struct ColorStyle
+    [System.Diagnostics.DebuggerDisplay("{R} {G} {B} {A}")]
+    public readonly struct ColorStyle : IFormattable
     {
         #region constructors        
 
         public static implicit operator ColorStyle(COLOR fillColor) { return new ColorStyle(fillColor); }
+        public static implicit operator ColorStyle(float opacity) { return FromOpacity(opacity); }
 
-        public ColorStyle(COLOR fillColor) { _Color = (uint)fillColor.ToArgb(); }
-
-        public ColorStyle(int color) { _Color = (uint)color; }
-
-        public ColorStyle(uint color) { _Color = color; }
-
-        public ColorStyle(byte red, byte green, byte blue, byte alpha = 255)
+        public static ColorStyle FromOpacity(float opacity)
         {
-            _Color = alpha;
-            _Color <<= 8;
-            _Color |= red;
-            _Color <<= 8;
-            _Color |= green;
-            _Color <<= 8;
-            _Color |= blue;
+            var o = (int)(opacity * 255f);
+            o = Math.Min(255, o);
+            o = Math.Max(0, o);
+
+            return new ColorStyle(255,255,255,(byte)o);
+        }
+
+        public ColorStyle(COLOR fillColor) { Packed = (uint)fillColor.ToArgb(); }
+
+        public ColorStyle(int color) { Packed = (uint)color; }
+
+        public ColorStyle(uint color) { Packed = color; }
+
+        public ColorStyle(int red, int green, int blue, int alpha = 255)
+        {
+            Packed = Math.Min(255, (uint)alpha);
+            Packed <<= 8;
+            Packed |= Math.Min(255, (uint)red);
+            Packed <<= 8;
+            Packed |= Math.Min(255, (uint)green);
+            Packed <<= 8;
+            Packed |= Math.Min(255, (uint)blue);
         }        
 
         #endregion
 
         #region data
 
-        private readonly uint _Color;
+        public readonly uint Packed;
 
         #endregion
 
-        #region properties
+        #region properties        
 
-        public uint Packed => _Color;
+        public int A => (int)(Packed >> 24);
 
-        public COLOR Color => COLOR.FromArgb((int)_Color);
+        public int R => (int)(Packed >> 16) & 255;
 
-        public int A => (int)(_Color >> 24);
+        public int G => (int)(Packed >> 8) & 255;
 
-        public int R => (int)(_Color >> 16) & 255;
+        public int B => (int)(Packed & 255);
 
-        public int G => (int)(_Color >> 8) & 255;
+        public bool IsEmpty => Packed <= 0xffffff;
 
-        public int B => (int)(_Color & 255);
-
-        public bool IsEmpty => !IsVisible;
-
-        public bool IsVisible => 0 != (_Color & 0xff000000);
+        public bool IsVisible => Packed > 0xffffff;
 
         #endregion
 
@@ -70,6 +76,39 @@ namespace InteropTypes.Graphics.Drawing
         public static readonly ColorStyle Yellow = COLOR.Yellow;
 
         public static readonly ColorStyle Transparent = COLOR.Transparent;
+
+        #endregion
+
+        #region API
+
+        /// <summary>
+        /// Converts this color to <see cref="COLOR"/>
+        /// </summary>
+        /// <returns>A <see cref="COLOR"/> instance.</returns>
+        public COLOR ToGDI() => COLOR.FromArgb((int)Packed);
+
+        /// <inheritdoc/>        
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            if (format == null) format = "<R,G,B,A>";
+
+            format = format.Replace("R", R.ToString(formatProvider));
+            format = format.Replace("G", G.ToString(formatProvider));
+            format = format.Replace("B", B.ToString(formatProvider));
+            format = format.Replace("A", A.ToString(formatProvider));
+            return format;
+        }
+
+        #endregion
+
+        #region API * With
+
+        public ColorStyle WithOpacity(float opacity)
+        {
+            var a = (float)this.A * opacity;
+
+            return new ColorStyle(R, G, B,(int)a);
+        }        
 
         #endregion
     }

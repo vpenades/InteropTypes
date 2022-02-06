@@ -5,18 +5,24 @@
     <RootNamespace>InteropTypes.Graphics</RootNamespace>
     <LangVersion>8</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+  </PropertyGroup>  
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
 
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>
+      Defines pixel types, formats, conversions and processing operations.
+    </Description>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0'">
-    <SupportsRuntimeIntrinsics>true</SupportsRuntimeIntrinsics>
+    <SupportsRuntimeIntrinsics>true</SupportsRuntimeIntrinsics>    
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(SupportsRuntimeIntrinsics)' != 'true' ">
@@ -27,13 +33,7 @@
   <ItemGroup Condition=" '$(SupportsRuntimeIntrinsics)' == 'true' ">
     <Compile Remove="**/*.fallback.cs" />
     <None Include="**/*.fallback.cs" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <Description>
-      Defines pixel types, formats, conversions and processing operations.
-    </Description>
-  </PropertyGroup>
+  </ItemGroup>  
 
   <ItemGroup>
     <InternalsVisibleTo Include="InteropTypes.Graphics.PixelFormats.Tests" />
@@ -42,6 +42,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

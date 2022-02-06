@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             public abstract void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle fillColor);
 
             /// <inheritdoc/>
-            public abstract void DrawImage(in Matrix3x2 transform, in ImageStyle style);
+            public abstract void DrawImage(in Matrix3x2 transform, ImageStyle style);
 
             #endregion
 
@@ -33,21 +33,21 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }            
 
             /// <inheritdoc/>
-            public void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle style)
+            public void DrawEllipse(POINT2 center, float width, float height, OutlineFillStyle style)
             {
                 if (this is Backends.IDrawingBackend2D backend) Decompose2D.DrawEllipse(backend, center, width, height, style);
                 else Decompose2D.DrawEllipse(this, center, width, height, style);
             }            
 
             /// <inheritdoc/>
-            public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, in LineStyle style)
+            public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, LineStyle style)
             {
                 if (this is Backends.IDrawingBackend2D backend) Decompose2D.DrawLines(backend, points, diameter, style);
                 else Decompose2D.DrawLines(this, points, diameter, style);
             }
 
             /// <inheritdoc/>
-            public void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle style)
+            public void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle style)
             {
                 if (this is Backends.IDrawingBackend2D backend) Decompose2D.DrawPolygon(backend, points, style);
                 else Decompose2D.DrawPolygon(this, points, style);

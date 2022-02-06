@@ -4,22 +4,22 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Drawing
 {
-    partial struct Point3
+    partial struct Point2
     {
         /// <summary>
-        /// Represents a segment delimited by two <see cref="Point3"/>.
+        /// Represents a segment delimited by two <see cref="Point2"/>.
         /// </summary>
         public readonly struct Pair : IEquatable<Pair>
         {
             #region constructor
 
-            public static Pair Create(in Point3 a, in Point3 b)
+            public static Pair Create(in Point2 a, in Point2 b)
             {
                 return new Pair(a, b);
             }
 
             /// <summary>
-            /// Creates a Point3 segment, ensuring that the endpoints are ordered, in ascending ordinal X,Y,Z component wise.
+            /// Creates a <see cref="Point2"/> segment, ensuring that the endpoints are ordered, in ascending ordinal X,Y,Z component wise.
             /// </summary>
             /// <param name="a">the first segment end point.</param>
             /// <param name="b">the other segment end point.</param>
@@ -27,9 +27,9 @@ namespace InteropTypes.Graphics.Drawing
             /// <remarks>
             /// CreateOrdered(a,b) == CreateOrdered(b,a);
             /// </remarks>
-            public static Pair CreateOrdered(in Point3 a, in Point3 b)
+            public static Pair CreateOrdered(in Point2 a, in Point2 b)
             {
-                switch(a.X.CompareTo(b.X))
+                switch (a.X.CompareTo(b.X))
                 {
                     case -1: return new Pair(a, b);
                     case 1: return new Pair(b, a);
@@ -39,29 +39,23 @@ namespace InteropTypes.Graphics.Drawing
                 {
                     case -1: return new Pair(a, b);
                     case 1: return new Pair(b, a);
-                }
-
-                switch (a.Z.CompareTo(b.Z))
-                {
-                    case -1: return new Pair(a, b);
-                    case 1: return new Pair(b, a);
-                }
+                }                
 
                 return new Pair(a, b);
-            }            
+            }
 
-            private Pair(in Point3 a, in Point3 b)
+            private Pair(in Point2 a, in Point2 b)
             {
-                this.A = a.XYZ;
-                this.B = b.XYZ;
+                this.A = a.XY;
+                this.B = b.XY;
             }
 
             #endregion
 
             #region data
 
-            public readonly System.Numerics.Vector3 A;
-            public readonly System.Numerics.Vector3 B;
+            public readonly System.Numerics.Vector2 A;
+            public readonly System.Numerics.Vector2 B;
 
             /// <inheritdoc/>            
             public override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
@@ -73,9 +67,9 @@ namespace InteropTypes.Graphics.Drawing
 
             #region properties
 
-            public System.Numerics.Vector3 Direction => B - A;
+            public System.Numerics.Vector2 Direction => B - A;
 
-            public System.Numerics.Vector3 DirectionNormalized => System.Numerics.Vector3.Normalize(B - A);
+            public System.Numerics.Vector2 DirectionNormalized => System.Numerics.Vector2.Normalize(B - A);
 
             public float Length => Direction.Length();
 
@@ -85,14 +79,14 @@ namespace InteropTypes.Graphics.Drawing
 
             #region API
 
-            public bool HasEnd(in Point3 point) { return point == A || point == B; }
+            public bool HasEnd(in Point2 point) { return point == A || point == B; }
 
             public static bool AreConnected(in Pair a, in Pair b) { return a.HasEnd(b.A) || a.HasEnd(b.B); }
 
             public static IEqualityComparer<Pair> GetEqualityComparer(bool ordered)
             {
                 return ordered ? _OrderedComparer.Instance : _UnorderedComparer.Instance;
-            }            
+            }
 
             #endregion
 

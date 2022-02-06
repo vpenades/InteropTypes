@@ -181,6 +181,15 @@ After:
             return null;
         }
 
+        public static void DrawSegment(this IScene3D dc, POINT3 a, POINT3 b, float diameter, LineStyle style)
+        {
+            Span<POINT3> points = stackalloc POINT3[2];
+            points[0] = a;
+            points[1] = b;
+
+            dc.DrawSegments(points, diameter, style);
+        }
+
         public static void DrawSurface(this IScene3D dc, SurfaceStyle brush, params Point3[] points)
         {
             dc.DrawSurface(points, brush);

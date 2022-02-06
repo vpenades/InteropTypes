@@ -38,9 +38,9 @@ namespace InteropTypes.Graphics.Drawing
     {
         void DrawAsset(in XFORM3 transform, ASSET asset, ColorStyle style);
 
-        void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle style);
+        void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle style);        
 
-        void DrawSegment(POINT3 a, POINT3 b, SCALAR diameter, LineStyle style);
+        void DrawSegments(ReadOnlySpan<POINT3> vertices, SCALAR diameter, LineStyle style);
 
         void DrawSphere(POINT3 center, SCALAR diameter, OutlineFillStyle style);
     }

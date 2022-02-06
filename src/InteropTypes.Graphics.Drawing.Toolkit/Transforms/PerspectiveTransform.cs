@@ -148,7 +148,16 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
+        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle brush)
+        {
+            for(int i=1; i < vertices.Length; ++i)
+            {
+                _DrawSegment(vertices[i-1],vertices[i],diameter,brush);
+            }
+        }
+
+        /// <inheritdoc/>
+        private void _DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
             var aa = GetProjection(a);
             var bb = GetProjection(b);
@@ -162,7 +171,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             var ow = GetPerspective(brush.Style.OutlineWidth, www);
 
             _RenderTarget.DrawLine(aaa, bbb, diameter, brush = brush.WithOutline(ow));
-        }
+        }        
 
         /// <inheritdoc/>
         public void DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)

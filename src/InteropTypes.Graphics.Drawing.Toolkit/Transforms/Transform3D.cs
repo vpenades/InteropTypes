@@ -84,22 +84,19 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, in LineStyle brush)
+        public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
         {
-            var xbrush = brush.WithOutline(_GetTransformed(brush.Style.OutlineWidth));
+            brush = brush.WithOutline(_GetTransformed(brush.Style.OutlineWidth));
+            diameter = _GetTransformed(diameter);
 
-            for (int i = 1; i < points.Length; ++i)
-            {
-                var aa = _GetTransformed(points[i - 1]);
-                var bb = _GetTransformed(points[i + 0]);
-                var ss = xbrush.GetLineSegmentStyle(points.Length, i);
+            Span<Point3> vertices = stackalloc Point3[points.Length];
+            for (int i = 0; i < vertices.Length; ++i) { vertices[i] = _GetTransformed(points[i]); }
 
-                DrawSegment(aa, bb, diameter, ss);
-            }
+            DrawSegments(vertices,diameter, brush);
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float width, float height, in OutlineFillStyle brush)
+        public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle brush)
         {
             width = _GetTransformed(width);
             height = _GetTransformed(height);
@@ -109,7 +106,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle brush)
         {
             var xbrush = brush.WithOutline(_GetTransformed(brush.OutlineWidth));
 
@@ -124,7 +121,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             throw new NotImplementedException();
         }
@@ -141,13 +138,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
+        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
         {
-            diameter = _GetTransformed(diameter);
-            var ow = _GetTransformed(brush.Style.OutlineWidth);
+            Span<Point3> vrts = stackalloc Point3[vertices.Length];
+            _TransformPoints(vertices, vrts);
 
-            if (_TargetEx != null) _TargetEx.DrawSegment(_GetTransformed(a), _GetTransformed(b), diameter, brush.WithOutline(ow));
-            else Decompose3D.DrawSegment(_Target, _GetTransformed(a), _GetTransformed(b), diameter, brush.WithOutline(ow));
+            if (_TargetEx != null) _TargetEx.DrawSegments(vrts, diameter, style);
+            else Decompose3D.DrawSegment(_Target, vrts, diameter, style);
         }
 
         /// <inheritdoc/>
@@ -155,9 +152,11 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         {
             diameter = _GetTransformed(diameter);
             var ow = _GetTransformed(brush.OutlineWidth);
+            brush = brush.WithOutline(ow);
+            var p = _GetTransformed(center);
 
-            if (_TargetEx != null) _TargetEx.DrawSphere(_GetTransformed(center), diameter, brush.WithOutline(ow));
-            else Decompose3D.DrawSphere(_Target, _GetTransformed(center), diameter, brush.WithOutline(ow));
+            if (_TargetEx != null) _TargetEx.DrawSphere(p, diameter, brush);
+            else Decompose3D.DrawSphere(_Target, p, diameter, brush);
         }
 
         /// <inheritdoc/>
@@ -169,16 +168,17 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _TransformPoints(vertices, vrts);
 
             if (_TargetEx != null) _TargetEx.DrawSurface(vrts, brush);
-            else Decompose3D.DrawSurface(_Target, vertices, brush);
+            else Decompose3D.DrawSurface(_Target, vrts, brush);
         }
 
+        /// <inheritdoc/>
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle fillColor)
         {
             Span<Point3> vrts = stackalloc Point3[vertices.Length];
             _TransformPoints(vertices, vrts);
 
             _Target.DrawConvexSurface(vrts, fillColor);
-        }
+        }        
 
         #endregion
     }

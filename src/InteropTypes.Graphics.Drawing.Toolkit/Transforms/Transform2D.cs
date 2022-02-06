@@ -114,7 +114,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         private Point2 _GetTransformed(Point3 point)
         {
-            return Point2.Transform(point.SelectXY(), _TransformForward);
+            return Point2.Transform(point.XY, _TransformForward);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawPolygon(ReadOnlySpan<Point2> points, in PolygonStyle brush)
+        public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle brush)
         {
             Span<Point2> pp = stackalloc Point2[points.Length];
             for (int i = 0; i < pp.Length; ++i) pp[i] = _GetTransformed(points[i]);
@@ -214,7 +214,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawLines(ReadOnlySpan<Point2> points, float strokeWidth, in LineStyle brush)
+        public void DrawLines(ReadOnlySpan<Point2> points, float strokeWidth, LineStyle brush)
         {
             Span<Point2> pp = stackalloc Point2[points.Length];
             for (int i = 0; i < pp.Length; ++i) pp[i] = _GetTransformed(points[i]);
@@ -232,7 +232,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawEllipse(Point2 center, float w, float h, in OutlineFillStyle brush)
+        public void DrawEllipse(Point2 center, float w, float h, OutlineFillStyle brush)
         {
             center = _GetTransformed(center);
             w = _GetTransformed(w);
@@ -251,7 +251,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             _Target.DrawImage(transform * _TransformForward, style);
         }
@@ -268,12 +268,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc/>
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
+        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
         {
-            diameter = _GetTransformed(diameter);
-            var ow = _GetTransformed(brush.Style.OutlineWidth);
+            Span<Point2> vvv = stackalloc Point2[vertices.Length];
+            for (int i = 0; i < vvv.Length; ++i) vvv[i] = _GetTransformed(vertices[i]);
 
-            this.DrawLine(_GetTransformed(a), _GetTransformed(b), diameter, brush.WithOutline(ow));
+            this.DrawLines(vvv, diameter, style);
         }
 
         /// <inheritdoc/>
@@ -289,7 +289,6 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
             Span<Point2> vvv = stackalloc Point2[vertices.Length];
-
             for (int i = 0; i < vvv.Length; ++i) vvv[i] = _GetTransformed(vertices[i]);
 
             if (!brush.DoubleSided)
@@ -310,7 +309,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             // todo: reverse winding if needed
 
             DrawConvexPolygon(vvv, style);
-        }
+        }        
 
         #endregion
     }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
@@ -16,19 +14,19 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region implicit
 
-        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, COLOR.White, false, false); }
+        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, ColorStyle.White, false, false); }
 
-        public static implicit operator ImageStyle((ImageAsset asset, COLOR color) args) { return new ImageStyle(args.asset, args.color, false, false); }
+        public static implicit operator ImageStyle((ImageAsset asset, ColorStyle color) args) { return new ImageStyle(args.asset, args.color, false, false); }
 
-        public static implicit operator ImageStyle((ImageAsset, COLOR, bool, bool) tuple) { return new ImageStyle(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4); }
+        public static implicit operator ImageStyle((ImageAsset asset, ColorStyle color, bool, bool) tuple) { return new ImageStyle(tuple.asset, tuple.color, tuple.Item3, tuple.Item4); }
 
-        public static implicit operator ImageStyle((ImageAsset, bool, bool) tuple) { return new ImageStyle(tuple.Item1, COLOR.White, tuple.Item2, tuple.Item3); }
+        public static implicit operator ImageStyle((ImageAsset asset, bool, bool) tuple) { return new ImageStyle(tuple.asset, ColorStyle.White, tuple.Item2, tuple.Item3); }
 
         #endregion
 
         #region constructor
 
-        public ImageStyle(ImageAsset bitmap, COLOR color, bool flipHorizontal, bool flipVertical)
+        public ImageStyle(ImageAsset bitmap, ColorStyle color, bool flipHorizontal, bool flipVertical)
         {
             Bitmap = bitmap;
             Color = color;
@@ -38,7 +36,7 @@ namespace InteropTypes.Graphics.Drawing
             _Orientation |= flipVertical ? Orientation.FlipVertical : Orientation.None;
         }
 
-        public ImageStyle(ImageAsset bitmap, COLOR color, int flags)
+        public ImageStyle(ImageAsset bitmap, ColorStyle color, int flags)
         {
             Bitmap = bitmap;
             Color = color;
@@ -58,7 +56,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// The color tint to apply to the bitmap.
         /// </summary>
-        public COLOR Color;
+        public ColorStyle Color;
 
         /// <summary>
         /// The orientation of the bitmap.
@@ -69,7 +67,9 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsVisible => Bitmap.IsVisible && Color.A > 0;
+        public bool IsEmpty => !IsVisible;
+
+        public bool IsVisible => Bitmap.IsVisible && Color.IsVisible;
 
         public bool FlipHorizontal
         {

@@ -10,7 +10,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents a graphic resource defined as a bitmap source and a region within that bitmap.
     /// </summary>
     /// <remarks>
-    /// <see cref="ImageAsset"/> is part of <see cref="ImageStyle"/>, which can be used at<br/>
+    /// <see cref="ImageAsset"/> is part of <see cref="ImageStyle"/>, which can be used by<br/>
     /// <see cref="IPrimitiveCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Source} ({Left}, {Top}) ({Width}, {Height}) Scale:{Scale}")]
@@ -194,27 +194,7 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the rendering scale of the image.
         /// </summary>
         [Obsolete("Use GetImageMatrix()")]
-        public XY Scale => _Scale;
-
-        /// <summary>
-        /// Gets the Left pixel coordinate within the <see cref="Source"/> asset.
-        /// </summary>
-        public float Left => _SourceUVMin.X;
-
-        /// <summary>
-        /// Gets the top pixel coordinate within the <see cref="Source"/> asset.
-        /// </summary>
-        public float Top => _SourceUVMin.Y;
-
-        /// <summary>
-        /// Gets the width of the image, in pixels.
-        /// </summary>
-        public float Width => _SourceUVMax.X - _SourceUVMin.X;
-
-        /// <summary>
-        /// Gets the Height of the image, in pixels.
-        /// </summary>
-        public float Height => _SourceUVMax.Y - _SourceUVMin.Y;
+        public XY Scale => _Scale;        
 
         public XY UV0 => _SourceUVMin;
         public XY UV1 => new XY(_SourceUVMax.X, _SourceUVMin.Y);
@@ -230,7 +210,10 @@ namespace InteropTypes.Graphics.Drawing
             {
                 if (Source == null) return false;
                 if (_Scale.X == 0 || _Scale.Y == 0) return false;
-                if (Width == 0 || Height == 0) return false;
+
+                var wh = _SourceUVMax - _SourceUVMin;
+
+                if (wh.X == 0 || wh.Y == 0) return false;
                 return true;
             }
         }
@@ -238,6 +221,18 @@ namespace InteropTypes.Graphics.Drawing
         #endregion
 
         #region API
+
+        public System.Drawing.Rectangle GetSourceRect()
+        {
+            var wh = _SourceUVMax - _SourceUVMin;
+
+            var x = (int)_SourceUVMin.X;
+            var y = (int)_SourceUVMin.Y;
+            var w = (int)wh.X;
+            var h = (int)wh.Y;
+
+            return new System.Drawing.Rectangle(x, y, w, h);
+        }
 
         private void _CalculateMatrices()
         {
@@ -256,19 +251,21 @@ namespace InteropTypes.Graphics.Drawing
 
         private System.Numerics.Matrix3x2 _GetImageMatrix(bool hflip, bool vflip, bool fpivot = false)
         {
+            var size = _SourceUVMax - _SourceUVMin;
+
             var sx = hflip ? -_Scale.X : +_Scale.X;
             var sy = vflip ? -_Scale.Y : +_Scale.Y;
 
             if (fpivot) // pivot after flip
             {
-                var final = System.Numerics.Matrix3x2.CreateScale(Width * sx, Height * sy);
+                var final = System.Numerics.Matrix3x2.CreateScale(size.X * sx, size.Y * sy);
                 final.Translation += new XY(Math.Max(0, -final.M11), Math.Max(0, -final.M22));
                 final.Translation -= _Pivot * _Scale;
                 return final;
             }
             else // pivot before flip
             {
-                var final = System.Numerics.Matrix3x2.CreateScale(Width, Height);
+                var final = System.Numerics.Matrix3x2.CreateScale(size);
                 final.Translation = -_Pivot;
                 final *= System.Numerics.Matrix3x2.CreateScale(sx, sy);
                 return final;

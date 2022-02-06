@@ -76,7 +76,7 @@ namespace InteropDrawing.Backends
         }        
 
         /// <inheritdoc/>
-        public sealed override void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public sealed override void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             var dst = _Target.AsSpanBitmap();
             var xform = style.GetTransform() * transform;
@@ -128,7 +128,7 @@ namespace InteropDrawing.Backends
         /// <inheritdoc/>
         public sealed override void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {
-            var fillColor = _ColorConverter(color.Color);
+            var fillColor = _ColorConverter(color.ToGDI());
 
             foreach (var (y, xmin, xmax) in _PolygonRasterizer.Value.GetScanlines(Point2.AsNumerics(points)))
             {
@@ -145,7 +145,7 @@ namespace InteropDrawing.Backends
         /// <inheritdoc/>
         public void DrawThinLines(ReadOnlySpan<Point2> points, float width, ColorStyle color)
         {
-            var outColor = _ColorConverter(color.Color);
+            var outColor = _ColorConverter(color.ToGDI());
 
             for (int i = 1; i < points.Length; ++i)
             {

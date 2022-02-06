@@ -15,7 +15,7 @@
   </ItemGroup>  
 
   <ItemGroup>    
-    <InternalsVisibleTo Include="InteropDrawing.Tests" />
+    <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Tests" />
   </ItemGroup>
 
   <ItemGroup>

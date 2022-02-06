@@ -104,25 +104,25 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         /// <inheritdoc />
-        public void DrawImage(in Matrix3x2 transform, in ImageStyle style)
+        public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             _RenderTarget.DrawImage(transform, style);
         }
 
         /// <inheritdoc />
-        public void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
+        public void DrawLines(ReadOnlySpan<POINT2> points, SCALAR diameter, LineStyle style)
         {
             DrawLines(_RenderTarget, points, diameter, style);
         }
 
         /// <inheritdoc />
-        public void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
+        public void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, OutlineFillStyle style)
         {
             DrawEllipse(_RenderTarget, center, width, height, style);
         }       
 
         /// <inheritdoc />
-        public void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle style)
+        public void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle style)
         {
             DrawPolygon(_RenderTarget, points,style);
         }

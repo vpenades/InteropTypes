@@ -32,27 +32,16 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public unsafe void DrawLines(ReadOnlySpan<POINT2> points, float diameter, in LineStyle brush)
+        public unsafe void DrawLines(ReadOnlySpan<POINT2> points, float diameter, LineStyle brush)
         {
-            if (points.Length > 2)
-            {
-                ref var xref = ref AddHeaderAndStruct<_PrimitivePolyLine>((int)_PrimitiveType.PolyLine, points)[0];
-                xref.Count = points.Length;
-                xref.Diameter = diameter;
-                xref.Style = brush;
-            }
-            else
-            {
-                ref var xref = ref AddHeaderAndStruct<_PrimitiveLine>((int)_PrimitiveType.Line)[0];
-                xref.PointA = points[0];
-                xref.PointB = points[1];
-                xref.Diameter = diameter;
-                xref.Style = brush;
-            }
+            ref var xref = ref AddHeaderAndStruct<_PrimitivePolyLine>((int)_PrimitiveType.PolyLine, points)[0];
+            xref.Count = points.Length;
+            xref.Diameter = diameter;
+            xref.Style = brush;
         }
 
         /// <inheritdoc/>
-        public unsafe void DrawEllipse(POINT2 center, float width, float height, in OutlineFillStyle brush)
+        public unsafe void DrawEllipse(POINT2 center, float width, float height, OutlineFillStyle brush)
         {
             ref var xref = ref AddHeaderAndStruct<_PrimitiveEllipse>((int)_PrimitiveType.Ellipse)[0];
             xref.Center = center;
@@ -62,7 +51,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public unsafe void DrawPolygon(ReadOnlySpan<POINT2> points, in PolygonStyle brush)
+        public unsafe void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle brush)
         {
             ref var xref = ref AddHeaderAndStruct<_PrimitivePolygon>((int)_PrimitiveType.Polygon, points)[0];
             xref.Count = points.Length;
@@ -70,13 +59,13 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in XFORM2 xform, in ImageStyle style)
+        public void DrawImage(in XFORM2 xform, ImageStyle style)
         {
             ref var xref = ref AddHeaderAndStruct<_PrimitiveImage>((int)_PrimitiveType.Image)[0];
             xref.Transform = xform;
             xref.ImageRef = AddReference(style.Bitmap);
             xref.Flags = style.Flags;
-            xref.Color = style.Color.ToArgb();
+            xref.Color = style.Color;
         }
 
         #endregion
@@ -103,10 +92,10 @@ namespace InteropTypes.Graphics.Drawing
 
                 switch (type)
                 {
-                    case _PrimitiveType.Line: _PrimitiveLine.GetBounds(ref bounds, span); break;
-                    case _PrimitiveType.PolyLine: _PrimitiveLine.GetBounds(ref bounds, span); break;
+                    case _PrimitiveType.PolyLine: _PrimitivePolyLine.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Ellipse: _PrimitiveEllipse.GetBounds(ref bounds, span); break;
                     case _PrimitiveType.Polygon: _PrimitivePolygon.GetBounds(ref bounds, span); break;
+                    case _PrimitiveType.Convex: { _PrimitiveConvex.GetBounds(ref bounds, span); break; }
                     case _PrimitiveType.Image: _PrimitiveImage.GetBounds(ref bounds, span, References); break;
                     case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, References); break;
                 }
@@ -120,13 +109,12 @@ namespace InteropTypes.Graphics.Drawing
             var span = _GetCommandBytes(offset, out _PrimitiveType type, out _);
 
             switch (type)
-            {
-                case _PrimitiveType.Line: { _PrimitiveLine.DrawTo(dc, span); break; }
+            {                
                 case _PrimitiveType.PolyLine: { _PrimitivePolyLine.DrawTo(dc, span); break; }
                 case _PrimitiveType.Ellipse: { _PrimitiveEllipse.DrawTo(dc, span); break; }
                 case _PrimitiveType.Polygon: { _PrimitivePolygon.DrawTo(dc, span); break; }
-                case _PrimitiveType.Image: { _PrimitiveImage.DrawTo(dc, span, References); break; }
                 case _PrimitiveType.Convex: { _PrimitiveConvex.DrawTo(dc, span); break; }
+                case _PrimitiveType.Image: { _PrimitiveImage.DrawTo(dc, span, References); break; }                
                 case _PrimitiveType.Asset: { _PrimitiveAsset.DrawTo(dc, span, References, collapseAssets); break; }
             }
         }
@@ -204,34 +192,7 @@ namespace InteropTypes.Graphics.Drawing
 
                 dst.DrawConvexPolygon(pts.Slice(0, src.Count), src.Color);
             }
-        }
-
-        struct _PrimitiveLine
-        {
-            public POINT2 PointA;
-            public POINT2 PointB;
-            public float Diameter;
-            public LineStyle Style;
-
-            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command)
-            {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveLine>(command)[0];
-
-                var r = src.Diameter * 0.5f + src.Style.Style.OutlineWidth;
-
-                var a = src.PointA.ToNumerics();
-                var b = src.PointB.ToNumerics();
-
-                bounds.AddVertex(a, r);
-                bounds.AddVertex(b, r);
-            }
-
-            public static unsafe void DrawTo(ICanvas2D dst, ReadOnlySpan<byte> command)
-            {
-                var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveLine>(command)[0];
-                dst.DrawLine(body.PointA, body.PointB, body.Diameter, body.Style);
-            }
-        }
+        }        
 
         struct _PrimitivePolyLine
         {
@@ -313,28 +274,22 @@ namespace InteropTypes.Graphics.Drawing
             public XFORM2 Transform;
             public int ImageRef;
             public int Flags;
-            public int Color;
+            public ColorStyle Color;
 
             public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
-                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];
-
-                var img = references[src.ImageRef] as ImageAsset;
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];                
 
                 var xref = (ImageAsset)references[src.ImageRef];
-                var style = new ImageStyle(xref, COLOR.FromArgb(src.Color), src.Flags);
+                var style = new ImageStyle(xref, src.Color, src.Flags);
 
-                var xform = style.Transform * src.Transform;
+                var xform = src.Transform;
+                style.PrependTransform(ref xform);
 
-                var a = XY.Zero;
-                var b = new XY(img.Width, 0);
-                var c = new XY(img.Width, img.Height);
-                var d = new XY(0, img.Height);
-
-                a = XY.Transform(a, xform);
-                b = XY.Transform(b, xform);
-                c = XY.Transform(c, xform);
-                d = XY.Transform(d, xform);
+                var a = XY.Transform(XY.Zero, xform);
+                var b = XY.Transform(XY.UnitX, xform);
+                var c = XY.Transform(XY.One, xform);
+                var d = XY.Transform(XY.UnitY, xform);
 
                 bounds.AddVertex(a, 0);
                 bounds.AddVertex(b, 0);
@@ -347,7 +302,7 @@ namespace InteropTypes.Graphics.Drawing
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];
 
                 var xref = (ImageAsset)references[src.ImageRef];
-                var style = new ImageStyle(xref, COLOR.FromArgb(src.Color), src.Flags);
+                var style = new ImageStyle(xref, src.Color, src.Flags);
 
                 dst.DrawImage(src.Transform, style);
             }
@@ -404,8 +359,7 @@ namespace InteropTypes.Graphics.Drawing
 
         private enum _PrimitiveType
         {
-            None,
-            Line,
+            None,            
             Convex,
             Image,
             Asset,

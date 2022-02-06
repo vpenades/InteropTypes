@@ -4,7 +4,7 @@
   <PropertyGroup>
     
     <Authors>Vicente Penades</Authors>
-    <Copyright>Copyright (c) 2021 Vicente Penades</Copyright>
+    <Copyright>Copyright (c) 2022 Vicente Penades</Copyright>
     <Description>      
       A collection of low level interop types that wrap memory pointers, Spans and byte arrays.
     </Description>
@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/vpenades/InteropTypes</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     
-    <PackageTags>C# Imaging Bitmaps Interop</PackageTags>
+    <PackageTags>C# Drawing Imaging Bitmaps Interop</PackageTags>
     <PackageProjectUrl>https://github.com/vpenades/InteropTypes</PackageProjectUrl>    
     <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     

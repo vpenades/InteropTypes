@@ -27,7 +27,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{17B219B6-2393-4D14-B532-F23C7EC56364}"
 	ProjectSection(SolutionItems) = preProject
 		src\build-preview.cmd = src\build-preview.cmd
+		src\Package.props = src\Package.props
 		README.md = README.md
+		src\SourceLink.props = src\SourceLink.props
+		src\Version.props = src\Version.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.NUnit", "src\InteropBitmaps.NUnit\InteropBitmaps.NUnit.csproj", "{2D2FFE85-0690-43C4-883C-39C2BCDC3968}"
@@ -50,7 +53,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drawing", "Drawing", "{1B0945CE-4A72-4CB0-92FC-F0B648814095}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropDrawing.Tests", "tests\InteropDrawing.Tests\InteropDrawing.Tests.csproj", "{C5CB5055-D2FF-4B6E-8368-847E3A991A42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Tests", "tests\InteropDrawing.Tests\InteropTypes.Graphics.Drawing.Tests.csproj", "{C5CB5055-D2FF-4B6E-8368-847E3A991A42}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backends", "Backends", "{2D022348-7707-4DB8-A5CD-469EA8ABBB5A}"
 EndProject

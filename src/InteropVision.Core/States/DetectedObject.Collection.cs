@@ -201,7 +201,7 @@ namespace InteropVision
 
             public int AddPoint(POINT point, SCORE confidence, String name, int idx = -1)
             {
-                var rect = point.ToGDIRectangleOffCenter(0);
+                var rect = new RECTF(point.X, point.Y, 0, 0);                
                 return AddObject(rect, confidence, name, idx);
             }
 

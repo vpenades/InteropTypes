@@ -186,23 +186,11 @@ namespace InteropWith
         public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
         {
             throw new NotImplementedException();
-        }
+        }        
 
-        public void DrawSegment(Point3 a, Point3 b, float diameter, LineStyle style)
+        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
         {
-            /*
-            if (style.Style.HasFill && diameter <= MinimumSolidLineDiameter)
-            {
-                var aa = _Lines.UseVertex(a.ToNumerics(), brush.Style.FillColor);
-                var bb = _Lines.UseVertex(b.ToNumerics(), brush.Style.FillColor);
-                _Lines.AddLine(aa, bb);
-
-                if (!brush.Style.HasOutline) return;
-
-                brush = brush.With(COLOR.Transparent);
-            }*/
-
-            _Collapsed3D.DrawSegment(a, b, diameter, style);
+            _Collapsed3D.DrawSegments(vertices, diameter, style);
         }
 
         public void DrawSphere(Point3 center, float diameter, OutlineFillStyle style)
@@ -212,12 +200,12 @@ namespace InteropWith
 
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle style)
         {
-            AddPolygon(vertices, style.Style.FillColor);
+            AddPolygon(vertices, style.Style.FillColor.ToGDI());
         }
 
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
-            AddPolygon(vertices, style.Color);
+            AddPolygon(vertices, style.ToGDI());
         }
 
 
