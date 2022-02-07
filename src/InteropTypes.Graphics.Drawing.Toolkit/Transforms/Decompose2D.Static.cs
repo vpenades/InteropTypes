@@ -19,9 +19,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         {
             if (asset == null) return true; // nothing to draw  
 
-            if (typeof(IDrawingBrush<ICanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICanvas2D>)asset).DrawTo(new Decompose2D(dc.CreateTransformed2D(transform))); return true; }
+            if (typeof(IDrawingBrush<ICanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICanvas2D>)asset).DrawTo(new Decompose2D(Drawing2DTransform.Create(dc, transform))); return true; }
 
-            if (typeof(IDrawingBrush<IPrimitiveCanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<IPrimitiveCanvas2D>)asset).DrawTo(dc.CreateTransformed2D(transform)); return true; }
+            if (typeof(IDrawingBrush<IPrimitiveCanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<IPrimitiveCanvas2D>)asset).DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
 
             // fallback
 
@@ -36,9 +36,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         {
             if (asset == null) return true; // nothing to draw            
 
-            if (asset is IDrawingBrush<ICanvas2D> d2) { d2.DrawTo(new Decompose2D(dc.CreateTransformed2D(transform))); return true; }
+            if (asset is IDrawingBrush<ICanvas2D> d2) { d2.DrawTo(new Decompose2D(Drawing2DTransform.Create(dc, transform))); return true; }
 
-            if (asset is IDrawingBrush<IPrimitiveCanvas2D> d1) { d1.DrawTo(dc.CreateTransformed2D(transform)); return true; }
+            if (asset is IDrawingBrush<IPrimitiveCanvas2D> d1) { d1.DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
 
             // fallback
 

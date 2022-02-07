@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
-    public readonly struct Drawing2DTransform :
+    readonly partial struct Drawing2DTransform :
         ICanvas2D,
         IScene3D,
         ITransformer2D,
@@ -29,8 +29,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, RectangleF virtualBounds)
         {
-            var virtualSize = virtualBounds.Size.ToVector2();
-            var virtualCenter = virtualBounds.ToCenterVector2();
+            Point2 virtualOrig = virtualBounds.Location;
+            Point2 virtualSize = virtualBounds.Size;
+            var virtualCenter = virtualOrig + virtualSize * 0.5f;
 
             var xform = Matrix3x2.CreateTranslation(virtualCenter);
 
@@ -77,8 +78,20 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             _TransformForward = xform;
             Matrix3x2.Invert(xform, out _TransformInverse);
-            _TransformScaleForward = xform.DecomposeScale();
+            _TransformScaleForward = _DecomposeScale(xform);
             _TransformScaleInverse = 1f / _TransformScaleForward;
+        }
+
+        private static float _DecomposeScale(in Matrix3x2 xform)
+        {
+            var det = xform.GetDeterminant();
+            var area = Math.Abs(det);
+
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Sqrt(area);
+            #else
+            return (float)Math.Sqrt(area);
+            #endif
         }
 
         #endregion
@@ -282,7 +295,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             diameter = _GetTransformed(diameter);
             var ow = _GetTransformed(brush.OutlineWidth);
 
-            this.DrawCircle(_GetTransformed(center), diameter, brush.WithOutline(ow));
+            this.DrawEllipse(_GetTransformed(center), diameter, diameter, brush.WithOutline(ow));
         }
 
         /// <inheritdoc/>

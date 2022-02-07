@@ -49,8 +49,8 @@ namespace Plotly
 
         public static (PlotlyVertex A, PlotlyVertex B, PlotlyVertex C) GetTriangle(POINT3 a, POINT3 b, POINT3 c)
         {
-            var ab = (b - a).ToNumerics();
-            var ac = (c - a).ToNumerics();
+            var ab = b - a;
+            var ac = c - a;
             var n = VECTOR3.Normalize(VECTOR3.Cross(ab, ac));
 
             var aa = new PlotlyVertex(a, n);

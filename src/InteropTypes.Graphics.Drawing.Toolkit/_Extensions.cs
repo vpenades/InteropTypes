@@ -16,27 +16,6 @@ namespace InteropTypes.Graphics.Drawing
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     static partial class _PrivateExtensions
     {
-        #region service provider
-
-        public static object TryGetService(this IServiceProvider owner, Type serviceType, Object parent = null)
-        {
-            if (parent is IServiceProvider psp)
-            {
-                // service provider has preference
-                if (serviceType == typeof(IServiceProvider)) return psp;
-
-                return serviceType.IsAssignableFrom(owner.GetType())
-                ? owner
-                : (psp?.GetService(serviceType));
-            }
-
-            return serviceType.IsAssignableFrom(owner.GetType())
-                ? owner
-                : null;
-        }
-
-        #endregion
-
         #region drawing
 
         public static XY ToVector2(this System.Drawing.PointF point) { return new XY(point.X, point.Y); }
@@ -115,7 +94,12 @@ namespace InteropTypes.Graphics.Drawing
         {
             var det = xform.GetDeterminant();
             var area = Math.Abs(det);
+
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Sqrt(area);
+            #else
             return (float)Math.Sqrt(area);
+            #endif
         }
 
 
@@ -128,11 +112,14 @@ namespace InteropTypes.Graphics.Drawing
         {
             // https://github.com/dotnet/runtime/blob/6cf1b8ec012d52880d46fa4773f60ed52ddc9f3d/src/libraries/System.Private.CoreLib/src/System/Numerics/Matrix4x4.cs#L1735
 
-            var scaleX = new XYZ(matrix.M11, matrix.M12, matrix.M13).Length();
-            var scaleY = new XYZ(matrix.M21, matrix.M22, matrix.M23).Length();
-            var scaleZ = new XYZ(matrix.M31, matrix.M32, matrix.M33).Length();            
+            var det = matrix.GetDeterminant();
+            var volume = Math.Abs(det);
 
-            return (scaleX + scaleY + scaleZ) / 3f;
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Pow(volume, (float)1 / 3);
+            #else
+            return (float)Math.Pow(volume, (double)1 / 3);
+            #endif
         }
 
         public static (XY Center, Single Radius) TransformCircle(this in Matrix3x2 matrix, in (XY Center, Single Radius) sphere)

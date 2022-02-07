@@ -25,7 +25,7 @@ namespace InteropTypes.Graphics.Backends
     public interface IMonoGameDrawing3D : IDisposableScene3D
     {
         void Clear();
-        void SetCamera(CameraView3D camera);
+        void SetCamera(CameraTransform3D camera);
         void Render();
     }
 

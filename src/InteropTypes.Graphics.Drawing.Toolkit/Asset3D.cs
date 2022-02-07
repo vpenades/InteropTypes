@@ -6,7 +6,7 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropTypes.Graphics.Drawing
 {
-    public abstract class Asset3D
+    public abstract class Asset3D : IDrawingBrush<IScene3D>
     {
         public object PrimaryAsset { get; protected set; }
 
@@ -48,6 +48,11 @@ namespace InteropTypes.Graphics.Drawing
             }
 
             DrawAsPrimitives(target);
+        }
+
+        public void DrawTo(IScene3D context)
+        {
+            DrawAsSurfaces(context);
         }
     }
 }

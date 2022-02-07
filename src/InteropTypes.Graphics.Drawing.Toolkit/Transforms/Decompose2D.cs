@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     /// <remarks>
     /// <see cref="ICanvas2D"/> 🡆 <see cref="IPrimitiveCanvas2D"/>
     /// </remarks>
-    public readonly partial struct Decompose2D :
+    readonly partial struct Decompose2D :
         ICanvas2D,        
         ITransformer2D,
         IServiceProvider

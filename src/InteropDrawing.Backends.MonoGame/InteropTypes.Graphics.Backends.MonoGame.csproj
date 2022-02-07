@@ -12,20 +12,36 @@
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
+  
   <ItemGroup>
-    <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />
+    <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />    
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" PrivateAssets="all" />    
-  </ItemGroup>
+  </ItemGroup>  
 
   <ItemGroup>
-    <Folder Include="Collections\" />
+    <ProjectReference Include="..\InteropDrawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />    
   </ItemGroup>
 
+
   <ItemGroup>
+    <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\Transforms\Decompose*.cs" LinkBase="Transforms" />
+    <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\Transforms\Transform*.cs" LinkBase="Transforms" />
+    <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\Transforms\_Service*.cs" LinkBase="Transforms" />
+    <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\Backends\*.cs" LinkBase="Backends" />
+    <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\Parametric\ShapeFactory*.cs" LinkBase="Parametric" />
+    <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\VectorMath\*.Matrix3x2.cs" LinkBase="Transforms" />
+    
+    <Compile Remove="..\InteropTypes.Graphics.Drawing.Toolkit\Transforms\_Public.cs" />
+    <Compile Remove="..\InteropTypes.Graphics.Drawing.Toolkit\Backends\_Public.cs" />
+  </ItemGroup>
+
+  <!--
+  <ItemGroup>    
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
+  -->
 
 </Project>

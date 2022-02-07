@@ -10,6 +10,16 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 {
     static class ShapeFactory2D
     {
+        #region constants
+
+        #if NETSTANDARD2_1_OR_GREATER
+        private const float PI = MathF.PI;
+        #else
+        private const float PI = (float)Math.PI;
+        #endif
+
+        #endregion
+
         #region ellipse
         public static void FillEllipseVertices(this Span<POINT2> dstVertices, POINT2 center, float width, float height)
         {
@@ -21,10 +31,19 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             {
                 var angle = i / (float)dstVertices.Length;
 
-                angle *= MathF.PI * 2;
+                #if NETSTANDARD2_1_OR_GREATER
 
+                angle *= MathF.PI * 2;
                 var x = MathF.Cos(angle) * width;
                 var y = MathF.Sin(angle) * height;
+
+                #else
+
+                angle *= (float)Math.PI * 2;
+                var x = (float)Math.Cos(angle) * width;
+                var y = (float)Math.Sin(angle) * height;
+
+                #endif
 
                 dstVertices[i] = center + new POINT2(x, y);
             }
@@ -66,7 +85,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // top right
             var center = origin + axisX * (sizeX - borderRadius) + axisY * borderRadius;
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, MathF.PI * 0.5f, 0f))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, PI * 0.5f, 0f))
             {
                 vertices[idx++] = center + (axisX * p.X + axisY * p.Y) * borderRadius;
             }
@@ -77,7 +96,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // bottom right
             center = origin + new VECTOR2(sizeX - borderRadius, sizeY - borderRadius);
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, 0, -MathF.PI * 0.5f))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, 0, -PI * 0.5f))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
@@ -88,7 +107,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // bottom left
             center = origin + new VECTOR2(borderRadius, sizeY - borderRadius);
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -MathF.PI * 0.5f, -MathF.PI))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -PI * 0.5f, -PI))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
@@ -99,7 +118,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // top left
             center = origin + new VECTOR2(borderRadius, borderRadius);
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -MathF.PI, -MathF.PI * 1.5f))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -PI, -PI * 1.5f))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
@@ -124,7 +143,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // top right
             var center = origin + new POINT2(size.X - borderRadius, borderRadius);
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, MathF.PI * 0.5f, 0f))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, PI * 0.5f, 0f))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
@@ -135,7 +154,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // bottom right
             center = origin + new POINT2(size.X - borderRadius, size.Y - borderRadius);
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, 0, -MathF.PI * 0.5f))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, 0, -PI * 0.5f))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
@@ -146,7 +165,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // bottom left
             center = origin + new VECTOR2(borderRadius, size.Y - borderRadius);
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -MathF.PI * 0.5f, -MathF.PI))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -PI * 0.5f, -PI))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
@@ -157,7 +176,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // top left
             center = origin + new POINT2(borderRadius, borderRadius);
-            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -MathF.PI, -MathF.PI * 1.5f))
+            foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -PI, -PI * 1.5f))
             {
                 vertices[idx++] = center + p * borderRadius;
             }
@@ -170,8 +189,14 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 var factor = i / (float)count;
                 var radians = rad0 * (1 - factor) + rad1 * factor;
 
+                #if NETSTANDARD2_1_OR_GREATER
                 var x = MathF.Cos(radians);
                 var y = -MathF.Sin(radians);
+                #else
+                var x = (float)Math.Cos(radians);
+                var y = -(float)Math.Sin(radians);
+                #endif
+
                 yield return new VECTOR2(x, y);
             }
         }
@@ -223,7 +248,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             var r = (left[1].ToNumerics() + right[0].ToNumerics()) * 0.5f;
 
             var c = (r + l) * 0.5f;
-            var d = (r - l).WithLength(diameter) * 0.5f;
+            var d = new POINT2(r - l).WithLength(diameter) * 0.5f;
 
             left[0] = right[1] = c - d;
             right[0] = left[1] = c + d;

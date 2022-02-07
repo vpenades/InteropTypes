@@ -86,6 +86,21 @@ namespace InteropTypes.Graphics.Drawing
             return new PolygonStyle(FillColor, OutlineColor, ow);
         }
 
+        public bool IsSolid(ref float diameter, out ColorStyle solidColor)
+        {
+            if (OutlineColor.IsVisible && diameter < OutlineWidth)
+            {
+                diameter = OutlineWidth;
+                solidColor = OutlineColor;
+                return true;
+            }
+
+            if (!HasOutline) { solidColor = FillColor; return true; }
+
+            solidColor = default;
+            return false;
+        }
+
         #endregion
     }
 }

@@ -35,7 +35,7 @@ namespace InteropTypes.Graphics.Backends
         {
             return new SharpGLTF.Materials.MaterialBuilder()
                 .WithMetallicRoughnessShader()
-                .WithChannelParam("BaseColor", Color)
+                .WithChannelParam(SharpGLTF.Materials.KnownChannel.BaseColor,SharpGLTF.Materials.KnownProperty.RGBA, Color)
                 .WithDoubleSide(DoubleSided)
                 .WithAlpha(Color.W == 1 ? SharpGLTF.Materials.AlphaMode.OPAQUE : SharpGLTF.Materials.AlphaMode.BLEND);
         }

@@ -73,8 +73,7 @@ namespace InteropDrawing
                 var d = new Vector3(0, -2, 0) + h * 2;
                 var e = new Vector3(0, 0.15f, 0) + h * 0.5f;
 
-                context.DrawSegment(a, b, 0.5f, (style, LineCapStyle.Triangle, LineCapStyle.Flat));
-                context.DrawSegment(b, c, 0.5f, (style, LineCapStyle.Flat, LineCapStyle.Flat));
+                context.DrawSegments(Point3.Array(a, b ,c), 0.5f, (style, LineCapStyle.Triangle, LineCapStyle.Flat));                
                 context.DrawSegment(c, d, 1f, (style, LineCapStyle.Triangle, LineCapStyle.Flat));
 
                 // connection to central sphere

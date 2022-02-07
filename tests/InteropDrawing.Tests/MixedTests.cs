@@ -50,6 +50,18 @@ namespace InteropDrawing
 
         [TestCase("Scene1")]
         [TestCase("Thunderbird1")]
+        public void TestSaveScene3D(string sceneName)
+        {
+            TestContext.CurrentContext.AttachShowDirLink();
+
+            var srcScene = SceneFactory.CreateRecord3D(sceneName);
+
+            srcScene.AttachToCurrentTest($"{sceneName}.glb");
+            srcScene.AttachToCurrentTest($"{sceneName}.html");
+        }
+
+        [TestCase("Scene1")]
+        [TestCase("Thunderbird1")]
         public void TestClipScene3D(string sceneName)
         {
             TestContext.CurrentContext.AttachShowDirLink();
@@ -318,11 +330,13 @@ namespace InteropDrawing
 
             using(var dc = scene.CreateDrawing3DContext())
             {
-                var style = (COLOR.Red, LineCapStyle.Round, LineCapStyle.Triangle);                
+                var style = new LineStyle(COLOR.Red, LineCapStyle.Round, LineCapStyle.Triangle).WithOutline(COLOR.Black,1);                
 
                 Decompose3D.DrawSegment(dc, Point3.Array( (0,0,0), (17,0,0), (20,10,0), (20, 20, 0)), 5, style);
 
                 Decompose3D.DrawSegment(dc, Point3.Array((0, 0, 20), (0, 15, 20), (30, 0, 20), (0, 0, 20)), 3, style);
+
+                Decompose3D.DrawSegment(dc, Point3.Array((0, 0, 40), (0, 15, 40)), 3, style);
             }
 
             var path = TestContext.CurrentContext.UseFilePath("extrude1.glb");

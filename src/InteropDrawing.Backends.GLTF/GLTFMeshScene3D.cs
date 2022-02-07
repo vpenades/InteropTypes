@@ -19,8 +19,21 @@ namespace InteropTypes.Graphics.Backends
     /// <summary>
     /// Wraps a <see cref="MESHBUILDER"/> with <see cref="IScene3D"/>.
     /// </summary>
-    public class GltfMeshDrawing3D : Decompose3D.PassToSelf, IScene3D
+    public class GltfMeshScene3D : Decompose3D.PassToSelf
     {
+        #region factory        
+
+        public static SharpGLTF.Scenes.SceneBuilder Convert(Record3D srcModel, GLTFWriteSettings? settings = null)
+        {
+            var dst = new GltfMeshScene3D();
+
+            srcModel.DrawTo(dst);
+
+            return dst.ToSceneBuilder(settings);
+        }
+
+        #endregion 
+
         #region data
 
         private MESHBUILDER _Mesh;
@@ -39,17 +52,7 @@ namespace InteropTypes.Graphics.Backends
         /// <summary>
         /// true if the mesh is empty.
         /// </summary>
-        public bool IsEmpty => _Mesh == null || !_Mesh.Primitives.Any(item => item.Vertices.Count > 0);
-
-        /// <summary>
-        /// Gets or sets the quality of Cylinders
-        /// </summary>
-        public int CylinderLOD { get; set; } = 6;
-
-        /// <summary>
-        /// Gets or sets the quality of Spheres.
-        /// </summary>
-        public int SphereLOD { get; set; } = 2;
+        public bool IsEmpty => _Mesh == null || !_Mesh.Primitives.Any(item => item.Vertices.Count > 0);        
 
         #endregion
 
@@ -58,24 +61,64 @@ namespace InteropTypes.Graphics.Backends
         public void Clear() { _Mesh = null; }
 
         /// <inheritdoc />
+        public override void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+        {
+            if (asset is GltfMeshScene3D other)
+            {
+                if (other._Mesh != null) _GetMesh().AddMesh(other._Mesh.Clone(), transform);
+                return;
+            }
+
+            if (asset is MESHBUILDER otherMesh)
+            {
+                _GetMesh().AddMesh(otherMesh.Clone(), transform);
+                return;
+            }            
+
+            base.DrawAsset(transform, asset, style);
+        }
+
+        /// <inheritdoc />
         public override void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle fillColor)
         {
+            POINT3.DebugGuardIsFinite(vertices);
+
             switch (vertices.Length)
             {
                 case 0: return;
-                case 1: return;
+                case 1: return; // _DrawPoint ??
                 case 2: _DrawLine(vertices[0], vertices[1], fillColor.ToGDI()); return;
                 default: _DrawSurface(vertices, fillColor.ToGDI(), false); return;
             }
+        }
+
+        public SharpGLTF.Schema2.ModelRoot ToModel()
+        {
+            var scene = new SharpGLTF.Scenes.SceneBuilder();
+            if (_Mesh != null) scene.AddRigidMesh(_Mesh, Matrix4x4.Identity);
+            return scene.ToGltf2();
+        }
+
+        public SharpGLTF.Scenes.SceneBuilder ToSceneBuilder(GLTFWriteSettings? settings = null)
+        {
+            var scene = new SharpGLTF.Scenes.SceneBuilder();
+            if (_Mesh != null) scene.AddRigidMesh(_Mesh.Clone(), Matrix4x4.Identity);
+            return scene;
         }
 
         #endregion
 
         #region core
 
-        private void _DrawSurface(ReadOnlySpan<POINT3> vertices, COLOR color, bool doubleSided)
+        private MESHBUILDER _GetMesh()
         {
             if (_Mesh == null) _Mesh = new MESHBUILDER();
+            return _Mesh;
+        }
+
+        private void _DrawSurface(ReadOnlySpan<POINT3> vertices, COLOR color, bool doubleSided)
+        {
+            _GetMesh();
 
             var material = _UseMaterial(color, doubleSided);
             var prim = _Mesh.UsePrimitive(material);
@@ -102,7 +145,7 @@ namespace InteropTypes.Graphics.Backends
 
         private void _DrawLine(POINT3 a, POINT3 b, COLOR color)
         {
-            if (_Mesh == null) _Mesh = new MESHBUILDER();
+            _GetMesh();
 
             var material = _UseMaterial(color, false);
 

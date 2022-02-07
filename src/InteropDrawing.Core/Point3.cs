@@ -46,7 +46,21 @@ namespace InteropTypes.Graphics.Drawing
         /// <see href="https://github.com/dotnet/runtime/blob/5906521ab238e7d5bb8e38ad81e9ce95561b9771/src/libraries/System.Private.CoreLib/src/System/Single.cs#L74">DotNet implementation</see>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool _IsFinite(float val) => !float.IsNaN(val) && !float.IsInfinity(val);
+        private static bool _IsFinite(float val)
+        {
+            #if NETSTANDARD2_1_OR_GREATER
+            return float.IsFinite(val);
+            #else
+            return !float.IsNaN(val) && !float.IsInfinity(val);
+            #endif
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [System.Diagnostics.Conditional("DEBUG")]
+        public static void DebugGuardIsFinite(ReadOnlySpan<Point3> points)
+        {
+            foreach(var point in points) System.Diagnostics.Debug.Assert(Point3.IsFinite(point));
+        }
 
         #endregion
 
@@ -197,15 +211,20 @@ namespace InteropTypes.Graphics.Drawing
         public static Point3 One => VECTOR3.One;
         public static Point3 UnitX => VECTOR3.UnitX;
         public static Point3 UnitY => VECTOR3.UnitY;
-        public static Point3 UnitZ => VECTOR3.UnitZ;
-
-        public bool IsFinite => _IsFinite(X) && _IsFinite(Y) && _IsFinite(Z);
+        public static Point3 UnitZ => VECTOR3.UnitZ;        
 
         public float Length => XYZ.Length();
         
         public VECTOR3 Normalized => VECTOR3.Normalize(this.XYZ);
 
-        public int DominantAxis => X >= Y ? (X >= Z ? 0 : 2) : (Y >= Z ? 1 : 2);
+        public int DominantAxis
+        {
+            get
+            {
+                var t = VECTOR3.Abs(this.XYZ);
+                return t.X >= t.Y ? t.X >= t.Z ? 0 : 2 : t.Y >= t.Z ? 1 : 2;
+            }
+        }
 
         #endregion
 
@@ -213,40 +232,52 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator -(Point3 a) { return -a.XYZ; }
+        public static VECTOR3 operator -(Point3 a) { return -a.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator *(Point3 a, float b) { return a.XYZ * b; }
+        public static VECTOR3 operator *(Point3 a, float b) { return a.XYZ * b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator /(Point3 a, float b) { return a.XYZ / b; }
+        public static VECTOR3 operator /(Point3 a, float b) { return a.XYZ / b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator *(Point3 a, Point3 b) { return a.XYZ * b; }
+        public static VECTOR3 operator *(Point3 a, Point3 b) { return a.XYZ * b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator /(Point3 a, Point3 b) { return a.XYZ / b; }
+        public static VECTOR3 operator /(Point3 a, Point3 b) { return a.XYZ / b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator +(Point3 a, Point3 b) { return a.XYZ + b.XYZ; }
+        public static VECTOR3 operator +(Point3 a, Point3 b) { return a.XYZ + b.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point3 operator -(Point3 a, Point3 b) { return a.XYZ - b.XYZ; }
+        public static VECTOR3 operator -(Point3 a, Point3 b) { return a.XYZ - b.XYZ; }
 
         #endregion
 
         #region API
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFinite(Point3 point) { return _IsFinite(point.X) && _IsFinite(point.Y) && _IsFinite(point.Z); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int GetDominantAxis(Point3 point) { return point.DominantAxis; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static VECTOR3 Lerp(Point3 a, Point3 b, float amount)
         {
             return VECTOR3.Lerp(a.XYZ, b.XYZ, amount);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static VECTOR3 Cross(Point3 a, Point3 b, Point3 c)
+        {
+            return VECTOR3.Cross(b - a, c - b);
         }
 
         /// <summary>
@@ -258,6 +289,7 @@ namespace InteropTypes.Graphics.Drawing
         public static float AngleInRadians(Point3 a, Point3 b)
         {
             var dot = VECTOR3.Dot(a.Normalized, b.Normalized);
+            if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
             #if NETSTANDARD2_1_OR_GREATER
@@ -266,6 +298,14 @@ namespace InteropTypes.Graphics.Drawing
             return (float)Math.Acos(dot);
             #endif
         }
+
+        public VECTOR3 WithLength(float len)
+        {
+            len /= XYZ.Length();
+            return XYZ * len;
+        }
+
+        public static bool IsClosedLoop(ReadOnlySpan<Point3> points) { return points[0] == points[points.Length - 1]; }
 
         #endregion
 

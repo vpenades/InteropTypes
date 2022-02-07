@@ -11,6 +11,7 @@ using GDIPOINT = System.Drawing.Point;
 using GDIPOINTF = System.Drawing.PointF;
 using GDISIZE = System.Drawing.Size;
 using GDISIZEF = System.Drawing.SizeF;
+using System.Numerics;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -50,7 +51,21 @@ namespace InteropTypes.Graphics.Drawing
         /// <see href="https://github.com/dotnet/runtime/blob/5906521ab238e7d5bb8e38ad81e9ce95561b9771/src/libraries/System.Private.CoreLib/src/System/Single.cs#L74">DotNet implementation</see>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool _IsFinite(float val) => !float.IsNaN(val) && !float.IsInfinity(val);
+        private static bool _IsFinite(float val)
+        {
+            #if NETSTANDARD2_1_OR_GREATER
+            return float.IsFinite(val);
+            #else
+            return !float.IsNaN(val) && !float.IsInfinity(val);
+            #endif
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [System.Diagnostics.Conditional("DEBUG")]
+        public static void DebugGuardIsFinite(ReadOnlySpan<Point2> points)
+        {
+            foreach (var point in points) System.Diagnostics.Debug.Assert(Point2.IsFinite(point));
+        }
 
         #endregion
 
@@ -211,12 +226,16 @@ namespace InteropTypes.Graphics.Drawing
         public static Point2 One => VECTOR2.One;
         public static Point2 UnitX => VECTOR2.UnitX;
         public static Point2 UnitY => VECTOR2.UnitY;
-
-        public bool IsFinite => _IsFinite(X) && _IsFinite(Y);
-
         public float Length => XY.Length();
-
-        public VECTOR2 Normalized => VECTOR2.Normalize(this.XY);    
+        public VECTOR2 Normalized => VECTOR2.Normalize(this.XY);
+        public int DominantAxis
+        {
+            get
+            {
+                var t = VECTOR2.Abs(this.XY);
+                return t.X >= t.Y ? 0 : 1;
+            }
+        }
 
         #endregion
 
@@ -224,35 +243,41 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator -(Point2 a) { return -a.XY; }
+        public static VECTOR2 operator -(Point2 a) { return -a.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator *(Point2 a, float b) { return a.XY * b; }
+        public static VECTOR2 operator *(Point2 a, float b) { return a.XY * b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator /(Point2 a, float b) { return a.XY / b; }
+        public static VECTOR2 operator /(Point2 a, float b) { return a.XY / b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator *(Point2 a, Point2 b) { return a.XY * b; }
+        public static VECTOR2 operator *(Point2 a, Point2 b) { return a.XY * b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator /(Point2 a, Point2 b) { return a.XY / b; }
+        public static VECTOR2 operator /(Point2 a, Point2 b) { return a.XY / b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator +(Point2 a, Point2 b) { return a.XY + b.XY; }
+        public static VECTOR2 operator +(Point2 a, Point2 b) { return a.XY + b.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Point2 operator -(Point2 a, Point2 b) { return a.XY - b.XY; }
+        public static VECTOR2 operator -(Point2 a, Point2 b) { return a.XY - b.XY; }
 
         #endregion
 
-        #region API        
+        #region API
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFinite(Point2 point) { return _IsFinite(point.X) && _IsFinite(point.Y); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int GetDominantAxis(Point2 point) { return point.DominantAxis; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static VECTOR2 Center(System.Drawing.Rectangle rect)
@@ -281,6 +306,7 @@ namespace InteropTypes.Graphics.Drawing
         public static float AngleInRadians(Point2 a, Point2 b)
         {
             var dot = VECTOR2.Dot(a.Normalized,b.Normalized);
+            if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
             #if NETSTANDARD2_1_OR_GREATER
@@ -308,7 +334,21 @@ namespace InteropTypes.Graphics.Drawing
         public static float Cross(Point2 a, Point2 b)
         {
             return a.X * b.Y -a.Y * b.X;
-        }            
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Cross(Point2 a, Point2 b, Point2 c)
+        {
+            return Cross(b-a, c-b);
+        }
+
+        public VECTOR2 WithLength(float len)
+        {
+            len /= XY.Length();
+            return XY * len;
+        }
+
+        public static bool IsClosedLoop(ReadOnlySpan<Point2> points) { return points[0] == points[points.Length - 1]; }
 
         #endregion
 

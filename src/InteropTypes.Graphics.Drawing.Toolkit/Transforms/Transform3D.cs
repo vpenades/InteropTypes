@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
-    public readonly struct Drawing3DTransform :
+    readonly partial struct Drawing3DTransform :
         ICanvas2D,
         IScene3D,
         IServiceProvider
@@ -24,7 +24,19 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _Target = target;
             _TargetEx = target as IScene3D;
             _Transform = xform;
-            _SizeScale = xform.DecomposeScale();
+            _SizeScale = _DecomposeScale(xform);
+        }
+
+        private static Single _DecomposeScale(in Matrix4x4 matrix)
+        {
+            var det = matrix.GetDeterminant();
+            var volume = Math.Abs(det);
+
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Pow(volume, (float)1 / 3);
+            #else
+            return (float)Math.Pow(volume, (double)1 / 3);
+            #endif
         }
 
         #endregion

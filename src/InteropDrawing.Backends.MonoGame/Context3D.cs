@@ -36,7 +36,7 @@ namespace InteropTypes.Graphics.Backends
         private GraphicsDevice _Device;
         private BasicEffect _Effect3D;
 
-        private CameraView3D? _Camera;
+        private CameraTransform3D? _Camera;
 
         private readonly MeshBuilder _Batch;
 
@@ -49,7 +49,7 @@ namespace InteropTypes.Graphics.Backends
         public int Width => _Device.Viewport.Width;
         public int Height => _Device.Viewport.Height;
 
-        public CameraView3D? Camera => _Camera;
+        public CameraTransform3D? Camera => _Camera;
 
         public bool IsEmpty => _Batch.IsEmpty && _AssetInstances.Count == 0;
 
@@ -64,7 +64,7 @@ namespace InteropTypes.Graphics.Backends
             _Camera = null;
         }
 
-        public void SetCamera(CameraView3D camera) { _Camera = camera; }
+        public void SetCamera(CameraTransform3D camera) { _Camera = camera; }
 
         public void Render() { Render(Matrix4x4.Identity); }
 

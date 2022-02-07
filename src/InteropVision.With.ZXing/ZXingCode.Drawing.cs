@@ -33,7 +33,7 @@ namespace InteropVision.With
             }*/
 
             var points = result.ResultPoints
-                .Select(item => new Point2(item.X, item.Y) + offset)
+                .Select(item => (Point2)(new Point2(item.X, item.Y) + offset))
                 .ToArray();
 
             dc.DrawPolygon((Color.Red, 4), points);

@@ -116,7 +116,7 @@ After:
         {
             var bounds = bitmap.Info;            
 
-            var ab = (b - a).ToNumerics();
+            var ab = (b - a);
 
             if (Math.Abs(ab.X) <= 1 && Math.Abs(ab.Y) <=1)
                 // can't loop; draw a single pixel

@@ -11,7 +11,7 @@ using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
-    public readonly partial struct Decompose3D :
+    readonly partial struct Decompose3D :
         IScene3D,
         IServiceProvider
     {
@@ -58,8 +58,6 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <inheritdoc/>
         public void DrawAsset(in Matrix4x4 transform, ASSET asset, ColorStyle style)
         {
-            if (asset is Asset3D a3d) { a3d._DrawAsSurfaces(this); return; }
-
             if (asset is IDrawingBrush<IScene3D> drawable) { drawable.DrawTo(this); return; }            
         }        
 
@@ -72,23 +70,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <inheritdoc/>
         public void DrawSphere(POINT3 center, SCALAR diameter, OutlineFillStyle style)
         {
-            DrawSphere(_RenderTarget, center, diameter, _SphereLod, style);
+            DrawSphere(_RenderTarget, center, diameter, style, _SphereLod);
         }
 
         /// <inheritdoc/>
         public void DrawSurface(ReadOnlySpan<POINT3> vertices, SurfaceStyle style)
         {
-            if (vertices.Length < 3) return;
-
-            if (_DecomposeSurfaceOutlines)
-            {
-                if (style.Style.HasFill) _RenderTarget.DrawConvexSurface(vertices, style.Style.FillColor);
-                if (style.Style.HasOutline) DrawOutlineAsSegments(this, vertices, style.Style.OutlineWidth, style.Style.OutlineColor);
-            }
-            else if (style.IsVisible)
-            {
-                _RenderTarget.DrawConvexSurface(vertices, style.Style.FillColor);
-            }
+            DrawSurface(_RenderTarget,vertices,style);
         }
 
         /// <inheritdoc/>

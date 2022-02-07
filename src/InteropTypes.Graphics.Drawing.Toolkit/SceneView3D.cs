@@ -167,7 +167,7 @@ namespace InteropTypes.Graphics.Drawing
         private Matrix4x4 _GetLookingCamera(Point3 campos)
         {
             var sceneCenter = _SceneBounds.HasValue ? (_SceneBounds.Value.Max - _SceneBounds.Value.Min) * 0.5f : Vector3.Zero;
-            return Matrix4x4.CreateWorld(campos.XYZ, (sceneCenter - campos).Normalized, Vector3.UnitY);
+            return Matrix4x4.CreateWorld(campos.XYZ, Vector3.Normalize(sceneCenter - campos), Vector3.UnitY);
         }
 
         private static Matrix4x4 _GetOptimalCamera(Point3 min, Point3 max)
@@ -187,7 +187,7 @@ namespace InteropTypes.Graphics.Drawing
 
             var forward = -Vector3.Normalize(new Vector3(rx, ry, rz));
 
-            return Matrix4x4.CreateWorld((center - forward * distance).ToNumerics(), forward, Vector3.UnitY);
+            return Matrix4x4.CreateWorld((center - forward * distance), forward, Vector3.UnitY);
         }
 
         #endregion        

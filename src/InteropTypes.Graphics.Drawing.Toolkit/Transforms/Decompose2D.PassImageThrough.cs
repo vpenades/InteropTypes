@@ -39,12 +39,6 @@ After:
                 if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency.");
                 _Target = target;
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-                _Backend = target as Backends.IDrawingBackend2D;
-After:
-                _Backend = target as IDrawingBackend2D;
-*/
                 _Backend = target as Backends.IDrawingBackend2D;
             }
 

@@ -66,6 +66,8 @@ namespace InteropTypes.Graphics.Drawing
         public static implicit operator LineStyle((ColorStyle, ColorStyle, float, LineCapStyle) style)               { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item4); }
         public static implicit operator LineStyle((ColorStyle, ColorStyle, float, LineCapStyle, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item5); }
 
+        public static implicit operator LineStyle(OutlineFillStyle style) { return new LineStyle(style, LineCapStyle.Flat, LineCapStyle.Flat); }
+
         public static implicit operator LineStyle((OutlineFillStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item2); }
         public static implicit operator LineStyle((OutlineFillStyle, LineCapStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
 
@@ -145,23 +147,15 @@ namespace InteropTypes.Graphics.Drawing
 
         public LineStyle With(OutlineFillStyle style) { return new LineStyle(style, StartCap, EndCap); }
 
+        public LineStyle WithFill(ColorStyle color) { return new LineStyle(Style.WithFill(color), StartCap, EndCap); }
+
         public LineStyle WithOutline(float ow) { return new LineStyle(Style.WithOutline(ow), StartCap, EndCap); }
 
-        public LineStyle WithOutline(COLOR color, float ow) { return new LineStyle(Style.WithOutline(color, ow), StartCap, EndCap); }
+        public LineStyle WithOutline(ColorStyle color, float ow) { return new LineStyle(Style.WithOutline(color, ow), StartCap, EndCap); }
 
         public bool IsSolid(ref float diameter, out ColorStyle solidColor)
         {
-            if (Style.OutlineColor.IsVisible && diameter < Style.OutlineWidth)
-            {
-                diameter = Style.OutlineWidth;
-                solidColor = Style.OutlineColor;
-                return true;
-            }
-
-            if (!Style.HasOutline) { solidColor = Style.FillColor; return true; }
-
-            solidColor = default;
-            return false;
+            return Style.IsSolid(ref diameter, out solidColor);
         }
 
         #endregion

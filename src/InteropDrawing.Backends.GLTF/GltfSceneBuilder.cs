@@ -107,40 +107,7 @@ namespace InteropTypes.Graphics.Backends
 
             // add camera
 
-            if (_Camera.HasValue)
-            {
-                var vcam = _Camera.Value;
-
-                var camNode = new SharpGLTF.Scenes.NodeBuilder("CameraNode");
-                camNode.WorldMatrix = vcam.WorldMatrix;
-
-                vcam.WorldMatrix = Matrix4x4.Identity;
-
-                if (vcam.VerticalFieldOfView.HasValue)
-                {
-                    var yfov = vcam.VerticalFieldOfView.Value;
-
-                    var persp = new SharpGLTF.Scenes.CameraBuilder.Perspective(null, yfov, 0.1f);
-
-                    scene.AddCamera(persp, camNode);
-                }
-                else if (vcam.OrthographicScale.HasValue)
-                {
-                    var s = vcam.OrthographicScale.Value;
-
-                    var ortho = new SharpGLTF.Scenes.CameraBuilder.Orthographic(s, s, 0.1f, 1000);
-
-                    scene.AddCamera(ortho, camNode);
-                }
-
-                if ((settings?.CameraSize ?? 0) > 0)
-                {
-                    var camMesh = new GltfMeshDrawing3D();
-                    vcam.DrawTo(camMesh, settings.Value.CameraSize.Value);
-
-                    scene.AddRigidMesh(camMesh.Mesh, camNode);
-                }
-            }
+            GLTFWriteSettings._AddCameraTo(_Camera, settings, scene);
 
             return scene;
         }
@@ -175,7 +142,7 @@ namespace InteropTypes.Graphics.Backends
     }
 
 
-    sealed class _GltfDrawing3DContext : GltfMeshDrawing3D, IDisposableScene3D
+    sealed class _GltfDrawing3DContext : GltfMeshScene3D, IDisposableScene3D
     {
         public _GltfDrawing3DContext(GltfSceneBuilder owner, Matrix4x4 xform)
         {
@@ -204,5 +171,48 @@ namespace InteropTypes.Graphics.Backends
         /// If defined it will add the current camera to the scene as a visible mesh.
         /// </summary>
         public float? CameraSize;
+
+
+
+        internal static void _AddCameraTo(CameraView3D? _Camera, GLTFWriteSettings? settings, SharpGLTF.Scenes.SceneBuilder scene)
+        {
+            if (_Camera.HasValue)
+            {
+                var vcam = _Camera.Value;
+
+                var camNode = new SharpGLTF.Scenes.NodeBuilder("CameraNode");
+                camNode.WorldMatrix = vcam.WorldMatrix;
+
+                var cam = vcam.Camera;
+                cam.WorldMatrix = Matrix4x4.Identity;
+                vcam.Camera = cam;
+
+                if (vcam.VerticalFieldOfView.HasValue)
+                {
+                    var yfov = vcam.VerticalFieldOfView.Value;
+
+                    var persp = new SharpGLTF.Scenes.CameraBuilder.Perspective(null, yfov, 0.1f);
+
+                    scene.AddCamera(persp, camNode);
+                }
+
+                else if (vcam.OrthographicScale.HasValue)
+                {
+                    var s = vcam.OrthographicScale.Value;
+
+                    var ortho = new SharpGLTF.Scenes.CameraBuilder.Orthographic(s, s, 0.1f, 1000);
+
+                    scene.AddCamera(ortho, camNode);
+                }
+
+                if ((settings?.CameraSize ?? 0) > 0)
+                {
+                    var camMesh = new GltfMeshScene3D();
+                    vcam.DrawTo(camMesh, settings.Value.CameraSize.Value);
+
+                    scene.AddRigidMesh(camMesh.Mesh, camNode);
+                }
+            }
+        }
     }
 }

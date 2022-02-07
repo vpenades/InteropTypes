@@ -140,7 +140,7 @@ namespace InteropTypes.Graphics.Drawing
             // camera located at the center of the scene.
 
             var center = (min + max) * 0.5f;
-            return Matrix3x2.CreateTranslation(center.ToNumerics());
+            return Matrix3x2.CreateTranslation(center);
         }
 
         #endregion        

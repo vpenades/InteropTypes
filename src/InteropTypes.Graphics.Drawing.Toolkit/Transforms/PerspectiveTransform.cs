@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     /// </list>
     /// </para>
     /// </remarks>
-    public class PerspectiveTransform :
+    partial class PerspectiveTransform :
         IScene3D,
         IServiceProvider
     {
@@ -103,7 +103,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         public Vector4 GetProjection(Point3 v)
         {
-            System.Diagnostics.Debug.Assert(v.IsFinite);
+            System.Diagnostics.Debug.Assert(Point3.IsFinite(v));
             return Vector4.Transform(v.ToNumerics(), _Projection);
         }
 

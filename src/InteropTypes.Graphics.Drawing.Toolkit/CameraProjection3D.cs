@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
-using System.Linq;
 
 using XY = System.Numerics.Vector2;
 using XYZ = System.Numerics.Vector3;
@@ -15,124 +14,9 @@ using BBOX = System.Numerics.Matrix3x2;
 
 using COLOR = System.Drawing.Color;
 
+
 namespace InteropTypes.Graphics.Drawing
 {
-    public struct CameraView3D
-    {
-        #region constructors
-
-        public static CameraView3D CreatePerspective(Point3 from, Point3 to)
-        {
-            return new CameraView3D
-            {
-                WorldMatrix = CreateWorldMatrix(from, to, 1),
-                VerticalFieldOfView = MathF.PI / 4
-            };
-        }
-
-        public static CameraView3D CreateLookingAt(Record3D scene, XYZ direction)
-        {
-            if (direction == XYZ.Zero) direction = -XYZ.UnitZ;
-
-            direction = XYZ.Normalize(direction);
-
-            throw new NotImplementedException();
-
-            // var bounds = scene.SphereBounds;
-
-            // return CreatePerspective(bounds.Center - direction * bounds.Radius * 2, bounds.Center);
-        }
-
-
-        public static CameraView3D CreateDefaultFrom(BBOX bounds)
-        {
-            // if (bounds.IsInvalid) return CreatePerspective(XYZ.UnitZ * 100, XYZ.Zero);
-
-            var center = bounds.MinMaxCenter();
-            var from = bounds.ColumnY() - center;
-
-            return CreatePerspective(from, center);
-        }
-
-        #endregion
-
-        #region data
-
-        /// <summary>
-        /// Transform Matrix of the camera in World Space.
-        /// </summary>
-        /// <remarks>
-        /// The camera looks into the negative Z
-        /// </remarks>
-        public Matrix4x4 WorldMatrix;
-
-        /// <summary>
-        /// If defined, the camera is a perspective matrix
-        /// </summary>
-        public float? VerticalFieldOfView;
-
-        /// <summary>
-        /// if defined, the camera is ortographic camera.
-        /// </summary>
-        public float? OrthographicScale;
-
-        public float? NearPlane;
-        public float? FarPlane;
-
-        #endregion        
-
-        #region API
-
-        public void DrawTo(IScene3D dc, float cameraSize)
-        {
-            dc.DrawCamera(WorldMatrix, cameraSize);
-
-            var p = CreateProjectionMatrix(1);
-
-            dc.DrawProjectedPlane(WorldMatrix, p, cameraSize * 0.05f, COLOR.BlueViolet);
-        }
-
-        /// <summary>
-        /// Creates a world matrix for a camera looking into negative Z axis
-        /// </summary>
-        /// <param name="fromPosition">camera location in world space.</param>
-        /// <param name="targetPosition">target location in world space.</param>
-        /// <param name="minDist">minimum distance between camera and target.</param>
-        /// <returns>A world matrix camera.</returns>
-        public static Matrix4x4 CreateWorldMatrix(Point3 fromPosition, Point3 targetPosition, float minDist = 0)
-        {
-            var targetPos = targetPosition.ToNumerics();
-            var froPos = fromPosition.ToNumerics();
-
-            var d = targetPos - froPos;
-
-            if (minDist > 0 && d.Length() < minDist)
-            {
-                d = d.WithLength(minDist);
-                fromPosition = targetPos - d;
-            }
-
-            return Matrix4x4.CreateWorld(froPos, d, XYZ.UnitY);
-        }
-
-        public Matrix4x4 CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null)
-        {
-            float near = nearPlane ?? NearPlane ?? 0.1f;
-            float far = farPlane ?? FarPlane ?? 1000f;
-
-            if (VerticalFieldOfView.HasValue)
-            {
-                return Matrix4x4.CreatePerspectiveFieldOfView(VerticalFieldOfView.Value, aspectRatio, near, far);
-            }
-            else
-            {
-                return Matrix4x4.CreateOrthographic(OrthographicScale.Value, OrthographicScale.Value, near, far);
-            }
-        }
-
-        #endregion
-    }
-
     public class CameraProjection3D
     {
         #region CONSTANTS
