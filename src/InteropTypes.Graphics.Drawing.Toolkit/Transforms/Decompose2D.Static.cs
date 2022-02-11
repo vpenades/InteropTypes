@@ -59,7 +59,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
 
-        public static void DrawEllipse(Backends.IDrawingBackend2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
+        public static void DrawEllipse(Backends.IBackendCanvas2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
         {
             // calculate number of vertices based on dimensions
             int count = Math.Max((int)width, (int)height);
@@ -81,7 +81,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (!style.HasOutline) _DrawSolidLines(dc, points, style.OutlineWidth, style.OutlineColor, true);
         }
 
-        public static void DrawPolygon(Backends.IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
+        public static void DrawPolygon(Backends.IBackendCanvas2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
         {
             if (points.Length < 3) return;
 
@@ -102,7 +102,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        public static void DrawLines(Backends.IDrawingBackend2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
+        public static void DrawLines(Backends.IBackendCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
         {
             var xstyle = style.IsSolid(ref diameter, out var solid)
                 ? new LineStyle(solid)

@@ -46,6 +46,20 @@ namespace InteropTypes.Graphics.Drawing
     }
 
     /// <summary>
+    /// This is an extension interface retrieved using the ServiceProvider on an existing ICanvas2D
+    /// </summary>
+    public interface IMeshScene3D
+    {
+        /// <summary>
+        /// Draws a 2D triangle mesh using the associated texture.
+        /// </summary>
+        /// <param name="vertices">the vertices.</param>
+        /// <param name="triangleIndices">the triangle indices.</param>
+        /// <param name="texture">the texture source.</param>
+        void DrawMesh(ReadOnlySpan<POINT3.Vertex> vertices, ReadOnlySpan<int> triangleIndices, Object texture);
+    }
+
+    /// <summary>
     /// Represents a disposable <see cref="IScene3D"/>.
     /// </summary>
     public interface IDisposableScene3D : IScene3D, IDisposable { }

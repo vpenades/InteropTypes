@@ -4,13 +4,8 @@ using System.Text;
 
 using InteropTypes.Graphics.Drawing;
 
-using ASSET = System.Object;
 using SCALAR = System.Single;
-
-using XFORM2 = System.Numerics.Matrix3x2;
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-
-using COLOR = System.Drawing.Color;
 
 namespace InteropTypes.Graphics.Backends
 {
@@ -18,10 +13,10 @@ namespace InteropTypes.Graphics.Backends
     /// Represents a drawing canvas where we can draw 2D thin lines.
     /// </summary>
     /// <remarks>
-    /// When a backend implements this interface, <see cref="ICanvas2D.DrawLines(ReadOnlySpan{POINT2}, SCALAR, in LineStyle)"/>
-    /// should call <see cref="DrawThinLines(ReadOnlySpan{POINT2}, SCALAR, COLOR)"/> when it detects the line thickness is equal or less than 1.
+    /// When a backend implements this interface, <see cref="ICanvas2D.DrawLines(ReadOnlySpan{POINT2}, SCALAR, LineStyle)"/>
+    /// should call <see cref="DrawThinLines(ReadOnlySpan{POINT2}, SCALAR, ColorStyle)"/> when it detects the line thickness is equal or less than 1.
     /// </remarks>
-    partial interface IDrawingBackend2D : IPrimitiveCanvas2D
+    partial interface IBackendCanvas2D : IPrimitiveCanvas2D
     {
         /// <summary>
         /// Gets the number of pixels covered by a unit of length.
@@ -38,7 +33,7 @@ namespace InteropTypes.Graphics.Backends
         void DrawThinLines(ReadOnlySpan<POINT2> points, float thickness, ColorStyle color);
     }
 
-    partial interface IDrawingBackend3D : IPrimitiveScene3D
+    partial interface IBackendScene3D : IPrimitiveScene3D
     {
         float GetThinSegmentsSize();
 

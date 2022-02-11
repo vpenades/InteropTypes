@@ -11,7 +11,6 @@ using GDIPOINT = System.Drawing.Point;
 using GDIPOINTF = System.Drawing.PointF;
 using GDISIZE = System.Drawing.Size;
 using GDISIZEF = System.Drawing.SizeF;
-using System.Numerics;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -350,6 +349,26 @@ namespace InteropTypes.Graphics.Drawing
 
         public static bool IsClosedLoop(ReadOnlySpan<Point2> points) { return points[0] == points[points.Length - 1]; }
 
+
+        /// <summary>
+        /// Gets the point of the segment defined by <paramref name="a"/> - <paramref name="b"/> closest to this point.
+        /// </summary>
+        /// <param name="a">The begin point of the segment.</param>
+        /// <param name="b">The end point of the segment.</param>
+        /// <returns>the point of the segment</returns>
+        public VECTOR2 GetClosestSegmentPoint(Point2 a, Point2 b)
+        {
+            var v = b - a;
+            var u = VECTOR2.Dot(this.XY - a, v) / v.LengthSquared();
+
+            u = Math.Max(0, u);
+            u = Math.Min(1, u);            
+
+            var linePoint = a + u * v;
+
+            return linePoint;
+        }
+
         #endregion
 
         #region API - Centroid
@@ -496,6 +515,20 @@ namespace InteropTypes.Graphics.Drawing
 
         #region conversions
 
+        #if NET5_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref VECTOR2 AsNumerics(ref Point2 point)
+        {
+            return ref Unsafe.As<Point2, VECTOR2>(ref point);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref Point2 AsPoint(ref VECTOR2 point)
+        {
+            return ref Unsafe.As<VECTOR2, Point2>(ref point);
+        }
+        #endif
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public GDIPOINTF ToGDIPoint() { return new GDIPOINTF(X, Y); }
 
@@ -503,22 +536,13 @@ namespace InteropTypes.Graphics.Drawing
         public GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public VECTOR2 ToNumerics() { return new VECTOR2(X, Y); }
-
-        /*
-        public System.Drawing.RectangleF ToGDIRectangleOffCenter(float size)
-        {
-            return new System.Drawing.RectangleF(X - size / 2f, Y - size / 2f, size, size);
-        }*/
+        public VECTOR2 ToNumerics() { return XY; }        
 
         /// <inheritdoc/>
-        public override string ToString() { return ToNumerics().ToString(); }
+        public override string ToString() { return XY.ToString(); }
 
         /// <inheritdoc/>
-        public string ToString(string format, IFormatProvider formatProvider)
-        {
-            return ToNumerics().ToString(format, formatProvider);
-        }
+        public string ToString(string format, IFormatProvider formatProvider) { return XY.ToString(format, formatProvider); }
 
         #endregion
 
@@ -533,6 +557,6 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        #endregion
+#endregion
     }
 }

@@ -11,7 +11,7 @@ namespace InteropTypes.Graphics.Drawing
     /// </summary>
     /// <remarks>
     /// <see cref="ImageAsset"/> is part of <see cref="ImageStyle"/>, which can be used by<br/>
-    /// <see cref="IPrimitiveCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
+    /// <see cref="IPrimitiveCanvas2D.DrawImage(in System.Numerics.Matrix3x2, ImageStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Source} ({Left}, {Top}) ({Width}, {Height}) Scale:{Scale}")]
     public class ImageAsset

@@ -9,9 +9,6 @@ using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
 using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
 
-
-
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
@@ -386,14 +383,28 @@ namespace InteropTypes.Graphics.Drawing
 
         #region conversions
 
+        #if NET5_0_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref VECTOR3 AsNumerics(ref Point3 point)
+        {
+            return ref Unsafe.As<Point3, VECTOR3>(ref point);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref Point3 AsPoint(ref VECTOR3 point)
+        {
+            return ref Unsafe.As<VECTOR3, Point3>(ref point);
+        }
+        #endif
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public VECTOR3 ToNumerics() { return XYZ; }
 
         /// <inheritdoc/>        
-        public override string ToString() { return ToNumerics().ToString(); }
+        public override string ToString() { return XYZ.ToString(); }
 
         /// <inheritdoc/>
-        public string ToString(string format, IFormatProvider formatProvider) { return ToNumerics().ToString(format, formatProvider); }
+        public string ToString(string format, IFormatProvider formatProvider) { return XYZ.ToString(format, formatProvider); }
 
         #endregion
     }

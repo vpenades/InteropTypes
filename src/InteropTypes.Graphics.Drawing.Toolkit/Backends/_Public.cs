@@ -4,6 +4,6 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Backends
 {
-    public partial interface IDrawingBackend2D { }
-    public partial interface IDrawingBackend3D { }
+    public partial interface IBackendCanvas2D { }
+    public partial interface IBackendScene3D { }
 }

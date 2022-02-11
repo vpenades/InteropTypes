@@ -24,7 +24,7 @@ Before:
 After:
             private IDrawingBackend2D _Backend;
 */
-            private InteropTypes.Graphics.Backends.IDrawingBackend2D _Backend;
+            private InteropTypes.Graphics.Backends.IBackendCanvas2D _Backend;
 
             #endregion
 
@@ -39,7 +39,7 @@ After:
                 if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency.");
                 _Target = target;
 
-                _Backend = target as Backends.IDrawingBackend2D;
+                _Backend = target as Backends.IBackendCanvas2D;
             }
 
             /// <summary>

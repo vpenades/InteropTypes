@@ -19,7 +19,8 @@ namespace InteropTypes.Graphics.Backends
 {
     partial class MeshBuilder :
         IPrimitiveScene3D,
-        IDrawingBackend2D
+        IBackendCanvas2D,
+        IMeshCanvas2D
     {
         #region lifecycle
 
@@ -96,7 +97,7 @@ namespace InteropTypes.Graphics.Backends
         public void SetThinLinesPixelSize(float pixelSize) { _2DLineSize = pixelSize; }
 
         /// <inheritdoc/>
-        public float GetPixelsPerUnit() { return _2DLineSize; }
+        public float GetPixelsPerUnit() { return _2DLineSize; }        
 
         /// <inheritdoc/>
         public void DrawThinLines(ReadOnlySpan<Point2> points, float thickness, ColorStyle color)
@@ -145,6 +146,23 @@ namespace InteropTypes.Graphics.Backends
 
             _Triangles.AddTriangle(v1, v2, v3);
             _Triangles.AddTriangle(v1, v3, v4);
+        }
+
+        /// <inheritdoc/>
+        public void DrawMesh(ReadOnlySpan<Point2.Vertex> vertices, ReadOnlySpan<int> indices, object texture)
+        {
+            Span<int> vvv = stackalloc int[indices.Length];
+
+            for(int i=0; i <indices.Length; i++)
+            {
+                var v = vertices[indices[i]];
+                vvv[i] = _Triangles.UseVertex(v.Position, _DepthZ, new Microsoft.Xna.Framework.Color(v.Color), v.TextureCoord);
+            }
+
+            for(int i=0; i < vvv.Length; i+=3)
+            {
+                _Triangles.AddTriangle(vvv[i+0], vvv[i + 1], vvv[i + 2]);
+            }
         }
 
         #endregion
@@ -225,7 +243,7 @@ namespace InteropTypes.Graphics.Backends
         {
             _Lines.Clear();
             _Triangles.Clear();
-        }
+        }        
 
         #endregion
     }

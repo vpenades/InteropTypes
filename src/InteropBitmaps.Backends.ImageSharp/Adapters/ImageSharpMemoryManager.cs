@@ -70,9 +70,9 @@ namespace InteropBitmaps.Adapters
 
         public override Span<byte> GetSpan()
         {
-            if (_Image.TryGetSinglePixelSpan(out Span<TPixel> span))
+            if (_Image.DangerousTryGetSinglePixelMemory(out Memory<TPixel> span))
             {
-                return System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(span);
+                return System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(span.Span);
             }
 
             throw new NotSupportedException();            

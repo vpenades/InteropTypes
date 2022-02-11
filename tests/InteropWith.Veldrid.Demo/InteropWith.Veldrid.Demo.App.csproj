@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest"/>
+    <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,8 +22,8 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <PackageReference Include="Veldrid.SDL2" Version="4.8.0" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.8.0" />
+    <PackageReference Include="Veldrid.SDL2" Version="4.9.0-beta1" />
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-beta1" />
     <PackageReference Include="Veldrid.VirtualReality" Version="1.0.1" />
   </ItemGroup>
 

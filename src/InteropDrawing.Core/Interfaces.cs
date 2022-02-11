@@ -31,6 +31,10 @@ namespace InteropTypes.Graphics.Drawing
     /// </example>
     public interface IPseudoImmutable
     {
+        /// <summary>
+        /// Represents an object that doesn't change as long as the parent object's content
+        /// doesn't change either.
+        /// </summary>
         object ImmutableKey { get; }
 
         // void InvalidateImmutableKey();

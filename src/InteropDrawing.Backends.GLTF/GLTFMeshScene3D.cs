@@ -90,7 +90,7 @@ namespace InteropTypes.Graphics.Backends
                 case 2: _DrawLine(vertices[0], vertices[1], fillColor.ToGDI()); return;
                 default: _DrawSurface(vertices, fillColor.ToGDI(), false); return;
             }
-        }
+        }        
 
         public SharpGLTF.Schema2.ModelRoot ToModel()
         {
@@ -167,7 +167,7 @@ namespace InteropTypes.Graphics.Backends
             }
 
             return material;
-        }
+        }        
 
         #endregion
     }

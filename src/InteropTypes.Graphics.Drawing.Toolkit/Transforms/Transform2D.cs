@@ -76,23 +76,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _Target = t;
             _TargetEx = t as ICanvas2D;
 
-            _TransformForward = xform;
-            Matrix3x2.Invert(xform, out _TransformInverse);
-            _TransformScaleForward = _DecomposeScale(xform);
-            _TransformScaleInverse = 1f / _TransformScaleForward;
-        }
-
-        private static float _DecomposeScale(in Matrix3x2 xform)
-        {
-            var det = xform.GetDeterminant();
-            var area = Math.Abs(det);
-
-            #if NETSTANDARD2_1_OR_GREATER
-            return MathF.Sqrt(area);
-            #else
-            return (float)Math.Sqrt(area);
-            #endif
-        }
+            _Transform = new TwoWayTransform2D(xform);
+        }        
 
         #endregion
 
@@ -103,10 +88,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         // two way transform
 
-        private readonly Matrix3x2 _TransformForward;
-        private readonly Matrix3x2 _TransformInverse;
-        private readonly float _TransformScaleForward;
-        private readonly float _TransformScaleInverse;
+        private readonly TwoWayTransform2D _Transform;        
 
         #endregion
 
@@ -115,26 +97,25 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <inheritdoc/>        
         public object GetService(Type serviceType)
         {
+            if (serviceType == typeof(IMeshCanvas2D))
+            {
+                if (_Target is IMeshCanvas2D meshTarget) return new MeshCanvas2DTransform(meshTarget, _Transform);
+            }
+
             return this.TryGetService(serviceType, _Target);
         }
 
-        private float _GetTransformed(float size) { return size <= 0 ? size : size * _TransformScaleForward; }
+        private float _GetTransformed(float size) { return size <= 0 ? size : size * _Transform.ScaleForward; }
 
-        private Point2 _GetTransformed(Point2 point)
-        {
-            return Point2.Transform(point, _TransformForward);
-        }
+        private Point2 _GetTransformed(Point2 point) { return Point2.Transform(point, _Transform.Forward); }
 
-        private Point2 _GetTransformed(Point3 point)
-        {
-            return Point2.Transform(point.XY, _TransformForward);
-        }
+        private Point2 _GetTransformed(Point3 point) { return Point2.Transform(point.XY, _Transform.Forward); }
 
         /// <summary>
         /// This matrix is used to convert a point from viewport space to scene space.
         /// </summary>
         /// <returns>A transform matrix</returns>
-        public Matrix3x2 GetInverseTransform() { return _TransformInverse; }
+        public Matrix3x2 GetInverseTransform() { return _Transform.Inverse; }
 
         #endregion
 
@@ -143,7 +124,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <inheritdoc />
         public void TransformForward(Span<Point2> points)
         {
-            Point2.Transform(points, _TransformForward);
+            Point2.Transform(points, _Transform.Forward);
             if (_Target is ITransformer2D xform) xform.TransformForward(points);
         }
 
@@ -151,13 +132,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public void TransformInverse(Span<Point2> points)
         {
             if (_Target is ITransformer2D xform) xform.TransformInverse(points);
-            Point2.Transform(points, _TransformInverse);
+            Point2.Transform(points, _Transform.Inverse);
         }
 
         /// <inheritdoc />
         public void TransformNormalsForward(Span<Point2> vectors)
         {
-            Point2.TransformNormals(vectors, _TransformForward);
+            Point2.TransformNormals(vectors, _Transform.Forward);
             if (_Target is ITransformer2D xform) xform.TransformNormalsForward(vectors);
         }
 
@@ -165,13 +146,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public void TransformNormalsInverse(Span<Point2> vectors)
         {
             if (_Target is ITransformer2D xform) xform.TransformNormalsInverse(vectors);
-            Point2.Transform(vectors, _TransformInverse);
+            Point2.Transform(vectors, _Transform.Inverse);
         }
 
         /// <inheritdoc />
         public void TransformScalarsForward(Span<float> scalars)
         {
-            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleForward;
+            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _Transform.ScaleForward;
             if (_Target is ITransformer2D xform) xform.TransformScalarsForward(scalars);
         }
 
@@ -179,7 +160,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public void TransformScalarsInverse(Span<float> scalars)
         {
             if (_Target is ITransformer2D xform) xform.TransformScalarsInverse(scalars);
-            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _TransformScaleInverse;
+            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _Transform.ScaleInverse;
         }
 
         #endregion
@@ -191,7 +172,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         {
             if (_TargetEx != null)
             {
-                _TargetEx.DrawAsset(transform * _TransformForward, asset, color);
+                _TargetEx.DrawAsset(transform * _Transform.Forward, asset, color);
             }
             else
             {
@@ -266,7 +247,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <inheritdoc/>
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
-            _Target.DrawImage(transform * _TransformForward, style);
+            _Target.DrawImage(transform * _Transform.Forward, style);
         }
 
         #endregion
@@ -323,6 +304,131 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             DrawConvexPolygon(vvv, style);
         }        
+
+        #endregion
+    }
+
+    readonly struct TwoWayTransform2D
+    {
+        public TwoWayTransform2D(in Matrix3x2 xform)
+        {
+            Forward = xform;
+            Matrix3x2.Invert(xform, out Inverse);
+            ScaleForward = _DecomposeScale(xform);
+            ScaleInverse = 1f / ScaleForward;
+        }
+
+        private static float _DecomposeScale(in Matrix3x2 xform)
+        {
+            var det = xform.GetDeterminant();
+            var area = Math.Abs(det);
+
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Sqrt(area);
+            #else
+            return (float)Math.Sqrt(area);
+            #endif
+        }
+
+        public readonly Matrix3x2 Forward;
+        public readonly Matrix3x2 Inverse;
+        public readonly float ScaleForward;
+        public readonly float ScaleInverse;
+    }
+
+
+    readonly partial struct MeshCanvas2DTransform :
+        IMeshCanvas2D,
+        ITransformer2D,
+        IServiceProvider
+    {
+        #region constructor
+        public MeshCanvas2DTransform(IMeshCanvas2D target, in TwoWayTransform2D ft)
+        {
+            _Target = target;
+            _Transform = ft;
+        }
+
+        #endregion
+
+        #region data
+
+        private readonly IMeshCanvas2D _Target;
+        private readonly TwoWayTransform2D _Transform;
+
+        #endregion
+
+        #region API
+
+        /// <inheritdoc/>        
+        public object GetService(Type serviceType)
+        {
+            return this.TryGetService(serviceType, _Target);
+        }
+
+        #endregion
+
+        #region ITransformer2D API
+
+        /// <inheritdoc />
+        public void TransformForward(Span<Point2> points)
+        {
+            Point2.Transform(points, _Transform.Forward);
+            if (_Target is ITransformer2D xform) xform.TransformForward(points);
+        }
+
+        /// <inheritdoc />
+        public void TransformInverse(Span<Point2> points)
+        {
+            if (_Target is ITransformer2D xform) xform.TransformInverse(points);
+            Point2.Transform(points, _Transform.Inverse);
+        }
+
+        /// <inheritdoc />
+        public void TransformNormalsForward(Span<Point2> vectors)
+        {
+            Point2.TransformNormals(vectors, _Transform.Forward);
+            if (_Target is ITransformer2D xform) xform.TransformNormalsForward(vectors);
+        }
+
+        /// <inheritdoc />
+        public void TransformNormalsInverse(Span<Point2> vectors)
+        {
+            if (_Target is ITransformer2D xform) xform.TransformNormalsInverse(vectors);
+            Point2.Transform(vectors, _Transform.Inverse);
+        }
+
+        /// <inheritdoc />
+        public void TransformScalarsForward(Span<float> scalars)
+        {
+            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _Transform.ScaleForward;
+            if (_Target is ITransformer2D xform) xform.TransformScalarsForward(scalars);
+        }
+
+        /// <inheritdoc />
+        public void TransformScalarsInverse(Span<float> scalars)
+        {
+            if (_Target is ITransformer2D xform) xform.TransformScalarsInverse(scalars);
+            for (int i = 0; i < scalars.Length; i++) scalars[i] *= _Transform.ScaleInverse;
+        }
+
+        #endregion
+
+        #region API
+
+        public void DrawMesh(ReadOnlySpan<Point2.Vertex> vertices, ReadOnlySpan<int> indices, object texture)
+        {
+            Span<Point2.Vertex> ps = stackalloc Point2.Vertex[vertices.Length];
+
+            vertices.CopyTo(ps);
+
+            for(int i=0; i < ps.Length; ++i)
+            {
+                ps[i].Position = Vector2.Transform(ps[i].Position, _Transform.Forward);
+            }
+
+            _Target.DrawMesh(ps,indices,texture);
+        }
 
         #endregion
     }

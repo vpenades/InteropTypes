@@ -50,10 +50,10 @@ namespace InteropBitmaps
 
             if (!TryGetExactPixelFormat<TPixel>(out var pfmt)) return false;
 
-            if (!src.TryGetSinglePixelSpan(out Span<TPixel> srcSpan)) return false;
+            if (!src.DangerousTryGetSinglePixelMemory(out Memory<TPixel> srcSpan)) return false;
 
             // We assume ImageSharp guarantees that memory is continuous.
-            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan);
+            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan.Span);
 
             dst = new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
 
@@ -142,10 +142,10 @@ namespace InteropBitmaps
 
             if (TryGetExactPixelFormat<TPixel>(out var pfmt))
             {
-                if (src.TryGetSinglePixelSpan(out Span<TPixel> srcSpan))
+                if (src.DangerousTryGetSinglePixelMemory(out Memory<TPixel> srcSpan))
                 {
                     // We assume ImageSharp guarantees that memory is continuous.
-                    var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan);
+                    var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan.Span);
 
                     return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
                 }
@@ -180,8 +180,8 @@ namespace InteropBitmaps
             for (int y = 0; y < dst.Height; ++y)
             {
                 var srcLine = src.GetScanlinePixels(y);
-                var dstLine = dst.Frames[0].GetPixelRowSpan(y);
-                srcLine.CopyTo(dstLine);
+                var dstLine = dst.Frames[0].DangerousGetPixelRowMemory(y);
+                srcLine.CopyTo(dstLine.Span);
             }
 
             return dst;
