@@ -273,7 +273,14 @@ namespace InteropTypes.Graphics.Drawing
         {
             var wh = _SourceUVMax - _SourceUVMin;
             return new System.Drawing.RectangleF(_SourceUVMin.X, _SourceUVMin.Y, wh.X, wh.Y);
-        }        
+        }
+
+        internal _ImageAssetTransforms UseTransforms()
+        {
+            if (_Transforms != null) return _Transforms;
+            _Transforms = new _ImageAssetTransforms(this, _SourceWidth, _SourceHeight);
+            return _Transforms;
+        }
 
         internal System.Numerics.Matrix3x2 _GetImageMatrix(bool hflip, bool vflip)
         {
@@ -282,7 +289,7 @@ namespace InteropTypes.Graphics.Drawing
             var sx = hflip ? -_OutputScale.X : +_OutputScale.X;
             var sy = vflip ? -_OutputScale.Y : +_OutputScale.Y;
 
-            if (_PivotPrecedence) // pivot after flip
+            if (_PivotPrecedence) // flip before pivot
             {
                 var final = System.Numerics.Matrix3x2.CreateScale(size.X * sx, size.Y * sy);
                 final.Translation += new XY(Math.Max(0, -final.M11), Math.Max(0, -final.M22));
@@ -296,13 +303,6 @@ namespace InteropTypes.Graphics.Drawing
                 final *= System.Numerics.Matrix3x2.CreateScale(sx, sy);
                 return final;
             }
-        }             
-
-        internal _ImageAssetTransforms UseTransforms()
-        {
-            if (_Transforms != null) return _Transforms;
-            _Transforms = new _ImageAssetTransforms(this, _SourceWidth, _SourceHeight);
-            return _Transforms;
         }
 
         #endregion
@@ -375,20 +375,22 @@ namespace InteropTypes.Graphics.Drawing
         public void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, ImageStyle.Orientation o, uint color, float depthZ = 1)
         {
             xform = _Transforms[(int)o] * xform;
+            var r0 = new XY(xform.M11, xform.M12);
+            var r1 = new XY(xform.M21, xform.M22);
 
-            vertices[0].Position = new XYZ(XY.Transform(XY.Zero, xform), depthZ);
+            vertices[0].Position = new XYZ(xform.Translation, depthZ);
             vertices[0].Color = color;
             vertices[0].TextureCoord = _UV0;
 
-            vertices[1].Position = new XYZ(XY.Transform(XY.UnitX, xform), depthZ);
+            vertices[1].Position = new XYZ(xform.Translation + r0, depthZ);
             vertices[1].Color = color;
             vertices[1].TextureCoord = _UV1;
 
-            vertices[2].Position = new XYZ(XY.Transform(XY.One, xform), depthZ);
+            vertices[2].Position = new XYZ(xform.Translation + r0 + r1, depthZ);
             vertices[2].Color = color;
             vertices[2].TextureCoord = _UV2;
 
-            vertices[3].Position = new XYZ(XY.Transform(XY.UnitY, xform), depthZ);
+            vertices[3].Position = new XYZ(xform.Translation + r1, depthZ);
             vertices[3].Color = color;
             vertices[3].TextureCoord = _UV3;
         }
@@ -396,20 +398,22 @@ namespace InteropTypes.Graphics.Drawing
         public void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform, ImageStyle.Orientation o, uint color)
         {
             xform = _Transforms[(int)o] * xform;
+            var r0 = new XY(xform.M11, xform.M12);
+            var r1 = new XY(xform.M21, xform.M22);
 
-            vertices[0].Position = XY.Transform(XY.Zero, xform);
+            vertices[0].Position = xform.Translation;
             vertices[0].Color = color;
             vertices[0].TextureCoord = _UV0;
 
-            vertices[1].Position = XY.Transform(XY.UnitX, xform);
+            vertices[1].Position = xform.Translation + r0;
             vertices[1].Color = color;
             vertices[1].TextureCoord = _UV1;
 
-            vertices[2].Position = XY.Transform(XY.One, xform);
+            vertices[2].Position = xform.Translation + r0 + r1;
             vertices[2].Color = color;
             vertices[2].TextureCoord = _UV2;
 
-            vertices[3].Position = XY.Transform(XY.UnitY, xform);
+            vertices[3].Position = xform.Translation + r1;
             vertices[3].Color = color;
             vertices[3].TextureCoord = _UV3;
         }
@@ -417,11 +421,13 @@ namespace InteropTypes.Graphics.Drawing
         public void TransformVertices(Span<XY> vertices, System.Numerics.Matrix3x2 xform, ImageStyle.Orientation o)
         {
             xform = _Transforms[(int)o] * xform;
+            var r0 = new XY(xform.M11, xform.M12);
+            var r1 = new XY(xform.M21, xform.M22);
 
-            vertices[0] = XY.Transform(XY.Zero, xform);
-            vertices[1] = XY.Transform(XY.UnitX, xform);
-            vertices[2] = XY.Transform(XY.One, xform);
-            vertices[3] = XY.Transform(XY.UnitY, xform);
+            vertices[0] = xform.Translation;
+            vertices[1] = xform.Translation + r0;
+            vertices[2] = xform.Translation + r0 + r1;
+            vertices[3] = xform.Translation + r1;
         }
 
         #endregion
