@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InteropBitmaps.Adapters
+using InteropBitmaps;
+
+namespace InteropTypes.Graphics.Backends
 {
-    sealed class WPFMemoryManager : MemoryManagers.BitmapMemoryManager
+    sealed class WPFMemoryManager : InteropBitmaps.MemoryManagers.BitmapMemoryManager
     {
         #region lifecycle
 
@@ -16,7 +18,7 @@ namespace InteropBitmaps.Adapters
 
             if (!_Implementation.TryGetExactPixelFormat(bmp.Format, out var bmpFmt))
             {
-                throw new Diagnostics.PixelFormatNotSupportedException(bmp.Format, nameof(bmp));
+                throw new InteropBitmaps.Diagnostics.PixelFormatNotSupportedException(bmp.Format, nameof(bmp));
             }
             
             var nfo = new BitmapInfo(bmp.PixelWidth, bmp.PixelHeight, bmpFmt, bmp.BackBufferStride);

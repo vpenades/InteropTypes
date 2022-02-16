@@ -11,8 +11,9 @@ using WIC_FORMAT = System.Windows.Media.PixelFormat;
 using WIC_FORMATS = System.Windows.Media.PixelFormats;
 
 using INTEROPFMT = InteropBitmaps.PixelFormat;
+using InteropBitmaps;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     partial class _Implementation
     {

@@ -10,7 +10,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     readonly partial struct Drawing3DTransform :
         ICanvas2D,
         IScene3D,
-        IServiceProvider
+        IServiceProvider,
+        ColorStyle.IDefaultValue
     {
         #region constructors
 
@@ -47,6 +48,17 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         private readonly IScene3D _TargetEx;
         private readonly Matrix4x4 _Transform;
         private readonly float _SizeScale;
+
+        #endregion
+
+        #region properties
+
+        /// <inheritdoc/>        
+        public ColorStyle DefaultColorStyle
+        {
+            get => ColorStyle.TryGetDefaultFrom(_Target);
+            set => value.TrySetDefaultTo(_Target);
+        }
 
         #endregion
 

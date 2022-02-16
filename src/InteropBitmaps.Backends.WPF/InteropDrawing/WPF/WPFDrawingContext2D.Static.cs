@@ -4,7 +4,7 @@ using InteropTypes.Graphics.Drawing;
 
 using RENDERTARGET = System.Windows.Media.Imaging.RenderTargetBitmap;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
     partial class WPFDrawingContext2D
     {

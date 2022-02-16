@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
     /// <summary>
     /// Converts a <see cref="Record2D"/> scene to a <see cref="System.Windows.Media.ImageSource"/>

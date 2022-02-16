@@ -178,7 +178,47 @@ namespace InteropTypes.Graphics.Drawing
             var a = (float)this.A * opacity;
 
             return new ColorStyle(R, G, B,(int)a);
-        }        
+        }
+
+        #endregion
+
+        #region nested types
+
+        public static ColorStyle TryGetDefaultFrom(Object source) { return GetDefaultFrom(source, default); }
+
+        public static ColorStyle GetDefaultFrom(Object source, ColorStyle defval)
+        {
+            if (source is IServiceProvider serviceProvider)
+            {
+                if (serviceProvider.GetService(typeof(IDefaultValue)) is IDefaultValue clientDefault)
+                {
+                    var val = clientDefault.DefaultColorStyle;
+                    if (val.IsVisible) return val;
+                }                
+            }
+
+            return defval;
+        }
+
+        public bool TrySetDefaultTo(Object target)
+        {
+            if (target is IServiceProvider serviceProvider)
+            {
+                if (serviceProvider.GetService(typeof(IDefaultValue)) is IDefaultValue clientDefault)
+                {
+                    clientDefault.DefaultColorStyle = this;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public interface IDefaultValue
+        {
+            ColorStyle DefaultColorStyle { get; set; }
+        }
+
 
         #endregion
     }

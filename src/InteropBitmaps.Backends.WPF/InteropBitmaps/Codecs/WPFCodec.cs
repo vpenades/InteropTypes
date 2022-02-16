@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InteropBitmaps.Codecs
+using InteropBitmaps;
+using InteropBitmaps.Codecs;
+
+namespace InteropTypes.Graphics.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("WPF(WIC) Codec")]
     public sealed class WPFCodec : IBitmapDecoder, IBitmapEncoder

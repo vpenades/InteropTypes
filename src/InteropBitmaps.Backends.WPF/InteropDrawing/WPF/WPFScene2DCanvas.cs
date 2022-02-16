@@ -12,7 +12,7 @@ using System.Windows.Media;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
     public class WPFScene2DCanvas : Canvas
     {

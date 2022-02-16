@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <summary>
         /// Base class for <see cref="IPrimitiveScene3D"/> pass through classes.
         /// </summary>
-        public abstract class PassThrough : IScene3D
+        public abstract class PassThrough : IScene3D, ColorStyle.IDefaultValue
         {
             #region data
 
@@ -21,6 +21,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             #endregion
 
             #region API
+
+            /// <inheritdoc/>
+            public ColorStyle DefaultColorStyle
+            {
+                get => ColorStyle.TryGetDefaultFrom(_Target);
+                set => value.TrySetDefaultTo(_Target);
+            }
 
             /// <summary>
             /// Sets the target <see cref="IPrimitiveScene3D"/> to where the drawing calls will be redirected.

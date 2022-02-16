@@ -12,23 +12,24 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <summary>
         /// Base class for <see cref="IPrimitiveScene3D"/> pass through classes.
         /// </summary>
-        public abstract class PassImageThrough : ICanvas2D
+        public abstract class PassImageThrough : ICanvas2D, ColorStyle.IDefaultValue
         {
             #region data
 
             private IPrimitiveCanvas2D _Target;
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            private Backends.IDrawingBackend2D _Backend;
-After:
-            private IDrawingBackend2D _Backend;
-*/
             private InteropTypes.Graphics.Backends.IBackendCanvas2D _Backend;
 
             #endregion
 
             #region API
+
+            /// <inheritdoc/>
+            public ColorStyle DefaultColorStyle
+            {
+                get => ColorStyle.TryGetDefaultFrom(_Target);
+                set => value.TrySetDefaultTo(_Target);
+            }
 
             /// <summary>
             /// Sets the target <see cref="IPrimitiveCanvas2D"/> to where the drawing calls will be redirected.

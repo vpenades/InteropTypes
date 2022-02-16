@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.OpenCvSharp4", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.ZXing", "src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj", "{C7538BBF-8C64-4BCA-9BCA-DE67B7DC9B90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.WPF", "src\InteropBitmaps.Backends.WPF\InteropTypes.Graphics.WPF.csproj", "{9120AFE7-EB78-4BDF-8427-229C89420B1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.WPF", "src\InteropBitmaps.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj", "{9120AFE7-EB78-4BDF-8427-229C89420B1A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.STB", "src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj", "{9CA81805-301D-4BDD-9E92-133C9C4EB203}"
 EndProject

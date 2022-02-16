@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net471;net5.0-windows;net6.0-windows</TargetFrameworks>
-    <RootNamespace>InteropBitmaps.Backend</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="InteropDrawing\WPFSceneCanvas.xaml">
+    <Page Update="InteropDrawing\WPF\WPFSceneCanvas.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>

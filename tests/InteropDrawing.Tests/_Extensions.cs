@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Backends.WPF;
 
 namespace InteropDrawing
 {
@@ -41,7 +42,7 @@ namespace InteropDrawing
             if (filePath.ToLower().EndsWith(".png") || filePath.ToLower().EndsWith(".jpg") || filePath.ToLower().EndsWith(".gif"))
             {
                 
-                Backends.WPFDrawingContext2D.SaveToBitmap(filePath, 1024, 1024, null, batch);
+                WPFDrawingContext2D.SaveToBitmap(filePath, 1024, 1024, null, batch);
                 NUnit.Framework.TestContext.AddTestAttachment(filePath);
                 return;
             }

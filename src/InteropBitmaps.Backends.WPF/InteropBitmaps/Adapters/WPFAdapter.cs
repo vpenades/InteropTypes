@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace InteropBitmaps.Adapters
+using InteropBitmaps;
+
+namespace InteropTypes.Graphics.Backends
 {
     public readonly ref struct WPFAdapter // WpfSpanBitmap
     {
@@ -17,7 +19,7 @@ namespace InteropBitmaps.Adapters
 
             if (!_Implementation.TryGetExactPixelFormat(bmp.PixelFormat, out _Exact))
             {
-                throw new Diagnostics.PixelFormatNotSupportedException(bmp.PixelFormat, nameof(bmp));
+                throw new InteropBitmaps.Diagnostics.PixelFormatNotSupportedException(bmp.PixelFormat, nameof(bmp));
             }
         }
 

@@ -8,7 +8,7 @@ using InteropTypes.Graphics.Drawing;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Backends
 {
     static class _PrivateExtensions
     {

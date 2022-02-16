@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InteropBitmaps.Adapters
+using InteropBitmaps;
+
+namespace InteropTypes.Graphics.Backends
 {
     public struct WPFFactory
     {
@@ -14,7 +16,7 @@ namespace InteropBitmaps.Adapters
 
             if (!_Implementation.TryGetExactPixelFormat(binfo.PixelFormat, out _Exact))
             {
-                throw new Diagnostics.PixelFormatNotSupportedException(binfo.PixelFormat, nameof(binfo));
+                throw new InteropBitmaps.Diagnostics.PixelFormatNotSupportedException(binfo.PixelFormat, nameof(binfo));
             }            
         }
 

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropBitmaps;
+
 // BitmapSource -> WriteableBitmap, BitmapFrame, BitmapImage, CroppedBitmap, FormatConvertedBitmap,RenderTargetBitmap,TransformedBitmap        
 using WIC_READABLE = System.Windows.Media.Imaging.BitmapSource;
 using WIC_WRITABLE = System.Windows.Media.Imaging.WriteableBitmap;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Backends
 {
     /// <summary>
     ///  Windows Imaging Component (WIC)
@@ -17,15 +19,15 @@ namespace InteropBitmaps
     {
         public static BitmapInfo GetBitmapInfo(this WIC_READABLE src) { return _Implementation.GetBitmapInfo(src); }
 
-        public static Adapters.WPFFactory WithWPF(this BitmapInfo binfo) { return new Adapters.WPFFactory(binfo); }
+        public static WPFFactory WithWPF(this BitmapInfo binfo) { return new WPFFactory(binfo); }
 
-        public static Adapters.WPFAdapter WithWPF(this SpanBitmap bmp) { return new Adapters.WPFAdapter(bmp); }
+        public static WPFAdapter WithWPF(this SpanBitmap bmp) { return new WPFAdapter(bmp); }
 
-        public static Adapters.WPFAdapter WithWPF<TPixel>(this SpanBitmap<TPixel> bmp)
+        public static WPFAdapter WithWPF<TPixel>(this SpanBitmap<TPixel> bmp)
             where TPixel:unmanaged
-        { return new Adapters.WPFAdapter(bmp); }
+        { return new WPFAdapter(bmp); }
 
-        public static MemoryBitmap.ISource UsingMemoryBitmap(this WIC_WRITABLE src) { return new Adapters.WPFMemoryManager(src); }
+        public static MemoryBitmap.ISource UsingMemoryBitmap(this WIC_WRITABLE src) { return new WPFMemoryManager(src); }
 
         public static void SetPixels(this WIC_WRITABLE bmp, int dstX, int dstY, SpanBitmap spanSrc)
         {

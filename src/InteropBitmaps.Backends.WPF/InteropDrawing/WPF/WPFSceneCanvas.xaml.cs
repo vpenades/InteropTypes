@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
     /// <summary>
     /// Interaction logic for WPFSceneCanvas.xaml

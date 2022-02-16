@@ -5,6 +5,8 @@ using System.Numerics;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Drawing.Transforms;
 
+using GDICOLOR = System.Drawing.Color;
+
 namespace InteropDrawing.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
@@ -25,14 +27,12 @@ namespace InteropDrawing.Backends
         #endregion
 
         #region constructor
-        public _MemoryDrawingContext(InteropBitmaps.MemoryBitmap<TPixel> target, Converter<System.Drawing.Color, TPixel> converter)
+        public _MemoryDrawingContext(InteropBitmaps.MemoryBitmap<TPixel> target, Converter<GDICOLOR, TPixel> converter)
         {
             _Target = target;
             _ColorConverter = converter;
 
-            _PolygonRasterizer = new Lazy<Helpers.PolygonScanlines>(() => new Helpers.PolygonScanlines(target.Width, target.Height));
-
-            _Collapse = new Decompose2D(this);
+            _PolygonRasterizer = new Lazy<Helpers.PolygonScanlines>(() => new Helpers.PolygonScanlines(target.Width, target.Height));            
         }
 
         #endregion
@@ -40,11 +40,9 @@ namespace InteropDrawing.Backends
         #region data
 
         internal readonly InteropBitmaps.MemoryBitmap<TPixel> _Target;
-        private readonly Converter<System.Drawing.Color, TPixel> _ColorConverter;
+        private readonly Converter<GDICOLOR, TPixel> _ColorConverter;
 
-        private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;
-
-        private readonly Decompose2D _Collapse;
+        private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;        
 
         #endregion
 
@@ -69,8 +67,7 @@ namespace InteropDrawing.Backends
         /// <inheritdoc/>
         public object GetService(Type serviceType)
         {
-            if (serviceType == typeof(InteropBitmaps.MemoryBitmap<TPixel>)) return _Target;
-            if (serviceType == typeof(Decompose2D)) return _Collapse;
+            if (serviceType == typeof(InteropBitmaps.MemoryBitmap<TPixel>)) return _Target;            
             if (serviceType.IsAssignableFrom(this.GetType())) return this;
             return null;
         }        

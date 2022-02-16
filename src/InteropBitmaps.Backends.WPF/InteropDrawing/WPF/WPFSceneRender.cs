@@ -9,7 +9,7 @@ using System.Windows.Threading;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
     public class WPFSceneRender : DispatcherObject
     {

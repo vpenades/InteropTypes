@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
+using InteropTypes.Graphics.Backends;
+
 using NUnit.Framework;
 
 namespace InteropBitmaps.Backends

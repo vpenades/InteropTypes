@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Codecs;
+
 using NUnit.Framework;
 
 namespace InteropBitmaps.Codecs

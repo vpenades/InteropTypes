@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Codecs;
+
 using NUnit.Framework;
 
 using SixLabors.ImageSharp;
@@ -96,7 +98,7 @@ namespace InteropBitmaps
             }
 
             var f1 = _injectExt(filePath, "WPF");
-            bmp.Save(f1, Codecs.WPFCodec.Default); TestContext.AddTestAttachment(f1);
+            bmp.Save(f1, InteropTypes.Graphics.Codecs.WPFCodec.Default); TestContext.AddTestAttachment(f1);
 
             var f2 = _injectExt(filePath, "GDI");
             bmp.Save(f2, Codecs.GDICodec.Default); TestContext.AddTestAttachment(f2);
@@ -123,7 +125,7 @@ namespace InteropBitmaps
             var dirPath = System.IO.Path.GetDirectoryName(filePath);
             System.IO.Directory.CreateDirectory(dirPath);            
             
-            bmp.Save(filePath, Codecs.WPFCodec.Default);
+            bmp.Save(filePath, WPFCodec.Default);
             TestContext.AddTestAttachment(filePath);
         }
 

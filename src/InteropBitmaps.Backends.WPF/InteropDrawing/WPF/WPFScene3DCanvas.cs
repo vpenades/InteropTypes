@@ -8,7 +8,7 @@ using System.Windows;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
     public class WPFScene3DCanvas : System.Windows.Controls.Canvas
     {

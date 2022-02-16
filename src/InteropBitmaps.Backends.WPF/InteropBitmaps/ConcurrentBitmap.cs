@@ -4,7 +4,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace InteropBitmaps
+using InteropBitmaps;
+
+namespace InteropTypes.Graphics.Backends
 {
 
     /// <summary>

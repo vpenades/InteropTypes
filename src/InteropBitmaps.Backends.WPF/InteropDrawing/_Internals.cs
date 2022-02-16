@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     internal struct PropertyFactory<TClass> where TClass:DependencyObject
     {

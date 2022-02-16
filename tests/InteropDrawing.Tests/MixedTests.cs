@@ -10,6 +10,8 @@ using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 using COLOR = System.Drawing.Color;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Drawing.Transforms;
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Backends.WPF;
 
 namespace InteropDrawing
 {
@@ -144,7 +146,7 @@ namespace InteropDrawing
         [Test]
         public void TestRenderBitmap()
         {
-            var renderTarget = new Backends.WPFRenderTarget(256, 256);
+            var renderTarget = new WPFRenderTarget(256, 256);
 
             var charPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Assets\\PunkRun.png");
             var character = ImageAsset.CreateGrid(charPath, (256, 256), (128, 128), 8, 8).ToArray();
@@ -177,7 +179,7 @@ namespace InteropDrawing
 
             var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
 
-            Backends.WPFDrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
+            WPFDrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
 
             TestContext.AddTestAttachment(path);
         }
@@ -186,7 +188,7 @@ namespace InteropDrawing
         [TestCase("Thunderbird1")]
         public void TestPaintersAlgorythmPipeline(string sceneName)
         {
-            var renderTarget = new Backends.WPFRenderTarget(1024, 1024);
+            var renderTarget = new WPFRenderTarget(1024, 1024);
 
             var scene = new Record3D();
             scene.DrawFloor(new Vector2(-50, -50), new Vector2(100, 100), 10, COLOR.Green, COLOR.DarkGreen);
@@ -270,7 +272,7 @@ namespace InteropDrawing
         [Test]
         public void TestRenderReferenceOutlinesInWPF()
         {
-            var renderTarget = new Backends.WPFRenderTarget(512, 512);
+            var renderTarget = new WPFRenderTarget(512, 512);
 
             using (var dc = renderTarget.OpenDrawingContext())
             {

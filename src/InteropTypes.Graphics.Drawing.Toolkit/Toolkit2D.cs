@@ -33,31 +33,10 @@ namespace InteropTypes.Graphics.Drawing
 
             if (!(dc is IServiceProvider srv)) return false;
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            var vinfo = srv.GetService(typeof(Backends.IBackendViewportInfo)) as Backends.IBackendViewportInfo;
-After:
             var vinfo = srv.GetService(typeof(IBackendViewportInfo)) as IBackendViewportInfo;
-*/
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            var vinfo = srv.GetService(typeof(InteropDrawing.IBackendViewportInfo)) as InteropDrawing.IBackendViewportInfo;
-After:
-            var vinfo = srv.GetService(typeof(IBackendViewportInfo)) as IBackendViewportInfo;
-*/
-            var vinfo = srv.GetService(typeof(InteropTypes.Graphics.Drawing.IBackendViewportInfo)) as InteropTypes.Graphics.Drawing.IBackendViewportInfo;
             if (vinfo == null) return false;
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            if (!(dc is Transforms.ITransformer2D xform)) return false;
-After:
             if (!(dc is ITransformer2D xform)) return false;
-*/
-            if (!(dc is InteropTypes.Graphics.Drawing.ITransformer2D xform)) return false;
             
             Span<POINT2> points = stackalloc POINT2[4];
             points[0] = (0,0);
@@ -77,13 +56,7 @@ After:
         public static bool TryGetQuadrant(this PRIMITIVE2D dc, out Quadrant quadrant)
         {
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            if (dc is Transforms.ITransformer2D xform)
-After:
             if (dc is ITransformer2D xform)
-*/
-            if (dc is InteropTypes.Graphics.Drawing.ITransformer2D xform)
             {
                 Span<POINT2> points = stackalloc POINT2[1];                
                 points[0] = VECTOR2.One;
@@ -125,64 +98,27 @@ After:
 
         public static void TransformForward(this PRIMITIVE2D dc, Span<POINT2> points)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            if (dc is Transforms.ITransformer2D xformer) xformer.TransformForward(points);
-After:
             if (dc is ITransformer2D xformer) xformer.TransformForward(points);
-*/
-            if (dc is InteropTypes.Graphics.Drawing.ITransformer2D xformer) xformer.TransformForward(points);
         }
 
         public static void TransformInverse(this PRIMITIVE2D dc, Span<POINT2> points)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            if (dc is Transforms.ITransformer2D xformer) xformer.TransformInverse(points);
-After:
             if (dc is ITransformer2D xformer) xformer.TransformInverse(points);
-*/
-            if (dc is InteropTypes.Graphics.Drawing.ITransformer2D xformer) xformer.TransformInverse(points);
         }
 
         public static POINT2 TransformForward(this PRIMITIVE2D dc, POINT2 point)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            return dc is Transforms.ITransformer2D xformer
-After:
             return dc is ITransformer2D xformer
-*/
-            return dc is InteropTypes.Graphics.Drawing.ITransformer2D xformer
                 ? xformer._TransformForward(point)
                 : point;
         }
 
         public static POINT2 TransformInverse(this PRIMITIVE2D dc, POINT2 point)
-        {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            return dc is Transforms.ITransformer2D xformer
-After:
-            return dc is ITransformer2D xformer
-*/
-            return dc is InteropTypes.Graphics.Drawing.ITransformer2D xformer
+        {return dc is ITransformer2D xformer
                 ? xformer._TransformInverse(point)
                 : point;
         }
-
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-        private static POINT2 _TransformForward(this Transforms.ITransformer2D dc, POINT2 point)
-After:
         private static POINT2 _TransformForward(this ITransformer2D dc, POINT2 point)
-*/
-        private static POINT2 _TransformForward(this InteropTypes.Graphics.Drawing.ITransformer2D dc, POINT2 point)
         {
             Span<POINT2> span = stackalloc POINT2[1];
             span[0] = point;
@@ -190,14 +126,7 @@ After:
             return span[0];
         }
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-        private static POINT2 _TransformInverse(this Transforms.ITransformer2D dc, POINT2 point)
-After:
         private static POINT2 _TransformInverse(this ITransformer2D dc, POINT2 point)
-*/
-        private static POINT2 _TransformInverse(this InteropTypes.Graphics.Drawing.ITransformer2D dc, POINT2 point)
         {
             Span<POINT2> span = stackalloc POINT2[1];
             span[0] = point;
@@ -205,14 +134,7 @@ After:
             return span[0];
         }
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-        private static POINT2 _TransformNormalForward(this Transforms.ITransformer2D dc, POINT2 normal)
-After:
         private static POINT2 _TransformNormalForward(this ITransformer2D dc, POINT2 normal)
-*/
-        private static POINT2 _TransformNormalForward(this InteropTypes.Graphics.Drawing.ITransformer2D dc, POINT2 normal)
         {
             Span<POINT2> span = stackalloc POINT2[1];
             span[0] = normal;
@@ -220,14 +142,7 @@ After:
             return span[0];
         }
 
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-        private static POINT2 _TransformNormalInverse(this Transforms.ITransformer2D dc, POINT2 normal)
-After:
         private static POINT2 _TransformNormalInverse(this ITransformer2D dc, POINT2 normal)
-*/
-        private static POINT2 _TransformNormalInverse(this InteropTypes.Graphics.Drawing.ITransformer2D dc, POINT2 normal)
         {
             Span<POINT2> span = stackalloc POINT2[1];
             span[0] = normal;
@@ -236,46 +151,26 @@ After:
         }
 
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
+
         public static Transforms.Drawing2DTransform CreateTransformed(PRIMITIVE2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
-After:
-        public static Drawing2DTransform CreateTransformed(PRIMITIVE2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
-*/
-        public static InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform CreateTransformed(PRIMITIVE2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
         {
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
+
             return Transforms.Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);
-After:
-            return Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);
-*/
-            return InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);
         }
 
-        public static ICanvas2D CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, POINT2 virtualSize)
+        public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, POINT2 virtualSize)
         {
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
+
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualSize);
-After:
-            return Drawing2DTransform.Create(t, physicalSize, virtualSize);
-*/
-            return InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(t, physicalSize, virtualSize);
         }        
 
-        public static ICanvas2D CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, BRECT virtualBounds)
+        public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, BRECT virtualBounds)
         {
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
+
             return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualBounds);
-After:
-            return Drawing2DTransform.Create(t, physicalSize, virtualBounds);
-*/
-            return InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(t, physicalSize, virtualBounds);
         }
 
         #endregion

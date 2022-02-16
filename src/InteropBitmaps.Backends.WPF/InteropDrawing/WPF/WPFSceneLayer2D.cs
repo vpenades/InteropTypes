@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
-    public class WPFCamera2D : DependencyObject , ISceneViewport2D
+    public class WPFSceneLayer2D : DependencyObject , ISceneViewport2D
     {
-        #region dependency properties
-
-        private static PropertyFactory<WPFCamera2D> _PropFactory = new PropertyFactory<WPFCamera2D>();
-
-        #endregion
-
         #region properties        
+
+        private static PropertyFactory<WPFSceneLayer2D> _PropFactory = new PropertyFactory<WPFSceneLayer2D>();
+
+        private static readonly StaticProperty<Record2D> _SceneProperty = _PropFactory.Register<Record2D>(nameof(Scene), null);
+        public Record2D Scene
+        {
+            get => _SceneProperty.GetValue(this);
+            set => _SceneProperty.SetValue(this, value);
+        }
 
         private static readonly StaticProperty<float> _WidthProperty = _PropFactory.Register<float>(nameof(Width), 100);
         public float Width
@@ -34,20 +39,22 @@ namespace InteropDrawing.Backends
 
         #endregion
 
+        #region API
+
         public (Matrix3x2 Camera, Matrix3x2 Projection) GetMatrices(float renderWidth, float renderHeight)
         {
             var c = Matrix3x2.Identity;
             var p = GetProjectionMatrix(renderWidth, renderHeight);
 
-            return (c, p);            
+            return (c, p);
         }
 
         public Matrix3x2 GetProjectionMatrix(float renderWidth, float renderHeight)
         {
             var www = renderWidth / Width;
-            var hhh = renderHeight / Height;            
+            var hhh = renderHeight / Height;
 
-            return CreateOrthographic2D(www,hhh);
+            return CreateOrthographic2D(www, hhh);
         }
 
         public static Matrix3x2 CreateOrthographic2D(float width, float height)
@@ -64,6 +71,25 @@ namespace InteropDrawing.Backends
             result.M32 = 0;
 
             return result;
+        }
+
+        #endregion
+    }
+
+    class WPFSceneLayer2DPanel : Panel
+    {
+        private readonly WPFDrawingContext2D _Context2D = new WPFDrawingContext2D();
+
+        protected override void OnRender(System.Windows.Media.DrawingContext dc)
+        {
+            base.OnRender(dc); // draw background
+
+            if (!(this.DataContext is WPFSceneLayer2D data)) return;
+
+            var model = data.Scene;
+            if (model == null || model.IsEmpty) return;
+            
+            _Context2D.DrawScene(dc, this.RenderSize, data, model);
         }
     }
 }

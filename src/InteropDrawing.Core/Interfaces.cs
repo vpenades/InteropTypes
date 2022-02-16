@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="context">The drawing context.</param>
         void DrawTo(TContext context);
-    }
+    }    
 
     /// <summary>
     /// defines an objects that exposes a unique key that doesn't change as long as

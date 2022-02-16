@@ -11,7 +11,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         ICanvas2D,
         IScene3D,
         ITransformer2D,
-        IServiceProvider
+        IServiceProvider,
+        ColorStyle.IDefaultValue
     {
         #region constructors
 
@@ -88,11 +89,18 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         // two way transform
 
-        private readonly TwoWayTransform2D _Transform;        
+        private readonly TwoWayTransform2D _Transform;
 
         #endregion
 
         #region API
+
+        /// <inheritdoc/>
+        public ColorStyle DefaultColorStyle
+        {
+            get => ColorStyle.TryGetDefaultFrom(_Target);
+            set => value.TrySetDefaultTo(_Target);
+        }
 
         /// <inheritdoc/>        
         public object GetService(Type serviceType)

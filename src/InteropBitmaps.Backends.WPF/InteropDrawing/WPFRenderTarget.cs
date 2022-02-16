@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     public class WPFRenderTarget
     {
@@ -26,13 +26,17 @@ namespace InteropDrawing.Backends
 
         private readonly System.Windows.Media.Imaging.RenderTargetBitmap _RenderTarget;
 
+        private bool _IsOpen;
+
         #endregion
 
         #region API        
 
         public IDisposableCanvas2D OpenDrawingContext()
         {
-            return new _DrawingContext(_RenderTarget);
+            if (_IsOpen) throw new InvalidOperationException("already open.");
+
+            return new _DrawingContext(this, _RenderTarget);
         }
 
         public void SaveToPNG(string filePath)
@@ -59,16 +63,39 @@ namespace InteropDrawing.Backends
             encoder.Save(writer);
         }
 
+        #endregion        
+
+        #region static API
+
+        public static void SaveToBitmap(string filePath, int width, int height, IDrawingBrush<ICanvas2D> scene)
+        {
+            var renderTarget = new WPFRenderTarget(width, height);
+
+            using (var dc = renderTarget.OpenDrawingContext())
+            {
+                scene.DrawTo(dc);
+            }
+
+            renderTarget.SaveToPNG(filePath);
+        }
+
         #endregion
 
         #region nested types
 
-        class _DrawingContext : WPFDrawingContext2D, IDisposableCanvas2D
+        sealed class _DrawingContext :
+            WPF.WPFDrawingContext2D,
+            IDisposableCanvas2D,
+            IBackendViewportInfo
+
         {
             #region lifecycle
 
-            public _DrawingContext(System.Windows.Media.Imaging.RenderTargetBitmap rt)
+            public _DrawingContext(WPFRenderTarget owner, System.Windows.Media.Imaging.RenderTargetBitmap rt)
             {
+                owner._IsOpen = true;
+
+                _Owner = owner;
                 _RenderTarget = rt;
                 _Visual = new System.Windows.Media.DrawingVisual();
                 _Context = _Visual.RenderOpen();
@@ -80,33 +107,32 @@ namespace InteropDrawing.Backends
             {
                 _Context.Close();
                 _RenderTarget.Render(_Visual);
+
+                _Owner._IsOpen = false;
             }
 
             #endregion
 
             #region API
 
+            private WPFRenderTarget _Owner;
+
             private System.Windows.Media.Imaging.RenderTargetBitmap _RenderTarget;
             private System.Windows.Media.DrawingVisual _Visual;
             private System.Windows.Media.DrawingContext _Context;
 
+            private Action _OnDispose;
+
             #endregion
-        }
 
-        #endregion
+            #region properties
 
-        #region static API
+            public int PixelsWidth => _RenderTarget.PixelWidth;
+            public int PixelsHeight => _RenderTarget.PixelHeight;
+            public float DotsPerInchX => (float)_RenderTarget.DpiX;
+            public float DotsPerInchY => (float)_RenderTarget.DpiY;
 
-        public static void SaveToBitmap(string filePath, int width, int height, Record2D scene)
-        {
-            var renderTarget = new WPFRenderTarget(width, height);
-
-            using (var dc = renderTarget.OpenDrawingContext())
-            {
-                scene.DrawTo(dc);
-            }
-
-            renderTarget.SaveToPNG(filePath);
+            #endregion
         }
 
         #endregion

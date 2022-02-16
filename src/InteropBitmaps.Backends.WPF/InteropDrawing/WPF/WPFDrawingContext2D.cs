@@ -7,13 +7,16 @@ using InteropTypes.Graphics.Drawing;
 
 using GDICOLOR = System.Drawing.Color;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
     /// <summary>
     /// Represents an agent able to converts <see cref="ICanvas2D"/> drawing calls to
     /// <see cref="System.Windows.Media.DrawingContext"/> drawing calls.
     /// </summary>
-    public partial class WPFDrawingContext2D : System.Windows.Threading.DispatcherObject, ICanvas2D
+    public partial class WPFDrawingContext2D :
+        System.Windows.Threading.DispatcherObject,
+        ICanvas2D,        
+        ColorStyle.IDefaultValue
     {
         #region lifecycle
 
@@ -33,6 +36,7 @@ namespace InteropDrawing.Backends
         #region data
         
         private System.Windows.Media.DrawingContext _Context;
+
         private readonly List<System.Windows.Media.MatrixTransform> _TransformCache = new List<System.Windows.Media.MatrixTransform>();
         private int _TransformDepth = 0;
 
@@ -41,6 +45,13 @@ namespace InteropDrawing.Backends
         private readonly Dictionary<UInt32, System.Windows.Media.SolidColorBrush> _BrushesCache = new Dictionary<UInt32, System.Windows.Media.SolidColorBrush>();
 
         private readonly Dictionary<Object, System.Windows.Media.Imaging.BitmapSource> _ImagesCache = new Dictionary<Object, System.Windows.Media.Imaging.BitmapSource>();
+
+        #endregion
+
+        #region properties
+
+        /// <inheritdoc/>        
+        public ColorStyle DefaultColorStyle { get; set; }
 
         #endregion
 
