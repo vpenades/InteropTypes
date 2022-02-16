@@ -16,6 +16,24 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.DebuggerDisplay("{Source} ({Left}, {Top}) ({Width}, {Height}) Scale:{Scale}")]
     public class ImageAsset
     {
+        #region diagnostics
+
+        private string ToDebuggerDisplay()
+        {
+            if (_Source == null) return "Empty";
+
+            var tmp = _Source.ToString();
+
+            tmp += $" O:{_SourceUVMin} WH:{_SourceUVMax - _SourceUVMin}";
+
+            if (_Pivot != XY.Zero) tmp += $" P:{_Pivot}";
+            if (_Scale != XY.One) tmp += $" S:{_Scale}";
+
+            return tmp;
+        }
+
+        #endregion
+
         #region lifecycle
 
         public static IEnumerable<ImageAsset> CreateGrid(object source, Point2 size, Point2 pivot, int count, int stride)
@@ -86,6 +104,14 @@ namespace InteropTypes.Graphics.Drawing
             return this;
         }
 
+        /// <summary>
+        /// expands the Texture coordinates and compensates the scale so the actual screen size remains unchanged.
+        /// </summary>
+        /// <param name="expand">The size to expand, in pixels</param>
+        /// <returns>itself.</returns>
+        /// <remarks>
+        /// This method is useful for tightly packed tiled bitmaps, where we want to contract the texture half a pixel (expand = -0.5f)
+        /// </remarks>
         public ImageAsset WithExpandedSource(float expand)
         {
             var v2exp = new XY(expand);
@@ -93,7 +119,7 @@ namespace InteropTypes.Graphics.Drawing
             var v2siz = _SourceUVMax - _SourceUVMin;
 
             _SourceUVMin -= v2exp;
-            _SourceUVMin += v2exp;
+            _SourceUVMax += v2exp;
 
             var xs = _SourceUVMax - _SourceUVMin;
 
@@ -119,6 +145,9 @@ namespace InteropTypes.Graphics.Drawing
 
         #region data
 
+        /// <summary>
+        /// The bitmap source, which can be a device texture, a image file path, etc.
+        /// </summary>
         private object _Source;
 
         /// <summary>
@@ -194,11 +223,26 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the rendering scale of the image.
         /// </summary>
         [Obsolete("Use GetImageMatrix()")]
-        public XY Scale => _Scale;        
+        public XY Scale => _Scale;
 
+        /// <summary>
+        /// Top left texture coordinate (in pixels).
+        /// </summary>
         public XY UV0 => _SourceUVMin;
+
+        /// <summary>
+        /// Top right texture coordinate (in pixels).
+        /// </summary>
         public XY UV1 => new XY(_SourceUVMax.X, _SourceUVMin.Y);
+
+        /// <summary>
+        /// Bottom right texture coordinate (in pixels).
+        /// </summary>
         public XY UV2 => _SourceUVMax;
+
+        /// <summary>
+        /// Bottom left texture coordinate (in pixels).
+        /// </summary>
         public XY UV3 => new XY(_SourceUVMin.X, _SourceUVMax.Y);
 
         /// <summary>
@@ -213,8 +257,7 @@ namespace InteropTypes.Graphics.Drawing
 
                 var wh = _SourceUVMax - _SourceUVMin;
 
-                if (wh.X == 0 || wh.Y == 0) return false;
-                return true;
+                return wh.X != 0 && wh.Y != 0;
             }
         }
 
@@ -222,7 +265,11 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API
 
-        public System.Drawing.Rectangle GetSourceRect()
+        /// <summary>
+        /// Gets the region within the source image, defined by the UV0,UV1,UV2,V3 coordinates.
+        /// </summary>
+        /// <returns>A rectangle.</returns>
+        public System.Drawing.Rectangle GetSourceRectangle()
         {
             var wh = _SourceUVMax - _SourceUVMin;
 
@@ -280,7 +327,7 @@ namespace InteropTypes.Graphics.Drawing
         internal void PrependTransform(ref System.Numerics.Matrix3x2 xform, ImageStyle.Orientation orientation)
         {
             xform = _Transforms[(int)orientation] * xform;
-        }
+        }        
 
         #endregion
     }

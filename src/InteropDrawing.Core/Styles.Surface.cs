@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
+using GDICOLOR = System.Drawing.Color;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -13,15 +13,16 @@ namespace InteropTypes.Graphics.Drawing
     /// Style used by <see cref="IScene3D.DrawSurface(ReadOnlySpan{Point3}, SurfaceStyle)"/>
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {DoubleSided}")]
-    public readonly struct SurfaceStyle
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public readonly struct SurfaceStyle : IEquatable<SurfaceStyle>
     {
         #region implicit        
 
-        public static implicit operator SurfaceStyle(COLOR color) { return new SurfaceStyle(color); }
-        public static implicit operator SurfaceStyle((COLOR fillColor, bool doubleSided) style) { return new SurfaceStyle(style.fillColor, style.doubleSided); }
-        public static implicit operator SurfaceStyle((COLOR fillColor, float outWidth) style) { return new SurfaceStyle(style.fillColor, style.outWidth); }
-        public static implicit operator SurfaceStyle((COLOR fillColor, COLOR outColor, float outWidth) style) { return new SurfaceStyle(style.fillColor, style.outColor, style.outWidth); }
-        public static implicit operator SurfaceStyle((COLOR fillColor, COLOR outColor, float outWidth, bool doubleSided) style) { return new SurfaceStyle((style.fillColor, style.outColor, style.outWidth), style.doubleSided); }
+        public static implicit operator SurfaceStyle(GDICOLOR color) { return new SurfaceStyle(color); }
+        public static implicit operator SurfaceStyle((GDICOLOR fillColor, bool doubleSided) style) { return new SurfaceStyle(style.fillColor, style.doubleSided); }
+        public static implicit operator SurfaceStyle((GDICOLOR fillColor, float outWidth) style) { return new SurfaceStyle(style.fillColor, style.outWidth); }
+        public static implicit operator SurfaceStyle((GDICOLOR fillColor, GDICOLOR outColor, float outWidth) style) { return new SurfaceStyle(style.fillColor, style.outColor, style.outWidth); }
+        public static implicit operator SurfaceStyle((GDICOLOR fillColor, GDICOLOR outColor, float outWidth, bool doubleSided) style) { return new SurfaceStyle((style.fillColor, style.outColor, style.outWidth), style.doubleSided); }
 
 
         public static implicit operator SurfaceStyle(ColorStyle color) { return new SurfaceStyle(color); }
@@ -90,7 +91,32 @@ namespace InteropTypes.Graphics.Drawing
         public readonly bool DoubleSided;
         public readonly uint SmoothingGroups;
 
-        // another interesting value would be SmoothingGroups, which can be used at triangulation.
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var h = Style.GetHashCode();
+            h ^= DoubleSided.GetHashCode();
+            h ^= SmoothingGroups.GetHashCode();
+            return h;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is SurfaceStyle other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(SurfaceStyle other)
+        {
+            return
+                this.Style == other.Style &&
+                this.DoubleSided == other.DoubleSided &&
+                this.SmoothingGroups == other.SmoothingGroups;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==(SurfaceStyle a, SurfaceStyle b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(SurfaceStyle a, SurfaceStyle b) => !a.Equals(b);
 
         #endregion
 

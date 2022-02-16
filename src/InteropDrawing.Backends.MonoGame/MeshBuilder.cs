@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Backends
 
         public MeshBuilder(bool faceFlip)
         {
-            _FaceFlip = faceFlip;
+            _FaceFlip = faceFlip;            
         }
 
         #endregion
@@ -135,21 +135,24 @@ namespace InteropTypes.Graphics.Backends
         /// <inheritdoc/>
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
-            var xform = transform;
-            style.PrependTransform(ref xform, _SpriteHFlip, _SpriteVFlip);
-            var color = style.Color.ToGDI().ToXna();
+            if (System.Runtime.CompilerServices.Unsafe.SizeOf<VERTEX>() != System.Runtime.CompilerServices.Unsafe.SizeOf<Vertex3>()) throw new InvalidOperationException("Vertex size mismatch");
 
-            var v1 = _Triangles.UseVertex(XY.Transform(XY.Zero, xform), _DepthZ, color, (style.Bitmap.UV0 + _SpriteUv0Bleed) * _SpriteCoordInvScale);
-            var v2 = _Triangles.UseVertex(XY.Transform(XY.UnitX, xform), _DepthZ, color, (style.Bitmap.UV1 + _SpriteUv1Bleed) * _SpriteCoordInvScale);
-            var v3 = _Triangles.UseVertex(XY.Transform(XY.One, xform), _DepthZ, color, (style.Bitmap.UV2 + _SpriteUv2Bleed) * _SpriteCoordInvScale);
-            var v4 = _Triangles.UseVertex(XY.Transform(XY.UnitY, xform), _DepthZ, color, (style.Bitmap.UV3 + _SpriteUv3Bleed) * _SpriteCoordInvScale);
+            Span<Vertex3> vertices = stackalloc Vertex3[4];
+
+            style.TransformVertices(vertices, transform, _SpriteCoordInvScale, _DepthZ);            
+
+            var xnaVertices = System.Runtime.InteropServices.MemoryMarshal.Cast<Vertex3, VERTEX>(vertices);
+            var v1 = _Triangles.UseVertex(xnaVertices[0]);
+            var v2 = _Triangles.UseVertex(xnaVertices[1]);
+            var v3 = _Triangles.UseVertex(xnaVertices[2]);
+            var v4 = _Triangles.UseVertex(xnaVertices[3]);            
 
             _Triangles.AddTriangle(v1, v2, v3);
             _Triangles.AddTriangle(v1, v3, v4);
         }
 
         /// <inheritdoc/>
-        public void DrawMesh(ReadOnlySpan<Point2.Vertex> vertices, ReadOnlySpan<int> indices, object texture)
+        public void DrawMesh(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
         {
             Span<int> vvv = stackalloc int[indices.Length];
 
@@ -284,6 +287,8 @@ namespace InteropTypes.Graphics.Backends
 
             return _Vertices.Use(v);
         }
+
+        public int UseVertex(in VERTEX v) { return _Vertices.Use(v); }
 
         public int UseVertex(XYZ position, COLOR color)
         {

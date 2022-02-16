@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
+using GDICOLOR = System.Drawing.Color;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -10,13 +10,14 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents a Fill Color, an Outline Color, and an Outline Size.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{FillColor} {OutlineColor} {OutlineWidth}")]
-    public readonly struct PolygonStyle
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public readonly struct PolygonStyle : IEquatable<PolygonStyle>
     {
         #region constructors
 
-        public static implicit operator PolygonStyle(COLOR fillColor) { return new PolygonStyle(fillColor); }
-        public static implicit operator PolygonStyle((COLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2); }
-        public static implicit operator PolygonStyle((COLOR, COLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator PolygonStyle(GDICOLOR fillColor) { return new PolygonStyle(fillColor); }
+        public static implicit operator PolygonStyle((GDICOLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2); }
+        public static implicit operator PolygonStyle((GDICOLOR, GDICOLOR, float) style) { return new PolygonStyle(style.Item1, style.Item2, style.Item3); }
 
         public static implicit operator PolygonStyle(ColorStyle fillColor) { return new PolygonStyle(fillColor); }
         public static implicit operator PolygonStyle((ColorStyle, float) style) { return new PolygonStyle(style.Item1, style.Item2); }        
@@ -50,7 +51,34 @@ namespace InteropTypes.Graphics.Drawing
 
         public readonly ColorStyle FillColor;
         public readonly ColorStyle OutlineColor;
-        public readonly float OutlineWidth;        
+        public readonly float OutlineWidth;
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var h = FillColor.GetHashCode();
+            h ^= OutlineColor.GetHashCode();
+            h ^= OutlineWidth.GetHashCode();
+            return h;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is PolygonStyle other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(PolygonStyle other)
+        {
+            return
+                this.FillColor == other.FillColor &&
+                this.OutlineColor == other.OutlineColor &&
+                this.OutlineWidth == other.OutlineWidth;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==(PolygonStyle a, PolygonStyle b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(PolygonStyle a, PolygonStyle b) => !a.Equals(b);
 
         #endregion
 

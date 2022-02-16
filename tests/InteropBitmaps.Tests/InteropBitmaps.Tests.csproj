@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropWith.WPF.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropTypes.Graphics.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropBitmaps.Backends.FFmpeg.AutoGen.csproj" />        
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropWith.OpenCvSharp4.csproj" />

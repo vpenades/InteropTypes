@@ -1,6 +1,6 @@
 ﻿using System;
 
-using COLOR = System.Drawing.Color;
+using GDICOLOR = System.Drawing.Color;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -8,13 +8,14 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents a Fill Color, an Outline Color, and an Outline Size.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{FillColor} {OutlineColor} {OutlineWidth}")]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly struct OutlineFillStyle
     {
         #region constructors
 
-        public static implicit operator OutlineFillStyle(COLOR fillColor) { return new OutlineFillStyle(fillColor); }
-        public static implicit operator OutlineFillStyle((COLOR, float) style) { return new OutlineFillStyle(style.Item1, style.Item2); }
-        public static implicit operator OutlineFillStyle((COLOR, COLOR, float) style) { return new OutlineFillStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator OutlineFillStyle(GDICOLOR fillColor) { return new OutlineFillStyle(fillColor); }
+        public static implicit operator OutlineFillStyle((GDICOLOR, float) style) { return new OutlineFillStyle(style.Item1, style.Item2); }
+        public static implicit operator OutlineFillStyle((GDICOLOR, GDICOLOR, float) style) { return new OutlineFillStyle(style.Item1, style.Item2, style.Item3); }
 
         public static implicit operator OutlineFillStyle(ColorStyle fillColor) { return new OutlineFillStyle(fillColor); }
         public static implicit operator OutlineFillStyle((ColorStyle, float) style) { return new OutlineFillStyle(style.Item1, style.Item2); }        
@@ -48,6 +49,33 @@ namespace InteropTypes.Graphics.Drawing
         public readonly ColorStyle FillColor;
         public readonly ColorStyle OutlineColor;
         public readonly float OutlineWidth;
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var h = FillColor.GetHashCode();
+            h ^= OutlineColor.GetHashCode();
+            h ^= OutlineWidth.GetHashCode();
+            return h;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is OutlineFillStyle other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(OutlineFillStyle other)
+        {
+            return
+                this.FillColor == other.FillColor &&
+                this.OutlineColor == other.OutlineColor &&
+                this.OutlineWidth == other.OutlineWidth;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==(OutlineFillStyle a, OutlineFillStyle b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(OutlineFillStyle a, OutlineFillStyle b) => !a.Equals(b);
 
         #endregion
 

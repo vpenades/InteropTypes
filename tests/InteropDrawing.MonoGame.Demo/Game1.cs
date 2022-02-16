@@ -132,18 +132,28 @@ namespace InteropDrawing
 
             _Drawing2D.DrawFont((10, 20), 1, $"{(int)vp.X} {(int)vp.Y}", new FontStyle(COLOR.White));
 
+            // Draw with IMeshCanvas2D extended API
 
-            var vertices = new Point2.Vertex[4];
-            vertices[0] = new Point2.Vertex((0, 0), (0, 0));
-            vertices[1] = new Point2.Vertex((50, 0), (1, 0));
-            vertices[2] = new Point2.Vertex((50, 50), (1, 1));
-            vertices[3] = new Point2.Vertex((0, 50), (0, 1));
+            var vertices = new Vertex2[4];
+            vertices[0] = new Vertex2((0, 0), (0, 0));
+            vertices[1] = new Vertex2((50, 0), (1, 0));
+            vertices[2] = new Vertex2((50, 50), (1, 1));
+            vertices[3] = new Vertex2((0, 50), (0, 1));
 
             var svc = _Drawing2D.CreateTransformed2D(System.Numerics.Matrix3x2.CreateTranslation(600, 300)) as IServiceProvider;
 
             var xformed = svc.GetService(typeof(IMeshCanvas2D)) as IMeshCanvas2D;
 
             xformed?.DrawMesh(vertices, new int[] { 0, 1, 2, 0, 2, 3 },"Assets\\Tiles.png");
+
+            // draw tiles with half pixel
+
+            var tile1 = ImageAsset.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4);
+            var tile2 = ImageAsset.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);
+
+            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600, 500), tile1);
+            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600 + 65, 500), tile2);
+
 
             _Drawing2D.End();
         }        

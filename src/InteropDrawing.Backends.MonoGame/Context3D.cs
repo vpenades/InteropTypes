@@ -44,6 +44,29 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
+        #region service provider
+
+        /// <inheritdoc/>        
+        public object GetService(Type serviceType)
+        {
+            if (serviceType.IsAssignableFrom(GetType())) return this;
+            return null;
+        }
+
+        #endregion
+
+        #region API - Windows
+
+        public int PixelsWidth => _Device.Viewport.Width;
+
+        public int PixelsHeight => _Device.Viewport.Height;
+
+        public float DotsPerInchX => 96;
+
+        public float DotsPerInchY => 96;
+
+        #endregion
+
         #region properties
 
         public int Width => _Device.Viewport.Width;

@@ -39,10 +39,4 @@ namespace InteropTypes.Graphics.Drawing
 
         // void InvalidateImmutableKey();
     }
-
-
-
-
-
-
 }

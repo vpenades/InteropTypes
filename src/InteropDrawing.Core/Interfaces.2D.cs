@@ -4,24 +4,17 @@ using System.Text;
 
 using ASSET = System.Object;
 using SCALAR = System.Single;
-
 using XFORM2 = System.Numerics.Matrix3x2;
-
-/* Unmerged change from project 'InteropDrawing.Core (netstandard2.1)'
-Before:
-using POINT2 = InteropDrawing.Point2;
-After:
-using POINT2 = InteropDrawing.Point2;
-using InteropDrawing;
-using InteropTypes.Graphics.Drawing;
-*/
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents a drawing canvas where we can draw 2D convex polygons and images
+    /// Represents a drawing canvas where we can draw convex polygons and images. 
     /// </summary>
+    /// <remarks>
+    /// Inherited by <see cref="ICanvas2D"/>
+    /// </remarks>
     public interface IPrimitiveCanvas2D
     {
         /// <summary>
@@ -53,7 +46,10 @@ namespace InteropTypes.Graphics.Drawing
 
     /// <summary>
     /// Represents a drawing canvas where we can draw vector graphics.
-    /// </summary>    
+    /// </summary>
+    /// <remarks>
+    /// Inherited by <see cref="IDisposableCanvas2D"/>
+    /// </remarks>
     public interface ICanvas2D : IPrimitiveCanvas2D
     {
         /// <summary>
@@ -90,21 +86,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="height">The height of the ellipse.</param>
         /// <param name="style">The fill and outline of the ellipse.</param>
         void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, OutlineFillStyle style);
-    }
-
-    /// <summary>
-    /// This is an extension interface retrieved using the ServiceProvider on an existing ICanvas2D
-    /// </summary>
-    public interface IMeshCanvas2D
-    {
-        /// <summary>
-        /// Draws a 2D triangle mesh using the associated texture.
-        /// </summary>
-        /// <param name="vertices">the vertices.</param>
-        /// <param name="triangleIndices">the triangle indices.</param>
-        /// <param name="texture">the texture source.</param>
-        void DrawMesh(ReadOnlySpan<POINT2.Vertex> vertices, ReadOnlySpan<int> triangleIndices, Object texture);
-    }
+    }    
 
     /// <summary>
     /// Represents a disposable <see cref="ICanvas2D"/>.

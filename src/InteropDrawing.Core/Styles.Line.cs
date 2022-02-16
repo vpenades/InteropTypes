@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
+using GDICOLOR = System.Drawing.Color;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -43,20 +43,21 @@ namespace InteropTypes.Graphics.Drawing
     /// Combines an <see cref="OutlineFillStyle"/> with Line Cap styles.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="ICanvas2D.DrawLines(ReadOnlySpan{Point2}, float, in LineStyle)"/>.
+    /// Style used by <see cref="ICanvas2D.DrawLines(ReadOnlySpan{Point2}, float, LineStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {StartCap} {EndCap}")]
-    public readonly struct LineStyle
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public readonly struct LineStyle : IEquatable<LineStyle>
     {
         #region implicit
 
-        public static implicit operator LineStyle(COLOR fillColor) { return new LineStyle(fillColor); }
-        public static implicit operator LineStyle((COLOR, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item2); }
-        public static implicit operator LineStyle((COLOR, LineCapStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
-        public static implicit operator LineStyle((COLOR, float) style) { return new LineStyle(style.Item1, style.Item2); }
-        public static implicit operator LineStyle((COLOR, COLOR, float) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
-        public static implicit operator LineStyle((COLOR, COLOR, float, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item4); }
-        public static implicit operator LineStyle((COLOR, COLOR, float, LineCapStyle, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item5); }
+        public static implicit operator LineStyle(GDICOLOR fillColor) { return new LineStyle(fillColor); }
+        public static implicit operator LineStyle((GDICOLOR, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item2); }
+        public static implicit operator LineStyle((GDICOLOR, LineCapStyle, LineCapStyle) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator LineStyle((GDICOLOR, float) style) { return new LineStyle(style.Item1, style.Item2); }
+        public static implicit operator LineStyle((GDICOLOR, GDICOLOR, float) style) { return new LineStyle(style.Item1, style.Item2, style.Item3); }
+        public static implicit operator LineStyle((GDICOLOR, GDICOLOR, float, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item4); }
+        public static implicit operator LineStyle((GDICOLOR, GDICOLOR, float, LineCapStyle, LineCapStyle) style) { return new LineStyle((style.Item1, style.Item2, style.Item3), style.Item4, style.Item5); }
 
         public static implicit operator LineStyle(ColorStyle fillColor)                           { return new LineStyle(fillColor); }
         public static implicit operator LineStyle((ColorStyle, LineCapStyle) style)               { return new LineStyle(style.Item1, style.Item2, style.Item2); }
@@ -113,7 +114,34 @@ namespace InteropTypes.Graphics.Drawing
 
         public readonly OutlineFillStyle Style;
         private readonly short _StartCap;
-        public readonly short _EndCap;
+        private readonly short _EndCap;
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var h = Style.GetHashCode();
+            h ^= _StartCap.GetHashCode();
+            h ^= _EndCap.GetHashCode();
+            return h;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is ImageStyle other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(LineStyle other)
+        {
+            return
+                this.Style == other.Style &&
+                this._StartCap == other._StartCap &&
+                this._EndCap == other._EndCap;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==(LineStyle a, LineStyle b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(LineStyle a, LineStyle b) => !a.Equals(b);
 
         #endregion
 

@@ -416,9 +416,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region API
 
-        public void DrawMesh(ReadOnlySpan<Point2.Vertex> vertices, ReadOnlySpan<int> indices, object texture)
+        public void DrawMesh(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
         {
-            Span<Point2.Vertex> ps = stackalloc Point2.Vertex[vertices.Length];
+            Span<Vertex2> ps = stackalloc Vertex2[vertices.Length];
 
             vertices.CopyTo(ps);
 

@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Backends
     /// <summary>
     /// Wraps a <see cref="MESHBUILDER"/> with <see cref="IScene3D"/>.
     /// </summary>
-    public class GltfMeshScene3D : Decompose3D.PassToSelf
+    public class GltfMeshScene3D : Decompose3D.PassToSelf, IMeshScene3D
     {
         #region factory        
 
@@ -104,6 +104,35 @@ namespace InteropTypes.Graphics.Backends
             var scene = new SharpGLTF.Scenes.SceneBuilder();
             if (_Mesh != null) scene.AddRigidMesh(_Mesh.Clone(), Matrix4x4.Identity);
             return scene;
+        }
+
+        /// <inheritdoc />
+        public void DrawMesh(ReadOnlySpan<Vertex3> vertices, ReadOnlySpan<int> triangleIndices, object texture)
+        {
+            for(int i=0; i < triangleIndices.Length; i+=3)
+            {
+                var a = vertices[triangleIndices[i + 0]];
+                var b = vertices[triangleIndices[i + 1]];
+                var c = vertices[triangleIndices[i + 2]];
+
+                var style = new ColorStyle(a.Color); // should average colors from a, b, c
+
+                _DrawSurface(POINT3.Array(a.Position, b.Position, c.Position), style.ToGDI(), false);
+            }
+        }
+
+        /// <inheritdoc />
+        public void DrawWireframe(ReadOnlySpan<Vertex3> vertices, ReadOnlySpan<int> lineIndices)
+        {
+            for (int i = 0; i < lineIndices.Length; i += 2)
+            {
+                var a = vertices[lineIndices[i + 0]];
+                var b = vertices[lineIndices[i + 1]];
+
+                var style = new ColorStyle(a.Color); // should average colors from a, b, c
+
+                _DrawLine(a.Position, b.Position, style.ToGDI());
+            }
         }
 
         #endregion

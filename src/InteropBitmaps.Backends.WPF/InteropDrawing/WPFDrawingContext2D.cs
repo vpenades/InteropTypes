@@ -5,7 +5,7 @@ using System.Windows;
 
 using InteropTypes.Graphics.Drawing;
 
-using COLOR = System.Drawing.Color;
+using GDICOLOR = System.Drawing.Color;
 
 namespace InteropDrawing.Backends
 {
@@ -255,7 +255,7 @@ namespace InteropDrawing.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawLabel(Point2 origin, String text, COLOR penColor)
+        public void DrawLabel(Point2 origin, String text, GDICOLOR penColor)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -282,7 +282,7 @@ namespace InteropDrawing.Backends
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             var bmp = style.Bitmap;
-            var bmpRect = bmp.GetSourceRect();
+            var bmpRect = bmp.GetSourceRectangle();
 
             var image = _UseImage(bmp.Source);
             var recti = new Int32Rect(bmpRect.X, bmpRect.Y, bmpRect.Width, bmpRect.Height);

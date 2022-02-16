@@ -214,9 +214,7 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region API - IDrawing2D
-
-        
+        #region API - IDrawing2D        
 
         protected override void SetImage(ImageAsset image)
         {
@@ -228,7 +226,7 @@ namespace InteropTypes.Graphics.Backends
             SetTexture(tex, attr);
         }
 
-        public void DrawMesh(ReadOnlySpan<Point2.Vertex> vertices, ReadOnlySpan<int> indices, object texture)
+        public void DrawMesh(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
         {
             var (tex, attr) = FetchTexture(texture);
             if (tex == null) { SetTexture(null); return; }

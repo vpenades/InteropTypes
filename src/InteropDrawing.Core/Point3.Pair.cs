@@ -9,6 +9,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Represents a segment delimited by two <see cref="Point3"/>.
         /// </summary>
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         public readonly struct Pair : IEquatable<Pair>
         {
             #region constructor

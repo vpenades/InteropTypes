@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
+using XY = System.Numerics.Vector2;
+using XYZ = System.Numerics.Vector3;
+
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Represents an image with a style applied to it.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="IPrimitiveCanvas2D.DrawImage(in System.Numerics.Matrix3x2, in ImageStyle)"/>.
+    /// Style used by <see cref="IPrimitiveCanvas2D.DrawImage(in System.Numerics.Matrix3x2, ImageStyle)"/>.
     /// </remarks>
-    public struct ImageStyle
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    public struct ImageStyle : IEquatable<ImageStyle>
     {
         #region implicit
 
@@ -63,6 +67,33 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         internal Orientation _Orientation;
 
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var h = Bitmap?.GetHashCode() ?? 0;
+            h ^= Color.GetHashCode();
+            h ^= _Orientation.GetHashCode();
+            return h;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is ImageStyle other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(ImageStyle other)
+        {
+            return
+                this.Bitmap == other.Bitmap &&
+                this.Color == other.Color && 
+                this._Orientation == other._Orientation;            
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==(ImageStyle a, ImageStyle b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(ImageStyle a, ImageStyle b) => !a.Equals(b);
+
         #endregion
 
         #region properties
@@ -111,6 +142,61 @@ namespace InteropTypes.Graphics.Drawing
             o ^= vflip ? Orientation.FlipVertical : Orientation.None;
 
             Bitmap.PrependTransform(ref xform, o);
+        }
+
+        /// <summary>
+        /// Fills the vertices to their final values so they can be send to the rastering pipeline.
+        /// </summary>
+        /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
+        /// <param name="xform">the transform to apply</param>
+        /// <param name="reciprocalTextureSize">The reciprocal of the source's texture size</param>
+        /// <param name="depthZ">the depth to set in the Position.Z of the vertices</param>
+        public void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, XY reciprocalTextureSize, float depthZ = 1)
+        {
+            Bitmap.PrependTransform(ref xform, _Orientation);
+
+            vertices[0].Position = new XYZ(XY.Transform(XY.Zero, xform), depthZ);
+            vertices[0].Color = Color.Packed;
+            vertices[0].TextureCoord = Bitmap.UV0 * reciprocalTextureSize;
+
+            vertices[1].Position = new XYZ(XY.Transform(XY.UnitX, xform), depthZ);
+            vertices[1].Color = Color.Packed;
+            vertices[1].TextureCoord = Bitmap.UV1 * reciprocalTextureSize;
+
+            vertices[2].Position = new XYZ(XY.Transform(XY.One, xform), depthZ);
+            vertices[2].Color = Color.Packed;
+            vertices[2].TextureCoord = Bitmap.UV2 * reciprocalTextureSize;
+
+            vertices[3].Position = new XYZ(XY.Transform(XY.UnitY, xform), depthZ);
+            vertices[3].Color = Color.Packed;
+            vertices[3].TextureCoord = Bitmap.UV3 * reciprocalTextureSize;
+        }
+
+        /// <summary>
+        /// Fills the vertices to their final values so they can be send to the rastering pipeline.
+        /// </summary>
+        /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
+        /// <param name="xform">the transform to apply</param>
+        /// <param name="reciprocalTextureSize">The reciprocal of the source's texture size</param>        
+        public void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform, XY reciprocalTextureSize)
+        {
+            Bitmap.PrependTransform(ref xform, _Orientation);
+
+            vertices[0].Position = XY.Transform(XY.Zero, xform);
+            vertices[0].Color = Color.Packed;
+            vertices[0].TextureCoord = Bitmap.UV0 * reciprocalTextureSize;
+
+            vertices[1].Position = XY.Transform(XY.UnitX, xform);
+            vertices[1].Color = Color.Packed;
+            vertices[1].TextureCoord = Bitmap.UV1 * reciprocalTextureSize;
+
+            vertices[2].Position = XY.Transform(XY.One, xform);
+            vertices[2].Color = Color.Packed;
+            vertices[2].TextureCoord = Bitmap.UV2 * reciprocalTextureSize;
+
+            vertices[3].Position = XY.Transform(XY.UnitY, xform);
+            vertices[3].Color = Color.Packed;
+            vertices[3].TextureCoord = Bitmap.UV3 * reciprocalTextureSize;
         }
 
         #endregion

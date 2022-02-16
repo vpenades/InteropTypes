@@ -11,9 +11,9 @@ using XNACOLOR = Microsoft.Xna.Framework.Color;
 namespace InteropTypes.Graphics.Backends
 {
     public interface IMonoGameDrawing2D :
+        IBackendViewportInfo,
         IDisposableCanvas2D,
         IMeshCanvas2D,
-        IBackendViewportInfo,
         ITransformer2D,
         IServiceProvider
     {
@@ -23,7 +23,11 @@ namespace InteropTypes.Graphics.Backends
         void End();
     }
 
-    public interface IMonoGameDrawing3D : IDisposableScene3D
+    public interface IMonoGameDrawing3D :
+        IBackendViewportInfo,
+        IDisposableScene3D,
+        // IMeshScene3D,
+        IServiceProvider
     {
         void Clear();
         void SetCamera(CameraTransform3D camera);
