@@ -38,7 +38,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 return Math.Min(nt, maxScale);
             }
 
-            public static void Extrude(IPrimitiveScene3D dc, ReadOnlySpan<POINT3> points, float diameter, bool closed, int divisions, bool flipFaces, LineStyle brush)
+            public static void Extrude(ICoreScene3D dc, ReadOnlySpan<POINT3> points, float diameter, bool closed, int divisions, bool flipFaces, LineStyle brush)
             {
                 System.Diagnostics.Debug.Assert(points.Length > 1);
                 System.Diagnostics.Debug.Assert(points[0] != points[points.Length - 1]);
@@ -148,7 +148,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 POINT3.DebugGuardIsFinite(points);
             }
 
-            private static VECTOR3 _Extrude(IPrimitiveScene3D dc, ReadOnlySpan<PointNode> nodes, bool closed, int divisions, ColorStyle color, bool flipFaces)
+            private static VECTOR3 _Extrude(ICoreScene3D dc, ReadOnlySpan<PointNode> nodes, bool closed, int divisions, ColorStyle color, bool flipFaces)
             {
                 Span<POINT3> aa = stackalloc POINT3[divisions];
                 Span<POINT3> bb = stackalloc POINT3[divisions];
@@ -186,7 +186,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 return maixAxis;
             }
 
-            private void _DrawCap(IPrimitiveScene3D dc, ColorStyle fillColor, LineCapStyle cap, Span<POINT3> corners, bool dir)
+            private void _DrawCap(ICoreScene3D dc, ColorStyle fillColor, LineCapStyle cap, Span<POINT3> corners, bool dir)
             {
                 var axis = Direction * (Diameter * 0.5f);
 

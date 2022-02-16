@@ -11,20 +11,20 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose3D
     {
-        public static bool DrawAsset(IPrimitiveScene3D dc, in Matrix4x4 transform, ASSET asset, ColorStyle style)
+        public static bool DrawAsset(ICoreScene3D dc, in Matrix4x4 transform, ASSET asset, ColorStyle style)
         {
             if (asset == null) return true;
 
             if (asset is IDrawingBrush<IScene3D> a2) { a2.DrawTo(new Decompose3D(Drawing3DTransform.Create(dc, transform))); return true; }
 
-            if (asset is IDrawingBrush<IPrimitiveScene3D> a1) { a1.DrawTo(Drawing3DTransform.Create(dc,transform)); return true; }            
+            if (asset is IDrawingBrush<ICoreScene3D> a1) { a1.DrawTo(Drawing3DTransform.Create(dc,transform)); return true; }            
 
             // fallback
 
             return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey, style);
         }
 
-        public static void DrawSurface(IPrimitiveScene3D dc, ReadOnlySpan<POINT3> vertices, SurfaceStyle style)
+        public static void DrawSurface(ICoreScene3D dc, ReadOnlySpan<POINT3> vertices, SurfaceStyle style)
         {
             if (vertices.Length == 0 || style.Style.IsEmpty) return;
             if (vertices.Length == 1) { DrawSphere(dc, vertices[0], 0, style.Style); return; }
@@ -76,7 +76,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return Vector3.Normalize(direction);
         }
 
-        private static void _DrawConvexSurfaceReverse(IPrimitiveScene3D dc, ReadOnlySpan<POINT3> vertices, ColorStyle style)
+        private static void _DrawConvexSurfaceReverse(ICoreScene3D dc, ReadOnlySpan<POINT3> vertices, ColorStyle style)
         {
             Span<POINT3> reverse = stackalloc POINT3[vertices.Length];
             vertices.CopyTo(reverse);
@@ -86,7 +86,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }        
 
 
-        public static void DrawSegment(IPrimitiveScene3D dc, ReadOnlySpan<POINT3> points, SCALAR diameter, LineStyle style)
+        public static void DrawSegment(ICoreScene3D dc, ReadOnlySpan<POINT3> points, SCALAR diameter, LineStyle style)
         {
             System.Diagnostics.Debug.Assert(points.Length > 0);
             bool closed = false;
@@ -121,12 +121,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        private static void _DrawSegment(IPrimitiveScene3D dc, ReadOnlySpan<POINT3> points, SCALAR diameter, LineStyle style, bool closed, bool flip)
+        private static void _DrawSegment(ICoreScene3D dc, ReadOnlySpan<POINT3> points, SCALAR diameter, LineStyle style, bool closed, bool flip)
         {
             Parametric.ShapeFactory3D.PointNode.Extrude(dc, points, diameter, closed, 5, flip, style);
         }        
 
-        public static void DrawSphere(IPrimitiveScene3D dc, POINT3 center, SCALAR diameter, OutlineFillStyle brush, int lod = 4)
+        public static void DrawSphere(ICoreScene3D dc, POINT3 center, SCALAR diameter, OutlineFillStyle brush, int lod = 4)
         {
             // more than 5 lods will create way too many polygons
             lod = Math.Max(1, lod);

@@ -144,7 +144,7 @@ namespace InteropDrawing
 
             var xformed = svc.GetService(typeof(IMeshCanvas2D)) as IMeshCanvas2D;
 
-            xformed?.DrawMesh(vertices, new int[] { 0, 1, 2, 0, 2, 3 },"Assets\\Tiles.png");
+            xformed?.DrawMeshPrimitive(vertices, new int[] { 0, 1, 2, 0, 2, 3 },"Assets\\Tiles.png");
 
             // draw tiles with half pixel
 

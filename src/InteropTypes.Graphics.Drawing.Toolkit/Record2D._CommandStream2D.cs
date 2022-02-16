@@ -185,7 +185,7 @@ namespace InteropTypes.Graphics.Drawing
                 foreach (var p in pts) bounds.AddVertex(p, 0);
             }
 
-            public static unsafe void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<byte> command)
+            public static unsafe void DrawTo(ICoreCanvas2D dst, ReadOnlySpan<byte> command)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveConvex>(command)[0];
                 var pts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, POINT2>(command.Slice(sizeof(_PrimitiveConvex)));
@@ -283,21 +283,17 @@ namespace InteropTypes.Graphics.Drawing
                 var xref = (ImageAsset)references[src.ImageRef];
                 var style = new ImageStyle(xref, src.Color, src.Flags);
 
-                var xform = src.Transform;
-                style.PrependTransform(ref xform);
+                Span<XY> vertices = stackalloc XY[4];
 
-                var a = XY.Transform(XY.Zero, xform);
-                var b = XY.Transform(XY.UnitX, xform);
-                var c = XY.Transform(XY.One, xform);
-                var d = XY.Transform(XY.UnitY, xform);
+                style.TransformVertices(vertices, src.Transform);
 
-                bounds.AddVertex(a, 0);
-                bounds.AddVertex(b, 0);
-                bounds.AddVertex(c, 0);
-                bounds.AddVertex(d, 0);
+                bounds.AddVertex(vertices[0], 0);
+                bounds.AddVertex(vertices[1], 0);
+                bounds.AddVertex(vertices[2], 0);
+                bounds.AddVertex(vertices[3], 0);
             }
 
-            public static void DrawTo(IPrimitiveCanvas2D dst, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
+            public static void DrawTo(ICoreCanvas2D dst, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];
 

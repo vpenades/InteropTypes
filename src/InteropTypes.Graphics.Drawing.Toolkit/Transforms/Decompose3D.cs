@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         IServiceProvider
     {
         #region lifecycle
-        public Decompose3D(IPrimitiveScene3D renderTarget)
+        public Decompose3D(ICoreScene3D renderTarget)
         {
             _RenderTarget = renderTarget;
             _DecomposeSurfaceOutlines = true;
@@ -24,7 +24,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _SphereLod = 3;            
         }
 
-        public Decompose3D(IPrimitiveScene3D renderTarget, int cylinderLOD, int sphereLOD)
+        public Decompose3D(ICoreScene3D renderTarget, int cylinderLOD, int sphereLOD)
         {
             _RenderTarget = renderTarget;
             _DecomposeSurfaceOutlines = true;
@@ -36,7 +36,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region data
 
-        private readonly IPrimitiveScene3D _RenderTarget;
+        private readonly ICoreScene3D _RenderTarget;
         private readonly bool _DecomposeSurfaceOutlines;
         private readonly int _CylinderLod;
         private readonly int _SphereLod;

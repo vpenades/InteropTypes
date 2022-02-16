@@ -10,13 +10,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     partial struct Decompose2D
     {
         /// <summary>
-        /// Base class for <see cref="IPrimitiveScene3D"/> pass through classes.
+        /// Base class for <see cref="ICoreScene3D"/> pass through classes.
         /// </summary>
         public abstract class PassThrough : ICanvas2D, ColorStyle.IDefaultValue
         {
             #region data
 
-            private IPrimitiveCanvas2D _Target;
+            private ICoreCanvas2D _Target;
 
             #endregion
 
@@ -30,10 +30,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
 
             /// <summary>
-            /// Sets the target <see cref="IPrimitiveCanvas2D"/> to where the drawing calls will be redirected.
+            /// Sets the target <see cref="ICoreCanvas2D"/> to where the drawing calls will be redirected.
             /// </summary>
             /// <param name="target">The drawing target.</param>
-            protected void SetPassThroughTarget(IPrimitiveCanvas2D target)
+            protected void SetPassThroughTarget(ICoreCanvas2D target)
             {
                 if (object.ReferenceEquals(target, this)) throw new ArgumentException($"{nameof(target)} must not reference itself to avod a circular dependency. Derive from {nameof(PassToSelf)} instead.");
                 _Target = target;

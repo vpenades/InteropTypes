@@ -16,19 +16,19 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     {
         #region constructors
 
-        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Matrix3x2 xform)
+        public static Drawing2DTransform Create(ICoreCanvas2D t, Matrix3x2 xform)
         {
             return new Drawing2DTransform(t, xform);
         }
 
-        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, Point2 virtualSize)
+        public static Drawing2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, Point2 virtualSize)
         {
             var xform = Matrix3x2.CreateTranslation(virtualSize.ToNumerics() / 2);
 
             return Create(t, physicalSize, virtualSize, xform);
         }
 
-        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, RectangleF virtualBounds)
+        public static Drawing2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, RectangleF virtualBounds)
         {
             Point2 virtualOrig = virtualBounds.Location;
             Point2 virtualSize = virtualBounds.Size;
@@ -39,7 +39,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return Create(t, physicalSize, virtualSize, xform);
         }
 
-        public static Drawing2DTransform Create(IPrimitiveCanvas2D t, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
+        public static Drawing2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
         {
             var xform = Matrix3x2.Identity;
 
@@ -60,19 +60,19 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return new Drawing2DTransform(t, xform);
         }
 
-        public static Drawing2DTransform Create((IPrimitiveCanvas2D target, float width, float height) viewport, Matrix3x2 projection, Matrix3x2 camera)
+        public static Drawing2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, Matrix3x2 projection, Matrix3x2 camera)
         {
             Matrix3x2.Invert(camera, out Matrix3x2 view);
             return Create(viewport, view * projection);
         }
 
-        public static Drawing2DTransform Create((IPrimitiveCanvas2D target, float width, float height) viewport, Matrix3x2 projview)
+        public static Drawing2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, Matrix3x2 projview)
         {
             var xform = projview * (viewport.width, viewport.height).CreateViewport2D();
             return new Drawing2DTransform(viewport.target, xform);
         }
 
-        private Drawing2DTransform(IPrimitiveCanvas2D t, Matrix3x2 xform)
+        private Drawing2DTransform(ICoreCanvas2D t, Matrix3x2 xform)
         {
             _Target = t;
             _TargetEx = t as ICanvas2D;
@@ -84,7 +84,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region data
 
-        private readonly IPrimitiveCanvas2D _Target;
+        private readonly ICoreCanvas2D _Target;
         private readonly ICanvas2D _TargetEx;
 
         // two way transform
@@ -424,7 +424,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region API
 
-        public void DrawMesh(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
+        public void DrawMeshPrimitive(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
         {
             Span<Vertex2> ps = stackalloc Vertex2[vertices.Length];
 
@@ -435,7 +435,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 ps[i].Position = Vector2.Transform(ps[i].Position, _Transform.Forward);
             }
 
-            _Target.DrawMesh(ps,indices,texture);
+            _Target.DrawMeshPrimitive(ps,indices,texture);
         }
 
         #endregion

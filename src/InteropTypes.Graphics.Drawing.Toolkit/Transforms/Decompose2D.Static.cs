@@ -15,13 +15,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     {
         #region API - Static IVectorsDrawing2D
 
-        public static bool DrawAsset<TAsset>(IPrimitiveCanvas2D dc, in Matrix3x2 transform, TAsset asset, ColorStyle color)
+        public static bool DrawAsset<TAsset>(ICoreCanvas2D dc, in Matrix3x2 transform, TAsset asset, ColorStyle color)
         {
             if (asset == null) return true; // nothing to draw  
 
             if (typeof(IDrawingBrush<ICanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICanvas2D>)asset).DrawTo(new Decompose2D(Drawing2DTransform.Create(dc, transform))); return true; }
 
-            if (typeof(IDrawingBrush<IPrimitiveCanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<IPrimitiveCanvas2D>)asset).DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
+            if (typeof(IDrawingBrush<ICoreCanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICoreCanvas2D>)asset).DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
 
             // fallback
 
@@ -32,20 +32,20 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return DrawAsset(dc, transform, xasset, color);
         }
 
-        public static bool DrawAsset(IPrimitiveCanvas2D dc, in Matrix3x2 transform, ASSET asset, ColorStyle color)
+        public static bool DrawAsset(ICoreCanvas2D dc, in Matrix3x2 transform, ASSET asset, ColorStyle color)
         {
             if (asset == null) return true; // nothing to draw            
 
             if (asset is IDrawingBrush<ICanvas2D> d2) { d2.DrawTo(new Decompose2D(Drawing2DTransform.Create(dc, transform))); return true; }
 
-            if (asset is IDrawingBrush<IPrimitiveCanvas2D> d1) { d1.DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
+            if (asset is IDrawingBrush<ICoreCanvas2D> d1) { d1.DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
 
             // fallback
 
             return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey, color);
         }
 
-        public static void DrawEllipse(IPrimitiveCanvas2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
+        public static void DrawEllipse(ICoreCanvas2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
         {
             // calculate number of vertices based on dimensions
             int count = Math.Max((int)width, (int)height);
@@ -72,7 +72,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             DrawPolygon(dc, points, style);
         }
 
-        public static void DrawPolygon(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
+        public static void DrawPolygon(ICoreCanvas2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
         {
             if (points.Length < 3) return;
 
@@ -90,7 +90,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (!style.HasOutline) _DrawSolidLines(dc, points, style.OutlineWidth, style.OutlineColor, true);
         }        
 
-        public static void DrawLines(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
+        public static void DrawLines(ICoreCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
         {
             var xstyle = style.IsSolid(ref diameter, out var solid)
                 ? new LineStyle(solid)
@@ -127,7 +127,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region core        
 
-        private static void _DrawSolidLines(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, ColorStyle color, bool closed)
+        private static void _DrawSolidLines(ICoreCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, ColorStyle color, bool closed)
         {
             if (points.Length < 2) return;
             if (points.Length == 2) closed = false;
@@ -145,7 +145,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        private static void _FillLineAsPolygon(IPrimitiveCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, ColorStyle color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
+        private static void _FillLineAsPolygon(ICoreCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, ColorStyle color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
         {
             var a = startCapStyle;
 
@@ -161,7 +161,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
         }
 
-        private static void _FillLineAsPolygon(IPrimitiveCanvas2D dc, POINT2 a, POINT2 b, SCALAR diameter, ColorStyle color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
+        private static void _FillLineAsPolygon(ICoreCanvas2D dc, POINT2 a, POINT2 b, SCALAR diameter, ColorStyle color, LineCapStyle startCapStyle, LineCapStyle endCapStyle)
         {
             var startCapCount = Parametric.ShapeFactory2D.GetLineCapVertexCount(startCapStyle);
             var endCapCount = Parametric.ShapeFactory2D.GetLineCapVertexCount(endCapStyle);

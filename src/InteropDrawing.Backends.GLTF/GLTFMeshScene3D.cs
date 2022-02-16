@@ -107,7 +107,7 @@ namespace InteropTypes.Graphics.Backends
         }
 
         /// <inheritdoc />
-        public void DrawMesh(ReadOnlySpan<Vertex3> vertices, ReadOnlySpan<int> triangleIndices, object texture)
+        public void DrawMeshPrimitive(ReadOnlySpan<Vertex3> vertices, ReadOnlySpan<int> triangleIndices, object texture)
         {
             for(int i=0; i < triangleIndices.Length; i+=3)
             {
@@ -122,7 +122,7 @@ namespace InteropTypes.Graphics.Backends
         }
 
         /// <inheritdoc />
-        public void DrawWireframe(ReadOnlySpan<Vertex3> vertices, ReadOnlySpan<int> lineIndices)
+        public void DrawWireframePrimitive(ReadOnlySpan<Vertex3> vertices, ReadOnlySpan<int> lineIndices)
         {
             for (int i = 0; i < lineIndices.Length; i += 2)
             {

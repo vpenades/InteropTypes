@@ -170,23 +170,16 @@ namespace InteropWith
 
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
-            var final = style.GetTransform(style.FlipHorizontal, style.FlipVertical) * transform;
-
-            Vertex2D p0 = final.Translation;
-            Vertex2D p1 = Vector2.Transform(Vector2.UnitX, final);
-            Vertex2D p2 = Vector2.Transform(Vector2.UnitX + Vector2.UnitY, final);
-            Vertex2D p3 = Vector2.Transform(Vector2.UnitY, final);
-
             var tex = GetTextureInfoFromSource(style.Bitmap.Source);
+            style.Bitmap.WithImageSize((int)tex.Item2.X, (int)tex.Item2.Y);
 
-            p0.TextureCoordinates = style.Bitmap.UV0 / tex.Item2;
-            p1.TextureCoordinates = style.Bitmap.UV1 / tex.Item2;
-            p2.TextureCoordinates = style.Bitmap.UV2 / tex.Item2;
-            p3.TextureCoordinates = style.Bitmap.UV3 / tex.Item2;
+            Span<Vertex3> vertices = stackalloc Vertex3[4];
 
-            // tex = _TextureFactory.Invoke(null);
+            style.TransformVertices(vertices, transform, -1);  
+            
+            var abcd = System.Runtime.InteropServices.MemoryMarshal.Cast<Vertex3,Vertex2D>(vertices);
 
-            AddQuad(p0, p1, p2, p3, tex.Item1);
+            AddQuad(abcd[0], abcd[1], abcd[2], abcd[3], tex.Item1);
         }
 
         

@@ -13,7 +13,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     /// Represents a drawing canvas filter that translates complex vector drawing calls into basic convex polygons.
     /// </summary>
     /// <remarks>
-    /// <see cref="ICanvas2D"/> 🡆 <see cref="IPrimitiveCanvas2D"/>
+    /// <see cref="ICanvas2D"/> 🡆 <see cref="ICoreCanvas2D"/>
     /// </remarks>
     readonly partial struct Decompose2D :
         ICanvas2D,        
@@ -22,7 +22,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     {
         #region lifecycle
 
-        public Decompose2D(IPrimitiveCanvas2D renderTarget)
+        public Decompose2D(ICoreCanvas2D renderTarget)
         {
             _RenderTarget = renderTarget;            
         }
@@ -31,7 +31,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region data
 
-        private readonly IPrimitiveCanvas2D _RenderTarget;        
+        private readonly ICoreCanvas2D _RenderTarget;        
 
         #endregion
 

@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Backends
     /// When a backend implements this interface, <see cref="ICanvas2D.DrawLines(ReadOnlySpan{POINT2}, SCALAR, LineStyle)"/>
     /// should call <see cref="DrawThinLines(ReadOnlySpan{POINT2}, SCALAR, ColorStyle)"/> when it detects the line thickness is equal or less than 1.
     /// </remarks>
-    partial interface IBackendCanvas2D : IPrimitiveCanvas2D
+    partial interface IBackendCanvas2D : ICoreCanvas2D
     {
         /// <summary>
         /// Gets the number of pixels covered by a unit of length.
@@ -33,7 +33,7 @@ namespace InteropTypes.Graphics.Backends
         void DrawThinLines(ReadOnlySpan<POINT2> points, float thickness, ColorStyle color);
     }
 
-    partial interface IBackendScene3D : IPrimitiveScene3D
+    partial interface IBackendScene3D : ICoreScene3D
     {
         float GetThinSegmentsSize();
 

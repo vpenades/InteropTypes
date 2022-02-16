@@ -10,12 +10,12 @@ using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents a drawing canvas where we can draw convex polygons and images. 
+    /// Represents the most fundamental drawing canvas for drawing simple poligons and images. 
     /// </summary>
     /// <remarks>
     /// Inherited by <see cref="ICanvas2D"/>
     /// </remarks>
-    public interface IPrimitiveCanvas2D
+    public interface ICoreCanvas2D
     {
         /// <summary>
         /// Draws a convex polygon, with the given fill color
@@ -50,7 +50,7 @@ namespace InteropTypes.Graphics.Drawing
     /// <remarks>
     /// Inherited by <see cref="IDisposableCanvas2D"/>
     /// </remarks>
-    public interface ICanvas2D : IPrimitiveCanvas2D
+    public interface ICanvas2D : ICoreCanvas2D
     {
         /// <summary>
         /// Draws an asset.

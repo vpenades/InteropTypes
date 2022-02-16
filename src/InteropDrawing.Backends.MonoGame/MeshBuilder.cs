@@ -18,7 +18,7 @@ using VERTEX = Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture;
 namespace InteropTypes.Graphics.Backends
 {
     partial class MeshBuilder :
-        IPrimitiveScene3D,
+        ICoreScene3D,
         IBackendCanvas2D,
         IMeshCanvas2D
     {
@@ -139,7 +139,7 @@ namespace InteropTypes.Graphics.Backends
 
             Span<Vertex3> vertices = stackalloc Vertex3[4];
 
-            style.TransformVertices(vertices, transform, _SpriteCoordInvScale, _DepthZ);            
+            style.TransformVertices(vertices, transform, _DepthZ);            
 
             var xnaVertices = System.Runtime.InteropServices.MemoryMarshal.Cast<Vertex3, VERTEX>(vertices);
             var v1 = _Triangles.UseVertex(xnaVertices[0]);
@@ -152,7 +152,7 @@ namespace InteropTypes.Graphics.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawMesh(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
+        public void DrawMeshPrimitive(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
         {
             Span<int> vvv = stackalloc int[indices.Length];
 

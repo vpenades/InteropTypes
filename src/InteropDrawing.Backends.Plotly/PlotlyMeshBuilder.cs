@@ -9,7 +9,7 @@ using VECTOR3 = System.Numerics.Vector3;
 
 namespace InteropDrawing.Backends
 {
-    class _PlotlyMeshBuilder : IPrimitiveScene3D
+    class _PlotlyMeshBuilder : ICoreScene3D
     {
         private readonly List<(VECTOR3 A, VECTOR3 B, VECTOR3 C, System.Drawing.Color Color)> _Triangles = new List<(VECTOR3 A, VECTOR3 B, VECTOR3 C, System.Drawing.Color Color)>();
 

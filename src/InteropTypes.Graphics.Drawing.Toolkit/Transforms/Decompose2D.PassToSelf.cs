@@ -10,7 +10,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     partial struct Decompose2D
     {
         /// <summary>
-        /// Base class for <see cref="IPrimitiveScene3D"/> pass through classes.
+        /// Base class for <see cref="ICoreScene3D"/> pass through classes.
         /// </summary>
         public abstract class PassToSelf : ICanvas2D
         {

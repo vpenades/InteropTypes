@@ -209,23 +209,25 @@ namespace InteropDrawing.Backends
             var img = _UseImage(bmp.Source);
             if (img == null) return;
 
-            var o = bmp.UV0;
-            var s = bmp.UV2 - bmp.UV0;
-            var srcRect = new System.Drawing.RectangleF(o.X, o.Y, s.X, s.Y);
+            style.Bitmap.WithImageSize(img.Width, img.Height);
 
-            if (transform.M12 == 0 && transform.M21 == 0) // no rotation
+            var xform = style.GetTransform() * transform;
+
+            var srcRect = bmp.GetSourceRectangle();            
+
+            if (xform.M12 == 0 && xform.M21 == 0) // no rotation
             {
-                var dstRect = new System.Drawing.RectangleF(transform.M31, transform.M32, transform.M11 * bmp.Scale.X, transform.M22 * bmp.Scale.Y);                
+                var dstRect = new System.Drawing.RectangleF(xform.M31, xform.M32, xform.M11, xform.M22);
 
                 _Context.DrawImage(img, dstRect, srcRect, System.Drawing.GraphicsUnit.Pixel);
             }
             else
             {
-                using (var matrix = new System.Drawing.Drawing2D.Matrix(transform.M11, transform.M12, transform.M21, transform.M22, transform.M31, transform.M32))
+                using (var matrix = new System.Drawing.Drawing2D.Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32))
                 {
                     _Context.MultiplyTransform(matrix);
 
-                    var dstRect = new System.Drawing.RectangleF(transform.M31, transform.M32, transform.M11 * bmp.Scale.X, transform.M22 * bmp.Scale.Y);
+                    var dstRect = new System.Drawing.RectangleF(xform.M31, xform.M32, xform.M11, xform.M22);
                     _Context.DrawImage(img, dstRect, srcRect, System.Drawing.GraphicsUnit.Pixel);
 
                     _Context.ResetTransform();

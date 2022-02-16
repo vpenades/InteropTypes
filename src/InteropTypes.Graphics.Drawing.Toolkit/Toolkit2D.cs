@@ -13,7 +13,7 @@ using XFORM2 = System.Numerics.Matrix3x2;
 
 namespace InteropTypes.Graphics.Drawing
 {
-    using PRIMITIVE2D = IPrimitiveCanvas2D;
+    using PRIMITIVE2D = ICoreCanvas2D;
     using CANVAS2DEX = ICanvas2D;
 
     public static partial class Toolkit

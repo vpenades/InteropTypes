@@ -11,9 +11,9 @@ using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents a render target context where we can draw 3D surfaces
+    /// Represents the most fundamental drawing scene to draw simple convex polygons.
     /// </summary>
-    public interface IPrimitiveScene3D
+    public interface ICoreScene3D
     {
         /// <summary>
         /// Draws a convex polygon, with the given fill color
@@ -33,7 +33,7 @@ namespace InteropTypes.Graphics.Drawing
     /// <summary>
     /// Represents a render target context where we can draw 3D primitives.
     /// </summary>
-    public interface IScene3D : IPrimitiveScene3D
+    public interface IScene3D : ICoreScene3D
     {
         /// <summary>
         /// Draws a backend dependant asset into to scene.

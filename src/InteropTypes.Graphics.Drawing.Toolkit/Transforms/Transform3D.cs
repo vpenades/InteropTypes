@@ -15,12 +15,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     {
         #region constructors
 
-        public static Drawing3DTransform Create(IPrimitiveScene3D target, in Matrix4x4 xform)
+        public static Drawing3DTransform Create(ICoreScene3D target, in Matrix4x4 xform)
         {
             return new Drawing3DTransform(target, xform);
         }
 
-        private Drawing3DTransform(IPrimitiveScene3D target, Matrix4x4 xform)
+        private Drawing3DTransform(ICoreScene3D target, Matrix4x4 xform)
         {
             _Target = target;
             _TargetEx = target as IScene3D;
@@ -44,7 +44,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         #region data
 
-        private readonly IPrimitiveScene3D _Target;
+        private readonly ICoreScene3D _Target;
         private readonly IScene3D _TargetEx;
         private readonly Matrix4x4 _Transform;
         private readonly float _SizeScale;

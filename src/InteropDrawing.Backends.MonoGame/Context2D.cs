@@ -223,17 +223,19 @@ namespace InteropTypes.Graphics.Backends
             var (tex, attr) = FetchTexture(image.Source);
             if (tex == null) { SetTexture(null); return; }
 
+            image.WithImageSize(tex.Width, tex.Height);
+
             SetTexture(tex, attr);
         }
 
-        public void DrawMesh(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
+        public void DrawMeshPrimitive(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
         {
             var (tex, attr) = FetchTexture(texture);
             if (tex == null) { SetTexture(null); return; }
 
             SetTexture(tex, attr);
 
-            _VectorsBatch.DrawMesh(vertices,indices,texture);
+            _VectorsBatch.DrawMeshPrimitive(vertices,indices,texture);
         }
 
         #endregion

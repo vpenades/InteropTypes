@@ -38,7 +38,7 @@ After:
             return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(source, xform);
         }
 
-        public static IPrimitiveCanvas2D CreateTransformed2D(this IPrimitiveCanvas2D source, XFORM2 xform)
+        public static ICoreCanvas2D CreateTransformed2D(this ICoreCanvas2D source, XFORM2 xform)
         {
 
 /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
@@ -96,7 +96,7 @@ After:
                 return;
             }
 
-            if (asset is IDrawingBrush<IPrimitiveScene3D> mdl1)
+            if (asset is IDrawingBrush<ICoreScene3D> mdl1)
             {
                 mdl1.DrawTo(dc);
                 return;

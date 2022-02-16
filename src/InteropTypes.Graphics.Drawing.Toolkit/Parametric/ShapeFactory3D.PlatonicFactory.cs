@@ -47,7 +47,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             private ColorStyle _Color;
             private bool _FaceFlip;
 
-            private IPrimitiveScene3D _Context;
+            private ICoreScene3D _Context;
 
             #endregion
 
@@ -55,7 +55,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             // https://en.wikipedia.org/wiki/Platonic_solid
 
-            public static void DrawTetrahedron(IPrimitiveScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
+            public static void DrawTetrahedron(ICoreScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
             {
                 if (lod < 0) return;
 
@@ -74,7 +74,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 ctx.DrawTriangle(lod, _TETRAVRT3, _TETRAVRT2, _TETRAVRT1);
             }
 
-            public static void DrawOctahedron(IPrimitiveScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
+            public static void DrawOctahedron(ICoreScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
             {
                 if (lod < 0) return;
 
@@ -101,7 +101,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 ctx.DrawTriangle(lod, -XYZ.UnitZ, -XYZ.UnitY, XYZ.UnitX);
             }
 
-            public static void DrawIcosahedron(IPrimitiveScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
+            public static void DrawIcosahedron(ICoreScene3D dc, XYZ center, float radius, int lod, ColorStyle color, bool faceFlip)
             {
                 if (lod < 0) return;
 

@@ -176,7 +176,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _RenderTarget.DrawPolygon(points, brush.Style);
         }
 
-        void IPrimitiveScene3D.DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
+        void ICoreScene3D.DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
             Span<XYZ> clippedVertices = stackalloc XYZ[vertices.Length * 2];
 

@@ -75,14 +75,17 @@ namespace InteropDrawing.Backends
         /// <inheritdoc/>
         public sealed override void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
-            var dst = _Target.AsSpanBitmap();
+            var dst = _Target.AsSpanBitmap();            
+
             var xform = style.GetTransform() * transform;
             float opacity = style.Color.A;
             opacity /= 255f;
 
             if (style.Bitmap.Source is InteropBitmaps.IMemoryBitmap typeless)
             {
-                var tsrc = typeless.AsSpanBitmap();
+                style.Bitmap.WithImageSize(typeless.Width, typeless.Height);
+
+                var tsrc = typeless.AsSpanBitmap();                
 
                 xform = Matrix3x2.CreateScale(1f / tsrc.Width, 1f / tsrc.Height) * xform;
 

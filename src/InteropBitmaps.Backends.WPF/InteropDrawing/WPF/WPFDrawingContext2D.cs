@@ -293,13 +293,13 @@ namespace InteropTypes.Graphics.Backends.WPF
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             var bmp = style.Bitmap;
-            var bmpRect = bmp.GetSourceRectangle();
+            var bmpRect = System.Drawing.Rectangle.Truncate(bmp.GetSourceRectangle());
 
             var image = _UseImage(bmp.Source);
             var recti = new Int32Rect(bmpRect.X, bmpRect.Y, bmpRect.Width, bmpRect.Height);
             var cropped = new System.Windows.Media.Imaging.CroppedBitmap(image, recti);
 
-            // PushMatrix(transform);
+            // PushMatrix(style.GetTransform() * transform);
 
             var dstRect = new Rect(0, 0, bmpRect.Width, bmpRect.Height);
             _Context.DrawImage(cropped, dstRect);
