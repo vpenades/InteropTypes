@@ -9,7 +9,7 @@ using InteropTypes.Graphics.Drawing;
 
 using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     class _PlotlyDrawing2DTracesContext : IDisposableCanvas2D
     {

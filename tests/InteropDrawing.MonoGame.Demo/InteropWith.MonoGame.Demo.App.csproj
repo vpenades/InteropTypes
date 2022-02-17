@@ -46,7 +46,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
   

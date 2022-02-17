@@ -29,7 +29,7 @@ namespace InteropBitmaps.Codecs
             {
                 using (var img = SixLabors.ImageSharp.Image.Load(context.Stream))
                 {
-                    bitmap = img.AsSpanBitmap().ToMemoryBitmap();
+                    bitmap = img.ToMemoryBitmap();
                 }
 
                 return true;

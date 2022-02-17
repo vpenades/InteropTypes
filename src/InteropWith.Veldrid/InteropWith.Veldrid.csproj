@@ -17,9 +17,8 @@
     <PackageReference Include="Veldrid" Version="4.9.0-beta1" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup>    
     <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
-    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
 

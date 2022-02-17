@@ -52,7 +52,7 @@ namespace InteropDrawing
 
         protected override void LoadContent()
         {
-            _Drawing2D = MonoGameDrawing.CreateDrawingContext2D(this.GraphicsDevice);            
+            _Drawing2D = MonoGameToolkit.CreateDrawingContext2D(this.GraphicsDevice);            
 
             _DynTex = new _DynamicTexture(this.GraphicsDevice);
         }

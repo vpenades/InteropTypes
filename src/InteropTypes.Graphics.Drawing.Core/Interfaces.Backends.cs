@@ -5,7 +5,7 @@ using System.Text;
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// provides additional information about the rendering backend
+    /// provides additional information about the physical viewport used by the backend.
     /// </summary>
     /// <remarks>
     /// This interface must be implemented by the underlaying rendering backend, and

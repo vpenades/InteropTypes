@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net471;net6.0</TargetFrameworks>    
 
     <IsPackable>false</IsPackable>
 
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,11 +16,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.PixelFormats.csproj" />
+    <ProjectReference Include="..\src\InteropTypes.Graphics.Drawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
   </ItemGroup>
 
 </Project>

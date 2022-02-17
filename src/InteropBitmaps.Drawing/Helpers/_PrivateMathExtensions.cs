@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropDrawing.Backends.Helpers
+namespace InteropTypes.Graphics.Backends.Helpers
 {
     static class _PrivateMathExtensions
     {

@@ -60,7 +60,7 @@ namespace InteropBitmaps.Adapters
             {
                 tmp.Mutate(operation);
 
-                return tmp.AsSpanBitmap().ToMemoryBitmap();
+                return tmp.ToMemoryBitmap();
             }
         }
 

@@ -5,6 +5,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Backends;
+
 using NUnit.Framework;
 
 using XY = System.Numerics.Vector2;

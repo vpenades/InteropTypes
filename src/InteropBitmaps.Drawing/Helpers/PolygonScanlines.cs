@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropDrawing.Backends.Helpers
+namespace InteropTypes.Graphics.Backends.Helpers
 {
     /// <summary>
     /// Helper class used to generate the raster scanlines of a convex polygon

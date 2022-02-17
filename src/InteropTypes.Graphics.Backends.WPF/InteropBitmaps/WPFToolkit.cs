@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using InteropBitmaps;
 
+using InteropTypes.Graphics.Adapters;
+
 // BitmapSource -> WriteableBitmap, BitmapFrame, BitmapImage, CroppedBitmap, FormatConvertedBitmap,RenderTargetBitmap,TransformedBitmap        
 using WIC_READABLE = System.Windows.Media.Imaging.BitmapSource;
 using WIC_WRITABLE = System.Windows.Media.Imaging.WriteableBitmap;

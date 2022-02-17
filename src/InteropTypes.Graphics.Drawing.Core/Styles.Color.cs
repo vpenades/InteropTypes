@@ -190,7 +190,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             if (source is IServiceProvider serviceProvider)
             {
-                if (serviceProvider.GetService(typeof(IDefaultValue)) is IDefaultValue clientDefault)
+                if (serviceProvider.GetService(typeof(IBackendDefaultValue)) is IBackendDefaultValue clientDefault)
                 {
                     var val = clientDefault.DefaultColorStyle;
                     if (val.IsVisible) return val;
@@ -204,7 +204,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             if (target is IServiceProvider serviceProvider)
             {
-                if (serviceProvider.GetService(typeof(IDefaultValue)) is IDefaultValue clientDefault)
+                if (serviceProvider.GetService(typeof(IBackendDefaultValue)) is IBackendDefaultValue clientDefault)
                 {
                     clientDefault.DefaultColorStyle = this;
                     return true;
@@ -214,7 +214,7 @@ namespace InteropTypes.Graphics.Drawing
             return false;
         }
 
-        public interface IDefaultValue
+        public interface IBackendDefaultValue
         {
             ColorStyle DefaultColorStyle { get; set; }
         }

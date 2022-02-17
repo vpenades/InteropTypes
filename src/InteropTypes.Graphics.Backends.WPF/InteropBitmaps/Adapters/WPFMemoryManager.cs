@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using InteropBitmaps;
 
-namespace InteropTypes.Graphics.Backends
+namespace InteropTypes.Graphics.Adapters
 {
     sealed class WPFMemoryManager : InteropBitmaps.MemoryManagers.BitmapMemoryManager
     {

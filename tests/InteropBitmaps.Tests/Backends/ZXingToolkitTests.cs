@@ -34,7 +34,7 @@ namespace InteropBitmaps.Backends
 
             // detect code:
 
-            var code = image.AsSpanBitmap().ScanAndDecodeQRCode();
+            var code = image.ReadAsSpanBitmap(default, (self,other) => self.ScanAndDecodeQRCode());            
 
             if (string.IsNullOrWhiteSpace(expected)) { Assert.Null(code); return; }
 
@@ -48,7 +48,7 @@ namespace InteropBitmaps.Backends
             var font = SixLabors.Fonts.SystemFonts.CreateFont("Arial", 20);
 
             image.Mutate(dc => dc.DrawPolygon(SixLabors.ImageSharp.Color.Red, 3, points));
-            image.Mutate(dc => dc.DrawText(code.Text, font, SixLabors.ImageSharp.Color.Red, new POINT(5, 5)));
+            image.Mutate(dc => dc.DrawText(code.Text.Replace("/",":"), font, SixLabors.ImageSharp.Color.Red, new POINT(5, 5)));
 
             image.AttachToCurrentTest("result.png");
         }

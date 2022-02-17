@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 using Plotly;
 using Plotly.Types;
 
-using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
-using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
-using System.Numerics;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
+using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
+
+namespace InteropTypes.Graphics.Backends
 {
     public class PlotlyDocumentBuilder
     {

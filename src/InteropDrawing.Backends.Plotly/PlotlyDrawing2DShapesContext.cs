@@ -4,18 +4,18 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-using static System.FormattableString;
-
 using Plotly;
 using Plotly.Types;
+
+using InteropTypes.Graphics.Drawing;
+
+using static System.FormattableString;
 
 // https://plotly.com/javascript/shapes/
 
 using SHAPES = Plotly.Box<Plotly.Types.IShapesProperty>;
-using System.Drawing;
-using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     class _PlotlyDrawing2DShapesContext : IDisposableCanvas2D
     {

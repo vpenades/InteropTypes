@@ -7,7 +7,9 @@ using System.Windows.Media.Imaging;
 
 using InteropBitmaps;
 
-namespace InteropTypes.Graphics.Backends
+using InteropTypes.Graphics.Backends;
+
+namespace InteropTypes.Graphics.Adapters
 {
     public readonly ref struct WPFAdapter // WpfSpanBitmap
     {

@@ -82,7 +82,7 @@ namespace InteropDrawing
 
             if (filePath.ToLower().EndsWith(".html"))
             {
-                var html = Backends.PlotlyDocumentBuilder.ConvertToHtml(batch);
+                var html = PlotlyDocumentBuilder.ConvertToHtml(batch);
                 System.IO.File.WriteAllText(filePath, html);
                 NUnit.Framework.TestContext.AddTestAttachment(filePath);
             }

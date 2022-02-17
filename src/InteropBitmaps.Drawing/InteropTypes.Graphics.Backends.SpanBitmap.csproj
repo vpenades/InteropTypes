@@ -1,8 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropDrawing.Backends</RootNamespace>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <Import Project="..\Package.props" />
@@ -10,10 +14,7 @@
   <Import Project="..\SourceLink.props" />
 
   <ItemGroup>
-    <PackageReference Include="Plotly.Sharp" Version="0.0.8196" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
 

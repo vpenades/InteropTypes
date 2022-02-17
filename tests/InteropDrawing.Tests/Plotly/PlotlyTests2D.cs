@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Drawing;
 
 using NUnit.Framework;

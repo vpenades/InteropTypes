@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         IScene3D,
         ITransformer2D,
         IServiceProvider,
-        ColorStyle.IDefaultValue
+        ColorStyle.IBackendDefaultValue
     {
         #region constructors
 

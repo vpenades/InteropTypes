@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Backends.WPF
     public partial class WPFDrawingContext2D :
         System.Windows.Threading.DispatcherObject,
         ICanvas2D,        
-        ColorStyle.IDefaultValue
+        ColorStyle.IBackendDefaultValue
     {
         #region lifecycle
 

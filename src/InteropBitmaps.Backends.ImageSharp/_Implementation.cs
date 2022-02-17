@@ -9,13 +9,9 @@ using SixLabors.ImageSharp.Processing;
 
 namespace InteropBitmaps
 {
-    public delegate void TransferAction(SpanBitmap src, SpanBitmap dst);
-
-    public delegate void MutateAction(SpanBitmap bmp);
-
     static partial class _Implementation
     {
-        #region API
+        #region API        
 
         public static Image TryWrapImageSharp(MemoryBitmap src)
         {
@@ -156,9 +152,9 @@ namespace InteropBitmaps
 
         public static Image CloneToImageSharp(SpanBitmap src)
         {
-            var dst = CreateImageSharp(src.PixelFormat, src.Width, src.Height);
+            var dst = CreateImageSharp(src.PixelFormat, src.Width, src.Height);            
 
-            dst.AsSpanBitmap().SetPixels(0, 0, src);
+            dst.MutateAsSpanBitmap(src, (d, s) => d.SetPixels(0, 0, s));            
 
             return dst;
         }
@@ -195,45 +191,97 @@ namespace InteropBitmaps
 
                 // if size has changed, throw error.
                 if (tmp.Width != src.Width || tmp.Height != src.Height) throw new ArgumentException("Operations that resize the source image are not allowed.", nameof(operation));
-
-                // transfer pixels back to src.
-                src.SetPixels(0, 0, WrapAsSpanBitmap(tmp));
+                
+                Copy(tmp, src);
             }
         }
 
-        public static void Transfer<TPixel>(SpanBitmap<TPixel> src, Image<TPixel> dst, TransferAction action)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            src = src.AsReadOnly();
+        
 
-            if (TryWrap(dst, out var dstSpan))
+       public static void Copy(Image src, SpanBitmap dst)
+        {
+            if (src is Image<L8> srcL8) { Copy(srcL8, dst); return; }
+
+            if (src is Image<Bgr565> srcBgr565) { Copy(srcBgr565, dst); return; }
+            if (src is Image<Bgra4444> srcBgra4444) { Copy(srcBgra4444, dst); return; }
+            if (src is Image<Bgra5551> srcBgra5551) { Copy(srcBgra5551, dst); return; }
+
+            if (src is Image<Rgb24> srcRgb24) { Copy(srcRgb24, dst); return; }
+            if (src is Image<Bgr24> srcBgr24) { Copy(srcBgr24, dst); return; }
+
+            if (src is Image<Rgba32> srcRgba32) { Copy(srcRgba32, dst); return; }
+            if (src is Image<Bgra32> srcBgra32) { Copy(srcBgra32, dst); return; }
+            if (src is Image<Argb32> srcArgb32) { Copy(srcArgb32, dst); return; }
+
+            if (src is Image<RgbaVector> srcRgbaVector) { Copy(srcRgbaVector, dst); return; }
+
+            throw new NotImplementedException();
+        }
+
+
+        public static unsafe void Copy<TSrcPixel,TDstPixel>(Image<TSrcPixel> src, SpanBitmap<TDstPixel> dst)
+            where TSrcPixel: unmanaged, IPixel<TSrcPixel>
+            where TDstPixel : unmanaged
+        {
+            if (src == null) throw new ArgumentNullException(nameof(src));
+            if (src.Width != dst.Width || src.Height != dst.Height) throw new ArgumentException("dimensions mismatch", nameof(dst));
+            if (sizeof(TSrcPixel) != sizeof(TDstPixel)) throw new ArgumentException("Pixel size mismatch", typeof(TDstPixel).Name);
+
+            for (int y = 0; y < dst.Height; y++)
             {
-                action(src, dstSpan);                
-            }
-            else
-            {
-                dstSpan = dst.ToMemoryBitmap().AsSpanBitmap();
-                action(src, dstSpan);                
+                var srcRow = src.DangerousGetPixelRowMemory(y).Span;
+                var dstRow = dst.UseScanlinePixels(y);
+
+                System.Runtime.InteropServices.MemoryMarshal
+                    .Cast<TSrcPixel, TDstPixel>(srcRow)
+                    .CopyTo(dstRow);
             }
         }
 
-        public static void Transfer<TPixel>(Image<TPixel> src, SpanBitmap<TPixel> dst, TransferAction action)
-            where TPixel : unmanaged, IPixel<TPixel>
+        public static unsafe void Copy<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> src, Image<TDstPixel> dst)
+            where TSrcPixel : unmanaged
+            where TDstPixel : unmanaged, IPixel<TDstPixel>
         {
-            if (TryWrap(src, out var srcSpan))
-            {
-                srcSpan = srcSpan.AsReadOnly();
+            if (dst == null) throw new ArgumentNullException(nameof(dst));
+            if (src.Width != dst.Width || src.Height != dst.Height) throw new ArgumentException("dimensions mismatch", nameof(dst));
+            if (sizeof(TSrcPixel) != sizeof(TDstPixel)) throw new ArgumentException("Pixel size mismatch", typeof(TDstPixel).Name);
 
-                action(srcSpan, dst);
+            for (int y = 0; y < dst.Height; y++)
+            {
+                var srcRow = src.GetScanlinePixels(y);
+                var dstRow = dst.DangerousGetPixelRowMemory(y).Span;
+
+                System.Runtime.InteropServices.MemoryMarshal
+                    .Cast<TSrcPixel, TDstPixel>(srcRow)
+                    .CopyTo(dstRow);
             }
-            else
-            {
-                srcSpan = src
-                    .ToMemoryBitmap()
-                    .AsSpanBitmap()
-                    .AsReadOnly();
+        }
 
-                action(srcSpan, dst);
+        public static void Copy<TSrcPixel>(Image<TSrcPixel> src, SpanBitmap dst)
+            where TSrcPixel : unmanaged, IPixel<TSrcPixel>            
+        {
+            for (int y = 0; y < dst.Height; y++)
+            {
+                var srcRow = src.DangerousGetPixelRowMemory(y).Span;
+                var dstRow = dst.UseScanlineBytes(y);
+
+                System.Runtime.InteropServices.MemoryMarshal
+                    .Cast<TSrcPixel, Byte>(srcRow)
+                    .CopyTo(dstRow);
+            }
+        }
+
+        public static void Copy<TDstPixel>(SpanBitmap src, Image<TDstPixel> dst)
+            where TDstPixel : unmanaged, IPixel<TDstPixel>
+        {
+            for (int y = 0; y < dst.Height; y++)
+            {
+                var srcRow = src.GetScanlineBytes(y);
+                var dstRow = dst.DangerousGetPixelRowMemory(y).Span;                
+
+                System.Runtime.InteropServices.MemoryMarshal
+                    .Cast<Byte, TDstPixel>(srcRow)
+                    .CopyTo(dstRow);
             }
         }
 

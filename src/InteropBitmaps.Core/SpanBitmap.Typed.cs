@@ -202,7 +202,7 @@ namespace InteropBitmaps
         public unsafe SpanBitmap<TDstPixel> ReinterpretOfType<TDstPixel>()
             where TDstPixel : unmanaged
         {
-            if (sizeof(TPixel) != sizeof(TDstPixel)) throw new ArgumentException("pixels size mismatch.");
+            if (sizeof(TPixel) != sizeof(TDstPixel)) throw new ArgumentException("pixels size mismatch.");            
 
             return _Writable.IsEmpty
                 ? new SpanBitmap<TDstPixel>(_Readable, _Info)
@@ -211,7 +211,7 @@ namespace InteropBitmaps
         
         public MemoryBitmap<TPixel> ToMemoryBitmap(PixelFormat? fmtOverride = null)
         {
-            fmtOverride = fmtOverride ?? this.PixelFormat;
+            fmtOverride ??= this.PixelFormat;
 
             if (fmtOverride.Value == this.PixelFormat) return new MemoryBitmap<TPixel>(_Readable.ToArray(), _Info);
 

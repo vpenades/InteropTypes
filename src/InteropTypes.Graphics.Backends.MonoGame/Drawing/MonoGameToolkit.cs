@@ -11,7 +11,7 @@ using XNACOLOR = Microsoft.Xna.Framework.Color;
 namespace InteropTypes.Graphics.Backends
 {
     public interface IMonoGameDrawing2D :
-        Drawing.IBackendViewportInfo,
+        IBackendViewportInfo,
         IDisposableCanvas2D,
         IMeshCanvas2D,
         ITransformer2D,
@@ -24,7 +24,7 @@ namespace InteropTypes.Graphics.Backends
     }
 
     public interface IMonoGameDrawing3D :
-        Drawing.IBackendViewportInfo,
+        IBackendViewportInfo,
         IDisposableScene3D,
         // IMeshScene3D,
         IServiceProvider
@@ -34,9 +34,7 @@ namespace InteropTypes.Graphics.Backends
         void Render();
     }
 
-
-
-    public static class MonoGameDrawing
+    public static partial class MonoGameToolkit
     {
         /// <summary>
         /// Takes a sprite texture image source (a string path, a raw texture, etc) and adds additional attributes
@@ -100,22 +98,12 @@ namespace InteropTypes.Graphics.Backends
                 tex = Texture2D.FromStream(gd, s);
             }
 
-            _PremultiplyAlpha(tex);
+            tex.PremultiplyAlpha();
 
             return tex;
         }
 
-        private static void _PremultiplyAlpha(Texture2D texture)
-        {
-            var data = new XNACOLOR[texture.Width * texture.Height];
-            texture.GetData(data);
-
-            // TODO: we could do with a parallels
-
-            for (int i = 0; i != data.Length; ++i) data[i] = XNACOLOR.FromNonPremultiplied(data[i].ToVector4());
-
-            texture.SetData(data);
-        }
+        
 
         internal static Texture2D _CreateSolidTexture(GraphicsDevice gd, int width, int height, XNACOLOR fillColor)
         {

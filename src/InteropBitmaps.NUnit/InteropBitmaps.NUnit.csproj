@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
-    <ProjectReference Include="..\InteropBitmaps.Drawing\InteropBitmaps.Drawing.csproj" />    
+    <ProjectReference Include="..\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />    
   </ItemGroup>
 
 </Project>

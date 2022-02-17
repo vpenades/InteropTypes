@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
-using InteropTypes.Graphics.Drawing;
+
 
 using NUnit.Framework;
+
+using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Backends;
 
 namespace InteropBitmaps.Drawing
 {

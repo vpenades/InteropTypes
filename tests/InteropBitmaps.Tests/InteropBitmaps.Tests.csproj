@@ -24,15 +24,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />    
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />    
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.5.20211231" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />
+    
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropBitmaps.Backends.FFmpeg.AutoGen.csproj" />        
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropWith.OpenCvSharp4.csproj" />
@@ -40,7 +41,7 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.VideoLAN\InteropBitmaps.Backends.VideoLAN.csproj" />    
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropBitmaps.Drawing.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
   </ItemGroup>  
 
 </Project>

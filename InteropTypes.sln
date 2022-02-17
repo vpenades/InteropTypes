@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.OpenCvSharp4", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.ZXing", "src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj", "{C7538BBF-8C64-4BCA-9BCA-DE67B7DC9B90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.WPF", "src\InteropBitmaps.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj", "{9120AFE7-EB78-4BDF-8427-229C89420B1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.WPF", "src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj", "{9120AFE7-EB78-4BDF-8427-229C89420B1A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.STB", "src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj", "{9CA81805-301D-4BDD-9E92-133C9C4EB203}"
 EndProject
@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropVision.Core", "src\I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bitmaps", "Bitmaps", "{F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Core", "src\InteropDrawing.Core\InteropTypes.Graphics.Drawing.Core.csproj", "{24CDA8A3-12EB-473B-A546-A9315343E207}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Core", "src\InteropTypes.Graphics.Drawing.Core\InteropTypes.Graphics.Drawing.Core.csproj", "{24CDA8A3-12EB-473B-A546-A9315343E207}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drawing", "Drawing", "{1B0945CE-4A72-4CB0-92FC-F0B648814095}"
 EndProject
@@ -55,9 +55,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropDrawing.Backends.SVG", "src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj", "{F2363BC6-B5DB-4D16-850B-B561A03CC18B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GLTF", "src\InteropDrawing.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj", "{B67426F4-ED6D-4F3D-A50D-E142DD985AEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GLTF", "src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj", "{B67426F4-ED6D-4F3D-A50D-E142DD985AEC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.MonoGame", "src\InteropDrawing.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj", "{6DA6AAE3-0896-4188-9036-23EFB4E2EE22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.MonoGame", "src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj", "{6DA6AAE3-0896-4188-9036-23EFB4E2EE22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropWith.MonoGame.Demo.App", "tests\InteropDrawing.MonoGame.Demo\InteropWith.MonoGame.Demo.App.csproj", "{6D8D03AB-2DDB-4A22-9591-07001CC40645}"
 EndProject
@@ -67,11 +67,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interop.MathF.Source", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interop.MathF.Source.Tests", "tests\Interop.MathF.Source.Tests\Interop.MathF.Source.Tests.csproj", "{5F316E96-DBC1-424A-87C7-B4DE18237289}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Drawing", "src\InteropBitmaps.Drawing\InteropBitmaps.Drawing.csproj", "{B6EACF05-2A76-472D-9EE9-A906C70DEB8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SpanBitmap", "src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj", "{B6EACF05-2A76-472D-9EE9-A906C70DEB8D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropVision.With.ZXing", "src\InteropVision.With.ZXing\InteropVision.With.ZXing.csproj", "{55D490C8-4CAD-4034-9178-D8C779072A37}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropDrawing.Backends.Plotly", "src\InteropDrawing.Backends.Plotly\InteropDrawing.Backends.Plotly.csproj", "{3C34B3B5-C92E-45B0-A3DE-26A72FC2EC35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Plotly", "src\InteropDrawing.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj", "{3C34B3B5-C92E-45B0-A3DE-26A72FC2EC35}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Backends.Android", "src\InteropBitmaps.Backends.Android\InteropBitmaps.Backends.Android.csproj", "{A8C9FC2F-2624-4AFE-AE0E-434A2B965430}"
 EndProject
@@ -102,6 +102,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Core", "src\InteropBitmaps.Core\InteropBitmaps.Core.csproj", "{7E54CEAF-A67A-4093-9EAA-6F5B27A16D15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Toolkit", "src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj", "{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Core.Tests", "InteropTypes.Graphics.Drawing.Core.Tests\InteropTypes.Graphics.Drawing.Core.Tests.csproj", "{7036A00F-83F7-4022-AAEC-A0B93AE82F90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -435,6 +437,14 @@ Global
 		{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785}.Release|x64.ActiveCfg = Release|Any CPU
 		{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785}.Release|x64.Build.0 = Release|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Debug|x64.Build.0 = Debug|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Release|x64.ActiveCfg = Release|Any CPU
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -463,7 +473,7 @@ Global
 		{6D8D03AB-2DDB-4A22-9591-07001CC40645} = {88681588-D801-4956-ACA7-ADE65AF158A7}
 		{4A3C9567-FA1D-4787-A9BD-A8691248490F} = {3CEF3DF0-92F3-43E7-84ED-A145547996B6}
 		{5F316E96-DBC1-424A-87C7-B4DE18237289} = {88681588-D801-4956-ACA7-ADE65AF158A7}
-		{B6EACF05-2A76-472D-9EE9-A906C70DEB8D} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
+		{B6EACF05-2A76-472D-9EE9-A906C70DEB8D} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{55D490C8-4CAD-4034-9178-D8C779072A37} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 		{3C34B3B5-C92E-45B0-A3DE-26A72FC2EC35} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{A8C9FC2F-2624-4AFE-AE0E-434A2B965430} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
@@ -480,6 +490,7 @@ Global
 		{B4A4BD11-BF09-4E70-9FD0-D5FE7F7EC795} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
 		{7E54CEAF-A67A-4093-9EAA-6F5B27A16D15} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
 		{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785} = {1B0945CE-4A72-4CB0-92FC-F0B648814095}
+		{7036A00F-83F7-4022-AAEC-A0B93AE82F90} = {1B0945CE-4A72-4CB0-92FC-F0B648814095}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

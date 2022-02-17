@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="6.0.200-preview.13.935" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="NUnitForImages.WPF" Version="3.0.0-Preview-20210913-1034" />
   </ItemGroup>
@@ -37,14 +37,17 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropBitmaps.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropWith.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropBitmaps.Backends.SkiaSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />    
     <ProjectReference Include="..\..\src\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropDrawing.Backends.Plotly.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj" />
+    
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+    
+    <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj" />
+    <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj" />
+
     <ProjectReference Include="..\..\src\InteropWith.MAUI\InteropWith.MAUI.csproj" />
   </ItemGroup>
 

@@ -8,6 +8,7 @@ using InteropTypes.Graphics.Drawing;
 using DRWCOLOR = System.Drawing.Color;
 using XNACOLOR = Microsoft.Xna.Framework.Color;
 using POINT3 = InteropTypes.Graphics.Drawing.Point3;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropTypes.Graphics.Backends
 {
@@ -127,6 +128,18 @@ namespace InteropTypes.Graphics.Backends
             m.M31 = terms.Translation.X;
             m.M32 = terms.Translation.Y;
             return m;
+        }
+
+        public static void PremultiplyAlpha(this Texture2D texture)
+        {
+            var data = new XNACOLOR[texture.Width * texture.Height];
+            texture.GetData(data);
+
+            // TODO: we could do with a parallels
+
+            for (int i = 0; i != data.Length; ++i) data[i] = XNACOLOR.FromNonPremultiplied(data[i].ToVector4());
+
+            texture.SetData(data);
         }
     }
 }

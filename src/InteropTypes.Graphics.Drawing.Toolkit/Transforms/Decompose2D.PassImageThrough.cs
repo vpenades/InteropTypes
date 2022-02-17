@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <summary>
         /// Base class for <see cref="ICoreScene3D"/> pass through classes.
         /// </summary>
-        public abstract class PassImageThrough : ICanvas2D, ColorStyle.IDefaultValue
+        public abstract class PassImageThrough : ICanvas2D, ColorStyle.IBackendDefaultValue
         {
             #region data
 

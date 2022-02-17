@@ -8,6 +8,7 @@ using NUnit.Framework;
 using InteropBitmaps;
 
 using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Backends;
 
 namespace InteropVision.Backends
 {

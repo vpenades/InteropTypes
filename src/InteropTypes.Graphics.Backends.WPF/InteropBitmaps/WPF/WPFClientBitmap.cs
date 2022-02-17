@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 using InteropBitmaps;
 
-namespace InteropTypes.Graphics.Backends
+namespace InteropTypes.Graphics.Backends.WPF
 {
 
     /// <summary>
@@ -14,7 +14,8 @@ namespace InteropTypes.Graphics.Backends
     /// </summary>
     public class WPFClientBitmap : DispatcherObject, System.ComponentModel.INotifyPropertyChanged
     {
-        // TODO: this must be a visual collection so we can add/remove layers
+        // TODO: this must be a visual collection so we can add/remove
+        // layers so we can draw a bitmap and a drawing.
 
         #region lifecycle
         
@@ -33,16 +34,26 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region properties
+        #region properties        
 
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// This is the bitmap that is displayed by WPF
+        /// </summary>
         public System.Windows.Media.Imaging.BitmapSource FrontBuffer => _FrontBuffer;
+        
+        /// <summary>
+        /// Called when <see cref="FrontBuffer"/> is updated.
+        /// </summary>
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
         #region API        
 
+        /// <summary>
+        /// Called from any thread to update the display bitmap
+        /// </summary>
+        /// <param name="src"></param>
         public void Update(SpanBitmap src)
         {
             if (!this.CheckAccess())

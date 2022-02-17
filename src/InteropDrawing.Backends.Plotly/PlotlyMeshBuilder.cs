@@ -7,7 +7,7 @@ using InteropTypes.Graphics.Drawing;
 using TRACES = Plotly.Box<Plotly.Types.ITracesProperty>;
 using VECTOR3 = System.Numerics.Vector3;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     class _PlotlyMeshBuilder : ICoreScene3D
     {

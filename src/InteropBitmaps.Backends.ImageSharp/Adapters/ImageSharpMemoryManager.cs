@@ -18,7 +18,10 @@ namespace InteropBitmaps.Adapters
         {
             _Image = image;
             _Owned = owned;
-            _Binfo = image.AsSpanBitmap().Info;
+
+            _Binfo = _Implementation.TryGetExactPixelFormat<TPixel>(out var pfmt)
+                ? new BitmapInfo(image.Width, image.Height, pfmt)
+                : throw new NotImplementedException(typeof(TPixel).Name);
         }
 
         protected override void Dispose(bool disposing)
@@ -30,9 +33,7 @@ namespace InteropBitmaps.Adapters
                     var src = new PointerBitmap(_Unmanaged, _Binfo)
                         .AsSpanBitmap();
 
-                    _Image.AsSpanBitmap()
-                        .AsTypeless()
-                        .SetPixels(0, 0, src);
+                    _Implementation.Copy(src, _Image);
                 }
 
                 if (_Owned && _Image != null) { System.Threading.Interlocked.Exchange(ref _Image, null)?.Dispose(); }
@@ -86,9 +87,7 @@ namespace InteropBitmaps.Adapters
 
             _Unmanaged = System.Runtime.InteropServices.Marshal.AllocHGlobal(span.Length);
 
-            new PointerBitmap(_Unmanaged, _Binfo)
-                .AsSpanBitmap()
-                .SetPixels(0, 0, _Image.AsSpanBitmap());
+            _Implementation.Copy(_Image, new PointerBitmap(_Unmanaged, _Binfo).AsSpanBitmap());
 
             return _Unmanaged;
         }

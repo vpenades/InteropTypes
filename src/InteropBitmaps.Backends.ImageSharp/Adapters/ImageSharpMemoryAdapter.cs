@@ -21,10 +21,7 @@ namespace InteropBitmaps.Adapters
             {
                 if (_ProxyImage.Width != _SourceBitmap.Width || _ProxyImage.Height != _SourceBitmap.Height) throw new ArgumentException("Operations that resize the source image are not allowed.", nameof(Image));
 
-                if (!_SourceBitmap.Info.IsContinuous)
-                {
-                    _SourceBitmap.SetPixels(0, 0, _ProxyImage.AsSpanBitmap());
-                }
+                _Implementation.Copy(_ProxyImage, _SourceBitmap);
 
                 _SourceBitmap = default;
             }

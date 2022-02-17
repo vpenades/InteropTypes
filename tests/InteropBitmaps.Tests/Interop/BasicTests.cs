@@ -53,78 +53,87 @@ namespace InteropBitmaps
         [Test]
         public void DrawPrimitivesWithMultipleAdapters()
         {
-            // load an image with Sixlabors Imagesharp, notice we use BGRA32 because RGBA32 is NOT supported by GDI.
-            var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(TestResources.ShannonJpg);
+            void _drawUsingMultipleDevices(SpanBitmap<SixLabors.ImageSharp.PixelFormats.Bgra32> img)
+            {
+                var slice = img.Slice((10, 10, img.Width - 20, img.Height - 20)); // crop the source image with a 10 pixels margin
 
-            // slice the central region of the source image
-            var slice = img
-                .AsSpanBitmap()
-                .Slice((10, 10, img.Width - 20, img.Height - 20)); // crop the source image with a 10 pixels margin
+                // cast to OpenCV adapter to blur and find edges in the image.
+                slice
+                    .WithOpenCv()
+                    .ApplyBlur((4, 4))
+                    .ApplyCanny(100, 200);
 
-            // cast to OpenCV adapter to blur and find edges in the image.
-            slice
-                .WithOpenCv()                
-                .ApplyBlur((4,4))
-                .ApplyCanny(100, 200);
+                // cast to GDI Adapter to draw primitives.
+                slice
+                    .WithGDI()
+                    .Draw
+                    (dc =>
+                    {
+                        var a = new System.Drawing.Point(5, 5);
+                        var b = new System.Drawing.Point(50, 50);
+                        var c = new System.Drawing.Point(5, 50);
 
-            // cast to GDI Adapter to draw primitives.
-            slice
-                .WithGDI()
-                .Draw
-                ( dc => {
-                    var a = new System.Drawing.Point(5, 5);
-                    var b = new System.Drawing.Point(50, 50);
-                    var c = new System.Drawing.Point(5, 50);
-
-                    var f = new System.Drawing.Font("arial", 30);
+                        var f = new System.Drawing.Font("arial", 30);
 
                     // draw a triangle
                     dc.DrawPolygon(System.Drawing.Pens.Yellow, new[] { a, b, c });
                     // draw text
                     dc.DrawString("GDI Text", f, System.Drawing.Brushes.Yellow, new System.Drawing.PointF(5, 60));
-                } );
+                    });
 
-            // cast to SkiaSharp Adapter to draw primitives.
-            slice
-                .WithSkiaSharp()
-                .Draw
-                ( canvas => {
-                    var p0 = new SkiaSharp.SKPoint(5, 120);
-                    var p1 = new SkiaSharp.SKPoint(250, 120);
-
-                    using var skiaPaint = new SkiaSharp.SKPaint
+                // cast to SkiaSharp Adapter to draw primitives.
+                slice
+                    .WithSkiaSharp()
+                    .Draw
+                    (canvas =>
                     {
-                        TextSize = 64.0f, IsAntialias = true, StrokeWidth = 20,
-                        Color = new SkiaSharp.SKColor(0, 0, 255),
-                        Style = SkiaSharp.SKPaintStyle.Fill                        
-                    };
+                        var p0 = new SkiaSharp.SKPoint(5, 120);
+                        var p1 = new SkiaSharp.SKPoint(250, 120);
 
-                    canvas.DrawLine(p0, p1, skiaPaint);
-                    canvas.DrawText("SkiaSharp Text", new SkiaSharp.SKPoint(5, 200), skiaPaint);                    
-                } );
+                        using var skiaPaint = new SkiaSharp.SKPaint
+                        {
+                            TextSize = 64.0f,
+                            IsAntialias = true,
+                            StrokeWidth = 20,
+                            Color = new SkiaSharp.SKColor(0, 0, 255),
+                            Style = SkiaSharp.SKPaintStyle.Fill
+                        };
 
-            // cast to imagesharp Adapter to draw primitives
-            slice
-                .WithImageSharp()
-                .Mutate
-                ( ipc=> {
-                    
-                    ipc.FillPolygon(SixLabors.ImageSharp.Color.Green, (5, 250), (50, 250), (5, 300));
-                    ipc.DrawText("ImageSharp Text", SixLabors.Fonts.SystemFonts.CreateFont("Arial", 40), SixLabors.ImageSharp.Color.Green, new SixLabors.ImageSharp.PointF(80, 250));
-                } );
+                        canvas.DrawLine(p0, p1, skiaPaint);
+                        canvas.DrawText("SkiaSharp Text", new SkiaSharp.SKPoint(5, 200), skiaPaint);
+                    });
 
-            // wpf
+                // cast to imagesharp Adapter to draw primitives
+                slice
+                    .WithImageSharp()
+                    .Mutate
+                    (ipc =>
+                    {
 
-            /* not working yet
-            slice
-                .WithWPF()
-                .Draw
-                (dc =>
-                {
-                    dc.DrawEllipse(System.Windows.Media.Brushes.Red, null, new System.Windows.Point(5, 5), 10, 10);
-                    dc.DrawEllipse(System.Windows.Media.Brushes.Blue, null, new System.Windows.Point(50, 50), 100, 100);
-                }
-                );*/
+                        ipc.FillPolygon(SixLabors.ImageSharp.Color.Green, (5, 250), (50, 250), (5, 300));
+                        ipc.DrawText("ImageSharp Text", SixLabors.Fonts.SystemFonts.CreateFont("Arial", 40), SixLabors.ImageSharp.Color.Green, new SixLabors.ImageSharp.PointF(80, 250));
+                    });
+
+                // wpf
+
+                /* not working yet
+                slice
+                    .WithWPF()
+                    .Draw
+                    (dc =>
+                    {
+                        dc.DrawEllipse(System.Windows.Media.Brushes.Red, null, new System.Windows.Point(5, 5), 10, 10);
+                        dc.DrawEllipse(System.Windows.Media.Brushes.Blue, null, new System.Windows.Point(50, 50), 100, 100);
+                    }
+                    );*/
+            }            
+
+            // load an image with Sixlabors Imagesharp, notice we use BGRA32 because RGBA32 is NOT supported by GDI.
+            var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(TestResources.ShannonJpg);
+
+            // render using multiple devices
+
+            img.MutateAsSpanBitmap(self => _drawUsingMultipleDevices(self.OfType<SixLabors.ImageSharp.PixelFormats.Bgra32>()));            
 
             // save the result back with ImageSharp
 

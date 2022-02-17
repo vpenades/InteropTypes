@@ -22,10 +22,11 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropDrawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />    
+    <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />    
   </ItemGroup>
 
 
+  <!--
   <ItemGroup>
     <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\Transforms\Decompose*.cs" LinkBase="Transforms" />
     <Compile Include="..\InteropTypes.Graphics.Drawing.Toolkit\Transforms\Transform*.cs" LinkBase="Transforms" />
@@ -37,11 +38,10 @@
     <Compile Remove="..\InteropTypes.Graphics.Drawing.Toolkit\Transforms\_Public.cs" />
     <Compile Remove="..\InteropTypes.Graphics.Drawing.Toolkit\Backends\_Public.cs" />
   </ItemGroup>
-
-  <!--
+  -->
+  
   <ItemGroup>    
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
-  </ItemGroup>
-  -->
+  </ItemGroup>  
 
 </Project>

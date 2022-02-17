@@ -110,32 +110,29 @@ namespace InteropBitmaps.Examples
 
             // direct conversion.
 
-            using var bitmap = image
-                .AsSpanBitmap()             // Wrap ImageSharp as SpanBitmap.
-                .WithGDI()                  // Get the System.Drawing API for this SpanBitmap.
-                .ToBitmap();                // create System.Drawing.Bitmap copy.
+            using var bitmap = image.ReadAsSpanBitmap(self => self.WithGDI().ToBitmap());
 
             bitmap.AttachToCurrentTest("result.jpg");
 
             // resized conversion.
 
-            using var resized = image
-                .AsSpanBitmap()             // Wrap ImageSharp as SpanBitmap.
-                .WithGDI()                  // Get the System.Drawing API for this SpanBitmap.
-                .ToResizedBitmap(32,32);    // create a resized System.Drawing.Bitmap copy.
+            using var resized = image.ReadAsSpanBitmap(self => self.WithGDI().ToResizedBitmap(32, 32));            
 
             resized.AttachToCurrentTest("resized.jpg");
 
-            // using MemoryBitmap facade.            
+            // using MemoryBitmap facade.
 
-            using var memory = image.UsingMemoryBitmap(); // using imagesharp image as a MemoryBitmap.
+            void _gdiDraw(SpanBitmap image)
+            {
+                using var gdi = image.ToMemoryBitmap().UsingGDI(); // using memoryBitmap as a System.Drawing.Bitmap
 
-                using var gdi = memory.Bitmap.UsingGDI(); // using memoryBitmap as a System.Drawing.Bitmap
+                gdi.Canvas
+                    .DrawLine(System.Drawing.Pens.Red, new System.Drawing.Point(2, 2), new System.Drawing.Point(500, 500));
 
-                    gdi.Canvas
-                        .DrawLine(System.Drawing.Pens.Red, new System.Drawing.Point(2, 2), new System.Drawing.Point(500, 500));
+                gdi.Bitmap.AttachToCurrentTest("drawn.jpg");
+            }
 
-                    gdi.Bitmap.AttachToCurrentTest("drawn.jpg");
+            image.MutateAsSpanBitmap(_gdiDraw);            
 
         }
     }

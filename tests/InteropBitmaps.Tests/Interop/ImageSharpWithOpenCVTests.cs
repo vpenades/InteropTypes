@@ -51,7 +51,8 @@ namespace InteropBitmaps.Interop
                 return foot_seg_marker;
             }
 
-            img.AsSpanBitmap().WithOpenCv().Apply(_Process);
+            img.MutateAsSpanBitmap(self => self.WithOpenCv().Apply(_Process));
+
             img.AttachToCurrentTest("result.png");
 
             // var img2 = img.AsSpanBitmap().AsOpenCVSharp().CloneMutated(_Process);

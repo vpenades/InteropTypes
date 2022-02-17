@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Numerics;
 
-using InteropTypes.Graphics.Drawing;
-
 using Plotly;
 
-namespace InteropDrawing.Backends
+using InteropTypes.Graphics.Drawing;
+
+namespace InteropTypes.Graphics.Backends
 {
     class _PlotlyDrawing3DContext :
-        InteropTypes.Graphics.Drawing.Transforms.Decompose3D.PassThrough,
+        Drawing.Transforms.Decompose3D.PassThrough,
         IDisposableScene3D
     {
         #region lifecycle

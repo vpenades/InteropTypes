@@ -93,7 +93,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (texture == null)
             {
-                if (_WhiteTexture == null) _WhiteTexture = MonoGameDrawing._CreateSolidTexture(_Device, 16, 16, Color.White);
+                if (_WhiteTexture == null) _WhiteTexture = MonoGameToolkit._CreateSolidTexture(_Device, 16, 16, Color.White);
                 texture = _WhiteTexture;
             }
 
@@ -154,7 +154,7 @@ namespace InteropTypes.Graphics.Backends
 
             if (_SpriteTextures.TryGetValue(imageSource, out (Texture2D, SpriteTextureAttributes) xtex)) return xtex;
 
-            xtex = MonoGameDrawing.CreateTexture(_Device, imageSource);
+            xtex = MonoGameToolkit.CreateTexture(_Device, imageSource);
 
             return _SpriteTextures[imageSource] = xtex;
         }
