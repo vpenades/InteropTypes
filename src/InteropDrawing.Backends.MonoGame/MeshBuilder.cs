@@ -42,8 +42,8 @@ namespace InteropTypes.Graphics.Backends
         private XY _SpriteUv2Bleed = XY.Zero;
         private XY _SpriteUv3Bleed = XY.Zero;
         private XY _SpriteCoordInvScale;
-        private bool _SpriteHFlip;
-        private bool _SpriteVFlip;
+        private bool _SpriteMirrorX;
+        private bool _SpriteMirrorY;
 
         private readonly LinesBuffer _Lines = new LinesBuffer();
         private readonly TrianglesBuffer _Triangles = new TrianglesBuffer();
@@ -79,10 +79,10 @@ namespace InteropTypes.Graphics.Backends
 
         #region API
 
-        public void SetSpriteGlobalFlip(bool hflip, bool vflip)
+        public void SetSpriteGlobalMirror(bool mirrorX, bool mirrorY)
         {
-            _SpriteHFlip = hflip;
-            _SpriteVFlip = vflip;
+            _SpriteMirrorX = mirrorX;
+            _SpriteMirrorY = mirrorY;
         }
 
         public void SetSpriteTextureSize(int width, int height)

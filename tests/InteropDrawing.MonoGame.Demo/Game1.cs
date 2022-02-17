@@ -109,7 +109,7 @@ namespace InteropDrawing
             GraphicsDevice.BlendState = BlendState.Opaque;            
 
             _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);
-            _Drawing2D.SetSpriteFlip(false, _FlipSprites);            
+            _Drawing2D.SetSpriteMirror(false, _FlipSprites);            
 
             var vp = _Drawing2D.TransformInverse(new Point2(mouseState.Position.X, mouseState.Position.Y));
 
@@ -148,8 +148,8 @@ namespace InteropDrawing
 
             // draw tiles with half pixel
 
-            var tile1 = ImageAsset.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4);
-            var tile2 = ImageAsset.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);
+            var tile1 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4);
+            var tile2 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);
 
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600, 500), tile1);
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600 + 65, 500), tile2);

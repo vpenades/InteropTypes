@@ -32,15 +32,15 @@ namespace InteropDrawing
 
     class _Sprites2D : IDrawingBrush<ICanvas2D>
     {
-        private static readonly ImageAsset[] _Punk = ImageAsset.CreateGrid("Assets\\PunkRun.png", (256, 256), (128, 128), false, 8, 8).ToArray();
-        private static readonly ImageAsset[] _Tiles = ImageAsset.CreateGrid("Assets\\Tiles.png", (16, 16), XY.Zero, 63, 9).ToArray();
+        private static readonly ImageSource[] _Punk = ImageSource.CreateGrid("Assets\\PunkRun.png", 8, 8, (256, 256), (128, 128)).ToArray();
+        private static readonly ImageSource[] _Tiles = ImageSource.CreateGrid("Assets\\Tiles.png", 63, 9, (16, 16), XY.Zero).ToArray();
 
-        private static readonly ImageAsset _Offset0 = ImageAsset.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40,108), false).WithScale(0.45f);
-        private static readonly ImageAsset _Offset1 = ImageAsset.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), true).WithScale(0.45f);
+        private static readonly ImageSource _Offset0 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40,108), false).WithScale(0.45f);
+        private static readonly ImageSource _Offset1 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), true).WithScale(0.45f);
 
         private static readonly BitmapGrid _Map1 = new BitmapGrid(4, 4, _Tiles);
 
-        private static readonly ImageAsset Beam1 = ImageAsset.CreateFromBitmap("Assets\\beam1.png", (256, 32), (16, 16));
+        private static readonly ImageSource Beam1 = ImageSource.CreateFromBitmap("Assets\\beam1.png", (256, 32), (16, 16));
 
         private static readonly System.Diagnostics.Stopwatch _Timer = System.Diagnostics.Stopwatch.StartNew();
 
@@ -53,7 +53,7 @@ namespace InteropDrawing
                 * System.Numerics.Matrix3x2.CreateRotation(_Time)
                    * System.Numerics.Matrix3x2.CreateTranslation(400, 300);
 
-            var image = ImageAsset.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
+            var image = ImageSource.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
 
             dc.DrawImage(x, image);
 
@@ -107,7 +107,7 @@ namespace InteropDrawing
     {
         #region lifecycle
 
-        public BitmapGrid(int width, int height, ImageAsset[] templates)
+        public BitmapGrid(int width, int height, ImageSource[] templates)
         {
             _Sprites = templates;
             _Width = width;
@@ -122,7 +122,7 @@ namespace InteropDrawing
 
         #region data
 
-        private readonly ImageAsset[] _Sprites;
+        private readonly ImageSource[] _Sprites;
 
         private readonly int _Width;
         private readonly int _Height;
@@ -135,7 +135,7 @@ namespace InteropDrawing
 
         public void DrawTo(ICanvas2D target, System.Numerics.Matrix3x2 transform)
         {
-            var tmp = new ImageAsset();
+            var tmp = new ImageSource();
 
             for (int y = 0; y < _Height; ++y)
             {
@@ -145,7 +145,7 @@ namespace InteropDrawing
 
                     var idx = _Tiles[y * _Width + x];
 
-                    _Sprites[idx].CopyTo(tmp, -offset);
+                    _Sprites[idx].CopyTo(tmp, -offset);                    
 
                     target.DrawImage(transform, tmp);
                 }

@@ -118,7 +118,7 @@ namespace InteropDrawing
             scene.DrawCircle((10, 10), 5, COLOR.Blue);
 
             var charPath = System.IO.Path.Combine(AssetsDir, "Tiles.jpg");
-            var cell = new ImageAsset(charPath, (0, 0), (64, 64), (32, 32));
+            var cell = new ImageSource(charPath, (0, 0), (64, 64), (32, 32));
 
             scene.DrawImage(Matrix3x2.CreateTranslation(2, 2), cell);            
 

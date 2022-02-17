@@ -149,10 +149,10 @@ namespace InteropDrawing
             var renderTarget = new WPFRenderTarget(256, 256);
 
             var charPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Assets\\PunkRun.png");
-            var character = ImageAsset.CreateGrid(charPath, (256, 256), (128, 128), 8, 8).ToArray();
+            var character = ImageSource.CreateGrid(charPath, 8, 8, (256, 256), (128, 128)).ToArray();
 
             var tilesPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Assets\\Tiles.jpg");
-            var tiles = ImageAsset.CreateFromBitmap(tilesPath, (1024, 1024), (512, 512));
+            var tiles = ImageSource.CreateFromBitmap(tilesPath, (1024, 1024), (512, 512));
 
             using (var dc = renderTarget.OpenDrawingContext())
             {

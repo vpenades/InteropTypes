@@ -35,7 +35,7 @@ namespace InteropBitmaps.Drawing
             var bmp = new MemoryBitmap<Pixel.BGR24>(512, 512);
 
             var cat = MemoryBitmap.Load("Resources\\cat.png", Codecs.GDICodec.Default);
-            var asset = new ImageAsset(cat, (0, 0), (32,35), (15,15));
+            var asset = new ImageSource(cat, (0, 0), (32,35), (15,15));
 
             var dc = bmp.CreateDrawingContext();
 

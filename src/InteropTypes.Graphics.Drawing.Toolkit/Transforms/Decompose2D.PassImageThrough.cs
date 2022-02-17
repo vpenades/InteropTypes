@@ -47,7 +47,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             /// This method is called to set or clear the current image drawing
             /// </summary>
             /// <param name="image">the image being set, or null</param>
-            protected abstract void SetImage(ImageAsset image);
+            protected abstract void SetImage(ImageSource image);
 
             private void _Check()
             {
@@ -70,7 +70,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             /// <inheritdoc/>
             public void DrawImage(in Matrix3x2 transform, ImageStyle style)
             {
-                _Check(); SetImage(style.Bitmap); _Target.DrawImage(transform, style);
+                _Check(); SetImage(style.Image); _Target.DrawImage(transform, style);
             }
 
             /// <inheritdoc/>

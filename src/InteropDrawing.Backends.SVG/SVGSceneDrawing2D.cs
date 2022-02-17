@@ -204,12 +204,12 @@ namespace InteropDrawing.Backends
         {
             if (!_CanRenderBitmaps) return;
 
-            var bmp = style.Bitmap;
+            var bmp = style.Image;
 
             var img = _UseImage(bmp.Source);
             if (img == null) return;
 
-            style.Bitmap.WithImageSize(img.Width, img.Height);
+            style.Image.WithSourceSize(img.Width, img.Height);
 
             var xform = style.GetTransform() * transform;
 

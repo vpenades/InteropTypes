@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Backends
     {
         void Begin(int virtualWidth, int virtualHeight, bool keepAspect);
         void SetCamera(System.Numerics.Matrix3x2 camera);
-        void SetSpriteFlip(bool hflip, bool vflip);
+        void SetSpriteMirror(bool mirrorX, bool mirrorY);
         void End();
     }
 
@@ -41,10 +41,10 @@ namespace InteropTypes.Graphics.Backends
         /// <summary>
         /// Takes a sprite texture image source (a string path, a raw texture, etc) and adds additional attributes
         /// </summary>
-        /// <param name="source">The value of <see cref="ImageAsset.Source"/></param>
+        /// <param name="source">The value of <see cref="ImageSource.Source"/></param>
         /// <param name="sampler">The sampler to associate with the image</param>
         /// <param name="textureBleed">the texture bleed to associate with the image</param>
-        /// <returns>A new value that replaces <see cref="ImageAsset.Source"/></returns>
+        /// <returns>A new value that replaces <see cref="ImageSource.Source"/></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static object CreateSpriteAssetSource(object source, SamplerState sampler = null, float textureBleed = 0)
         {

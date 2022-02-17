@@ -81,9 +81,9 @@ namespace InteropDrawing.Backends
             float opacity = style.Color.A;
             opacity /= 255f;
 
-            if (style.Bitmap.Source is InteropBitmaps.IMemoryBitmap typeless)
+            if (style.Image.Source is InteropBitmaps.IMemoryBitmap typeless)
             {
-                style.Bitmap.WithImageSize(typeless.Width, typeless.Height);
+                style.Image.WithSourceSize(typeless.Width, typeless.Height);
 
                 var tsrc = typeless.AsSpanBitmap();                
 

@@ -292,7 +292,7 @@ namespace InteropTypes.Graphics.Backends.WPF
         /// <inheritdoc/>
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
-            var bmp = style.Bitmap;
+            var bmp = style.Image;
             var bmpRect = System.Drawing.Rectangle.Truncate(bmp.GetSourceRectangle());
 
             var image = _UseImage(bmp.Source);

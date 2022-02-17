@@ -16,7 +16,7 @@ namespace InteropWith
 {
     class ProgramWin
     {
-        private static ImageAsset _Sprite1 = new ImageAsset("assets\\hieroglyph_sprites_by_asalga.png", (0, 0), (192, 192), (8, 8));
+        private static ImageSource _Sprite1 = new ImageSource("assets\\hieroglyph_sprites_by_asalga.png", (0, 0), (192, 192), (8, 8));
 
         public static void Run(string[] args)
         {

@@ -10,7 +10,7 @@ namespace InteropVision
     public partial class ColorFrameState : IDrawingBrush<ICanvas2D>
     {
         private MemoryBitmap _Image;
-        private ImageAsset _SpriteAsset;
+        private ImageSource _SpriteAsset;
 
         public MemoryBitmap Image => _Image;
 
@@ -38,7 +38,7 @@ namespace InteropVision
             if (_SpriteAsset == null)
             {
                 var bmp = GetDisplayBitmap();
-                _SpriteAsset = ImageAsset.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
+                _SpriteAsset = ImageSource.CreateFromBitmap(bmp, (bmp.Width, bmp.Height), (0, 0));
             }
 
             dc.DrawImage(Matrix3x2.Identity, _SpriteAsset);

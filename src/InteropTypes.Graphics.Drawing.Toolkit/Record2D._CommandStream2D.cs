@@ -63,7 +63,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             ref var xref = ref AddHeaderAndStruct<_PrimitiveImage>((int)_PrimitiveType.Image)[0];
             xref.Transform = xform;
-            xref.ImageRef = AddReference(style.Bitmap);
+            xref.ImageRef = AddReference(style.Image);
             xref.Flags = style.Flags;
             xref.Color = style.Color;
         }
@@ -280,7 +280,7 @@ namespace InteropTypes.Graphics.Drawing
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];                
 
-                var xref = (ImageAsset)references[src.ImageRef];
+                var xref = (ImageSource)references[src.ImageRef];
                 var style = new ImageStyle(xref, src.Color, src.Flags);
 
                 Span<XY> vertices = stackalloc XY[4];
@@ -297,7 +297,7 @@ namespace InteropTypes.Graphics.Drawing
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveImage>(command)[0];
 
-                var xref = (ImageAsset)references[src.ImageRef];
+                var xref = (ImageSource)references[src.ImageRef];
                 var style = new ImageStyle(xref, src.Color, src.Flags);
 
                 dst.DrawImage(src.Transform, style);

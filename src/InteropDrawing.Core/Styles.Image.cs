@@ -18,34 +18,34 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region implicit
 
-        public static implicit operator ImageStyle(ImageAsset asset) { return new ImageStyle(asset, ColorStyle.White, false, false); }
+        public static implicit operator ImageStyle(ImageSource asset) { return new ImageStyle(asset, ColorStyle.White, false, false); }
 
-        public static implicit operator ImageStyle((ImageAsset asset, ColorStyle color) args) { return new ImageStyle(args.asset, args.color, false, false); }
+        public static implicit operator ImageStyle((ImageSource asset, ColorStyle color) args) { return new ImageStyle(args.asset, args.color, false, false); }
 
-        public static implicit operator ImageStyle((ImageAsset asset, ColorStyle color, bool, bool) tuple) { return new ImageStyle(tuple.asset, tuple.color, tuple.Item3, tuple.Item4); }
+        public static implicit operator ImageStyle((ImageSource asset, ColorStyle color, bool, bool) tuple) { return new ImageStyle(tuple.asset, tuple.color, tuple.Item3, tuple.Item4); }
 
-        public static implicit operator ImageStyle((ImageAsset asset, bool, bool) tuple) { return new ImageStyle(tuple.asset, ColorStyle.White, tuple.Item2, tuple.Item3); }
+        public static implicit operator ImageStyle((ImageSource asset, bool, bool) tuple) { return new ImageStyle(tuple.asset, ColorStyle.White, tuple.Item2, tuple.Item3); }
 
         #endregion
 
         #region constructor
 
-        public ImageStyle(ImageAsset bitmap, ColorStyle color, bool flipHorizontal, bool flipVertical)
+        public ImageStyle(ImageSource bitmap, ColorStyle color, bool flipHorizontal, bool flipVertical)
         {
-            Bitmap = bitmap;
+            Image = bitmap;
             Color = color;
 
-            _Orientation = Orientation.None;
-            _Orientation |= flipHorizontal ? Orientation.FlipHorizontal : Orientation.None;
-            _Orientation |= flipVertical ? Orientation.FlipVertical : Orientation.None;
+            _Orientation = _ImageFlags.None;
+            _Orientation |= flipHorizontal ? _ImageFlags.FlipHorizontal : _ImageFlags.None;
+            _Orientation |= flipVertical ? _ImageFlags.FlipVertical : _ImageFlags.None;
         }
 
-        public ImageStyle(ImageAsset bitmap, ColorStyle color, int flags)
+        public ImageStyle(ImageSource bitmap, ColorStyle color, int flags)
         {
-            Bitmap = bitmap;
+            Image = bitmap;
             Color = color;
 
-            _Orientation = (Orientation)flags;
+            _Orientation = (_ImageFlags)flags;
         }
 
         #endregion
@@ -55,7 +55,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// The image source.
         /// </summary>
-        public ImageAsset Bitmap;
+        public ImageSource Image;
 
         /// <summary>
         /// The color tint to apply to the bitmap.
@@ -65,12 +65,12 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// The orientation of the bitmap.
         /// </summary>
-        internal Orientation _Orientation;
+        internal _ImageFlags _Orientation;
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            var h = Bitmap?.GetHashCode() ?? 0;
+            var h = Image?.GetHashCode() ?? 0;
             h ^= Color.GetHashCode();
             h ^= _Orientation.GetHashCode();
             return h;
@@ -83,7 +83,7 @@ namespace InteropTypes.Graphics.Drawing
         public bool Equals(ImageStyle other)
         {
             return
-                this.Bitmap == other.Bitmap &&
+                this.Image == other.Image &&
                 this.Color == other.Color && 
                 this._Orientation == other._Orientation;            
         }
@@ -100,18 +100,18 @@ namespace InteropTypes.Graphics.Drawing
 
         public bool IsEmpty => !IsVisible;
 
-        public bool IsVisible => Bitmap.IsVisible && Color.IsVisible;
+        public bool IsVisible => Image.IsVisible && Color.IsVisible;
 
         public bool FlipHorizontal
         {
-            get => _Orientation.HasFlag(Orientation.FlipHorizontal);
-            set => _Orientation = _Orientation & ~Orientation.FlipHorizontal | (value ? Orientation.FlipHorizontal : Orientation.None);
+            get => _Orientation.HasFlag(_ImageFlags.FlipHorizontal);
+            set => _Orientation = _Orientation & ~_ImageFlags.FlipHorizontal | (value ? _ImageFlags.FlipHorizontal : _ImageFlags.None);
         }
 
         public bool FlipVertical
         {
-            get => _Orientation.HasFlag(Orientation.FlipVertical);
-            set => _Orientation = _Orientation & ~Orientation.FlipVertical | (value ? Orientation.FlipVertical : Orientation.None);
+            get => _Orientation.HasFlag(_ImageFlags.FlipVertical);
+            set => _Orientation = _Orientation & ~_ImageFlags.FlipVertical | (value ? _ImageFlags.FlipVertical : _ImageFlags.None);
         }
 
         public int Flags => (int)_Orientation;
@@ -124,21 +124,21 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the local transform associated to this image (Pivot, scale, mirroring).
         /// </summary>
         /// <returns>A transform matrix.</returns>
-        public System.Numerics.Matrix3x2 GetTransform() { return Bitmap.UseTransforms().GetImageMatrix(_Orientation); }
+        public System.Numerics.Matrix3x2 GetTransform() { return Image.UseTransforms().GetImageMatrix(_Orientation); }
 
         /// <summary>
         /// Gets the local transform associated to this image (Pivot, scale, mirroring).
         /// </summary>
-        /// <param name="hflip">True to mirror horizontally.</param>
-        /// <param name="vflip">True to mirror vertically.</param>
+        /// <param name="mirrorX">True to mirror horizontally.</param>
+        /// <param name="mirrorY">True to mirror vertically.</param>
         /// <returns>A transform matrix.</returns>
-        public System.Numerics.Matrix3x2 GetTransform(bool hflip, bool vflip)
+        public System.Numerics.Matrix3x2 GetTransform(bool mirrorX, bool mirrorY)
         {
             var o = _Orientation;
-            o ^= hflip ? Orientation.FlipHorizontal : Orientation.None;
-            o ^= vflip ? Orientation.FlipVertical : Orientation.None;
+            o ^= mirrorX ? _ImageFlags.FlipHorizontal : _ImageFlags.None;
+            o ^= mirrorY ? _ImageFlags.FlipVertical : _ImageFlags.None;
 
-            return Bitmap.UseTransforms().GetImageMatrix(o);
+            return Image.UseTransforms().GetImageMatrix(o);
         }        
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="depthZ">the depth to set in the Position.Z of the vertices</param>
         public void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, float depthZ = 1)
         {
-            Bitmap.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed, depthZ);
+            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed, depthZ);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="xform">the transform to apply</param>        
         public void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform)
         {
-            Bitmap.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed);
+            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed);
         }
 
         /// <summary>
@@ -169,19 +169,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="xform">the transform to apply</param>        
         public void TransformVertices(Span<XY> vertices, System.Numerics.Matrix3x2 xform)
         {
-            Bitmap.UseTransforms().TransformVertices(vertices, xform, _Orientation);
-        }
-
-        #endregion
-
-        #region nested types
-
-        [Flags]
-        internal enum Orientation
-        {
-            None = 0,
-            FlipHorizontal = 1,
-            FlipVertical = 2,
+            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation);
         }
 
         #endregion

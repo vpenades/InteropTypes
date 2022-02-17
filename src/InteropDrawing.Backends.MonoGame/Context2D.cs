@@ -142,9 +142,9 @@ namespace InteropTypes.Graphics.Backends
         }
 
         /// <inheritdoc />
-        public void SetSpriteFlip(bool hflip, bool vflip)
+        public void SetSpriteMirror(bool hflip, bool vflip)
         {
-            _VectorsBatch.SetSpriteGlobalFlip(hflip, vflip);
+            _VectorsBatch.SetSpriteGlobalMirror(hflip, vflip);
         }
 
         /// <inheritdoc />
@@ -216,14 +216,14 @@ namespace InteropTypes.Graphics.Backends
 
         #region API - IDrawing2D        
 
-        protected override void SetImage(ImageAsset image)
+        protected override void SetImage(ImageSource image)
         {
             if (image == null) { SetTexture(null); return; }
 
             var (tex, attr) = FetchTexture(image.Source);
             if (tex == null) { SetTexture(null); return; }
 
-            image.WithImageSize(tex.Width, tex.Height);
+            image.WithSourceSize(tex.Width, tex.Height);
 
             SetTexture(tex, attr);
         }

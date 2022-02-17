@@ -170,8 +170,8 @@ namespace InteropWith
 
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
-            var tex = GetTextureInfoFromSource(style.Bitmap.Source);
-            style.Bitmap.WithImageSize((int)tex.Item2.X, (int)tex.Item2.Y);
+            var tex = GetTextureInfoFromSource(style.Image.Source);
+            style.Image.WithSourceSize((int)tex.Item2.X, (int)tex.Item2.Y);
 
             Span<Vertex3> vertices = stackalloc Vertex3[4];
 

@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Backends.WPF
         #region properties
 
         public DrawingVisual VectorDrawing => _VectorDrawing;
-        public ImageSource VectorImage => _VectorImage;
+        public System.Windows.Media.ImageSource VectorImage => _VectorImage;
 
         #endregion
 
