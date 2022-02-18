@@ -9,7 +9,7 @@ namespace InteropTypes.Graphics.Drawing
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{FillColor} {OutlineColor} {OutlineWidth}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public readonly struct OutlineFillStyle
+    public readonly struct OutlineFillStyle : IEquatable<OutlineFillStyle>
     {
         #region constructors
 

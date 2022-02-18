@@ -9,6 +9,9 @@
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
+  <ItemGroup>
+    <None Include="..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />

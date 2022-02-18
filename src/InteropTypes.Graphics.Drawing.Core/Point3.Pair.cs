@@ -68,7 +68,16 @@ namespace InteropTypes.Graphics.Drawing
             public override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
 
             /// <inheritdoc/>
+            public override bool Equals(object obj) { return obj is Pair other && Equals(other); }
+
+            /// <inheritdoc/>
             public bool Equals(Pair other) { return this.A == other.A && this.B == other.B; }
+
+            /// <inheritdoc/>
+            public static bool operator ==(Pair left, Pair right) { return left.Equals(right); }
+
+            /// <inheritdoc/>
+            public static bool operator !=(Pair left, Pair right) { return !left.Equals(right); }
 
             #endregion
 

@@ -105,6 +105,8 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="other">The other instance to be overwritten.</param>        
         public void CopyTo(ImageSource other)
         {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
             other._Source = this.Source;
             other._SourceWidth = this._SourceWidth;
             other._SourceHeight = this._SourceHeight;
@@ -124,6 +126,8 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="pivotOffset">An optional pivot offset.</param>
         public void CopyTo(ImageSource other, Point2 pivotOffset)
         {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+
             this.CopyTo(other);
             if (pivotOffset == XY.Zero) return;
 
@@ -170,7 +174,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Determines the flip order vs Pivot transform precedence.
         /// </summary>
-        private bool _PivotPrecedence = false;
+        private bool _PivotPrecedence;
 
         /// <summary>
         /// The output scale of the image

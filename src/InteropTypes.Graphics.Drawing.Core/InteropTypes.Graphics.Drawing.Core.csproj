@@ -4,11 +4,12 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
-  </PropertyGroup>  
+  </PropertyGroup>
   
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
+  <Import Project="..\Analysers.props" />
 
   <PropertyGroup>
     <Description>
@@ -16,7 +17,7 @@
       - 2D: ICanvas2D
       - 3D: IScene3D      
     </Description>
-  </PropertyGroup>
+  </PropertyGroup>  
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">    
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
@@ -26,6 +27,6 @@
   <ItemGroup>
     <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Toolkit" />
     <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Tests" />
-  </ItemGroup>
+  </ItemGroup>  
 
 </Project>
