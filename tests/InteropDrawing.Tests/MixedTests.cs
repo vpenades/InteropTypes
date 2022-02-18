@@ -199,7 +199,7 @@ namespace InteropDrawing
 
             using (var dc = renderTarget.OpenDrawingContext())
             {
-                var perspective = InteropTypes.Graphics.Drawing.Transforms.PerspectiveTransform.CreateLookingAtCenter((dc, 1024, 1024), (10, 5, 30));
+                var perspective = PerspectiveTransform.CreateLookingAtCenter((dc, 1024, 1024), (10, 5, 30));
                 perspective.DrawScene(scene);
             }
 
@@ -232,7 +232,7 @@ namespace InteropDrawing
         [Test]
         public void TestSVG()
         {
-            using (var svg = Backends.SVGSceneDrawing2D.CreateGraphic())
+            using (var svg = SVGSceneDrawing2D.CreateGraphic())
             {
                 svg.DrawLine((0, 0), (100, 100), 2, (COLOR.SkyBlue, LineCapStyle.Round, LineCapStyle.Triangle));
 
@@ -252,7 +252,7 @@ namespace InteropDrawing
         [Test]
         public void RenderSceneToSVG()
         {
-            using (var svg = Backends.SVGSceneDrawing2D.CreateGraphic())
+            using (var svg = SVGSceneDrawing2D.CreateGraphic())
             {
                 var scene = SceneFactory.CreateRecord3D("Scene1");
 
@@ -328,7 +328,7 @@ namespace InteropDrawing
         [Test]
         public void  TestDrawMultiSegment()
         {
-            var scene = new InteropTypes.Graphics.Backends.GltfSceneBuilder();
+            var scene = new GltfSceneBuilder();
 
             using(var dc = scene.CreateDrawing3DContext())
             {

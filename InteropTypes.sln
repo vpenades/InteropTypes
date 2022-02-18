@@ -53,7 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drawing", "Drawing", "{1B09
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Tests", "tests\InteropDrawing.Tests\InteropTypes.Graphics.Drawing.Tests.csproj", "{C5CB5055-D2FF-4B6E-8368-847E3A991A42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropDrawing.Backends.SVG", "src\InteropDrawing.Backends.SVG\InteropDrawing.Backends.SVG.csproj", "{F2363BC6-B5DB-4D16-850B-B561A03CC18B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SVG", "src\InteropDrawing.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj", "{F2363BC6-B5DB-4D16-850B-B561A03CC18B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GLTF", "src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj", "{B67426F4-ED6D-4F3D-A50D-E142DD985AEC}"
 EndProject

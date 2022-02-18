@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
+using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Drawing;
 
 using NUnit.Framework;
@@ -37,7 +38,7 @@ namespace InteropDrawing.Backends.SVG
         [Test]
         public void RenderSceneToSVG()
         {
-            using var svg = Backends.SVGSceneDrawing2D.CreateGraphic();
+            using var svg = SVGSceneDrawing2D.CreateGraphic();
 
             var scene = SceneFactory.CreateRecord3D("Scene1");
 

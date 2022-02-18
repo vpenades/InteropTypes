@@ -5,6 +5,7 @@ using System.Text;
 
 using InteropDrawing.Backends;
 
+using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Drawing;
 
 using NUnit.Framework;

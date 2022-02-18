@@ -34,7 +34,7 @@ namespace InteropDrawing
 
             if (filePath.ToLower().EndsWith(".svg"))
             {
-                Backends.SVGSceneDrawing2D.SaveToSVG(filePath, batch);
+                SVGSceneDrawing2D.SaveToSVG(filePath, batch);
                 NUnit.Framework.TestContext.AddTestAttachment(filePath);
                 return;
             }

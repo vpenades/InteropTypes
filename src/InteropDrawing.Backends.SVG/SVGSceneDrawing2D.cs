@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-using COLOR = System.Drawing.Color;
 using BRUSH = System.Drawing.Brush;
 using IMAGE = System.Drawing.Image;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Backends
 {
     public class SVGSceneDrawing2D : ICanvas2D, IDisposable
     {
