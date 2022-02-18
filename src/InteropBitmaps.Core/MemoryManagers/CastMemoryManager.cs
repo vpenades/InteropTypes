@@ -20,7 +20,8 @@ namespace InteropBitmaps.MemoryManagers
 
         public override Span<TTo> GetSpan() => MemoryMarshal.Cast<TFrom, TTo>(_from.Span);
 
-        
+
+        // In order to implement a pin/unpin mechanism we would need a thread safe reference counter mechanism        
         public override MemoryHandle Pin(int elementIndex = 0) => throw new NotSupportedException();
 
         public override void Unpin() => throw new NotSupportedException();

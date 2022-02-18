@@ -154,7 +154,7 @@ namespace InteropBitmaps
         {
             var dst = CreateImageSharp(src.PixelFormat, src.Width, src.Height);            
 
-            dst.MutateAsSpanBitmap(src, (d, s) => d.SetPixels(0, 0, s));            
+            dst.WriteAsSpanBitmap(src, (d, s) => d.SetPixels(0, 0, s));            
 
             return dst;
         }

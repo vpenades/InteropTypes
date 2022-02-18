@@ -122,12 +122,11 @@ namespace InteropBitmaps.Examples
 
             // using MemoryBitmap facade.
 
-            void _gdiDraw(SpanBitmap image)
+            void _gdiDraw(SpanBitmap<Bgra32> image)
             {
-                using var gdi = image.ToMemoryBitmap().UsingGDI(); // using memoryBitmap as a System.Drawing.Bitmap
+                using var gdi = image.ToMemoryBitmap().AsTypeless().UsingGDI(); // using memoryBitmap as a System.Drawing.Bitmap
 
-                gdi.Canvas
-                    .DrawLine(System.Drawing.Pens.Red, new System.Drawing.Point(2, 2), new System.Drawing.Point(500, 500));
+                gdi.Canvas.DrawLine(System.Drawing.Pens.Red, new System.Drawing.Point(2, 2), new System.Drawing.Point(500, 500));
 
                 gdi.Bitmap.AttachToCurrentTest("drawn.jpg");
             }

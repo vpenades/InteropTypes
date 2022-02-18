@@ -133,7 +133,7 @@ namespace InteropBitmaps
 
             // render using multiple devices
 
-            img.MutateAsSpanBitmap(self => _drawUsingMultipleDevices(self.OfType<SixLabors.ImageSharp.PixelFormats.Bgra32>()));            
+            img.WriteAsSpanBitmap(self => _drawUsingMultipleDevices(self.OfType<SixLabors.ImageSharp.PixelFormats.Bgra32>()));            
 
             // save the result back with ImageSharp
 
@@ -148,11 +148,7 @@ namespace InteropBitmaps
         {
             var mem = MemoryBitmap.Load(TestResources.ShannonJpg, Codecs.GDICodec.Default);
 
-            var img = mem.TryUsingAsImageSharp();
-
-            img.AttachToCurrentTest("result.png");
-
-            img.Dispose();            
+            mem.WriteAsSpanBitmap(img => img.AttachToCurrentTest("result.png"));            
         }
 
         [Test]
@@ -164,9 +160,7 @@ namespace InteropBitmaps
 
             using var ptr = bmp.UsingPointerBitmap();
 
-            using var img = ptr.Bitmap.TryUsingImageSharp<SixLabors.ImageSharp.PixelFormats.Bgra32>();
-            
-            img.AttachToCurrentTest("result.png");
+            ptr.Bitmap.WriteAsImageSharp(img => img.AttachToCurrentTest("result.png"));
         }
     }
 }

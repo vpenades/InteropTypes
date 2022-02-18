@@ -140,7 +140,15 @@ namespace InteropBitmaps
         {
             return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory;
         }
-        
+
+        public unsafe Memory<TOtherPixel> GetPixelMemory<TOtherPixel>()
+            where TOtherPixel:unmanaged
+        {
+            if (sizeof(TPixel) != sizeof(TOtherPixel)) throw new ArgumentException("pixel size mismatch", typeof(TOtherPixel).Name);
+
+            return new MemoryManagers.CastMemoryManager<Byte, TOtherPixel>(_Data).Memory;
+        }
+
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);

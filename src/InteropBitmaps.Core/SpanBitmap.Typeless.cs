@@ -175,6 +175,15 @@ namespace InteropBitmaps
             return SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        public unsafe SpanBitmap<TPixel> OfTypeOrDefault<TPixel>()
+            where TPixel : unmanaged
+        {
+            return this.Info.IsEmpty
+                ? new SpanBitmap<TPixel>()
+                : this.OfType<TPixel>();
+        }
+
         /// <summary>
         /// Returns a pixel specific <see cref="SpanBitmap{TPixel}"/>.
         /// </summary>
@@ -189,7 +198,9 @@ namespace InteropBitmaps
         {
             Guard.IsValidPixelFormat<TPixel>(_Info);
 
-            return _Writable.IsEmpty ? new SpanBitmap<TPixel>(_Readable, _Info) : new SpanBitmap<TPixel>(_Writable, _Info);
+            return _Writable.IsEmpty
+                ? new SpanBitmap<TPixel>(_Readable, _Info)
+                : new SpanBitmap<TPixel>(_Writable, _Info);
         }
 
         /// <summary>

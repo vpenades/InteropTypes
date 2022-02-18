@@ -23,7 +23,12 @@ namespace InteropBitmaps
         public static Adapters.GDIMemoryAdapter UsingGDI(this MemoryBitmap bmp) { return new Adapters.GDIMemoryAdapter(bmp); }
 
         public static Adapters.GDIMemoryAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp) where TPixel : unmanaged
-        { return new Adapters.GDIMemoryAdapter(bmp); }        
+        { return new Adapters.GDIMemoryAdapter(bmp); }
+
+        public static void MutateAsGDIGraphics<TPixel>(this SpanBitmap<TPixel> bmp, Action<System.Drawing.Graphics> mutator) where TPixel : unmanaged
+        {
+            bmp.WithGDI().Draw(mutator);
+        }
 
         #endregion
 
