@@ -141,7 +141,7 @@ namespace InteropBitmaps
         public static void WriteAsSpanBitmap<TPixel>(this Image<TPixel> self, SpanBitmap<TPixel> other, SpanBitmap<TPixel>.Action2 action)
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            self.MutateAsSpanBitmap<TPixel,TPixel>(other, (s,o) => action(s,o));
+            self.WriteAsSpanBitmap<TPixel,TPixel>(other, (s,o) => action(s,o));
         }
 
         public static unsafe void WriteAsSpanBitmap<TSelfPixel, TOtherPixel>(this Image<TSelfPixel> self, SpanBitmap<TOtherPixel> other, SpanBitmap<TOtherPixel>.Action2 action)

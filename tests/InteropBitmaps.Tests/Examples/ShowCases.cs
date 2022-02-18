@@ -131,8 +131,7 @@ namespace InteropBitmaps.Examples
                 gdi.Bitmap.AttachToCurrentTest("drawn.jpg");
             }
 
-            image.MutateAsSpanBitmap(_gdiDraw);            
-
+            image.WriteAsSpanBitmap(_gdiDraw);
         }
     }
 }

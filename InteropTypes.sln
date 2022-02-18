@@ -103,7 +103,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropBitmaps.Core", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Toolkit", "src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj", "{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Core.Tests", "InteropTypes.Graphics.Drawing.Core.Tests\InteropTypes.Graphics.Drawing.Core.Tests.csproj", "{7036A00F-83F7-4022-AAEC-A0B93AE82F90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Core.Tests", "src\InteropTypes.Graphics.Drawing.Core.Tests\InteropTypes.Graphics.Drawing.Core.Tests.csproj", "{7036A00F-83F7-4022-AAEC-A0B93AE82F90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
