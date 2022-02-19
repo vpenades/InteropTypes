@@ -10,6 +10,7 @@
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
   <Import Project="..\Analysers.props" />
+  <Import Project="..\ApiChangeAnalyzer.props" />
 
   <PropertyGroup>
     <Description>
