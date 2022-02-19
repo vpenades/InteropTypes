@@ -72,6 +72,12 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
+        #region properties
+
+        public bool IsFinite => Point2.IsFinite(Position) && Point2.IsFinite(TextureCoord);
+
+        #endregion
+
         #region API
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

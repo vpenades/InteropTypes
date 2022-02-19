@@ -17,3 +17,6 @@ dotnet_diagnostic.CA1051.severity = none
 
 # CA1014: Mark assemblies with CLSCompliant
 dotnet_diagnostic.CA1014.severity = none
+
+# RS0017: Symbol 'static InteropTypes.Graphics.Drawing.Point3.Pair.AreConnected(in InteropTypes.Graphics.Drawing.Point3.Pair a, in InteropTypes.Graphics.Drawing.Point3.Pair b) -> bool' is part of the declared API, but is either not public or could not be found
+dotnet_diagnostic.RS0017.severity = error

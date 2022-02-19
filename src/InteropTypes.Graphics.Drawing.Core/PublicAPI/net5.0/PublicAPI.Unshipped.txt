@@ -162,14 +162,6 @@ InteropTypes.Graphics.Drawing.Point2.Equals(System.Numerics.Vector2 other) -> bo
 InteropTypes.Graphics.Drawing.Point2.GetClosestSegmentPoint(InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b) -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Point2.Length.get -> float
 InteropTypes.Graphics.Drawing.Point2.Normalized.get -> System.Numerics.Vector2
-InteropTypes.Graphics.Drawing.Point2.Pair
-InteropTypes.Graphics.Drawing.Point2.Pair.Direction.get -> System.Numerics.Vector2
-InteropTypes.Graphics.Drawing.Point2.Pair.DirectionNormalized.get -> System.Numerics.Vector2
-InteropTypes.Graphics.Drawing.Point2.Pair.Equals(InteropTypes.Graphics.Drawing.Point2.Pair other) -> bool
-InteropTypes.Graphics.Drawing.Point2.Pair.HasEnd(in InteropTypes.Graphics.Drawing.Point2 point) -> bool
-InteropTypes.Graphics.Drawing.Point2.Pair.Length.get -> float
-InteropTypes.Graphics.Drawing.Point2.Pair.Ordered.get -> InteropTypes.Graphics.Drawing.Point2.Pair
-InteropTypes.Graphics.Drawing.Point2.Pair.Pair() -> void
 InteropTypes.Graphics.Drawing.Point2.Point2() -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(float x, float y) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(System.Numerics.Vector2 vector) -> void
@@ -187,14 +179,6 @@ InteropTypes.Graphics.Drawing.Point3.Equals(InteropTypes.Graphics.Drawing.Point3
 InteropTypes.Graphics.Drawing.Point3.Equals(System.Numerics.Vector3 other) -> bool
 InteropTypes.Graphics.Drawing.Point3.Length.get -> float
 InteropTypes.Graphics.Drawing.Point3.Normalized.get -> System.Numerics.Vector3
-InteropTypes.Graphics.Drawing.Point3.Pair
-InteropTypes.Graphics.Drawing.Point3.Pair.Direction.get -> System.Numerics.Vector3
-InteropTypes.Graphics.Drawing.Point3.Pair.DirectionNormalized.get -> System.Numerics.Vector3
-InteropTypes.Graphics.Drawing.Point3.Pair.Equals(InteropTypes.Graphics.Drawing.Point3.Pair other) -> bool
-InteropTypes.Graphics.Drawing.Point3.Pair.HasEnd(in InteropTypes.Graphics.Drawing.Point3 point) -> bool
-InteropTypes.Graphics.Drawing.Point3.Pair.Length.get -> float
-InteropTypes.Graphics.Drawing.Point3.Pair.Ordered.get -> InteropTypes.Graphics.Drawing.Point3.Pair
-InteropTypes.Graphics.Drawing.Point3.Pair.Pair() -> void
 InteropTypes.Graphics.Drawing.Point3.Point3() -> void
 InteropTypes.Graphics.Drawing.Point3.Point3(float x, float y, float z) -> void
 InteropTypes.Graphics.Drawing.Point3.Point3(InteropTypes.Graphics.Drawing.Point2 xy, float z) -> void
@@ -222,6 +206,26 @@ InteropTypes.Graphics.Drawing.PolygonStyle.WithFill(InteropTypes.Graphics.Drawin
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(float ow) -> InteropTypes.Graphics.Drawing.PolygonStyle
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor) -> InteropTypes.Graphics.Drawing.PolygonStyle
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor, float ow) -> InteropTypes.Graphics.Drawing.PolygonStyle
+InteropTypes.Graphics.Drawing.Segment2
+InteropTypes.Graphics.Drawing.Segment2.Direction.get -> System.Numerics.Vector2
+InteropTypes.Graphics.Drawing.Segment2.DirectionNormalized.get -> System.Numerics.Vector2
+InteropTypes.Graphics.Drawing.Segment2.DominantAxis.get -> int
+InteropTypes.Graphics.Drawing.Segment2.Equals(InteropTypes.Graphics.Drawing.Segment2 other) -> bool
+InteropTypes.Graphics.Drawing.Segment2.HasEnd(in InteropTypes.Graphics.Drawing.Point2 point) -> bool
+InteropTypes.Graphics.Drawing.Segment2.IsFinite.get -> bool
+InteropTypes.Graphics.Drawing.Segment2.Length.get -> float
+InteropTypes.Graphics.Drawing.Segment2.Ordinal.get -> InteropTypes.Graphics.Drawing.Segment2
+InteropTypes.Graphics.Drawing.Segment2.Segment2() -> void
+InteropTypes.Graphics.Drawing.Segment3
+InteropTypes.Graphics.Drawing.Segment3.Direction.get -> System.Numerics.Vector3
+InteropTypes.Graphics.Drawing.Segment3.DirectionNormalized.get -> System.Numerics.Vector3
+InteropTypes.Graphics.Drawing.Segment3.DominantAxis.get -> int
+InteropTypes.Graphics.Drawing.Segment3.Equals(InteropTypes.Graphics.Drawing.Segment3 other) -> bool
+InteropTypes.Graphics.Drawing.Segment3.HasEnd(in InteropTypes.Graphics.Drawing.Point3 point) -> bool
+InteropTypes.Graphics.Drawing.Segment3.IsFinite.get -> bool
+InteropTypes.Graphics.Drawing.Segment3.Length.get -> float
+InteropTypes.Graphics.Drawing.Segment3.Ordinal.get -> InteropTypes.Graphics.Drawing.Segment3
+InteropTypes.Graphics.Drawing.Segment3.Segment3() -> void
 InteropTypes.Graphics.Drawing.SurfaceStyle
 InteropTypes.Graphics.Drawing.SurfaceStyle.Equals(InteropTypes.Graphics.Drawing.SurfaceStyle other) -> bool
 InteropTypes.Graphics.Drawing.SurfaceStyle.IsVisible.get -> bool
@@ -237,6 +241,7 @@ InteropTypes.Graphics.Drawing.SurfaceStyle.WithOutline(float outlineWidth) -> In
 InteropTypes.Graphics.Drawing.Vertex2
 InteropTypes.Graphics.Drawing.Vertex2.Color -> uint
 InteropTypes.Graphics.Drawing.Vertex2.Equals(InteropTypes.Graphics.Drawing.Vertex2 other) -> bool
+InteropTypes.Graphics.Drawing.Vertex2.IsFinite.get -> bool
 InteropTypes.Graphics.Drawing.Vertex2.Position -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Vertex2.TextureCoord -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Vertex2.Vertex2() -> void
@@ -247,6 +252,7 @@ InteropTypes.Graphics.Drawing.Vertex2.Vertex2(InteropTypes.Graphics.Drawing.Poin
 InteropTypes.Graphics.Drawing.Vertex3
 InteropTypes.Graphics.Drawing.Vertex3.Color -> uint
 InteropTypes.Graphics.Drawing.Vertex3.Equals(InteropTypes.Graphics.Drawing.Vertex3 other) -> bool
+InteropTypes.Graphics.Drawing.Vertex3.IsFinite.get -> bool
 InteropTypes.Graphics.Drawing.Vertex3.Position -> System.Numerics.Vector3
 InteropTypes.Graphics.Drawing.Vertex3.TextureCoord -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3() -> void
@@ -265,16 +271,16 @@ override InteropTypes.Graphics.Drawing.OutlineFillStyle.Equals(object obj) -> bo
 override InteropTypes.Graphics.Drawing.OutlineFillStyle.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.Point2.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.Point2.GetHashCode() -> int
-override InteropTypes.Graphics.Drawing.Point2.Pair.Equals(object obj) -> bool
-override InteropTypes.Graphics.Drawing.Point2.Pair.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.Point2.ToString() -> string
 override InteropTypes.Graphics.Drawing.Point3.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.Point3.GetHashCode() -> int
-override InteropTypes.Graphics.Drawing.Point3.Pair.Equals(object obj) -> bool
-override InteropTypes.Graphics.Drawing.Point3.Pair.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.Point3.ToString() -> string
 override InteropTypes.Graphics.Drawing.PolygonStyle.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.PolygonStyle.GetHashCode() -> int
+override InteropTypes.Graphics.Drawing.Segment2.Equals(object obj) -> bool
+override InteropTypes.Graphics.Drawing.Segment2.GetHashCode() -> int
+override InteropTypes.Graphics.Drawing.Segment3.Equals(object obj) -> bool
+override InteropTypes.Graphics.Drawing.Segment3.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.SurfaceStyle.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.SurfaceStyle.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.Vertex2.Equals(object obj) -> bool
@@ -290,13 +296,13 @@ readonly InteropTypes.Graphics.Drawing.LineStyle.Style -> InteropTypes.Graphics.
 readonly InteropTypes.Graphics.Drawing.OutlineFillStyle.FillColor -> InteropTypes.Graphics.Drawing.ColorStyle
 readonly InteropTypes.Graphics.Drawing.OutlineFillStyle.OutlineColor -> InteropTypes.Graphics.Drawing.ColorStyle
 readonly InteropTypes.Graphics.Drawing.OutlineFillStyle.OutlineWidth -> float
-readonly InteropTypes.Graphics.Drawing.Point2.Pair.A -> System.Numerics.Vector2
-readonly InteropTypes.Graphics.Drawing.Point2.Pair.B -> System.Numerics.Vector2
-readonly InteropTypes.Graphics.Drawing.Point3.Pair.A -> System.Numerics.Vector3
-readonly InteropTypes.Graphics.Drawing.Point3.Pair.B -> System.Numerics.Vector3
 readonly InteropTypes.Graphics.Drawing.PolygonStyle.FillColor -> InteropTypes.Graphics.Drawing.ColorStyle
 readonly InteropTypes.Graphics.Drawing.PolygonStyle.OutlineColor -> InteropTypes.Graphics.Drawing.ColorStyle
 readonly InteropTypes.Graphics.Drawing.PolygonStyle.OutlineWidth -> float
+readonly InteropTypes.Graphics.Drawing.Segment2.A -> System.Numerics.Vector2
+readonly InteropTypes.Graphics.Drawing.Segment2.B -> System.Numerics.Vector2
+readonly InteropTypes.Graphics.Drawing.Segment3.A -> System.Numerics.Vector3
+readonly InteropTypes.Graphics.Drawing.Segment3.B -> System.Numerics.Vector3
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.DoubleSided -> bool
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.SmoothingGroups -> uint
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.Style -> InteropTypes.Graphics.Drawing.OutlineFillStyle
@@ -390,12 +396,6 @@ static InteropTypes.Graphics.Drawing.Point2.operator /(InteropTypes.Graphics.Dra
 static InteropTypes.Graphics.Drawing.Point2.operator /(InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b) -> System.Numerics.Vector2
 static InteropTypes.Graphics.Drawing.Point2.operator ==(in InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b) -> bool
 static InteropTypes.Graphics.Drawing.Point2.operator ==(in InteropTypes.Graphics.Drawing.Point2 a, System.Numerics.Vector2 b) -> bool
-static InteropTypes.Graphics.Drawing.Point2.Pair.AreConnected(in InteropTypes.Graphics.Drawing.Point2.Pair a, in InteropTypes.Graphics.Drawing.Point2.Pair b) -> bool
-static InteropTypes.Graphics.Drawing.Point2.Pair.Create(in InteropTypes.Graphics.Drawing.Point2 a, in InteropTypes.Graphics.Drawing.Point2 b) -> InteropTypes.Graphics.Drawing.Point2.Pair
-static InteropTypes.Graphics.Drawing.Point2.Pair.CreateOrdered(in InteropTypes.Graphics.Drawing.Point2 a, in InteropTypes.Graphics.Drawing.Point2 b) -> InteropTypes.Graphics.Drawing.Point2.Pair
-static InteropTypes.Graphics.Drawing.Point2.Pair.GetEqualityComparer(bool ordered) -> System.Collections.Generic.IEqualityComparer<InteropTypes.Graphics.Drawing.Point2.Pair>
-static InteropTypes.Graphics.Drawing.Point2.Pair.operator !=(InteropTypes.Graphics.Drawing.Point2.Pair left, InteropTypes.Graphics.Drawing.Point2.Pair right) -> bool
-static InteropTypes.Graphics.Drawing.Point2.Pair.operator ==(InteropTypes.Graphics.Drawing.Point2.Pair left, InteropTypes.Graphics.Drawing.Point2.Pair right) -> bool
 static InteropTypes.Graphics.Drawing.Point2.Transform(float x, float y, in System.Numerics.Matrix3x2 xform) -> System.Numerics.Vector2
 static InteropTypes.Graphics.Drawing.Point2.Transform(InteropTypes.Graphics.Drawing.Point2 p, in System.Numerics.Matrix3x2 xform) -> System.Numerics.Vector2
 static InteropTypes.Graphics.Drawing.Point2.Transform(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> src, System.Span<InteropTypes.Graphics.Drawing.Point2> dst, in System.Numerics.Matrix3x2 xform) -> void
@@ -443,12 +443,6 @@ static InteropTypes.Graphics.Drawing.Point3.operator /(InteropTypes.Graphics.Dra
 static InteropTypes.Graphics.Drawing.Point3.operator /(InteropTypes.Graphics.Drawing.Point3 a, InteropTypes.Graphics.Drawing.Point3 b) -> System.Numerics.Vector3
 static InteropTypes.Graphics.Drawing.Point3.operator ==(in InteropTypes.Graphics.Drawing.Point3 a, in InteropTypes.Graphics.Drawing.Point3 b) -> bool
 static InteropTypes.Graphics.Drawing.Point3.operator ==(in InteropTypes.Graphics.Drawing.Point3 a, in System.Numerics.Vector3 b) -> bool
-static InteropTypes.Graphics.Drawing.Point3.Pair.AreConnected(in InteropTypes.Graphics.Drawing.Point3.Pair a, in InteropTypes.Graphics.Drawing.Point3.Pair b) -> bool
-static InteropTypes.Graphics.Drawing.Point3.Pair.Create(in InteropTypes.Graphics.Drawing.Point3 a, in InteropTypes.Graphics.Drawing.Point3 b) -> InteropTypes.Graphics.Drawing.Point3.Pair
-static InteropTypes.Graphics.Drawing.Point3.Pair.CreateOrdered(in InteropTypes.Graphics.Drawing.Point3 a, in InteropTypes.Graphics.Drawing.Point3 b) -> InteropTypes.Graphics.Drawing.Point3.Pair
-static InteropTypes.Graphics.Drawing.Point3.Pair.GetEqualityComparer(bool ordered) -> System.Collections.Generic.IEqualityComparer<InteropTypes.Graphics.Drawing.Point3.Pair>
-static InteropTypes.Graphics.Drawing.Point3.Pair.operator !=(InteropTypes.Graphics.Drawing.Point3.Pair left, InteropTypes.Graphics.Drawing.Point3.Pair right) -> bool
-static InteropTypes.Graphics.Drawing.Point3.Pair.operator ==(InteropTypes.Graphics.Drawing.Point3.Pair left, InteropTypes.Graphics.Drawing.Point3.Pair right) -> bool
 static InteropTypes.Graphics.Drawing.Point3.Transform(InteropTypes.Graphics.Drawing.Point3 p, in System.Numerics.Matrix4x4 xform) -> InteropTypes.Graphics.Drawing.Point3
 static InteropTypes.Graphics.Drawing.Point3.Transform(System.Span<InteropTypes.Graphics.Drawing.Point3> dst, System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> src, float z) -> void
 static InteropTypes.Graphics.Drawing.Point3.UnitX.get -> InteropTypes.Graphics.Drawing.Point3
@@ -464,6 +458,18 @@ static InteropTypes.Graphics.Drawing.PolygonStyle.implicit operator InteropTypes
 static InteropTypes.Graphics.Drawing.PolygonStyle.implicit operator InteropTypes.Graphics.Drawing.PolygonStyle(System.Drawing.Color fillColor) -> InteropTypes.Graphics.Drawing.PolygonStyle
 static InteropTypes.Graphics.Drawing.PolygonStyle.operator !=(InteropTypes.Graphics.Drawing.PolygonStyle a, InteropTypes.Graphics.Drawing.PolygonStyle b) -> bool
 static InteropTypes.Graphics.Drawing.PolygonStyle.operator ==(InteropTypes.Graphics.Drawing.PolygonStyle a, InteropTypes.Graphics.Drawing.PolygonStyle b) -> bool
+static InteropTypes.Graphics.Drawing.Segment2.Create(in InteropTypes.Graphics.Drawing.Point2 a, in InteropTypes.Graphics.Drawing.Point2 b) -> InteropTypes.Graphics.Drawing.Segment2
+static InteropTypes.Graphics.Drawing.Segment2.CreateOrdinal(in InteropTypes.Graphics.Drawing.Point2 a, in InteropTypes.Graphics.Drawing.Point2 b) -> InteropTypes.Graphics.Drawing.Segment2
+static InteropTypes.Graphics.Drawing.Segment2.GetEqualityComparer(bool ordinal) -> System.Collections.Generic.IEqualityComparer<InteropTypes.Graphics.Drawing.Segment2>
+static InteropTypes.Graphics.Drawing.Segment2.operator !=(InteropTypes.Graphics.Drawing.Segment2 left, InteropTypes.Graphics.Drawing.Segment2 right) -> bool
+static InteropTypes.Graphics.Drawing.Segment2.operator ==(InteropTypes.Graphics.Drawing.Segment2 left, InteropTypes.Graphics.Drawing.Segment2 right) -> bool
+static InteropTypes.Graphics.Drawing.Segment2.TryGetConnectingPoint(in InteropTypes.Graphics.Drawing.Segment2 a, in InteropTypes.Graphics.Drawing.Segment2 b, out InteropTypes.Graphics.Drawing.Point2 connectingPoint) -> bool
+static InteropTypes.Graphics.Drawing.Segment3.Create(in InteropTypes.Graphics.Drawing.Point3 a, in InteropTypes.Graphics.Drawing.Point3 b) -> InteropTypes.Graphics.Drawing.Segment3
+static InteropTypes.Graphics.Drawing.Segment3.CreateOrdinal(in InteropTypes.Graphics.Drawing.Point3 a, in InteropTypes.Graphics.Drawing.Point3 b) -> InteropTypes.Graphics.Drawing.Segment3
+static InteropTypes.Graphics.Drawing.Segment3.GetEqualityComparer(bool ordinal) -> System.Collections.Generic.IEqualityComparer<InteropTypes.Graphics.Drawing.Segment3>
+static InteropTypes.Graphics.Drawing.Segment3.operator !=(InteropTypes.Graphics.Drawing.Segment3 left, InteropTypes.Graphics.Drawing.Segment3 right) -> bool
+static InteropTypes.Graphics.Drawing.Segment3.operator ==(InteropTypes.Graphics.Drawing.Segment3 left, InteropTypes.Graphics.Drawing.Segment3 right) -> bool
+static InteropTypes.Graphics.Drawing.Segment3.TryGetConnectingPoint(in InteropTypes.Graphics.Drawing.Segment3 a, in InteropTypes.Graphics.Drawing.Segment3 b, out InteropTypes.Graphics.Drawing.Point3 connectingPoint) -> bool
 static InteropTypes.Graphics.Drawing.SurfaceStyle.implicit operator InteropTypes.Graphics.Drawing.SurfaceStyle((InteropTypes.Graphics.Drawing.ColorStyle fillColor, bool doubleSided) style) -> InteropTypes.Graphics.Drawing.SurfaceStyle
 static InteropTypes.Graphics.Drawing.SurfaceStyle.implicit operator InteropTypes.Graphics.Drawing.SurfaceStyle((InteropTypes.Graphics.Drawing.ColorStyle fillColor, float outWidth) style) -> InteropTypes.Graphics.Drawing.SurfaceStyle
 static InteropTypes.Graphics.Drawing.SurfaceStyle.implicit operator InteropTypes.Graphics.Drawing.SurfaceStyle((InteropTypes.Graphics.Drawing.ColorStyle fillColor, InteropTypes.Graphics.Drawing.ColorStyle outColor, float outWidth) style) -> InteropTypes.Graphics.Drawing.SurfaceStyle
