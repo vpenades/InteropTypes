@@ -9,13 +9,13 @@ using System.Windows.Threading;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropTypes.Graphics.Backends.WPF
+namespace InteropTypes.Graphics.Backends
 {
-    public class WPFSceneRender : DispatcherObject
+    public class SceneRender : DispatcherObject
     {
         #region lifecycle
 
-        public WPFSceneRender() { }
+        public SceneRender() { }
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace InteropTypes.Graphics.Backends.WPF
         private DrawingVisual _VectorDrawing = new DrawingVisual();
         private DrawingImage _VectorImage = new DrawingImage();
 
-        private WPFDrawingContext2D _DeviceContext2D = new WPFDrawingContext2D();        
+        private DrawingContext2D _DeviceContext2D = new DrawingContext2D();        
 
         private Record2D _SafeClone2D = new Record2D();
         private Record3D _SafeClone3D = new Record3D();

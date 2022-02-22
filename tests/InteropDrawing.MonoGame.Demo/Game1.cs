@@ -79,11 +79,6 @@ namespace InteropDrawing
             if (kcurr.IsKeyDown(Keys.D1) && klast.IsKeyUp(Keys.D1)) _UseQuadrant1 = !_UseQuadrant1;
             if (kcurr.IsKeyDown(Keys.D2) && klast.IsKeyUp(Keys.D2)) _FlipSprites = !_FlipSprites;
 
-
-
-
-
-
             // TODO: Add your update logic here
 
             // var sdlHandle = this.Window.Handle;

@@ -34,12 +34,17 @@ namespace InteropTypes.Graphics.Backends
 
         public StaticProperty<TValue> RegisterAttached<TValue>(string name, TValue defval)
         {
+            return RegisterAttached(name, defval, FrameworkPropertyMetadataOptions.AffectsRender);
+        }
+
+        public StaticProperty<TValue> RegisterAttached<TValue>(string name, TValue defval, FrameworkPropertyMetadataOptions flags)
+        {
             var p = DependencyProperty.RegisterAttached
             (
                 name,
                 typeof(TValue),
                 typeof(TClass),
-                new FrameworkPropertyMetadata(defval, FrameworkPropertyMetadataOptions.AffectsRender)
+                new FrameworkPropertyMetadata(defval, flags)
             );
 
             return new StaticProperty<TValue>(p);

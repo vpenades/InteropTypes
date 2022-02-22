@@ -8,18 +8,55 @@ namespace InteropTypes.Graphics.Drawing
     /// <summary>
     /// Represents a Camera transform in 3D space.
     /// </summary>
-    public struct CameraTransform3D
+    /// <remarks>
+    /// <para>
+    /// All proyection parameters used to construct a projection matrix can be set up in advanced except one;
+    /// <b>Aspect Ratio</b>, which depends on the actual display window.
+    /// </para>
+    /// <para>
+    /// This structure is divided into two section:<br/>
+    /// - A <see cref="WorldMatrix"/> representing the position of the camera within the scene.
+    /// - A <see cref="CreateProjectionMatrix(float, float?, float?)"/> method to retrieve the projection matrix.
+    /// </para>    
+    /// </remarks>
+    public struct CameraTransform3D : IEquatable<CameraTransform3D>
     {
         #region constructors
+
+        public static bool TryGetFromServiceProvider(Object obj, out CameraTransform3D cameraTransform)
+        {
+            if (obj is IServiceProvider provider)
+            {
+                if (provider.GetService(typeof(CameraTransform3D)) is CameraTransform3D ct3d) { cameraTransform = ct3d; return true; }
+            }
+
+            cameraTransform = default;
+            return false;
+        }
         
         public CameraTransform3D(Matrix4x4 position, float? fov, float? ortho, float? near, float? far)
         {
+            nameof(position).GuardIsFinite(position);
+            nameof(fov).GuardIsFiniteOrNull(fov);
+            nameof(ortho).GuardIsFiniteOrNull(ortho);
+            nameof(near).GuardIsFiniteOrNull(near);
+
+            if (near.HasValue && far.HasValue && far.Value <= near.Value) throw new ArgumentException("far value must be higher than near", nameof(far));
+
             WorldMatrix = position;
             VerticalFieldOfView = fov;
             OrthographicScale = ortho;
             NearPlane = near;
             FarPlane = far;
         }
+
+        #endregion
+
+        #region constants
+
+        public static CameraTransform3D Empty => default;
+
+        public static CameraTransform3D Identity => new CameraTransform3D(Matrix4x4.Identity, null, null, -1f, 1f);
 
         #endregion
 
@@ -53,12 +90,76 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         public float? FarPlane;
 
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            if (!IsInitialized) return 0;
+
+            return WorldMatrix.GetHashCode()
+                ^ VerticalFieldOfView.GetHashCode()
+                ^ OrthographicScale.GetHashCode()
+                ^ NearPlane.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is CameraTransform3D other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(CameraTransform3D other)
+        {
+            if (!this.IsInitialized && !other.IsInitialized) return true;            
+
+            if (this.WorldMatrix != other.WorldMatrix) return false;
+
+            if (this.VerticalFieldOfView != other.VerticalFieldOfView) return false;
+            if (this.OrthographicScale != other.OrthographicScale) return false;
+
+            if (this.NearPlane != other.NearPlane) return false;
+            if (this.FarPlane != other.FarPlane) return false;
+
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator == (in CameraTransform3D a, in CameraTransform3D b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(in CameraTransform3D a, in CameraTransform3D b) => !a.Equals(b);
+
+        #endregion
+
+        #region properties
+
+        public bool IsValid
+        {
+            get
+            {
+                if (!IsInitialized) return false;
+                if (!WorldMatrix.IsFiniteAndNotZero()) return false;
+                if (VerticalFieldOfView.HasValue)
+                {
+                    if (VerticalFieldOfView.Value <= 0.0f || VerticalFieldOfView.Value >= Math.PI) return false;
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this object has been initialized.
+        /// </summary>
+        public bool IsInitialized => VerticalFieldOfView.HasValue || OrthographicScale.HasValue;
+
         #endregion
 
         #region API
 
         public Matrix4x4 CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null)
         {
+            nameof(aspectRatio).GuardIsFinite(aspectRatio);
+            nameof(nearPlane).GuardIsFiniteOrNull(nearPlane);
+            nameof(farPlane).GuardIsFiniteOrNull(farPlane);            
+
             float near = nearPlane ?? NearPlane ?? 0.1f;
             float far = farPlane ?? FarPlane ?? 1000f;
 
@@ -70,12 +171,10 @@ namespace InteropTypes.Graphics.Drawing
                 return _CreatePerspectiveFieldOfView(VerticalFieldOfView.Value, aspectRatio, near, far);
                 #endif
             }
-            else
-            {
-                var scale = OrthographicScale ?? 1;
-                return Matrix4x4.CreateOrthographic(scale, scale, near, far);
-            }
-        }
+            
+            var scale = OrthographicScale ?? 1;
+            return Matrix4x4.CreateOrthographic(scale, scale, near, far); // TODO: should scale be multiplied by aspect ratio?            
+        }        
 
         #if !NETSTANDARD2_1_OR_GREATER
         /// <summary>

@@ -8,17 +8,17 @@ using System.Windows.Data;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropTypes.Graphics.Backends.WPF
+namespace InteropTypes.Graphics.Backends
 {
     /// <summary>
     /// Converts a <see cref="Record2D"/> scene to a <see cref="System.Windows.Media.ImageSource"/>
     /// that can be bound to <see cref="System.Windows.Controls.Image.Source"/>
     /// </summary>
-    public class WPFSceneConverter : IValueConverter
+    public class SceneConverter : IValueConverter
     {
         #region data
 
-        private WPFSceneRender _Renderer = new WPFSceneRender();
+        private SceneRender _Renderer = new SceneRender();
 
         public Size Viewport { get; set; } = Size.Empty;        
 

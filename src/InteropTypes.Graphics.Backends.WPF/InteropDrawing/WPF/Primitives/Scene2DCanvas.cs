@@ -12,15 +12,15 @@ using System.Windows.Media;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropTypes.Graphics.Backends.WPF
+namespace InteropTypes.Graphics.Backends.WPF.Primitives
 {
-    public class WPFScene2DCanvas : Canvas
+    public partial class Scene2DCanvas : Canvas
     {
         // Todo: add a dispatchertimer to check the Model's immutable flag for automatic refresh
 
         #region data
 
-        private readonly WPFDrawingContext2D _Context2D = new WPFDrawingContext2D();
+        private readonly DrawingContext2D _Context2D = new DrawingContext2D();
 
         private Matrix3x2 _CameraMatrix = Matrix3x2.Identity;
         private Matrix3x2 _ProjectionMatrix = Matrix3x2.Identity;
@@ -30,7 +30,7 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         #region dependency properties
 
-        private static PropertyFactory<WPFScene2DCanvas> _PropFactory = new PropertyFactory<WPFScene2DCanvas>();
+        private static PropertyFactory<Scene2DCanvas> _PropFactory = new PropertyFactory<Scene2DCanvas>();
 
         #endregion
 
@@ -102,7 +102,7 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         private static void _Update(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is WPFScene2DCanvas dc) dc._Update(e.Property, e.OldValue, e.NewValue);
+            if (d is Scene2DCanvas dc) dc._Update(e.Property, e.OldValue, e.NewValue);
         }
 
         private void _Update(DependencyProperty p, object oldv, object newv)

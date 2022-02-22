@@ -2,7 +2,10 @@ InteropTypes.Graphics.Drawing.CameraTransform3D
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D() -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D(System.Numerics.Matrix4x4 position, float? fov, float? ortho, float? near, float? far) -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null) -> System.Numerics.Matrix4x4
+InteropTypes.Graphics.Drawing.CameraTransform3D.Equals(InteropTypes.Graphics.Drawing.CameraTransform3D other) -> bool
 InteropTypes.Graphics.Drawing.CameraTransform3D.FarPlane -> float?
+InteropTypes.Graphics.Drawing.CameraTransform3D.IsInitialized.get -> bool
+InteropTypes.Graphics.Drawing.CameraTransform3D.IsValid.get -> bool
 InteropTypes.Graphics.Drawing.CameraTransform3D.NearPlane -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.OrthographicScale -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.VerticalFieldOfView -> float?
@@ -163,6 +166,7 @@ InteropTypes.Graphics.Drawing.Point2.GetClosestSegmentPoint(InteropTypes.Graphic
 InteropTypes.Graphics.Drawing.Point2.Length.get -> float
 InteropTypes.Graphics.Drawing.Point2.Normalized.get -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Point2.Point2() -> void
+InteropTypes.Graphics.Drawing.Point2.Point2(double x, double y) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(float x, float y) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(System.Numerics.Vector2 vector) -> void
 InteropTypes.Graphics.Drawing.Point2.ToGDIPoint() -> System.Drawing.PointF
@@ -260,6 +264,8 @@ InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Poin
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.ColorStyle c) -> void
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.ColorStyle c, InteropTypes.Graphics.Drawing.Point2 t) -> void
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.Point3 t) -> void
+override InteropTypes.Graphics.Drawing.CameraTransform3D.Equals(object obj) -> bool
+override InteropTypes.Graphics.Drawing.CameraTransform3D.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.ColorStyle.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.ColorStyle.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.ColorStyle.ToString() -> string
@@ -306,6 +312,11 @@ readonly InteropTypes.Graphics.Drawing.Segment3.B -> System.Numerics.Vector3
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.DoubleSided -> bool
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.SmoothingGroups -> uint
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.Style -> InteropTypes.Graphics.Drawing.OutlineFillStyle
+static InteropTypes.Graphics.Drawing.CameraTransform3D.Empty.get -> InteropTypes.Graphics.Drawing.CameraTransform3D
+static InteropTypes.Graphics.Drawing.CameraTransform3D.Identity.get -> InteropTypes.Graphics.Drawing.CameraTransform3D
+static InteropTypes.Graphics.Drawing.CameraTransform3D.operator !=(in InteropTypes.Graphics.Drawing.CameraTransform3D a, in InteropTypes.Graphics.Drawing.CameraTransform3D b) -> bool
+static InteropTypes.Graphics.Drawing.CameraTransform3D.operator ==(in InteropTypes.Graphics.Drawing.CameraTransform3D a, in InteropTypes.Graphics.Drawing.CameraTransform3D b) -> bool
+static InteropTypes.Graphics.Drawing.CameraTransform3D.TryGetFromServiceProvider(object obj, out InteropTypes.Graphics.Drawing.CameraTransform3D cameraTransform) -> bool
 static InteropTypes.Graphics.Drawing.ColorStyle.AreEqual(uint colorA, uint colorB) -> bool
 static InteropTypes.Graphics.Drawing.ColorStyle.FromOpacity(float opacity) -> InteropTypes.Graphics.Drawing.ColorStyle
 static InteropTypes.Graphics.Drawing.ColorStyle.GetDefaultFrom(object source, InteropTypes.Graphics.Drawing.ColorStyle defval) -> InteropTypes.Graphics.Drawing.ColorStyle
@@ -370,9 +381,10 @@ static InteropTypes.Graphics.Drawing.Point2.Centroid(System.ReadOnlySpan<Interop
 static InteropTypes.Graphics.Drawing.Point2.Centroid(System.ReadOnlySpan<System.Numerics.Vector2> points) -> System.Numerics.Vector2
 static InteropTypes.Graphics.Drawing.Point2.Cross(InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b) -> float
 static InteropTypes.Graphics.Drawing.Point2.Cross(InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b, InteropTypes.Graphics.Drawing.Point2 c) -> float
-static InteropTypes.Graphics.Drawing.Point2.DebugGuardIsFinite(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points) -> void
+static InteropTypes.Graphics.Drawing.Point2.DebugAssertIsFinite(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points) -> void
 static InteropTypes.Graphics.Drawing.Point2.GetDominantAxis(InteropTypes.Graphics.Drawing.Point2 point) -> int
 static InteropTypes.Graphics.Drawing.Point2.Half.get -> InteropTypes.Graphics.Drawing.Point2
+static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2((double X, double Y) p) -> InteropTypes.Graphics.Drawing.Point2
 static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2((float X, float Y) p) -> InteropTypes.Graphics.Drawing.Point2
 static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2(System.Drawing.Point p) -> InteropTypes.Graphics.Drawing.Point2
 static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2(System.Drawing.PointF p) -> InteropTypes.Graphics.Drawing.Point2
@@ -418,7 +430,7 @@ static InteropTypes.Graphics.Drawing.Point3.Centroid(System.Numerics.Vector3[] p
 static InteropTypes.Graphics.Drawing.Point3.Centroid(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> points) -> System.Numerics.Vector3
 static InteropTypes.Graphics.Drawing.Point3.Centroid(System.ReadOnlySpan<System.Numerics.Vector3> points) -> System.Numerics.Vector3
 static InteropTypes.Graphics.Drawing.Point3.Cross(InteropTypes.Graphics.Drawing.Point3 a, InteropTypes.Graphics.Drawing.Point3 b, InteropTypes.Graphics.Drawing.Point3 c) -> System.Numerics.Vector3
-static InteropTypes.Graphics.Drawing.Point3.DebugGuardIsFinite(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> points) -> void
+static InteropTypes.Graphics.Drawing.Point3.DebugAssertIsFinite(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> points) -> void
 static InteropTypes.Graphics.Drawing.Point3.GetDominantAxis(InteropTypes.Graphics.Drawing.Point3 point) -> int
 static InteropTypes.Graphics.Drawing.Point3.Half.get -> InteropTypes.Graphics.Drawing.Point3
 static InteropTypes.Graphics.Drawing.Point3.implicit operator InteropTypes.Graphics.Drawing.Point3((float X, float Y, float Z) p) -> InteropTypes.Graphics.Drawing.Point3

@@ -36,27 +36,14 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region diagnostics
 
-        /// <summary>
-        /// Tells if the value is finite and not NaN
-        /// </summary>
-        /// <remarks>
-        /// <see href="https://github.com/dotnet/runtime/blob/5906521ab238e7d5bb8e38ad81e9ce95561b9771/src/libraries/System.Private.CoreLib/src/System/Single.cs#L74">DotNet implementation</see>
-        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool _IsFinite(float val)
-        {
-            #if NETSTANDARD2_1_OR_GREATER
-            return float.IsFinite(val);
-            #else
-            return !float.IsNaN(val) && !float.IsInfinity(val);
-            #endif
-        }
+        public static bool IsFinite(Point3 point) { return point.X.IsFinite() && point.Y.IsFinite() && point.Z.IsFinite(); }
 
         [System.Diagnostics.DebuggerStepThrough]
         [System.Diagnostics.Conditional("DEBUG")]
-        public static void DebugGuardIsFinite(ReadOnlySpan<Point3> points)
+        public static void DebugAssertIsFinite(ReadOnlySpan<Point3> points)
         {
-            foreach(var point in points) System.Diagnostics.Debug.Assert(Point3.IsFinite(point));
+            foreach (var point in points) System.Diagnostics.Debug.Assert(Point3.IsFinite(point));
         }
 
         #endregion
@@ -257,10 +244,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region API
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsFinite(Point3 point) { return _IsFinite(point.X) && _IsFinite(point.Y) && _IsFinite(point.Z); }
+        #region API        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetDominantAxis(Point3 point) { return point.DominantAxis; }

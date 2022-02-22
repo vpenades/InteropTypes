@@ -7,26 +7,26 @@ using InteropTypes.Graphics.Drawing;
 
 using GDICOLOR = System.Drawing.Color;
 
-namespace InteropTypes.Graphics.Backends.WPF
+namespace InteropTypes.Graphics.Backends
 {
     /// <summary>
-    /// Represents an agent able to converts <see cref="ICanvas2D"/> drawing calls to
+    /// Represents an agent able to convert <see cref="ICanvas2D"/> drawing calls to
     /// <see cref="System.Windows.Media.DrawingContext"/> drawing calls.
     /// </summary>
-    public partial class WPFDrawingContext2D :
+    public partial class DrawingContext2D :
         System.Windows.Threading.DispatcherObject,
         ICanvas2D,        
         ColorStyle.IBackendDefaultValue
     {
         #region lifecycle
 
-        private static readonly WPFDrawingContext2D _Default = new WPFDrawingContext2D();
+        private static readonly DrawingContext2D _Default = new DrawingContext2D();
 
-        public static WPFDrawingContext2D Default => _Default;
+        public static DrawingContext2D Default => _Default;
 
-        public WPFDrawingContext2D() { }
+        public DrawingContext2D() { }
 
-        public WPFDrawingContext2D(System.Windows.Media.DrawingContext context)
+        public DrawingContext2D(System.Windows.Media.DrawingContext context)
         {
             SetContext(context);
         }        
@@ -351,7 +351,7 @@ namespace InteropTypes.Graphics.Backends.WPF
             var h = (float)(viewport?.Height ?? 100);
 
             PushClipRect(viewport);
-            scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.PerspectiveTransform.Create((this, w, h), cam, prj));
+            scene.DrawTo(Drawing.Transforms.PerspectiveTransform.Create((this, w, h), cam, prj));
             PopClipRect(viewport);
         }
 

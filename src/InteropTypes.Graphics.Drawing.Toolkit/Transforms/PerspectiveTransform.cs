@@ -61,9 +61,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             System.Diagnostics.Debug.Assert(nearPlane > 0);
 
             _Projection = projview;
-            _ProjectionScale = new Vector3(projview.M12, projview.M22, projview.M32).Length(); // we only use the Y Axis to avoid problems with the AspectRatio
+            _ProjectionScale = 1; // _DecomposeScale(viewport); // we only use the Y Axis to avoid problems with the AspectRatio
 
-            _ClipPlane = new Plane(Vector3.UnitZ, -nearPlane);
+            _ClipPlane = new Plane(Vector3.UnitZ, -nearPlane * 2f);
 
             _Viewport = viewport;
             _ViewportScale = new Vector2(viewport.M12, viewport.M22).Length(); // we only use the Y Axis to avoid problems with the AspectRatio
@@ -71,6 +71,31 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _Distorsion = distorsion;
 
             _RenderTarget = renderTarget;
+        }
+
+
+        private static float _DecomposeScale(in Matrix3x2 xform)
+        {
+            var det = xform.GetDeterminant();
+            var area = Math.Abs(det);
+
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Sqrt(area);
+            #else
+            return (float)Math.Sqrt(area);
+            #endif
+        }
+
+        private static Single _DecomposeScale(in Matrix4x4 matrix)
+        {
+            var det = matrix.GetDeterminant();
+            var volume = Math.Abs(det);
+
+            #if NETSTANDARD2_1_OR_GREATER
+            return MathF.Pow(volume, (float)1 / 3);
+            #else
+            return (float)Math.Pow(volume, (double)1 / 3);
+            #endif
         }
 
         #endregion
@@ -104,15 +129,15 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public Vector4 GetProjection(Point3 v)
         {
             System.Diagnostics.Debug.Assert(Point3.IsFinite(v));
-            return Vector4.Transform(v.ToNumerics(), _Projection);
+            return Vector4.Transform(v.XYZ, _Projection);
         }
 
         public Vector2 GetPerspective(Vector4 v)
         {
             System.Diagnostics.Debug.Assert(v.IsFinite(), "Invalid Vertex: NaN");
-            System.Diagnostics.Debug.Assert(v.W > 0, "Invalid Vertex, W must be positive");
+            // System.Diagnostics.Debug.Assert(v.W > 0, "Invalid Vertex, W must be positive");
 
-            var xy = new Vector2(v.X, v.Y) / v.W;
+            var xy = new Vector2(v.X, v.Y) / v.Z;
             xy = Vector2.Transform(xy, _Viewport);
 
             if (_Distorsion != null) xy = _Distorsion(xy);

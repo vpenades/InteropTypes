@@ -58,12 +58,16 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 var u = bw - aw;
                 u = bw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) a = Vector3.Lerp(b, a, u);// so we only clamp when u is within bounds                    
+
+                System.Diagnostics.Debug.Assert(Plane.DotCoordinate(plane, a) >= -0.0001f);
             }
             else if (bw < 0)
             {
                 var u = aw - bw;
                 u = aw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) b = Vector3.Lerp(a, b, u); // so we only clamp when u is within bounds
+
+                System.Diagnostics.Debug.Assert(Plane.DotCoordinate(plane, b) >= -0.0001f);
             }
 
             if (a == b) return false;
@@ -148,18 +152,22 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 var u = bw - aw;
                 u = bw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) a = Vector4.Lerp(b, a, u);// so we only clamp when u is within bounds                    
+
+                System.Diagnostics.Debug.Assert(Plane.DotCoordinate(plane, a.SelectXYZ()) >= -0.0001f);
             }
             else if (bw < 0)
             {
                 var u = aw - bw;
                 u = aw / u; // u values close or equal to 0 can result in values with large errors or infinity
                 if (u < 1) b = Vector4.Lerp(a, b, u); // so we only clamp when u is within bounds
+
+                System.Diagnostics.Debug.Assert(Plane.DotCoordinate(plane, b.SelectXYZ()) >= -0.0001f);
             }
 
             if (a == b) return false;
 
             return true;
-        }
+        }        
 
         private PolygonClipper4(Span<Vector4> vertices)
         {

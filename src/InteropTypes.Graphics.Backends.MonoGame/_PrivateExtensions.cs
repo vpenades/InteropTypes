@@ -56,30 +56,14 @@ namespace InteropTypes.Graphics.Backends
             return new Microsoft.Xna.Framework.Vector3(vector.X, vector.Y, vector.Z);
         }
 
-        public static Matrix3x2 CreateVirtualToPhysical(this Microsoft.Xna.Framework.Graphics.GraphicsDevice device, (float width, float height) virtualSize, bool keepAspect)
+        public static Matrix3x2 CreateVirtualToPhysical(this GraphicsDevice device, (float width, float height) virtualSize, bool keepAspect)
         {
+            var camera = new CameraTransform2D(Matrix3x2.Identity, virtualSize, keepAspect);
+
             var physicalSize = new Vector2(device.Viewport.Width, device.Viewport.Height);
 
-            return physicalSize.CreateVirtualToPhysical(new Vector2(virtualSize.width, virtualSize.height), keepAspect);
-        }
-
-        public static Matrix3x2 CreateVirtualToPhysical(this Vector2 physicalSize, Vector2 virtualSize, bool keepAspect)
-        {
-            var ws = physicalSize.X / Math.Abs(virtualSize.X);
-            var hs = physicalSize.Y / Math.Abs(virtualSize.Y);
-
-            if (keepAspect) ws = hs;
-            var xform = Matrix3x2.CreateScale(ws, hs);
-
-            if (virtualSize.X < 0) xform.M11 *= -1;
-            if (virtualSize.Y < 0) xform.M22 *= -1;
-
-            var offsx = (physicalSize.X - virtualSize.X * hs) * 0.5f;
-            var offsy = (physicalSize.Y - virtualSize.Y * hs) * 0.5f;
-
-            xform *= Matrix3x2.CreateTranslation(offsx, offsy);
-            return xform;
-        }
+            return camera.CreateViewportMatrix(physicalSize);            
+        }        
 
         public static float DecomposeScale(this in Matrix3x2 xform)
         {

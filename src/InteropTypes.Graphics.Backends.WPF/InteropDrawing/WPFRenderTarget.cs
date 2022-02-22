@@ -84,7 +84,7 @@ namespace InteropTypes.Graphics.Backends
         #region nested types
 
         sealed class _DrawingContext :
-            WPF.WPFDrawingContext2D,
+            DrawingContext2D,
             IDisposableCanvas2D,
             IBackendViewportInfo
 

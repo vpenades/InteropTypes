@@ -50,6 +50,30 @@ namespace InteropDrawing
             Assert.AreEqual(7, l);
         }
 
+        [Test]
+        public void TestPolygonClipping2()
+        {
+            var p = new Plane(new System.Numerics.Vector3(0, 0, 1), -0.1f);
+
+            _Clip(p, (3.6963348f, -0.17063361f, 32.588318f), (3.6963348f, 0.35697514f, -68.17659f));
+        }
+
+
+        private static void _Clip(Plane plane, Point3 a, Point3 b)
+        {
+            var aa = a.XYZ;
+            var bb = b.XYZ;
+
+            InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipLineToPlane(ref aa, ref bb, plane);
+
+            var u = Plane.DotCoordinate(plane, aa);
+            Assert.IsTrue(u >= -0.001f);
+
+            u = Plane.DotCoordinate(plane, bb);
+            Assert.IsTrue(u >= -0.001f);
+
+        }
+
         [TestCase("Scene1")]
         [TestCase("Thunderbird1")]
         public void TestSaveScene3D(string sceneName)
@@ -179,7 +203,7 @@ namespace InteropDrawing
 
             var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
 
-            WPFDrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
+            DrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
 
             TestContext.AddTestAttachment(path);
         }

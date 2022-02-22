@@ -145,7 +145,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                     points[i] = Point + p * r;
                 }
 
-                POINT3.DebugGuardIsFinite(points);
+                POINT3.DebugAssertIsFinite(points);
             }
 
             private static VECTOR3 _Extrude(ICoreScene3D dc, ReadOnlySpan<PointNode> nodes, bool closed, int divisions, ColorStyle color, bool flipFaces)

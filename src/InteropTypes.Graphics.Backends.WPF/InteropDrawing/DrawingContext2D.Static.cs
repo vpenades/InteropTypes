@@ -4,14 +4,14 @@ using InteropTypes.Graphics.Drawing;
 
 using RENDERTARGET = System.Windows.Media.Imaging.RenderTargetBitmap;
 
-namespace InteropTypes.Graphics.Backends.WPF
+namespace InteropTypes.Graphics.Backends
 {
-    partial class WPFDrawingContext2D
+    partial class DrawingContext2D
     {
         public static RENDERTARGET CreateRenderTargetBitmap(int width, int height, SceneView2D view, IDrawingBrush<ICanvas2D> scene)
         {
             var rt = new RENDERTARGET(width, height, 96, 96, System.Windows.Media.PixelFormats.Default);
-            var ctx = new WPFDrawingContext2D();
+            var ctx = new DrawingContext2D();
             ctx.DrawScene(rt, new Size(width, height), view, scene);
             return rt;
         }
@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Backends.WPF
         public static RENDERTARGET CreateRenderTargetBitmap(int width, int height, SceneView3D view, IDrawingBrush<IScene3D> scene)
         {
             var rt = new RENDERTARGET(width, height, 96, 96, System.Windows.Media.PixelFormats.Default);
-            var ctx = new WPFDrawingContext2D();
+            var ctx = new DrawingContext2D();
             ctx.DrawScene(rt, new Size(width, height), view, scene);
             return rt;
         }

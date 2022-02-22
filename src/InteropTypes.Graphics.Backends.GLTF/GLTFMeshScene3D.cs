@@ -81,7 +81,7 @@ namespace InteropTypes.Graphics.Backends
         /// <inheritdoc />
         public override void DrawConvexSurface(ReadOnlySpan<POINT3> vertices, ColorStyle fillColor)
         {
-            POINT3.DebugGuardIsFinite(vertices);
+            POINT3.DebugAssertIsFinite(vertices);
 
             switch (vertices.Length)
             {

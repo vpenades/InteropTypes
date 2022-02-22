@@ -65,9 +65,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="diameter">The diameter of the sphere</param>
         /// <param name="style">The style of the sphere.</param>
         void DrawSphere(POINT3 center, SCALAR diameter, OutlineFillStyle style);
-    }
-
-    
+    }    
 
     /// <summary>
     /// Represents a disposable <see cref="IScene3D"/>.
@@ -75,24 +73,8 @@ namespace InteropTypes.Graphics.Drawing
     public interface IDisposableScene3D : IScene3D, IDisposable { }
 
 
-
-
-
-
     public interface ISceneBounds3D
     {
         (System.Numerics.Vector3 Center, SCALAR Radius) GetBoundingSphere();
-    }
-
-    public interface ISceneViewport2D
-    {
-        (XFORM2 Camera, XFORM2 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }
-
-    public interface ISceneViewport3D
-    {
-        // TODO: include near/far depth plane distance hints
-
-        (XFORM3 Camera, XFORM3 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }
+    }    
 }

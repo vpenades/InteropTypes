@@ -159,18 +159,18 @@ namespace InteropTypes.Graphics.Drawing
         {
             // https://github.com/dotnet/corefx/blob/master/src/System.Numerics.Vectors/src/System/Numerics/Plane.cs#L245
 
-            return Plane.DotCoordinate(plane, p.ToNumerics()) > radius;
+            return PLANE.DotCoordinate(plane, p.XYZ) > radius;
         }
 
         public static bool IsInPositiveSideOfPlane(this PLANE plane, XYZ p)
         {
-            return Plane.DotCoordinate(plane, p) > 0;
+            return PLANE.DotCoordinate(plane, p) > 0;
         }
         public static bool IsInPositiveSideOfPlane(this PLANE plane, ReadOnlySpan<Point3> ppp)
         {
             foreach (var p in ppp)
             {
-                if (!plane.IsInPositiveSideOfPlane(p.ToNumerics())) return false;
+                if (!plane.IsInPositiveSideOfPlane(p.XYZ)) return false;
             }
 
             return true;
@@ -203,38 +203,24 @@ namespace InteropTypes.Graphics.Drawing
 
         public static int ClipPolygonToPlane(this in PLANE plane, Span<Point3> outVertices, ReadOnlySpan<Point3> inVertices)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             return Parametric.PolygonClipper3.ClipPolygonToPlane(Point3.AsNumerics(outVertices), Point3.AsNumerics(inVertices), plane);
-After:
-            return PolygonClipper3.ClipPolygonToPlane(Point3.AsNumerics(outVertices), Point3.AsNumerics(inVertices), plane);
-*/
-            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipPolygonToPlane(Point3.AsNumerics(outVertices), Point3.AsNumerics(inVertices), plane);
         }
 
         public static int ClipPolygonToPlane(this in PLANE plane, Span<XYZ> outVertices, ReadOnlySpan<XYZ> inVertices)
         {
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             return Parametric.PolygonClipper3.ClipPolygonToPlane(outVertices, inVertices, plane);
-After:
-            return PolygonClipper3.ClipPolygonToPlane(outVertices, inVertices, plane);
-*/
-            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipPolygonToPlane(outVertices, inVertices, plane);
         }
 
         public static int ClipPolygonToPlane(this in PLANE plane, Span<XYZW> outVertices, ReadOnlySpan<XYZW> inVertices)
         {
+            var count = Parametric.PolygonClipper4.ClipPolygonToPlane(outVertices, inVertices, plane);
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            return Parametric.PolygonClipper4.ClipPolygonToPlane(outVertices, inVertices, plane);
-After:
-            return PolygonClipper4.ClipPolygonToPlane(outVertices, inVertices, plane);
-*/
-            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper4.ClipPolygonToPlane(outVertices, inVertices, plane);
+            #if DEBUG
+            System.Diagnostics.Debug.Assert(new PLANE(plane.Normal, plane.D+0.0001f).IsInPositiveSideOfPlane(outVertices.Slice(0, count)));
+            #endif
+
+            return count;
         }
 
         /// <summary>
@@ -246,26 +232,12 @@ After:
         /// <returns>true if the line is totally or partially in the positive side of the plane</returns>
         public static bool ClipLineToPlane(this in PLANE plane, ref XYZ a, ref XYZ b)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             return Parametric.PolygonClipper3.ClipLineToPlane(ref a, ref b, plane);
-After:
-            return PolygonClipper3.ClipLineToPlane(ref a, ref b, plane);
-*/
-            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipLineToPlane(ref a, ref b, plane);
         }
 
         public static bool ClipLineToPlane(this in PLANE plane, ref XYZW a, ref XYZW b)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             return Parametric.PolygonClipper4.ClipLineToPlane(ref a, ref b, plane);
-After:
-            return PolygonClipper4.ClipLineToPlane(ref a, ref b, plane);
-*/
-            return InteropTypes.Graphics.Drawing.Parametric.PolygonClipper4.ClipLineToPlane(ref a, ref b, plane);
         }
 
         #endregion

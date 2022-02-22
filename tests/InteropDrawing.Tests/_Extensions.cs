@@ -42,7 +42,7 @@ namespace InteropDrawing
             if (filePath.ToLower().EndsWith(".png") || filePath.ToLower().EndsWith(".jpg") || filePath.ToLower().EndsWith(".gif"))
             {
                 
-                WPFDrawingContext2D.SaveToBitmap(filePath, 1024, 1024, null, batch);
+                DrawingContext2D.SaveToBitmap(filePath, 1024, 1024, null, batch);
                 NUnit.Framework.TestContext.AddTestAttachment(filePath);
                 return;
             }
