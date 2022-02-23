@@ -24,14 +24,18 @@ rem msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
 
 md bin
 
+move InteropTypes.Graphics.Drawing.Core\bin\release\*.*nupkg bin
+move InteropTypes.Graphics.Drawing.Toolkit\bin\release\*.*nupkg bin
+move InteropTypes.Graphics.Backends.GLTF\bin\release\*.*nupkg bin
+move InteropTypes.Graphics.Backends.MonoGame\bin\release\*.*nupkg bin
+move InteropTypes.Graphics.Backends.WPF\bin\release\*.*nupkg bin
+
+move InteropDrawing.Backends.SVG\bin\release\*.*nupkg bin
+move InteropDrawing.Backends.Plotly\bin\release\*.*nupkg bin
+
 move InteropTypes.Graphics.PixelFormats\bin\release\*.*nupkg bin
+
 move InteropBitmaps.Core\bin\release\*.*nupkg bin
-move InteropDrawing.Core\bin\release\*.*nupkg bin
-move InteropTensors.Core\bin\release\*.*nupkg bin
-move InteropVision.Core\bin\release\*.*nupkg bin
-
-move InteropBitmaps.Drawing\bin\release\*.*nupkg bin
-
 move InteropBitmaps.Backends.GDI\bin\release\*.*nupkg bin
 move InteropBitmaps.Backends.ImageSharp\bin\release\*.*nupkg bin
 move InteropBitmaps.Backends.SkiaSharp\bin\release\*.*nupkg bin
@@ -39,11 +43,8 @@ move InteropBitmaps.Backends.STB\bin\release\*.*nupkg bin
 move InteropBitmaps.Backends.WPF\bin\release\*.*nupkg bin
 move InteropBitmaps.Backends.Android\bin\release\*.*nupkg bin
 
-move InteropDrawing.Backends.GLTF\bin\release\*.*nupkg bin
-move InteropDrawing.Backends.MonoGame\bin\release\*.*nupkg bin
-move InteropDrawing.Backends.SVG\bin\release\*.*nupkg bin
-move InteropDrawing.Backends.WPF\bin\release\*.*nupkg bin
-move InteropDrawing.Backends.Plotly\bin\release\*.*nupkg bin
+move InteropTensors.Core\bin\release\*.*nupkg bin
+move InteropVision.Core\bin\release\*.*nupkg bin
 
 move InteropWith.OnnxRuntime\bin\release\*.*nupkg bin
 

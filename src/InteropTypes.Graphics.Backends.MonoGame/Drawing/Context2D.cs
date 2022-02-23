@@ -11,7 +11,7 @@ namespace InteropTypes.Graphics.Backends
 {
     class MonoGameDrawing2D :
         Decompose2D.PassImageThrough,
-        IMonoGameDrawing2D
+        IMonoGameCanvas2D
     {
         #region lifecycle
 

@@ -133,7 +133,7 @@ namespace InteropTypes.Graphics.Drawing
             After:
                         var context = Drawing2DTransform.Create(renderTarget, projection, camera);
             */
-            var context = Transforms.Drawing2DTransform.Create(renderTarget, projection, camera);
+            var context = Transforms.Canvas2DTransform.Create(renderTarget, projection, camera);
 
             DrawTo(context);
         }

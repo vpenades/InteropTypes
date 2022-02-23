@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
-    readonly partial struct Drawing3DTransform :
+    readonly partial struct Scene3DTransform :
         ICanvas2D,
         IScene3D,
         IServiceProvider,
@@ -15,12 +15,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     {
         #region constructors
 
-        public static Drawing3DTransform Create(ICoreScene3D target, in Matrix4x4 xform)
+        public static Scene3DTransform Create(ICoreScene3D target, in Matrix4x4 xform)
         {
-            return new Drawing3DTransform(target, xform);
+            return new Scene3DTransform(target, xform);
         }
 
-        private Drawing3DTransform(ICoreScene3D target, Matrix4x4 xform)
+        private Scene3DTransform(ICoreScene3D target, Matrix4x4 xform)
         {
             _Target = target;
             _TargetEx = target as IScene3D;

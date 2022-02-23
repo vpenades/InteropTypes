@@ -7,8 +7,7 @@
   </PropertyGroup>
   
   <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+  <Import Project="..\Version.props" />  
   <Import Project="..\Analysers.props" />
   <Import Project="..\ApiChangeAnalyzer.props" />
 

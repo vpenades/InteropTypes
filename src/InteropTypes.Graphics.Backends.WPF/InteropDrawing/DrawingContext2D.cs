@@ -338,7 +338,7 @@ namespace InteropTypes.Graphics.Backends
             var h = (float)(viewport?.Height ?? 100);
 
             PushClipRect(viewport);
-            scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create((this, w, h), prj, cam));
+            scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.Canvas2DTransform.Create((this, w, h), prj, cam));
             PopClipRect(viewport);
         }
 

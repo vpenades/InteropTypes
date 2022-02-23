@@ -13,15 +13,15 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose2D
     {
-        #region API - Static IVectorsDrawing2D
+        #region API - Static ICanvas2D
 
         public static bool DrawAsset<TAsset>(ICoreCanvas2D dc, in Matrix3x2 transform, TAsset asset, ColorStyle color)
         {
             if (asset == null) return true; // nothing to draw  
 
-            if (typeof(IDrawingBrush<ICanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICanvas2D>)asset).DrawTo(new Decompose2D(Drawing2DTransform.Create(dc, transform))); return true; }
+            if (typeof(IDrawingBrush<ICanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICanvas2D>)asset).DrawTo(new Decompose2D(Canvas2DTransform.Create(dc, transform))); return true; }
 
-            if (typeof(IDrawingBrush<ICoreCanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICoreCanvas2D>)asset).DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
+            if (typeof(IDrawingBrush<ICoreCanvas2D>).IsAssignableFrom(typeof(TAsset))) { ((IDrawingBrush<ICoreCanvas2D>)asset).DrawTo(Canvas2DTransform.Create(dc, transform)); return true; }
 
             // fallback
 
@@ -36,9 +36,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         {
             if (asset == null) return true; // nothing to draw            
 
-            if (asset is IDrawingBrush<ICanvas2D> d2) { d2.DrawTo(new Decompose2D(Drawing2DTransform.Create(dc, transform))); return true; }
+            if (asset is IDrawingBrush<ICanvas2D> d2) { d2.DrawTo(new Decompose2D(Canvas2DTransform.Create(dc, transform))); return true; }
 
-            if (asset is IDrawingBrush<ICoreCanvas2D> d1) { d1.DrawTo(Drawing2DTransform.Create(dc, transform)); return true; }
+            if (asset is IDrawingBrush<ICoreCanvas2D> d1) { d1.DrawTo(Canvas2DTransform.Create(dc, transform)); return true; }
 
             // fallback
 
@@ -57,7 +57,6 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             DrawPolygon(dc, points, style);
         }
-
 
         public static void DrawEllipse(Backends.IBackendCanvas2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)
         {
@@ -78,7 +77,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             if (style.HasFill) dc.DrawConvexPolygon(points, style.FillColor); // todo: triangulate
 
-            if (!style.HasOutline) _DrawSolidLines(dc, points, style.OutlineWidth, style.OutlineColor, true);
+            if (style.HasOutline) _DrawSolidLines(dc, points, style.OutlineWidth, style.OutlineColor, true);
         }
 
         public static void DrawPolygon(Backends.IBackendCanvas2D dc, ReadOnlySpan<POINT2> points, in PolygonStyle style)
@@ -87,7 +86,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             if (style.HasFill) dc.DrawConvexPolygon(points, style.FillColor); // todo: triangulate
 
-            if (!style.HasOutline) _DrawSolidLines(dc, points, style.OutlineWidth, style.OutlineColor, true);
+            if (style.HasOutline) _DrawSolidLines(dc, points, style.OutlineWidth, style.OutlineColor, true);
         }        
 
         public static void DrawLines(ICoreCanvas2D dc, ReadOnlySpan<POINT2> points, SCALAR diameter, in LineStyle style)
@@ -123,7 +122,6 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         }
 
         #endregion
-
 
         #region core        
 

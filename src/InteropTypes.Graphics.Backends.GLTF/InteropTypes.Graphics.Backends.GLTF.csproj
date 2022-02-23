@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+  <Import Project="..\Version.props" />  
 
   <ItemGroup>
     <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0025" />

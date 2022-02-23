@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Backends
 {
     class MonoGameDrawing3D :
         Decompose3D.PassThrough,
-        IMonoGameDrawing3D
+        IMonoGameScene3D
     {
         #region lifecycle
 

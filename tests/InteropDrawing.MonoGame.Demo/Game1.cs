@@ -40,7 +40,7 @@ namespace InteropDrawing
 
         private readonly GraphicsDeviceManager _Graphics;
 
-        private IMonoGameDrawing2D _Drawing2D;        
+        private IMonoGameCanvas2D _Drawing2D;        
 
         private _Sprites2D _Sprites = new _Sprites2D();
 
@@ -52,7 +52,7 @@ namespace InteropDrawing
 
         protected override void LoadContent()
         {
-            _Drawing2D = MonoGameToolkit.CreateDrawingContext2D(this.GraphicsDevice);            
+            _Drawing2D = MonoGameToolkit.CreateCanvas2D(this.GraphicsDevice);            
 
             _DynTex = new _DynamicTexture(this.GraphicsDevice);
         }
@@ -149,6 +149,8 @@ namespace InteropDrawing
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600, 500), tile1);
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600 + 65, 500), tile2);
 
+
+            _Drawing2D.DrawCircle((600, 100), 50, (COLOR.Yellow,2));
 
             _Drawing2D.End();
         }        

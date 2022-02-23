@@ -71,8 +71,5 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             offset += Vector3.TransformNormal(new Vector3(glyph.Right, 0, 0), xform);
         }
 
-
-
-
     }
 }

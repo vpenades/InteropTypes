@@ -10,9 +10,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-<!--
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
--->
+    
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedAllSources>true</EmbedAllSources>
+    
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>  

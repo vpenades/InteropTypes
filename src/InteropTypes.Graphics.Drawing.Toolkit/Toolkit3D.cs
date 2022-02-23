@@ -35,7 +35,7 @@ Before:
 After:
             return xform.IsIdentity ? source : Drawing2DTransform.Create(source, xform);
 */
-            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(source, xform);
+            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Canvas2DTransform.Create(source, xform);
         }
 
         public static ICoreCanvas2D CreateTransformed2D(this ICoreCanvas2D source, XFORM2 xform)
@@ -47,7 +47,7 @@ Before:
 After:
             return xform.IsIdentity ? source : Drawing2DTransform.Create(source, xform);
 */
-            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Drawing2DTransform.Create(source, xform);
+            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Canvas2DTransform.Create(source, xform);
         }
 
         public static ICanvas2D CreateTransformed2D(this IScene3D t, XFORM4 xform)
@@ -59,7 +59,7 @@ Before:
 After:
             return Drawing3DTransform.Create(t, xform);
 */
-            return InteropTypes.Graphics.Drawing.Transforms.Drawing3DTransform.Create(t, xform);
+            return InteropTypes.Graphics.Drawing.Transforms.Scene3DTransform.Create(t, xform);
         }
 
         public static IScene3D CreateTransformed3D(this IScene3D t, XFORM4 xform)
@@ -71,7 +71,7 @@ Before:
 After:
             return xform.IsIdentity ? t : Drawing3DTransform.Create(t, xform);
 */
-            return xform.IsIdentity ? t : InteropTypes.Graphics.Drawing.Transforms.Drawing3DTransform.Create(t, xform);
+            return xform.IsIdentity ? t : InteropTypes.Graphics.Drawing.Transforms.Scene3DTransform.Create(t, xform);
         }
 
         #endregion

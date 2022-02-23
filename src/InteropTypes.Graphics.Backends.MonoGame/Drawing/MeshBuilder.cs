@@ -92,7 +92,7 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region API - IDrawing2D        
+        #region API - ICanvas2D        
 
         public void SetThinLinesPixelSize(float pixelSize) { _2DLineSize = pixelSize; }
 
@@ -170,7 +170,7 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region API - IDrawing3D        
+        #region API - IScene3D        
 
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {

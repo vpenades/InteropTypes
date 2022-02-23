@@ -15,9 +15,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         {
             if (asset == null) return true;
 
-            if (asset is IDrawingBrush<IScene3D> a2) { a2.DrawTo(new Decompose3D(Drawing3DTransform.Create(dc, transform))); return true; }
+            if (asset is IDrawingBrush<IScene3D> a2) { a2.DrawTo(new Decompose3D(Scene3DTransform.Create(dc, transform))); return true; }
 
-            if (asset is IDrawingBrush<ICoreScene3D> a1) { a1.DrawTo(Drawing3DTransform.Create(dc,transform)); return true; }            
+            if (asset is IDrawingBrush<ICoreScene3D> a1) { a1.DrawTo(Scene3DTransform.Create(dc,transform)); return true; }            
 
             // fallback
 

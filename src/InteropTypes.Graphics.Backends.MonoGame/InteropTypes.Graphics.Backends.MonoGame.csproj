@@ -10,8 +10,7 @@
   </PropertyGroup>
 
   <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+  <Import Project="..\Version.props" />  
   
   <ItemGroup>
     <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />    

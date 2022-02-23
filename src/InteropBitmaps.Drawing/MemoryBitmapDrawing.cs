@@ -66,7 +66,7 @@ namespace InteropTypes.Graphics.Backends
             var xform = System.Numerics.Matrix3x2.CreateScale(sx, sy);
             xform.Translation = new System.Numerics.Vector2(tx, ty);
 
-            return Drawing.Transforms.Drawing2DTransform.Create(dc, xform);
+            return Drawing.Transforms.Canvas2DTransform.Create(dc, xform);
         }
 
         public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap)

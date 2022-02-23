@@ -331,7 +331,7 @@ namespace InteropDrawing
             dc2x.DrawLines(new[] { new POINT2(x, 150), new POINT2(x, 200) }, 10, l1style);
             dc2x.DrawLines(new[] { new POINT2(x, 250), new POINT2(x, 300) }, 10, l2style);
 
-            var dc3d = Drawing2DTransform.Create(dc, Matrix3x2.Identity);
+            var dc3d = Canvas2DTransform.Create(dc, Matrix3x2.Identity);
 
             x = 150; dc.DrawFont((x, 30), texts, "3D", FontStyle.VFlip_Gray.With(COLOR.White));
 

@@ -1,3 +1,15 @@
+InteropTypes.Graphics.Drawing.CameraTransform2D
+InteropTypes.Graphics.Drawing.CameraTransform2D.CameraTransform2D() -> void
+InteropTypes.Graphics.Drawing.CameraTransform2D.CameraTransform2D(System.Numerics.Matrix3x2 position, InteropTypes.Graphics.Drawing.Point2 virtualSize, bool keepAspectRatio) -> void
+InteropTypes.Graphics.Drawing.CameraTransform2D.CameraTransform2D(System.Numerics.Matrix3x2 position, InteropTypes.Graphics.Drawing.Point2? virtualSize) -> void
+InteropTypes.Graphics.Drawing.CameraTransform2D.CreateFinalMatrix(InteropTypes.Graphics.Drawing.Point2 physicalSize) -> System.Numerics.Matrix3x2
+InteropTypes.Graphics.Drawing.CameraTransform2D.CreateViewportMatrix(InteropTypes.Graphics.Drawing.Point2 physicalSize) -> System.Numerics.Matrix3x2
+InteropTypes.Graphics.Drawing.CameraTransform2D.Equals(InteropTypes.Graphics.Drawing.CameraTransform2D other) -> bool
+InteropTypes.Graphics.Drawing.CameraTransform2D.IsInitialized.get -> bool
+InteropTypes.Graphics.Drawing.CameraTransform2D.IsValid.get -> bool
+InteropTypes.Graphics.Drawing.CameraTransform2D.KeepAspectRatio -> bool?
+InteropTypes.Graphics.Drawing.CameraTransform2D.VirtualSize -> System.Numerics.Vector2?
+InteropTypes.Graphics.Drawing.CameraTransform2D.WorldMatrix -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform3D
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D() -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D(System.Numerics.Matrix4x4 position, float? fov, float? ortho, float? near, float? far) -> void
@@ -264,6 +276,8 @@ InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Poin
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.ColorStyle c) -> void
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.ColorStyle c, InteropTypes.Graphics.Drawing.Point2 t) -> void
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.Point3 t) -> void
+override InteropTypes.Graphics.Drawing.CameraTransform2D.Equals(object obj) -> bool
+override InteropTypes.Graphics.Drawing.CameraTransform2D.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.CameraTransform3D.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.CameraTransform3D.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.ColorStyle.Equals(object obj) -> bool
@@ -312,6 +326,11 @@ readonly InteropTypes.Graphics.Drawing.Segment3.B -> System.Numerics.Vector3
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.DoubleSided -> bool
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.SmoothingGroups -> uint
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.Style -> InteropTypes.Graphics.Drawing.OutlineFillStyle
+static InteropTypes.Graphics.Drawing.CameraTransform2D.Empty.get -> InteropTypes.Graphics.Drawing.CameraTransform2D
+static InteropTypes.Graphics.Drawing.CameraTransform2D.Identity.get -> InteropTypes.Graphics.Drawing.CameraTransform2D
+static InteropTypes.Graphics.Drawing.CameraTransform2D.operator !=(in InteropTypes.Graphics.Drawing.CameraTransform2D a, in InteropTypes.Graphics.Drawing.CameraTransform2D b) -> bool
+static InteropTypes.Graphics.Drawing.CameraTransform2D.operator ==(in InteropTypes.Graphics.Drawing.CameraTransform2D a, in InteropTypes.Graphics.Drawing.CameraTransform2D b) -> bool
+static InteropTypes.Graphics.Drawing.CameraTransform2D.TryGetFromServiceProvider(object obj, out InteropTypes.Graphics.Drawing.CameraTransform2D cameraTransform) -> bool
 static InteropTypes.Graphics.Drawing.CameraTransform3D.Empty.get -> InteropTypes.Graphics.Drawing.CameraTransform3D
 static InteropTypes.Graphics.Drawing.CameraTransform3D.Identity.get -> InteropTypes.Graphics.Drawing.CameraTransform3D
 static InteropTypes.Graphics.Drawing.CameraTransform3D.operator !=(in InteropTypes.Graphics.Drawing.CameraTransform3D a, in InteropTypes.Graphics.Drawing.CameraTransform3D b) -> bool

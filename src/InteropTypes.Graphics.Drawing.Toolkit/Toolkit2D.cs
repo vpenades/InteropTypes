@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 using VECTOR2 = System.Numerics.Vector2;
 using BRECT = System.Drawing.RectangleF;
@@ -10,6 +11,7 @@ using COLOR = System.Drawing.Color;
 using SCALAR = System.Single;
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 using XFORM2 = System.Numerics.Matrix3x2;
+
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -24,77 +26,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region 2D transforms
-
-
-        public static bool TryGetBackendViewportBounds(this PRIMITIVE2D dc, out BRECT bounds)
-        {
-            bounds = BRECT.Empty;
-
-            if (!(dc is IServiceProvider srv)) return false;
-
-            var vinfo = srv.GetService(typeof(IBackendViewportInfo)) as IBackendViewportInfo;
-            if (vinfo == null) return false;
-
-            if (!(dc is ITransformer2D xform)) return false;
-            
-            Span<POINT2> points = stackalloc POINT2[4];
-            points[0] = (0,0);
-            points[1] = (vinfo.PixelsWidth, 0);
-            points[2] = (0, vinfo.PixelsHeight);
-            points[3] = (vinfo.PixelsWidth, vinfo.PixelsHeight);
-            xform.TransformInverse(points);
-
-            foreach(var p in points)
-            {
-                bounds = BRECT.Union(bounds, new BRECT(p.X, p.Y, 0, 0));
-            }            
-                
-            return true;            
-        }
-
-        public static bool TryGetQuadrant(this PRIMITIVE2D dc, out Quadrant quadrant)
-        {
-
-            if (dc is ITransformer2D xform)
-            {
-                Span<POINT2> points = stackalloc POINT2[1];                
-                points[0] = VECTOR2.One;
-                xform.TransformNormalsForward(points);
-                quadrant = GetQuadrant(points[0].ToNumerics());
-                return true;
-            }
-            else
-            {
-                quadrant = default;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Determines the predominant quadrant from a given transform matrix.
-        /// </summary>
-        /// <param name="transform">The viewport transform matrix</param>
-        /// <returns>The positive quadrant</returns>
-        public static Quadrant GetQuadrant(in XFORM2 transform)
-        {
-            var p0 = VECTOR2.Transform(VECTOR2.Zero,transform);
-            var p1 = VECTOR2.Transform(VECTOR2.One, transform);
-
-            return GetQuadrant(p1 - p0);
-        }
-
-        public static Quadrant GetQuadrant(in VECTOR2 direction)
-        {
-            var q = Quadrant.Origin;
-            if (direction.X < 0) q |= Quadrant.Left;
-            else if (direction.X > 0) q |= Quadrant.Right;
-
-            if (direction.Y < 0) q |= Quadrant.Bottom;
-            else if (direction.Y > 0) q |= Quadrant.Top;
-
-            return q;
-        }
+        #region 2D transforms        
 
         public static void TransformForward(this PRIMITIVE2D dc, Span<POINT2> points)
         {
@@ -152,25 +84,25 @@ namespace InteropTypes.Graphics.Drawing
 
 
 
-        public static Transforms.Drawing2DTransform CreateTransformed(PRIMITIVE2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
+        public static Transforms.Canvas2DTransform CreateTransformed(PRIMITIVE2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
         {
 
 
-            return Transforms.Drawing2DTransform.Create(target, physicalSize, virtualSize, xform);
+            return Transforms.Canvas2DTransform.Create(target, physicalSize, virtualSize, xform);
         }
 
         public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, POINT2 virtualSize)
         {
 
 
-            return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualSize);
+            return Transforms.Canvas2DTransform.Create(t, physicalSize, virtualSize);
         }        
 
         public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, BRECT virtualBounds)
         {
 
 
-            return Transforms.Drawing2DTransform.Create(t, physicalSize, virtualBounds);
+            return Transforms.Canvas2DTransform.Create(t, physicalSize, virtualBounds);
         }
 
         #endregion
@@ -301,15 +233,8 @@ namespace InteropTypes.Graphics.Drawing
         public static void DrawRectangle(this CANVAS2DEX dc, POINT2 origin, POINT2 size, in OutlineFillStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
-
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
+            
             Parametric.ShapeFactory2D.FillRectangleVertices(vertices, origin, size, 0, 0);
-After:
-            ShapeFactory2D.FillRectangleVertices(vertices, origin, size, 0, 0);
-*/
-            InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.FillRectangleVertices(vertices, origin, size, 0, 0);
 
             dc.DrawPolygon(vertices, style);
         }
@@ -322,24 +247,10 @@ After:
         public static void DrawRectangle(this CANVAS2DEX dc, POINT2 origin, POINT2 size, in OutlineFillStyle style, float borderRadius, int arcVertexCount = 6)
         {
             if (borderRadius == 0) arcVertexCount = 0;
-
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
+            
             Span<POINT2> vertices = stackalloc POINT2[Parametric.ShapeFactory2D.GetRectangleVertexCount(arcVertexCount)];
-After:
-            Span<POINT2> vertices = stackalloc POINT2[ShapeFactory2D.GetRectangleVertexCount(arcVertexCount)];
-*/
-            Span<POINT2> vertices = stackalloc POINT2[InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.GetRectangleVertexCount(arcVertexCount)];
-
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
+            
             Parametric.ShapeFactory2D.FillRectangleVertices(vertices, origin, size, borderRadius, arcVertexCount);
-After:
-            ShapeFactory2D.FillRectangleVertices(vertices, origin, size, borderRadius, arcVertexCount);
-*/
-            InteropTypes.Graphics.Drawing.Parametric.ShapeFactory2D.FillRectangleVertices(vertices, origin, size, borderRadius, arcVertexCount);
 
             dc.DrawPolygon(vertices, style);
         }        
@@ -349,53 +260,33 @@ After:
             dc.DrawPolygon(points, style);
         }        
 
-        public static void DrawFont(this CANVAS2DEX dc, POINT2 origin, float size, String text, FontStyle style)
-        {
-            var xform = XFORM2.CreateScale(size);
-            xform.Translation = origin.ToNumerics();
-
-            style = style.With(style.Strength * size);
-
-            dc.DrawFont(xform, text, style);
-        }
-
-        public static void DrawFont(this CANVAS2DEX dc, XFORM2 xform, String text, FontStyle style)
-        {
-            float xflip = 1;
-            float yflip = 1;            
-
-            if (style.Alignment.HasFlag(FontAlignStyle.FlipHorizontal)) { xflip = -1; }
-            if (style.Alignment.HasFlag(FontAlignStyle.FlipVertical)) { yflip = -1; }            
-
-            if (style.Alignment.HasFlag(FontAlignStyle.FlipAuto) && dc.TryGetQuadrant(out var q))
-            {
-                if (q.HasFlag(Quadrant.Bottom)) yflip *= -1;
-            }            
-
-            style = style.With(style.Alignment & ~(FontAlignStyle.FlipHorizontal | FontAlignStyle.FlipVertical));
-
-            xform = XFORM2.CreateScale(xflip, yflip) * xform;
-
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
-After:
-            FontDrawing.DrawFontAsLines(dc, xform, text, style);
-*/
-            InteropTypes.Graphics.Drawing.Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
-        }
+        
 
         public static void DrawPath(this CANVAS2DEX dc, XFORM2 xform, string path, OutlineFillStyle style)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             Parametric.PathParser.DrawPath(dc, xform, path, style);
-After:
-            PathParser.DrawPath(dc, xform, path, style);
-*/
-            InteropTypes.Graphics.Drawing.Parametric.PathParser.DrawPath(dc, xform, path, style);
+        }
+
+        public static void DrawImageBackground(this PRIMITIVE2D dc, ImageStyle style)
+        {
+            var vflip = false;
+
+            if (dc.TryGetQuadrant(out var quadrant))
+            {
+                if (quadrant.HasFlag(Quadrant.Top)) vflip = true;
+            }
+
+            if (dc.TryGetBackendViewportBounds(out var screenBounds))
+            {
+                var screenXform = XFORM2.CreateScale(screenBounds.Width, screenBounds.Height);
+                screenXform.Translation = new VECTOR2(screenBounds.X, screenBounds.Y);
+
+                XFORM2.Invert(style.GetTransform(false, vflip), out var imageXform);
+
+                var xform = imageXform * screenXform;
+
+                dc.DrawImage(xform, style);
+            }
         }
 
         #endregion

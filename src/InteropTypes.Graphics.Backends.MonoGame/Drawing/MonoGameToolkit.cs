@@ -10,7 +10,7 @@ using XNACOLOR = Microsoft.Xna.Framework.Color;
 
 namespace InteropTypes.Graphics.Backends
 {
-    public interface IMonoGameDrawing2D :
+    public interface IMonoGameCanvas2D :
         IBackendViewportInfo,
         IDisposableCanvas2D,
         IMeshCanvas2D,
@@ -23,7 +23,7 @@ namespace InteropTypes.Graphics.Backends
         void End();
     }
 
-    public interface IMonoGameDrawing3D :
+    public interface IMonoGameScene3D :
         IBackendViewportInfo,
         IDisposableScene3D,
         // IMeshScene3D,
@@ -121,12 +121,12 @@ namespace InteropTypes.Graphics.Backends
             return tex;
         }
 
-        public static IMonoGameDrawing2D CreateDrawingContext2D(this GraphicsDevice device)
+        public static IMonoGameCanvas2D CreateCanvas2D(this GraphicsDevice device)
         {
             return new MonoGameDrawing2D(device);
         }
 
-        public static IMonoGameDrawing3D CreateDrawingContext3D(this GraphicsDevice device)
+        public static IMonoGameScene3D CreateScene3D(this GraphicsDevice device)
         {
             return new MonoGameDrawing3D(device);
         }

@@ -141,7 +141,6 @@ namespace InteropTypes.Graphics.Backends
         #endregion
     }
 
-
     sealed class _GltfDrawing3DContext : GltfMeshScene3D, IDisposableScene3D
     {
         public _GltfDrawing3DContext(GltfSceneBuilder owner, Matrix4x4 xform)

@@ -8,7 +8,12 @@
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+
+  <PropertyGroup>
+    <Description>
+      Extends ICanvas2D and IScene3D with wrappers and extensions.
+    </Description>
+  </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <Compile Include="..\Interop.MathF.Source\*.cs" LinkBase="MathF" />
