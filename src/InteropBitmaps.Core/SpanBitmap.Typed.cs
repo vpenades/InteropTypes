@@ -13,7 +13,8 @@ namespace InteropBitmaps
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
-    public readonly ref partial struct SpanBitmap<TPixel> where TPixel : unmanaged
+    public readonly ref partial struct SpanBitmap<TPixel>
+        where TPixel : unmanaged
     {
         #region lifecycle
 
@@ -89,7 +90,30 @@ namespace InteropBitmaps
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly ReadOnlySpan<Byte> _Readable;
 
-        public override int GetHashCode() { return _Implementation.CalculateHashCode(_Readable, _Info); }
+        /// <inheritdoc/>
+        public override int GetHashCode() { throw new NotSupportedException("Spans don't support GetHashCode"); }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { throw new NotSupportedException(); }
+
+        /// <inheritdoc/>
+        public static bool operator ==(in SpanBitmap<TPixel> a, in SpanBitmap<TPixel> b) { return AreEqual(a, b); }
+
+        /// <inheritdoc/>
+        public static bool operator !=(in SpanBitmap<TPixel> a, in SpanBitmap<TPixel> b) { return !AreEqual(a, b); }
+
+        /// <summary>
+        /// Indicates whether both instances are equal.
+        /// </summary>
+        /// <param name="a">The first instance.</param>
+        /// <param name="b">The first instance.</param>
+        /// <returns>true if both instances represent the same value.</returns>
+        public static bool AreEqual(in SpanBitmap<TPixel> a, in SpanBitmap<TPixel> b)
+        {
+            if (a.Info != b.Info) return false;
+            if (a._Readable != b._Readable) return false;
+            return true;
+        }
 
         #endregion
 

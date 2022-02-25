@@ -87,41 +87,6 @@ namespace InteropBitmaps
                     dstRow[x] = pixelFunc(d, srcRow[x]);
                 }                
             }
-        }
-
-        public static int CalculateHashCode(ReadOnlySpan<Byte> data, in BitmapInfo info)
-        {
-            if (info.IsEmpty) return 0;            
-
-            System.Diagnostics.Debug.Assert(data.Length == info.BitmapByteSize);
-
-            // if the bytestride exceeds the actual row size, the region outside the
-            // bitmap is not accounted for the hash.
-
-            int rowSize = info.Width * info.PixelByteSize;
-            int x = 0;
-            int y = 0;
-            int step = 1;
-            int count = 0;
-
-            ulong h = 0;
-
-            while ((x + y) < data.Length)
-            {
-                h <<= 2;
-                h += data[x + y];
-
-                x += step;
-                while(x > rowSize)
-                {
-                    x -= rowSize;
-                    y += info.StepByteSize;
-                }
-
-                ++count; if (count > 5) { count = 0; step += 2; }
-            }
-            
-            return h.GetHashCode();
-        }
+        }        
     }
 }

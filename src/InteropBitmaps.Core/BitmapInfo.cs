@@ -114,6 +114,7 @@ namespace InteropBitmaps
         /// </summary>
         public readonly int PixelByteSize;
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             // PixelFormat should be irrelevant
@@ -121,23 +122,28 @@ namespace InteropBitmaps
             return Width.GetHashCode() ^ Height.GetHashCode() ^ PixelFormat.GetHashCode();
         }
 
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is BitmapInfo other && AreEqual(this, other); }
+
+        /// <inheritdoc/>
+        public bool Equals(BitmapInfo other) { return AreEqual(this, other); }
+
+        /// <inheritdoc/>
+        public static bool operator ==(in BitmapInfo a, in BitmapInfo b) { return AreEqual(a, b); }
+
+        /// <inheritdoc/>
+        public static bool operator !=(in BitmapInfo a, in BitmapInfo b) { return !AreEqual(a, b); }
+
+
         public static bool AreEqual(in BitmapInfo a, in BitmapInfo b, bool compareStepSize = true)
         {
             if (a.Width != b.Width) return false;
             if (a.Height != b.Height) return false;
-            if (a.PixelByteSize != b.PixelByteSize) return false;            
+            if (a.PixelByteSize != b.PixelByteSize) return false;
             if (a.PixelFormat != b.PixelFormat) return false;
             if (compareStepSize && a.StepByteSize != b.StepByteSize) return false;
             return true;
         }
-
-        public bool Equals(BitmapInfo other) { return AreEqual(this, other); }
-
-        public override bool Equals(object obj) { return obj is BitmapInfo other ? AreEqual(this, other) : false; }
-
-        public static bool operator ==(in BitmapInfo a, in BitmapInfo b) { return AreEqual(a, b); }
-
-        public static bool operator !=(in BitmapInfo a, in BitmapInfo b) { return !AreEqual(a, b); }
 
         #endregion
 

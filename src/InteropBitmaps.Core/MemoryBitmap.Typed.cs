@@ -9,37 +9,63 @@ namespace InteropBitmaps
 {
     /// <summary>
     /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
-    /// </summary>    
+    /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
-    // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
-    public readonly struct MemoryBitmap : IMemoryBitmap
+    // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
+    public readonly struct MemoryBitmap<TPixel>
+        : IMemoryBitmap
+        , IBitmap<TPixel>
+        , IEquatable<MemoryBitmap<TPixel>>
+        where TPixel : unmanaged        
     {
-        #region lifecycle        
-        public MemoryBitmap(in BitmapInfo info)
-            : this(new byte[info.BitmapByteSize], info) { }
+        #region debug
 
-        public MemoryBitmap(Byte[] array, in BitmapInfo info)
+        internal ReadOnlySpan<TPixel> _Row0 => AsSpanBitmap().GetScanlinePixels(0);
+        internal ReadOnlySpan<TPixel> _Row1 => AsSpanBitmap().GetScanlinePixels(1);
+        internal ReadOnlySpan<TPixel> _Row2 => AsSpanBitmap().GetScanlinePixels(2);
+        internal ReadOnlySpan<TPixel> _Row3 => AsSpanBitmap().GetScanlinePixels(3);
+
+        #endregion
+
+        #region lifecycle
+
+        public MemoryBitmap(in BitmapInfo info)
         {
-            _Info = info;            
-            _Data = array.AsMemory().Slice(0, _Info.BitmapByteSize);
+            Guard.IsValidPixelFormat<TPixel>(info);
+
+            _Info = info;
+            _Data = new Byte[info.BitmapByteSize];
         }
 
         public MemoryBitmap(Memory<Byte> data, in BitmapInfo info)
         {
+            Guard.IsValidPixelFormat<TPixel>(info);
+
             _Info = info;
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+        public MemoryBitmap(int width, int height) : this(width, height, PixelFormat.TryIdentifyPixel<TPixel>()) { }
+
+        public unsafe MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
-            var bytes = new byte[_Info.BitmapByteSize];            
+
+            Guard.IsValidPixelFormat<TPixel>(_Info);
+
+            var bytes = new byte[_Info.BitmapByteSize];
             _Data = bytes;
         }        
 
-        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+        public MemoryBitmap(Memory<Byte> data, int width, int height, int stepByteSize = 0)
+            : this(data, width, height, PixelFormat.CreateUndefined<TPixel>(), stepByteSize) { }
+
+        public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
             _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
+
+            Guard.IsValidPixelFormat<TPixel>(_Info);
+
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
@@ -52,7 +78,34 @@ namespace InteropBitmaps
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private readonly Memory<Byte> _Data;
-        public override int GetHashCode() { return _Implementation.CalculateHashCode(_Data.Span, _Info); }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() { return _Data.GetHashCode() ^ _Info.GetHashCode(); }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is MemoryBitmap<TPixel> other && AreEqual(this,other); }
+
+        /// <inheritdoc/>
+        public bool Equals(MemoryBitmap<TPixel> other) { return AreEqual(this, other); }
+
+        /// <inheritdoc/>
+        public static bool operator ==(in MemoryBitmap<TPixel> a, in MemoryBitmap<TPixel> b) { return AreEqual(a, b); }
+
+        /// <inheritdoc/>
+        public static bool operator !=(in MemoryBitmap<TPixel> a, in MemoryBitmap<TPixel> b) { return !AreEqual(a, b); }
+
+        /// <summary>
+        /// Indicates whether both instances are equal.
+        /// </summary>
+        /// <param name="a">The first instance.</param>
+        /// <param name="b">The first instance.</param>
+        /// <returns>true if both instances represent the same value.</returns>
+        public static bool AreEqual(in MemoryBitmap<TPixel> a, in MemoryBitmap<TPixel> b)
+        {
+            if (a.Info != b.Info) return false;
+            if (a._Data.Equals(b._Data)) return false;
+            return true;
+        }
 
         #endregion
 
@@ -105,29 +158,29 @@ namespace InteropBitmaps
         #region API - Buffers
 
         public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+        public Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
+
         public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
+        public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Data.Span, y); }
 
-        /// <summary>
-        /// Gets the underlaying buffer as a <typeparamref name="TPixel"/> memory buffer.
-        /// </summary>
-        /// <typeparam name="TPixel">The pixel format</typeparam>
-        /// <returns>A memory buffer</returns>
-        public unsafe Memory<TPixel> GetPixelMemory<TPixel>() where TPixel : unmanaged
+
+        public Memory<TPixel> GetPixelMemory()
         {
-            if ((this.Info.StepByteSize % sizeof(TPixel)) != 0) throw new ArgumentException("The bitmap stride is not a multiple of TPixel size.", nameof(TPixel));
-
             return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory;
         }
-        
-        /// <summary>
-        /// Gets the underlaying byte array, as long as the backing <see cref="Memory"/> was constructed from an <see cref="Array"/>.
-        /// </summary>
-        /// <param name="segment">The underlaying memory <see cref="Array"/></param>
-        /// <returns>true if the operation succeeded.</returns>
+
+        public unsafe Memory<TOtherPixel> GetPixelMemory<TOtherPixel>()
+            where TOtherPixel:unmanaged
+        {
+            if (sizeof(TPixel) != sizeof(TOtherPixel)) throw new ArgumentException("pixel size mismatch", typeof(TOtherPixel).Name);
+
+            return new MemoryManagers.CastMemoryManager<Byte, TOtherPixel>(_Data).Memory;
+        }
+
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);
-        }        
+        }
 
         public Byte[] ToByteArray()
         {
@@ -140,134 +193,99 @@ namespace InteropBitmaps
 
         #region API - Cast
 
-        public static implicit operator SpanBitmap(MemoryBitmap bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
+        public static implicit operator SpanBitmap(MemoryBitmap<TPixel> bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
 
-        public SpanBitmap AsSpanBitmap() { return this; }
+        public static implicit operator SpanBitmap<TPixel>(MemoryBitmap<TPixel> bmp) { return new SpanBitmap<TPixel>(bmp._Data.Span, bmp._Info); }
 
-        public unsafe MemoryBitmap<TPixel> OfType<TPixel>()
-            where TPixel : unmanaged
-        { return new MemoryBitmap<TPixel>(_Data, _Info); }
+        public static implicit operator MemoryBitmap(MemoryBitmap<TPixel> bmp) { return new MemoryBitmap(bmp._Data, bmp._Info); }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public SpanBitmap<TPixel> AsSpanBitmap() { return this; }
+
+        /// <inheritdoc />        
+        [System.Diagnostics.DebuggerStepThrough]
+        SpanBitmap IMemoryBitmap.AsSpanBitmap() { return this; }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public MemoryBitmap AsTypeless() { return new MemoryBitmap(this._Data, this._Info); }
 
         #endregion
 
-        #region API - Pixel Ops
-        
-        public void SetPixels(int dstX, int dstY, SpanBitmap src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }        
+        #region API - Pixel Ops        
 
-        public MemoryBitmap Slice(in BitmapBounds rect)
+        public void SetPixels(TPixel value) { AsSpanBitmap().SetPixels(value); }
+
+        public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }
+
+        public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel, TSrcPixel, TPixel> pixelFunc)
+            where TSrcPixel:unmanaged
+        {
+            AsSpanBitmap().ApplyPixels(dstX, dstY, src, pixelFunc);
+        }
+
+        public MemoryBitmap<TPixel> Slice(in BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);
             var memory = this._Data.Slice(offset, info.BitmapByteSize);
-            return new MemoryBitmap(memory, info);
+            return new MemoryBitmap<TPixel>(memory, info);
         }
+        
+        public TPixel GetPixel(int x, int y) { return UseScanlinePixels(y)[x]; }
 
-        /// <summary>
-        /// Reshapes <paramref name="bmp"/> if it doesn't match <paramref name="fmt"/>.
-        /// </summary>
-        /// <param name="bmp">The bitmap to reshape.</param>
-        /// <param name="fmt">The shape to apply.</param>
-        /// <param name="compareStep">True if we want to take <see cref="BitmapInfo.StepByteSize"/> into account.</param>
-        /// <param name="discardPixels">True if we don't want to copy the pixels when reshaping.</param>
-        /// <returns></returns>
-        public static bool Reshape(ref MemoryBitmap bmp, BitmapInfo fmt, bool compareStep = false, bool discardPixels = false)
+        public void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
+
+        public TPixel GetPixel(POINT point) { return UseScanlinePixels(point.Y)[point.X]; }
+
+        public void SetPixel(POINT point, TPixel value) { UseScanlinePixels(point.Y)[point.X] = value; }
+
+        public IEnumerable<(POINT Location, TPixel Pixel)> EnumeratePixels()
         {
-            if (BitmapInfo.AreEqual(bmp.Info, fmt, compareStep)) return false;
+            for (int y = 0; y < Height; ++y)
+            {
+                for (int x = 0; x < Width; ++x)
+                {
+                    var p = new POINT(x, y);
 
-            var newBmp = new MemoryBitmap(fmt);
-            if (!discardPixels) newBmp.SetPixels(0, 0, bmp);
-            bmp = newBmp;
-            return true;
+                    yield return (p, GetPixel(p));
+                }
+            }
         }
 
-        public MemoryBitmap ToMemoryBitmap(PixelFormat? fmtOverride = null)
+        public MemoryBitmap<TPixel> ToMemoryBitmap(PixelFormat? fmtOverride = null)
         {
             return this.AsSpanBitmap().ToMemoryBitmap(fmtOverride);
-        }
-
-        public bool TrySetPixelsFormatRGBX(out MemoryBitmap newBitmap)
-        {
-            if (this.AsSpanBitmap().TrySetPixelsFormatRGBX(out var newSpan))
-            {
-                newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
-                return true;
-            }
-            else
-            {
-                newBitmap = default;
-                return false;
-            }
-        }
-
-        public bool TrySetPixelsFormatBGRX(out MemoryBitmap newBitmap)
-        {
-            if (this.AsSpanBitmap().TrySetPixelsFormatBGRX(out var newSpan))
-            {
-                newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
-                return true;
-            }
-            else
-            {
-                newBitmap = default;
-                return false;
-            }
-        }
-
-        public bool TrySetPixelsFormat(PixelFormat newFormat, out MemoryBitmap newBitmap)
-        {
-            if (this.AsSpanBitmap().TrySetPixelsFormat(newFormat, out var newSpan))
-            {
-                newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
-                return true;
-            }
-            else
-            {
-                newBitmap = default;
-                return false;
-            }
         }
 
         #endregion
 
         #region API - IO
 
-        public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
+        public static MemoryBitmap<TPixel> Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
         {
-            return Codecs.CodecFactory.Read(s, factory);
+            var raw = MemoryBitmap.Read(s, factory);
+            if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
+
+            var fmt = raw.Info.WithPixelFormat<TPixel>();
+            var dst = new MemoryBitmap<TPixel>(fmt);
+            dst.AsTypeless().SetPixels(0, 0, raw);
+            return dst;
         }
 
-        public static MemoryBitmap Load(string filePath, params Codecs.IBitmapDecoder[] factory)
-        {            
-            using (var s = System.IO.File.OpenRead(filePath))
-            {
-                return Codecs.CodecFactory.Read(s, factory, (int)s.Length);
-            }
+        public static MemoryBitmap<TPixel> Load(string filePath, params Codecs.IBitmapDecoder[] factory)
+        {
+            var raw = MemoryBitmap.Load(filePath, factory);
+            if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
+
+            var fmt = raw.Info.WithPixelFormat<TPixel>();
+            var dst = new MemoryBitmap<TPixel>(fmt);
+            dst.AsTypeless().SetPixels(0, 0, raw);
+            return dst;
         }
 
         public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Save(filePath, factory);
-        }
-
-        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
-        {
-            this.AsSpanBitmap().Write(stream, format, factory);
-        }
-
-        #endregion
-
-        #region nested types
-
-        /// <summary>
-        /// Represents an object that promises a <see cref="MemoryBitmap"/> and controls its life cycle.
-        /// </summary>
-        public interface ISource : IDisposable
-        {
-            /// <summary>
-            /// Gets the <see cref="MemoryBitmap"/> owned by this instance.<br/>
-            /// If this <see cref="ISource"/> is disposed, the <see cref="Bitmap"/> will no longet be valid.
-            /// </summary>
-            MemoryBitmap Bitmap { get; }
-        }
+        }        
 
         #endregion
     }

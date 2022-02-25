@@ -11,8 +11,14 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents an image resource defined as a bitmap source and a region within that bitmap.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// <see cref="ImageSource"/> is part of <see cref="ImageStyle"/>, which can be used by<br/>
     /// <see cref="ICoreCanvas2D.DrawImage(in System.Numerics.Matrix3x2, ImageStyle)"/>.
+    /// </para>
+    /// <para>
+    /// This class does not (usually) contain the image itself, but the to provide
+    /// an image to the rendering backend.
+    /// </para>
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplay(),nq}")]
     public class ImageSource : ICloneable
@@ -399,7 +405,7 @@ namespace InteropTypes.Graphics.Drawing
     }
 
     /// <summary>
-    /// Represents the cached calculated transforms of a <see cref="ImageSource"/>.
+    /// Represents the cached calculated transforms of an <see cref="ImageSource"/>.
     /// </summary>
     class _ImageSourceTransforms
     {

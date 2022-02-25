@@ -50,15 +50,26 @@ namespace InteropTypes.Graphics.Drawing
 
     public static partial class Toolkit
     {
+        /// <summary>
+        /// Tries to get the quadrant used by the render target.
+        /// </summary>
+        /// <param name="dc">The rendering target.</param>
+        /// <param name="quadrant">The quadrant used by the render target</param>
+        /// <returns>true if it succeeded to retrieve the quadrant.</returns>
         public static bool TryGetQuadrant(this PRIMITIVE2D dc, out Quadrant quadrant)
         {
-
             if (dc is ITransformer2D xform)
             {
                 Span<POINT2> points = stackalloc POINT2[1];
                 points[0] = VECTOR2.One;
                 xform.TransformNormalsForward(points);
-                quadrant = GetQuadrant(points[0].ToNumerics());
+
+                var dir = points[0].XY;
+
+                dir *= new VECTOR2(1, -1); // We reverse the vertical axis so it makes sense from screen POV.
+
+                quadrant = _GetQuadrant(dir);
+
                 return true;
             }
             else
@@ -66,29 +77,16 @@ namespace InteropTypes.Graphics.Drawing
                 quadrant = default;
                 return false;
             }
-        }
+        }        
 
-        /// <summary>
-        /// Determines the predominant quadrant from a given transform matrix.
-        /// </summary>
-        /// <param name="transform">The viewport transform matrix</param>
-        /// <returns>The positive quadrant</returns>
-        public static Quadrant GetQuadrant(in XFORM2 transform)
-        {
-            var p0 = VECTOR2.Transform(VECTOR2.Zero, transform);
-            var p1 = VECTOR2.Transform(VECTOR2.One, transform);
-
-            return GetQuadrant(p1 - p0);
-        }
-
-        public static Quadrant GetQuadrant(in VECTOR2 direction)
+        private static Quadrant _GetQuadrant(in VECTOR2 direction)
         {
             var q = Quadrant.Origin;
             if (direction.X < 0) q |= Quadrant.Left;
             else if (direction.X > 0) q |= Quadrant.Right;
 
-            if (direction.Y < 0) q |= Quadrant.Top;
-            else if (direction.Y > 0) q |= Quadrant.Bottom;
+            if (direction.Y < 0) q |= Quadrant.Bottom;
+            else if (direction.Y > 0) q |= Quadrant.Top;
 
             return q;
         }

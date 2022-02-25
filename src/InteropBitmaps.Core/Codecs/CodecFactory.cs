@@ -39,7 +39,7 @@ namespace InteropBitmaps.Codecs
             Guard.IsFalse(nameof(format), format == CodecFormat.Undefined);
             Guard.GreaterThan(nameof(encoders), encoders.Length, 0);
 
-            // if the stream has been created already, keep the start position:
+            // if the stream has been created already, remember the start position:
 
             long position = 0;
             bool keepOpen = false;
