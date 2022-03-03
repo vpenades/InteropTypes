@@ -111,5 +111,33 @@ namespace InteropBitmaps.Codecs
                 proxy.Image.AttachToCurrentTest("ImageSharp.png");
             }            
         }
+
+
+        [Test]
+        public void SaveMjpeg()
+        {
+            var f1 = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+            var f2 = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon-blurred.jpg");
+
+            var ff1 = MemoryBitmap.Load(f1, GDICodec.Default);
+            var ff2 = MemoryBitmap.Load(f2, GDICodec.Default);
+
+            IEnumerable<MemoryBitmap> _getFrames()
+            {
+                for (int i = 0; i < 10; ++i)
+                {
+                    yield return ff1;
+                    yield return ff1;
+                    yield return ff1;
+                    yield return ff1;
+                    yield return ff2;
+                    yield return ff2;
+                    yield return ff2;
+                    yield return ff2;
+                }
+            }
+
+            _getFrames().AttachAviToCurrentTest("video.avi");
+        }
     }
 }

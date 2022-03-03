@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Backends.WPF;
 using InteropTypes.Graphics.Drawing;
 
 namespace InteropTypes.Graphics
@@ -13,11 +14,39 @@ namespace InteropTypes.Graphics
         public void DrawTo(IScene3D context)
         {
             context.DrawSphere((0,0,0), 2, ColorStyle.Red);
+
+            System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
         }
 
         public Sphere Item1 => new Sphere();
 
         public Cube Item2 => new Cube();
+
+        public WPFClientBitmap ClientBitmap { get; } = new WPFClientBitmap();
+
+
+        private void _AsyncUpdateBitmap()
+        {
+            var bmp = new InteropBitmaps.MemoryBitmap(256, 256, InteropBitmaps.Pixel.BGR24.Format);
+            var rnd = new Random();
+
+            while(true)
+            {
+                System.Threading.Thread.Sleep(1000 / 100);
+
+                if (bmp.TryGetBuffer(out var buffer))
+                {
+                    var data = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(buffer.Array);                   
+
+                    for(int i=0; i < data.Length; ++i)
+                    {
+                        data[i] = rnd.Next();
+                    }
+                }
+
+                ClientBitmap.Update(bmp);
+            }
+        }
     }
 
 

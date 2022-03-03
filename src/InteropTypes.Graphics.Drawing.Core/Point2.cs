@@ -257,11 +257,11 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator *(Point2 a, Point2 b) { return a.XY * b; }
+        public static VECTOR2 operator *(Point2 a, Point2 b) { return a.XY * b.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator /(Point2 a, Point2 b) { return a.XY / b; }
+        public static VECTOR2 operator /(Point2 a, Point2 b) { return a.XY / b.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

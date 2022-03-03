@@ -435,7 +435,7 @@ namespace InteropBitmaps
             public static implicit operator BGRA32(in (int R, int G, int B, int A) color) { return new BGRA32(color.R, color.G, color.B, color.A); }
 
             public BGRA32(in System.Drawing.Color color) { R = color.R; G = color.G;B = color.B;A = color.A; }
-            public BGRA32(Alpha8 color) { B = 0; G = 0; R = 0; A = color.A; }
+            public BGRA32(Alpha8 color) { B = 255; G = 255; R = 255; A = color.A; }
             public BGRA32(Luminance8 color) { B = color.L; G = color.L; R = color.L; A = 255; }
             public BGRA32(Luminance16 color)
             {
@@ -867,7 +867,7 @@ namespace InteropBitmaps
         public partial struct RGBA128F
         {
             #region constructors
-            public RGBA128F(Alpha8 alpha) : this() { RGBA = new XYZA(0, 0, 0, alpha.A) / 255f; }
+            public RGBA128F(Alpha8 alpha) : this() { RGBA = new XYZA(255, 255, 255, alpha.A) / 255f; }
             public RGBA128F(Luminance8 luma) : this() { RGBA = new XYZA(luma.L, luma.L, luma.L, 255) / 255f; }
             public RGBA128F(Luminance16 luma) : this() { RGBA = new XYZA(luma.L, luma.L, luma.L, 65565) / 65535f; }
             public RGBA128F(Luminance32F luma) : this() { RGBA = new XYZA(luma.L, luma.L, luma.L, 1); }

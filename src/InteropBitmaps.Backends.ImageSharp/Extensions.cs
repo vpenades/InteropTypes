@@ -114,6 +114,7 @@ namespace InteropBitmaps
 
         public static void WriteAsSpanBitmap(this Image self, SpanBitmap other, SpanBitmap.Action2 action)
         {
+            if (self is Image<A8> srcA8) { srcA8.WriteAsSpanBitmap(other.OfTypeOrDefault<Pixel.Alpha8>(), (s, o) => action(s, o)); return; }
             if (self is Image<L8> srcL8) { srcL8.WriteAsSpanBitmap(other.OfTypeOrDefault<Pixel.Luminance8>(), (s,o) => action(s,o)); return; }
 
             if (self is Image<Bgr565> srcBgr565) { srcBgr565.WriteAsSpanBitmap(other.OfTypeOrDefault<Pixel.BGR565>(), (s, o) => action(s, o)); return; }

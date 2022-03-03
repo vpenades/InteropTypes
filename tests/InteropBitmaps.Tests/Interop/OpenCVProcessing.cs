@@ -41,7 +41,9 @@ namespace InteropBitmaps.Interop
 
         public static Mat ExtractSegmentalMarker(this Mat image)
         {
+            #pragma warning disable CA2000 // Dispose objects before losing scope
             var output = new Mat();
+            #pragma warning restore CA2000 // Dispose objects before losing scope
 
             var SegMarkCol = image.Get<Vec3b>(5, 5);
 

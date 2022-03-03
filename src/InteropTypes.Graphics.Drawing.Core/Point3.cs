@@ -228,11 +228,11 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator *(Point3 a, Point3 b) { return a.XYZ * b; }
+        public static VECTOR3 operator *(Point3 a, Point3 b) { return a.XYZ * b.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator /(Point3 a, Point3 b) { return a.XYZ / b; }
+        public static VECTOR3 operator /(Point3 a, Point3 b) { return a.XYZ / b.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -258,7 +258,7 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static VECTOR3 Cross(Point3 a, Point3 b, Point3 c)
         {
-            return VECTOR3.Cross(b - a, c - b);
+            return VECTOR3.Cross(b.XYZ - a.XYZ, c.XYZ - b.XYZ);
         }
 
         /// <summary>

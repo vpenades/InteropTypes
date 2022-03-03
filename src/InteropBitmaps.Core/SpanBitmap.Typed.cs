@@ -121,11 +121,13 @@ namespace InteropBitmaps
 
         public Span<Byte> WritableBytes => _Writable;       
 
-        public ReadOnlySpan<Byte> ReadableBytes => _Readable;        
+        public ReadOnlySpan<Byte> ReadableBytes => _Readable;
 
         #endregion
 
         #region properties - Info
+
+        public bool IsEmpty => _Info.IsEmpty || _Readable.IsEmpty;
 
         /// <summary>
         /// Gets the layout information of the bitmap; Width, Height, PixelFormat, etc.

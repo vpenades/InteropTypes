@@ -123,7 +123,9 @@ namespace InteropTypes.Graphics.Backends
         
         private readonly Converter<GDICOLOR, TPixel> _ColorConverter;
 
-        private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;        
+        private readonly Lazy<Helpers.PolygonScanlines> _PolygonRasterizer;
+
+        private MemoryBitmap _TempBitmap;
 
         #endregion
 
@@ -154,10 +156,29 @@ namespace InteropTypes.Graphics.Backends
         {
             if (src.Source is IMemoryBitmap typeless)
             {
-                bitmap = typeless.AsSpanBitmap();
+                bitmap = typeless.AsSpanBitmap().AsReadOnly(); if (bitmap.IsEmpty) return false;
                 src.WithSourceSize(bitmap.Width, bitmap.Height);
                 return true;
-            }            
+            }
+
+            if (src.Source is MemoryBitmap.ISource isrc)
+            {
+                bitmap = isrc.Bitmap.AsSpanBitmap().AsReadOnly(); if (bitmap.IsEmpty) return false;
+                src.WithSourceSize(bitmap.Width, bitmap.Height);
+                return true;
+            }
+
+            if (src.Source is InterlockedBitmap ilock)
+            {
+                ilock.DequeueLastOrDefault(innerBmp => innerBmp.AsSpanBitmap().CopyTo(ref _TempBitmap));
+
+                if (_TempBitmap.IsEmpty) { bitmap = default; return false; }
+                
+                bitmap = _TempBitmap.AsSpanBitmap().AsReadOnly();
+                src.WithSourceSize(bitmap.Width, bitmap.Height);
+                return true;
+                
+            }
 
             bitmap = default;
             return false;

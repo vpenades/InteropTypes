@@ -43,6 +43,8 @@ namespace InteropBitmaps
         {
             switch(src.Code)
             {
+                case Pixel.Alpha8.Code: { dst = CVDEPTHTYPE.CV_8UC1; return true; }
+
                 case Pixel.Luminance8.Code: { dst = CVDEPTHTYPE.CV_8UC1; return true; }
                 case Pixel.Luminance16.Code: { dst = CVDEPTHTYPE.CV_16UC1; return true; }
                 case Pixel.Luminance32F.Code: { dst = CVDEPTHTYPE.CV_32FC1; return true; }
@@ -252,7 +254,7 @@ namespace InteropBitmaps
 
         #region extras
 
-        public static InteropTypes.Graphics.Drawing.Point2 ToPoint2(this OpenCvSharp.Point2f p) { return new POINT2(p.X, p.Y); }        
+        public static POINT2 ToPoint2(this OpenCvSharp.Point2f p) { return new POINT2(p.X, p.Y); }        
 
         public static void TransferSpan(SpanBitmap src, SpanBitmap dst, SpanBitmap.Action2 action)
         {

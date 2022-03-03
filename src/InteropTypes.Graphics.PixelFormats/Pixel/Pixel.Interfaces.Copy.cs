@@ -169,11 +169,11 @@ namespace InteropBitmaps
                 {
                     --dLen;
                     // per channel copy.
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
 
                     sPtr = ref Unsafe.Add(ref sPtr, 1);
@@ -202,11 +202,11 @@ namespace InteropBitmaps
                 {
                     --dLen;
                     // per channel copy.
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
 
                     sPtr = ref Unsafe.Add(ref sPtr, 1);
@@ -235,11 +235,11 @@ namespace InteropBitmaps
                 {
                     --dLen;
                     // per channel copy.
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
                     dPtr = (Byte)sPtr.A;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
@@ -270,11 +270,11 @@ namespace InteropBitmaps
                 {
                     --dLen;
                     // per channel copy.
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
                     dPtr = (Byte)sPtr.A;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
@@ -307,11 +307,11 @@ namespace InteropBitmaps
                     // per channel copy.
                     dPtr = (Byte)sPtr.A;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
-                    dPtr = 0;
+                    dPtr = 255;
                     dPtr = ref Unsafe.Add(ref dPtr, 1);
 
                     sPtr = ref Unsafe.Add(ref sPtr, 1);

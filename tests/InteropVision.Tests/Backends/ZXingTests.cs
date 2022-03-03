@@ -35,7 +35,9 @@ namespace InteropVision.Backends
 
             var result = new With.ZXingCode();
 
-            new With.ZXingCode.Detector().Inference(result, image, new System.Drawing.Rectangle(20,20,1000,1000) );
+            using var detector = new With.ZXingCode.Detector();
+                
+            detector.Inference(result, image, new System.Drawing.Rectangle(20,20,1000,1000) );
 
             var code = result.Results.First();
 

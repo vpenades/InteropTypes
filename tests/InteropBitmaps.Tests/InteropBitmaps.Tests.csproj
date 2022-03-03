@@ -42,6 +42,7 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ZXing\InteropBitmaps.Backends.ZXing.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropBitmaps.Backends.STB.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Graphics.Video.csproj" />
   </ItemGroup>  
 
 </Project>

@@ -101,7 +101,7 @@ namespace InteropBitmaps
 
         /// <summary>
         /// Number of bytes to advance from the beginning of one row to the next.
-        /// </summary>
+        /// </summary>        
         public readonly int StepByteSize;
 
         /// <summary>
@@ -348,29 +348,53 @@ namespace InteropBitmaps
             return this.PixelFormat == tformat;
         }
 
-        public bool CreateBitmap(ref SpanBitmap bmp)
+        public bool CreateBitmap(ref SpanBitmap bmp, bool keepPixelStride = false)
         {
-            if (bmp.Info != this) { bmp = new SpanBitmap(new Byte[this.BitmapByteSize], this); return true; }
+            if (!AreEqual(this, bmp.Info, keepPixelStride))
+            {
+                var nfo = keepPixelStride ? this : WithSize(this.Width, this.Height);
+
+                bmp = new SpanBitmap(new Byte[this.BitmapByteSize], nfo);
+                return true;
+            }
             return false;
         }
 
-        public bool CreateBitmap<T>(ref SpanBitmap<T> bmp)
+        public bool CreateBitmap<T>(ref SpanBitmap<T> bmp, bool keepPixelStride = false)
             where T : unmanaged
         {
-            if (bmp.Info != this) { bmp = new SpanBitmap<T>(new Byte[this.BitmapByteSize], this); return true; }
+            if (!AreEqual(this, bmp.Info, keepPixelStride))
+            {
+                var nfo = keepPixelStride ? this : WithSize(this.Width, this.Height);
+
+                bmp = new SpanBitmap<T>(new Byte[this.BitmapByteSize], nfo);
+                return true;
+            }
             return false;
         }
 
-        public bool CreateBitmap(ref MemoryBitmap bmp)
+        public bool CreateBitmap(ref MemoryBitmap bmp, bool keepPixelStride = false)
         {
-            if (bmp.Info != this) { bmp = new MemoryBitmap(this); return true; }
+            if (!AreEqual(this, bmp.Info, keepPixelStride))
+            {
+                var nfo = keepPixelStride ? this : WithSize(this.Width, this.Height);
+
+                bmp = new MemoryBitmap(nfo);
+                return true;
+            }
             return false;
         }
 
-        public bool CreateBitmap<T>(ref MemoryBitmap<T> bmp)
+        public bool CreateBitmap<T>(ref MemoryBitmap<T> bmp, bool keepPixelStride = false)
             where T:unmanaged
         {
-            if (bmp.Info != this) { bmp = new MemoryBitmap<T>(this); return true; }
+            if (!AreEqual(this, bmp.Info, keepPixelStride))
+            {
+                var nfo = keepPixelStride ? this : WithSize(this.Width,this.Height);
+
+                bmp = new MemoryBitmap<T>(nfo);
+                return true;
+            }
             return false;
         }
 

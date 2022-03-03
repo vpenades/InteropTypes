@@ -327,9 +327,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 255;
+                this.G = 255;
+                this.R = 255;
             }
 
             /// <inheritdoc/>
@@ -505,9 +505,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 255;
+                this.G = 255;
+                this.R = 255;
             }
 
             /// <inheritdoc/>
@@ -683,9 +683,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 255;
+                this.G = 255;
+                this.R = 255;
                 this.A = value.A;
             }
 
@@ -878,9 +878,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 255;
+                this.G = 255;
+                this.R = 255;
                 this.A = value.A;
             }
 
@@ -1073,9 +1073,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 255;
+                this.G = 255;
+                this.R = 255;
                 this.A = value.A;
             }
 
@@ -1268,9 +1268,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.PreB = 0;
-                this.PreG = 0;
-                this.PreR = 0;
+                this.PreB = value.A;
+                this.PreG = value.A;
+                this.PreR = value.A;
                 this.A = value.A;
             }
 
@@ -1466,9 +1466,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.PreB = 0;
-                this.PreG = 0;
-                this.PreR = 0;
+                this.PreB = value.A;
+                this.PreG = value.A;
+                this.PreR = value.A;
                 this.A = value.A;
             }
 
@@ -1665,9 +1665,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 1;
+                this.G = 1;
+                this.R = 1;
             }
 
             /// <inheritdoc/>
@@ -1847,9 +1847,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 1;
+                this.G = 1;
+                this.R = 1;
             }
 
             /// <inheritdoc/>
@@ -2029,9 +2029,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 255;
+                this.G = 255;
+                this.R = 255;
                 this.A = value.A;
                 BGRA *= __RCP255;
             }
@@ -2235,9 +2235,9 @@ namespace InteropBitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Alpha8 value)
             {
-                this.B = 0;
-                this.G = 0;
-                this.R = 0;
+                this.B = 255;
+                this.G = 255;
+                this.R = 255;
                 this.A = value.A;
                 RGBA *= __RCP255;
             }

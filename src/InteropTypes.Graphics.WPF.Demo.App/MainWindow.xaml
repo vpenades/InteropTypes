@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:InteropTypes.Graphics"
         xmlns:itypes="urn:InteropTypes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800">    
+    
     <TabControl>
         <!--
         <TabItem Header="2D">
@@ -41,6 +42,12 @@
                 
             </itypes:Scene3DView>
 
+        </TabItem>
+
+        <TabItem Header="video bitmap updater">
+
+            <Image Source="{Binding ClientBitmap.FrontBuffer}" />
+            
         </TabItem>
 
     </TabControl>

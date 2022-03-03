@@ -57,7 +57,12 @@ namespace InteropTypes.Graphics.Adapters
             }
 
             if (dst == null) { dst = CloneToWritableBitmap(allowCompatibleFormats); return true; }
-            else { dst.SetPixels(0, 0, _Bitmap); return false; }
+            else
+            {
+                dst.SetPixels(0, 0, _Bitmap);                
+
+                return false;
+            }
         }        
 
         public WriteableBitmap CloneToWritableBitmap(bool allowCompatibleFormats = false)

@@ -25,8 +25,7 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         #region data        
 
-        private readonly object _BackBufferLock = new object();
-        private MemoryBitmap _BackBuffer;
+        private InterlockedBitmap _Interlocked = new InterlockedBitmap(3);        
 
         private System.Windows.Media.Imaging.WriteableBitmap _FrontBuffer;        
 
@@ -59,7 +58,7 @@ namespace InteropTypes.Graphics.Backends.WPF
             if (!this.CheckAccess())
             {
                 // Create an internal copy
-                lock (_BackBufferLock) { src.CopyTo(ref _BackBuffer); }
+                if (!_Interlocked.TryEnqueue(src)) return;
 
                 // And invoke the update in the UI thread.
                 try { this.Dispatcher.Invoke(_UpdateFromBackBuffer); }
@@ -86,17 +85,20 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         private void _UpdateFromBackBuffer()
         {
-            VerifyAccess();
+            VerifyAccess();            
 
-            bool recycled = false;
-
-            lock (_BackBufferLock)
+            void _OnBmpRead(MemoryBitmap bmp)
             {
-                var src = _BackBuffer.AsSpanBitmap();
-                recycled = src.WithWPF().CopyTo(ref _FrontBuffer);                
+                var src = bmp.AsSpanBitmap();
+
+                var oldBuff = _FrontBuffer;
+
+                src.WithWPF().CopyTo(ref _FrontBuffer);                
+
+                if (ReferenceEquals(oldBuff, _FrontBuffer)) PropertyChanged?.Invoke(this, _FrontBufferChanged);
             }
 
-            if (recycled) PropertyChanged?.Invoke(this, _FrontBufferChanged);
+            _Interlocked.TryDropAndDequeueLast(_OnBmpRead);
         }
 
         #endregion

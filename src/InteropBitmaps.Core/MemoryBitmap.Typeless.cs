@@ -12,7 +12,7 @@ namespace InteropBitmaps
     /// </summary>    
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
-    public readonly struct MemoryBitmap : IMemoryBitmap , IEquatable<MemoryBitmap>
+    public readonly partial struct MemoryBitmap : IMemoryBitmap , IEquatable<MemoryBitmap>
     {
         #region lifecycle        
         public MemoryBitmap(in BitmapInfo info)

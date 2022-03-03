@@ -69,6 +69,11 @@ namespace InteropTypes.Graphics
 
                 dstPtr.AsSpanBitmap().SetPixels(0, 0, srcPtr.AsSpanBitmap());
 
+                var w = Math.Min(dstBmp.PixelWidth, srcPtr.Width);
+                var h = Math.Min(dstBmp.PixelHeight, srcPtr.Height);
+                var drect = new System.Windows.Int32Rect(0, 0, w, h);
+
+                dstBmp.AddDirtyRect(drect);
             }
             finally
             {

@@ -144,7 +144,17 @@ namespace InteropBitmaps
             videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
             Codecs.FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
             TestContext.AddTestAttachment(videoPath);
+        }
 
+        public static string AttachAviToCurrentTest(this IEnumerable<MemoryBitmap> frames, string videoPath, float frameRate = 25)
+        {
+            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
+
+            InteropTypes.Graphics.Video.VideoEncoderFactory.SaveToAVI(frames, videoPath, (decimal)frameRate, new Codecs.GDICodec(50));
+
+            TestContext.AddTestAttachment(videoPath);
+
+            return videoPath;
         }
     }
 

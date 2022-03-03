@@ -282,7 +282,7 @@ namespace InteropVision.Backends
 
             var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
 
-            var modelFactory = new MultiresModels(InteropWith.OnnxModel.FromFile);
+            using var modelFactory = new MultiresModels(InteropWith.OnnxModel.FromFile);
             modelFactory.Register(16, 16, "Models\\realesrgan_16x16.onnx");
             modelFactory.Register(32, 32, "Models\\realesrgan_32x32.onnx");
             modelFactory.Register(64, 64, "Models\\realesrgan_64x64.onnx");

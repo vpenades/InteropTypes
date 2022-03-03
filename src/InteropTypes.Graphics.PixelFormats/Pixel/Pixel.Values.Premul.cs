@@ -410,7 +410,7 @@ namespace InteropBitmaps
         {
             #region RGB constructors            
 
-            public RGBP128F(Alpha8 alpha) : this(0, 0, 0, alpha.A) { }
+            public RGBP128F(Alpha8 alpha) : this(255, 255, 255, alpha.A) { }
             public RGBP128F(Luminance8 luma) : this(luma.L, luma.L, luma.L, 255) { }
             public RGBP128F(Luminance16 luma) : this(new XYZ(luma.L, luma.L, luma.L) / 65535f) { }
             public RGBP128F(Luminance32F luma) : this(new XYZ(luma.L, luma.L, luma.L)) { }

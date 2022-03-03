@@ -21,8 +21,18 @@ namespace InteropBitmaps.Backends
             var bitmap = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
 
             bitmap.AttachToCurrentTest("Result.png");
-        }
+        }        
 
-        
-    }
+        [Test]
+        public void FontRender()
+        {
+            using(var ff = new GDIFontGlyphFactory())
+            {
+                var bmp = ff.GetGlyph('A');
+
+                bmp.AttachToCurrentTest("A.png");
+            }
+
+        }
+    }    
 }

@@ -145,7 +145,7 @@ namespace InteropBitmaps
                         else
                         {
                             if (c == 'A') WriteLine($"dPtr = 255;");
-                            else WriteLine($"dPtr = 0;");
+                            else WriteLine($"dPtr = 255;");
                         }
 
                         WriteLine("dPtr = ref Unsafe.Add(ref dPtr, 1);");

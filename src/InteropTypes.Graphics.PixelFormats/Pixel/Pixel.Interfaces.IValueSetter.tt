@@ -229,7 +229,7 @@ namespace InteropBitmaps
             _writeStructBegin(dstType, commonInterface);
             _WriteSetterSelf(dstType);
 
-            _WriteSetterXYZ("Alpha8", dst, ("0","0","0") );
+            _WriteSetterXYZ("Alpha8", dst, ("255","255","255") );
             _WriteSetterXYZ("Luminance8", dst, ("L","L","L") );
             _WriteSetterNotImpl("Luminance16");
             _WriteSetterNotImpl("Luminance32F");
@@ -268,7 +268,7 @@ namespace InteropBitmaps
             _writeStructBegin(dstType, commonInterface);
             _WriteSetterSelf(dstType);
 
-            _WriteSetterXYZW("Alpha8", dst, ("0","0","0","A") );
+            _WriteSetterXYZW("Alpha8", dst, ("255","255","255","A") );
             _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255"));
             _WriteSetterNotImpl("Luminance16");
             _WriteSetterNotImpl("Luminance32F");
@@ -315,7 +315,7 @@ namespace InteropBitmaps
             _writeStructBegin(dstType, commonInterface);
             _WriteSetterSelf(dstType);
 
-            _WriteSetterXYZW("Alpha8", dst, ("0","0","0","A") );
+            _WriteSetterXYZW("Alpha8", dst, ("A","A","A","A") );
             _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255"));
             _WriteSetterNotImpl("Luminance16");
             _WriteSetterNotImpl("Luminance32F");
@@ -371,7 +371,7 @@ namespace InteropBitmaps
 
             _WriteSetterSelf(dstType);
 
-            _WriteSetterXYZ("Alpha8", dst, ("0","0","0"));
+            _WriteSetterXYZ("Alpha8", dst, ("1","1","1"));
             _WriteSetterXYZ("Luminance8", dst, ("L","L","L") , suffix);
             _WriteSetterNotImpl("Luminance16");
             _WriteSetterXYZ("Luminance32F", dst, ("L","L","L") );
@@ -419,7 +419,7 @@ namespace InteropBitmaps
 
             _WriteSetterSelf(dstType);
 
-            _WriteSetterXYZW("Alpha8", dst, ("0","0","0","A"), suffix);
+            _WriteSetterXYZW("Alpha8", dst, ("255","255","255","A"), suffix);
             _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255") , suffix);
             _WriteSetterNotImpl("Luminance16");
             _WriteSetterXYZW("Luminance32F", dst, ("L","L","L", "1"));

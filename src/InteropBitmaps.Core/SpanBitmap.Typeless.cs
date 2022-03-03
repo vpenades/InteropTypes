@@ -123,6 +123,8 @@ namespace InteropBitmaps
 
         #region properties - Info
 
+        public bool IsEmpty => _Info.IsEmpty || _Readable.IsEmpty;
+
         /// <summary>
         /// Gets the layout information of the bitmap; Width, Height, PixelFormat, etc.
         /// </summary>
@@ -388,13 +390,13 @@ namespace InteropBitmaps
                     row[x] = (Byte)rnd.Next();
                 }
             }
-        }
+        }        
 
         public bool CopyTo(ref MemoryBitmap other)
         {
             var refreshed = false;
 
-            if (!this.Info.Equals(other.Info))
+            if (!BitmapInfo.AreEqual(this.Info, other.Info, false))
             {
                 other = new MemoryBitmap(this.Info);
                 refreshed = true;

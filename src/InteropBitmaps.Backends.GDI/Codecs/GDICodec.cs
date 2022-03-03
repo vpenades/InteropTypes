@@ -1,22 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+
+using GDIIMAGEFORMAT = System.Drawing.Imaging.ImageFormat;
 
 namespace InteropBitmaps.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
     public sealed class GDICodec : IBitmapDecoder, IBitmapEncoder
     {
-        #region lifecycle
+        #region lifecycle        
 
-        static GDICodec() { }
+        public static GDICodec Default { get; } = new GDICodec();
 
         private GDICodec() { }
+        
+        public GDICodec(int quality)
+        {
+            _Quality = Math.Max(1, Math.Min(100, quality));
+        }        
 
-        private static readonly GDICodec _Default = new GDICodec();
+        #endregion
 
-        public static GDICodec Default => _Default;
+        #region data
+
+        private int? _Quality;
+
+        private ImageCodecInfo[] _CodecsCache;
 
         #endregion
 
@@ -51,7 +63,7 @@ namespace InteropBitmaps.Codecs
             {
                 using (var tmp = _Implementation.CloneAsGDIBitmap(bmp))
                 {
-                    tmp.Save(stream.Value, fmt);
+                    _WriteBitmap(stream.Value, fmt, tmp);
                 }
             }
             else
@@ -60,7 +72,7 @@ namespace InteropBitmaps.Codecs
                 {
                     using (var tmp = _Implementation.WrapOrCloneAsGDIBitmap(ptr))
                     {
-                        tmp.Save(stream.Value, fmt);
+                        _WriteBitmap(stream.Value, fmt, tmp);
                     }
                 }
 
@@ -70,22 +82,57 @@ namespace InteropBitmaps.Codecs
             return true;
         }
 
-        private static System.Drawing.Imaging.ImageFormat GetFormatFromExtension(CodecFormat format)
+        private void _WriteBitmap(Stream stream, GDIIMAGEFORMAT fmt, System.Drawing.Bitmap tmp)
+        {
+            var customOptions = false;
+
+            customOptions |= _Quality.HasValue;
+
+            if (!customOptions)
+            {
+                tmp.Save(stream,fmt);
+                return;
+            }
+
+            var encoder = GetEncoder(fmt);
+
+            var ppp = new EncoderParameters(1);
+            ppp.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, (long)_Quality.Value);
+
+            tmp.Save(stream, encoder, ppp);
+        }
+
+        private static GDIIMAGEFORMAT GetFormatFromExtension(CodecFormat format)
         {
             switch(format)
             {
-                case CodecFormat.Png: return System.Drawing.Imaging.ImageFormat.Png;
-                case CodecFormat.Jpeg: return System.Drawing.Imaging.ImageFormat.Jpeg;
+                case CodecFormat.Png: return GDIIMAGEFORMAT.Png;
+                case CodecFormat.Jpeg: return GDIIMAGEFORMAT.Jpeg;
 
-                case CodecFormat.Tiff: return System.Drawing.Imaging.ImageFormat.Tiff;
-                case CodecFormat.Icon: return System.Drawing.Imaging.ImageFormat.Icon;
+                case CodecFormat.Tiff: return GDIIMAGEFORMAT.Tiff;
+                case CodecFormat.Icon: return GDIIMAGEFORMAT.Icon;
 
-                case CodecFormat.Gif: return System.Drawing.Imaging.ImageFormat.Gif;
-                case CodecFormat.Bmp: return System.Drawing.Imaging.ImageFormat.Bmp;
-                case CodecFormat.Emf: return System.Drawing.Imaging.ImageFormat.Emf;
-                case CodecFormat.Wmf: return System.Drawing.Imaging.ImageFormat.Wmf;
+                case CodecFormat.Gif: return GDIIMAGEFORMAT.Gif;
+                case CodecFormat.Bmp: return GDIIMAGEFORMAT.Bmp;
+                case CodecFormat.Emf: return GDIIMAGEFORMAT.Emf;
+                case CodecFormat.Wmf: return GDIIMAGEFORMAT.Wmf;
                 default: return null;
             }            
+        }
+
+        private ImageCodecInfo GetEncoder(GDIIMAGEFORMAT format)
+        {
+            if (_CodecsCache == null) _CodecsCache = ImageCodecInfo.GetImageEncoders();
+
+            foreach (var codec in _CodecsCache)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+
+            return null;
         }
 
         #endregion
