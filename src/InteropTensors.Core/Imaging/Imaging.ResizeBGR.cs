@@ -5,7 +5,7 @@ using System.Runtime.Versioning;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     ref struct _ResizeBGR
     {

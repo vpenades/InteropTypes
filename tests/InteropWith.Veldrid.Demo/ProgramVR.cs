@@ -5,9 +5,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-using InteropBitmaps;
-using InteropDrawing;
-
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
 using Veldrid;
@@ -15,7 +14,7 @@ using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 using Veldrid.VirtualReality;
 
-namespace InteropWith
+namespace VeldridDemo
 {
     class ProgramVR
     {

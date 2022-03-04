@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     public readonly struct VideoFrameState
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     internal class FixedMathTests
     {

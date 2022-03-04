@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Backends;
+
 using NUnit.Framework;
 
-using InteropBitmaps;
-using InteropTypes.Graphics.Drawing;
-
-namespace InteropDrawing.Backends
+namespace InteropTypes.Graphics.Drawing
 {
     public class MauiTests
     {
@@ -22,7 +21,7 @@ namespace InteropDrawing.Backends
                     {
                         mauiCanvas.Canvas = skCanvas;
 
-                        var myCanvas = InteropWith.MAUI.CanvasWrapper.Create(mauiCanvas);
+                        var myCanvas = CanvasWrapper.Create(mauiCanvas);
 
                         myCanvas.DrawCircle((50, 50), 20, System.Drawing.Color.Red);
 

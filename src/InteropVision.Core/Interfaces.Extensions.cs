@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropBitmaps;
-
-using InteropTensors;
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Tensors;
 
 using RECT = System.Drawing.Rectangle;
 
-using CAPINFO = InteropVision.IO.ICaptureDeviceInfo;
+using CAPINFO = InteropTypes.Vision.IO.ICaptureDeviceInfo;
 using CAPTIME = System.DateTime;
+using InteropTypes.Graphics;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public static partial class _Extensions
     {

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Codecs;
 
 using NUnit.Framework;
@@ -14,7 +16,7 @@ using SixLabors.ImageSharp.Processing;
 
 using POINTF = SixLabors.ImageSharp.PointF;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     static class TestUtils
     {
@@ -148,9 +150,9 @@ namespace InteropBitmaps
 
         public static string AttachAviToCurrentTest(this IEnumerable<MemoryBitmap> frames, string videoPath, float frameRate = 25)
         {
-            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
+            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);            
 
-            InteropTypes.Graphics.Video.VideoEncoderFactory.SaveToAVI(frames, videoPath, (decimal)frameRate, new Codecs.GDICodec(50));
+            InteropTypes.Video.VideoEncoderFactory.SaveToAVI(frames, videoPath, (decimal)frameRate, new Codecs.GDICodec(50));
 
             TestContext.AddTestAttachment(videoPath);
 

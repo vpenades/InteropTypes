@@ -5,7 +5,7 @@ using System.Text;
 
 using POINT = InteropTypes.Graphics.Drawing.Point2;
 
-namespace InteropVision
+namespace InteropTypes.Vision.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{Id}")]
     public struct Marker

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using InteropVision;
-
 using ONNX = Microsoft.ML.OnnxRuntime;
 
-namespace InteropWith
+namespace InteropTypes.Vision.Backends
 {
     public class OnnxModel : IModelGraph, IServiceProvider
     {

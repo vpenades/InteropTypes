@@ -6,7 +6,7 @@ using InteropTypes.Graphics.Drawing;
 
 using Microsoft.Xna.Framework.Graphics;
 
-namespace InteropDrawing
+namespace MonoGameDemo
 {
     class _DynamicTexture : IDrawingBrush<ICanvas2D>
     {

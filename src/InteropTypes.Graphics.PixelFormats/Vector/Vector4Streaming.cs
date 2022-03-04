@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     public static partial class Vector4Streaming
     {

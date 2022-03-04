@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 using FFmpeg.AutoGen;
 
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     sealed unsafe class VideoStreamDecoder : IDisposable
     {

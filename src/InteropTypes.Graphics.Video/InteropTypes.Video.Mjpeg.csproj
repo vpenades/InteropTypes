@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Numerics;
 
-using InteropBitmaps;
-
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public partial class ColorFrameState : IDrawingBrush<ICanvas2D>
     {

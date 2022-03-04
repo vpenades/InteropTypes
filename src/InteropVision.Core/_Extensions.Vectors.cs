@@ -9,7 +9,7 @@ using XYZ = System.Numerics.Vector3;
 using RECT = System.Drawing.Rectangle;
 using RECTF = System.Drawing.RectangleF;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     [Obsolete]
     public static partial class _ObsoleteExtensions

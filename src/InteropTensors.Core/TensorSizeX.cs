@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     
     /// <summary>

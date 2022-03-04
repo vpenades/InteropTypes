@@ -3,33 +3,43 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Backends;
+
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
-using INTEROPFMT = InteropBitmaps.PixelFormat;
+using INTEROPFMT = InteropTypes.Graphics.PixelFormat;
 
 using GDIICON = System.Drawing.Icon;
 using GDIIMAGE = System.Drawing.Image;
 using GDIBITMAP = System.Drawing.Bitmap;
 using GDIPTR = System.Drawing.Imaging.BitmapData;
 
-namespace InteropBitmaps
-{
-    public delegate void TransferSpanAction(SpanBitmap src, SpanBitmap dst);
 
+namespace InteropTypes.Graphics
+{
     static partial class _Implementation
     {
         #region API
 
         public static GDIBITMAP WrapOrCloneAsGDIBitmap(PointerBitmap src)
         {
-            if (TryWrap(src, out var dst, out _)) return dst;
-            return CloneAsGDIBitmap(src);
+            return _TryWrap(src, out var dst, out _)
+                ? dst
+                : CloneAsGDIBitmap(src);
         }
 
-        public static bool TryWrap(PointerBitmap src, out GDIBITMAP dst, out string errorMsg)
+        public static GDIBITMAP WrapAsGDIBitmap(PointerBitmap src)
+        {
+            return _TryWrap(src, out var dst, out var err)
+                ? dst
+                : throw new ArgumentException(err, nameof(src));
+        }
+
+        private static bool _TryWrap(PointerBitmap src, out GDIBITMAP dst, out string errorMsg)
         {
             dst = null;
 
-            if (src.IsEmpty) { errorMsg = "Empty"; return false; }
+            if (src.IsEmpty) { errorMsg = "Source is Empty"; return false; }
 
             if (!TryGetExactPixelFormat(src.Info.PixelFormat, out var fmt))
             {
@@ -48,11 +58,7 @@ namespace InteropBitmaps
             return true;
         }        
 
-        public static GDIBITMAP WrapAsGDIBitmap(PointerBitmap src)
-        {
-            if (TryWrap(src, out var dst, out var err)) return dst;
-            throw new ArgumentException(err, nameof(src));
-        }
+        
 
         public static GDIBITMAP CloneAsGDIBitmap(SpanBitmap src, GDIFMT? fmtOverride = null)
         {
@@ -155,7 +161,7 @@ namespace InteropBitmaps
             }
         }
         
-        public static void TransferSpan(SpanBitmap src, GDIBITMAP dst, TransferSpanAction action)
+        public static void TransferSpan(SpanBitmap src, GDIBITMAP dst, SpanBitmap.Action2 action)
         {
             src = src.AsReadOnly();
 
@@ -179,7 +185,7 @@ namespace InteropBitmaps
             }
         }
 
-        public static void TransferSpan(GDIBITMAP src, SpanBitmap dst, TransferSpanAction action)
+        public static void TransferSpan(GDIBITMAP src, SpanBitmap dst, SpanBitmap.Action2 action)
         {
             var rect = new Rectangle(0, 0, dst.Width, dst.Height);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     public static partial class Pixel
     {

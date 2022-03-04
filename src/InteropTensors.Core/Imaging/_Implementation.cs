@@ -6,9 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     static class _Implementation
     {

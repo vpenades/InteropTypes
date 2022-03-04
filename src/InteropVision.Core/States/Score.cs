@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     /// <summary>
     /// Represents the output score of an inference.

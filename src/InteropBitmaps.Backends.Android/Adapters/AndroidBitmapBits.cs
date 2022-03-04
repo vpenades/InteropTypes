@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InteropBitmaps.Adapters
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Adapters
 {
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
-    sealed class AndroidBitmapBits : MemoryManagers.BitmapMemoryManager
+    sealed class AndroidBitmapBits : Bitmaps.MemoryManagers.BitmapMemoryManager
     {
         #region debug
 

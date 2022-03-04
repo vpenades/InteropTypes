@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using BenchmarkDotNet.Attributes;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     [MonoJob("Mono x64", @"C:\Program Files\Mono\bin\mono.exe")]
     [SimpleJob(BenchmarkDotNet.Jobs.RuntimeMoniker.Net472), SimpleJob(BenchmarkDotNet.Jobs.RuntimeMoniker.Net60)]

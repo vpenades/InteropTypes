@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps.Backends
+namespace InteropTypes.Graphics.Backends
 {
     [Category("Backends")]
     public class OpenCvTests
@@ -63,9 +64,9 @@ namespace InteropBitmaps.Backends
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "Aruco", filePath);
             var bitmap = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);            
 
-            var arucoContext = new InteropVision.MarkersContext();
+            var arucoContext = new Vision.Backends.MarkersContext();
 
-            using (var arucoEstimator = new InteropVision.MarkersContext.ArucoEstimator())
+            using (var arucoEstimator = new Vision.Backends.MarkersContext.ArucoEstimator())
             {
                 arucoEstimator.SetCameraCalibrationDefault();
                 arucoEstimator.Inference(arucoContext, bitmap);
@@ -78,7 +79,7 @@ namespace InteropBitmaps.Backends
 
             bitmap
                 .CreateDrawingContext()
-                .DrawAsset(System.Numerics.Matrix3x2.Identity, arucoContext, InteropTypes.Graphics.Drawing.ColorStyle.White);
+                .DrawAsset(System.Numerics.Matrix3x2.Identity, arucoContext, Drawing.ColorStyle.White);
 
             bitmap.AttachToCurrentTest("output.png");
         }

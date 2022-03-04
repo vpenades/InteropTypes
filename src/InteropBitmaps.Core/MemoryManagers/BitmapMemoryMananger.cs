@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.MemoryManagers
+namespace InteropTypes.Graphics.Bitmaps.MemoryManagers
 {
     /// <summary>
     /// Helper class that wraps a <see cref="PointerBitmap"/> to expose it as a <see cref="MemoryBitmap"/>

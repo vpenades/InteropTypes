@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("SkiaSharp Codec")]
     public class SkiaCodec: IBitmapDecoder, IBitmapEncoder

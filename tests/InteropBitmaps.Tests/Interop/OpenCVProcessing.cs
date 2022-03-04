@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenCvSharp;
 
-namespace InteropBitmaps.Interop
+namespace InteropTypes.Graphics.Bitmaps
 {
     static class OpenCVProcessing
     {

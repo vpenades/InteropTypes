@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Vision
 {
     /// <summary>
     /// 

@@ -12,8 +12,9 @@ using System.Linq;
 using WIC_WRITABLE = System.Windows.Media.Imaging.WriteableBitmap;
 using WIC_READABLE = System.Windows.Media.Imaging.BitmapSource;
 
-using InteropBitmaps;
+
 using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics
 {    
@@ -30,7 +31,7 @@ namespace InteropTypes.Graphics
 
             return TryGetExactPixelFormat(src.Format, out var fmt)
                 ? new BitmapInfo(src.PixelWidth, src.PixelHeight, fmt, byteStride)
-                : throw new InteropBitmaps.Diagnostics.PixelFormatNotSupportedException(src.Format, nameof(fmt));
+                : throw new Diagnostics.PixelFormatNotSupportedException(src.Format, nameof(fmt));
         }
 
         public static void SetPixels(WIC_WRITABLE dstBmp, int dstX, int dstY, SpanBitmap srcSpan)
@@ -49,7 +50,7 @@ namespace InteropTypes.Graphics
 
             if (!TryGetExactPixelFormat(dstBmp.Format, out var dstFmt))
             {
-                throw new InteropBitmaps.Diagnostics.PixelFormatNotSupportedException(dstBmp.Format, nameof(dstBmp));
+                throw new Diagnostics.PixelFormatNotSupportedException(dstBmp.Format, nameof(dstBmp));
             }
 
             if (srcPtr.PixelFormat == dstFmt)

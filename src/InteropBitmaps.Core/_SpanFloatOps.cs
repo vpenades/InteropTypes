@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
+    using Diagnostics;
+
     // TODO: implement https://devblogs.microsoft.com/dotnet/hardware-intrinsics-in-net-core/
 
     static class _SpanSingleExtensions

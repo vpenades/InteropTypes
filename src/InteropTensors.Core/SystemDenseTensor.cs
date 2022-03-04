@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Numerics.Tensors;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     /// <summary>
     /// <see cref="IDenseTensor{T}"/> implementation over <see cref="System.Numerics.Tensors.DenseTensor{T}"/>

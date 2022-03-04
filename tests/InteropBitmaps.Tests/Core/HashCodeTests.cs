@@ -8,7 +8,7 @@ using Microsoft.SqlServer.Server;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps.Core
+namespace InteropTypes.Graphics.Bitmaps
 {
     [Category("Core")]
     public class HashCodeTests

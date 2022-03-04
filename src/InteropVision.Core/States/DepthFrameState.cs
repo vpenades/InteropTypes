@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropBitmaps;
-
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public partial class DepthFrameState : IDrawingBrush<ICanvas2D>
     {

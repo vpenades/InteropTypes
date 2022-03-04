@@ -17,7 +17,7 @@ using RECTF = System.Drawing.RectangleF;
 
 using XY = System.Numerics.Vector2;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     [Obsolete("Do not use",true)]
     static class DrawingExtensions

@@ -5,7 +5,7 @@ using System.Text;
 using SIZE = System.Drawing.Size;
 using POINT = System.Drawing.Point;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     /// <summary>
     /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>

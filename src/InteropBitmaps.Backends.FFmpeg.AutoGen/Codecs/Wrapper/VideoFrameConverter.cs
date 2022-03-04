@@ -6,7 +6,7 @@ using System.Text;
 
 using FFmpeg.AutoGen;
 
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     sealed unsafe class VideoFrameConverter : IDisposable
     {

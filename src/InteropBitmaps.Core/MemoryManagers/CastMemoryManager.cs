@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace InteropBitmaps.MemoryManagers
+namespace InteropTypes.Graphics.Bitmaps.MemoryManagers
 {
     // https://stackoverflow.com/questions/54511330/how-can-i-cast-memoryt-to-another
 

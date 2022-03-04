@@ -5,9 +5,9 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-using SCORE = InteropVision.Score;
+using SCORE = InteropTypes.Vision.Score;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     [System.Diagnostics.DebuggerDisplay("{Name} {Score}")]
     public partial struct DetectedObject

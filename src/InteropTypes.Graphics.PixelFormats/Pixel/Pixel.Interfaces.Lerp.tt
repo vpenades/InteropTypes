@@ -11,7 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
 
     partial class Pixel    
@@ -238,7 +238,7 @@ namespace InteropBitmaps
             WriteLine("");
             _writeFastestMethodAttribute();
             WriteLine($"public static TDst Lerp<TDst>({fmt} left, {fmt} right, int rx)");
-            WriteLine($"    where TDst: unmanaged, IPixelFactory<BGRA32, TDst>");
+            WriteLine($"    where TDst: unmanaged, IValueSetter<BGRA32>");
 
             _writeOpenBlock();
             _writeComment("calculate quantized weights");
@@ -253,7 +253,9 @@ namespace InteropBitmaps
 
             var ccc = String.Join(", ", channels);            
 
-            WriteLine($"return default(TDst).From( new BGRA32({ccc}));");
+            WriteLine($"var dst = default(TDst);");
+            WriteLine($"dst.SetValue( new BGRA32({ccc}));");
+            WriteLine($"return dst;");
             
             _writeCloseBlock();
         }

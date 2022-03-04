@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InteropDrawing
+namespace MonoGameDemo
 {
     public static class Program
     {

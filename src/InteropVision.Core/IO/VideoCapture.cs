@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropVision.IO
+namespace InteropTypes.Vision.IO
 {
     /// <summary>
     /// Represents the base class for an object or device able to stream a sequence of video frames.

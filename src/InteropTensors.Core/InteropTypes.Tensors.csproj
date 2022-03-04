@@ -16,9 +16,7 @@
   <Import Project="..\SourceLink.props" />
 
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>InteropTensors.Tests</_Parameter1>
-    </AssemblyAttribute>
+    <InternalsVisibleTo Include="InteropTypes.Tensors.Tests"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
   </ItemGroup>  
   
   <!-- Templates -->

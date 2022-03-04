@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     static partial class _Implementation
     {

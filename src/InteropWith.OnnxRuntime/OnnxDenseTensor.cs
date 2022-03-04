@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropTensors;
+using InteropTypes.Tensors;
 
 using Microsoft.ML.OnnxRuntime.Tensors;
 
-namespace InteropWith
+namespace InteropTypes.Vision.Backends
 {
     /// <summary>
     /// <see cref="IDenseTensor{T}"/> implementation over <see cref="System.Numerics.Tensors.DenseTensor{T}"/>

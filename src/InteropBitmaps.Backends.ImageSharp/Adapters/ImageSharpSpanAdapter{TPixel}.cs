@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace InteropBitmaps.Adapters
+namespace InteropTypes.Graphics.Adapters
 {
     /// <summary>
     /// Wraps a <see cref="SpanBitmap{TPixel}"/> so it can be used as an ImageSharp's <see cref="Image{TPixel}"/>

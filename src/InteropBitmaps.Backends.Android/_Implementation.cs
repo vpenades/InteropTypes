@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using ANDROIDGFX = Android.Graphics;
 using ANDROIDBITMAP = Android.Graphics.Bitmap;
 using ANDROIDIMAGE = Android.Media.Image;
+using InteropTypes.Graphics.Backends;
+
 
 // interesting: ANDROIDMEDIA.FaceDetector
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     static partial class _Implementation
     {

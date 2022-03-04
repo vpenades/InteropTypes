@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics;
 using InteropTypes.Graphics.Backends.WPF;
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropTypes.Graphics
+namespace WPFDemo
 {
-    internal class AppMVVM : Drawing.IDrawingBrush<Drawing.IScene3D>
+    internal class AppMVVM : IDrawingBrush<IScene3D>
     {
         public void DrawTo(IScene3D context)
         {
@@ -27,7 +29,7 @@ namespace InteropTypes.Graphics
 
         private void _AsyncUpdateBitmap()
         {
-            var bmp = new InteropBitmaps.MemoryBitmap(256, 256, InteropBitmaps.Pixel.BGR24.Format);
+            var bmp = new MemoryBitmap(256, 256, Pixel.BGR24.Format);
             var rnd = new Random();
 
             while(true)
@@ -50,7 +52,7 @@ namespace InteropTypes.Graphics
     }
 
 
-    public class Sphere : Drawing.IDrawingBrush<Drawing.IScene3D>
+    public class Sphere : IDrawingBrush<IScene3D>
     {
         public void DrawTo(IScene3D context)
         {
@@ -64,7 +66,7 @@ namespace InteropTypes.Graphics
         }
     }
 
-    public class Cube : Drawing.IDrawingBrush<Drawing.IScene3D>
+    public class Cube : IDrawingBrush<IScene3D>
     {
         public void DrawTo(IScene3D context)
         {

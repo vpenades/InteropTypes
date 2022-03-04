@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public static partial class _Extensions
     {

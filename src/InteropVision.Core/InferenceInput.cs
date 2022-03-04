@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Numerics;
 
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
 
-using CAPINFO = InteropVision.IO.ICaptureDeviceInfo;
+using CAPINFO = InteropTypes.Vision.IO.ICaptureDeviceInfo;
 using CAPTIME = System.DateTime;
 
-using PTRBMP = InteropBitmaps.PointerBitmap;
-using MEMBMP = InteropBitmaps.MemoryBitmap;
+using PTRBMP = InteropTypes.Graphics.Bitmaps.PointerBitmap;
+using MEMBMP = InteropTypes.Graphics.Bitmaps.MemoryBitmap;
 
 using RECT = System.Drawing.Rectangle;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     /// <summary>
     /// Represents the input for an inference engine.
@@ -32,7 +34,7 @@ namespace InteropVision
             {
                 text += ptrBmp.Info.ToDebuggerDisplayString();
             }
-            else if (Content is InteropBitmaps.IBitmapInfo bmpNfo)
+            else if (Content is IBitmapInfo bmpNfo)
             {
                 text += bmpNfo.Info.ToDebuggerDisplayString();
             }
@@ -139,7 +141,7 @@ namespace InteropVision
             if (window.Value.Width == 0) return default;
             if (window.Value.Height == 0) return default;
 
-            var r = InteropBitmaps.BitmapBounds.Clip(window.Value, inputBitmap.Bounds);
+            var r = BitmapBounds.Clip(window.Value, inputBitmap.Bounds);
             if (r.Width * r.Height == 0) return default;
 
             window = r;
@@ -228,7 +230,7 @@ namespace InteropVision
             PinBitmap(ptrBmp => onInputPinned((this.CaptureDevice, this.CaptureTime, ptrBmp)));
         }
 
-        public void PinInput(InteropBitmaps.PixelFormat expectedFormat, Action<InferenceInput<PTRBMP>> onInputPinned)
+        public void PinInput(PixelFormat expectedFormat, Action<InferenceInput<PTRBMP>> onInputPinned)
         {
             PinBitmap(expectedFormat, ptrBmp => onInputPinned((this.CaptureDevice, this.CaptureTime, ptrBmp)));
         }
@@ -247,25 +249,25 @@ namespace InteropVision
                 return;
             }
 
-            if (this.Content is InteropBitmaps.MemoryBitmap<InteropBitmaps.Pixel.BGR24> bgr24Bmp)
+            if (this.Content is MemoryBitmap<Pixel.BGR24> bgr24Bmp)
             {
                 bgr24Bmp.AsSpanBitmap().PinReadablePointer(onBitmapPinned);
                 return;
             }
 
-            if (this.Content is InteropBitmaps.MemoryBitmap<InteropBitmaps.Pixel.RGBA32> rgba32Bmp)
+            if (this.Content is MemoryBitmap<Pixel.RGBA32> rgba32Bmp)
             {
                 rgba32Bmp.AsSpanBitmap().PinReadablePointer(onBitmapPinned);
                 return;
             }
 
-            if (this.Content is InteropBitmaps.MemoryBitmap<InteropBitmaps.Pixel.BGRA32> bgra32Bmp)
+            if (this.Content is MemoryBitmap<Pixel.BGRA32> bgra32Bmp)
             {
                 bgra32Bmp.AsSpanBitmap().PinReadablePointer(onBitmapPinned);
                 return;
             }
 
-            if (this.Content is InteropBitmaps.MemoryBitmap<InteropBitmaps.Pixel.ARGB32> argb32Bmp)
+            if (this.Content is MemoryBitmap<Pixel.ARGB32> argb32Bmp)
             {
                 argb32Bmp.AsSpanBitmap().PinReadablePointer(onBitmapPinned);
                 return;
@@ -279,12 +281,12 @@ namespace InteropVision
         /// </summary>
         /// <param name="expectedFormat">The pixel format required to be used by the pointer bitmap.</param>
         /// <param name="onBitmapPinned">Action called to provide the pointer bitmap.</param>
-        protected virtual void PinBitmap(InteropBitmaps.PixelFormat expectedFormat, Action<PTRBMP> onBitmapPinned)
+        protected virtual void PinBitmap(PixelFormat expectedFormat, Action<PTRBMP> onBitmapPinned)
         {
             PinBitmap(ptrBmp => _OnPin(expectedFormat, ptrBmp, onBitmapPinned));            
         }
 
-        private void _OnPin(InteropBitmaps.PixelFormat expectedFormat, PTRBMP srcBitmap, Action<PTRBMP> onBitmapPinned)
+        private void _OnPin(PixelFormat expectedFormat, PTRBMP srcBitmap, Action<PTRBMP> onBitmapPinned)
         {
             if (srcBitmap.PixelFormat == expectedFormat) { onBitmapPinned(srcBitmap); return; }
 

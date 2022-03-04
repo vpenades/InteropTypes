@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Codecs
 {
     public class CodecException : System.IO.IOException { }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropVision.IO
+namespace InteropTypes.Vision.IO
 {
     /// <summary>
     /// Helper Frame Rate counter.

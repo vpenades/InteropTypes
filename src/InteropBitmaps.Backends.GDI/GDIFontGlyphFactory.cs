@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Backends
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Backends
 {
     public class GDIFontGlyphFactory : IDisposable
     {

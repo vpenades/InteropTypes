@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
 using GDIPTR = System.Drawing.Imaging.BitmapData;
 
-using INTEROPFMT = InteropBitmaps.PixelFormat;
+using INTEROPFMT = InteropTypes.Graphics.PixelFormat;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     static partial class _Implementation
     {

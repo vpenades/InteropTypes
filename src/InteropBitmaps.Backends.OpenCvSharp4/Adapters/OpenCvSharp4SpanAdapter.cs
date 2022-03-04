@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
+
 using OpenCvSharp;
 
-namespace InteropBitmaps.Adapters
+namespace InteropTypes.Graphics.Adapters
 {
     public readonly ref struct OpenCvSharp4SpanAdapter
     {

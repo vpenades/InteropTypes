@@ -5,9 +5,9 @@ using System.Numerics.Tensors;
 using System.Text;
 using System.Threading;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     /// <summary>
     /// Declares an object implementing this interface as a Dense Tensor.

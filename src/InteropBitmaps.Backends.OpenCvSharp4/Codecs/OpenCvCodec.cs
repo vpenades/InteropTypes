@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Backends;
+
+namespace InteropTypes.Graphics.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("OpenCvSharp Codec")]
     public sealed class OpenCvCodec : IBitmapDecoder, IBitmapEncoder
@@ -19,6 +22,8 @@ namespace InteropBitmaps.Codecs
         public static OpenCvCodec Default => _Default;
 
         #endregion
+
+        #region API
 
         /// <inheritdoc/>
         public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
@@ -44,5 +49,7 @@ namespace InteropBitmaps.Codecs
 
             return true;
         }
+
+        #endregion
     }
 }

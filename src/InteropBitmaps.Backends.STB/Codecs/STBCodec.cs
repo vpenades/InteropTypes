@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using STBREAD = StbImageSharp;
 using STBWRITE = StbImageWriteSharp;
 using STBDIRECTX = StbDxtSharp;
 
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     public class STBCodec : IBitmapDecoder , IBitmapEncoder
     {

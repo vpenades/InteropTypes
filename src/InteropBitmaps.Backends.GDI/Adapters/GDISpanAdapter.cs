@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace InteropBitmaps.Adapters
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Backends;
+
+namespace InteropTypes.Graphics.Adapters
 {
     public readonly ref struct GDISpanAdapter
     {

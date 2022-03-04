@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Backends;
+
 using NUnit.Framework;
 
 using SixLabors.ImageSharp;
 
-namespace InteropBitmaps.Interop
+namespace InteropTypes.Graphics.Bitmaps
 {
     [Category("Backends")]
     public class ImageSharpWithOpenCVTests

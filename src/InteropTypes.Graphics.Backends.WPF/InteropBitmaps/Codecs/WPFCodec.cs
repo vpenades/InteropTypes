@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using InteropBitmaps;
-using InteropBitmaps.Codecs;
+using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Codecs
 {
@@ -24,6 +23,8 @@ namespace InteropTypes.Graphics.Codecs
         public static WPFCodec Default => _Default;
 
         #endregion
+
+        #region API
 
         /// <inheritdoc/>
         public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
@@ -64,5 +65,7 @@ namespace InteropTypes.Graphics.Codecs
                 default: return null;
             }
         }
+
+        #endregion
     }
 }

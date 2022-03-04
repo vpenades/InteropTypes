@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropBitmaps</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
     <ProjectReference Include="..\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />    
   </ItemGroup>
 

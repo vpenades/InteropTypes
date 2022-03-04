@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <IsPackable>false</IsPackable>    
+    <IsPackable>false</IsPackable>
+    <RootNamespace>InteropTypes.Tensors</RootNamespace>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropTensors.Core\InteropTensors.Core.csproj" />
+    <ProjectReference Include="..\..\src\InteropTensors.Core\InteropTypes.Tensors.csproj" />
   </ItemGroup>
 
 </Project>

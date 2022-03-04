@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace InteropBitmaps.Adapters
+namespace InteropTypes.Graphics.Adapters
 {
     sealed class CastMemoryManager<TFrom, TTo> : MemoryManager<TTo>
         where TFrom : unmanaged

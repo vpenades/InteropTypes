@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     public abstract class Statistics
     {

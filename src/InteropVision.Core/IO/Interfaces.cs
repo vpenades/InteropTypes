@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropVision.IO
+namespace InteropTypes.Vision.IO
 {
     /// <summary>
     /// Represents the information of a capture device object.

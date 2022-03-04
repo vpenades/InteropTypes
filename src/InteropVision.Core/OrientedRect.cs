@@ -5,7 +5,7 @@ using System.Text;
 using XY = System.Numerics.Vector2;
 using MATRIX = System.Numerics.Matrix3x2;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     /// <summary>
     /// Represents an oriented rectangle, backed by a <see cref="MATRIX"/>

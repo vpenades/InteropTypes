@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-using XY = System.Numerics.Vector2;
-using COLOR = System.Drawing.Color;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropDrawing
+using XY = System.Numerics.Vector2;
+using COLOR = System.Drawing.Color;
+
+namespace MonoGameDemo
 {
     struct _Scene2D : IDrawingBrush<ICanvas2D>
     {

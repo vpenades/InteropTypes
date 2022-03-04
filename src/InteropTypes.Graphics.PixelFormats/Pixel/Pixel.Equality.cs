@@ -5,7 +5,7 @@
 
 using System;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     partial class Pixel    
     {

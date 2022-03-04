@@ -5,7 +5,7 @@ using System.Text;
 
 using ONNX = Microsoft.ML.OnnxRuntime;
 
-namespace InteropWith
+namespace InteropTypes.Vision.Backends
 {
     class OnnxOptions : IDisposable
     {

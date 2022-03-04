@@ -7,7 +7,12 @@ using System.Text;
 
 using Veldrid;
 
-namespace InteropWith
+using INTEROPPIXFMT = InteropTypes.Graphics.PixelFormat;
+using INTEROPPIXEL = InteropTypes.Graphics.Pixel;
+
+using VELDRIDPIXFMT = Veldrid.PixelFormat;
+
+namespace InteropTypes.Graphics.Backends
 {
     class _VeldridTextureCollection : IDisposable
     {
@@ -81,7 +86,7 @@ namespace InteropWith
         /// Created textures are 2D, non-multisampled, non-mipmapped textures with RGBA8 UNorm format and
         /// texture usage <see cref="TextureUsage.Sampled"/>.
         /// </remarks>
-        public int CreateTexture(int width, int height, PixelFormat pFormat)
+        public int CreateTexture(int width, int height, VELDRIDPIXFMT pFormat)
         {
             CheckDisposed();            
 
@@ -90,17 +95,17 @@ namespace InteropWith
             return _AddTexture(tex);
         }        
 
-        public static PixelFormat From(InteropBitmaps.PixelFormat fmt)
+        public static VELDRIDPIXFMT From(INTEROPPIXFMT fmt)
         {
             switch(fmt.Code)
             {
-                case InteropBitmaps.Pixel.RGBA32.Code: return PixelFormat.R8_G8_B8_A8_UNorm;
-                case InteropBitmaps.Pixel.BGRA32.Code: return PixelFormat.B8_G8_R8_A8_UNorm;                
+                case INTEROPPIXEL.RGBA32.Code: return VELDRIDPIXFMT.R8_G8_B8_A8_UNorm;
+                case INTEROPPIXEL.BGRA32.Code: return VELDRIDPIXFMT.B8_G8_R8_A8_UNorm;                
                 default: throw new NotImplementedException(nameof(fmt));
             }
         }
 
-        public int CreateTexture(InteropBitmaps.SpanBitmap bitmap)
+        public int CreateTexture(Bitmaps.SpanBitmap bitmap)
         {
             var dstFmt = From(bitmap.PixelFormat);
 
@@ -159,7 +164,7 @@ namespace InteropWith
         }
 
         
-        public PixelFormat GetTextureFormat(int id)
+        public VELDRIDPIXFMT GetTextureFormat(int id)
         {
             CheckDisposed();
             var tex = _textures[id];
@@ -176,7 +181,7 @@ namespace InteropWith
             _Factory.SetData<T>(tex, subRect, data);
         }
 
-        public void SetData(int id, InteropBitmaps.SpanBitmap src)            
+        public void SetData(int id, Bitmaps.SpanBitmap src)            
         {
             CheckDisposed();
 

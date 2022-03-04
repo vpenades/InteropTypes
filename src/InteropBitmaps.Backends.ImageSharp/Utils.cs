@@ -11,7 +11,7 @@ using MathNet.Numerics.Statistics;
 
 using POINT = System.Drawing.Point;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Backends
 {
     static class _Utils
     {

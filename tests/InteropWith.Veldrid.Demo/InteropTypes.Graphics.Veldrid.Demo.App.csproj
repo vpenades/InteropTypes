@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>VeldridDemo</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,8 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
-    <ProjectReference Include="..\..\src\InteropWith.Veldrid\InteropWith.Veldrid.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
+    <ProjectReference Include="..\..\src\InteropWith.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj" />
   </ItemGroup>
 
 </Project>

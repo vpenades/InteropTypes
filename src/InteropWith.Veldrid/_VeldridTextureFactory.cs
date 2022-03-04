@@ -6,7 +6,13 @@ using System.Text;
 
 using Veldrid;
 
-namespace InteropWith
+using INTEROPPIXFMT = InteropTypes.Graphics.PixelFormat;
+using INTEROPPIXEL = InteropTypes.Graphics.Pixel;
+
+using VELDRIDPIXFMT = Veldrid.PixelFormat;
+
+
+namespace InteropTypes.Graphics.Backends
 {
     class _VeldridTextureFactory : IDisposable
     {
@@ -53,7 +59,7 @@ namespace InteropWith
 
         #region API        
 
-        public void SetData(Texture tex, InteropBitmaps.SpanBitmap src)
+        public void SetData(Texture tex, Bitmaps.SpanBitmap src)
         {
             CheckDisposed();
 
@@ -67,7 +73,7 @@ namespace InteropWith
         {
             CheckDisposed();
             
-            var bpp = tex.Format == PixelFormat.R8_UNorm ? 1 : 4;
+            var bpp = tex.Format == VELDRIDPIXFMT.R8_UNorm ? 1 : 4;
             if (data.Length * Marshal.SizeOf<T>() != tex.Width * tex.Height * bpp)
                 throw new ArgumentException($"Length of data (${data.Length * Marshal.SizeOf<T>()}) did not match width * height of the texture (${tex.Width * tex.Height * bpp}).", nameof(data));
 
@@ -79,7 +85,7 @@ namespace InteropWith
         {
             var staging = _GetStagingTexture(width, height);            
 
-            var bpp = tex.Format == PixelFormat.R8_UNorm ? 1 : 4;
+            var bpp = tex.Format == VELDRIDPIXFMT.R8_UNorm ? 1 : 4;
             var rowBytes = (int)width * bpp;
 
             var map = _Graphics.Map(staging, MapMode.Write, 0);
@@ -108,12 +114,12 @@ namespace InteropWith
             _Graphics.SubmitCommands(_CommandList);
         }
 
-        private unsafe void _CopyData(Texture dstTex, InteropBitmaps.SpanBitmap srcBitmap)
+        private unsafe void _CopyData(Texture dstTex, Bitmaps.SpanBitmap srcBitmap)
         {
             srcBitmap.PinReadablePointer(ptr => _CopyData(dstTex, ptr));
         }
 
-        private unsafe void _CopyData(Texture dstTex, InteropBitmaps.PointerBitmap srcBitmap)
+        private unsafe void _CopyData(Texture dstTex, Bitmaps.PointerBitmap srcBitmap)
         {
             var tmpTex = _GetStagingTexture(dstTex.Width, dstTex.Height);
 
@@ -128,34 +134,34 @@ namespace InteropWith
             _Graphics.SubmitCommands(_CommandList);
         }        
 
-        private void _WriteFromTexture(Texture srcTexture, InteropBitmaps.SpanBitmap.Action1 writeAction)
+        private void _WriteFromTexture(Texture srcTexture, Bitmaps.SpanBitmap.Action1 writeAction)
         {
             var fmt = From(srcTexture.Format);
 
             var srcMap = _Graphics.Map(srcTexture, MapMode.Write, 0);
 
-            var binfo = new InteropBitmaps.BitmapInfo((int)srcTexture.Width, (int)srcTexture.Height, fmt, (int)srcMap.RowPitch);
+            var binfo = new Bitmaps.BitmapInfo((int)srcTexture.Width, (int)srcTexture.Height, fmt, (int)srcMap.RowPitch);
 
-            var srcSpan = new InteropBitmaps.SpanBitmap(srcMap.Data, binfo);
+            var srcSpan = new Bitmaps.SpanBitmap(srcMap.Data, binfo);
 
             writeAction(srcSpan);
 
             _Graphics.Unmap(srcTexture);
         }
 
-        private static InteropBitmaps.PixelFormat From(PixelFormat srcFmt)
+        private static INTEROPPIXFMT From(VELDRIDPIXFMT srcFmt)
         {
             switch(srcFmt)
             {
-                case PixelFormat.R8_G8_B8_A8_SInt: return InteropBitmaps.Pixel.BGRA32.Format;
-                case PixelFormat.R8_G8_B8_A8_UInt: return InteropBitmaps.Pixel.BGRA32.Format;
-                case PixelFormat.R8_G8_B8_A8_UNorm: return InteropBitmaps.Pixel.RGBA32.Format;
-                case PixelFormat.R8_G8_B8_A8_UNorm_SRgb: return InteropBitmaps.Pixel.RGBA32.Format;
+                case VELDRIDPIXFMT.R8_G8_B8_A8_SInt: return INTEROPPIXEL.BGRA32.Format;
+                case VELDRIDPIXFMT.R8_G8_B8_A8_UInt: return INTEROPPIXEL.BGRA32.Format;
+                case VELDRIDPIXFMT.R8_G8_B8_A8_UNorm: return INTEROPPIXEL.RGBA32.Format;
+                case VELDRIDPIXFMT.R8_G8_B8_A8_UNorm_SRgb: return INTEROPPIXEL.RGBA32.Format;
                 
-                case PixelFormat.B8_G8_R8_A8_UNorm: return InteropBitmaps.Pixel.BGRA32.Format;
-                case PixelFormat.B8_G8_R8_A8_UNorm_SRgb: return InteropBitmaps.Pixel.BGRA32.Format;
+                case VELDRIDPIXFMT.B8_G8_R8_A8_UNorm: return INTEROPPIXEL.BGRA32.Format;
+                case VELDRIDPIXFMT.B8_G8_R8_A8_UNorm_SRgb: return INTEROPPIXEL.BGRA32.Format;
 
-                case PixelFormat.R32_G32_B32_A32_Float: return InteropBitmaps.Pixel.RGBA128F.Format;                
+                case VELDRIDPIXFMT.R32_G32_B32_A32_Float: return INTEROPPIXEL.RGBA128F.Format;                
 
                 default: throw new NotImplementedException();
             }
@@ -166,14 +172,14 @@ namespace InteropWith
         {
             if (_Staging == null)
             {
-                var td = TextureDescription.Texture2D(width, height, 1, 1, PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Staging);
+                var td = TextureDescription.Texture2D(width, height, 1, 1, VELDRIDPIXFMT.R8_G8_B8_A8_UNorm, TextureUsage.Staging);
                 _Staging = _Graphics.ResourceFactory.CreateTexture(ref td);
             }
             else if (_Staging.Width < width || _Staging.Height < height)
             {
                 var newWidth = Math.Max(width , _Staging.Width);
                 var newHeight = Math.Max(height , _Staging.Height);
-                var td = TextureDescription.Texture2D(newWidth, newHeight, 1, 1, PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Staging);
+                var td = TextureDescription.Texture2D(newWidth, newHeight, 1, 1, VELDRIDPIXFMT.R8_G8_B8_A8_UNorm, TextureUsage.Staging);
                 _Graphics.DisposeWhenIdle(_Staging);
                 _Staging = _Graphics.ResourceFactory.CreateTexture(ref td);
             }

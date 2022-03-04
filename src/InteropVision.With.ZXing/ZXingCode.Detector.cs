@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropVision.With
 {

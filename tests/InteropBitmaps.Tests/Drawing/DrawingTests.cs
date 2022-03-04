@@ -10,8 +10,9 @@ using NUnit.Framework;
 
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropBitmaps.Drawing
+namespace InteropTypes.Graphics.Drawing
 {
     public class DrawingTests
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Processing
+namespace InteropTypes.Graphics.Bitmaps.Processing
 {
     /// <summary>
     /// Code to flip an image horizontally, vertically, or both

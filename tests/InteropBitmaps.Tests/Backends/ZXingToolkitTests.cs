@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using InteropTypes.Vision;
+
 using NUnit.Framework;
 
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -10,7 +13,7 @@ using SixLabors.ImageSharp.Processing;
 
 using POINT = SixLabors.ImageSharp.PointF;
 
-namespace InteropBitmaps.Backends
+namespace InteropTypes.Graphics.Backends
 {
     [Category("Computer Vision")]
     public class ZXingTests

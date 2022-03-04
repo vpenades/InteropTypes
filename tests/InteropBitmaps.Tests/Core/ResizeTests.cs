@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 using XY = System.Numerics.Vector2;
 
-namespace InteropBitmaps.Core
+namespace InteropTypes.Graphics.Bitmaps
 {
     [Category("Core")]
     public class ResizeTests

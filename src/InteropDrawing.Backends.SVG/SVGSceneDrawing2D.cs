@@ -4,6 +4,7 @@ using System.Numerics;
 
 using BRUSH = System.Drawing.Brush;
 using IMAGE = System.Drawing.Image;
+
 using InteropTypes.Graphics.Drawing;
 
 namespace InteropTypes.Graphics.Backends

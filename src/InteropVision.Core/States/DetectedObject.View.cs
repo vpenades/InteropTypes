@@ -5,7 +5,7 @@ using System.Linq;
 
 using RECTF = System.Drawing.RectangleF;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     partial struct DetectedObject
     {

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Codecs
 {
     public class FFmpegAutoGenCodec
     {

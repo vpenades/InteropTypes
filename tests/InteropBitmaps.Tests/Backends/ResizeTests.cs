@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using NUnit.Framework;
 
-namespace InteropBitmaps.Backends
+namespace InteropTypes.Graphics.Backends
 {
     [Category("Backends")]
     public class ResizeTests

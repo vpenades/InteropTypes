@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
-namespace InteropBitmaps.Drawing
+namespace InteropTypes.Graphics.Drawing
 {
     struct _Triangle
     {

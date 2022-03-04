@@ -8,7 +8,10 @@ using FFMpegCore.Enums;
 using FFMpegCore.Extend;
 using FFMpegCore.Pipes;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics
 {
     static class _Implementation
     {

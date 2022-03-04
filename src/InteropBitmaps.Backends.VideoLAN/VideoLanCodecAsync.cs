@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 
 using LibVLCSharp.Shared;
 using System.Collections.Generic;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     // https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/PreviewThumbnailExtractor
 

@@ -10,7 +10,7 @@ using Microsoft.Win32;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     [Category("Core")]
     public class MemoryBitmapTests

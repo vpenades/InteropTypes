@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("ImageSharp Codec")]
     public sealed class ImageSharpCodec : IBitmapDecoder, IBitmapEncoder

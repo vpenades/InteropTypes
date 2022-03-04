@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
 using POINT = InteropTypes.Graphics.Drawing.Point2;

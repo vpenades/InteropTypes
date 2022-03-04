@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Numerics.Tensors;
 using System.Text;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     
     

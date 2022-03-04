@@ -4,11 +4,15 @@ using System.Text;
 
 using SharpAvi.Output;
 
-namespace InteropTypes.Graphics.Video
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Codecs;
+using InteropTypes.Graphics;
+
+namespace InteropTypes.Video
 {    
     public static class VideoEncoderFactory
     {
-        public static void SaveToAVI(this IEnumerable<InteropBitmaps.MemoryBitmap> frames, string filePath, decimal fps, InteropBitmaps.Codecs.IBitmapEncoder encoder)
+        public static void SaveToAVI(this IEnumerable<MemoryBitmap> frames, string filePath, decimal fps, IBitmapEncoder encoder)
         {
             VideoFrameWriter writer = null;
 
@@ -24,7 +28,7 @@ namespace InteropTypes.Graphics.Video
             }
         }
 
-        public static VideoFrameWriter AddVideoFrameWriter(this AviWriter writer, int width, int height, InteropBitmaps.Codecs.IBitmapEncoder encoder)
+        public static VideoFrameWriter AddVideoFrameWriter(this AviWriter writer, int width, int height, IBitmapEncoder encoder)
         {
             // Argument.IsNotNull(writer, nameof(writer));
             // Argument.IsPositive(width, nameof(width));
@@ -43,13 +47,13 @@ namespace InteropTypes.Graphics.Video
         internal VideoFrameWriter(IAviVideoStream writer)
         {
             _Writer = writer;
-            _Cache = new InteropBitmaps.MemoryBitmap<InteropBitmaps.Pixel.BGRA32>(writer.Width, writer.Height, InteropBitmaps.Pixel.BGRA32.Format);
+            _Cache = new MemoryBitmap<Pixel.BGRA32>(writer.Width, writer.Height, Pixel.BGRA32.Format);
         }
 
         private readonly IAviVideoStream _Writer;
-        private readonly InteropBitmaps.MemoryBitmap<InteropBitmaps.Pixel.BGRA32> _Cache;
+        private readonly MemoryBitmap<Pixel.BGRA32> _Cache;
 
-        public void WriteFrame(InteropBitmaps.SpanBitmap bmp)
+        public void WriteFrame(SpanBitmap bmp)
         {
             _Cache.AsTypeless().SetPixels(0, 0, bmp);
 

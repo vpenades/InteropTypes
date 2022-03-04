@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-using InteropTensors;
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Tensors;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     /// <summary>
     /// Loads of DNN model (TFLite, ONNX, etc).
@@ -88,9 +89,9 @@ namespace InteropVision
     public interface ITensorImageProcessor<TTensorPixel>
         where TTensorPixel:unmanaged
     {
-        void CopyImage(InteropBitmaps.SpanBitmap src, SpanTensor3<TTensorPixel> dst);
+        void CopyImage(SpanBitmap src, SpanTensor3<TTensorPixel> dst);
 
-        void CopyImage(SpanTensor3<TTensorPixel> src, InteropBitmaps.SpanBitmap dst);
+        void CopyImage(SpanTensor3<TTensorPixel> src, SpanBitmap dst);
     }
 
 }

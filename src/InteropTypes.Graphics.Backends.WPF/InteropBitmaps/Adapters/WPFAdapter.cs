@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-using InteropBitmaps;
 
 using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Adapters
 {
@@ -21,7 +21,7 @@ namespace InteropTypes.Graphics.Adapters
 
             if (!_Implementation.TryGetExactPixelFormat(bmp.PixelFormat, out _Exact))
             {
-                throw new InteropBitmaps.Diagnostics.PixelFormatNotSupportedException(bmp.PixelFormat, nameof(bmp));
+                throw new Diagnostics.PixelFormatNotSupportedException(bmp.PixelFormat, nameof(bmp));
             }
         }
 

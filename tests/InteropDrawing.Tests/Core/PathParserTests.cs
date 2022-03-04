@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using InteropDrawing.Backends;
-
 using InteropTypes.Graphics.Backends;
-using InteropTypes.Graphics.Drawing;
 
 using NUnit.Framework;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     public class PathParserTests
     {

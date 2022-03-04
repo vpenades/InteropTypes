@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps.Core
+namespace InteropTypes.Graphics.Bitmaps
 {
     [Category("Core")]
     public class PointerBitmapTests

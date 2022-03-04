@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Adapters
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Adapters
 {
     public struct SkiaMemoryAdapter : IDisposable
     {

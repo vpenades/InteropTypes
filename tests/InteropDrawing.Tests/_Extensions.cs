@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Backends;
-using InteropTypes.Graphics.Backends.WPF;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     static class _Extensions
     {

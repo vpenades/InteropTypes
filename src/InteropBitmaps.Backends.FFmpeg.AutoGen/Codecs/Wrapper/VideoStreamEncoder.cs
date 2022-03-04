@@ -6,7 +6,9 @@ using System.Text;
 
 using FFmpeg.AutoGen;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Codecs
 {
     class VideoStreamEncoder : IDisposable
     {

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
 
 using SIZE = System.Drawing.Size;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     public delegate void Kernel2Copy<Tin, Tout>(SpanTensor2<Tin> src, SpanTensor2<Tout> dst)
         where Tin: unmanaged

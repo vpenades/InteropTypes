@@ -6,7 +6,7 @@ using System.Numerics.Tensors;
 using System.Reflection;
 using System.Text;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     public static partial class TensorExtensions
     {

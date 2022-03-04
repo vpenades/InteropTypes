@@ -5,7 +5,7 @@ using System.Text;
 using SIZE = System.Drawing.Size;
 using POINT = System.Drawing.Point;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     public interface IBitmapInfo
     {

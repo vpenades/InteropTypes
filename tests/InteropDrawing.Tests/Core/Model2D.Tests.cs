@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using InteropTypes.Graphics.Drawing;
-
 using NUnit.Framework;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
  
     [Category("InteropDrawing Core")]

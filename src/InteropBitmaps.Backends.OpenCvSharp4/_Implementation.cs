@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Backends;
+
 using OPENCV = OpenCvSharp.Cv2;
 using CVMATRIX = OpenCvSharp.Mat;
 using CVDEPTHTYPE = OpenCvSharp.MatType;
 
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     public delegate void TransferCvAction(CVMATRIX src, CVMATRIX dst);
         
@@ -202,7 +205,7 @@ namespace InteropBitmaps
             dst.Set(1, 2, src.M32);
         }
 
-        public static InteropTensors.SpanTensor2<T> AsSpanTensor2<T>(this CVMATRIX src)
+        public static Tensors.SpanTensor2<T> AsSpanTensor2<T>(this CVMATRIX src)
             where T : unmanaged
         {
             if (src == null) throw new ArgumentNullException(nameof(src));
@@ -213,19 +216,19 @@ namespace InteropBitmaps
             if (src.Dims == 1)
             {
                 if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
-                return new InteropTensors.SpanTensor2<T>(src.Data, src.Size(0), src.Channels());
+                return new Tensors.SpanTensor2<T>(src.Data, src.Size(0), src.Channels());
             }
 
             if (src.Dims == 2)
             {
                 if (src.Channels() != 1) throw new ArgumentNullException(nameof(src.Channels));
-                return new InteropTensors.SpanTensor2<T>(src.Data, src.Size(0), src.Size(1));
+                return new Tensors.SpanTensor2<T>(src.Data, src.Size(0), src.Size(1));
             }
 
             throw new ArgumentNullException(nameof(src.Dims));
         }
 
-        public static InteropTensors.SpanTensor3<T> AsSpanTensor3<T>(this CVMATRIX src)
+        public static Tensors.SpanTensor3<T> AsSpanTensor3<T>(this CVMATRIX src)
             where T : unmanaged
         {
             if (src == null) throw new ArgumentNullException(nameof(src));
@@ -238,13 +241,13 @@ namespace InteropBitmaps
             if (src.Dims == 2)
             {
                 if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
-                return new InteropTensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Channels());
+                return new Tensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Channels());
             }
 
             if (src.Dims == 3)
             {
                 if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
-                return new InteropTensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Size(2));
+                return new Tensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Size(2));
             }
 
             throw new ArgumentNullException(nameof(src.Dims));

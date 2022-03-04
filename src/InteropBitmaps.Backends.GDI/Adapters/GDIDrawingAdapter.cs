@@ -7,7 +7,7 @@ using InteropTypes.Graphics.Drawing;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropBitmaps.Adapters
+namespace InteropTypes.Graphics.Adapters
 {
     class GDIDrawingAdapter : ICanvas2D
     {

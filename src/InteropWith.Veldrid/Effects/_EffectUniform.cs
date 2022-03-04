@@ -4,7 +4,7 @@ using System.Text;
 
 using Veldrid;
 
-namespace InteropWith
+namespace InteropTypes.Graphics.Backends
 {
     class _EffectUniform : IEffectInput, IDisposable
     {

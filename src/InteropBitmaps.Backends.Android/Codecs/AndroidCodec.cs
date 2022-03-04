@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 
-
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
     public sealed class AndroidBitmapCodec : IBitmapDecoder, IBitmapEncoder

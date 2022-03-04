@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps.Transform
+namespace InteropTypes.Graphics.Bitmaps.Transform
 {
     internal class Kernet3x3Tests
     {

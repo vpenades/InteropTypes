@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     using PCID = PixelComponentID;
 

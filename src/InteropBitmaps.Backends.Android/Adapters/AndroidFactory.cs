@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using ANDROIDBITMAP = Android.Graphics.Bitmap;
 using ANDROIDGFX = Android.Graphics;
 using ANDROIDMEDIA = Android.Media;
 
-namespace InteropBitmaps.Adapters
+namespace InteropTypes.Graphics.Adapters
 {
     public readonly struct AndroidFactory
     {

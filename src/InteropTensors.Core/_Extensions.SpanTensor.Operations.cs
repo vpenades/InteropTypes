@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropTensors.Core
+namespace InteropTypes.Tensors
 {
     partial class TensorExtensions
     {

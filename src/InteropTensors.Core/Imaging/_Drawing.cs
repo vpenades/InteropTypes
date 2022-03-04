@@ -4,7 +4,7 @@ using System.Text;
 
 using XY = System.Numerics.Vector2;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     static class _Drawing
     {

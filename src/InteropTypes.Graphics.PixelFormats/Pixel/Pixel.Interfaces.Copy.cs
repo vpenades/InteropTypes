@@ -5,7 +5,7 @@ using System.Text;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     partial class Pixel    
     {

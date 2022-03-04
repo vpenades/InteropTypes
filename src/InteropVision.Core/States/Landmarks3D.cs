@@ -8,7 +8,7 @@ using System.Numerics;
 using XYZ = System.Numerics.Vector3;
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public class Landmarks3D : IDrawingBrush<IScene3D> //, InteropDrawing.IBounds3D
     {

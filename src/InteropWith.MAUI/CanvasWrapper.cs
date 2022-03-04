@@ -6,7 +6,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropWith.MAUI
+namespace InteropTypes.Graphics.Backends
 {
     public readonly struct CanvasWrapper : ICanvas2D
     {

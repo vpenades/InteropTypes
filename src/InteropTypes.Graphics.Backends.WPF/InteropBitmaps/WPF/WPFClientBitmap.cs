@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Backends.WPF
 {

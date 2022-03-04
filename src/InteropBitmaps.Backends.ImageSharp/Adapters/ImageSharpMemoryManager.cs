@@ -6,8 +6,9 @@ using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Advanced;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropBitmaps.Adapters
+namespace InteropTypes.Graphics.Adapters
 {
     class ImageSharpMemoryManager<TPixel> : MemoryManager<Byte>, MemoryBitmap.ISource
         where TPixel : unmanaged, IPixel<TPixel>

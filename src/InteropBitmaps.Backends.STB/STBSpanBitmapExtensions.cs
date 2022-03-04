@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using STBREAD = StbImageSharp;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Backends
 {
     public static class STBSharpExtensions
     {

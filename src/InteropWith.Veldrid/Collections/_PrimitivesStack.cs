@@ -4,7 +4,7 @@ using System.Text;
 
 
 
-namespace InteropWith
+namespace InteropTypes.Graphics.Backends
 {
     class _PrimitivesStack<TVertex>
         where TVertex: unmanaged

@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>    
-    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropBitmaps.Backends.GDI.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
 

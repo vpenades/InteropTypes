@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropTypes.Graphics.Drawing;
-using InteropTypes.Graphics.Drawing.Transforms;
-
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing
+namespace InteropTypes.Graphics.Drawing
 {
     static class SceneFactory
     {

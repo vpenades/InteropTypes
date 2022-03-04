@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>    
+    <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
+    <LangVersion>8</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+  <Import Project="..\SourceLink.props" />
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.Tests" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.PixelFormats.csproj" />
+  </ItemGroup>  
+
+</Project>

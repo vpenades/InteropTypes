@@ -4,13 +4,12 @@ using System.Numerics;
 using System.Text;
 
 using InteropTypes.Graphics.Backends;
-using InteropTypes.Graphics.Drawing;
 
 using NUnit.Framework;
 
 using COLOR = System.Drawing.Color;
 
-namespace InteropDrawing.Backends.SVG
+namespace InteropTypes.Graphics.Drawing
 {
     [Category("InteropDrawing SVG")]
     public class TestScene

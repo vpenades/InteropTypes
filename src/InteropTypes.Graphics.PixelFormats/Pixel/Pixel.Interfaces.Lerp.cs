@@ -1,4 +1,5 @@
 ﻿
+// GENERATED CODE: using CodeGenUtils.t4
 
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
 
     partial class Pixel    
@@ -112,8 +113,7 @@ namespace InteropBitmaps
                 return new BGRP32(0, 0, 0, a);
             }
         }
-        partial struct Luminance8
-            : ISpanLerpDelegateProvider<Luminance8,Luminance8,int>
+        partial struct Luminance8 : ISpanLerpDelegateProvider<Luminance8,Luminance8,int>
         {
             SpanLerpCallback<Luminance8,Luminance8,int> ISpanLerpDelegateProvider<Luminance8,Luminance8,int>.GetSpanLerpDelegate() { return Lerp; }
 
@@ -200,9 +200,8 @@ namespace InteropBitmaps
                 var R = (left.R * lx + right.R * rx) / 16384;
                 var G = (left.G * lx + right.G * rx) / 16384;
                 var B = (left.B * lx + right.B * rx) / 16384;
-
                 var dst = default(TDst);
-                dst.SetValue(new BGRA32(R, G, B));
+                dst.SetValue( new BGRA32(R, G, B));
                 return dst;
             }
 
@@ -748,8 +747,7 @@ namespace InteropBitmaps
                 return new BGRP32(r, g, b, a);
             }
         }
-        partial struct RGBP32
-            : ILerpToBGRP32<RGBP32>
+        partial struct RGBP32 : ILerpToBGRP32<RGBP32>
         {
 
             /// <summary>
@@ -804,8 +802,7 @@ namespace InteropBitmaps
                 return new BGRP32(r, g, b, a);
             }
         }
-        partial struct BGRP32
-            : ILerpToBGRP32<BGRP32>
+        partial struct BGRP32 : ILerpToBGRP32<BGRP32>
         {
 
             /// <summary>
@@ -860,8 +857,7 @@ namespace InteropBitmaps
                 return new BGRP32(r, g, b, a);
             }
         }
-        partial struct RGB96F
-            : ISpanLerpDelegateProvider<RGB96F,RGB96F,float>
+        partial struct RGB96F : ISpanLerpDelegateProvider<RGB96F,RGB96F,float>
         {
             SpanLerpCallback<RGB96F,RGB96F,float> ISpanLerpDelegateProvider<RGB96F,RGB96F,float>.GetSpanLerpDelegate() { return Lerp; }
 
@@ -890,8 +886,7 @@ namespace InteropBitmaps
                 return new RGB96F(R, G, B);
             }
         }
-        partial struct BGR96F
-            : ISpanLerpDelegateProvider<BGR96F,BGR96F,float>
+        partial struct BGR96F : ISpanLerpDelegateProvider<BGR96F,BGR96F,float>
         {
             SpanLerpCallback<BGR96F,BGR96F,float> ISpanLerpDelegateProvider<BGR96F,BGR96F,float>.GetSpanLerpDelegate() { return Lerp; }
 

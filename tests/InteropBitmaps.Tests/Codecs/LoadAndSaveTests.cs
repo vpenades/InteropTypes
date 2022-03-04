@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using InteropTypes.Graphics.Codecs;
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     [Category("Codecs")]
     public class LoadAndSaveTests

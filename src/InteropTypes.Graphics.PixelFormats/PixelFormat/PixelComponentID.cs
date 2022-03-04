@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     /// <summary>
     /// Represents the meaning of a <see cref="PixelFormat"/>'s channel.<br/>

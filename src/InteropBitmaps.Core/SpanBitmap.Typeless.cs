@@ -6,8 +6,10 @@ using System.Numerics;
 using SIZE = System.Drawing.Size;
 using POINT = System.Drawing.Point;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
+    using Diagnostics;
+
     /// <summary>
     /// Represents a Bitmap backed by a <see cref="Span{Byte}"/>
     /// </summary>

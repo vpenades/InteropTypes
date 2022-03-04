@@ -4,7 +4,7 @@ using System.Data;
 using System.Numerics;
 using System.Text;
 
-namespace InteropBitmaps.Processing
+namespace InteropTypes.Graphics.Bitmaps.Processing
 {
     
     static class _NearestResizeImplementation

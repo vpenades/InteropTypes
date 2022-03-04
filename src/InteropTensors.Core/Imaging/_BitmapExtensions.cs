@@ -4,13 +4,14 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
 
-using TENSOR2FLOAT = InteropTensors.SpanTensor2<float>;
-using TENSOR3FLOAT = InteropTensors.SpanTensor3<float>;
-using TENSOR4FLOAT = InteropTensors.SpanTensor4<float>;
+using TENSOR2FLOAT = InteropTypes.Tensors.SpanTensor2<float>;
+using TENSOR3FLOAT = InteropTypes.Tensors.SpanTensor3<float>;
+using TENSOR4FLOAT = InteropTypes.Tensors.SpanTensor4<float>;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     public static partial class TensorExtensions
     {

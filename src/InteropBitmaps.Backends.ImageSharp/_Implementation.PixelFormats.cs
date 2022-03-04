@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     partial class _Implementation
     {

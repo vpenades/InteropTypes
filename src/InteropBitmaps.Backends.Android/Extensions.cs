@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Bitmaps;
 
 using ANDROIDGFX = Android.Graphics;
 using ANDROIDMEDIA = Android.Media;
 using ANDROIDBITMAP = Android.Graphics.Bitmap;
 
-namespace InteropBitmaps
+
+namespace InteropTypes.Graphics.Backends
 {
     public static class AndroidToolkit
     {

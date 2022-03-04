@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using InteropTensors;
-
-using InteropVision;
+using InteropTypes.Tensors;
 
 using ONNX = Microsoft.ML.OnnxRuntime;
 
-namespace InteropWith
+namespace InteropTypes.Vision.Backends
 {
     // https://github.com/microsoft/onnxruntime/blob/master/csharp/sample/Microsoft.ML.OnnxRuntime.InferenceSample/Program.cs
     // https://gist.github.com/pranavsharma/939d93fc7291c5a1638bfa3b190d72e3

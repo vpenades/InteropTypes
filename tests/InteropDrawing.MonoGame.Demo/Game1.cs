@@ -10,7 +10,7 @@ using COLOR = System.Drawing.Color;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Backends;
 
-namespace InteropDrawing
+namespace MonoGameDemo
 {
     public class Game1 : Game
     {

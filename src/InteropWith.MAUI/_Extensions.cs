@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropWith.MAUI
+namespace InteropTypes.Graphics.Backends
 {
     public static class MauiExtensions
     {

@@ -6,7 +6,7 @@ using System.Numerics;
 using RECTI = System.Drawing.Rectangle;
 using RECTF = System.Drawing.RectangleF;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     [System.Diagnostics.DebuggerDisplay("T:{Time} S:{Score} Area:{Region.Width*Region.Height}")]
     public struct DetectedFrame

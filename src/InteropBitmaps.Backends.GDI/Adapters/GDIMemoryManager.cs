@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Adapters
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Adapters
 {
     /// <summary>
     /// Helper class that wraps a <see cref="System.Drawing.Bitmap"/> to expose it as a <see cref="MemoryBitmap"/>
     /// </summary>
-    sealed unsafe class GDIMemoryManager : MemoryManagers.BitmapMemoryManager
+    sealed unsafe class GDIMemoryManager : Bitmaps.MemoryManagers.BitmapMemoryManager
     {
         #region lifecycle
         

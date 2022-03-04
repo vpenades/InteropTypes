@@ -5,10 +5,10 @@ using InteropTypes.Graphics.Drawing;
 
 using POINT = InteropTypes.Graphics.Drawing.Point2;
 
-using SCORE = InteropVision.Score;
+using SCORE = InteropTypes.Vision.Score;
 using COLOR = System.Drawing.Color;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     partial struct DetectedObject
     {

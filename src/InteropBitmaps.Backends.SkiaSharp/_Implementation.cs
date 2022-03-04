@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-using INTEROPFMT = InteropBitmaps.PixelFormat;
+using INTEROPFMT = InteropTypes.Graphics.PixelFormat;
 using SKIACOLOR = SkiaSharp.SKColorType;
 using SKIAALPHA = SkiaSharp.SKAlphaType;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     static partial class _Implementation
     {

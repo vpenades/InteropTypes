@@ -8,8 +8,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 using NUnit.Framework;
+using InteropTypes.Graphics.Backends;
 
-namespace InteropBitmaps.Examples
+namespace InteropTypes.Graphics.Bitmaps
 {
     [Category("Examples")]
     public class ShowCases

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropWith
+namespace InteropTypes.Graphics.Backends
 {
     sealed class _DisposablesRecorder : IDisposable
     {

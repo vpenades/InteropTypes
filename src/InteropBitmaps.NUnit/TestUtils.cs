@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Backends;
+
 using NUnit.Framework;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     static class NUnitExtensions
     {

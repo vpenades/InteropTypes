@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
+using InteropTypes.Graphics.Bitmaps;
+
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace InteropBitmaps.Adapters
+namespace InteropTypes.Graphics.Adapters
 {
     public struct ImageSharpMemoryAdapter<TPixel> : IDisposable
         where TPixel : unmanaged, IPixel<TPixel>

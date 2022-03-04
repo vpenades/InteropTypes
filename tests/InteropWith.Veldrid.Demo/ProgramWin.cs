@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-using InteropBitmaps;
-
-using InteropDrawing;
-
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
+
+using MonoGameDemo;
 
 using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 
-namespace InteropWith
+namespace VeldridDemo
 {
     class ProgramWin
     {

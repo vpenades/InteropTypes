@@ -4,8 +4,13 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 
-using InteropBitmaps;
-using InteropTensors;
+using InteropTypes.Graphics;
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Adapters;
+using InteropTypes.Graphics.Backends;
+
+using InteropTypes.Tensors;
+using InteropTypes.Vision;
 
 using OPENCV2 = OpenCvSharp.Cv2;
 using CVSTORAGE = OpenCvSharp.FileStorage;
@@ -13,7 +18,7 @@ using ARUCO = OpenCvSharp.Aruco;
 using CVMATRIX = OpenCvSharp.Mat;
 using CVDEPTHTYPE = OpenCvSharp.MatType;
 
-namespace InteropVision
+namespace InteropTypes.Vision.Backends
 {
     partial class MarkersContext
     {        

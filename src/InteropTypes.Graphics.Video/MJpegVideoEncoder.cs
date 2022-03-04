@@ -5,16 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Codecs;
+using InteropTypes.Graphics.Bitmaps;
+
 using SharpAvi;
 using SharpAvi.Codecs;
+using InteropTypes.Graphics;
 
-namespace InteropTypes.Graphics.Video
+namespace InteropTypes.Video
 {    
     sealed class MJpegVideoEncoder : IVideoEncoder
     {
         #region lifecycle
 
-        public MJpegVideoEncoder(int width, int height, InteropBitmaps.Codecs.IBitmapEncoder encoder)
+        public MJpegVideoEncoder(int width, int height, IBitmapEncoder encoder)
         {
             // Argument.IsPositive(width, nameof(width));
             // Argument.IsPositive(height, nameof(height));
@@ -33,7 +37,7 @@ namespace InteropTypes.Graphics.Video
 
         private readonly int width;
         private readonly int height;
-        private readonly InteropBitmaps.Codecs.IBitmapEncoder jpegEncoder;
+        private readonly IBitmapEncoder jpegEncoder;
 
         private readonly MemoryStream buffer;
 
@@ -93,12 +97,12 @@ namespace InteropTypes.Graphics.Video
         {
             var startPosition = (int)destination.Position;
 
-            var bmp = new InteropBitmaps.SpanBitmap<InteropBitmaps.Pixel.BGRA32>(source, width, height, InteropBitmaps.Pixel.BGRA32.Format);
+            var bmp = new SpanBitmap<Pixel.BGRA32>(source, width, height, Pixel.BGRA32.Format);
 
             var lazy = new Lazy<Stream>(()=>destination);
             if (lazy.Value != destination) throw new InvalidOperationException();
 
-            jpegEncoder.TryWrite(lazy, InteropBitmaps.Codecs.CodecFormat.Jpeg, bmp);
+            jpegEncoder.TryWrite(lazy, CodecFormat.Jpeg, bmp);
 
             destination.Flush();
             return (int)(destination.Position - startPosition);

@@ -7,7 +7,7 @@ using InteropTypes.Graphics.Drawing;
 
 using Veldrid;
 
-namespace InteropWith
+namespace InteropTypes.Graphics.Backends
 {
     public interface IVeldridDrawingContext2D : IDisposableCanvas2D
     {

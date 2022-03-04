@@ -5,7 +5,7 @@
 // [assembly: ShaderSet("SpriteShaderSolid", "InteropWith.VeldridShaders.SpriteShader.VS", "InteropWith.VeldridShaders.SpriteShader.FS_Solid")]
 // [assembly: ShaderSet("SpriteShaderTextured", "InteropWith.VeldridShaders.SpriteShader.VS", "InteropWith.VeldridShaders.SpriteShader.FS_Textured")]
 
-namespace InteropWith.VeldridShaders
+namespace InteropTypes.Graphics.Backends.VeldridShaders
 {
     public class SpriteShader
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public static partial class _Extensions
     {

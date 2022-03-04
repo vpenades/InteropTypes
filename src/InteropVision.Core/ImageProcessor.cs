@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
-using InteropTensors;
+using InteropTypes.Tensors;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public class ImageProcessor<TPixel> : ITensorImageProcessor<float>
             where TPixel : unmanaged

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropBitmaps</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
     <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -11,7 +11,7 @@
   <Import Project="..\Version.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>        

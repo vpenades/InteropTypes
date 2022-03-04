@@ -8,7 +8,10 @@ using System.Text;
 
 using FFmpeg.AutoGen;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Codecs;
+
+namespace InteropTypes.Graphics
 {
     static class _Implementation
     {

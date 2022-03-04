@@ -7,8 +7,10 @@ using SIZE = System.Drawing.Size;
 using POINT = System.Drawing.Point;
 using RECTI = System.Drawing.Rectangle;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
+    using Diagnostics;
+
     using WSPAN = Span<Byte>;
     using RSPAN = ReadOnlySpan<Byte>;
 

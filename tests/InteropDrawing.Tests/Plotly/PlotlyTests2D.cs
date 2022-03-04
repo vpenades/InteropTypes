@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 
 using InteropTypes.Graphics.Backends;
-using InteropTypes.Graphics.Drawing;
 
 using NUnit.Framework;
 
-namespace InteropDrawing.Backends.Plotly
+namespace InteropTypes.Graphics.Drawing
 {
     public class PlotlyTests2D
     {

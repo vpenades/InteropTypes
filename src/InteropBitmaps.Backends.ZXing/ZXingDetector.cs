@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Detectors
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Vision
 {
     public class ZXingDetector
     {

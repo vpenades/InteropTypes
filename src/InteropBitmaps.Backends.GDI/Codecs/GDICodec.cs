@@ -4,9 +4,11 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using GDIIMAGEFORMAT = System.Drawing.Imaging.ImageFormat;
 
-namespace InteropBitmaps.Codecs
+namespace InteropTypes.Graphics.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
     public sealed class GDICodec : IBitmapDecoder, IBitmapEncoder
@@ -96,10 +98,11 @@ namespace InteropBitmaps.Codecs
 
             var encoder = GetEncoder(fmt);
 
-            var ppp = new EncoderParameters(1);
-            ppp.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, (long)_Quality.Value);
-
-            tmp.Save(stream, encoder, ppp);
+            using (var ppp = new EncoderParameters(1))
+            {
+                ppp.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, (long)_Quality.Value);
+                tmp.Save(stream, encoder, ppp);
+            }
         }
 
         private static GDIIMAGEFORMAT GetFormatFromExtension(CodecFormat format)

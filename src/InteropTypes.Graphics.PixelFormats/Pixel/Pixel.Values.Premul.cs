@@ -6,7 +6,7 @@ using System.Text;
 using XYZ = System.Numerics.Vector3;
 using XYZA = System.Numerics.Vector4;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     partial class Pixel
     {

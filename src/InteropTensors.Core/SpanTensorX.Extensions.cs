@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Numerics.Tensors;
 using System.Text;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     public static partial class SpanTensor
     {
@@ -16,12 +16,7 @@ namespace InteropTensors
             SpanTensor.ApplySoftMax(tensor.Span);
         }
 
-        public static void ApplySoftMax(this SpanTensor1<System.Numerics.Vector2> tensor)
-        {
-            SpanTensor.ApplySoftMax(tensor.Span);
-        }
-
-
+        
         public static int IndexOf<T>(this SpanTensor1<T> tensor, T value)
         where T : unmanaged, IEquatable<T>
         {

@@ -8,7 +8,7 @@ using InteropTypes.Graphics.Drawing;
 
 using POINT = InteropTypes.Graphics.Drawing.Point2;
 
-namespace InteropVision
+namespace InteropTypes.Vision.Backends
 {
     partial class MarkersContext : IDrawingBrush<ICanvas2D>
     {

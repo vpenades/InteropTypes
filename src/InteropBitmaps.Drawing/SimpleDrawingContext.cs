@@ -2,8 +2,7 @@
 using System.Drawing;
 using System.Numerics;
 
-using InteropBitmaps;
-
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Drawing.Transforms;
 

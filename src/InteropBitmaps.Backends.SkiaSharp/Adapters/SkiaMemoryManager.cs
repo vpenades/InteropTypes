@@ -3,9 +3,11 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Adapters
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Adapters
 {
-    class SkiaMemoryManager : MemoryManagers.BitmapMemoryManager
+    class SkiaMemoryManager : Bitmaps.MemoryManagers.BitmapMemoryManager
     {
         #region lifecycle
 

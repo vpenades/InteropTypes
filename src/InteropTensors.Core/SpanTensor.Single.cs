@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using TENSOR2S = InteropTensors.SpanTensor2<float>;
-using TENSOR3S = InteropTensors.SpanTensor3<float>;
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics;
 
-using TENSOR2V3 = InteropTensors.SpanTensor2<System.Numerics.Vector3>;
-using TENSOR2V4 = InteropTensors.SpanTensor2<System.Numerics.Vector4>;
+using TENSOR2S = InteropTypes.Tensors.SpanTensor2<float>;
+using TENSOR3S = InteropTypes.Tensors.SpanTensor3<float>;
 
-using XFORM3 = InteropTensors.MultiplyAdd;
-using XFORM4 = InteropTensors.MultiplyAdd;
+using TENSOR2V3 = InteropTypes.Tensors.SpanTensor2<System.Numerics.Vector3>;
+using TENSOR2V4 = InteropTypes.Tensors.SpanTensor2<System.Numerics.Vector4>;
 
-namespace InteropTensors
+using XFORM3 = InteropTypes.Tensors.MultiplyAdd;
+using XFORM4 = InteropTypes.Tensors.MultiplyAdd;
+
+namespace InteropTypes.Tensors
 {
     public static partial class SpanTensor
     {
@@ -119,10 +122,10 @@ namespace InteropTensors
             }
         }        
 
-        public static void FitBitmap(TENSOR2V3 dst, InteropBitmaps.SpanBitmap src)
+        public static void FitBitmap(TENSOR2V3 dst, SpanBitmap src)
         {
             var dstData = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, byte>(dst.Span);
-            var dstBmp = new InteropBitmaps.SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], InteropBitmaps.Pixel.BGR96F.Format);
+            var dstBmp = new SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], Pixel.BGR96F.Format);
 
             if (src.PixelFormat.IsFloating)
             {
@@ -130,7 +133,7 @@ namespace InteropTensors
             }
             else
             {
-                InteropBitmaps.SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));             
+                SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));             
             }            
         }
 
@@ -360,7 +363,7 @@ namespace InteropTensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(SpanTensor2<float> src, SpanTensor2<Byte> dst, MultiplyAdd xform)
+        public static void Copy(TENSOR2S src, SpanTensor2<Byte> dst, MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
 

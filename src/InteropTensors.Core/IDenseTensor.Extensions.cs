@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropTensors
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Tensors
 {
     public static class NativeTensorExtensions
     {
@@ -49,7 +51,7 @@ namespace InteropTensors
         /// <param name="srcImage">The source image.</param>
         /// <param name="srcImageROI">The region of interest of the source image.</param>
         /// <param name="dstToSrcXform">A transform to transform from <paramref name="dstTensor"/> coordinates to <paramref name="srcImage"/> coordinates. </param>
-        public static void SetPixels(this IInputImageTensor dstTensor, int dstTensorSizeIdx, InteropBitmaps.PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
+        public static void SetPixels(this IInputImageTensor dstTensor, int dstTensorSizeIdx, PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
         {
             if (dstTensor == null) throw new ArgumentNullException(nameof(dstTensor));            
 
@@ -78,7 +80,7 @@ namespace InteropTensors
         /// <param name="srcImage">The source image.</param>
         /// <param name="srcImageROI">The region of interest of the source image.</param>
         /// <param name="dstToSrcXform">A transform to transform from <paramref name="dstTensor"/> coordinates to <paramref name="srcImage"/> coordinates. </param>
-        public static void SetPixels(this IDenseTensor dstTensor, int dstTensorSizeIdx, InteropBitmaps.PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
+        public static void SetPixels(this IDenseTensor dstTensor, int dstTensorSizeIdx, PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
         {
             if (!(dstTensor is IInputImageTensor dstImage)) throw new ArgumentException($"Does not implement {nameof(IInputImageTensor)}.", nameof(dstTensor));
             

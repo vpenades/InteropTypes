@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
 using Veldrid;
 
-namespace InteropWith
+namespace InteropTypes.Graphics.Backends
 {
     public class VeldridDrawingFactory : IDisposable
     {
@@ -122,7 +122,7 @@ namespace InteropWith
 
             if (textureSource is string filePath)
             {
-                var tmp = MemoryBitmap.Load(filePath, InteropBitmaps.Codecs.GDICodec.Default);
+                var tmp = MemoryBitmap.Load(filePath,Codecs.GDICodec.Default);
 
                 bmp = new MemoryBitmap(tmp.Width, tmp.Height, Pixel.RGBA32.Format);
                 bmp.SetPixels(0, 0, tmp);

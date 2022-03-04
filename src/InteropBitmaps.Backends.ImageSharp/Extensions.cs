@@ -1,10 +1,12 @@
 ﻿using System;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Backends
 {
     public static partial class ImageSharpToolkit
     {

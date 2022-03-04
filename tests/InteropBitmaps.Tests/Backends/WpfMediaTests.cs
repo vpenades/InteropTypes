@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
 
 using NUnit.Framework;
 
-namespace InteropBitmaps.Backends
+namespace InteropTypes.Graphics.Backends
 {
     [Category("Backends")]
     public class WPFTests

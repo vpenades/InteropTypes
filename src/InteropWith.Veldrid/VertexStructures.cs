@@ -6,7 +6,7 @@ using System.Text;
 
 using Veldrid;
 
-namespace InteropWith
+namespace InteropTypes.Graphics.Backends
 {
     [StructLayout(LayoutKind.Sequential)]
     struct Vertex2D

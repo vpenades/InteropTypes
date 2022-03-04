@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Diagnostics
+namespace InteropTypes.Graphics.Diagnostics
 {
     public class PixelFormatNotSupportedException : ArgumentException
     {

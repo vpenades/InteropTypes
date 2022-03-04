@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
+
+  <ItemGroup>
+    <PackageReference Include="SafeStbImageSharp" Version="2.22.4" />
+    <PackageReference Include="StbDxtSharp" Version="1.10.3" />    
+    <PackageReference Include="StbImageWriteSharp" Version="1.13.5" />    
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
+  </ItemGroup>
+
+</Project>

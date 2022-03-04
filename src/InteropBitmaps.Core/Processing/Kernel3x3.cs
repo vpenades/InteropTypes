@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
+    using Diagnostics;
+
     partial struct SpanBitmap<TPixel>
     {
         public void Apply(Processing.Kernel3x3<TPixel>.KernelEvaluator<TPixel> function)            

@@ -4,7 +4,7 @@ using System.Text;
 
 using System.Numerics.Tensors;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     partial class TensorExtensions
     {

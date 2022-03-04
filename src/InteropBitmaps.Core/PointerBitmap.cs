@@ -5,8 +5,10 @@ using System.Transactions;
 
 using SIZE = System.Drawing.Size;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
+    using Diagnostics;
+
     /// <summary>
     /// Represents a Bitmap backed by a native <see cref="IntPtr"/> memory pointer.
     /// </summary>

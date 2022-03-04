@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Backends;
+
 using NUnit.Framework;
 
 using SixLabors.ImageSharp.Drawing.Processing;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     [Category("Backends")]
     public class BasicTests

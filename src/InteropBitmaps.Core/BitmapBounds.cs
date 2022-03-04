@@ -8,7 +8,7 @@ using POINT = System.Drawing.Point;
 using RECTI = System.Drawing.Rectangle;
 using RECTS = System.Drawing.RectangleF;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     /// <summary>
     /// Defines yet another rectangle structure.

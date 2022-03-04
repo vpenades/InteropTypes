@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using STBREAD = StbImageSharp;
 using STBWRITE = StbImageWriteSharp;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     /// <see href="https://github.com/StbSharp/StbImageLib"/>
     static class _Implementation

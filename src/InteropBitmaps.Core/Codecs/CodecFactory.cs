@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps.Codecs
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Codecs
 {
+    using Diagnostics;
     public static class CodecFactory
     {
         private const string _CodecError000 = "incompatible codecs must not write to the stream.";

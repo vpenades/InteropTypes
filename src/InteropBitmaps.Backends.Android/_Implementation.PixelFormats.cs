@@ -4,8 +4,9 @@ using System.Linq;
 
 using ANDROIDGFX = Android.Graphics;
 using ANDROIDBITMAP = Android.Graphics.Bitmap;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics
 {
     partial class _Implementation
     {

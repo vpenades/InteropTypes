@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace InteropBitmaps.Adapters
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Adapters
 {
     public readonly struct GDIFactory
     {

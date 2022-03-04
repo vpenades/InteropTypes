@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropTensors
+namespace InteropTypes.Tensors
 {
     [System.Diagnostics.DebuggerDisplay("{XYZW}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]

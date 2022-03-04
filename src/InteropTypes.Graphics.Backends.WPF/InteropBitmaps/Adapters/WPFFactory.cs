@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Adapters
 {
@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Adapters
 
             if (!_Implementation.TryGetExactPixelFormat(binfo.PixelFormat, out _Exact))
             {
-                throw new InteropBitmaps.Diagnostics.PixelFormatNotSupportedException(binfo.PixelFormat, nameof(binfo));
+                throw new Diagnostics.PixelFormatNotSupportedException(binfo.PixelFormat, nameof(binfo));
             }            
         }
 

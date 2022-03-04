@@ -5,7 +5,7 @@ using System.Text;
 
 using Veldrid;
 
-namespace InteropWith
+namespace InteropTypes.Graphics.Backends
 {
     public interface IEffectInput
     {

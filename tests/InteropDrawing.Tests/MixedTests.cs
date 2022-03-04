@@ -6,14 +6,13 @@ using System.Text;
 
 using NUnit.Framework;
 
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-using COLOR = System.Drawing.Color;
-using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Drawing.Transforms;
 using InteropTypes.Graphics.Backends;
-using InteropTypes.Graphics.Backends.WPF;
 
-namespace InteropDrawing
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+using COLOR = System.Drawing.Color;
+
+namespace InteropTypes.Graphics.Drawing
 {
     [TestFixture]
     [Category("Schematic3D")]

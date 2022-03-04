@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     /// <summary>
     /// Represents a producer-consumer interlocked exchange bitmap.

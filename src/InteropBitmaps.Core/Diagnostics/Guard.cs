@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace InteropBitmaps
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics.Diagnostics
 {
 	internal static class Guard
 	{

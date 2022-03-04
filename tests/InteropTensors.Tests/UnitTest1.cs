@@ -3,7 +3,7 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-namespace InteropTensors.Tests
+namespace InteropTypes.Tensors
 {
     [Category("Interop Tensors")]
     public class Tests

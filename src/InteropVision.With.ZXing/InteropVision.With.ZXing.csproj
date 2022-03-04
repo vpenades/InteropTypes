@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropVision.Core\InteropVision.Core.csproj" />
+    <ProjectReference Include="..\InteropVision.Core\InteropTypes.Vision.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

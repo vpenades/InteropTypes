@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
-using InteropBitmaps;
+using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {    
     /// <summary>
     /// Combines a broad and a narrow detector.
