@@ -5,7 +5,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropVision.With
+namespace InteropTypes.Vision.Backends
 {
     partial class ZXingCode
     {

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using INTEROPFMT = InteropTypes.Graphics.PixelFormat;
+using INTEROPFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
+using INTEROPPIX = InteropTypes.Graphics.Bitmaps.Pixel;
+
 using SKIACOLOR = SkiaSharp.SKColorType;
 using SKIAALPHA = SkiaSharp.SKAlphaType;
 
@@ -14,24 +16,24 @@ namespace InteropTypes.Graphics
         {
             switch (src)
             {
-                case Pixel.Alpha8.Code: dstColor = SKIACOLOR.Alpha8; dstAlpha = SKIAALPHA.Opaque; return true;
-                case Pixel.Luminance8.Code: dstColor = SKIACOLOR.Gray8; dstAlpha = SKIAALPHA.Opaque; return true;
+                case INTEROPPIX.Alpha8.Code: dstColor = SKIACOLOR.Alpha8; dstAlpha = SKIAALPHA.Opaque; return true;
+                case INTEROPPIX.Luminance8.Code: dstColor = SKIACOLOR.Gray8; dstAlpha = SKIAALPHA.Opaque; return true;
 
-                case Pixel.BGR565.Code: dstColor = SKIACOLOR.Rgb565; dstAlpha = SKIAALPHA.Opaque; return true;
+                case INTEROPPIX.BGR565.Code: dstColor = SKIACOLOR.Rgb565; dstAlpha = SKIAALPHA.Opaque; return true;
 
-                case Pixel.RGBA32.Code: dstColor = SKIACOLOR.Rgba8888; dstAlpha = SKIAALPHA.Unpremul; return true;
-                case Pixel.BGRA32.Code: dstColor = SKIACOLOR.Bgra8888; dstAlpha = SKIAALPHA.Unpremul; return true;
+                case INTEROPPIX.RGBA32.Code: dstColor = SKIACOLOR.Rgba8888; dstAlpha = SKIAALPHA.Unpremul; return true;
+                case INTEROPPIX.BGRA32.Code: dstColor = SKIACOLOR.Bgra8888; dstAlpha = SKIAALPHA.Unpremul; return true;
 
-                case Pixel.RGBA128F.Code: dstColor = SKIACOLOR.RgbaF32; dstAlpha = SKIAALPHA.Unpremul; return true;
+                case INTEROPPIX.RGBA128F.Code: dstColor = SKIACOLOR.RgbaF32; dstAlpha = SKIAALPHA.Unpremul; return true;
             }
 
             if (allowCompatibleFormats)
             {
                 switch (src)
                 {
-                    case Pixel.BGR24.Code: dstColor = SKIACOLOR.Rgb888x; dstAlpha = SKIAALPHA.Opaque; return true;
-                    case Pixel.RGB24.Code: dstColor = SKIACOLOR.Rgb888x; dstAlpha = SKIAALPHA.Opaque; return true;
-                    case Pixel.Luminance16.Code: dstColor = SKIACOLOR.Gray8; dstAlpha = SKIAALPHA.Opaque; return true;
+                    case INTEROPPIX.BGR24.Code: dstColor = SKIACOLOR.Rgb888x; dstAlpha = SKIAALPHA.Opaque; return true;
+                    case INTEROPPIX.RGB24.Code: dstColor = SKIACOLOR.Rgb888x; dstAlpha = SKIAALPHA.Opaque; return true;
+                    case INTEROPPIX.Luminance16.Code: dstColor = SKIACOLOR.Gray8; dstAlpha = SKIAALPHA.Opaque; return true;
                 }
             }
 
@@ -63,20 +65,20 @@ namespace InteropTypes.Graphics
         {
             switch (color)
             {
-                case SKIACOLOR.Alpha8: return Pixel.Alpha8.Format;
-                case SKIACOLOR.Gray8: return Pixel.Luminance8.Format;
-                case SKIACOLOR.Rgba8888: return Pixel.RGBA32.Format;
-                case SKIACOLOR.Rgb888x: return Pixel.RGBA32.Format;
-                case SKIACOLOR.Bgra8888: return Pixel.BGRA32.Format;
+                case SKIACOLOR.Alpha8: return INTEROPPIX.Alpha8.Format;
+                case SKIACOLOR.Gray8: return INTEROPPIX.Luminance8.Format;
+                case SKIACOLOR.Rgba8888: return INTEROPPIX.RGBA32.Format;
+                case SKIACOLOR.Rgb888x: return INTEROPPIX.RGBA32.Format;
+                case SKIACOLOR.Bgra8888: return INTEROPPIX.BGRA32.Format;
             }
 
             if (allowCompatibleFormats)
             {
                 switch (color)
                 {
-                    case SKIACOLOR.Argb4444: return Pixel.BGRA4444.Format;
-                    case SKIACOLOR.Rgb565: return Pixel.BGR565.Format;
-                    case SKIACOLOR.Rgb888x: return Pixel.RGB24.Format;
+                    case SKIACOLOR.Argb4444: return INTEROPPIX.BGRA4444.Format;
+                    case SKIACOLOR.Rgb565: return INTEROPPIX.BGR565.Format;
+                    case SKIACOLOR.Rgb888x: return INTEROPPIX.RGB24.Format;
                 }
             }
 
@@ -87,20 +89,20 @@ namespace InteropTypes.Graphics
         {
             switch (color)
             {
-                case SKIACOLOR.Alpha8: return Pixel.Alpha8.Format;
-                case SKIACOLOR.Gray8: return Pixel.Luminance8.Format;
-                case SKIACOLOR.Rgba8888: return Pixel.RGBP32.Format;
-                case SKIACOLOR.Rgb888x: return Pixel.RGBP32.Format;
-                case SKIACOLOR.Bgra8888: return Pixel.BGRP32.Format;
+                case SKIACOLOR.Alpha8: return INTEROPPIX.Alpha8.Format;
+                case SKIACOLOR.Gray8: return INTEROPPIX.Luminance8.Format;
+                case SKIACOLOR.Rgba8888: return INTEROPPIX.RGBP32.Format;
+                case SKIACOLOR.Rgb888x: return INTEROPPIX.RGBP32.Format;
+                case SKIACOLOR.Bgra8888: return INTEROPPIX.BGRP32.Format;
             }
 
             if (allowCompatibleFormats)
             {
                 switch (color)
                 {                    
-                    case SKIACOLOR.Argb4444: return Pixel.RGBP32.Format;
-                    case SKIACOLOR.Rgb565: return Pixel.RGBP32.Format;
-                    case SKIACOLOR.Rgb888x: return Pixel.RGBP32.Format;
+                    case SKIACOLOR.Argb4444: return INTEROPPIX.RGBP32.Format;
+                    case SKIACOLOR.Rgb565: return INTEROPPIX.RGBP32.Format;
+                    case SKIACOLOR.Rgb888x: return INTEROPPIX.RGBP32.Format;
                 }
             }
 

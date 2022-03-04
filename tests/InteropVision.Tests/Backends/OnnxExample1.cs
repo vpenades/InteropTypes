@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using InteropTensors;
-using InteropBitmaps;
+using InteropTypes.Tensors;
+using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Graphics.Codecs;
 
 using NUnit.Framework;
 
-namespace InteropVision.Backends
+namespace InteropTypes.Vision.Backends
 {
     public class OnnxExample1
     {
         [SetUp]
         public void Setup()
         {
-            InteropWith.OnnxModel.DeviceID = -1;
+            OnnxModel.DeviceID = -1;
         }        
 
         [TestCase("Resources\\dog.jpeg")]
@@ -25,9 +26,9 @@ namespace InteropVision.Backends
         {
             // https://onnxruntime.ai/docs/tutorials/resnet50_csharp.html            
 
-            var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
+            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
 
-            var model = InteropWith.OnnxModel.FromFile("Models\\resnet50-v2-7.onnx");
+            var model = OnnxModel.FromFile("Models\\resnet50-v2-7.onnx");
 
             // image normalization
             // https://github.com/onnx/models/tree/master/vision/classification/resnet#preprocessing            
@@ -79,9 +80,9 @@ namespace InteropVision.Backends
         {
             // https://github.com/linxiaohui/mtcnn-opencv/tree/main/mtcnn_cv2
 
-            var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
+            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
 
-            var pmodel = InteropWith.OnnxModel.FromFile("Models\\MCNN\\pnet.onnx");
+            var pmodel = OnnxModel.FromFile("Models\\MCNN\\pnet.onnx");
             var imagePreprocessor = new ImageProcessor<Pixel.RGB96F>();
 
             using (var session = pmodel.CreateSession())
@@ -183,9 +184,9 @@ namespace InteropVision.Backends
         // https://github.com/ShiqiYu/libfacedetection
         // https://github.com/Kazuhito00/YuNet-ONNX-TFLite-Sample/blob/main/yunet/yunet_onnx.py
 
-            var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
+            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
 
-            var pmodel = InteropWith.OnnxModel.FromFile("Models\\face_detection_yunet_2021sep.onnx");
+            var pmodel = OnnxModel.FromFile("Models\\face_detection_yunet_2021sep.onnx");
             var imagePreprocessor = new ImageProcessor<Pixel.RGB96F>();
 
             using (var session = pmodel.CreateSession())
@@ -239,9 +240,9 @@ namespace InteropVision.Backends
             // https://github.com/openvinotoolkit/open_model_zoo/tree/2021.4.1/models/public/mtcnn
             
 
-            var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
+            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
 
-            var model = InteropWith.OnnxModel.FromFile("Models\\arcfaceresnet100-8.onnx");            
+            var model = OnnxModel.FromFile("Models\\arcfaceresnet100-8.onnx");            
 
             var imagePreprocessor = new ImageProcessor<Pixel.RGB96F>();            
 
@@ -280,9 +281,9 @@ namespace InteropVision.Backends
         {
             // https://onnxruntime.ai/docs/tutorials/resnet50_csharp.html
 
-            var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
+            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
 
-            using var modelFactory = new MultiresModels(InteropWith.OnnxModel.FromFile);
+            using var modelFactory = new MultiresModels(OnnxModel.FromFile);
             modelFactory.Register(16, 16, "Models\\realesrgan_16x16.onnx");
             modelFactory.Register(32, 32, "Models\\realesrgan_32x32.onnx");
             modelFactory.Register(64, 64, "Models\\realesrgan_64x64.onnx");
@@ -319,7 +320,7 @@ namespace InteropVision.Backends
 
                 var path = TestContext.CurrentContext.GetTestResultPath(imagePath);
                 System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
-                resultBitmap.Save(path, InteropBitmaps.Codecs.GDICodec.Default);
+                resultBitmap.Save(path, GDICodec.Default);
                 TestContext.AddTestAttachment(path);
             }
         }
@@ -330,7 +331,7 @@ namespace InteropVision.Backends
         [TestCase("Resources\\yukikaze.jpg")]
         public void TestAnime2Sketch(string imagePath)
         {
-            var srcImage = MemoryBitmap.Load(imagePath, InteropBitmaps.Codecs.GDICodec.Default);
+            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
             MemoryBitmap<Pixel.Luminance8> dstImage = default;
 
             using(var filter = new Anime2SketchFilter())
@@ -340,7 +341,7 @@ namespace InteropVision.Backends
 
             var path = TestContext.CurrentContext.GetTestResultPath(imagePath);
             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
-            dstImage.Save(path, InteropBitmaps.Codecs.GDICodec.Default);
+            dstImage.Save(path, GDICodec.Default);
             TestContext.AddTestAttachment(path);
         }
 
@@ -387,7 +388,7 @@ namespace InteropVision.Backends
     {
         public Anime2SketchFilter()
         {
-            var model = InteropWith.OnnxModel.FromFile("Models\\anime2sketch_512x512.onnx");
+            var model = OnnxModel.FromFile("Models\\anime2sketch_512x512.onnx");
             
             var modelOptions = (model as IServiceProvider).GetService(typeof(Microsoft.ML.OnnxRuntime.SessionOptions)) as Microsoft.ML.OnnxRuntime.SessionOptions;
             modelOptions.GraphOptimizationLevel = Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_DISABLE_ALL;

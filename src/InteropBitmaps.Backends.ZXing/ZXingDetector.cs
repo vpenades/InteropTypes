@@ -4,7 +4,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Vision
+namespace InteropTypes.Graphics.Backends
 {
     public class ZXingDetector
     {

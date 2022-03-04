@@ -1,4 +1,4 @@
-﻿namespace InteropVision.Backends
+﻿namespace InteropTypes.Vision.Backends
 {
     public static class Labels
     {

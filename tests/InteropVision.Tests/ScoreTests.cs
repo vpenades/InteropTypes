@@ -4,7 +4,7 @@ using System.Text;
 
 using NUnit.Framework;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public class ScoreTests
     {

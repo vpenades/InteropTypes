@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.PixelFormats.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.Bitmaps.PixelFormats.csproj" />
   </ItemGroup>
 
 </Project>

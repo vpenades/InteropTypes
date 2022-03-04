@@ -6,7 +6,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropVision.With
+namespace InteropTypes.Vision.Backends
 {
     partial class ZXingCode : IDrawingBrush<ICanvas2D>
     {

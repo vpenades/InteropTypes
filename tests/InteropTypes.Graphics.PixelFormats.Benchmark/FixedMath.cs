@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using BenchmarkDotNet.Attributes;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     // https://github.com/dotnet/BenchmarkDotNet/issues/257
     // [ClrJob, CoreJob, MonoJob]

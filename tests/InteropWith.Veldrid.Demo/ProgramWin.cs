@@ -41,7 +41,7 @@ namespace VeldridDemo
                 Y = 100,
                 WindowWidth = 960,
                 WindowHeight = 540,
-                WindowTitle = "InteropDrawing Demo"
+                WindowTitle = "Drawing Demo"
             };
 
             window = VeldridStartup.CreateWindow(ref windowCI);

@@ -2,7 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
   </PropertyGroup>
+
+  <Import Project="..\Package.props" />
+  <Import Project="..\Version.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\InteropVision.Core\InteropTypes.Vision.Core.csproj" />

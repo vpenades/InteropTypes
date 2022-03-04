@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes.Graphics.Bitmaps
 {
 
     partial class Pixel    

@@ -41,11 +41,11 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropTypes.Graphics.Backends.FFmpeg.AutoGen.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Video.Mjpeg.csproj" />
-    <ProjectReference Include="..\..\src\InteropVision.With.ZXing\InteropVision.With.ZXing.csproj" />   
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Codecs.Mjpeg.csproj" />   
     
     <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
-    <ProjectReference Include="..\..\src\InteropVision.Core\InteropTypes.Vision.Core.csproj" />    
+    <ProjectReference Include="..\..\src\InteropVision.Core\InteropTypes.Vision.Core.csproj" />
+    <ProjectReference Include="..\..\src\InteropVision.With.ZXing\InteropTypes.Vision.Backends.ZXing.csproj" />    
     <ProjectReference Include="..\..\src\InteropWith.OnnxRuntime\InteropTypes.Vision.Backends.OnnxRuntime.csproj" />
 
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />

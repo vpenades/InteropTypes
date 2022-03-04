@@ -16,7 +16,7 @@ using SixLabors.ImageSharp.Processing;
 
 using POINTF = SixLabors.ImageSharp.PointF;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     static class TestUtils
     {
@@ -100,22 +100,22 @@ namespace InteropTypes.Graphics
             }
 
             var f1 = _injectExt(filePath, "WPF");
-            bmp.Save(f1, InteropTypes.Graphics.Codecs.WPFCodec.Default); TestContext.AddTestAttachment(f1);
+            bmp.Save(f1, WPFCodec.Default); TestContext.AddTestAttachment(f1);
 
             var f2 = _injectExt(filePath, "GDI");
-            bmp.Save(f2, Codecs.GDICodec.Default); TestContext.AddTestAttachment(f2);
+            bmp.Save(f2, GDICodec.Default); TestContext.AddTestAttachment(f2);
 
             var f3 = _injectExt(filePath, "ImageSharp");
-            bmp.Save(f3, Codecs.ImageSharpCodec.Default); TestContext.AddTestAttachment(f3);
+            bmp.Save(f3, ImageSharpCodec.Default); TestContext.AddTestAttachment(f3);
 
             var f4 = _injectExt(filePath, "SkiaSharp");
-            bmp.Save(f4, Codecs.SkiaCodec.Default); TestContext.AddTestAttachment(f4);
+            bmp.Save(f4, SkiaCodec.Default); TestContext.AddTestAttachment(f4);
 
             var f5 = _injectExt(filePath, "OpenCvSharp");
-            bmp.Save(f5, Codecs.OpenCvCodec.Default); TestContext.AddTestAttachment(f5);
+            bmp.Save(f5, OpenCvCodec.Default); TestContext.AddTestAttachment(f5);
 
             var f6 = _injectExt(filePath, "STB");
-            bmp.Save(f6, Codecs.STBCodec.WithQuality(80)); TestContext.AddTestAttachment(f6);
+            bmp.Save(f6, STBCodec.WithQuality(80)); TestContext.AddTestAttachment(f6);
 
             // TODO: it should compare saved files against bmp
         }
@@ -134,7 +134,7 @@ namespace InteropTypes.Graphics
         public static string AttachToCurrentTest(this IEnumerable<PointerBitmap> frames, string videoPath)
         {
             videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
-            Codecs.FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
+            FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
             TestContext.AddTestAttachment(videoPath);
 
             return videoPath;
@@ -144,7 +144,7 @@ namespace InteropTypes.Graphics
         public static void AttachToCurrentTest(this IEnumerable<(PointerBitmap bmp, long pts)> frames, string videoPath)
         {
             videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
-            Codecs.FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
+            FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
             TestContext.AddTestAttachment(videoPath);
         }
 
@@ -152,7 +152,7 @@ namespace InteropTypes.Graphics
         {
             videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);            
 
-            InteropTypes.Video.VideoEncoderFactory.SaveToAVI(frames, videoPath, (decimal)frameRate, new Codecs.GDICodec(50));
+            InteropTypes.Codecs.VideoEncoderFactory.SaveToAVI(frames, videoPath, (decimal)frameRate, new GDICodec(50));
 
             TestContext.AddTestAttachment(videoPath);
 

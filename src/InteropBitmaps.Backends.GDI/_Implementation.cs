@@ -7,7 +7,7 @@ using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Backends;
 
 using GDIFMT = System.Drawing.Imaging.PixelFormat;
-using INTEROPFMT = InteropTypes.Graphics.PixelFormat;
+using INTEROPFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
 
 using GDIICON = System.Drawing.Icon;
 using GDIIMAGE = System.Drawing.Image;

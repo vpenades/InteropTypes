@@ -6,9 +6,8 @@ using SharpAvi.Output;
 
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Codecs;
-using InteropTypes.Graphics;
 
-namespace InteropTypes.Video
+namespace InteropTypes.Codecs
 {    
     public static class VideoEncoderFactory
     {

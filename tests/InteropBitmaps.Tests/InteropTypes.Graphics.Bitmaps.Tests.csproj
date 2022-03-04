@@ -39,10 +39,10 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.VideoLAN\InteropTypes.Graphics.Backends.VideoLAN.csproj" />    
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ZXing\InteropTypes.Vision.Backends.ZXing.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ZXing\InteropTypes.Graphics.Backends.ZXing.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropTypes.Graphics.Backends.STB.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Video.Mjpeg.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Codecs.Mjpeg.csproj" />
   </ItemGroup>  
 
 </Project>

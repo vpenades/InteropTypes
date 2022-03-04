@@ -4,9 +4,7 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps.Processing
 {
-    using TRANSFORM = System.Numerics.Matrix3x2;
-
-    
+    using TRANSFORM = System.Numerics.Matrix3x2;    
 
     static class _BitmapTransformImplementation
     {

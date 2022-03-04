@@ -4,7 +4,7 @@ using System.Linq;
 
 using BenchmarkDotNet.Running;
 
-namespace InteropBitmaps
+namespace InteropTypes.Graphics.Bitmaps
 {
     public class Program
     {

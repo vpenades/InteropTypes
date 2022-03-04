@@ -2,8 +2,8 @@
 
 using ShaderGen;
 
-[assembly: ShaderSet("SpriteShaderSolid", "InteropWith.VeldridShaders.SpriteShader.VS", "InteropWith.VeldridShaders.SpriteShader.FS_Solid")]
-[assembly: ShaderSet("SpriteShaderTextured", "InteropWith.VeldridShaders.SpriteShader.VS", "InteropWith.VeldridShaders.SpriteShader.FS_Textured")]
+[assembly: ShaderSet("SpriteShaderSolid", "InteropTypes.Graphics.Backends.VeldridShaders.SpriteShader.VS", "InteropTypes.Graphics.Backends.VeldridShaders.SpriteShader.FS_Solid")]
+[assembly: ShaderSet("SpriteShaderTextured", "InteropTypes.Graphics.Backends.VeldridShaders.SpriteShader.VS", "InteropTypes.Graphics.Backends.VeldridShaders.SpriteShader.FS_Textured")]
 
 namespace InteropTypes.Graphics.Backends.VeldridShaders
 {

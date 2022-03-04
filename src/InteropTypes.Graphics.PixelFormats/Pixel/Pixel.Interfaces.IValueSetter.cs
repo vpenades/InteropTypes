@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Numerics;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes.Graphics.Bitmaps
 {
 
     partial class Pixel    

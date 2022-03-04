@@ -2,7 +2,7 @@
 
 using ShaderGen;
 
-[assembly: ShaderSet("SolidShader", "InteropWith.VeldridShaders.SolidShader.VS", "InteropWith.VeldridShaders.SolidShader.FS_Solid")]
+[assembly: ShaderSet("SolidShader", "InteropTypes.Graphics.Backends.VeldridShaders.SolidShader.VS", "InteropTypes.Graphics.Backends.VeldridShaders.SolidShader.FS_Solid")]
 
 namespace InteropTypes.Graphics.Backends.VeldridShaders
 {

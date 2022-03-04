@@ -5,7 +5,7 @@ using System.Linq;
 
 using InteropTypes.Graphics.Drawing;
 
-namespace InteropVision.With
+namespace InteropTypes.Vision.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{ToString()}")]
     public partial class ZXingCode

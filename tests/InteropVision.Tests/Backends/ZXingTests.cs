@@ -5,12 +5,12 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using InteropBitmaps;
-
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Codecs;
 
-namespace InteropVision.Backends
+namespace InteropTypes.Vision.Backends
 {
     public class ZXingTests
     {
@@ -29,17 +29,17 @@ namespace InteropVision.Backends
 
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var image = MemoryBitmap.Load(filePath, InteropBitmaps.Codecs.STBCodec.Default);
+            var image = MemoryBitmap.Load(filePath, STBCodec.Default);
 
             // detect code:            
 
-            var result = new With.ZXingCode();
+            var result = new ZXingCode();
 
-            using var detector = new With.ZXingCode.Detector();
+            using var detector = new ZXingCode.Detector();
                 
             detector.Inference(result, image, new System.Drawing.Rectangle(20,20,1000,1000) );
 
-            var code = result.Results.First();
+            var code = result.Results[0];
 
             if (string.IsNullOrWhiteSpace(expected)) { Assert.Null(code); return; }
 

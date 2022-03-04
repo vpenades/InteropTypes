@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;

@@ -6,8 +6,8 @@ using System.Text;
 
 using Veldrid;
 
-using INTEROPPIXFMT = InteropTypes.Graphics.PixelFormat;
-using INTEROPPIXEL = InteropTypes.Graphics.Pixel;
+using INTEROPPIXFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
+using INTEROPPIXEL = InteropTypes.Graphics.Bitmaps.Pixel;
 
 using VELDRIDPIXFMT = Veldrid.PixelFormat;
 

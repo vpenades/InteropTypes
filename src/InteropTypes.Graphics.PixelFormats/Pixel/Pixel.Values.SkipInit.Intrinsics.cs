@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes.Graphics.Bitmaps
 {
     // https://github.com/dotnet/runtime/issues/29905
     // https://github.com/dotnet/runtime/issues/29905#issuecomment-537304675

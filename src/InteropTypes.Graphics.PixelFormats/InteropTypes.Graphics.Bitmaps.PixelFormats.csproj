@@ -9,11 +9,7 @@
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
-
-  <PropertyGroup>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+  <Import Project="..\SourceLink.props" />  
 
   <PropertyGroup>
     <Description>
@@ -36,31 +32,13 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <InternalsVisibleTo Include="InteropTypes.Graphics.PixelFormats.Tests" />
-    <InternalsVisibleTo Include="InteropTypes.Graphics.PixelFormats.Benchmark" />
+    <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.PixelFormats.Tests" />
+    <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.PixelFormats.Benchmark" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pixel\Pixel.Interfaces.Composition.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.Composition.tt</DependentUpon>
-    </None>
-    <None Include="Pixel\Pixel.Interfaces.IAnyValue.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IAnyValue.tt</DependentUpon>
-    </None>
-    <None Include="Pixel\Pixel.Interfaces.IValueSetter.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IValueSetter.tt</DependentUpon>
-    </None>
   </ItemGroup>  
 
   <ItemGroup>

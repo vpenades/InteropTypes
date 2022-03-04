@@ -47,7 +47,7 @@
     
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj" />
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Video.Mjpeg.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Codecs.Mjpeg.csproj" />
 
     <ProjectReference Include="..\..\src\InteropWith.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj" />
   </ItemGroup>

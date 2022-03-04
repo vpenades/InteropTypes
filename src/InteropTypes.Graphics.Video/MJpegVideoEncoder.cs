@@ -10,9 +10,8 @@ using InteropTypes.Graphics.Bitmaps;
 
 using SharpAvi;
 using SharpAvi.Codecs;
-using InteropTypes.Graphics;
 
-namespace InteropTypes.Video
+namespace InteropTypes.Codecs
 {    
     sealed class MJpegVideoEncoder : IVideoEncoder
     {

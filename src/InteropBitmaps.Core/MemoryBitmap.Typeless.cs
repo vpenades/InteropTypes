@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 
 using SIZE = System.Drawing.Size;
-using POINT = System.Drawing.Point;
 
 namespace InteropTypes.Graphics.Bitmaps
 {

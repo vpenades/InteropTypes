@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using INTEROPFMT = InteropTypes.Graphics.PixelFormat;
+using INTEROPFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
 using SKIACOLOR = SkiaSharp.SKColorType;
 using SKIAALPHA = SkiaSharp.SKAlphaType;
 using InteropTypes.Graphics.Bitmaps;

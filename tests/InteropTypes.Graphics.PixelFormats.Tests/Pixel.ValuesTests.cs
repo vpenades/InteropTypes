@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes.Graphics.Bitmaps
 {
     internal class PixelValuesTests
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Veldrid;
@@ -29,7 +30,10 @@ namespace InteropTypes.Graphics.Backends
 
             var names = typeof(VeldridHelper).Assembly.GetManifestResourceNames();
 
-            name = "InteropWith.Veldrid.ShadersGen." + name;
+            name = "InteropTypes.Graphics.Backends.Veldrid.ShadersGen." + name;
+
+            if (names.All(item => item != name)) throw new InvalidOperationException($"{name} not found.");
+
 
             var info = typeof(VeldridHelper).Assembly.GetManifestResourceInfo(name);
 

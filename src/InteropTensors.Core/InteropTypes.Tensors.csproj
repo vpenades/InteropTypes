@@ -5,11 +5,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
+  </PropertyGroup>  
 
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
@@ -20,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Numerics.Tensors" Version="5.0.0-preview.8.20407.11" />
+    <PackageReference Include="System.Numerics.Tensors" Version="7.0.0-preview.1.22076.8" />
   </ItemGroup>
 
   <ItemGroup>
