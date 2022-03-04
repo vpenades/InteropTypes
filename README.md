@@ -1,8 +1,8 @@
 ## InteropTypes
 
-A collection of loosely coupled types that can be used to translate data between libraries.
+This repository contains an heterogeneous collection of loosely coupled libraries designed to interoperate with third party libraries.
 
-## InteropBitmaps
+## InteropTypes.Graphics.Bitmaps
 
 An experimental, proof of concept, low level library to exchange bitmaps
 between imaging libraries.
@@ -18,7 +18,7 @@ GPU textures, or client bitmaps like GDI or WIC,
 that typically use unmanaged memory to store bitmaps, and forces
 developers to write cumbersome and sometimes dangerous code.
 
-Exchanging bitmaps between libraries is a challenge, and __InteropBitmaps__
+Exchanging bitmaps between libraries is a challenge, and __InteropTypes.Graphics.Bitmaps__
 is an attempt to solve this issue by providing a number of low level
 bitmap types that can be instantiated over existing memory:
 
@@ -31,14 +31,14 @@ bitmap types that can be instantiated over existing memory:
 These types simply wrap previously existing memory, and provide mechanisms
 to access bitmap data in a safer way.
 
-## InteropDrawing
+## InteropTypes.Graphics.Drawing
 
 Provides a set of common interfaces for drawing basic vector shapes, both in 2D and 3D
 
 The purpose of this library is to allow writing _once_, code that draws vector shapes
 but can draw to canvas of different APIs and SDKs
 
-### Backends
+### InteropTypes.Graphics.Backends
 
 In order to interoperate with commonly used libraries, a number of
 backend extensions are provided.
@@ -64,7 +64,7 @@ libraries:
 Other libraries I am considering are: ImageMagick, SharpDX,
 and some sensor libraries like Kinectv2, Orbbec and Nuitrack.
 
-### InteropTensors
+### InteropTypes.Tensors
 
 A highly experimental library to deal with in memory dense tensors.
 

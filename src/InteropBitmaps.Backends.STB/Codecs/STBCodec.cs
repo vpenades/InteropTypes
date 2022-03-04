@@ -7,7 +7,7 @@ using STBREAD = StbImageSharp;
 using STBWRITE = StbImageWriteSharp;
 using STBDIRECTX = StbDxtSharp;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     public class STBCodec : IBitmapDecoder , IBitmapEncoder
     {

@@ -16,7 +16,7 @@ using WIC_READABLE = System.Windows.Media.Imaging.BitmapSource;
 using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {    
     static partial class _Implementation
     {

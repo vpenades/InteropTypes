@@ -6,7 +6,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("SkiaSharp Codec")]
     public class SkiaCodec: IBitmapDecoder, IBitmapEncoder

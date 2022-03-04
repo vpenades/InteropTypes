@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using InteropTypes.Tensors;
 using InteropTypes.Graphics.Bitmaps;
-using InteropTypes.Graphics.Codecs;
+using InteropTypes.Codecs;
 
 using NUnit.Framework;
 

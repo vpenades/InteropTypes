@@ -7,12 +7,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using LibVLCSharp.Shared;
-using System.Collections.Generic;
+
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     // https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/PreviewThumbnailExtractor
 

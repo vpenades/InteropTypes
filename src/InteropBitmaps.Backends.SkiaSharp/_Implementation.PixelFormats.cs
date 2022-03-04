@@ -8,7 +8,7 @@ using INTEROPPIX = InteropTypes.Graphics.Bitmaps.Pixel;
 using SKIACOLOR = SkiaSharp.SKColorType;
 using SKIAALPHA = SkiaSharp.SKAlphaType;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     partial class _Implementation
     {

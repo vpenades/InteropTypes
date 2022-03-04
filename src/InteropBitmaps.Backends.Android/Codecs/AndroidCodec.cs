@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
     public sealed class AndroidBitmapCodec : IBitmapDecoder, IBitmapEncoder

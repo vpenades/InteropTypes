@@ -5,7 +5,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Diagnostics
+namespace InteropTypes.Diagnostics
 {
 	internal static class Guard
 	{

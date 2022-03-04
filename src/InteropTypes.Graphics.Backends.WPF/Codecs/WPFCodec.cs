@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("WPF(WIC) Codec")]
     public sealed class WPFCodec : IBitmapDecoder, IBitmapEncoder

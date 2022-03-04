@@ -4,7 +4,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     using Diagnostics;
     public static class CodecFactory

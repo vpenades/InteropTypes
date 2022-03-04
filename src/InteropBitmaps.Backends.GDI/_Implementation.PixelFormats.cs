@@ -10,7 +10,7 @@ using GDIPTR = System.Drawing.Imaging.BitmapData;
 
 using INTEROPFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     static partial class _Implementation
     {

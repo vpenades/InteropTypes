@@ -6,7 +6,7 @@ using System.Text;
 
 using FFmpeg.AutoGen;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     static class FFmpegHelper
     {

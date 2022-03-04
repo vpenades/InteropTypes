@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InteropTypes.Graphics.Bitmaps
+using InteropTypes.Graphics.Bitmaps;
+
+namespace InteropTypes.Graphics
 {
     static class _Implementation
     {

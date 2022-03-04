@@ -7,7 +7,7 @@ using SKIACOLOR = SkiaSharp.SKColorType;
 using SKIAALPHA = SkiaSharp.SKAlphaType;
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     static partial class _Implementation
     {

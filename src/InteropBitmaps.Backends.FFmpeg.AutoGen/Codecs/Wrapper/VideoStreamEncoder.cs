@@ -8,7 +8,7 @@ using FFmpeg.AutoGen;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     class VideoStreamEncoder : IDisposable
     {

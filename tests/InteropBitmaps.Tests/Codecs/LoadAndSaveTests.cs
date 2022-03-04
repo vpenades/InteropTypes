@@ -9,7 +9,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 using NUnit.Framework;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     [Category("Codecs")]
     public class LoadAndSaveTests

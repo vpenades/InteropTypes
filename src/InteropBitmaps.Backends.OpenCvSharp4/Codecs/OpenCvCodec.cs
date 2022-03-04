@@ -6,7 +6,7 @@ using System.Text;
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Backends;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("OpenCvSharp Codec")]
     public sealed class OpenCvCodec : IBitmapDecoder, IBitmapEncoder

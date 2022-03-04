@@ -5,7 +5,6 @@ using System.Text;
 using SharpAvi.Output;
 
 using InteropTypes.Graphics.Bitmaps;
-using InteropTypes.Graphics.Codecs;
 
 namespace InteropTypes.Codecs
 {    

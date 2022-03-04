@@ -13,7 +13,7 @@ using WIC_FORMATS = System.Windows.Media.PixelFormats;
 using INTEROPFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
 using INTEROPPIX = InteropTypes.Graphics.Bitmaps.Pixel;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     partial class _Implementation
     {

@@ -8,7 +8,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 using GDIIMAGEFORMAT = System.Drawing.Imaging.ImageFormat;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
     public sealed class GDICodec : IBitmapDecoder, IBitmapEncoder

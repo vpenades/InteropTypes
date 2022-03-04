@@ -7,7 +7,7 @@ using InteropTypes.Graphics.Bitmaps;
 using STBREAD = StbImageSharp;
 using STBWRITE = StbImageWriteSharp;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     /// <see href="https://github.com/StbSharp/StbImageLib"/>
     static class _Implementation

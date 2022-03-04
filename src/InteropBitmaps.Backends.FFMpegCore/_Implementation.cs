@@ -11,7 +11,7 @@ using FFMpegCore.Pipes;
 using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     static class _Implementation
     {

@@ -15,7 +15,7 @@ using GDIBITMAP = System.Drawing.Bitmap;
 using GDIPTR = System.Drawing.Imaging.BitmapData;
 
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     static partial class _Implementation
     {

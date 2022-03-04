@@ -9,9 +9,9 @@ using System.Text;
 using FFmpeg.AutoGen;
 
 using InteropTypes.Graphics.Bitmaps;
-using InteropTypes.Graphics.Codecs;
+using InteropTypes.Codecs;
 
-namespace InteropTypes.Graphics
+namespace InteropTypes
 {
     static class _Implementation
     {

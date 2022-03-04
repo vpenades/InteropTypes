@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Codecs
+namespace InteropTypes.Codecs
 {
     // https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/PreviewThumbnailExtractor
 

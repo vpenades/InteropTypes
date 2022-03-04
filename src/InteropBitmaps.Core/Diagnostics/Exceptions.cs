@@ -4,7 +4,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
-namespace InteropTypes.Graphics.Diagnostics
+namespace InteropTypes.Diagnostics
 {
     public class PixelFormatNotSupportedException : ArgumentException
     {
