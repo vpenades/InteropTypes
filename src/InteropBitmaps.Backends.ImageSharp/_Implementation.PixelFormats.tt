@@ -1,0 +1,115 @@
+﻿<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+using System;
+
+using InteropTypes.Graphics.Bitmaps;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
+
+namespace InteropTypes
+{
+    partial class _Implementation
+    {
+    
+<#
+//-------------------------------------------------------------------------------------------------------------------
+
+var pairs = new []
+{
+("A8","Alpha8"),
+("L8","Luminance8"),
+("L16","Luminance16"),
+("Bgr565","BGR565"),
+("Bgra5551","BGRA5551"),
+("Bgra4444","BGRA4444"),
+("Bgr24","BGR24"),
+("Rgb24","RGB24"),
+("Bgra32","BGRA32"),
+("Rgba32","RGBA32"),
+("Argb32","ARGB32"),
+("RgbaVector","RGBA128F")
+};
+
+void __WriteForAllTypes(string macro)
+{
+    PushIndent("    ");
+    PushIndent("    ");
+    PushIndent("    ");
+
+    foreach(var pair in pairs)
+    {
+        var PixelA = pair.Item1;
+        var PixelB = pair.Item2;
+        
+        var m = macro.Replace("@IMAGESHARP@", PixelA);
+        m = m.Replace("@INTEROP@", PixelB);
+
+        WriteLine(m);
+    }
+
+    PopIndent();
+    PopIndent();
+    PopIndent();
+}
+
+
+// ----------------------------------------------------------------------------------------------------------------------------
+#>
+
+        public static bool TryGetExactPixelFormat<TPixel>(out PixelFormat fmt)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            <# __WriteForAllTypes("if (typeof(TPixel) == typeof(@IMAGESHARP@)) { fmt = Pixel.@INTEROP@.Format; return true; }"); #>
+
+            fmt = default;
+            return false;
+        }
+
+        public static bool TryGetExactPixelFormat(Image src, out PixelFormat fmt)
+        {
+            <# __WriteForAllTypes("if (src is Image<@IMAGESHARP@>) { fmt = Pixel.@INTEROP@.Format; return true; }"); #>
+
+            fmt = default;
+            return false;
+        }
+
+        public static bool TryGetExactPixelType(PixelFormat fmt, out Type type)
+        {
+            switch (fmt.Code)
+            {
+                <# __WriteForAllTypes("case Pixel.@INTEROP@.Code: type = typeof(@IMAGESHARP@); return true;"); #>
+                default: type = null; return false;
+            }
+        }
+
+        public static bool TryWrapAsSpanBitmap(Image src, SpanBitmap.Action1 action)
+        {
+            <# __WriteForAllTypes("if (src is Image<@IMAGESHARP@> image@IMAGESHARP@) return TryWrapAsSpanBitmap<@IMAGESHARP@, Pixel.@INTEROP@>(image@IMAGESHARP@, s => action(s) );"); #>
+
+            throw new NotImplementedException();
+        }
+        
+        public static Image TryWrapAsImageSharp(MemoryBitmap src)
+        {
+            switch(src.PixelFormat.Code)
+            {                
+                <# __WriteForAllTypes("case Pixel.@INTEROP@.Code: return WrapAsImageSharp<@IMAGESHARP@>(src);"); #>
+                default: throw src.PixelFormat.ThrowArgument(nameof(src));
+            }
+        }
+        
+        public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
+        {
+            switch (fmt.Code)
+            {
+                <# __WriteForAllTypes("case Pixel.@INTEROP@.Code: return new Image<@IMAGESHARP@>(width, height);"); #>
+                default: throw fmt.ThrowArgument(nameof(fmt));
+            }
+        }
+
+    }
+}

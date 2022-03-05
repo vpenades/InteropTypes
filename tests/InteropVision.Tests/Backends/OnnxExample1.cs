@@ -378,10 +378,7 @@ namespace InteropTypes.Vision.Backends
 
             throw new NotImplementedException();
         }        
-    }
-
-
-    
+    }   
 
 
     class Anime2SketchFilter : IDisposable

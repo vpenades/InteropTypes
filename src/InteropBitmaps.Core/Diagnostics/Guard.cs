@@ -88,6 +88,13 @@ namespace InteropTypes.Diagnostics
 			throw new ArgumentException(string.Format("{0} is {1} but should be equal or less than {2}", paramName, param, min), paramName);
 		}
 
+		public static void BitmapRect(int width, int height, int pixelByteSize)
+		{
+			Guard.GreaterThan<int>("width", width, 0);
+			Guard.GreaterThan<int>("height", height, 0);
+			Guard.GreaterThan<int>("pixelByteSize", pixelByteSize, 0);
+		}
+
 		public static void BitmapRect(int width, int height, int pixelByteSize, int stepByteSize)
 		{
 			Guard.GreaterThan<int>("width", width, 0);
@@ -98,24 +105,6 @@ namespace InteropTypes.Diagnostics
 			{
 				Guard.EqualOrGreaterThan<int>("stepByteSize", stepByteSize, width * pixelByteSize);
 			}
-		}
-
-		public static unsafe void IsValidPixelFormat<TPixel>(in BitmapInfo info) where TPixel : unmanaged
-		{
-			if (sizeof(TPixel) != info.PixelByteSize)
-			{
-				throw new ArgumentException("Invalid pixel size.", "TPixel");
-			}
-
-			Type typeFromHandle = typeof(TPixel);
-			if (typeFromHandle == typeof(float) || typeFromHandle == typeof(Vector2) || typeFromHandle == typeof(Vector3) || typeFromHandle == typeof(Vector4))
-			{
-				Type depthType = info.PixelFormat.GetDepthType();
-				if (depthType != typeof(float))
-				{
-					throw new ArgumentException(string.Format("Pixel Format is {0}", depthType), "TPixel");
-				}
-			}
-		}
+		}		
 	}
 }

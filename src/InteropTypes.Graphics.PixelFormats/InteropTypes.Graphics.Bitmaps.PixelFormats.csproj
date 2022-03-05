@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
-    <RootNamespace>InteropTypes.Graphics</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
     <LangVersion>8</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>  

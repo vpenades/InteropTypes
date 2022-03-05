@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Adapters
                     var src = new PointerBitmap(_Unmanaged, _Binfo)
                         .AsSpanBitmap();
 
-                    _Implementation.Copy(src, _Image);
+                    _Implementation.CopyPixels(src, _Image);
                 }
 
                 if (_Owned && _Image != null) { System.Threading.Interlocked.Exchange(ref _Image, null)?.Dispose(); }
@@ -88,7 +88,7 @@ namespace InteropTypes.Graphics.Adapters
 
             _Unmanaged = System.Runtime.InteropServices.Marshal.AllocHGlobal(span.Length);
 
-            _Implementation.Copy(_Image, new PointerBitmap(_Unmanaged, _Binfo).AsSpanBitmap());
+            _Implementation.CopyPixels(_Image, new PointerBitmap(_Unmanaged, _Binfo).AsSpanBitmap());
 
             return _Unmanaged;
         }

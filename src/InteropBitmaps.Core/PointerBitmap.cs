@@ -161,7 +161,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public System.Buffers.IMemoryOwner<TPixel> UsingMemory<TPixel>()
             where TPixel:unmanaged
         {
-            Guard.IsValidPixelFormat<TPixel>(this.Info);
+            this.Info.ArgumentIsCompatiblePixelFormat<TPixel>();
 
             return new MemoryManagers.UnmanagedMemoryManager<TPixel>(this.Pointer, this.Info.BitmapByteSize);
         }

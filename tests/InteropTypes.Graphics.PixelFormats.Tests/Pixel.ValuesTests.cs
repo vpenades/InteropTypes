@@ -54,13 +54,13 @@ namespace InteropTypes.Graphics.Bitmaps
             pixRef[0].FromRgba32(cr);
 
             var cv = pixVal[0].GetValue();
-            var f = PixelFormat.TryIdentifyPixel<TPixel>();
+            var f = PixelFormat.TryIdentifyFormat<TPixel>();
 
             TestContext.WriteLine($"{cv.R} {cv.G} {cv.B} {cv.A}");
 
             Assert.Greater(cv.R, cv.G);
             Assert.Greater(cv.G, cv.B);
-            if (f.HasAlpha) Assert.Greater(cv.B, cv.A);
+            if (f.HasUnpremulAlpha) Assert.Greater(cv.B, cv.A);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public MemoryBitmap(in BitmapInfo info)
         {
-            Guard.IsValidPixelFormat<TPixel>(info);
+            info.ArgumentIsCompatiblePixelFormat<TPixel>();
 
             _Info = info;
             _Data = new Byte[info.BitmapByteSize];
@@ -41,22 +41,18 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public MemoryBitmap(Memory<Byte> data, in BitmapInfo info)
         {
-            Guard.IsValidPixelFormat<TPixel>(info);
+            info.ArgumentIsCompatiblePixelFormat<TPixel>();
 
             _Info = info;
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height) : this(width, height, PixelFormat.TryIdentifyPixel<TPixel>()) { }
+        public MemoryBitmap(int width, int height) : this(width, height, PixelFormat.TryIdentifyFormat<TPixel>()) { }
 
         public unsafe MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
-
-            Guard.IsValidPixelFormat<TPixel>(_Info);
-
-            var bytes = new byte[_Info.BitmapByteSize];
-            _Data = bytes;
+            _Info = BitmapInfo.Create<TPixel>(width, height, pixelFormat, stepByteSize);            
+            _Data = new byte[_Info.BitmapByteSize];
         }        
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, int stepByteSize = 0)
@@ -64,10 +60,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, stepByteSize);
-
-            Guard.IsValidPixelFormat<TPixel>(_Info);
-
+            _Info = BitmapInfo.Create<TPixel>(width, height, pixelFormat, stepByteSize);
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 

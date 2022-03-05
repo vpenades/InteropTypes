@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Adapters
         {
             _SourceBitmap = bmp;
 
-            if (bmp.Info.IsContinuous) _ProxyImage = _Implementation.TryWrapImageSharp<TPixel>(bmp);
+            if (bmp.Info.IsContinuous) _ProxyImage = _Implementation.WrapAsImageSharp<TPixel>(bmp);
             else _ProxyImage = _Implementation.CloneToImageSharp<TPixel>(bmp);
         }
 
@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Adapters
             {
                 if (_ProxyImage.Width != _SourceBitmap.Width || _ProxyImage.Height != _SourceBitmap.Height) throw new ArgumentException("Operations that resize the source image are not allowed.", nameof(Image));
 
-                _Implementation.Copy(_ProxyImage, _SourceBitmap);
+                _Implementation.CopyPixels(_ProxyImage, _SourceBitmap);
 
                 _SourceBitmap = default;
             }

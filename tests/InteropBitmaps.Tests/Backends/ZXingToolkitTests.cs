@@ -37,7 +37,7 @@ namespace InteropTypes.Graphics.Backends
 
             // detect code:
 
-            var code = image.ReadAsSpanBitmap(default, (self,other) => self.ScanAndDecodeQRCode());            
+            var code = image.ReadAsSpanBitmap(self => self.ScanAndDecodeQRCode());            
 
             if (string.IsNullOrWhiteSpace(expected)) { Assert.Null(code); return; }
 

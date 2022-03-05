@@ -223,7 +223,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public unsafe SpanBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged
         {
-            Guard.IsValidPixelFormat<TPixel>(_Info);
+            _Info.ArgumentIsCompatiblePixelFormat<TPixel>();
 
             return _Writable.IsEmpty
                 ? new SpanBitmap<TPixel>(_Readable, _Info)
@@ -435,7 +435,7 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             var newFormat = dst.PixelFormat.IsDefined
                 ? dst.PixelFormat
-                : PixelFormat.TryIdentifyPixel<TPixel>();
+                : PixelFormat.TryIdentifyFormat<TPixel>();
 
             var newInfo = this.Info.WithPixelFormat(newFormat);
 

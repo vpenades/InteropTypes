@@ -15,6 +15,12 @@ namespace InteropTypes.Diagnostics
             return format.ToString();
         }
 
+        public PixelFormatNotSupportedException(Object format)
+                   : base($"{_GetFormatString(format)} not supported.")
+        {
+            _Format = format;
+        }
+
         public PixelFormatNotSupportedException(Object format, string paramName)
                     : base($"{_GetFormatString(format)} not supported.", paramName)
         {

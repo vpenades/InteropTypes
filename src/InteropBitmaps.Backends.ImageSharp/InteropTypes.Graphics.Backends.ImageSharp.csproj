@@ -11,6 +11,11 @@
   <Import Project="..\Version.props" />
   <ItemGroup>
     <None Include="..\..\.editorconfig" Link=".editorconfig" />
+    <None Include="_Implementation.PixelFormats.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>_Implementation.PixelFormats.tt</DependentUpon>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +26,39 @@
     <PackageReference Include="MathNet.Numerics" Version="4.15.0" />    
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Bitmaps\ImageSharpToolkit.Typed.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ImageSharpToolkit.Typed.cs</LastGenOutput>
+    </None>
+    <None Update="Bitmaps\ImageSharpToolkit.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ImageSharpToolkit.tt</DependentUpon>
+    </None>
+    <None Update="_Implementation.PixelFormats.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>_Implementation.PixelFormats.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Bitmaps\ImageSharpToolkit.Typed.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ImageSharpToolkit.Typed.tt</DependentUpon>
+    </Compile>
+    <Compile Update="_Implementation.PixelFormats.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>_Implementation.PixelFormats.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

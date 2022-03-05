@@ -61,8 +61,8 @@ namespace InteropTypes.Graphics.Bitmaps
             where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
             where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
         {
-            var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
-            var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
+            var srcFmt = PixelFormat.TryIdentifyFormat<TSrcPixel>();
+            var dstFmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
 
             var src = new TSrcPixel[5];
             var dst = new TDstPixel[5];            
@@ -79,7 +79,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var srcP = src[i].GetValue();
                 var dstP = dst[i].GetValue();
 
-                if (!srcFmt.HasAlpha || !dstFmt.HasAlpha)
+                if (!srcFmt.HasUnpremulAlpha || !dstFmt.HasUnpremulAlpha)
                 {
                     srcP = new Pixel.BGRA32(srcP.R, srcP.G, srcP.B, (Byte)255);
                     dstP = new Pixel.BGRA32(dstP.R, dstP.G, dstP.B, (Byte)255);
@@ -93,8 +93,8 @@ namespace InteropTypes.Graphics.Bitmaps
             where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
             where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
         {
-            var srcFmt = PixelFormat.TryIdentifyPixel<TSrcPixel>();
-            var dstFmt = PixelFormat.TryIdentifyPixel<TDstPixel>();
+            var srcFmt = PixelFormat.TryIdentifyFormat<TSrcPixel>();
+            var dstFmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
 
             var src = new TSrcPixel[5];
             var dst = new TDstPixel[5];

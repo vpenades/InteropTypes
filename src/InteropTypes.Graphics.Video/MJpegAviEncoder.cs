@@ -12,11 +12,11 @@ using SharpAvi.Codecs;
 
 namespace InteropTypes.Codecs
 {    
-    sealed class MJpegVideoEncoder : IVideoEncoder
+    sealed class _MJpegAviEncoder : IVideoEncoder
     {
         #region lifecycle
 
-        public MJpegVideoEncoder(int width, int height, IBitmapEncoder encoder)
+        public _MJpegAviEncoder(int width, int height, IBitmapEncoder encoder)
         {
             // Argument.IsPositive(width, nameof(width));
             // Argument.IsPositive(height, nameof(height));

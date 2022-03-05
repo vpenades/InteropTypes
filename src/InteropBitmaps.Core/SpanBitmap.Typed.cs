@@ -30,7 +30,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
         {
             Guard.NotNull(nameof(data), data);
-            Guard.IsValidPixelFormat<TPixel>(info);
+            info.ArgumentIsCompatiblePixelFormat<TPixel>();
 
             _Info = info;
 
@@ -42,14 +42,14 @@ namespace InteropTypes.Graphics.Bitmaps
 
         internal SpanBitmap(Span<Byte> data, in BitmapInfo info)
         {
-            Guard.IsValidPixelFormat<TPixel>(info);
+            info.ArgumentIsCompatiblePixelFormat<TPixel>();
             _Info = info;
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
         internal SpanBitmap(ReadOnlySpan<Byte> data, in BitmapInfo info)
         {
-            Guard.IsValidPixelFormat<TPixel>(info);
+            info.ArgumentIsCompatiblePixelFormat<TPixel>();
             _Info = info;
             _Readable = data.Slice(0, _Info.BitmapByteSize);
             _Writable = null;
@@ -57,24 +57,20 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public unsafe SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
-            Guard.IsValidPixelFormat<TPixel>(_Info);
+            _Info = BitmapInfo.Create<TPixel>(width, height, pixelFormat, scanlineSize);            
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
         public unsafe SpanBitmap(Span<TPixel> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
+            _Info = BitmapInfo.Create<TPixel>(width, height, pixelFormat, scanlineSize);
             var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(data);
-
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
-            Guard.IsValidPixelFormat<TPixel>(_Info);
             _Readable = _Writable = span.Slice(0, _Info.BitmapByteSize);
         }
 
         public unsafe SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
-            _Info = new BitmapInfo(width, height, pixelFormat, scanlineSize);
-            Guard.IsValidPixelFormat<TPixel>(_Info);
+            _Info = BitmapInfo.Create<TPixel>(width, height, pixelFormat, scanlineSize);            
             _Readable = data.Slice(0, _Info.BitmapByteSize);
             _Writable = null;
         }

@@ -150,9 +150,9 @@ namespace InteropTypes
 
         public static string AttachAviToCurrentTest(this IEnumerable<MemoryBitmap> frames, string videoPath, float frameRate = 25)
         {
-            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);            
+            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
 
-            InteropTypes.Codecs.VideoEncoderFactory.SaveToAVI(frames, videoPath, (decimal)frameRate, new GDICodec(50));
+            MJpegAviFrameWriter.SaveToAVI(frames, videoPath, (decimal)frameRate, new GDICodec(50));
 
             TestContext.AddTestAttachment(videoPath);
 

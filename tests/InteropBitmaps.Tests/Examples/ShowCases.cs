@@ -123,7 +123,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             // using MemoryBitmap facade.
 
-            void _gdiDraw(SpanBitmap<Bgra32> image)
+            void _gdiDraw(SpanBitmap<Pixel.BGRA32> image)
             {
                 using var gdi = image.ToMemoryBitmap().AsTypeless().UsingGDI(); // using memoryBitmap as a System.Drawing.Bitmap
 

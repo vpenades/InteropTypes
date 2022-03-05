@@ -45,13 +45,13 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public BitmapInfo WithPixelFormat<TPixel>() where TPixel:unmanaged
         {
-            var fmt = PixelFormat.TryIdentifyPixel<TPixel>();
+            var fmt = PixelFormat.TryIdentifyFormat<TPixel>();
             return this.WithPixelFormat(fmt);
         }
 
         public BitmapInfo WithPixelFormat<TPixel>(PixelFormat format) where TPixel : unmanaged
         {
-            var fmt = PixelFormat.TryIdentifyPixel<TPixel>();
+            var fmt = PixelFormat.TryIdentifyFormat<TPixel>();
             if (format == default) return this.WithPixelFormat(fmt);
 
             if (fmt.ByteCount != format.ByteCount) throw new Diagnostics.PixelFormatNotSupportedException(format, nameof(format));
@@ -68,12 +68,45 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region constructors
 
+        /// <summary>
+        /// Creates a new BitmapInfo instance.
+        /// </summary>
+        /// <typeparam name="TPixel">The pixel type. It must match <paramref name="pixelFormat"/>.</typeparam>
+        /// <param name="width">The bitmap width, in pixels. Must be higher than zero</param>
+        /// <param name="height">The bitmap height, in pixels. Must be highter than zero</param>
+        /// <param name="pixelFormat">The pixel format. It must match <typeparamref name="TPixel"/>.</param>
+        /// <param name="stepByteSize">The optional row width, in pixels.</param>
+        /// <returns>A new BitmapInfo instance.</returns>
+        public static BitmapInfo Create<TPixel>(int width, int height, PixelFormat pixelFormat, int stepByteSize)
+            where TPixel: unmanaged
+        {
+            var bmp = new BitmapInfo(width,height,pixelFormat,stepByteSize);
+            bmp.ArgumentIsCompatiblePixelFormat<TPixel>();
+            return bmp;
+        }
+
         public BitmapInfo(SIZE size, PixelFormat pixelFormat, int stepByteSize = 0)
             : this(size.Width,size.Height,pixelFormat,stepByteSize) { }
-        
-        public BitmapInfo(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
+
+        public BitmapInfo(int width, int height, PixelFormat pixelFormat)
         {
             var pixelByteSize = pixelFormat.ByteCount;
+            if (pixelByteSize <= 0) { this = default; return; }
+
+            Guard.BitmapRect(width, height, pixelByteSize);
+
+            Width = width;
+            Height = height;
+            StepByteSize = width * pixelByteSize;
+
+            PixelFormat = pixelFormat;
+            PixelByteSize = pixelByteSize;
+        }
+
+        public BitmapInfo(int width, int height, PixelFormat pixelFormat, int stepByteSize)
+        {
+            var pixelByteSize = pixelFormat.ByteCount;
+            if (pixelByteSize <= 0) { this = default; return; }
 
             Guard.BitmapRect(width, height, pixelByteSize, stepByteSize);
 
@@ -154,7 +187,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <summary>
         /// Gets a value indicating whether this instance is empty.
         /// </summary>
-        public bool IsEmpty => (Width * Height * PixelByteSize) == 0;
+        public bool IsEmpty => PixelByteSize == 0;
 
         /// <summary>
         /// Gets the number of bytes used by a visible pixel row.
@@ -338,16 +371,20 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region factory
 
+        public void ArgumentIsCompatiblePixelFormat<TPixel>() where TPixel : unmanaged
+        {
+            if (!IsCompatiblePixel<TPixel>()) throw new PixelFormatNotSupportedException(typeof(TPixel).Name);            
+        }
+
         public unsafe bool IsCompatiblePixel<TPixel>() where TPixel:unmanaged
         {
-            if (sizeof(TPixel) != this.PixelByteSize)
-            {
-                return false;
-            }
+            // if we create an empty SpanBitmap or BitmapInfo with "default" all values are zero,
+            // but theoretically, it's safe because there's no pixels to access either.
+            if (IsEmpty) return true;
 
-            var tformat = PixelFormat.TryIdentifyPixel<TPixel>();
+            if (sizeof(TPixel) != this.PixelByteSize) return false;
 
-            return this.PixelFormat == tformat;
+            return PixelFormat.IsCompatibleFormat<TPixel>();
         }
 
         public bool CreateBitmap(ref SpanBitmap bmp, bool keepPixelStride = false)

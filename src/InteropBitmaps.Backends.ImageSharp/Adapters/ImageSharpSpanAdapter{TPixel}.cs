@@ -45,7 +45,7 @@ namespace InteropTypes.Graphics.Adapters
             {
                 tmp.Mutate(operation);
 
-                return tmp.ToMemoryBitmap();
+                return tmp.ToMemoryBitmap<TPixel>();
             }
         }
 

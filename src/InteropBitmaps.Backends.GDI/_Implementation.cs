@@ -21,6 +21,27 @@ namespace InteropTypes
     {
         #region API
 
+        public static bool TryWrap(GDIPTR src, out BitmapInfo dst)
+        {
+            if (TryGetExactPixelFormat(src.PixelFormat, out var fmt))
+            {
+                dst = new BitmapInfo(src.Width, src.Height, fmt, src.Stride);
+                return true;
+            }
+            else
+            {
+                dst = default;
+                return false;
+            }
+        }
+
+        public static BitmapInfo GetBitmapInfo(GDIPTR bits)
+        {
+            return TryGetExactPixelFormat(bits.PixelFormat, out var fmt)
+                ? new BitmapInfo(bits.Width, bits.Height, fmt, bits.Stride)
+                : throw new Diagnostics.PixelFormatNotSupportedException(bits.PixelFormat, nameof(bits));
+        }
+
         public static GDIBITMAP WrapOrCloneAsGDIBitmap(PointerBitmap src)
         {
             return _TryWrap(src, out var dst, out _)
@@ -58,8 +79,6 @@ namespace InteropTypes
             return true;
         }        
 
-        
-
         public static GDIBITMAP CloneAsGDIBitmap(SpanBitmap src, GDIFMT? fmtOverride = null)
         {
             var fmt = fmtOverride ?? GetCompatiblePixelFormat(src.PixelFormat);
@@ -89,7 +108,7 @@ namespace InteropTypes
             {
                 bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
 
-                var span = bits.AsSpanBitmap();
+                var span = bits.AsSpanBitmapDangerous();
 
                 return fmtOverride.HasValue ? span.ToMemoryBitmap(fmtOverride.Value) : span.ToMemoryBitmap();
             }
@@ -143,25 +162,25 @@ namespace InteropTypes
             return MemoryBitmap.Reshape(ref dst, binfo);
         }
 
-        public static void Mutate(GDIBITMAP bmp, Action<PointerBitmap> action)
+        public static void Mutate(GDIBITMAP bmp, SpanBitmap.Action1 action)
         {
             var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
-            GDIPTR bits = null;
+            GDIPTR dstBits = null;
 
             try
             {
-                bits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmp.PixelFormat);
+                dstBits = bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bmp.PixelFormat);
 
-                action(bits.AsPointerBitmap());
+                action(dstBits.AsSpanBitmapDangerous());
             }
             finally
             {
-                bmp.UnlockBits(bits);
+                if (dstBits != null) bmp.UnlockBits(dstBits);
             }
         }
         
-        public static void TransferSpan(SpanBitmap src, GDIBITMAP dst, SpanBitmap.Action2 action)
+        public static void Transfer(SpanBitmap src, GDIBITMAP dst, SpanBitmap.Action2 action)
         {
             src = src.AsReadOnly();
 
@@ -174,7 +193,7 @@ namespace InteropTypes
                 dstBits = dst.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, dst.PixelFormat);
 
                 var dstSpan = dstBits
-                    .AsPointerBitmap()
+                    .AsPointerBitmapDangerous()
                     .AsSpanBitmap();
 
                 action(src, dstSpan);
@@ -185,7 +204,7 @@ namespace InteropTypes
             }
         }
 
-        public static void TransferSpan(GDIBITMAP src, SpanBitmap dst, SpanBitmap.Action2 action)
+        public static void Transfer(GDIBITMAP src, SpanBitmap dst, SpanBitmap.Action2 action)
         {
             var rect = new Rectangle(0, 0, dst.Width, dst.Height);
 
@@ -196,7 +215,7 @@ namespace InteropTypes
                 srcBits = src.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, src.PixelFormat);
 
                 var srcSpan = srcBits
-                    .AsPointerBitmap()
+                    .AsPointerBitmapDangerous()
                     .AsSpanBitmap()
                     .AsReadOnly();
 

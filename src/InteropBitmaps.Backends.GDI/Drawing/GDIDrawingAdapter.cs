@@ -5,9 +5,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Drawing;
 
-using COLOR = System.Drawing.Color;
-
-namespace InteropTypes.Graphics.Adapters
+namespace InteropTypes.Graphics.Backends
 {
     class GDIDrawingAdapter : ICanvas2D
     {

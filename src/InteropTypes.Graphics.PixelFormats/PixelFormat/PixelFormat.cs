@@ -28,6 +28,18 @@ namespace InteropTypes.Graphics.Bitmaps
 
         private string GetDebuggerDisplay() { return ToString(); }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        public void ArgumentIsCompatibleFormat<TPixel>(string paramName) where TPixel : unmanaged
+        {
+            if (!IsCompatibleFormat<TPixel>()) throw new Diagnostics.PixelFormatNotSupportedException(typeof(TPixel).Name, paramName);
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public Diagnostics.PixelFormatNotSupportedException ThrowArgument(string paramName)
+        {
+            return new Diagnostics.PixelFormatNotSupportedException(this, paramName);
+        }
+
         #endregion
 
         #region constructors
@@ -167,7 +179,7 @@ namespace InteropTypes.Graphics.Bitmaps
             throw new NotImplementedException();
         }
 
-        public static unsafe PixelFormat TryIdentifyPixel<TPixel>() where TPixel : unmanaged
+        public static unsafe PixelFormat TryIdentifyFormat<TPixel>() where TPixel : unmanaged
         {
             int byteSize = sizeof(TPixel);
 
@@ -356,9 +368,9 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         /// <summary>
-        /// Gets the number of bits used by the largest element in the format.
+        /// Gets the number of bits of the biggest component in the format.
         /// </summary>
-        public int MaxComponentBitLength
+        public int ComponentMaxBitLength
         {
             get
             {
@@ -371,7 +383,7 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         /// <summary>
-        /// Gets a value indicating whether this format is non empty
+        /// Gets a value indicating whether this format is not empty
         /// and all defined channels are not of "undefined type"
         /// </summary>
         public bool IsDefined
@@ -379,77 +391,49 @@ namespace InteropTypes.Graphics.Bitmaps
             get
             {
                 if (Code == 0) return false;
-                if (_Component0 > 0 && Component0.IsUndefined) return false;
-                if (_Component1 > 0 && Component1.IsUndefined) return false;
-                if (_Component2 > 0 && Component2.IsUndefined) return false;
-                if (_Component3 > 0 && Component3.IsUndefined) return false;
+                if (Component0.IsUndefined) return false;
+                if (Component1.IsUndefined) return false;
+                if (Component2.IsUndefined) return false;
+                if (Component3.IsUndefined) return false;
                 return true;
             }
         }
 
         /// <summary>
+        /// True if one of the components is alpha (premultiplied or not).
+        /// </summary>
+        public bool HasAlpha => HasUnpremulAlpha | HasPremulAlpha;
+
+        /// <summary>
         /// True if one of the components is non premultiplied alpha.
         /// </summary>
-        public bool HasAlpha => Component0.IsAlpha | Component1.IsAlpha | Component2.IsAlpha | Component3.IsAlpha;
+        public bool HasUnpremulAlpha => Component0.IsUnpremulAlpha | Component1.IsUnpremulAlpha | Component2.IsUnpremulAlpha | Component3.IsUnpremulAlpha;
 
         /// <summary>
         /// True if one of the components is premultiplied alpha.
         /// </summary>
-        public bool HasPremul => Component0.IsPremul | Component1.IsPremul | Component2.IsPremul | Component3.IsPremul;
+        public bool HasPremulAlpha => Component0.IsPremulAlpha | Component1.IsPremulAlpha | Component2.IsPremulAlpha | Component3.IsPremulAlpha;
 
-        /// <summary>
-        /// True if one of the components is alpha (premultiplied or not).
-        /// </summary>
-        public bool HasAlphaOrPremul => HasAlpha | HasPremul;
+        
 
         /// <summary>
         /// true if all the components are floating point values.
         /// </summary>
         public bool IsFloating => Component0.IsFloating && Component1.IsFloating && Component2.IsFloating && Component3.IsFloating;
 
+        /// <summary>
+        /// true if all the components are integer quantized values.
+        /// </summary>
         public bool IsQuantized => !IsFloating;
 
-        public bool Is8BitOrLess => Component0.Is8BitOrLess && Component1.Is8BitOrLess && Component2.Is8BitOrLess && Component3.Is8BitOrLess;
-
-        public static readonly IReadOnlyList<PixelFormat> AllFormats = new PixelFormat[]
-        {
-            // Millimeter16.Code, WIP
-
-            Pixel.Alpha8.Format,
-
-            Pixel.Luminance8.Format,
-            Pixel.Luminance16.Format,
-            Pixel.Luminance32F.Format,
-
-            Pixel.BGR565.Format,
-            Pixel.BGRA5551.Format,
-            Pixel.BGRA4444.Format,
-
-            Pixel.RGB24.Format,
-            Pixel.BGR24.Format,
-
-            Pixel.BGRA32.Format,
-            Pixel.BGRP32.Format,
-
-            Pixel.RGBA32.Format,
-            Pixel.RGBP32.Format,
-
-            Pixel.ARGB32.Format,
-            Pixel.PRGB32.Format,
-
-            Pixel.RGB96F.Format,
-            Pixel.BGR96F.Format,
-
-            Pixel.RGBA128F.Format,
-            Pixel.RGBP128F.Format,
-
-            Pixel.BGRA128F.Format,
-            Pixel.BGRP128F.Format,
-        };
+        /// <summary>
+        /// true of all the components use 8 bits or less.
+        /// </summary>
+        public bool Is8BitOrLess => Component0.Is8BitOrLess && Component1.Is8BitOrLess && Component2.Is8BitOrLess && Component3.Is8BitOrLess;        
 
         #endregion
 
-        #region API
+        #region helpers
 
         private int _FindIndex(PCID pef)
         {
@@ -460,6 +444,30 @@ namespace InteropTypes.Graphics.Bitmaps
             return -1;
         }
 
+        private int _GetByteLength()
+        {
+            int l = 0;
+            l += Component0.BitCount;
+            l += Component1.BitCount;
+            l += Component2.BitCount;
+            l += Component3.BitCount;
+            return l / 8;
+        }
+
+        private int _GetEmptyCount()
+        {
+            int count = 0;
+            if (Component0.Id == PCID.Empty) ++count;
+            if (Component1.Id == PCID.Empty) ++count;
+            if (Component2.Id == PCID.Empty) ++count;
+            if (Component3.Id == PCID.Empty) ++count;
+            return count;
+        }
+
+        #endregion
+
+        #region API - Linq
+
         public bool All(PCID a) { return _FindIndex(a) >= 0; }
         public bool All(PCID a, PCID b) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0; }
         public bool All(PCID a, PCID b, PCID c) { return _FindIndex(a) >= 0 && _FindIndex(b) >= 0 && _FindIndex(c) >= 0; }
@@ -469,6 +477,10 @@ namespace InteropTypes.Graphics.Bitmaps
         public bool Any(PCID a, PCID b) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0; }
         public bool Any(PCID a, PCID b, PCID c) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0; }
         public bool Any(PCID a, PCID b, PCID c, PCID d) { return _FindIndex(a) >= 0 || _FindIndex(b) >= 0 || _FindIndex(c) >= 0 || _FindIndex(d) >= 0; }
+
+        #endregion
+
+        #region API
 
         public int GetBitOffset(PCID pef)
         {
@@ -489,7 +501,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public int GetByteOffset(PCID pef)
         {
             if (Component0 == pef) return 0;
-
+            
             int l = Component0.ByteCount;
             if (Component1 == pef) return l;
 
@@ -500,27 +512,7 @@ namespace InteropTypes.Graphics.Bitmaps
             if (Component3 == pef) return l;
 
             return -1;
-        }
-
-        private int _GetByteLength()
-        {
-            int l = 0;
-            l += Component0.BitCount;
-            l += Component1.BitCount;
-            l += Component2.BitCount;
-            l += Component3.BitCount;
-            return l / 8;
-        }        
-
-        private int _GetEmptyCount()
-        {
-            int count = 0;
-            if (Component0.Id == PCID.Empty) ++count;
-            if (Component1.Id == PCID.Empty) ++count;
-            if (Component2.Id == PCID.Empty) ++count;
-            if (Component3.Id == PCID.Empty) ++count;
-            return count;
-        }        
+        }          
 
         public Type GetDepthType()
         {
@@ -531,7 +523,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             if (e0Len == 8) return typeof(Byte);
             if (e0Len == 16) return typeof(UInt16);
-            if (e0Len == 32) return typeof(Single);
+            if (e0Len == 32 && IsFloating) return typeof(Single);
 
             return null;
         }
@@ -557,7 +549,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return (null, 0);
         }
 
-        public Type GetDefaultPixelType()
+        public Type GetPixelTypeOrNull()
         {
             switch (Code)
             {
@@ -593,6 +585,29 @@ namespace InteropTypes.Graphics.Bitmaps
             }
 
             return null;
+        }        
+
+        public bool IsCompatibleFormat<TPixel>()
+            where TPixel : unmanaged
+        {
+            #if DEBUG
+
+            Type tt = typeof(TPixel);
+
+            var tpixelIsFP =
+                tt == typeof(Single) ||
+                tt == typeof(Vector2) ||
+                tt == typeof(Vector3) ||
+                tt == typeof(Vector4);
+
+            if (this.IsFloating != tpixelIsFP)
+            {
+                throw new Diagnostics.PixelFormatNotSupportedException($"Pixel Format mismatch {this}", typeof(TPixel).Name);
+            }
+            
+            #endif
+
+            return this == TryIdentifyFormat<TPixel>();
         }
 
         #endregion
@@ -602,7 +617,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <inheritdoc />        
         public override string ToString()
         {
-            var ptype = GetDefaultPixelType();
+            var ptype = GetPixelTypeOrNull();
             if (ptype != null) return ptype.Name;
 
             var components = Components.Select(item => item.Id);

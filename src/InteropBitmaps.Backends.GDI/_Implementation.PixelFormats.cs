@@ -19,6 +19,7 @@ namespace InteropTypes
             switch (inFmt)
             {
                 case GDIFMT.Format16bppGrayScale: outFmt = Pixel.Luminance16.Format; return true;
+
                 case GDIFMT.Format16bppRgb565: outFmt = Pixel.BGR565.Format; return true;
                 case GDIFMT.Format16bppRgb555: outFmt = Pixel.BGRA5551.Format; return true;
                 case GDIFMT.Format16bppArgb1555: outFmt = Pixel.BGRA5551.Format; return true;
@@ -46,6 +47,7 @@ namespace InteropTypes
                 case Pixel.BGR24.Code: outFmt = GDIFMT.Format24bppRgb; return true;
 
                 case Pixel.BGRA32.Code: outFmt = GDIFMT.Format32bppArgb; return true;
+                case Pixel.BGRP32.Code: outFmt = GDIFMT.Format32bppPArgb; return true;
             }
 
             outFmt = default;
@@ -64,7 +66,7 @@ namespace InteropTypes
                 case Pixel.Luminance8.Code:
                 case Pixel.Luminance16.Code:
                 case Pixel.Luminance32F.Code:
-                    //outFmt = GDIFMT.Format16bppGrayScale; return true; // Gray16 is listed, but not supported by GDI.
+                    // return GDIFMT.Format16bppGrayScale; // Gray16 is listed, but not supported by GDI.
                     return GDIFMT.Format24bppRgb;
 
                 case Pixel.RGB24.Code:
@@ -91,25 +93,6 @@ namespace InteropTypes
             }
         }
 
-        public static bool TryWrap(GDIPTR src, out BitmapInfo dst)
-        {
-            if (TryGetExactPixelFormat(src.PixelFormat, out var fmt))
-            {
-                dst = new BitmapInfo(src.Width, src.Height, fmt, src.Stride);
-                return true;
-            }
-            else
-            {
-                dst = default;
-                return false;
-            }
-        }
-
-        public static BitmapInfo GetBitmapInfo(GDIPTR bits)
-        {
-            return TryGetExactPixelFormat(bits.PixelFormat, out var fmt)
-                ? new BitmapInfo(bits.Width, bits.Height, fmt, bits.Stride)
-                : throw new Diagnostics.PixelFormatNotSupportedException(bits.PixelFormat, nameof(bits));
-        }        
+       
     }
 }

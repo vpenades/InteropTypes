@@ -49,7 +49,7 @@ namespace InteropTypes.Tensors
             if (sizeof(T) != sizeof(TPixel)) throw new ArgumentException(nameof(TPixel));
 
             var data = System.Runtime.InteropServices.MemoryMarshal.Cast<T, TPixel>(this._Buffer);
-            var pfmt = PixelFormat.TryIdentifyPixel<TPixel>();
+            var pfmt = PixelFormat.TryIdentifyFormat<TPixel>();
 
             return new SpanBitmap<TPixel>(data, BitmapSize.Width, BitmapSize.Height, pfmt);
         }

@@ -23,7 +23,7 @@ namespace InteropTypes.Graphics.Bitmaps
             {
                 TestContext.WriteLine($"{fmt}");
 
-                var pixelType = fmt.GetDefaultPixelType();
+                var pixelType = fmt.GetPixelTypeOrNull();
                 Assert.NotNull(pixelType);
 
                 var pixel = Activator.CreateInstance(pixelType);

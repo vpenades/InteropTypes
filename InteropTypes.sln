@@ -108,7 +108,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.WPF.Demo.App", "src\InteropTypes.Graphics.WPF.Demo.App\InteropTypes.Graphics.WPF.Demo.App.csproj", "{CA316A21-B1D5-48ED-9297-35CA4972BA60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.Mjpeg", "src\InteropTypes.Graphics.Video\InteropTypes.Codecs.Mjpeg.csproj", "{FEF78B0C-600C-4697-BFEF-BC272105B391}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.MJPEG", "src\InteropTypes.Graphics.Video\InteropTypes.Codecs.MJPEG.csproj", "{FEF78B0C-600C-4697-BFEF-BC272105B391}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{B682D47D-DFCA-4CC7-B1F2-E934E69932E6}"
 EndProject

@@ -1,0 +1,92 @@
+﻿<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+using System;
+
+using InteropTypes.Graphics.Bitmaps;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
+
+namespace InteropTypes.Graphics.Backends
+{
+    partial class ImageSharpToolkit
+    {
+    
+<#
+//-------------------------------------------------------------------------------------------------------------------
+
+var pairs = new []
+{
+("A8","Alpha8"),
+("L8","Luminance8"),
+("L16","Luminance16"),
+("Bgr24","BGR24"),
+("Rgb24","RGB24"),
+("Bgra32","BGRA32"),
+("Rgba32","RGBA32"),
+("Argb32","ARGB32"),
+("RgbaVector","RGBA128F")
+};
+
+PushIndent("    ");
+PushIndent("    ");
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static MemoryBitmap<Pixel.{PixelB}> ToMemoryBitmap(this Image<{PixelA}> image) {{ return ToMemoryBitmap<Pixel.{PixelB}>(image); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Function1<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<Pixel.{PixelB}, TResult>(self,default, (a,b) => function(a) ); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}> other, SpanBitmap<Pixel.{PixelB}>.Function2<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<Pixel.{PixelB}, TResult>(self, other, function); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static void WriteAsSpanBitmap(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Action1 action) {{ _Implementation.WriteAsSpanBitmap<{PixelA}, Pixel.{PixelB}>(self, default, (a,b) => action(a) ); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static void WriteAsSpanBitmap(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}> other, SpanBitmap<Pixel.{PixelB}>.Action2 action) {{ _Implementation.WriteAsSpanBitmap<{PixelA}, Pixel.{PixelB}>(self, other, action); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static bool TryWrapAsSpanBitmap(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Action1 action) {{ return _Implementation.TryWrapAsSpanBitmap(self, action); }}");
+}
+
+PopIndent();
+PopIndent();
+
+// ----------------------------------------------------------------------------------------------------------------------------
+#>
+
+    }
+}

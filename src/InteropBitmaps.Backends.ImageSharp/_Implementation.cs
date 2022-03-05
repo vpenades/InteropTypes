@@ -2,163 +2,110 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropTypes.Graphics.Backends;
-using InteropTypes.Graphics.Bitmaps;
-
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace InteropTypes.Graphics
+using InteropTypes.Graphics.Backends;
+using InteropTypes.Graphics.Bitmaps;
+
+using MEMORYMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
+
+namespace InteropTypes
 {
     static partial class _Implementation
     {
-        #region API        
+        #region API - Dangerous             
 
-        public static Image TryWrapImageSharp(MemoryBitmap src)
+        public static unsafe bool TryWrapAsSpanBitmap<TSrcPixel,TDstPixel>(Image<TSrcPixel> src, SpanBitmap<TDstPixel>.Action1 action)
+            where TSrcPixel : unmanaged, IPixel<TSrcPixel>
+            where TDstPixel : unmanaged
         {
-            if (!TryGetExactPixelType(src.PixelFormat, out var pixType)) throw new NotImplementedException();
+            if (src == null) throw new ArgumentNullException(nameof(src));
 
-            if (pixType == typeof(A8)) return TryWrapImageSharp<A8>(src);
-            if (pixType == typeof(L8)) return TryWrapImageSharp<L8>(src);
+            if (TryGetExactPixelFormat<TSrcPixel>(out var pfmt))
+            {
+                if (src.DangerousTryGetSinglePixelMemory(out Memory<TSrcPixel> srcSpan))
+                {                    
+                    var span = MEMORYMARSHALL.Cast<TSrcPixel, Byte>(srcSpan.Span);
 
-            if (pixType == typeof(L16)) return TryWrapImageSharp<L16>(src);
-            if (pixType == typeof(Bgr565)) return TryWrapImageSharp<Bgr565>(src);
-            if (pixType == typeof(Bgra4444)) return TryWrapImageSharp<Bgra4444>(src);
-            if (pixType == typeof(Bgra5551)) return TryWrapImageSharp<Bgra5551>(src);
+                    var bmp = new SpanBitmap<TDstPixel>(span, src.Width, src.Height, pfmt);
 
-            if (pixType == typeof(Bgr24)) return TryWrapImageSharp<Bgr24>(src);
-            if (pixType == typeof(Rgb24)) return TryWrapImageSharp<Rgb24>(src);
+                    action(bmp);
+                    return true;
+                }
+            }
 
-            if (pixType == typeof(Argb32)) return TryWrapImageSharp<Argb32>(src);
-            if (pixType == typeof(Bgra32)) return TryWrapImageSharp<Bgra32>(src);
-            if (pixType == typeof(Rgba32)) return TryWrapImageSharp<Rgba32>(src);
-
-            if (pixType == typeof(RgbaVector)) return TryWrapImageSharp<RgbaVector>(src);
-
-            throw new NotImplementedException();
+            return false;
         }
 
-        public static bool TryWrap<TPixel>(Image<TPixel> src, out SpanBitmap<TPixel> dst)
-            where TPixel : unmanaged, IPixel<TPixel>
+        #endregion
+
+        #region API - Pixel Format and Bitmap Info
+
+        public static BitmapInfo GetBitmapInfo(Image image)
         {
-            dst = default;
-
-            if (src == null) return false;
-
-            if (!TryGetExactPixelFormat<TPixel>(out var pfmt)) return false;
-
-            if (!src.DangerousTryGetSinglePixelMemory(out Memory<TPixel> srcSpan)) return false;
-
-            // We assume ImageSharp guarantees that memory is continuous.
-            var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan.Span);
-
-            dst = new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
-
-            return true;
+            if (TryGetBitmapInfo(image, out var binfo)) return binfo;
+            throw new Diagnostics.PixelFormatNotSupportedException(image.GetType().Name, nameof(image));
         }
 
-        public static Image<TPixel> TryWrapImageSharp<TPixel>(this MemoryBitmap src)
+        public static bool TryGetBitmapInfo(Image image, out BitmapInfo binfo)
+        {
+            if (TryGetExactPixelFormat(image, out var fmt))
+            {
+                binfo = new BitmapInfo(image.Width, image.Height, fmt);
+                return true;
+            }
+
+            binfo = default;
+            return false;
+        }
+
+        public static BitmapInfo GetBitmapInfo<TPixel>(Image<TPixel> image)
             where TPixel : unmanaged, IPixel<TPixel>
         {
+            if (TryGetBitmapInfo(image, out var binfo)) return binfo;
+            throw new Diagnostics.PixelFormatNotSupportedException(typeof(TPixel).Name, nameof(image));
+        }
+
+        public static bool TryGetBitmapInfo<TPixel>(Image<TPixel> image, out BitmapInfo binfo)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            if (TryGetExactPixelFormat<TPixel>(out var fmt))
+            {
+                binfo = new BitmapInfo(image.Width, image.Height, fmt);
+                return true;
+            }
+
+            binfo = default;
+            return false;
+        }
+
+        #endregion
+
+        #region Wrap & Clone
+
+        public static Image<TPixel> WrapAsImageSharp<TPixel>(this MemoryBitmap src)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {
+            if (src.IsEmpty) throw new ArgumentNullException(nameof(src));
+
             // ImageSharp does not support non-continuous pixel rows.
-            if (!src.Info.IsContinuous) return null;
+            if (!src.Info.IsContinuous) throw new ArgumentException("source images with extra row stride are not sopported.", nameof(src));
 
             TryGetExactPixelType(src.PixelFormat, out var pixType);
             if (pixType != typeof(TPixel)) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
 
-            var memMngr = new Adapters.CastMemoryManager<Byte, TPixel>(src.Memory);
+            var memMngr = new Graphics.Adapters.CastMemoryManager<Byte, TPixel>(src.Memory);
 
             return Image.WrapMemory(memMngr, src.Width, src.Height);
         }
 
-        public static Image CreateImageSharp(PixelFormat fmt, int width, int height)
-        {
-            switch (fmt.Code)
-            {
-                case Pixel.Alpha8.Code: return new Image<A8>(width, height);
-                case Pixel.Luminance8.Code: return new Image<L8>(width, height);
-
-                case Pixel.Luminance16.Code: return new Image<L16>(width, height);
-                case Pixel.BGR565.Code: return new Image<Bgr565>(width, height);
-                case Pixel.BGRA5551.Code: return new Image<Bgra5551>(width, height);
-                case Pixel.BGRA4444.Code: return new Image<Bgra4444>(width, height);
-
-                case Pixel.RGB24.Code: return new Image<Rgb24>(width, height);
-                case Pixel.BGR24.Code: return new Image<Bgr24>(width, height);
-
-                case Pixel.RGBP32.Code:
-                case Pixel.RGBA32.Code: return new Image<Rgba32>(width, height);
-                case Pixel.BGRP32.Code:
-                case Pixel.BGRA32.Code: return new Image<Bgra32>(width, height);
-                // case Pixel.ARGB32P.Code:
-                case Pixel.ARGB32.Code: return new Image<Argb32>(width, height);
-
-                default: throw new NotImplementedException();
-            }
-        }
-
-        public static SpanBitmap WrapAsSpanBitmap(Image src)
-        {
-            if (src == null) return default;
-
-            if (src is Image<A8> a8) return WrapAsSpanBitmap(a8);
-            if (src is Image<L8> b8) return WrapAsSpanBitmap(b8);
-
-            if (src is Image<L16> a16) return WrapAsSpanBitmap(a16);
-            if (src is Image<Bgr565> b16) return WrapAsSpanBitmap(b16);
-            if (src is Image<Bgra5551> c16) return WrapAsSpanBitmap(c16);
-            if (src is Image<Bgra4444> d16) return WrapAsSpanBitmap(d16);
-
-            if (src is Image<Rgb24> a24) return WrapAsSpanBitmap(a24);
-            if (src is Image<Bgr24> b24) return WrapAsSpanBitmap(b24);
-
-            if (src is Image<Rgba32> a32) return WrapAsSpanBitmap(a32);
-            if (src is Image<Bgra32> b32) return WrapAsSpanBitmap(b32);
-            if (src is Image<Argb32> c32) return WrapAsSpanBitmap(c32);
-            if (src is Image<Rgba1010102> d32) return WrapAsSpanBitmap(d32);
-
-            if (src is Image<Rgb48> a48) return WrapAsSpanBitmap(a48);
-
-            if (src is Image<Rgba64> a64) return WrapAsSpanBitmap(a64);
-
-            if (src is Image<HalfSingle> ah) return WrapAsSpanBitmap(ah);
-            if (src is Image<HalfVector2> bh) return WrapAsSpanBitmap(bh);
-            if (src is Image<HalfVector4> ch) return WrapAsSpanBitmap(ch);
-
-            if (src is Image<RgbaVector> av) return WrapAsSpanBitmap(av);
-
-            throw new NotImplementedException();
-        }
-
-        
-
-        public static SpanBitmap<TPixel> WrapAsSpanBitmap<TPixel>(Image<TPixel> src)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            if (src == null) return default;
-
-            if (TryGetExactPixelFormat<TPixel>(out var pfmt))
-            {
-                if (src.DangerousTryGetSinglePixelMemory(out Memory<TPixel> srcSpan))
-                {
-                    // We assume ImageSharp guarantees that memory is continuous.
-                    var span = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Byte>(srcSpan.Span);
-
-                    return new SpanBitmap<TPixel>(span, src.Width, src.Height, pfmt);
-                }
-            }
-
-            throw new NotSupportedException();
-        }
-
         public static Image CloneToImageSharp(SpanBitmap src)
         {
-            var dst = CreateImageSharp(src.PixelFormat, src.Width, src.Height);            
-
-            dst.WriteAsSpanBitmap(src, (d, s) => d.SetPixels(0, 0, s));            
-
+            var dst = CreateImageSharp(src.PixelFormat, src.Width, src.Height);
+            CopyPixels(src, dst);
             return dst;
         }
 
@@ -175,18 +122,11 @@ namespace InteropTypes.Graphics
             where TPixel : unmanaged, IPixel<TPixel>
         {
             var dst = new Image<TPixel>(src.Width, src.Height);
-
-            for (int y = 0; y < dst.Height; ++y)
-            {
-                var srcLine = src.GetScanlinePixels(y);
-                var dstLine = dst.Frames[0].DangerousGetPixelRowMemory(y);
-                srcLine.CopyTo(dstLine.Span);
-            }
-
+            CopyPixels(src, dst);
             return dst;
         }
         
-        public static void Mutate(SpanBitmap src, Action<IImageProcessingContext> operation)            
+        public static void Mutate(SpanBitmap src, Action<IImageProcessingContext> operation)
         {
             using (var tmp = CloneToImageSharp(src))
             {
@@ -195,34 +135,76 @@ namespace InteropTypes.Graphics
                 // if size has changed, throw error.
                 if (tmp.Width != src.Width || tmp.Height != src.Height) throw new ArgumentException("Operations that resize the source image are not allowed.", nameof(operation));
                 
-                Copy(tmp, src);
+                CopyPixels(tmp, src);
             }
         }
 
-        
+        #endregion
 
-       public static void Copy(Image src, SpanBitmap dst)
+        #region Read & Write bitmaps        
+
+        public static TResult ReadAsSpanBitmap<TSelfPixel, TOtherPixel, TResult>(Image<TSelfPixel> self, SpanBitmap<TOtherPixel> other, SpanBitmap<TOtherPixel>.Function2<TResult> function)
+            where TSelfPixel : unmanaged, IPixel<TSelfPixel>
+            where TOtherPixel: unmanaged
         {
-            if (src is Image<L8> srcL8) { Copy(srcL8, dst); return; }
+            if (self == null) throw new ArgumentNullException(nameof(self));
 
-            if (src is Image<Bgr565> srcBgr565) { Copy(srcBgr565, dst); return; }
-            if (src is Image<Bgra4444> srcBgra4444) { Copy(srcBgra4444, dst); return; }
-            if (src is Image<Bgra5551> srcBgra5551) { Copy(srcBgra5551, dst); return; }
+            if (!TryGetExactPixelFormat<TSelfPixel>(out var otherFmt)) throw new NotImplementedException($"{typeof(TSelfPixel)}");
 
-            if (src is Image<Rgb24> srcRgb24) { Copy(srcRgb24, dst); return; }
-            if (src is Image<Bgr24> srcBgr24) { Copy(srcBgr24, dst); return; }
+            if (self.DangerousTryGetSinglePixelMemory(out Memory<TSelfPixel> selfMem))
+            {
+                var selfBytes = MEMORYMARSHALL.Cast<TSelfPixel, Byte>(selfMem.Span);
+                var selfBmp = new SpanBitmap<TOtherPixel>(selfBytes, self.Width, self.Height, otherFmt);
 
-            if (src is Image<Rgba32> srcRgba32) { Copy(srcRgba32, dst); return; }
-            if (src is Image<Bgra32> srcBgra32) { Copy(srcBgra32, dst); return; }
-            if (src is Image<Argb32> srcArgb32) { Copy(srcArgb32, dst); return; }
+                return function(selfBmp.AsReadOnly(), other);
+            }
+            else
+            {
+                var tempBmp = ImageSharpToolkit
+                    .ToMemoryBitmap<TOtherPixel>(self)
+                    .AsSpanBitmap()
+                    .AsReadOnly();
 
-            if (src is Image<RgbaVector> srcRgbaVector) { Copy(srcRgbaVector, dst); return; }
-
-            throw new NotImplementedException();
+                return function(tempBmp, other);
+            }
         }
 
+        public static unsafe void WriteAsSpanBitmap<TSelfPixel, TOtherPixel>(Image<TSelfPixel> self, SpanBitmap<TOtherPixel> other, SpanBitmap<TOtherPixel>.Action2 action)
+            where TSelfPixel : unmanaged, IPixel<TSelfPixel>
+            where TOtherPixel : unmanaged
+        {
+            if (self == null) throw new ArgumentNullException(nameof(self));
 
-        public static unsafe void Copy<TSrcPixel,TDstPixel>(Image<TSrcPixel> src, SpanBitmap<TDstPixel> dst)
+            if (sizeof(TSelfPixel) != sizeof(TOtherPixel)) throw new ArgumentException("pixel size mismatch", typeof(TOtherPixel).Name);
+
+            other = other.AsReadOnly();
+
+            if (!TryGetExactPixelFormat<TSelfPixel>(out var otherFmt))
+            {
+                otherFmt = PixelFormat.TryIdentifyFormat<TOtherPixel>();
+            }
+
+            if (self.DangerousTryGetSinglePixelMemory(out Memory<TSelfPixel> selfMem))
+            {
+                var selfBytes = MEMORYMARSHALL.Cast<TSelfPixel, Byte>(selfMem.Span);
+                var selfBmp = new SpanBitmap<TOtherPixel>(selfBytes, self.Width, self.Height, otherFmt);
+                action(selfBmp, other);
+            }
+            else
+            {
+                var tempBmp = new MemoryBitmap<TOtherPixel>(self.Width, self.Height, otherFmt);
+
+                CopyPixels(self, tempBmp);
+                action(tempBmp, other);
+                CopyPixels(tempBmp, self);
+            }
+        }
+
+        #endregion
+
+        #region copy pixels
+
+        public static unsafe void CopyPixels<TSrcPixel,TDstPixel>(Image<TSrcPixel> src, SpanBitmap<TDstPixel> dst)
             where TSrcPixel: unmanaged, IPixel<TSrcPixel>
             where TDstPixel : unmanaged
         {
@@ -235,13 +217,13 @@ namespace InteropTypes.Graphics
                 var srcRow = src.DangerousGetPixelRowMemory(y).Span;
                 var dstRow = dst.UseScanlinePixels(y);
 
-                System.Runtime.InteropServices.MemoryMarshal
+                MEMORYMARSHALL
                     .Cast<TSrcPixel, TDstPixel>(srcRow)
                     .CopyTo(dstRow);
             }
         }
 
-        public static unsafe void Copy<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> src, Image<TDstPixel> dst)
+        public static unsafe void CopyPixels<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> src, Image<TDstPixel> dst)
             where TSrcPixel : unmanaged
             where TDstPixel : unmanaged, IPixel<TDstPixel>
         {
@@ -249,18 +231,20 @@ namespace InteropTypes.Graphics
             if (src.Width != dst.Width || src.Height != dst.Height) throw new ArgumentException("dimensions mismatch", nameof(dst));
             if (sizeof(TSrcPixel) != sizeof(TDstPixel)) throw new ArgumentException("Pixel size mismatch", typeof(TDstPixel).Name);
 
+            src = src.AsReadOnly();
+
             for (int y = 0; y < dst.Height; y++)
             {
                 var srcRow = src.GetScanlinePixels(y);
                 var dstRow = dst.DangerousGetPixelRowMemory(y).Span;
 
-                System.Runtime.InteropServices.MemoryMarshal
+                MEMORYMARSHALL
                     .Cast<TSrcPixel, TDstPixel>(srcRow)
                     .CopyTo(dstRow);
             }
         }
 
-        public static void Copy<TSrcPixel>(Image<TSrcPixel> src, SpanBitmap dst)
+        public static void CopyPixels<TSrcPixel>(Image<TSrcPixel> src, SpanBitmap dst)
             where TSrcPixel : unmanaged, IPixel<TSrcPixel>            
         {
             for (int y = 0; y < dst.Height; y++)
@@ -268,21 +252,23 @@ namespace InteropTypes.Graphics
                 var srcRow = src.DangerousGetPixelRowMemory(y).Span;
                 var dstRow = dst.UseScanlineBytes(y);
 
-                System.Runtime.InteropServices.MemoryMarshal
+                MEMORYMARSHALL
                     .Cast<TSrcPixel, Byte>(srcRow)
                     .CopyTo(dstRow);
             }
         }
 
-        public static void Copy<TDstPixel>(SpanBitmap src, Image<TDstPixel> dst)
+        public static void CopyPixels<TDstPixel>(SpanBitmap src, Image<TDstPixel> dst)
             where TDstPixel : unmanaged, IPixel<TDstPixel>
         {
+            src = src.AsReadOnly();
+
             for (int y = 0; y < dst.Height; y++)
             {
                 var srcRow = src.GetScanlineBytes(y);
-                var dstRow = dst.DangerousGetPixelRowMemory(y).Span;                
+                var dstRow = dst.DangerousGetPixelRowMemory(y).Span;
 
-                System.Runtime.InteropServices.MemoryMarshal
+                MEMORYMARSHALL
                     .Cast<Byte, TDstPixel>(srcRow)
                     .CopyTo(dstRow);
             }

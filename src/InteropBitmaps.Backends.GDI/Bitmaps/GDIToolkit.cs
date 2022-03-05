@@ -57,61 +57,61 @@ namespace InteropTypes.Graphics.Backends
             return binfo;
         }
 
-        public static PointerBitmap AsPointerBitmap(this GDIPTR data)
+        public static PointerBitmap AsPointerBitmapDangerous(this GDIPTR data)
         {
             var info = _Implementation.GetBitmapInfo(data);
             System.Diagnostics.Debug.Assert(info.StepByteSize == data.Stride);
             return new PointerBitmap(data.Scan0, info);
         }
 
-        public static SpanBitmap AsSpanBitmap(this GDIPTR data)
+        public static SpanBitmap AsSpanBitmapDangerous(this GDIPTR data)
         {
-            return data.AsPointerBitmap();
+            return data.AsPointerBitmapDangerous();
         }
 
-        public static SpanBitmap<TPixel> AsSpanBitmap<TPixel>(this GDIPTR data)
+        public static SpanBitmap<TPixel> AsSpanBitmapDangerous<TPixel>(this GDIPTR data)
             where TPixel: unmanaged
         {
-            return data.AsPointerBitmap().AsSpanBitmapOfType<TPixel>();
+            return data.AsPointerBitmapDangerous().AsSpanBitmapOfType<TPixel>();
         }
 
         #endregion        
 
         #region Generic API
         
-        public static void Mutate(this GDIBITMAP bmp, Action<PointerBitmap> action)
+        public static void Mutate(this GDIBITMAP bmp, SpanBitmap.Action1 action)
         {
             _Implementation.Mutate(bmp, action);
         }
 
         public static void SetPixels(this GDIBITMAP dst, int dstx, int dsty, in SpanBitmap src)
         {
-            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
+            _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
         }
 
         public static void SetPixels(this SpanBitmap dst, int dstx, int dsty, in GDIBITMAP src)
         {
-            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
+            _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
         }
 
         public static void SetPixels(this GDIBITMAP dst, System.Numerics.Matrix3x2 dstSRT, in SpanBitmap src)
         {
-            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstSRT, s));
+            _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstSRT, s));
         }
 
         public static void SetPixels(this SpanBitmap dst, System.Numerics.Matrix3x2 dstSRT, in GDIBITMAP src)
         {
-            _Implementation.TransferSpan(src, dst, (s, d) => d.SetPixels(dstSRT, s));
+            _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstSRT, s));
         }
 
         public static void FitPixels(this GDIBITMAP dst, in SpanBitmap src)
         {
-            _Implementation.TransferSpan(src, dst, (s, d) => d.FitPixels(s));
+            _Implementation.Transfer(src, dst, (s, d) => d.FitPixels(s));
         }
 
         public static void FitPixels(this SpanBitmap dst, in GDIBITMAP src)
         {
-            _Implementation.TransferSpan(src, dst, (s, d) => d.FitPixels(s));
+            _Implementation.Transfer(src, dst, (s, d) => d.FitPixels(s));
         }
 
         public static bool CopyTo(this GDIBITMAP src, ref MemoryBitmap dst, PixelFormat? fmtOverride = null)
@@ -142,7 +142,7 @@ namespace InteropTypes.Graphics.Backends
             }
 
             var refreshed = _Implementation.Reshape(ref dst, src, fmtOverride);
-            dst.SetPixels(0, 0, src.AsSpanBitmap());
+            dst.SetPixels(0, 0, src.AsSpanBitmapDangerous());
             return refreshed;
         }
 
