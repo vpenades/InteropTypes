@@ -52,59 +52,9 @@ namespace InteropTypes.Graphics.Backends
             return dst;
         }
 
-        #endregion
+        #endregion        
 
-        #region ImageSharp.ReadAsSpanBitmap( x => x )
-
-        public static TResult ReadAsSpanBitmap<TResult>(this Image self, SpanBitmap.Function1<TResult> function)
-        {
-            return ReadAsSpanBitmap(self, default, (self2, other) => function(self2));
-        }
-        
-        public static TResult ReadAsSpanBitmap<TResult>(this Image self, SpanBitmap other, SpanBitmap.Function2<TResult> function)
-        {
-            return _Implementation.ReadAsSpanBitmap(self, other, function);
-        }
-
-        public static TResult ReadAsSpanBitmap<TOtherPixel, TResult>(this Image self, SpanBitmap<TOtherPixel>.Function1<TResult> function)
-            where TOtherPixel : unmanaged
-        {
-            return ReadAsSpanBitmap<TOtherPixel,TResult>(self, default, (self2,other) => function(self2));
-        }
-
-        public static TResult ReadAsSpanBitmap<TOtherPixel,TResult>(this Image self, SpanBitmap<TOtherPixel> other, SpanBitmap<TOtherPixel>.Function2<TResult> function)
-            where TOtherPixel : unmanaged
-        {
-            return _Implementation.ReadAsSpanBitmap(self, other, function);
-        }
-
-        #endregion
-
-        #region ImageSharp.WriteAsSpanBitmap( x => x );
-
-        public static void WriteAsSpanBitmap(this Image self, SpanBitmap.Action1 action)
-        {
-            WriteAsSpanBitmap(self, default, (s, o) => action(s));
-        }
-
-        public static void WriteAsSpanBitmap(this Image self, SpanBitmap other, SpanBitmap.Action2 action)
-        {
-            _Implementation.WriteAsSpanBitmap(self, other, action);
-        }
-
-        public static void WriteAsSpanBitmap<TPixel>(this Image self, SpanBitmap<TPixel>.Action1 action)
-            where TPixel : unmanaged
-        {
-            WriteAsSpanBitmap<TPixel>(self, default, (self2, other) => action(self2));
-        }
-
-        public static void WriteAsSpanBitmap<TPixel>(this Image self, SpanBitmap<TPixel> other, SpanBitmap<TPixel>.Action2 action)
-            where TPixel : unmanaged
-        {
-            throw new NotImplementedException();
-
-            // self.WriteAsSpanBitmap<TPixel,TPixel>(other, (s,o) => action(s,o));
-        }
+        #region ImageSharp.WriteAsSpanBitmap( x => x );        
 
         public static unsafe void WriteAsSpanBitmap<TSelfPixel, TOtherPixel>(this Image<TSelfPixel> self, SpanBitmap<TOtherPixel> other, SpanBitmap<TOtherPixel>.Action2 action)
             where TSelfPixel : unmanaged, IPixel<TSelfPixel>

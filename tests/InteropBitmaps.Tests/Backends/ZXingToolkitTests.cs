@@ -33,7 +33,7 @@ namespace InteropTypes.Graphics.Backends
 
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            using var image = SixLabors.ImageSharp.Image.Load(filePath);
+            using var image = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(filePath);
 
             // detect code:
 

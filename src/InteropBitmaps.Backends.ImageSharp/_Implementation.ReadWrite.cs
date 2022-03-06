@@ -12,13 +12,6 @@ namespace InteropTypes
 {
     partial class _Implementation
     {
-               
-
-        
-
-        
-
-
         public static TResult ReadAsSpanBitmap<TResult>(Image self, SpanBitmap other, SpanBitmap.Function2<TResult> function)
         {
             if (other.IsEmpty) return ReadAsSpanBitmap<Byte, TResult>(self, default, (s,o) => function(s, default));
@@ -61,9 +54,7 @@ namespace InteropTypes
             if (typeof(TOtherPixel) == typeof(Pixel.RGBA128F)) return _run<RgbaVector>(other);
 
             throw new NotImplementedException(self.GetType().Name);
-        }
-
-        
+        }        
 
         public static void WriteAsSpanBitmap(Image self, SpanBitmap other, SpanBitmap.Action2 action)
         {
@@ -86,7 +77,7 @@ namespace InteropTypes
             throw new NotImplementedException();
         }
 
-        public static void WriteAsSpanBitmap(MemoryBitmap self, Action<Image> action)
+        public static void WriteAsImageSharp(MemoryBitmap self, Action<Image> action)
         {
             switch (self.Info.PixelFormat.Code)
             {

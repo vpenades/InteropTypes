@@ -47,7 +47,7 @@ foreach(var pair in pairs)
     var PixelA = pair.Item1;
     var PixelB = pair.Item2;
 
-    WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Function1<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<Pixel.{PixelB}, TResult>(self,default, (a,b) => function(a) ); }}");
+    WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Function1<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<{PixelA}, Pixel.{PixelB}, TResult>(self,default, (a,b) => function(a) ); }}");
 }
 
 foreach(var pair in pairs)
@@ -55,7 +55,7 @@ foreach(var pair in pairs)
     var PixelA = pair.Item1;
     var PixelB = pair.Item2;
 
-    WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}> other, SpanBitmap<Pixel.{PixelB}>.Function2<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<Pixel.{PixelB}, TResult>(self, other, function); }}");
+    WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}> other, SpanBitmap<Pixel.{PixelB}>.Function2<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<{PixelA}, Pixel.{PixelB}, TResult>(self, other, function); }}");
 }
 
 foreach(var pair in pairs)

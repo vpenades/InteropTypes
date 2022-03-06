@@ -11,7 +11,8 @@ namespace InteropTypes.Graphics.Backends
         [ThreadStatic]
         private static WeakReference<Byte[]> _TempBuffer;
 
-        public static ZXing.Result ScanAndDecodeQRCode(this SpanBitmap src)
+        public static ZXing.Result ScanAndDecodeQRCode<TPixel>(this SpanBitmap<TPixel> src)
+            where TPixel : unmanaged
         {
             var reader = new ZXing.BarcodeReaderGeneric();
             reader.Options.PureBarcode = false;

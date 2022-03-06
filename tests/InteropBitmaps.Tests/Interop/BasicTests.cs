@@ -55,7 +55,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void DrawPrimitivesWithMultipleAdapters()
         {
-            void _drawUsingMultipleDevices(SpanBitmap<SixLabors.ImageSharp.PixelFormats.Bgra32> img)
+            void _drawUsingMultipleDevices(SpanBitmap<Pixel.BGRA32> img)
             {
                 var slice = img.Slice((10, 10, img.Width - 20, img.Height - 20)); // crop the source image with a 10 pixels margin
 
@@ -106,12 +106,9 @@ namespace InteropTypes.Graphics.Bitmaps
                     });
 
                 // cast to imagesharp Adapter to draw primitives
-                slice
-                    .WithImageSharp()
-                    .Mutate
-                    (ipc =>
+                slice.MutateAsImageSharp(
+                    ipc =>
                     {
-
                         ipc.FillPolygon(SixLabors.ImageSharp.Color.Green, (5, 250), (50, 250), (5, 300));
                         ipc.DrawText("ImageSharp Text", SixLabors.Fonts.SystemFonts.CreateFont("Arial", 40), SixLabors.ImageSharp.Color.Green, new SixLabors.ImageSharp.PointF(80, 250));
                     });
@@ -135,7 +132,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             // render using multiple devices
 
-            img.WriteAsSpanBitmap(self => _drawUsingMultipleDevices(self.OfType<SixLabors.ImageSharp.PixelFormats.Bgra32>()));            
+            img.WriteAsSpanBitmap(self => _drawUsingMultipleDevices(self));            
 
             // save the result back with ImageSharp
 
