@@ -41,7 +41,11 @@ namespace InteropTypes.Graphics.Bitmaps
             {
                 var ptrBmp = new PointerBitmap(new IntPtr(ptr), binfo, true);
 
-                return onPinned(ptrBmp);
+                var result = onPinned(ptrBmp);                
+
+                // TODO: check that result is not PointerBitmap and does not overlap with "readable"
+
+                return result;
             }
         }
 

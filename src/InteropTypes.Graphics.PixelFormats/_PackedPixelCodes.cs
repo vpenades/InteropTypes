@@ -31,6 +31,8 @@ namespace InteropTypes.Graphics.Bitmaps
         public const uint BGRA4444 = SHIFT0 * (uint)PFCID.Blue4 | SHIFT1 * (uint)PFCID.Green4 | SHIFT2 * (uint)PFCID.Red4 | SHIFT3 * (uint)PFCID.Alpha4;
         public const uint BGRA5551 = SHIFT0 * (uint)PFCID.Blue5 | SHIFT1 * (uint)PFCID.Green5 | SHIFT2 * (uint)PFCID.Red5 | SHIFT3 * (uint)PFCID.Alpha1;        
 
+        public const uint Undefined24 = SHIFT0 * (uint)PFCID.Undefined8 | SHIFT1 * (uint)PFCID.Undefined8 | SHIFT2 * (uint)PFCID.Undefined8;
+
         public const uint RGB24 = SHIFT0 * (uint)PFCID.Red8 | SHIFT1 * (uint)PFCID.Green8 | SHIFT2 * (uint)PFCID.Blue8;
         public const uint BGR24 = SHIFT0 * (uint)PFCID.Blue8 | SHIFT1 * (uint)PFCID.Green8 | SHIFT2 * (uint)PFCID.Red8;
 

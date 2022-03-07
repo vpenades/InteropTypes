@@ -13,6 +13,7 @@ namespace InteropTypes.Graphics.Bitmaps
     [Category("Core")]
     public class HashCodeTests
     {
+        [Ignore("Hash code is based on underlaying Span<T>.HashCode")]
         [Test]
         public void TestHashCodes()
         {

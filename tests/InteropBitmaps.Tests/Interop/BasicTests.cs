@@ -145,9 +145,11 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void DrawMemoryAsImageSharp()
         {
-            var mem = MemoryBitmap.Load(TestResources.ShannonJpg, Codecs.GDICodec.Default);
+            var mem = MemoryBitmap.Load(TestResources.ShannonJpg, Codecs.GDICodec.Default);            
 
-            mem.WriteAsSpanBitmap(img => img.AttachToCurrentTest("result.png"));            
+            mem.OfType<Pixel.BGRA32>()
+                .AsSpanBitmap()
+                .ReadAsImageSharp(img => { img.AttachToCurrentTest("result.png"); return 0; } );
         }
 
         [Test]
@@ -159,7 +161,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
             using var ptr = bmp.UsingPointerBitmap();
 
-            ptr.Bitmap.WriteAsImageSharp(img => img.AttachToCurrentTest("result.png"));
+            ptr.Bitmap
+                .AsSpanBitmapOfType<Pixel.BGRA32>()
+                .WriteAsImageSharp(img => img.AttachToCurrentTest("result.png"));
         }
     }
 }

@@ -167,7 +167,7 @@ namespace InteropTypes
 
                 return function(tempBmp, other);
             }
-        }
+        }        
 
         public static unsafe void WriteAsSpanBitmap<TSelfPixel, TOtherPixel>(Image<TSelfPixel> self, SpanBitmap<TOtherPixel> other, SpanBitmap<TOtherPixel>.Action2 action)
             where TSelfPixel : unmanaged, IPixel<TSelfPixel>
@@ -198,6 +198,13 @@ namespace InteropTypes
                 action(tempBmp, other);
                 CopyPixels(tempBmp, self);
             }
+        }
+
+        public static void MutateAsImageSharp<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> self, Action<IImageProcessingContext> operation)
+            where TSrcPixel : unmanaged
+            where TDstPixel : unmanaged, IPixel<TDstPixel>
+        {
+            _ImageSharpChangedMonitor.WriteAsImageSharp<TSrcPixel, TDstPixel>(self, img => ProcessingExtensions.Mutate(img, operation));
         }
 
         #endregion
@@ -274,6 +281,6 @@ namespace InteropTypes
             }
         }
 
-        #endregion
-    }
+        #endregion       
+    }    
 }

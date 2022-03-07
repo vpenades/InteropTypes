@@ -231,7 +231,7 @@ namespace InteropTypes.Vision.Backends
             }
         }
 
-
+        [Ignore("https://github.com/microsoft/onnxruntime/issues/2175")]
         [TestCase("Resources\\dog.jpeg")]
         [TestCase("Resources\\shannon.jpg")]
         public void TestArcFace(string imagePath)
@@ -242,16 +242,16 @@ namespace InteropTypes.Vision.Backends
 
             var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
 
-            var model = OnnxModel.FromFile("Models\\arcfaceresnet100-8.onnx");            
+            var srcImagePreprocessor = new ImageProcessor<Pixel.RGB96F>();
 
-            var imagePreprocessor = new ImageProcessor<Pixel.RGB96F>();            
+            var model = OnnxModel.FromFile("Models\\arcfaceresnet100-8.onnx");            
 
             using (var session = model.CreateSession())
             {
                 var workingTensor = session.GetInputTensor<float>(0)
                     .AsSpanTensor4()
                     .GetSubTensor(0)
-                    .SetImage(srcImage, imagePreprocessor);                
+                    .SetImage(srcImage, srcImagePreprocessor);                
 
                 // run
 
@@ -328,7 +328,7 @@ namespace InteropTypes.Vision.Backends
         [TestCase("Resources\\dog.jpeg")]
         [TestCase("Resources\\shannon.jpg")]
         [TestCase("Resources\\pixel-art.png")]
-        [TestCase("Resources\\yukikaze.jpg")]
+        // [TestCase("Resources\\yukikaze.jpg")]
         public void TestAnime2Sketch(string imagePath)
         {
             var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);

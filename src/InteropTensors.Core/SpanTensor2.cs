@@ -31,14 +31,16 @@ namespace InteropTypes.Tensors
         public unsafe SpanBitmap<T> AsSpanBitmap()
         {
             var l = sizeof(T);
-
-            if (l == 1) return AsSpanBitmap(Pixel.Luminance8.Format);
-            if (l == 3) return AsSpanBitmap(Pixel.BGR24.Format);
+            
+            if (typeof(Pixel.IReflection).IsAssignableFrom(typeof(T))) return AsSpanBitmap<T>();
 
             if (typeof(T) == typeof(Single)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 1));
             if (typeof(T) == typeof(Vector2)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 2));
             if (typeof(T) == typeof(Vector3)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 3));
             if (typeof(T) == typeof(Vector4)) return AsSpanBitmap(PixelFormat.CreateFromDepthAndChannels(typeof(float), 4));
+
+            if (l == 1) return AsSpanBitmap(Pixel.Luminance8.Format);
+            if (l == 3) return AsSpanBitmap(Pixel.BGR24.Format);
 
             throw new NotImplementedException();
         }

@@ -112,7 +112,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");            
             var cat = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
-            var cat00 = cat.OfType<Pixel.RGBA32>();
+            var cat00 = cat.OfType<Pixel.BGRA32>();
 
             for(float r=0.1f; r < 1; r+=0.2f)
             {

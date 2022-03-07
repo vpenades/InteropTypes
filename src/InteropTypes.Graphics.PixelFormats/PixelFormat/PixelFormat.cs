@@ -128,12 +128,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static unsafe PixelFormat CreateUndefined<TPixel>() where TPixel : unmanaged
         {
-            var tp = typeof(TPixel);
-
-            if (tp == typeof(float)) return new PixelFormat(PCID.Undefined32F);
-            if (tp == typeof(Vector2)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F);
-            if (tp == typeof(Vector3)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
-            if (tp == typeof(Vector4)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
+            if (typeof(TPixel) == typeof(float)) return new PixelFormat(PCID.Undefined32F);
+            if (typeof(TPixel) == typeof(Vector2)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F);
+            if (typeof(TPixel) == typeof(Vector3)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
+            if (typeof(TPixel) == typeof(Vector4)) return new PixelFormat(PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F, PCID.Undefined32F);
 
             return CreateUndefinedOfSize(sizeof(TPixel));
         }
@@ -181,44 +179,32 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static unsafe PixelFormat TryIdentifyFormat<TPixel>() where TPixel : unmanaged
         {
-            int byteSize = sizeof(TPixel);
-
-            switch (byteSize)
-            {
-                case 1:
-                    if (typeof(TPixel) == typeof(Pixel.Alpha8)) return Pixel.Alpha8.Format;
-                    if (typeof(TPixel) == typeof(Pixel.Luminance8)) return Pixel.Luminance8.Format;
-                    break;
-                case 2:
-                    if (typeof(TPixel) == typeof(Pixel.BGR565)) return Pixel.BGR565.Format;
-                    if (typeof(TPixel) == typeof(Pixel.BGRA4444)) return Pixel.BGRA4444.Format;
-                    if (typeof(TPixel) == typeof(Pixel.BGRA5551)) return Pixel.BGRA5551.Format;
-                    if (typeof(TPixel) == typeof(Pixel.Luminance16)) return Pixel.Luminance16.Format;
-                    break;
-                case 3:
-                    if (typeof(TPixel) == typeof(Pixel.BGR24)) return Pixel.BGR24.Format;
-                    if (typeof(TPixel) == typeof(Pixel.RGB24)) return Pixel.RGB24.Format;
-                    break;
-                case 4:
-                    if (typeof(TPixel) == typeof(Pixel.BGRA32)) return Pixel.BGRA32.Format;
-                    if (typeof(TPixel) == typeof(Pixel.BGRP32)) return Pixel.BGRP32.Format;
-                    if (typeof(TPixel) == typeof(Pixel.RGBA32)) return Pixel.RGBA32.Format;
-                    if (typeof(TPixel) == typeof(Pixel.RGBP32)) return Pixel.RGBP32.Format;
-                    if (typeof(TPixel) == typeof(Pixel.ARGB32)) return Pixel.ARGB32.Format;
-                    if (typeof(TPixel) == typeof(Pixel.PRGB32)) return Pixel.PRGB32.Format;
-                    if (typeof(TPixel) == typeof(Pixel.Luminance32F)) return Pixel.Luminance32F.Format;
-                    break;
-                case 12:
-                    if (typeof(TPixel) == typeof(Pixel.RGB96F)) return Pixel.RGB96F.Format;
-                    if (typeof(TPixel) == typeof(Pixel.BGR96F)) return Pixel.BGR96F.Format;
-                    break;
-                case 16:
-                    if (typeof(TPixel) == typeof(Pixel.BGRA128F)) return Pixel.BGRA128F.Format;
-                    if (typeof(TPixel) == typeof(Pixel.BGRP128F)) return Pixel.BGRP128F.Format;
-                    if (typeof(TPixel) == typeof(Pixel.RGBA128F)) return Pixel.RGBA128F.Format;
-                    if (typeof(TPixel) == typeof(Pixel.RGBP128F)) return Pixel.RGBP128F.Format;
-                    break;
-            }
+            if (typeof(TPixel) == typeof(Pixel.Alpha8)) return Pixel.Alpha8.Format;
+            if (typeof(TPixel) == typeof(Pixel.Luminance8)) return Pixel.Luminance8.Format;
+            
+            if (typeof(TPixel) == typeof(Pixel.BGR565)) return Pixel.BGR565.Format;
+            if (typeof(TPixel) == typeof(Pixel.BGRA4444)) return Pixel.BGRA4444.Format;
+            if (typeof(TPixel) == typeof(Pixel.BGRA5551)) return Pixel.BGRA5551.Format;
+            if (typeof(TPixel) == typeof(Pixel.Luminance16)) return Pixel.Luminance16.Format;
+            
+            if (typeof(TPixel) == typeof(Pixel.BGR24)) return Pixel.BGR24.Format;
+            if (typeof(TPixel) == typeof(Pixel.RGB24)) return Pixel.RGB24.Format;
+            
+            if (typeof(TPixel) == typeof(Pixel.BGRA32)) return Pixel.BGRA32.Format;
+            if (typeof(TPixel) == typeof(Pixel.BGRP32)) return Pixel.BGRP32.Format;
+            if (typeof(TPixel) == typeof(Pixel.RGBA32)) return Pixel.RGBA32.Format;
+            if (typeof(TPixel) == typeof(Pixel.RGBP32)) return Pixel.RGBP32.Format;
+            if (typeof(TPixel) == typeof(Pixel.ARGB32)) return Pixel.ARGB32.Format;
+            if (typeof(TPixel) == typeof(Pixel.PRGB32)) return Pixel.PRGB32.Format;
+            if (typeof(TPixel) == typeof(Pixel.Luminance32F)) return Pixel.Luminance32F.Format;
+            
+            if (typeof(TPixel) == typeof(Pixel.RGB96F)) return Pixel.RGB96F.Format;
+            if (typeof(TPixel) == typeof(Pixel.BGR96F)) return Pixel.BGR96F.Format;
+            
+            if (typeof(TPixel) == typeof(Pixel.BGRA128F)) return Pixel.BGRA128F.Format;
+            if (typeof(TPixel) == typeof(Pixel.BGRP128F)) return Pixel.BGRP128F.Format;
+            if (typeof(TPixel) == typeof(Pixel.RGBA128F)) return Pixel.RGBA128F.Format;
+            if (typeof(TPixel) == typeof(Pixel.RGBP128F)) return Pixel.RGBP128F.Format;            
 
             return CreateUndefined<TPixel>();
         }
@@ -414,12 +400,21 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </summary>
         public bool HasPremulAlpha => Component0.IsPremulAlpha | Component1.IsPremulAlpha | Component2.IsPremulAlpha | Component3.IsPremulAlpha;
 
-        
-
         /// <summary>
-        /// true if all the components are floating point values.
+        /// true if all non empty components are floating point values.
         /// </summary>
-        public bool IsFloating => Component0.IsFloating && Component1.IsFloating && Component2.IsFloating && Component3.IsFloating;
+        public bool IsFloating
+        {
+            get
+            {
+                var result = true;
+                if (!Component0.IsEmpty) result &= Component0.IsFloating;
+                if (!Component1.IsEmpty) result &= Component1.IsFloating;
+                if (!Component2.IsEmpty) result &= Component2.IsFloating;
+                if (!Component3.IsEmpty) result &= Component3.IsFloating;
+                return result;
+            }
+        }
 
         /// <summary>
         /// true if all the components are integer quantized values.
@@ -587,27 +582,34 @@ namespace InteropTypes.Graphics.Bitmaps
             return null;
         }        
 
-        public bool IsCompatibleFormat<TPixel>()
+        public unsafe bool IsCompatibleFormat<TPixel>()
             where TPixel : unmanaged
         {
+            var id = TryIdentifyFormat<TPixel>();
+
             #if DEBUG
 
-            Type tt = typeof(TPixel);
-
-            var tpixelIsFP =
-                tt == typeof(Single) ||
-                tt == typeof(Vector2) ||
-                tt == typeof(Vector3) ||
-                tt == typeof(Vector4);
-
-            if (this.IsFloating != tpixelIsFP)
+            if (!id.IsDefined)
             {
-                throw new Diagnostics.PixelFormatNotSupportedException($"Pixel Format mismatch {this}", typeof(TPixel).Name);
-            }
-            
-            #endif
+                Type tt = typeof(TPixel);
 
-            return this == TryIdentifyFormat<TPixel>();
+                var tpixelIsFP =
+                    tt == typeof(Single) ||
+                    tt == typeof(Vector2) ||
+                    tt == typeof(Vector3) ||
+                    tt == typeof(Vector4);
+
+                if (this.IsFloating != tpixelIsFP)
+                {
+                    throw new Diagnostics.PixelFormatNotSupportedException($"Pixel Format mismatch {this}", typeof(TPixel).Name);
+                }
+            }
+
+            #endif            
+
+            return id.IsDefined
+                ? this == id
+                : sizeof(TPixel) == this.ByteCount;
         }
 
         #endregion

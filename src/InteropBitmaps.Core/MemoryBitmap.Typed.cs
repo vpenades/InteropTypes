@@ -7,8 +7,6 @@ using POINT = System.Drawing.Point;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
-    using Diagnostics;
-
     /// <summary>
     /// Represents a Bitmap wrapped around a <see cref="Memory{Byte}"/>
     /// </summary>

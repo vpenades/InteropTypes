@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 case 1: dst.OfType<Byte>().ApplyMirror(horizontal, vertical, multiThread); return;
                 case 2: dst.OfType<UInt16>().ApplyMirror(horizontal, vertical, multiThread); return;
-                case 3: dst.OfType<Pixel.RGB24>().ApplyMirror(horizontal, vertical, multiThread); return;
+                case 3: dst.OfType<Pixel.Undefined24>().ApplyMirror(horizontal, vertical, multiThread); return;
                 case 4: dst.OfType<UInt32>().ApplyMirror(horizontal, vertical, multiThread); return;
                 case 8: dst.OfType<UInt64>().ApplyMirror(horizontal, vertical, multiThread); return;
                 case 12: dst.OfType<System.Numerics.Vector3>().ApplyMirror(horizontal, vertical, multiThread); return;

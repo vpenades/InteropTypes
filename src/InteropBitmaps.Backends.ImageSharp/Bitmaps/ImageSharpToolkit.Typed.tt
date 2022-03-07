@@ -23,6 +23,9 @@ var pairs = new []
 ("A8","Alpha8"),
 ("L8","Luminance8"),
 ("L16","Luminance16"),
+("Bgr565","BGR565"),
+("Bgra5551","BGRA5551"),
+("Bgra4444","BGRA4444"),
 ("Bgr24","BGR24"),
 ("Rgb24","RGB24"),
 ("Bgra32","BGRA32"),
@@ -47,6 +50,14 @@ foreach(var pair in pairs)
     var PixelA = pair.Item1;
     var PixelB = pair.Item2;
 
+    WriteLine($"public static bool TryWrapAsSpanBitmap(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Action1 action) {{ return _Implementation.TryWrapAsSpanBitmap(self, action); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
     WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Function1<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<{PixelA}, Pixel.{PixelB}, TResult>(self,default, (a,b) => function(a) ); }}");
 }
 
@@ -56,6 +67,14 @@ foreach(var pair in pairs)
     var PixelB = pair.Item2;
 
     WriteLine($"public static TResult ReadAsSpanBitmap<TResult>(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}> other, SpanBitmap<Pixel.{PixelB}>.Function2<TResult> function) {{ return _Implementation.ReadAsSpanBitmap<{PixelA}, Pixel.{PixelB}, TResult>(self, other, function); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static TResult ReadAsImageSharp<TResult>(this SpanBitmap<Pixel.{PixelB}> self, Func<Image<{PixelA}>, TResult> function) {{ return _ImageSharpChangedMonitor.ReadAsImageSharp<Pixel.{PixelB}, {PixelA}, TResult>(self, function); }}");
 }
 
 foreach(var pair in pairs)
@@ -79,7 +98,15 @@ foreach(var pair in pairs)
     var PixelA = pair.Item1;
     var PixelB = pair.Item2;
 
-    WriteLine($"public static bool TryWrapAsSpanBitmap(this Image<{PixelA}> self, SpanBitmap<Pixel.{PixelB}>.Action1 action) {{ return _Implementation.TryWrapAsSpanBitmap(self, action); }}");
+    WriteLine($"public static void WriteAsImageSharp(this SpanBitmap<Pixel.{PixelB}> self, Action<Image<{PixelA}>> action) {{ _ImageSharpChangedMonitor.WriteAsImageSharp<Pixel.{PixelB}, {PixelA}>(self, action); }}");
+}
+
+foreach(var pair in pairs)
+{
+    var PixelA = pair.Item1;
+    var PixelB = pair.Item2;
+
+    WriteLine($"public static void MutateAsImageSharp(this SpanBitmap<Pixel.{PixelB}> self, Action<SixLabors.ImageSharp.Processing.IImageProcessingContext> operation) {{ _Implementation.MutateAsImageSharp<Pixel.{PixelB}, {PixelA}>(self, operation); }}");
 }
 
 PopIndent();

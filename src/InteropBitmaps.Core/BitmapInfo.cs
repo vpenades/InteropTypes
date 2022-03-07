@@ -371,9 +371,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region factory
 
+        [System.Diagnostics.DebuggerStepThrough]
         public void ArgumentIsCompatiblePixelFormat<TPixel>() where TPixel : unmanaged
         {
-            if (!IsCompatiblePixel<TPixel>()) throw new PixelFormatNotSupportedException(typeof(TPixel).Name);            
+            if (!IsCompatiblePixel<TPixel>()) throw new PixelFormatNotSupportedException($"generic {typeof(TPixel).Name} is not compatible with {this.PixelFormat}");
         }
 
         public unsafe bool IsCompatiblePixel<TPixel>() where TPixel:unmanaged
