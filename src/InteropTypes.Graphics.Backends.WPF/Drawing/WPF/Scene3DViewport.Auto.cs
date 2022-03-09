@@ -8,7 +8,7 @@ using InteropTypes.Graphics.Drawing;
 
 namespace InteropTypes.Graphics.Backends.WPF
 {
-    public class AutoCamera3DPanel : Primitives.Scene3DPanel
+    public class AutoCamera3DViewport : Primitives.Scene3DViewport
     {
         private CameraTransform3D _Camera = CameraTransform3D.Identity;
 

@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>    
-    <RootNamespace>InteropTypes.Graphics</RootNamespace>
+    <RootNamespace>WPFDemo</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

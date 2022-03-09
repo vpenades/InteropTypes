@@ -18,15 +18,13 @@ namespace WPFDemo
     {
         public AppMVVM()
         {
-            
+            System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
         }
 
 
         public void DrawTo(IScene3D context)
         {
-            context.DrawSphere((0,0,0), 2, ColorStyle.Red);
-
-            System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
+            context.DrawSphere((0,0,0), 2, ColorStyle.Red);            
         }
 
         

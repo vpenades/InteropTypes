@@ -10,7 +10,7 @@ using System.Windows.Input;
 namespace InteropTypes.Graphics.Backends.WPF
 {
     using DRAWABLE = Drawing.IDrawingBrush<Drawing.IScene3D>;
-    using CAMERATEMPLATE = ControlTemplate;
+    using CAMERATEMPLATE = Scene3DViewportTemplate;
 
     [System.ComponentModel.DefaultProperty(nameof(Scene))]
     [System.Windows.Markup.ContentProperty(nameof(Scene))]
@@ -38,7 +38,9 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         static readonly StaticProperty<DRAWABLE> SceneProperty = _PropFactory.RegisterCallback<DRAWABLE>(nameof(Scene), null);
 
-        static readonly StaticProperty<CAMERATEMPLATE> PanelTemplateProperty = _PropFactory.RegisterCallback(nameof(PanelTemplate), OrbitCamera3DPanel.CreateDefaultTemplate());
+        static readonly StaticProperty<CAMERATEMPLATE> ViewportTemplateProperty = _PropFactory.RegisterCallback(nameof(ViewportTemplate), OrbitCamera3DViewport.CreateDefaultTemplate());
+
+        static readonly StaticProperty<Primitives.Scene3DViewport> PanelProperty = _PropFactory.RegisterCallback<Primitives.Scene3DViewport>(nameof(Viewport), null);
 
         #endregion
 
@@ -56,50 +58,57 @@ namespace InteropTypes.Graphics.Backends.WPF
         ///     from the template given by Camera3DPanel.)
         /// </summary>
         [System.ComponentModel.Bindable(false)]
-        public CAMERATEMPLATE PanelTemplate
+        public CAMERATEMPLATE ViewportTemplate
         {
-            get => PanelTemplateProperty.GetValue(this);
-            set => PanelTemplateProperty.SetValue(this, value);
+            get => ViewportTemplateProperty.GetValue(this);
+            set => ViewportTemplateProperty.SetValue(this, value);
         }
 
-        #endregion
+        public Primitives.Scene3DViewport Viewport
+        {
+            get => PanelProperty.GetValue(this);
+            private set => PanelProperty.SetValue(this, value);
+        }
 
-        #region data
-
-        private Primitives.Scene3DPanel _Panel;
-
-        #endregion
+        #endregion        
 
         #region callbacks        
 
-        void PropertyFactory<Scene3DView>.IPropertyChanged.OnPropertyChanged(DependencyPropertyChangedEventArgs args)
+        public virtual bool OnPropertyChangedEx(DependencyPropertyChangedEventArgs args)
         {
             // https://github.com/dotnet/wpf/blob/a30c4edea55a95ec9d7c2d29d79b2d4fb12ed973/src/Microsoft.DotNet.Wpf/src/PresentationFramework/System/Windows/Controls/ItemsControl.cs#L190
 
             if (args.Property == SceneProperty.Property)
             {
-                if (_Panel != null) _Panel.Scene = this.Scene;
+                if (Viewport != null) Viewport.Scene = this.Scene;
+                return true;
             }
 
-            if (args.Property == PanelTemplateProperty.Property)
+            if (args.Property == ViewportTemplateProperty.Property)
             {
                 _SetCameraPanel();
+                return true;
             }
+
+            return false;
         }
         private void _SetCameraPanel()
         {
             var presenter = this.GetTemplateChild("Presenter") as ContentPresenter;
             if (presenter == null) return;
-            var panelTmpl = this.PanelTemplate;
+            var panelTmpl = this.ViewportTemplate;
             if (panelTmpl == null) return;
             var panelCtrl = panelTmpl.LoadContent();
             if (panelCtrl == null) return;
-            _Panel = panelCtrl as Primitives.Scene3DPanel;
-            if (_Panel == null) return;
 
-            presenter.Content = _Panel;
+            var p = panelCtrl as Primitives.Scene3DViewport;
+            Viewport = p;
 
-            _Panel.Scene = this.Scene;
+            if (p == null) return;
+
+            presenter.Content = p;
+
+            p.Scene = this.Scene;
         }
 
         #endregion        

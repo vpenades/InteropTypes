@@ -18,23 +18,14 @@ namespace InteropTypes.Graphics.Backends.WPF.Primitives
     /// </summary>
     /// <remarks>
     /// <para>The camera is the "bridge" between the 3D scene and the screen's viewport.</para>
-    /// <para>Derived classes: <see cref="OrbitCamera3DPanel"/>, <see cref="AutoCamera3DPanel"/></para>
+    /// <para>Derived classes: <see cref="OrbitCamera3DViewport"/>, <see cref="AutoCamera3DViewport"/></para>
     /// <para>This panel is part of <see cref="Scene3DView"/> architecture.</para>
     /// </remarks>
-    public abstract partial class Scene3DPanel :
-        System.Windows.Controls.Panel,
+    public abstract partial class Scene3DViewport :
+        FrameworkElement,
         CAMERAVIEW.ISource,
-        PropertyFactory<Scene3DPanel>.IPropertyChanged
+        PropertyFactory<Scene3DViewport>.IPropertyChanged
     {
-        #region lifecycle
-
-        public Scene3DPanel()
-        {
-            this.Unloaded += (s, e) => Scene = null; // allow unregister scene from bubble up.
-        }
-
-        #endregion
-
         #region data        
 
         private readonly DrawingContext2D _Context2D = new DrawingContext2D();
@@ -45,7 +36,7 @@ namespace InteropTypes.Graphics.Backends.WPF.Primitives
 
         #region Dependency properties
 
-        private static readonly PropertyFactory<Scene3DPanel> _PropFactory = new PropertyFactory<Scene3DPanel>();
+        private static readonly PropertyFactory<Scene3DViewport> _PropFactory = new PropertyFactory<Scene3DViewport>();
 
         static readonly StaticProperty<DRAWABLE> SceneProperty = _PropFactory.RegisterCallback<DRAWABLE>(nameof(Scene), null);
 
@@ -66,15 +57,18 @@ namespace InteropTypes.Graphics.Backends.WPF.Primitives
 
         #region API
 
-        void PropertyFactory<Scene3DPanel>.IPropertyChanged.OnPropertyChanged(DependencyPropertyChangedEventArgs args)
+        public virtual bool OnPropertyChangedEx(DependencyPropertyChangedEventArgs args)
         {
             if (args.Property == SceneProperty.Property)
             {
                 OnSceneChanged(Scene);
                 this.InvalidateVisual();
+                return true;
             }
-        }
 
+            return false;
+        }
+        
         protected virtual void OnSceneChanged(DRAWABLE scene) { }
 
         public abstract CAMERAVIEW GetCameraTransform3D();        

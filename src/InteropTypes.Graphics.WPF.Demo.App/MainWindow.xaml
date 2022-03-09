@@ -23,17 +23,15 @@
                     <Button Content="Save Scene" Click="Button_Click" />
                     <Button Content="Recenter" Click="Button_Click_1" />
                 </WrapPanel>
-
+                
                 <itypes:Scene3DView x:Name="mySceneView" Scene="{Binding Rocket}" >
 
-                    <!--
-                    <itypes:Scene3DView.Camera3DPanel>
-                        <ControlTemplate>
-                            <itypes:AutoCamera3DPanel />
-                        </ControlTemplate>
-                    </itypes:Scene3DView.Camera3DPanel>
-                    -->                    
-                
+                    <itypes:Scene3DView.ViewportTemplate>
+                        <itypes:Scene3DViewportTemplate>
+                            <local:CustomCamera3DPanel />
+                        </itypes:Scene3DViewportTemplate>
+                    </itypes:Scene3DView.ViewportTemplate>
+
                 </itypes:Scene3DView>
 
             </DockPanel>
@@ -44,7 +42,14 @@
 
             <Image Source="{Binding ClientBitmap.FrontBuffer}" />
             
-        </TabItem>        
+        </TabItem>
+
+        <TabItem Header="tests">
+            <Grid>
+                <Button Content="button" />
+                <TextBlock Text="testblock" />
+            </Grid>
+        </TabItem>
 
     </TabControl>
 </Window>

@@ -6,9 +6,30 @@ namespace InteropTypes.Graphics.Backends
 {
     internal struct PropertyFactory<TClass> where TClass:DependencyObject
     {
-        public interface IPropertyChanged
+        public StaticProperty<TValue> Register<TValue>(string name, TValue defval)
         {
-            void OnPropertyChanged(DependencyPropertyChangedEventArgs args);
+            var p = DependencyProperty.Register
+            (
+                name,
+                typeof(TValue),
+                typeof(TClass),
+                new FrameworkPropertyMetadata(defval)
+            );
+
+            return new StaticProperty<TValue>(p);
+        }
+
+        public StaticProperty<TValue> Register<TValue>(string name, TValue defval, FrameworkPropertyMetadataOptions options)
+        {
+            var p = DependencyProperty.Register
+            (
+                name,
+                typeof(TValue),
+                typeof(TClass),
+                new FrameworkPropertyMetadata(defval, options)
+            );
+
+            return new StaticProperty<TValue>(p);
         }
 
         public StaticProperty<TValue> RegisterCallback<TValue>(string name, TValue defval)
@@ -35,20 +56,7 @@ namespace InteropTypes.Graphics.Backends
             );
 
             return new StaticProperty<TValue>(p);
-        }
-
-        public StaticProperty<TValue> Register<TValue>(string name, TValue defval)
-        {
-            var p = DependencyProperty.Register
-            (
-                name,
-                typeof(TValue),
-                typeof(TClass),
-                new FrameworkPropertyMetadata(defval)
-            );
-
-            return new StaticProperty<TValue>(p);
-        }
+        }        
 
         public StaticProperty<TValue> RegisterAttached<TValue>(string name, TValue defval)
         {
@@ -74,8 +82,13 @@ namespace InteropTypes.Graphics.Backends
 
             if (d is IPropertyChanged instance)
             {
-                instance.OnPropertyChanged(e);
+                instance.OnPropertyChangedEx(e);
             }
+        }
+
+        public interface IPropertyChanged
+        {
+            bool OnPropertyChangedEx(DependencyPropertyChangedEventArgs args);
         }
     }
 
