@@ -10,7 +10,7 @@ namespace InteropTypes.Graphics.Drawing
     /// <summary>
     /// Defines a Camera in 3D space, that can be used to create Camera and Projection matrices.
     /// </summary>
-    public class SceneView3D : IPseudoImmutable, ISceneViewport3D
+    public class SceneView3D : IPseudoImmutable, CameraTransform3D.ISource
     {
         #region lifecycle
 
@@ -134,13 +134,14 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API - Evaluators
 
-        public (Matrix4x4 Camera, Matrix4x4 Projection) GetMatrices(float width, float height)
+        public CameraTransform3D GetCameraTransform3D()
         {
-            var cam = GetCameraMatrix();
-            var prj = GetProjectionMatrix(width, height);
-
-            return (cam, prj);
-        }
+            return new CameraTransform3D(
+                GetCameraMatrix(),
+                _ProjectionFactor > 0 ? _ProjectionFactor : (float?)null,
+                _ProjectionFactor < 0 ? -_ProjectionFactor : (float?)null,
+                0.1f, 10000f);
+        }        
 
         public Matrix4x4 GetProjectionMatrix(float width, float height)
         {
@@ -188,8 +189,8 @@ namespace InteropTypes.Graphics.Drawing
             var forward = -Vector3.Normalize(new Vector3(rx, ry, rz));
 
             return Matrix4x4.CreateWorld((center - forward * distance), forward, Vector3.UnitY);
-        }
+        }        
 
-        #endregion        
+        #endregion
     }
 }

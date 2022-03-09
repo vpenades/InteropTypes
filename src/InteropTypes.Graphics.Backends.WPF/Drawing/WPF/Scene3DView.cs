@@ -7,152 +7,101 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using WPFVECTOR = System.Windows.Media.Media3D.Vector3D;
-using DRAWABLE = InteropTypes.Graphics.Drawing.IDrawingBrush<InteropTypes.Graphics.Drawing.IScene3D>;
-
 namespace InteropTypes.Graphics.Backends.WPF
 {
-    /// <summary>
-    /// Represents a view that controls the camera of the scene3D object inside the content.
-    /// </summary>
-    public class Scene3DView : ContentControl
+    using DRAWABLE = Drawing.IDrawingBrush<Drawing.IScene3D>;
+    using CAMERATEMPLATE = ControlTemplate;
+
+    [System.ComponentModel.DefaultProperty(nameof(Scene))]
+    [System.Windows.Markup.ContentProperty(nameof(Scene))]
+    public class Scene3DView : Control, PropertyFactory<Scene3DView>.IPropertyChanged
     {
         #region lifecycle
 
-        public Scene3DView()
+        static Scene3DView()
         {
-            var isDesign = System.ComponentModel.DesignerProperties.GetIsInDesignMode(this);
-            if (isDesign) return;
-
-            if (_Camera == null) _Camera = new OrbitCamera3D();
-
-            _RegisterBubbleSceneChanges();
-            _RegisterBubbleUpSceneSizeChanges();
-
-            this.Loaded += Scene3DView_Loaded;
-            this.Unloaded += Scene3DView_Unloaded;            
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Scene3DView),new FrameworkPropertyMetadata(typeof(Scene3DView)));
         }        
 
-        private void Scene3DView_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {           
-            _Camera.AttachTo(this);            
-        }        
-
-        private void Scene3DView_Unloaded(object sender, RoutedEventArgs e)
+        public override void OnApplyTemplate()
         {
-            _UnregisterBubbleSceneChanges();
-            _UnregisterBubbleUpSceneSizeChanges();
+            base.OnApplyTemplate();
+
+            _SetCameraPanel();
+        }
+
+        #endregion
+
+        #region dependency properties
+
+        private static readonly PropertyFactory<Scene3DView> _PropFactory = new PropertyFactory<Scene3DView>();
+
+        static readonly StaticProperty<DRAWABLE> SceneProperty = _PropFactory.RegisterCallback<DRAWABLE>(nameof(Scene), null);
+
+        static readonly StaticProperty<CAMERATEMPLATE> PanelTemplateProperty = _PropFactory.RegisterCallback(nameof(PanelTemplate), OrbitCamera3DPanel.CreateDefaultTemplate());
+
+        #endregion
+
+        #region Properties
+
+        public DRAWABLE Scene
+        {
+            get => SceneProperty.GetValue(this);
+            set => SceneProperty.SetValue(this, value);
+        }
+
+        /// <summary>
+        ///     Camera3DPanel is the panel that controls the point of view of the scene.
+        ///     (More precisely, the panel that controls the view is created
+        ///     from the template given by Camera3DPanel.)
+        /// </summary>
+        [System.ComponentModel.Bindable(false)]
+        public CAMERATEMPLATE PanelTemplate
+        {
+            get => PanelTemplateProperty.GetValue(this);
+            set => PanelTemplateProperty.SetValue(this, value);
         }
 
         #endregion
 
         #region data
 
-        private OrbitCamera3D _Camera;
-
-        private Drawing.CameraTransform3D _LastCamera = Drawing.CameraTransform3D.Empty;
-
-        private readonly Dictionary<Object, DRAWABLE> _VisibleScenes = new Dictionary<Object, DRAWABLE>();
+        private Primitives.Scene3DPanel _Panel;
 
         #endregion
 
-        #region scene size scene management        
+        #region callbacks        
 
-        private void _RegisterBubbleUpSceneSizeChanges()
+        void PropertyFactory<Scene3DView>.IPropertyChanged.OnPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            ChildScenesSizeChanged += OnChildSceneSizeChanged;
+            // https://github.com/dotnet/wpf/blob/a30c4edea55a95ec9d7c2d29d79b2d4fb12ed973/src/Microsoft.DotNet.Wpf/src/PresentationFramework/System/Windows/Controls/ItemsControl.cs#L190
+
+            if (args.Property == SceneProperty.Property)
+            {
+                if (_Panel != null) _Panel.Scene = this.Scene;
+            }
+
+            if (args.Property == PanelTemplateProperty.Property)
+            {
+                _SetCameraPanel();
+            }
+        }
+        private void _SetCameraPanel()
+        {
+            var presenter = this.GetTemplateChild("Presenter") as ContentPresenter;
+            if (presenter == null) return;
+            var panelTmpl = this.PanelTemplate;
+            if (panelTmpl == null) return;
+            var panelCtrl = panelTmpl.LoadContent();
+            if (panelCtrl == null) return;
+            _Panel = panelCtrl as Primitives.Scene3DPanel;
+            if (_Panel == null) return;
+
+            presenter.Content = _Panel;
+
+            _Panel.Scene = this.Scene;
         }
 
-        private void _UnregisterBubbleUpSceneSizeChanges()
-        {
-            ChildScenesSizeChanged -= OnChildSceneSizeChanged;
-        }
-
-        public event Primitives.Camera3DPanel.SceneSizeChangedRoutedEventHandler ChildScenesSizeChanged
-        {
-            add { AddHandler(Primitives.Camera3DPanel.SceneSizeChangedEvent, value, true); }
-            remove { RemoveHandler(Primitives.Camera3DPanel.SceneSizeChangedEvent, value); }
-        }
-
-        private void OnChildSceneSizeChanged(object sender, Primitives.Camera3DPanel.SceneSizeChangedEventArgs e)
-        {
-            _Camera.Target = e.Sphere.Center;
-            _Camera.Distance = e.Sphere.Radius * 4;
-            _UpdateCamera();
-        }
-
-        #endregion
-
-        #region child scene management
-
-        /* We use a bubbling routed event to propagate Scene changes from child Scene3DCanvas up to this control.
-         * So we can keep a collection of all the scenes that need to be rendered.
-         * 
-         * Note that 3D layering is totally different compared to 2D layering:  in 3D layering we have to merge
-         * all the scenes into one for depth sorting.
-         */
-
-        private void _RegisterBubbleSceneChanges()
-        {
-            ChildScenesChanged += Scene3DView_ChildScenesChanged;
-        }
-
-        private void _UnregisterBubbleSceneChanges()
-        {
-            ChildScenesChanged -= Scene3DView_ChildScenesChanged;
-        }
-
-        public event Primitives.Scene3DCanvas.SceneChangedRoutedEventHandler ChildScenesChanged
-        {
-            add { AddHandler(Primitives.Scene3DCanvas.SceneChangedEvent, value, true); }
-            remove { RemoveHandler(Primitives.Scene3DCanvas.SceneChangedEvent, value); }
-        }
-
-        private void Scene3DView_ChildScenesChanged(object sender, Primitives.Scene3DCanvas.SceneChangedEventArgs e)
-        {
-            if (e.Scene == null) _VisibleScenes.Remove(e.Source);
-            else _VisibleScenes[e.Source] = e.Scene;
-        }        
-
-        #endregion
-
-        #region mouse events
-
-        // https://stackoverflow.com/questions/20899810/previewmousemove-vs-mousemove
-        // https://docs.microsoft.com/en-us/dotnet/desktop/wpf/advanced/routed-events-overview?redirectedfrom=MSDN&view=netframeworkdesktop-4.8
-        // https://web.archive.org/web/20140225041901/http://www.csharptutorial.in/2012/10/understanding-event-handling-in-wpf.html
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e); // do not call this to block to upper controls
-
-            if (_Camera == null) return;
-
-            _Camera.OnMouseMove(this, e);
-
-            var cam = _Camera.GetCameraTransform();
-            if (cam != _LastCamera) _UpdateCamera();
-            _LastCamera = cam;
-        }
-
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
-        {
-            base.OnMouseWheel(e); // do not call this to block to upper controls
-
-            if (_Camera == null) return;
-
-            _Camera.OnMouseWheel(this, e);
-
-            var cam = _Camera.GetCameraTransform();
-            if (cam != _LastCamera) _UpdateCamera();
-            _LastCamera = cam;
-        }
-
-        private void _UpdateCamera()
-        {
-            _Camera.Clone().AttachTo(this); // this triggers setting the current camera as an attached property to all child objects
-        }
-
-        #endregion
-    }    
+        #endregion        
+    }
 }

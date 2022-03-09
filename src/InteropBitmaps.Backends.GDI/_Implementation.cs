@@ -162,7 +162,7 @@ namespace InteropTypes
             return MemoryBitmap.Reshape(ref dst, binfo);
         }
 
-        public static void Mutate(GDIBITMAP bmp, SpanBitmap.Action1 action)
+        public static void WriteAsSpanBitmap(GDIBITMAP bmp, SpanBitmap.Action1 action)
         {
             var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 

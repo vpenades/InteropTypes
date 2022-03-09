@@ -40,11 +40,11 @@ namespace InteropTypes.Graphics.Drawing
             _Orientation |= flipVertical ? _ImageFlags.FlipVertical : _ImageFlags.None;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public ImageStyle(ImageSource bitmap, ColorStyle color, int flags)
         {
             Image = bitmap;
             Color = color;
-
             _Orientation = (_ImageFlags)flags;
         }
 

@@ -131,14 +131,20 @@ namespace InteropTypes.Graphics.Drawing
 
         #region constructors
 
+        [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2(double x, double y) : this() { X = (float)x; Y = (float)y; }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2(float x, float y) : this() { X = x; Y = y; }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2(VECTOR2 vector) : this() { XY = vector; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point2(ReadOnlySpan<float> span) : this() { X = span[0]; Y = span[1]; }
 
         /// <summary>
         /// Helper method used to convert point params to an array.
@@ -149,6 +155,7 @@ namespace InteropTypes.Graphics.Drawing
         /// When a function has a <see cref="ReadOnlySpan{Point2}"/> we can
         /// pass a Point2.Params(...) instead.
         /// </remarks>
+        [System.Diagnostics.DebuggerStepThrough]
         public static Point2[] Array(params Point2[] points) { return points; }
 
         #endregion
@@ -418,6 +425,15 @@ namespace InteropTypes.Graphics.Drawing
         #region API - Bulk
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CopyTo(Span<float> dst) { dst[0] = X; dst[1] = Y; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CopyTo(Span<Point2> dst) { dst[0] = this; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CopyTo(Span<VECTOR2> dst) { dst[0] = this.XY; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<Point2> AsPoints(Span<VECTOR2> points) { return MEMMARSHALL.Cast<VECTOR2, Point2>(points); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -536,7 +552,10 @@ namespace InteropTypes.Graphics.Drawing
         public GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public VECTOR2 ToNumerics() { return XY; }        
+        public VECTOR2 ToNumerics() { return XY; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float[] ToArray() { return new float[] { X, Y }; }
 
         /// <inheritdoc/>
         public override string ToString() { return XY.ToString(); }

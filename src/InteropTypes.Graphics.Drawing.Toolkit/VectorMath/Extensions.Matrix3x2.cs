@@ -89,6 +89,11 @@ namespace InteropTypes.Graphics.Drawing
             dst[index + 5] = src.M32;
         }
 
+        public static float[] ToArray(this Matrix3x2 src)
+        {
+            return new float[] { src.M11, src.M12, src.M21, src.M22, src.M31, src.M32 };
+        }
+
         #endregion
     }
 }

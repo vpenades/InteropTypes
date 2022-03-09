@@ -41,6 +41,8 @@ namespace InteropTypes.Graphics.Drawing
             nameof(ortho).GuardIsFiniteOrNull(ortho);
             nameof(near).GuardIsFiniteOrNull(near);
 
+            if (fov.HasValue && ortho.HasValue) throw new ArgumentException("FOV and Ortho are defined. Only one of the two must be defined", nameof(ortho));
+
             if (near.HasValue && far.HasValue && far.Value <= near.Value) throw new ArgumentException("far value must be higher than near", nameof(far));
 
             WorldMatrix = position;
@@ -154,6 +156,13 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API
 
+        public Matrix4x4 CreateViewMatrix()
+        {
+            return !Matrix4x4.Invert(WorldMatrix, out Matrix4x4 viewMatrix)
+                ? throw new InvalidOperationException("Can't invert")
+                : viewMatrix;
+        }
+
         public Matrix4x4 CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null)
         {
             nameof(aspectRatio).GuardIsFinite(aspectRatio);
@@ -211,7 +220,16 @@ namespace InteropTypes.Graphics.Drawing
 
             return result;
         }
-        #endif
+#endif
+
+        #endregion
+
+        #region nested types
+
+        public interface ISource
+        {
+            CameraTransform3D GetCameraTransform3D();
+        }
 
         #endregion
     }

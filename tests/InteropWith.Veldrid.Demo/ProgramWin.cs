@@ -6,7 +6,7 @@ using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
-using MonoGameDemo;
+using InteropTypes;
 
 using Veldrid;
 using Veldrid.Sdl2;

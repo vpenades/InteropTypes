@@ -29,10 +29,12 @@ namespace InteropTypes.Graphics.Drawing
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{XYZ}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1036:Override methods on comparable types", Justification = "The API would be misleading")]
     public partial struct Point3
         : IFormattable
         , IEquatable<Point3>
         , IEquatable<VECTOR3>
+        , IComparable<BoundingSphere>
     {
         #region diagnostics
 
@@ -93,14 +95,20 @@ namespace InteropTypes.Graphics.Drawing
 
         #region constructors
 
+        [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3(float x, float y, float z) : this() { X = x; Y = y; Z = z; }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3(VECTOR3 v) : this() { XYZ = v; }
 
+        [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3(Point2 xy, float z) : this() { XY = xy.XY; Z = z; }        
+        public Point3(Point2 xy, float z) : this() { XY = xy.XY; Z = z; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3(ReadOnlySpan<float> span) : this() { X = span[0]; Y = span[1]; Z = span[2]; }
 
         /// <summary>
         /// Helper method used to convert point params to an array.
@@ -111,6 +119,7 @@ namespace InteropTypes.Graphics.Drawing
         /// When a function has a <see cref="ReadOnlySpan{Point2}"/> we can
         /// pass a Point2.Params(...) instead.
         /// </remarks>
+        [System.Diagnostics.DebuggerStepThrough]
         public static Point3[] Array(params Point3[] points) { return points; }
 
         #endregion
@@ -334,7 +343,36 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
+        #region boundings
+
+        /// <summary>
+        /// Compares this point against a sphere.
+        /// </summary>
+        /// <param name="other">the sphere to compare against</param>
+        /// <returns>
+        /// -1 if inside <paramref name="other"/> sphere.<br/>
+        /// 0 if overlapping <paramref name="other"/> sphere.<br/>
+        /// 1 if outside <paramref name="other"/> sphere.<br/>
+        /// </returns>
+        public int CompareTo(BoundingSphere other)
+        {
+            return VECTOR3
+                .Distance(this.XYZ, other.Center)
+                .CompareTo(other.Radius);
+        }
+
+        #endregion
+
         #region API - Bulk
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CopyTo(Span<float> dst) { dst[0] = X; dst[1] = Y; dst[2] = Z; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CopyTo(Span<Point3> dst) { dst[0] = this; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void CopyTo(Span<VECTOR3> dst) { dst[0] = this.XYZ; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<Point3> AsPoints(Span<VECTOR3> points) { return MEMMARSHALL.Cast<VECTOR3, Point3>(points); }
@@ -384,7 +422,10 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public VECTOR3 ToNumerics() { return XYZ; }
 
-        /// <inheritdoc/>        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float[] ToArray() { return new float[] { X, Y, Z}; }
+
+        /// <inheritdoc/>  
         public override string ToString() { return XYZ.ToString(); }
 
         /// <inheritdoc/>

@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IScene3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Record3D : IScene3D, IDrawingBrush<IScene3D>, IPseudoImmutable, ISceneBounds3D
+    public class Record3D : IScene3D, IDrawingBrush<IScene3D>, IPseudoImmutable, BoundingSphere.ISource
     {
         #region data
 
@@ -56,7 +56,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
 
-        public (XYZ Center, float Radius) BoundingSphere
+        public BoundingSphere BoundingSphere
         {
             get
             {
@@ -71,7 +71,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API
 
-        public (XYZ Center, float Radius) GetBoundingSphere()
+        public BoundingSphere GetBoundingSphere()
         {
             var key = (Model3DVersionKey)ImmutableKey;
             return key.BoundingSphere;
@@ -85,19 +85,19 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>        
-        public void DrawAsset((Quaternion R, XYZ T) transform, object asset, ColorStyle style)
+        public void DrawAsset((Quaternion R, XYZ T) transform, object asset)
         {
             var xform = Matrix4x4.CreateFromQuaternion(transform.R);
             xform.Translation = transform.T;
 
-            DrawAsset(xform, asset, style);
+            DrawAsset(xform, asset);
         }
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
             _ImmutableKey = null;
-            _Commands.DrawAsset(transform, asset, style);
+            _Commands.DrawAsset(transform, asset);
         }        
 
         /// <inheritdoc/>
@@ -158,16 +158,9 @@ namespace InteropTypes.Graphics.Drawing
             context.DrawScene(this);
         }
 
-        public void DrawTo((ICanvas2D target, float width, float height) renderTarget, Matrix4x4 camera, Matrix4x4 projection)
+        public void DrawTo((ICanvas2D target, float width, float height) renderTarget, CameraTransform3D camera)
         {
-
-            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-            Before:
-                        var context = Transforms.PerspectiveTransform.Create(renderTarget, projection, camera);
-            After:
-                        var context = PerspectiveTransform.Create(renderTarget, projection, camera);
-            */
-            var context = Transforms.PerspectiveTransform.Create(renderTarget, projection, camera);
+            var context = Transforms.PerspectiveTransform.Create(renderTarget, camera);
 
             context.DrawScene(this);
         }
@@ -226,7 +219,7 @@ namespace InteropTypes.Graphics.Drawing
         private int? _ContentHash;
 
         private (XYZ Min, XYZ Max)? _BoundingBox;
-        private (XYZ Center, float Radius)? _BoundingSphere;
+        private BoundingSphere? _BoundingSphere;
 
         private (int, int, int, System.Drawing.Color)[] _Triangles;
 
@@ -279,7 +272,7 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        public (XYZ Center, float Radius) BoundingSphere
+        public BoundingSphere BoundingSphere
         {
             get
             {
@@ -295,9 +288,9 @@ namespace InteropTypes.Graphics.Drawing
 
         private void _UpdateBounds(Record3D model)
         {
-            var (min, max, center, radius) = model._Commands.GetBounds();
+            var (min, max, sphere) = model._Commands.GetBounds();
             _BoundingBox = (min, max);
-            _BoundingSphere = (center, radius);
+            _BoundingSphere = sphere;
         }
 
         #endregion

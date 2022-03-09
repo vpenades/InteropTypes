@@ -11,7 +11,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose3D
     {
-        public static bool DrawAsset(ICoreScene3D dc, in Matrix4x4 transform, ASSET asset, ColorStyle style)
+        public static bool DrawAsset(ICoreScene3D dc, in Matrix4x4 transform, ASSET asset)
         {
             if (asset == null) return true;
 
@@ -21,7 +21,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             // fallback
 
-            return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey, style);
+            return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey);
         }
 
         public static void DrawSurface(ICoreScene3D dc, ReadOnlySpan<POINT3> vertices, SurfaceStyle style)

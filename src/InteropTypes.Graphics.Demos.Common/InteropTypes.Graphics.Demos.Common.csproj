@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>  
+
+  <ItemGroup>
+    <None Remove="Assets\**" />
+    <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+  </ItemGroup>
+
+</Project>

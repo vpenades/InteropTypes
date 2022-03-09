@@ -20,13 +20,13 @@ namespace InteropTypes.Graphics.Drawing
         {
             if (PrimaryAsset is Record3D md3d)
             {
-                target.DrawAssetAsSurfaces(PrimaryAsset, COLOR.White);
+                target.DrawAssetAsSurfaces(PrimaryAsset);
                 return;
             }
 
             if (FallbackAsset != null)
             {
-                target.DrawAssetAsSurfaces(FallbackAsset, COLOR.White);
+                target.DrawAssetAsSurfaces(FallbackAsset);
                 return;
             }
 
@@ -37,13 +37,13 @@ namespace InteropTypes.Graphics.Drawing
         {
             if (PrimaryAsset is Record3D md3d)
             {
-                target.DrawAssetAsPrimitives(PrimaryAsset, COLOR.White);
+                target.DrawAssetAsPrimitives(PrimaryAsset);
                 return;
             }
 
             if (FallbackAsset != null)
             {
-                target.DrawAssetAsPrimitives(FallbackAsset, COLOR.White);
+                target.DrawAssetAsPrimitives(FallbackAsset);
                 return;
             }
 

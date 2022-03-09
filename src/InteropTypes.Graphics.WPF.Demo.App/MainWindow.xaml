@@ -9,38 +9,34 @@
         Title="MainWindow" Height="450" Width="800">    
     
     <TabControl>
-        <!--
-        <TabItem Header="2D">
-            
-        </TabItem>
-        -->
 
         <TabItem Header="3D">
 
-            <itypes:Scene3DView >
-                <itypes:Scene3DPanel Content="{Binding}" />
-            </itypes:Scene3DView>
+            <itypes:Scene3DView Scene="{Binding Item1}" />
 
         </TabItem>
 
         <TabItem Header="3D root">
 
-            <itypes:Scene3DView >                
-                
-                <itypes:Scene3DRoot>
+            <DockPanel>
+                <WrapPanel DockPanel.Dock="Top">
+                    <Button Content="Save Scene" Click="Button_Click" />
+                    <Button Content="Recenter" Click="Button_Click_1" />
+                </WrapPanel>
 
-                    <itypes:Scene3DRoot.Background>
-                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <GradientStop Color="DarkBlue" Offset="0" />
-                            <GradientStop Color="SkyBlue" Offset="1" />
-                        </LinearGradientBrush>
-                    </itypes:Scene3DRoot.Background>
-                    
-                    <itypes:Scene3DSource Scene="{Binding Item1}" />                    
-                    <itypes:Scene3DSource Scene="{Binding Item2}" />
-                </itypes:Scene3DRoot>
+                <itypes:Scene3DView x:Name="mySceneView" Scene="{Binding Rocket}" >
+
+                    <!--
+                    <itypes:Scene3DView.Camera3DPanel>
+                        <ControlTemplate>
+                            <itypes:AutoCamera3DPanel />
+                        </ControlTemplate>
+                    </itypes:Scene3DView.Camera3DPanel>
+                    -->                    
                 
-            </itypes:Scene3DView>
+                </itypes:Scene3DView>
+
+            </DockPanel>
 
         </TabItem>
 
@@ -48,7 +44,7 @@
 
             <Image Source="{Binding ClientBitmap.FrontBuffer}" />
             
-        </TabItem>
+        </TabItem>        
 
     </TabControl>
 </Window>

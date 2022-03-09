@@ -16,12 +16,11 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region IScene3D
 
-        public void DrawAsset(in XFORM3 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in XFORM3 transform, object asset)
         {
             ref var xref = ref AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset)[0];
             xref.Transform = transform;
-            xref.AssetRef = AddReference(asset);
-            xref.Style = brush;
+            xref.AssetRef = AddReference(asset);            
         }
         
         public unsafe void DrawSegments(ReadOnlySpan<POINT3> vertices, float diameter, LineStyle brush)
@@ -95,7 +94,7 @@ namespace InteropTypes.Graphics.Drawing
             return span.Slice(4);
         }
 
-        public (XYZ Min, XYZ Max, XYZ Center, float Radius) GetBounds()
+        public (XYZ Min, XYZ Max, BoundingSphere Sphere) GetBounds()
         {
             var bounds = _BoundsContext.CreateEmpty();
 
@@ -114,7 +113,7 @@ namespace InteropTypes.Graphics.Drawing
                 }
             }
 
-            return (bounds.Min, bounds.Max, bounds.Sphere.Center, bounds.Sphere.Radius);
+            return (bounds.Min, bounds.Max, bounds.Sphere);
         }
 
         public XYZ GetCenter(int offset)
@@ -198,7 +197,7 @@ namespace InteropTypes.Graphics.Drawing
             public XYZ Min;
             public XYZ Max;
 
-            public (XYZ Center, float Radius) Sphere;
+            public BoundingSphere Sphere;
 
             public void AddVertex(in POINT3 vertex, float radius)
             {
@@ -211,29 +210,10 @@ namespace InteropTypes.Graphics.Drawing
                 // Bounding Sphere
                 if (Sphere.Radius < 0) { Sphere = (v, radius); return; }
 
-                Sphere = _MergeSpheres(Sphere, (v, radius));
+                Sphere = BoundingSphere.Merge(Sphere, (v, radius));
             }
 
-            private static (XYZ Center, float Radius) _MergeSpheres(in (XYZ Center, float Radius) left, in (XYZ Center, float Radius) right)
-            {
-                var relative = right.Center - left.Center;
-
-                float distance = relative.Length();
-
-                // check if one sphere is inside the other
-                if (distance <= left.Radius + right.Radius)
-                {
-                    if (distance <= left.Radius - right.Radius) return left;
-                    if (distance <= right.Radius - left.Radius) return right;
-                }
-
-                float leftRadius = Math.Max(left.Radius - distance, right.Radius);
-                float Rightradius = Math.Max(left.Radius + distance, right.Radius);
-
-                relative = relative + (leftRadius - Rightradius) / (2 * distance) * relative;
-
-                return (left.Center + relative, (leftRadius + Rightradius) / 2);
-            }
+            
         }
 
         interface IPointsCount { int GetCount(); }        
@@ -379,8 +359,7 @@ namespace InteropTypes.Graphics.Drawing
         struct _PrimitiveAsset
         {
             public XFORM3 Transform;
-            public int AssetRef;
-            public ColorStyle Style;
+            public int AssetRef;            
 
             public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
@@ -400,11 +379,11 @@ namespace InteropTypes.Graphics.Drawing
                 }
                 else
                 {
-                    var sphere = Toolkit.GetAssetBoundingSphere(xref);
-                    if (sphere.HasValue)
+                    var sphere = BoundingSphere.FromAsset(xref);
+                    if (sphere.IsValid)
                     {
-                        var (c, s) = src.Transform.TransformSphere(sphere.Value);
-                        bounds.AddVertex(c, s);
+                        var s = BoundingSphere.Transform(sphere, src.Transform);
+                        bounds.AddVertex(s.Center, s.Radius);
                     }
                 }
             }
@@ -419,9 +398,9 @@ namespace InteropTypes.Graphics.Drawing
             {
                 var body = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveAsset>(command)[0];
 
-                if (collapse) { dst.DrawAssetAsSurfaces(body.Transform, references[body.AssetRef], body.Style); return; }
+                if (collapse) { dst.DrawAssetAsSurfaces(body.Transform, references[body.AssetRef]); return; }
 
-                dst.DrawAsset(body.Transform, references[body.AssetRef], body.Style);
+                dst.DrawAsset(body.Transform, references[body.AssetRef]);
             }
         }
 

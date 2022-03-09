@@ -24,6 +24,7 @@ namespace InteropTypes.Graphics.Drawing
         public static implicit operator PolygonStyle((ColorStyle, ColorStyle, float) style) { return new PolygonStyle(style.Item1, style.Item2, style.Item3); }
         public static implicit operator PolygonStyle(OutlineFillStyle style) { return new PolygonStyle(style.FillColor, style.OutlineColor, style.OutlineWidth); }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public PolygonStyle(ColorStyle fillColor)
         {
             FillColor = fillColor;
@@ -31,6 +32,7 @@ namespace InteropTypes.Graphics.Drawing
             OutlineWidth = 0;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public PolygonStyle(ColorStyle outColor, float outWidth)
         {
             FillColor = ColorStyle.Transparent;
@@ -38,6 +40,7 @@ namespace InteropTypes.Graphics.Drawing
             OutlineWidth = outWidth;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public PolygonStyle(ColorStyle fillColor, ColorStyle outColor, float outWidth)
         {
             FillColor = fillColor;

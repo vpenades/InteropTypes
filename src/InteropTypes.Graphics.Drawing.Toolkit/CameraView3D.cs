@@ -20,6 +20,8 @@ namespace InteropTypes.Graphics.Drawing
             var center = bounds.MinMaxCenter();
             var from = bounds.ColumnY() - center;
 
+            from *= 4;
+
             return CreatePerspective(from, center);
         }
 

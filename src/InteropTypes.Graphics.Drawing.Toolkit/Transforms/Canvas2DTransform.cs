@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public static Canvas2DTransform Create(ICoreCanvas2D t, Matrix3x2 xform)
         {
             return new Canvas2DTransform(t, xform);
-        }
+        }        
 
         public static Canvas2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, Point2 virtualSize)
         {
@@ -58,6 +58,11 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             xform = Matrix3x2.Multiply(invVirtOffset, xform);
 
             return new Canvas2DTransform(t, xform);
+        }
+
+        public static Canvas2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, CameraTransform2D camera)
+        {            
+            return Create(viewport, camera.CreateFinalMatrix((viewport.width,viewport.height)));
         }
 
         public static Canvas2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, Matrix3x2 projection, Matrix3x2 camera)
@@ -263,7 +268,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region 3D Drawing API
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
             throw new NotImplementedException();
             // this.DrawAssetAsSurfaces(transform, asset, brush);            

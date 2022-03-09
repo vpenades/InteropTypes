@@ -16,10 +16,6 @@
 
   <ItemGroup>
     <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\Shared\DrawableScenes.cs" Link="DrawableScenes.cs" />
   </ItemGroup>  
 
   <ItemGroup>
@@ -30,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
     <ProjectReference Include="..\..\src\InteropWith.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj" />
   </ItemGroup>
 

@@ -8,35 +8,16 @@ using InteropTypes.Graphics.Drawing;
 using XY = System.Numerics.Vector2;
 using COLOR = System.Drawing.Color;
 
-namespace MonoGameDemo
+namespace InteropTypes
 {
-    struct _Scene2D : IDrawingBrush<ICanvas2D>
-    {
-        public void DrawTo(ICanvas2D dc)
-        {
-            dc.DrawCircle((0, 0), 50, COLOR.Red);
-            dc.DrawCircle((200, 200), 50, COLOR.White);
-            dc.DrawRectangle((175, 175), (50, 50), (COLOR.Transparent, COLOR.Red, 4));
+    
 
-            dc.DrawRectangle((480, 200), (130, 130), (COLOR.Transparent, COLOR.Red, 4), 12);
-
-            dc.DrawRectangle((10, 10), (200, 200), (COLOR.Yellow, 2));
-
-            // DrawFlower(_Drawing2D, new XY(450, 450), 4);
-
-            dc.DrawFont((100, 100), 0.75f, "Hello World!", (COLOR.White, 2));
-
-            // var bee = _CreateBeeModel2D(COLOR.Yellow);
-            // _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.CreateRotation(t) * System.Numerics.Matrix3x2.CreateTranslation(600, 350), bee, Color.White);
-        }
-    }
-
-    class _Sprites2D : IDrawingBrush<ICanvas2D>
+    public class _Sprites2D : IDrawingBrush<ICanvas2D>
     {
         private static readonly ImageSource[] _Punk = ImageSource.CreateGrid("Assets\\PunkRun.png", 8, 8, (256, 256), (128, 128)).ToArray();
         private static readonly ImageSource[] _Tiles = ImageSource.CreateGrid("Assets\\Tiles.png", 63, 9, (16, 16), XY.Zero).ToArray();
 
-        private static readonly ImageSource _Offset0 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40,108), false).WithScale(0.45f);
+        private static readonly ImageSource _Offset0 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), false).WithScale(0.45f);
         private static readonly ImageSource _Offset1 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), true).WithScale(0.45f);
 
         private static readonly BitmapGrid _Map1 = new BitmapGrid(4, 4, _Tiles);
@@ -88,7 +69,7 @@ namespace MonoGameDemo
 
             dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 40), _Offset0);
 
-            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 80), (_Offset0,true,false));
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 80), (_Offset0, true, false));
 
             dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 140), _Offset1);
 
@@ -100,59 +81,5 @@ namespace MonoGameDemo
 
             // rect.Bounds.DrawTo(_Drawing2D, (Color.Red, 1));
         }
-    }
-
-    
-
-    class BitmapGrid
-    {
-        #region lifecycle
-
-        public BitmapGrid(int width, int height, ImageSource[] templates)
-        {
-            _Sprites = templates;
-            _Width = width;
-            _Height = height;
-            _Tiles = new int[_Width * _Height];
-
-            _Tiles[2] = 5;
-            _Tiles[5] = 7;
-        }
-
-        #endregion
-
-        #region data
-
-        private readonly ImageSource[] _Sprites;
-
-        private readonly int _Width;
-        private readonly int _Height;
-
-        private readonly int[] _Tiles;
-
-        #endregion
-
-        #region API
-
-        public void DrawTo(ICanvas2D target, System.Numerics.Matrix3x2 transform)
-        {
-            var tmp = new ImageSource();
-
-            for (int y = 0; y < _Height; ++y)
-            {
-                for (int x = 0; x < _Width; ++x)
-                {
-                    var offset = new XY(x * 16, y * 16);
-
-                    var idx = _Tiles[y * _Width + x];
-
-                    _Sprites[idx].CopyTo(tmp, -offset);                    
-
-                    target.DrawImage(transform, tmp);
-                }
-            }
-        }
-
-        #endregion
     }
 }

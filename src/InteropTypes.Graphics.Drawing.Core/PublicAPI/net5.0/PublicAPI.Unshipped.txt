@@ -1,3 +1,16 @@
+InteropTypes.Graphics.Drawing.BoundingSphere
+InteropTypes.Graphics.Drawing.BoundingSphere.BoundingSphere() -> void
+InteropTypes.Graphics.Drawing.BoundingSphere.BoundingSphere(InteropTypes.Graphics.Drawing.Point3 center, float radius) -> void
+InteropTypes.Graphics.Drawing.BoundingSphere.BoundingSphere(System.Numerics.Vector3 center, float radius) -> void
+InteropTypes.Graphics.Drawing.BoundingSphere.Center -> System.Numerics.Vector3
+InteropTypes.Graphics.Drawing.BoundingSphere.CompareTo(InteropTypes.Graphics.Drawing.BoundingSphere other) -> int
+InteropTypes.Graphics.Drawing.BoundingSphere.CompareTo(System.Numerics.Plane other) -> int
+InteropTypes.Graphics.Drawing.BoundingSphere.Equals(InteropTypes.Graphics.Drawing.BoundingSphere other) -> bool
+InteropTypes.Graphics.Drawing.BoundingSphere.ISource
+InteropTypes.Graphics.Drawing.BoundingSphere.ISource.GetBoundingSphere() -> InteropTypes.Graphics.Drawing.BoundingSphere
+InteropTypes.Graphics.Drawing.BoundingSphere.IsValid.get -> bool
+InteropTypes.Graphics.Drawing.BoundingSphere.Radius -> float
+InteropTypes.Graphics.Drawing.BoundingSphere.ToString(string format, System.IFormatProvider formatProvider) -> string
 InteropTypes.Graphics.Drawing.CameraTransform2D
 InteropTypes.Graphics.Drawing.CameraTransform2D.CameraTransform2D() -> void
 InteropTypes.Graphics.Drawing.CameraTransform2D.CameraTransform2D(System.Numerics.Matrix3x2 position, InteropTypes.Graphics.Drawing.Point2 virtualSize, bool keepAspectRatio) -> void
@@ -6,6 +19,8 @@ InteropTypes.Graphics.Drawing.CameraTransform2D.CreateFinalMatrix(InteropTypes.G
 InteropTypes.Graphics.Drawing.CameraTransform2D.CreateViewportMatrix(InteropTypes.Graphics.Drawing.Point2 physicalSize) -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform2D.Equals(InteropTypes.Graphics.Drawing.CameraTransform2D other) -> bool
 InteropTypes.Graphics.Drawing.CameraTransform2D.IsInitialized.get -> bool
+InteropTypes.Graphics.Drawing.CameraTransform2D.ISource
+InteropTypes.Graphics.Drawing.CameraTransform2D.ISource.GetCameraTransform2D() -> InteropTypes.Graphics.Drawing.CameraTransform2D
 InteropTypes.Graphics.Drawing.CameraTransform2D.IsValid.get -> bool
 InteropTypes.Graphics.Drawing.CameraTransform2D.KeepAspectRatio -> bool?
 InteropTypes.Graphics.Drawing.CameraTransform2D.VirtualSize -> System.Numerics.Vector2?
@@ -14,9 +29,12 @@ InteropTypes.Graphics.Drawing.CameraTransform3D
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D() -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D(System.Numerics.Matrix4x4 position, float? fov, float? ortho, float? near, float? far) -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null) -> System.Numerics.Matrix4x4
+InteropTypes.Graphics.Drawing.CameraTransform3D.CreateViewMatrix() -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.CameraTransform3D.Equals(InteropTypes.Graphics.Drawing.CameraTransform3D other) -> bool
 InteropTypes.Graphics.Drawing.CameraTransform3D.FarPlane -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.IsInitialized.get -> bool
+InteropTypes.Graphics.Drawing.CameraTransform3D.ISource
+InteropTypes.Graphics.Drawing.CameraTransform3D.ISource.GetCameraTransform3D() -> InteropTypes.Graphics.Drawing.CameraTransform3D
 InteropTypes.Graphics.Drawing.CameraTransform3D.IsValid.get -> bool
 InteropTypes.Graphics.Drawing.CameraTransform3D.NearPlane -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.OrthographicScale -> float?
@@ -101,16 +119,10 @@ InteropTypes.Graphics.Drawing.IMeshScene3D.DrawWireframePrimitive(System.ReadOnl
 InteropTypes.Graphics.Drawing.IPseudoImmutable
 InteropTypes.Graphics.Drawing.IPseudoImmutable.ImmutableKey.get -> object
 InteropTypes.Graphics.Drawing.IScene3D
-InteropTypes.Graphics.Drawing.IScene3D.DrawAsset(in System.Numerics.Matrix4x4 transform, object asset, InteropTypes.Graphics.Drawing.ColorStyle style) -> void
+InteropTypes.Graphics.Drawing.IScene3D.DrawAsset(in System.Numerics.Matrix4x4 transform, object asset) -> void
 InteropTypes.Graphics.Drawing.IScene3D.DrawSegments(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> vertices, float diameter, InteropTypes.Graphics.Drawing.LineStyle style) -> void
 InteropTypes.Graphics.Drawing.IScene3D.DrawSphere(InteropTypes.Graphics.Drawing.Point3 center, float diameter, InteropTypes.Graphics.Drawing.OutlineFillStyle style) -> void
 InteropTypes.Graphics.Drawing.IScene3D.DrawSurface(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> vertices, InteropTypes.Graphics.Drawing.SurfaceStyle style) -> void
-InteropTypes.Graphics.Drawing.ISceneBounds3D
-InteropTypes.Graphics.Drawing.ISceneBounds3D.GetBoundingSphere() -> (System.Numerics.Vector3 Center, float Radius)
-InteropTypes.Graphics.Drawing.ISceneViewport2D
-InteropTypes.Graphics.Drawing.ISceneViewport2D.GetMatrices(float renderWidth, float renderHeight) -> (System.Numerics.Matrix3x2 Camera, System.Numerics.Matrix3x2 Projection)
-InteropTypes.Graphics.Drawing.ISceneViewport3D
-InteropTypes.Graphics.Drawing.ISceneViewport3D.GetMatrices(float renderWidth, float renderHeight) -> (System.Numerics.Matrix4x4 Camera, System.Numerics.Matrix4x4 Projection)
 InteropTypes.Graphics.Drawing.ITransformer2D
 InteropTypes.Graphics.Drawing.ITransformer2D.TransformForward(System.Span<InteropTypes.Graphics.Drawing.Point2> points) -> void
 InteropTypes.Graphics.Drawing.ITransformer2D.TransformInverse(System.Span<InteropTypes.Graphics.Drawing.Point2> points) -> void
@@ -169,6 +181,9 @@ InteropTypes.Graphics.Drawing.OutlineFillStyle.WithOutline(float ow) -> InteropT
 InteropTypes.Graphics.Drawing.OutlineFillStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor) -> InteropTypes.Graphics.Drawing.OutlineFillStyle
 InteropTypes.Graphics.Drawing.OutlineFillStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor, float ow) -> InteropTypes.Graphics.Drawing.OutlineFillStyle
 InteropTypes.Graphics.Drawing.Point2
+InteropTypes.Graphics.Drawing.Point2.CopyTo(System.Span<float> dst) -> void
+InteropTypes.Graphics.Drawing.Point2.CopyTo(System.Span<InteropTypes.Graphics.Drawing.Point2> dst) -> void
+InteropTypes.Graphics.Drawing.Point2.CopyTo(System.Span<System.Numerics.Vector2> dst) -> void
 InteropTypes.Graphics.Drawing.Point2.DominantAxis.get -> int
 InteropTypes.Graphics.Drawing.Point2.Equals(InteropTypes.Graphics.Drawing.Point2 other) -> bool
 InteropTypes.Graphics.Drawing.Point2.Equals(System.Drawing.PointF other) -> bool
@@ -181,6 +196,8 @@ InteropTypes.Graphics.Drawing.Point2.Point2() -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(double x, double y) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(float x, float y) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(System.Numerics.Vector2 vector) -> void
+InteropTypes.Graphics.Drawing.Point2.Point2(System.ReadOnlySpan<float> span) -> void
+InteropTypes.Graphics.Drawing.Point2.ToArray() -> float[]
 InteropTypes.Graphics.Drawing.Point2.ToGDIPoint() -> System.Drawing.PointF
 InteropTypes.Graphics.Drawing.Point2.ToGDISize() -> System.Drawing.SizeF
 InteropTypes.Graphics.Drawing.Point2.ToNumerics() -> System.Numerics.Vector2
@@ -190,6 +207,10 @@ InteropTypes.Graphics.Drawing.Point2.X -> float
 InteropTypes.Graphics.Drawing.Point2.XY -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Point2.Y -> float
 InteropTypes.Graphics.Drawing.Point3
+InteropTypes.Graphics.Drawing.Point3.CompareTo(InteropTypes.Graphics.Drawing.BoundingSphere other) -> int
+InteropTypes.Graphics.Drawing.Point3.CopyTo(System.Span<float> dst) -> void
+InteropTypes.Graphics.Drawing.Point3.CopyTo(System.Span<InteropTypes.Graphics.Drawing.Point3> dst) -> void
+InteropTypes.Graphics.Drawing.Point3.CopyTo(System.Span<System.Numerics.Vector3> dst) -> void
 InteropTypes.Graphics.Drawing.Point3.DominantAxis.get -> int
 InteropTypes.Graphics.Drawing.Point3.Equals(InteropTypes.Graphics.Drawing.Point3 other) -> bool
 InteropTypes.Graphics.Drawing.Point3.Equals(System.Numerics.Vector3 other) -> bool
@@ -199,6 +220,8 @@ InteropTypes.Graphics.Drawing.Point3.Point3() -> void
 InteropTypes.Graphics.Drawing.Point3.Point3(float x, float y, float z) -> void
 InteropTypes.Graphics.Drawing.Point3.Point3(InteropTypes.Graphics.Drawing.Point2 xy, float z) -> void
 InteropTypes.Graphics.Drawing.Point3.Point3(System.Numerics.Vector3 v) -> void
+InteropTypes.Graphics.Drawing.Point3.Point3(System.ReadOnlySpan<float> span) -> void
+InteropTypes.Graphics.Drawing.Point3.ToArray() -> float[]
 InteropTypes.Graphics.Drawing.Point3.ToNumerics() -> System.Numerics.Vector3
 InteropTypes.Graphics.Drawing.Point3.ToString(string format, System.IFormatProvider formatProvider) -> string
 InteropTypes.Graphics.Drawing.Point3.WithLength(float len) -> System.Numerics.Vector3
@@ -233,6 +256,7 @@ InteropTypes.Graphics.Drawing.Segment2.Length.get -> float
 InteropTypes.Graphics.Drawing.Segment2.Ordinal.get -> InteropTypes.Graphics.Drawing.Segment2
 InteropTypes.Graphics.Drawing.Segment2.Segment2() -> void
 InteropTypes.Graphics.Drawing.Segment3
+InteropTypes.Graphics.Drawing.Segment3.CompareTo(InteropTypes.Graphics.Drawing.BoundingSphere other) -> int
 InteropTypes.Graphics.Drawing.Segment3.Direction.get -> System.Numerics.Vector3
 InteropTypes.Graphics.Drawing.Segment3.DirectionNormalized.get -> System.Numerics.Vector3
 InteropTypes.Graphics.Drawing.Segment3.DominantAxis.get -> int
@@ -276,6 +300,9 @@ InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Poin
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.ColorStyle c) -> void
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.ColorStyle c, InteropTypes.Graphics.Drawing.Point2 t) -> void
 InteropTypes.Graphics.Drawing.Vertex3.Vertex3(InteropTypes.Graphics.Drawing.Point3 p, InteropTypes.Graphics.Drawing.Point3 t) -> void
+override InteropTypes.Graphics.Drawing.BoundingSphere.Equals(object obj) -> bool
+override InteropTypes.Graphics.Drawing.BoundingSphere.GetHashCode() -> int
+override InteropTypes.Graphics.Drawing.BoundingSphere.ToString() -> string
 override InteropTypes.Graphics.Drawing.CameraTransform2D.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.CameraTransform2D.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.CameraTransform3D.Equals(object obj) -> bool
@@ -326,6 +353,18 @@ readonly InteropTypes.Graphics.Drawing.Segment3.B -> System.Numerics.Vector3
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.DoubleSided -> bool
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.SmoothingGroups -> uint
 readonly InteropTypes.Graphics.Drawing.SurfaceStyle.Style -> InteropTypes.Graphics.Drawing.OutlineFillStyle
+static InteropTypes.Graphics.Drawing.BoundingSphere.From(InteropTypes.Graphics.Drawing.IDrawingBrush<InteropTypes.Graphics.Drawing.ICoreScene3D> drawable) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.From(InteropTypes.Graphics.Drawing.IDrawingBrush<InteropTypes.Graphics.Drawing.IScene3D> drawable) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.FromAsset(object asset) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.FromPoints(System.Collections.Generic.IEnumerable<InteropTypes.Graphics.Drawing.Point3> points) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.implicit operator InteropTypes.Graphics.Drawing.BoundingSphere((InteropTypes.Graphics.Drawing.Point3 Center, float Radius) sphere) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.Merge(in InteropTypes.Graphics.Drawing.BoundingSphere left, in InteropTypes.Graphics.Drawing.BoundingSphere right) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.Merge(in InteropTypes.Graphics.Drawing.BoundingSphere sphere, in System.Numerics.Vector3 point) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.operator !=(InteropTypes.Graphics.Drawing.BoundingSphere left, InteropTypes.Graphics.Drawing.BoundingSphere right) -> bool
+static InteropTypes.Graphics.Drawing.BoundingSphere.operator ==(InteropTypes.Graphics.Drawing.BoundingSphere left, InteropTypes.Graphics.Drawing.BoundingSphere right) -> bool
+static InteropTypes.Graphics.Drawing.BoundingSphere.Overlap(in InteropTypes.Graphics.Drawing.BoundingSphere left, in InteropTypes.Graphics.Drawing.BoundingSphere right) -> bool
+static InteropTypes.Graphics.Drawing.BoundingSphere.Transform(InteropTypes.Graphics.Drawing.BoundingSphere sphere, in System.Numerics.Matrix4x4 transform) -> InteropTypes.Graphics.Drawing.BoundingSphere
+static InteropTypes.Graphics.Drawing.BoundingSphere.Undefined.get -> InteropTypes.Graphics.Drawing.BoundingSphere
 static InteropTypes.Graphics.Drawing.CameraTransform2D.Empty.get -> InteropTypes.Graphics.Drawing.CameraTransform2D
 static InteropTypes.Graphics.Drawing.CameraTransform2D.Identity.get -> InteropTypes.Graphics.Drawing.CameraTransform2D
 static InteropTypes.Graphics.Drawing.CameraTransform2D.operator !=(in InteropTypes.Graphics.Drawing.CameraTransform2D a, in InteropTypes.Graphics.Drawing.CameraTransform2D b) -> bool
@@ -491,12 +530,16 @@ static InteropTypes.Graphics.Drawing.PolygonStyle.operator !=(InteropTypes.Graph
 static InteropTypes.Graphics.Drawing.PolygonStyle.operator ==(InteropTypes.Graphics.Drawing.PolygonStyle a, InteropTypes.Graphics.Drawing.PolygonStyle b) -> bool
 static InteropTypes.Graphics.Drawing.Segment2.Create(in InteropTypes.Graphics.Drawing.Point2 a, in InteropTypes.Graphics.Drawing.Point2 b) -> InteropTypes.Graphics.Drawing.Segment2
 static InteropTypes.Graphics.Drawing.Segment2.CreateOrdinal(in InteropTypes.Graphics.Drawing.Point2 a, in InteropTypes.Graphics.Drawing.Point2 b) -> InteropTypes.Graphics.Drawing.Segment2
+static InteropTypes.Graphics.Drawing.Segment2.Distance(in InteropTypes.Graphics.Drawing.Segment2 segment, InteropTypes.Graphics.Drawing.Point2 point) -> float
+static InteropTypes.Graphics.Drawing.Segment2.DotProduct(in InteropTypes.Graphics.Drawing.Segment2 segment, InteropTypes.Graphics.Drawing.Point2 point) -> float
 static InteropTypes.Graphics.Drawing.Segment2.GetEqualityComparer(bool ordinal) -> System.Collections.Generic.IEqualityComparer<InteropTypes.Graphics.Drawing.Segment2>
 static InteropTypes.Graphics.Drawing.Segment2.operator !=(InteropTypes.Graphics.Drawing.Segment2 left, InteropTypes.Graphics.Drawing.Segment2 right) -> bool
 static InteropTypes.Graphics.Drawing.Segment2.operator ==(InteropTypes.Graphics.Drawing.Segment2 left, InteropTypes.Graphics.Drawing.Segment2 right) -> bool
 static InteropTypes.Graphics.Drawing.Segment2.TryGetConnectingPoint(in InteropTypes.Graphics.Drawing.Segment2 a, in InteropTypes.Graphics.Drawing.Segment2 b, out InteropTypes.Graphics.Drawing.Point2 connectingPoint) -> bool
 static InteropTypes.Graphics.Drawing.Segment3.Create(in InteropTypes.Graphics.Drawing.Point3 a, in InteropTypes.Graphics.Drawing.Point3 b) -> InteropTypes.Graphics.Drawing.Segment3
 static InteropTypes.Graphics.Drawing.Segment3.CreateOrdinal(in InteropTypes.Graphics.Drawing.Point3 a, in InteropTypes.Graphics.Drawing.Point3 b) -> InteropTypes.Graphics.Drawing.Segment3
+static InteropTypes.Graphics.Drawing.Segment3.Distance(in InteropTypes.Graphics.Drawing.Segment3 segment, InteropTypes.Graphics.Drawing.Point3 point) -> float
+static InteropTypes.Graphics.Drawing.Segment3.DotProduct(in InteropTypes.Graphics.Drawing.Segment3 segment, InteropTypes.Graphics.Drawing.Point3 point) -> float
 static InteropTypes.Graphics.Drawing.Segment3.GetEqualityComparer(bool ordinal) -> System.Collections.Generic.IEqualityComparer<InteropTypes.Graphics.Drawing.Segment3>
 static InteropTypes.Graphics.Drawing.Segment3.operator !=(InteropTypes.Graphics.Drawing.Segment3 left, InteropTypes.Graphics.Drawing.Segment3 right) -> bool
 static InteropTypes.Graphics.Drawing.Segment3.operator ==(InteropTypes.Graphics.Drawing.Segment3 left, InteropTypes.Graphics.Drawing.Segment3 right) -> bool

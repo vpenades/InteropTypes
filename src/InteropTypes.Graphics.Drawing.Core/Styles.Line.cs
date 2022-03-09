@@ -76,31 +76,36 @@ namespace InteropTypes.Graphics.Drawing
 
         #region constructors
 
+        [System.Diagnostics.DebuggerStepThrough]
         public LineStyle(ColorStyle fillColor)
         {
             Style = fillColor;
             _StartCap = _EndCap = (short)LineCapStyle.Flat;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public LineStyle(ColorStyle outColor, float outWidth)
         {
             Style = new OutlineFillStyle(outColor, outWidth);
             _StartCap = _EndCap = (short)LineCapStyle.Flat;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public LineStyle(ColorStyle fillColor, ColorStyle outColor, float outWidth)
         {
             Style = new OutlineFillStyle(fillColor, outColor, outWidth);
             _StartCap = _EndCap = (short)LineCapStyle.Flat;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public LineStyle(ColorStyle fillColor, LineCapStyle startCap, LineCapStyle endCap)
         {
             Style = new OutlineFillStyle(fillColor);
             _StartCap = (short)startCap;
             _EndCap = (short)endCap;
-        }        
+        }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public LineStyle(OutlineFillStyle color, LineCapStyle startCap, LineCapStyle endCap)
         {
             Style = color;

@@ -181,9 +181,9 @@ namespace InteropTypes.Graphics.Backends
             _FillColor = color;
         }
 
-        private InteropTypes.Graphics.Drawing.Transforms.Decompose3D _Collapsed3D => new InteropTypes.Graphics.Drawing.Transforms.Decompose3D(this);
+        private Drawing.Transforms.Decompose3D _Collapsed3D => new Drawing.Transforms.Decompose3D(this);
 
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
             throw new NotImplementedException();
         }        

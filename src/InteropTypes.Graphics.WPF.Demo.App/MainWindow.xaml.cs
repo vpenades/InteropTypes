@@ -26,5 +26,31 @@ namespace WPFDemo
 
             this.DataContext = new AppMVVM();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var gltfScene = new InteropTypes.Graphics.Backends.GltfSceneBuilder();
+
+            using(var dc = gltfScene.Create3DContext())
+            {
+                // mySceneRoot.DrawTo(dc);                
+            }
+
+            // var cam = mySceneRoot.Camera;
+
+            // gltfScene.SetCamera(cam);
+
+            gltfScene.Save("result.glb", new InteropTypes.Graphics.Backends.GLTFWriteSettings { CameraSize=2 });            
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var record = new InteropTypes.Graphics.Drawing.Record3D();
+            // mySceneRoot.DrawTo(record);            
+
+            var camView = InteropTypes.Graphics.Drawing.CameraView3D.CreateDefaultFrom(record.BoundingMatrix);
+
+            // mySceneRoot.Camera = camView;
+        }
     }
 }

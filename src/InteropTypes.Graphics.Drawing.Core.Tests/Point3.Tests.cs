@@ -19,5 +19,15 @@ namespace InteropTypes.Graphics.Drawing
             Assert.AreEqual(1, new Point3(0, -3, 0).DominantAxis);
             Assert.AreEqual(2, new Point3(0, 0, -3).DominantAxis);
         }
+
+        [Test]
+        public void ComparePoint3Tests()
+        {
+            var sphere = new BoundingSphere((-5, 0, 0), 1);
+
+            Assert.AreEqual(-1, new Point3(-5, 0, 0).CompareTo(sphere)); // inside
+            Assert.AreEqual(0, new Point3(-5, 1, 0).CompareTo(sphere)); // at boundary
+            Assert.AreEqual(1, new Point3(-5, 2, 0).CompareTo(sphere)); // outside
+        }
     }
 }

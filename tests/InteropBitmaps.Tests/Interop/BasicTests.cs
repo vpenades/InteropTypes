@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using InteropTypes.Graphics.Backends;
-
 using NUnit.Framework;
-
 using SixLabors.ImageSharp.Drawing.Processing;
+using InteropTypes.Graphics.Backends;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
@@ -66,10 +64,7 @@ namespace InteropTypes.Graphics.Bitmaps
                     .ApplyCanny(100, 200);
 
                 // cast to GDI Adapter to draw primitives.
-                slice
-                    .WithGDI()
-                    .Draw
-                    (dc =>
+                slice.MutateAsGDI(dc =>
                     {
                         var a = new System.Drawing.Point(5, 5);
                         var b = new System.Drawing.Point(50, 50);
@@ -106,8 +101,7 @@ namespace InteropTypes.Graphics.Bitmaps
                     });
 
                 // cast to imagesharp Adapter to draw primitives
-                slice.MutateAsImageSharp(
-                    ipc =>
+                slice.MutateAsImageSharp(ipc =>
                     {
                         ipc.FillPolygon(SixLabors.ImageSharp.Color.Green, (5, 250), (50, 250), (5, 300));
                         ipc.DrawText("ImageSharp Text", SixLabors.Fonts.SystemFonts.CreateFont("Arial", 40), SixLabors.ImageSharp.Color.Green, new SixLabors.ImageSharp.PointF(80, 250));
@@ -156,14 +150,13 @@ namespace InteropTypes.Graphics.Bitmaps
         public void DrawGDIAsImageSharp()
         {
             using var gdi = System.Drawing.Image.FromFile(TestResources.ShannonJpg);
-
             using var bmp = new System.Drawing.Bitmap(gdi);
 
             using var ptr = bmp.UsingPointerBitmap();
 
             ptr.Bitmap
                 .AsSpanBitmapOfType<Pixel.BGRA32>()
-                .WriteAsImageSharp(img => img.AttachToCurrentTest("result.png"));
+                .ReadAsImageSharp(img => img.AttachToCurrentTest("result.png"));
         }
     }
 }

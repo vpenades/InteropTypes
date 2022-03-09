@@ -39,9 +39,8 @@ namespace InteropTypes.Graphics.Drawing
         /// Draws a backend dependant asset into to scene.
         /// </summary>
         /// <param name="transform">The transform to apply to the asset.</param>
-        /// <param name="asset">The asset to draw.</param>
-        /// <param name="style">The tint color to apply to the asset, if supported.</param>
-        void DrawAsset(in XFORM3 transform, ASSET asset, ColorStyle style);
+        /// <param name="asset">The asset to draw.</param>        
+        void DrawAsset(in XFORM3 transform, ASSET asset);
 
         /// <summary>
         /// Draws a polygon surface into the scene.
@@ -70,11 +69,5 @@ namespace InteropTypes.Graphics.Drawing
     /// <summary>
     /// Represents a disposable <see cref="IScene3D"/>.
     /// </summary>
-    public interface IDisposableScene3D : IScene3D, IDisposable { }
-
-
-    public interface ISceneBounds3D
-    {
-        (System.Numerics.Vector3 Center, SCALAR Radius) GetBoundingSphere();
-    }    
+    public interface IDisposableScene3D : IScene3D, IDisposable { }    
 }

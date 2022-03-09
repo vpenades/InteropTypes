@@ -78,17 +78,17 @@ After:
 
         #region assets
 
-        public static void DrawAsset(this IScene3D dc, in XFORM4 transform, Object asset) { dc.DrawAsset(transform, asset, COLOR.White); }
+        public static void DrawAsset(this IScene3D dc, in XFORM4 transform, Object asset) { dc.DrawAsset(transform, asset); }
 
-        public static void DrawAssetAsSurfaces(this IScene3D dc, in XFORM4 transform, Object asset, OutlineFillStyle brush)
+        public static void DrawAssetAsSurfaces(this IScene3D dc, in XFORM4 transform, Object asset)
         {
             // TODO: if dc is IAssetDrawing, call directly
 
             dc = dc.CreateTransformed3D(transform);
-            dc.DrawAssetAsSurfaces(asset, brush);
+            dc.DrawAssetAsSurfaces(asset);
         }
 
-        public static void DrawAssetAsSurfaces(this IScene3D dc, Object asset, OutlineFillStyle brush)
+        public static void DrawAssetAsSurfaces(this IScene3D dc, Object asset)
         {
             if (asset is Asset3D a3d)
             {
@@ -109,15 +109,15 @@ After:
             }
         }
 
-        public static void DrawAssetAsPrimitives(this IScene3D dc, in XFORM4 transform, Object asset, OutlineFillStyle brush)
+        public static void DrawAssetAsPrimitives(this IScene3D dc, in XFORM4 transform, Object asset)
         {
             // TODO: if dc is IAssetDrawing, call directly
 
             dc = dc.CreateTransformed3D(transform);
-            dc.DrawAssetAsPrimitives(asset, brush);
+            dc.DrawAssetAsPrimitives(asset);
         }
 
-        public static void DrawAssetAsPrimitives(this IScene3D dc, Object asset, OutlineFillStyle brush)
+        public static void DrawAssetAsPrimitives(this IScene3D dc, Object asset)
         {
             if (asset is Asset3D a3d)
             {
@@ -164,22 +164,7 @@ After:
             }
 
             return null;
-        }
-
-        public static (VECTOR3 Center, Single Radius)? GetAssetBoundingSphere(Object asset)
-        {
-            if (asset is Record3D model3D) return model3D.BoundingSphere;
-            if (asset is IDrawingBrush<IScene3D> drawable)
-            {
-                var mdl = _Model3DBounds.Value;
-                mdl.Clear();
-
-                drawable.DrawTo(mdl);
-                return mdl.BoundingSphere;
-            }
-
-            return null;
-        }
+        }        
 
         public static void DrawSegment(this IScene3D dc, POINT3 a, POINT3 b, float diameter, LineStyle style)
         {

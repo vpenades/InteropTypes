@@ -39,17 +39,5 @@ namespace InteropTypes.Graphics.Drawing
         object ImmutableKey { get; }
 
         // void InvalidateImmutableKey();
-    }
-
-    public interface ISceneViewport2D
-    {
-        (Matrix3x2 Camera, Matrix3x2 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }
-
-    public interface ISceneViewport3D
-    {
-        // TODO: include near/far depth plane distance hints
-
-        (Matrix4x4 Camera, Matrix4x4 Projection) GetMatrices(float renderWidth, float renderHeight);
-    }
+    }    
 }

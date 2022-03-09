@@ -41,6 +41,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region constructors
 
+        [System.Diagnostics.DebuggerStepThrough]
         public SurfaceStyle(ColorStyle fillColor)
         {
             Style = fillColor;
@@ -48,6 +49,7 @@ namespace InteropTypes.Graphics.Drawing
             SmoothingGroups = 0;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public SurfaceStyle(ColorStyle outColor, float outWidth)
         {
             Style = new OutlineFillStyle(outColor, outWidth);
@@ -55,6 +57,7 @@ namespace InteropTypes.Graphics.Drawing
             SmoothingGroups = 0;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public SurfaceStyle(ColorStyle fillColor, ColorStyle outColor, float outWidth)
         {
             Style = new OutlineFillStyle(fillColor, outColor, outWidth);
@@ -62,6 +65,7 @@ namespace InteropTypes.Graphics.Drawing
             SmoothingGroups = 0;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public SurfaceStyle(ColorStyle fillColor, bool doubleSided)
         {
             Style = new OutlineFillStyle(fillColor);
@@ -69,6 +73,7 @@ namespace InteropTypes.Graphics.Drawing
             SmoothingGroups = 0;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public SurfaceStyle(OutlineFillStyle color, bool doubleSided)
         {
             Style = color;
@@ -76,6 +81,7 @@ namespace InteropTypes.Graphics.Drawing
             SmoothingGroups = 0;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public SurfaceStyle(PolygonStyle color, bool doubleSided)
         {
             Style = new OutlineFillStyle(color.FillColor, color.OutlineColor, color.OutlineWidth);

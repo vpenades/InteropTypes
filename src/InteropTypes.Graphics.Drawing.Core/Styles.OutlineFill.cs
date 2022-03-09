@@ -21,6 +21,7 @@ namespace InteropTypes.Graphics.Drawing
         public static implicit operator OutlineFillStyle((ColorStyle, float) style) { return new OutlineFillStyle(style.Item1, style.Item2); }        
         public static implicit operator OutlineFillStyle((ColorStyle, ColorStyle, float) style) { return new OutlineFillStyle(style.Item1, style.Item2, style.Item3); }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public OutlineFillStyle(ColorStyle fillColor)
         {
             FillColor = fillColor;
@@ -28,6 +29,7 @@ namespace InteropTypes.Graphics.Drawing
             OutlineWidth = 0;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public OutlineFillStyle(ColorStyle outColor, float outWidth)
         {
             FillColor = ColorStyle.Transparent;
@@ -35,6 +37,7 @@ namespace InteropTypes.Graphics.Drawing
             OutlineWidth = outWidth;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public OutlineFillStyle(ColorStyle fillColor, ColorStyle outColor, float outWidth)
         {
             FillColor = fillColor;

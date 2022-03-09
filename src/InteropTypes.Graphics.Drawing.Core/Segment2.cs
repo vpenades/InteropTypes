@@ -14,6 +14,7 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region constructor
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Segment2 Create(in Point2 a, in Point2 b)
         {
             return new Segment2(a, b);
@@ -45,6 +46,7 @@ namespace InteropTypes.Graphics.Drawing
             return new Segment2(a, b);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         private Segment2(in Point2 a, in Point2 b)
         {
             this.A = a.XY;
@@ -93,6 +95,12 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API
 
+        /// <summary>
+        /// Checks whether one of the ends of the segment is <paramref name="point"/>.
+        /// </summary>
+        /// <param name="point">The point to check.</param>
+        /// <returns>true if <paramref name="point"/> is one of the end of the segment.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasEnd(in Point2 point) { return point == A || point == B; }
 
         /// <summary>
@@ -109,6 +117,25 @@ namespace InteropTypes.Graphics.Drawing
 
             connectingPoint = default;
             return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float DotProduct(in Segment2 segment, Point2 point)
+        {
+            var ab = segment.B - segment.A;
+            var ac = point - segment.A;
+            return System.Numerics.Vector2.Dot(ab, ac) / ab.LengthSquared();
+        }
+
+        public static float Distance(in Segment2 segment, Point2 point)
+        {
+            var ab = segment.B - segment.A;
+            var ac = point - segment.A;
+            var u = System.Numerics.Vector2.Dot(ab, ac) / ab.LengthSquared();
+
+            u = Math.Max(0, u);
+            u = Math.Min(1, u);
+            return System.Numerics.Vector2.Distance(point.XY, segment.A + ab * u);
         }
 
         public static IEqualityComparer<Segment2> GetEqualityComparer(bool ordinal)

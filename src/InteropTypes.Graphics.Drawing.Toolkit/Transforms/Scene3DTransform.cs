@@ -155,10 +155,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region 3D Drawing API        
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
-            if (_TargetEx != null) _TargetEx.DrawAsset(transform * _Transform, asset, brush);
-            else Decompose3D.DrawAsset(_Target, transform * _Transform, asset, brush);
+            if (_TargetEx != null) _TargetEx.DrawAsset(transform * _Transform, asset);
+            else Decompose3D.DrawAsset(_Target, transform * _Transform, asset);
         }
 
         /// <inheritdoc/>

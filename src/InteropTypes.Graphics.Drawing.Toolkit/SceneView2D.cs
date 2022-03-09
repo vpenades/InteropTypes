@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Drawing
 {
-    public class SceneView2D : IPseudoImmutable, ISceneViewport2D
+    public class SceneView2D : IPseudoImmutable, CameraTransform2D.ISource
     {
         #region lifecycle
 
@@ -101,7 +101,18 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region API - Evaluators        
+        #region API - Evaluators
+
+        public virtual CameraTransform2D GetCameraTransform2D()
+        {
+            if (_SceneBounds.HasValue)
+            {
+                var ss = _SceneBounds.Value.Max - _SceneBounds.Value.Min;
+                return new CameraTransform2D(_CameraMatrix ?? Matrix3x2.Identity, ss);
+            }
+
+            return new CameraTransform2D(_CameraMatrix ?? Matrix3x2.Identity, null);
+        }
 
         public virtual (Matrix3x2 Camera, Matrix3x2 Projection) GetMatrices(float renderWidth, float renderHeight)
         {

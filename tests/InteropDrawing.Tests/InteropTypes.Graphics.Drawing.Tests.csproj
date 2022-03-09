@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Shared\DrawableScenes.cs" Link="DrawableScenes.cs" />
     <Compile Include="..\Shared\TestUtils.cs" Link="TestUtils.cs" />
   </ItemGroup>  
 
@@ -38,11 +37,13 @@
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropTypes.Graphics.Backends.STB.csproj" />    
-    <ProjectReference Include="..\..\src\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
+    <ProjectReference Include="..\..\src\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />    
+    <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
     
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
     
     <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj" />

@@ -35,16 +35,15 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         public static PerspectiveTransform CreatePerspective((ICanvas2D rt, float w, float h) viewport, float projectionFOV, Matrix4x4 camera)
         {
-            var nearPlane = 0.1f;
+            return Create(viewport, new CameraTransform3D(camera, projectionFOV, null, 0.1f, 1000));
+        }        
 
-            var proj = Matrix4x4.CreatePerspectiveFieldOfView(projectionFOV, viewport.w / viewport.h, nearPlane, 1000);
-
-            return Create(viewport, proj, camera);
-        }
-
-        public static PerspectiveTransform Create((ICanvas2D rt, float w, float h) viewport, Matrix4x4 projection, Matrix4x4 camera, Func<Vector2, Vector2> distort = null)
+        public static PerspectiveTransform Create((ICanvas2D rt, float w, float h) viewport, CameraTransform3D camera, Func<Vector2, Vector2> distort = null)
         {
-            if (!Matrix4x4.Invert(camera, out Matrix4x4 viewMatrix)) throw new ArgumentException(nameof(camera));
+            if (!camera.IsValid) throw new ArgumentException("Invalid", nameof(camera));
+
+            var viewMatrix = camera.CreateViewMatrix();
+            var projMatrix = camera.CreateProjectionMatrix(viewport.w / viewport.h);
 
             var nearPlane = 0.1f;
 
@@ -53,15 +52,15 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 , 0, -0.5f * viewport.h
                 , 0.5f * viewport.w, 0.5f * viewport.h);
 
-            return new PerspectiveTransform(viewport.rt, distort, vp, viewMatrix * projection, nearPlane);
+            return new PerspectiveTransform(viewport.rt, distort, vp, projMatrix, viewMatrix, nearPlane);
         }
 
-        private PerspectiveTransform(ICanvas2D renderTarget, Func<Vector2, Vector2> distorsion, Matrix3x2 viewport, Matrix4x4 projview, float nearPlane)
+        private PerspectiveTransform(ICanvas2D renderTarget, Func<Vector2, Vector2> distorsion, Matrix3x2 viewport, Matrix4x4 proj, Matrix4x4 view, float nearPlane)
         {
             System.Diagnostics.Debug.Assert(nearPlane > 0);
 
-            _Projection = projview;
-            _ProjectionScale = 1; // _DecomposeScale(viewport); // we only use the Y Axis to avoid problems with the AspectRatio
+            _Projection = view * proj;
+            _ProjectionScale = _DecomposeScale(view); // we only use the Y Axis to avoid problems with the AspectRatio
 
             _ClipPlane = new Plane(Vector3.UnitZ, -nearPlane * 2f);
 
@@ -145,31 +144,31 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return xy;
         }
 
-        public float GetPerspective(float value, float w)
+        public float GetPerspective(float value, in Vector4 w)
         {
-            return value * _ProjectionScale * _ViewportScale / w;
+            return value * _ProjectionScale * _ViewportScale / w.Z;
         }
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
-            var sphere = Toolkit.GetAssetBoundingSphere(asset);
+            var sphere = BoundingSphere.FromAsset(asset);
 
-            if (!sphere.HasValue)
+            if (!sphere.IsValid)
             {
-                this.DrawAssetAsSurfaces(transform, asset, brush);
+                this.DrawAssetAsSurfaces(transform, asset);
                 return;
             }
 
-            var (center, radius) = transform.TransformSphere(sphere.Value);
+            var s = BoundingSphere.Transform(sphere, transform);
 
-            if (_ClipPlane.IsInPositiveSideOfPlane(center, radius))
+            if (_ClipPlane.IsInPositiveSideOfPlane(s.Center, s.Radius))
             {
-                DrawAsset(transform, asset, brush);
+                DrawAsset(transform, asset);
                 return;
             }
 
-            this.DrawAssetAsPrimitives(transform, asset, brush);
+            this.DrawAssetAsPrimitives(transform, asset);
         }
 
         /// <inheritdoc/>
@@ -189,7 +188,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             if (!_ClipPlane.ClipLineToPlane(ref aa, ref bb)) return;
 
-            var www = (aa.W + bb.W) * 0.5f;
+            var www = (aa + bb) * 0.5f;
             var aaa = GetPerspective(aa);
             var bbb = GetPerspective(bb);
             diameter = GetPerspective(diameter, www);
@@ -204,11 +203,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             var aa = GetProjection(center);
 
             if (!_ClipPlane.IsInPositiveSideOfPlane(aa.SelectXYZ(), 0)) return;
-
-            var www = aa.W;
+            
             var aaa = GetPerspective(aa);
-            diameter = GetPerspective(diameter, www);
-            var ow = GetPerspective(brush.OutlineWidth, www);
+            diameter = GetPerspective(diameter, aa);
+            var ow = GetPerspective(brush.OutlineWidth, aa);
 
             _RenderTarget.DrawEllipse(aaa, diameter, diameter, brush.WithOutline(ow));
         }
@@ -264,13 +262,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 // TODO: face culling
             }
 
-            float www = 0;
+            Vector4 www = Vector4.Zero;
 
             Span<Point2> perspective = stackalloc Point2[projected.Length];
             for (int i = 0; i < perspective.Length; ++i)
             {
                 var v = projected[i];
-                www += v.W;
+                www += v;
                 perspective[i] = GetPerspective(v);
             }
 

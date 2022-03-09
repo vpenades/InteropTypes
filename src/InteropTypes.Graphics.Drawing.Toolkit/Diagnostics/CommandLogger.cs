@@ -73,9 +73,9 @@ namespace InteropTypes.Graphics.Drawing.Diagnostics
         }
 
         /// <inheritdoc />
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
-            Write($"Asset {transform} {asset} {brush}");
+            Write($"Asset {transform} {asset}");
         }
 
         /// <inheritdoc />

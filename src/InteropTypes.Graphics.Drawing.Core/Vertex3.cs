@@ -13,6 +13,7 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region constructors            
 
+        [System.Diagnostics.DebuggerStepThrough]
         public Vertex3(Point3 p, ColorStyle c, Point2 t)
         {
             Position = p.XYZ;
@@ -20,6 +21,7 @@ namespace InteropTypes.Graphics.Drawing
             TextureCoord = t.XY;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public Vertex3(Point3 p, ColorStyle c)
         {
             Position = p.XYZ;
@@ -27,6 +29,7 @@ namespace InteropTypes.Graphics.Drawing
             TextureCoord = default;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public Vertex3(Point3 p, Point3 t)
         {
             Position = p.XYZ;
@@ -34,6 +37,7 @@ namespace InteropTypes.Graphics.Drawing
             TextureCoord = t.XY;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public Vertex3(Point3 p)
         {
             Position = p.XYZ;

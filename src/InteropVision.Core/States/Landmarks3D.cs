@@ -32,9 +32,7 @@ namespace InteropTypes.Vision
 
         private RectangleF? _InnerBounds;
         private RectangleF? _OuterBounds;
-        private XYZ? _Size;
-
-        // private (XYZ Center, float Radius)? _BoundingSphere;
+        private XYZ? _Size;        
 
         #endregion
 
@@ -170,7 +168,7 @@ namespace InteropTypes.Vision
             return _Size.Value;
         }
 
-        public virtual void DrawTo(InteropTypes.Graphics.Drawing.IScene3D dc)
+        public virtual void DrawTo(IScene3D dc)
         {
             // ideally this should be half the distance of the two closest points
             // but that's not trivial to calculate.
@@ -180,15 +178,7 @@ namespace InteropTypes.Vision
             {
                 dc.DrawSphere(l, r * 2f, Color.White);
             }
-        }
-
-        /*
-        public (XYZ Center, float Radius) GetBoundingSphere()
-        {
-            if (_BoundingSphere.HasValue) return _BoundingSphere.Value;
-
-            throw new NotImplementedException();
-        }*/
+        }        
 
         #endregion
     }

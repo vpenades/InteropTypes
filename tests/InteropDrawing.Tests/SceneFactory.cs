@@ -19,6 +19,7 @@ namespace InteropTypes.Graphics.Drawing
                 case "Scene1": return CreateDefaultScene1();
                 case "Thunderbird1": return CreateThunderbirdsRocket();
                 case "DNA": return CreateDNAScene();
+                case "SideBySideSpheres": return CreateSideBySideSpheres();
                 default: throw new ArgumentException();
             }
         }
@@ -51,35 +52,7 @@ namespace InteropTypes.Graphics.Drawing
         private static Record3D CreateThunderbirdsRocket()
         {
             var context = new Record3D();
-
-            var style = new OutlineFillStyle(COLOR.Red, COLOR.Black, 0.1f);
-
-            context.DrawSphere(Vector3.UnitY, 2.5f, style);
-
-            context.DrawSegment((0, 4, 0), (0, 8, 0), 1.5f, (style, LineCapStyle.Round, LineCapStyle.Triangle));
-
-
-            for (int i = 0; i < 3; ++i)
-            {
-                var angle = (i * 120) * (float)Math.PI / 180f;
-                var h = new Vector3((float)Math.Cos(angle), 0, (float)Math.Sin(angle));
-
-                var a = new Vector3(0, 4, 0) + h * 0.5f;
-                var b = new Vector3(0, 2, 0) + h * 2;
-                var c = new Vector3(0, 0, 0) + h * 2;
-                var d = new Vector3(0, -2, 0) + h * 2;
-                var e = new Vector3(0, 0.15f, 0) + h * 0.5f;
-
-                context.DrawSegments(Point3.Array(a, b ,c), 0.5f, (style, LineCapStyle.Triangle, LineCapStyle.Flat));                
-                context.DrawSegment(c, d, 1f, (style, LineCapStyle.Triangle, LineCapStyle.Flat));
-
-                // connection to central sphere
-                context.DrawSegment((c + d) * 0.5f, e, 0.25f, (style, LineCapStyle.Triangle, LineCapStyle.Flat));
-
-                // exhaust plume
-                context.DrawSegment(d - Vector3.UnitY, d - Vector3.UnitY * 3, 0.5f, ((COLOR.White, COLOR.Blue.WithAlpha(150), 0.5f), LineCapStyle.Round, LineCapStyle.Triangle));
-            }
-
+            ThunderbirdRocket.DrawTo(context);
             return context;
         }
 
@@ -120,6 +93,25 @@ namespace InteropTypes.Graphics.Drawing
             scene.DrawImage(Matrix3x2.CreateTranslation(2, 2), cell);            
 
             return scene;
+        }
+
+
+        public static Record3D CreateSideBySideSpheres()
+        {
+            var record = new Record3D();
+            IScene3D dc = record;
+
+            for(int i=0; i < 2; ++i)
+            {
+                int x = -5 + i * 10;
+
+                dc.DrawSphere((x, 0, -5), 8, (COLOR.Red, COLOR.Blue, 1));
+                dc.DrawSphere((x, 0, 5), 8, COLOR.Red);
+
+                dc = new Transforms.Decompose3D(record, 5, 3);
+            }
+
+            return record;
         }
     }
 }

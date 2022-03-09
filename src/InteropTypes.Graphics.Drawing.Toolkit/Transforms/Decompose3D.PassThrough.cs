@@ -49,9 +49,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             #region API - IScene3D
 
             /// <inheritdoc/>
-            public virtual void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+            public virtual void DrawAsset(in Matrix4x4 transform, object asset)
             {
-                _Check(); Decompose3D.DrawAsset(_Target, transform, asset, style);
+                _Check(); Decompose3D.DrawAsset(_Target, transform, asset);
             }
 
             /// <inheritdoc/>

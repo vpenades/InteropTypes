@@ -171,5 +171,14 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         #endregion
+
+        #region nested types
+
+        public interface ISource
+        {
+            CameraTransform2D GetCameraTransform2D();
+        }
+
+        #endregion
     }
 }

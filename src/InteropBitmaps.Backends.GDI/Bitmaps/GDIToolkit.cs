@@ -27,10 +27,7 @@ namespace InteropTypes.Graphics.Backends
         public static Adapters.GDIMemoryAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp) where TPixel : unmanaged
         { return new Adapters.GDIMemoryAdapter(bmp); }
 
-        public static void MutateAsGDIGraphics<TPixel>(this SpanBitmap<TPixel> bmp, Action<System.Drawing.Graphics> mutator) where TPixel : unmanaged
-        {
-            bmp.WithGDI().Draw(mutator);
-        }
+        
 
         #endregion
 
@@ -79,9 +76,14 @@ namespace InteropTypes.Graphics.Backends
 
         #region Generic API
         
-        public static void Mutate(this GDIBITMAP bmp, SpanBitmap.Action1 action)
+        public static void WriteAsSpanBitmap(this GDIBITMAP bmp, SpanBitmap.Action1 action)
         {
-            _Implementation.Mutate(bmp, action);
+            _Implementation.WriteAsSpanBitmap(bmp, action);
+        }
+
+        public static void MutateAsGDI<TPixel>(this SpanBitmap<TPixel> bmp, Action<System.Drawing.Graphics> mutator) where TPixel : unmanaged
+        {
+            bmp.WithGDI().Draw(mutator);
         }
 
         public static void SetPixels(this GDIBITMAP dst, int dstx, int dsty, in SpanBitmap src)

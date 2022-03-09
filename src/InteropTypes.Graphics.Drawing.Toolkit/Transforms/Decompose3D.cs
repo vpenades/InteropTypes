@@ -56,7 +56,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region API - IDrawing3D
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix4x4 transform, ASSET asset, ColorStyle style)
+        public void DrawAsset(in Matrix4x4 transform, ASSET asset)
         {
             if (asset is IDrawingBrush<IScene3D> drawable) { drawable.DrawTo(this); return; }            
         }        

@@ -20,14 +20,18 @@ namespace InteropTypes.Graphics.Drawing
         #region constructors        
 
         public static implicit operator ColorStyle(GDICOLOR fillColor) { return new ColorStyle(fillColor); }
-        public static implicit operator ColorStyle(float opacity) { return FromOpacity(opacity); }        
+        public static implicit operator ColorStyle(float opacity) { return FromOpacity(opacity); }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(GDICOLOR fillColor) : this() { Packed = (uint)fillColor.ToArgb(); }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int color) : this() { Packed = (uint)color; }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(uint color) : this() { Packed = color; }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int red, int green, int blue, int alpha = 255) : this()
         {
             B = (Byte)blue;

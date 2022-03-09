@@ -6,6 +6,24 @@ namespace InteropTypes.Graphics.Backends
 {
     internal struct PropertyFactory<TClass> where TClass:DependencyObject
     {
+        public interface IPropertyChanged
+        {
+            void OnPropertyChanged(DependencyPropertyChangedEventArgs args);
+        }
+
+        public StaticProperty<TValue> RegisterCallback<TValue>(string name, TValue defval)
+        {
+            var p = DependencyProperty.Register
+            (
+                name,
+                typeof(TValue),
+                typeof(TClass),
+                new FrameworkPropertyMetadata(defval, _OnPropertyChanged)
+            );
+
+            return new StaticProperty<TValue>(p);
+        }
+
         public StaticProperty<TValue> Register<TValue>(string name, TValue defval, PropertyChangedCallback callback)
         {
             var p = DependencyProperty.Register
@@ -48,6 +66,16 @@ namespace InteropTypes.Graphics.Backends
             );
 
             return new StaticProperty<TValue>(p);
+        }
+
+        private static void _OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // https://github.com/dotnet/wpf/blob/a30c4edea55a95ec9d7c2d29d79b2d4fb12ed973/src/Microsoft.DotNet.Wpf/src/PresentationFramework/System/Windows/Controls/ItemsControl.cs#L190
+
+            if (d is IPropertyChanged instance)
+            {
+                instance.OnPropertyChanged(e);
+            }
         }
     }
 

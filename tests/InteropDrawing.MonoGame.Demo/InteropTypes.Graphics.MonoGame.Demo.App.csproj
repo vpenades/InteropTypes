@@ -28,10 +28,6 @@
     <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />    
   </ItemGroup>  
   
-  <ItemGroup>
-    <Compile Include="..\Shared\DrawableScenes.cs" Link="DrawableScenes.cs" />
-  </ItemGroup>  
-  
   <ItemGroup>    
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
@@ -47,6 +43,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
   

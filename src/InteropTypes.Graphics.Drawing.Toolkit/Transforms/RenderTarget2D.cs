@@ -198,7 +198,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _RenderTarget.DrawConvexPolygon(points, style);
         }
 
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
             throw new NotImplementedException();
             // this.DrawAssetAsSurfaces(transform, asset, brush);

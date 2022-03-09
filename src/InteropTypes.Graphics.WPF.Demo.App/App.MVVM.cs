@@ -9,10 +9,19 @@ using InteropTypes.Graphics.Backends.WPF;
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
+using InteropTypes;
+using System.Windows.Input;
+
 namespace WPFDemo
 {
     internal class AppMVVM : IDrawingBrush<IScene3D>
     {
+        public AppMVVM()
+        {
+            
+        }
+
+
         public void DrawTo(IScene3D context)
         {
             context.DrawSphere((0,0,0), 2, ColorStyle.Red);
@@ -20,9 +29,13 @@ namespace WPFDemo
             System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
         }
 
+        
+
         public Sphere Item1 => new Sphere();
 
         public Cube Item2 => new Cube();
+
+        public ThunderbirdRocket Rocket => new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(20,0,0));
 
         public WPFClientBitmap ClientBitmap { get; } = new WPFClientBitmap();
 

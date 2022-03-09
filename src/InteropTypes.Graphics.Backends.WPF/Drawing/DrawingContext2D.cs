@@ -178,7 +178,7 @@ namespace InteropTypes.Graphics.Backends
         public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
         {
             this.VerifyAccess();
-            new InteropTypes.Graphics.Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
+            new Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
         }
 
         /// <inheritdoc/>
@@ -329,7 +329,7 @@ namespace InteropTypes.Graphics.Backends
             if (viewport.HasValue) _Context.Pop();
         }
 
-        public void DrawScene(Size? viewport, Matrix3x2 prj, Matrix3x2 cam, IDrawingBrush<ICanvas2D> scene)
+        public void DrawScene(Size? viewport, CameraTransform2D camera, IDrawingBrush<ICanvas2D> scene)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -338,11 +338,11 @@ namespace InteropTypes.Graphics.Backends
             var h = (float)(viewport?.Height ?? 100);
 
             PushClipRect(viewport);
-            scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.Canvas2DTransform.Create((this, w, h), prj, cam));
+            scene.DrawTo(Drawing.Transforms.Canvas2DTransform.Create((this, w, h), camera));
             PopClipRect(viewport);
         }
 
-        public void DrawScene(Size? viewport, Matrix4x4 prj, Matrix4x4 cam, IDrawingBrush<IScene3D> scene)
+        public void DrawScene(Size? viewport, in CameraTransform3D camera, IDrawingBrush<IScene3D> scene)
         {
             this.VerifyAccess();
             this.VerifyContext();
@@ -351,11 +351,11 @@ namespace InteropTypes.Graphics.Backends
             var h = (float)(viewport?.Height ?? 100);
 
             PushClipRect(viewport);
-            scene.DrawTo(Drawing.Transforms.PerspectiveTransform.Create((this, w, h), cam, prj));
+            scene.DrawTo(Drawing.Transforms.PerspectiveTransform.Create((this, w, h), camera));
             PopClipRect(viewport);
-        }
+        }        
 
-        public void DrawScene(Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
+        public void DrawScene(Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
         {
             if (xform == null)
             {
@@ -363,15 +363,10 @@ namespace InteropTypes.Graphics.Backends
                 xform = new SceneView2D().WithSceneBounds(bounds.Value);
             }
 
-            var w = (float)(viewport?.Width ?? 100);
-            var h = (float)(viewport?.Height ?? 100);
-
-            var (cam, prj) = xform.GetMatrices(w, h);
-
-            DrawScene(viewport, prj, cam, scene);
+            DrawScene(viewport, xform.GetCameraTransform2D(), scene);
         }        
 
-        public void DrawScene(Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
+        public void DrawScene(Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
         {
             if (xform == null)
             {
@@ -379,14 +374,10 @@ namespace InteropTypes.Graphics.Backends
                 xform = new SceneView3D().WithSceneBounds(bounds.Value);
             }
 
-            var w = (float)(viewport?.Width ?? 100);
-            var h = (float)(viewport?.Height ?? 100);
-            var (cam, prj) = xform.GetMatrices(w, h);
-
-            DrawScene(viewport, prj, cam, scene);
+            DrawScene(viewport, xform.GetCameraTransform3D(), scene);
         }
 
-        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
+        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
         {
             this.VerifyAccess();
             SetContext(dc);
@@ -394,7 +385,7 @@ namespace InteropTypes.Graphics.Backends
             SetContext(null);
         }
 
-        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
+        public void DrawScene(System.Windows.Media.DrawingContext dc, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
         {
             this.VerifyAccess();
             SetContext(dc);
@@ -402,7 +393,7 @@ namespace InteropTypes.Graphics.Backends
             SetContext(null);            
         }
 
-        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
+        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
         {
             if (!this.CheckAccess())
             {
@@ -422,7 +413,7 @@ namespace InteropTypes.Graphics.Backends
             _Context = oldDC;
         }
 
-        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
+        public void DrawScene(System.Windows.Media.DrawingVisual target, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
         {
             if (!this.CheckAccess())
             {
@@ -442,7 +433,7 @@ namespace InteropTypes.Graphics.Backends
             _Context = oldDC;
         }
 
-        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, ISceneViewport2D xform, IDrawingBrush<ICanvas2D> scene)
+        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
         {
             if (!this.CheckAccess())
             {
@@ -455,7 +446,7 @@ namespace InteropTypes.Graphics.Backends
             target.Render(visual);
         }
 
-        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, ISceneViewport3D xform, IDrawingBrush<IScene3D> scene)
+        public void DrawScene(System.Windows.Media.Imaging.RenderTargetBitmap target, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
         {
             if (!this.CheckAccess())
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace InteropTypes.Graphics.Drawing
@@ -9,10 +10,13 @@ namespace InteropTypes.Graphics.Drawing
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{A}⊶{B}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public readonly struct Segment3 : IEquatable<Segment3>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1036:Override methods on comparable types", Justification = "The API would be misleading")]
+    public readonly struct Segment3 : IEquatable<Segment3>,
+        IComparable<BoundingSphere>
     {
         #region constructor
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Segment3 Create(in Point3 a, in Point3 b)
         {
             return new Segment3(a, b);
@@ -50,6 +54,7 @@ namespace InteropTypes.Graphics.Drawing
             return new Segment3(a, b);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         private Segment3(in Point3 a, in Point3 b)
         {
             this.A = a.XYZ;
@@ -98,6 +103,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasEnd(in Point3 point) { return point == A || point == B; }
 
         /// <summary>
@@ -119,6 +125,40 @@ namespace InteropTypes.Graphics.Drawing
         public static IEqualityComparer<Segment3> GetEqualityComparer(bool ordinal)
         {
             return ordinal ? _OrderedComparer.Instance : _UnorderedComparer.Instance;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float DotProduct(in Segment3 segment, Point3 point)
+        {
+            var ab = segment.B - segment.A;
+            var ac = point - segment.A;
+            return System.Numerics.Vector3.Dot(ab, ac) / ab.LengthSquared();
+        }
+
+        public static float Distance(in Segment3 segment, Point3 point)
+        {
+            var ab = segment.B - segment.A;
+            var ac = point - segment.A;
+            var u = System.Numerics.Vector3.Dot(ab, ac) / ab.LengthSquared();
+
+            u = Math.Max(0, u);
+            u = Math.Min(1, u);
+            return System.Numerics.Vector3.Distance(point.XYZ, segment.A + ab * u);
+        }        
+
+
+        /// <summary>
+        /// Compares this segment against a sphere.
+        /// </summary>
+        /// <param name="other">the sphere to compare against.</param>
+        /// <returns>
+        /// -1 if inside or intersects <paramref name="other"/> sphere.<br/>
+        /// 0 if touches the <paramref name="other"/> sphere boundary.<br/>
+        /// 1 if outside <paramref name="other"/> sphere.<br/>
+        /// </returns>
+        public int CompareTo(BoundingSphere other)
+        {
+            return Distance(this, other.Center).CompareTo(other.Radius);
         }
 
         #endregion

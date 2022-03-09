@@ -32,46 +32,7 @@ namespace InteropTypes.Graphics.Drawing
             Assert.AreEqual(3, Matrix4x4.CreateScale(3).DecomposeScale(), 0.0001f);
         }
 
-        [Test]
-        public void TestPolygonClipping()
-        {
-            var saw = new[] { Vector3.Zero, new Vector3(1, 5, 0), new Vector3(2, 1, 0), new Vector3(3, 5, 0), new Vector3(4, 0, 0) };
-
-            Span<Vector3> sawOut1 = stackalloc Vector3[saw.Length * 2];
-
-            var l = new Plane(Vector3.UnitY, 1).ClipPolygonToPlane(sawOut1, saw);
-            Assert.AreEqual(5, l);
-
-            l = new Plane(Vector3.UnitY, -2).ClipPolygonToPlane(sawOut1, saw);
-            Assert.AreEqual(6, l);
-
-            l = new Plane(-Vector3.UnitY, 2).ClipPolygonToPlane(sawOut1, saw);
-            Assert.AreEqual(7, l);
-        }
-
-        [Test]
-        public void TestPolygonClipping2()
-        {
-            var p = new Plane(new System.Numerics.Vector3(0, 0, 1), -0.1f);
-
-            _Clip(p, (3.6963348f, -0.17063361f, 32.588318f), (3.6963348f, 0.35697514f, -68.17659f));
-        }
-
-
-        private static void _Clip(Plane plane, Point3 a, Point3 b)
-        {
-            var aa = a.XYZ;
-            var bb = b.XYZ;
-
-            InteropTypes.Graphics.Drawing.Parametric.PolygonClipper3.ClipLineToPlane(ref aa, ref bb, plane);
-
-            var u = Plane.DotCoordinate(plane, aa);
-            Assert.IsTrue(u >= -0.001f);
-
-            u = Plane.DotCoordinate(plane, bb);
-            Assert.IsTrue(u >= -0.001f);
-
-        }
+        
 
         [TestCase("Scene1")]
         [TestCase("Thunderbird1")]
@@ -83,28 +44,7 @@ namespace InteropTypes.Graphics.Drawing
 
             srcScene.AttachToCurrentTest($"{sceneName}.glb");
             srcScene.AttachToCurrentTest($"{sceneName}.html");
-        }
-
-        [TestCase("Scene1")]
-        [TestCase("Thunderbird1")]
-        public void TestClipScene3D(string sceneName)
-        {
-            TestContext.CurrentContext.AttachShowDirLink();
-
-            var srcScene = SceneFactory.CreateRecord3D(sceneName);
-
-            var bounds = srcScene.BoundingMatrix;
-
-            for (int i = -1; i <= 1; ++i)
-            {
-                var dstScene = new Record3D();
-
-                srcScene.DrawTo(new PlaneClip3D(dstScene, new Plane(Vector3.UnitX, i)));
-
-                dstScene.AttachToCurrentTest($"{sceneName}_{i}.glb");
-                dstScene.AttachToCurrentTest($"{sceneName}_{i}.html");
-            }
-        }
+        }        
 
 
         [Test]
@@ -209,26 +149,43 @@ namespace InteropTypes.Graphics.Drawing
 
         [TestCase("Scene1")]
         [TestCase("Thunderbird1")]
+        [TestCase("SideBySideSpheres")]        
         public void TestPaintersAlgorythmPipeline(string sceneName)
         {
-            var renderTarget = new WPFRenderTarget(1024, 1024);
-
             var scene = new Record3D();
             scene.DrawFloor(new Vector2(-50, -50), new Vector2(100, 100), 10, COLOR.Green, COLOR.DarkGreen);
             scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, -10), SceneFactory.CreateRecord3D(sceneName));
-            scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, 0), SceneFactory.CreateRecord3D(sceneName));
+            // scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, 0), SceneFactory.CreateRecord3D(sceneName));
             scene.AttachToCurrentTest("scene.glb");
             scene.AttachToCurrentTest("scene.html");
 
+            // render scene with WPF
+
+            var renderTarget = new WPFRenderTarget(1024, 1024);
             using (var dc = renderTarget.OpenDrawingContext())
             {
-                var perspective = PerspectiveTransform.CreateLookingAtCenter((dc, 1024, 1024), (10, 5, 30));
-                perspective.DrawScene(scene);
+                PerspectiveTransform
+                    .CreateLookingAtCenter((dc, 1024, 1024), (10, 5, 30))
+                    .DrawScene(scene);
+                
             }
 
-            var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
+            var path = TestContext.CurrentContext.UseFilePath($"WPF_{sceneName}.png");
 
             renderTarget.SaveToPNG(path);
+
+            // render with MemoryBitmap
+
+            var mem = new Bitmaps.MemoryBitmap(1024, 1024, Bitmaps.Pixel.RGBA32.Format);
+            var mdc = Backends.SpanBitmapDrawing.CreateDrawingContext(mem);
+
+            PerspectiveTransform
+                    .CreateLookingAtCenter((mdc, 1024, 1024), (10, 5, 30))
+                    .DrawScene(scene);
+
+            mem.AttachToCurrentTest($"Span_{sceneName}.png");
+
+
             TestContext.AddTestAttachment(path);
         }
 
@@ -353,7 +310,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             var scene = new GltfSceneBuilder();
 
-            using(var dc = scene.CreateDrawing3DContext())
+            using(var dc = scene.Create3DContext())
             {
                 var style = new LineStyle(COLOR.Red, LineCapStyle.Round, LineCapStyle.Triangle).WithOutline(COLOR.Black,1);                
 

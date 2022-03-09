@@ -40,7 +40,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return this.TryGetService(serviceType, _Target);
         }
 
-        public void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in Matrix4x4 transform, object asset)
         {
             throw new NotImplementedException();
 

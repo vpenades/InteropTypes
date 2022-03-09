@@ -14,12 +14,6 @@
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Drawing\WPF\SceneCanvas.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-  </ItemGroup>
-
   <!--
   <ItemGroup>
     <Reference Include="PresentationCore" />

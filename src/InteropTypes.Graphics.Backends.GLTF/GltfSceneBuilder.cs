@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Backends
         {
             var dst = new GltfSceneBuilder();
 
-            using (var dc = dst.CreateDrawing3DContext())
+            using (var dc = dst.Create3DContext())
             {
                 srcModel.DrawTo(dc);
             }
@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Backends
 
         private readonly List<(MESHBUILDER Mesh, Matrix4x4 Transform)> _Meshes = new List<(MESHBUILDER, Matrix4x4)>();
 
-        private CameraView3D? _Camera;
+        private CameraTransform3D? _Camera;
 
         #endregion
 
@@ -56,7 +56,7 @@ namespace InteropTypes.Graphics.Backends
 
         public GltfSceneBuilder Draw(params IDrawingBrush<IScene3D>[] drawables)
         {
-            using (var dc = CreateDrawing3DContext())
+            using (var dc = Create3DContext())
             {
                 foreach (var d in drawables) d.DrawTo(dc);
             }
@@ -66,7 +66,7 @@ namespace InteropTypes.Graphics.Backends
 
         public GltfSceneBuilder Draw(Matrix4x4 xform, params IDrawingBrush<IScene3D>[] drawables)
         {
-            using (var dc = CreateDrawing3DContext(xform))
+            using (var dc = Create3DContext(xform))
             {
                 foreach (var d in drawables) d.DrawTo(dc);
             }
@@ -74,12 +74,12 @@ namespace InteropTypes.Graphics.Backends
             return this;
         }
 
-        public IDisposableScene3D CreateDrawing3DContext()
+        public IDisposableScene3D Create3DContext()
         {
             return new _GltfDrawing3DContext(this, Matrix4x4.Identity);
         }
 
-        public IDisposableScene3D CreateDrawing3DContext(Matrix4x4 transform)
+        public IDisposableScene3D Create3DContext(Matrix4x4 transform)
         {
             return new _GltfDrawing3DContext(this, transform);
         }
@@ -91,7 +91,7 @@ namespace InteropTypes.Graphics.Backends
             _Meshes.Add((mesh, xform));
         }
 
-        public void SetCamera(CameraView3D camera) { _Camera = camera; }
+        public void SetCamera(CameraTransform3D camera) { _Camera = camera; }
 
         #endregion
 
@@ -173,7 +173,7 @@ namespace InteropTypes.Graphics.Backends
 
 
 
-        internal static void _AddCameraTo(CameraView3D? _Camera, GLTFWriteSettings? settings, SharpGLTF.Scenes.SceneBuilder scene)
+        internal static void _AddCameraTo(CameraTransform3D? _Camera, GLTFWriteSettings? settings, SharpGLTF.Scenes.SceneBuilder scene)
         {
             if (_Camera.HasValue)
             {
@@ -182,9 +182,9 @@ namespace InteropTypes.Graphics.Backends
                 var camNode = new SharpGLTF.Scenes.NodeBuilder("CameraNode");
                 camNode.WorldMatrix = vcam.WorldMatrix;
 
-                var cam = vcam.Camera;
+                var cam = vcam;
                 cam.WorldMatrix = Matrix4x4.Identity;
-                vcam.Camera = cam;
+                vcam = cam;
 
                 if (vcam.VerticalFieldOfView.HasValue)
                 {
@@ -206,8 +206,9 @@ namespace InteropTypes.Graphics.Backends
 
                 if ((settings?.CameraSize ?? 0) > 0)
                 {
-                    var camMesh = new GltfMeshScene3D();
-                    vcam.DrawTo(camMesh, settings.Value.CameraSize.Value);
+                    var camMesh = new GltfMeshScene3D();                    
+
+                    new CameraView3D(vcam).DrawTo(camMesh, settings.Value.CameraSize.Value);
 
                     scene.AddRigidMesh(camMesh.Mesh, camNode);
                 }

@@ -61,7 +61,7 @@ namespace InteropTypes.Graphics.Backends
         public void Clear() { _Mesh = null; }
 
         /// <inheritdoc />
-        public override void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+        public override void DrawAsset(in Matrix4x4 transform, object asset)
         {
             if (asset is GltfMeshScene3D other)
             {
@@ -75,7 +75,7 @@ namespace InteropTypes.Graphics.Backends
                 return;
             }            
 
-            base.DrawAsset(transform, asset, style);
+            base.DrawAsset(transform, asset);
         }
 
         /// <inheritdoc />

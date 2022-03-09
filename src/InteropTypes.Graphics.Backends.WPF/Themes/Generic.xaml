@@ -3,31 +3,37 @@
                     xmlns:local="clr-namespace:InteropTypes.Graphics.Backends.WPF"
                     xmlns:localprims="clr-namespace:InteropTypes.Graphics.Backends.WPF.Primitives">
 
-    <Style TargetType="local:Scene3DPanel">
+    <Style TargetType="local:Scene3DView">
+
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="DarkBlue" Offset="0" />
+                    <GradientStop Color="SkyBlue" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>            
+        </Setter>
+
+        <!-- https://github.com/dotnet/wpf/blob/main/src/Microsoft.DotNet.Wpf/src/Themes/XAML/ItemsControl.xaml -->
+
         <Setter Property="Template">
             <Setter.Value>
-
-                <!-- ClipToBounds required to prevent drawing outside the rendering area -->
-                <!-- background required to ensure mouse event are triggered when clicking background -->
-
-                <ControlTemplate TargetType="local:Scene3DPanel">
-                    <localprims:Scene3DCanvas x:Name="PART_Viewport3D"
-                                         ClipToBounds="True"
-                                         HorizontalAlignment="Stretch"
-                                         VerticalAlignment="Stretch">
-
-                        <localprims:Scene3DCanvas.Background>
-                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                <GradientStop Color="DarkBlue" Offset="0" />
-                                <GradientStop Color="SkyBlue" Offset="1" />
-                            </LinearGradientBrush>
-                        </localprims:Scene3DCanvas.Background>
-
-                    </localprims:Scene3DCanvas>
-
+                <ControlTemplate TargetType="local:Scene3DView">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="Presenter" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>
+        </Setter>        
+
+        <!--
+        <Setter Property="Camera3DPanel" Value="{DataTemplateKey myDefault3DPanel}" />
+        -->
+
     </Style>    
 
 </ResourceDictionary>

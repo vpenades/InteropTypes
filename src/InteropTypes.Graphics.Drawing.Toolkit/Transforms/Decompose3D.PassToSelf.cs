@@ -15,9 +15,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             public abstract void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style);
 
             /// <inheritdoc/>
-            public virtual void DrawAsset(in Matrix4x4 transform, object asset, ColorStyle style)
+            public virtual void DrawAsset(in Matrix4x4 transform, object asset)
             {
-                Decompose3D.DrawAsset(this, transform, asset, style);
+                Decompose3D.DrawAsset(this, transform, asset);
             }            
 
             /// <inheritdoc/>
