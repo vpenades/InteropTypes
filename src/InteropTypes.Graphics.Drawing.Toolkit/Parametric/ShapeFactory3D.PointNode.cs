@@ -199,8 +199,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                         {
                             var j = (i + 1) % corners.Length;
 
-                            var i0 = corners[i].ToNumerics();
-                            var j0 = corners[j].ToNumerics();
+                            var i0 = corners[i].XYZ;
+                            var j0 = corners[j].XYZ;
                             var i1 = VECTOR3.Lerp(Point, i0 + axis, 0.7f);
                             var j1 = VECTOR3.Lerp(Point, j0 + axis, 0.7f);
 

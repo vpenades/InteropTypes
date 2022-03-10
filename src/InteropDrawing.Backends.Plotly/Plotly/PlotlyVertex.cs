@@ -66,13 +66,13 @@ namespace Plotly
 
         public PlotlyVertex(POINT3 p)
         {
-            Position = p.ToNumerics();
+            Position = p.XYZ;
             Normal = Position == VECTOR3.Zero ? VECTOR3.Zero : VECTOR3.Normalize(Position);
         }
 
         public PlotlyVertex(POINT3 p, VECTOR3 n)
         {
-            Position = p.ToNumerics();
+            Position = p.XYZ;
             Normal = n;
         }
 

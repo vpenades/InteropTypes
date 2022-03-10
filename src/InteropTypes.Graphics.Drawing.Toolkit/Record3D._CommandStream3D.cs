@@ -201,7 +201,7 @@ namespace InteropTypes.Graphics.Drawing
 
             public void AddVertex(in POINT3 vertex, float radius)
             {
-                var v = vertex.ToNumerics();
+                var v = vertex.XYZ;
 
                 // Bounding Box
                 Min = XYZ.Min(Min, v - new XYZ(radius));

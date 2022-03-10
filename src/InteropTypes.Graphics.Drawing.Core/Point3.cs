@@ -389,7 +389,7 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point3 Transform(Point3 p, in System.Numerics.Matrix4x4 xform)
         {
-            return VECTOR3.Transform(p.ToNumerics(), xform);
+            return VECTOR3.Transform(p.XYZ, xform);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -419,6 +419,7 @@ namespace InteropTypes.Graphics.Drawing
         }
         #endif
 
+        [Obsolete("Use .XYZ")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public VECTOR3 ToNumerics() { return XYZ; }
 

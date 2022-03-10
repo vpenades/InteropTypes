@@ -178,7 +178,13 @@ After:
         public static void DrawSurface(this IScene3D dc, SurfaceStyle brush, params Point3[] points)
         {
             dc.DrawSurface(points, brush);
-        }        
+        }
+
+        public static void DrawPivot(this IScene3D dc, Point3 origin, Single size)
+        {
+            var xform = XFORM4.CreateTranslation(origin.XYZ);
+            DrawPivot(dc, xform, size);
+        }
 
         public static void DrawPivot(this IScene3D dc, in XFORM4 pivot, Single size)
         {
@@ -359,17 +365,20 @@ After:
 
         public static void DrawFont(this IScene3D dc, XFORM4 xform, String text, COLOR color)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
-After:
-            FontDrawing.DrawFontAsLines(dc, xform, text, color);
-*/
-            InteropTypes.Graphics.Drawing.Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
         }
 
-        public static void DrawFloor(this IScene3D dc, VECTOR2 origin, VECTOR2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)
+        public static void DrawFloorXZ(this IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)
+        {
+            _DrawFloor(dc, origin, size, divisions, oddStyle, evenStyle, (x, z) => new VECTOR3(x, 0, z));
+        }
+
+        public static void DrawFloorXY(this IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)
+        {
+            _DrawFloor(dc, origin, size, divisions, oddStyle, evenStyle, (x, y) => new VECTOR3(x, y, 0));
+        }
+
+        private static void _DrawFloor(IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle, Func<float, float, VECTOR3> axisFunc)
         {
             var xdivisions = divisions;
             var ydivisions = divisions;
@@ -377,21 +386,21 @@ After:
             if (size.X > size.Y) xdivisions *= (int)(size.X / size.Y);
             else ydivisions *= (int)(size.Y / size.X);
 
-            var step = new VECTOR3(size.X, 0, size.Y) / new VECTOR3(xdivisions, 1, ydivisions);
-            var init = new VECTOR3(origin.X, 0, origin.Y);
+            var step = axisFunc(size.X / xdivisions, size.Y / ydivisions);
+            var init = origin;
 
             for (int y = 0; y < ydivisions; ++y)
             {
                 for (int x = 0; x < xdivisions; ++x)
                 {
-                    var a = init + step * new VECTOR3(x, 0, y);
-                    var b = init + step * new VECTOR3(x + 1, 0, y);
-                    var c = init + step * new VECTOR3(x + 1, 0, y + 1);
-                    var d = init + step * new VECTOR3(x, 0, y + 1);
+                    var a = init + step * axisFunc(x, y);
+                    var b = init + step * axisFunc(x + 1, y);
+                    var c = init + step * axisFunc(x + 1, y + 1);
+                    var d = init + step * axisFunc(x, y + 1);
 
                     var style = ((x & 1) ^ (y & 1)) == 0 ? oddStyle : evenStyle;
 
-                    dc.DrawSurface(style, a, b, c, d);
+                    dc.DrawSurface((style,true), a, b, c, d);
                 }
             }
         }

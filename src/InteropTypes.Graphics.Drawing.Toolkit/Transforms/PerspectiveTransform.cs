@@ -35,43 +35,40 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         public static PerspectiveTransform CreatePerspective((ICanvas2D rt, float w, float h) viewport, float projectionFOV, Matrix4x4 camera)
         {
-            return Create(viewport, new CameraTransform3D(camera, projectionFOV, null, 0.1f, 1000));
+            var cam = new CameraTransform3D(camera, projectionFOV, null, 0.1f, 1000);
+
+            return Create(viewport, cam);
         }        
 
         public static PerspectiveTransform Create((ICanvas2D rt, float w, float h) viewport, CameraTransform3D camera, Func<Vector2, Vector2> distort = null)
         {
-            if (!camera.IsValid) throw new ArgumentException("Invalid", nameof(camera));
-
-            var viewMatrix = camera.CreateViewMatrix();
-            var projMatrix = camera.CreateProjectionMatrix(viewport.w / viewport.h);
-
-            var nearPlane = 0.1f;
-
-            var vp = new Matrix3x2
-                (0.5f * viewport.w, 0
-                , 0, -0.5f * viewport.h
-                , 0.5f * viewport.w, 0.5f * viewport.h);
-
-            return new PerspectiveTransform(viewport.rt, distort, vp, projMatrix, viewMatrix, nearPlane);
+            return new PerspectiveTransform(viewport.rt, (viewport.w, viewport.h), camera, distort);
         }
 
-        private PerspectiveTransform(ICanvas2D renderTarget, Func<Vector2, Vector2> distorsion, Matrix3x2 viewport, Matrix4x4 proj, Matrix4x4 view, float nearPlane)
+        private PerspectiveTransform(ICanvas2D renderTarget, Point2 physicalSize, CameraTransform3D camera, Func<Vector2, Vector2> distorsion = null)
         {
-            System.Diagnostics.Debug.Assert(nearPlane > 0);
+            if (renderTarget == null) throw new ArgumentNullException(nameof(renderTarget));
+            if (!camera.IsValid) throw new ArgumentException("Invalid", nameof(camera));
 
-            _Projection = view * proj;
-            _ProjectionScale = _DecomposeScale(view); // we only use the Y Axis to avoid problems with the AspectRatio
+            const float nearPlane = 0.1f;
+            var viewMatrix = camera.CreateViewMatrix();
+            var projMatrix = camera.CreateProjectionMatrix(physicalSize);
+            var portMatrix = camera.CreateViewportMatrix(physicalSize);
 
+            _Camera = camera.CreateCameraMatrix();
+            _CameraScale = _DecomposeScale(_Camera);
+
+            _Final = viewMatrix * projMatrix;
             _ClipPlane = new Plane(Vector3.UnitZ, -nearPlane * 2f);
 
-            _Viewport = viewport;
-            _ViewportScale = new Vector2(viewport.M12, viewport.M22).Length(); // we only use the Y Axis to avoid problems with the AspectRatio
+            _Viewport = portMatrix;            
+            _ViewportScale = new Vector2(portMatrix.M12, portMatrix.M22).Length(); // we only use the Y Axis to avoid problems with the AspectRatio
+            // _ViewportScale = _DecomposeScale(viewport);
 
             _Distorsion = distorsion;
 
             _RenderTarget = renderTarget;
         }
-
 
         private static float _DecomposeScale(in Matrix3x2 xform)
         {
@@ -103,9 +100,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         // http://xdpixel.com/decoding-a-projection-matrix/
 
-        private readonly Matrix4x4 _Projection;
-        private readonly float _ProjectionScale;
+        private readonly Matrix4x4 _Camera;
+        private readonly float _CameraScale;
 
+        private readonly Matrix4x4 _Final;
         private readonly Plane _ClipPlane;
 
         private readonly Matrix3x2 _Viewport;
@@ -128,7 +126,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         public Vector4 GetProjection(Point3 v)
         {
             System.Diagnostics.Debug.Assert(Point3.IsFinite(v));
-            return Vector4.Transform(v.XYZ, _Projection);
+            return Vector4.Transform(v.XYZ, _Final);
         }
 
         public Vector2 GetPerspective(Vector4 v)
@@ -136,17 +134,26 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             System.Diagnostics.Debug.Assert(v.IsFinite(), "Invalid Vertex: NaN");
             // System.Diagnostics.Debug.Assert(v.W > 0, "Invalid Vertex, W must be positive");
 
-            var xy = new Vector2(v.X, v.Y) / v.Z;
+            var xy = new Vector2(v.X, v.Y) / v.W;
             xy = Vector2.Transform(xy, _Viewport);
 
             if (_Distorsion != null) xy = _Distorsion(xy);
 
             return xy;
-        }
+        }        
 
-        public float GetPerspective(float value, in Vector4 w)
+        public float GetPerspectiveRadius(float radius, Point3 center)
         {
-            return value * _ProjectionScale * _ViewportScale / w.Z;
+            // we transform two points separated by the radius distance
+            // and we project them. This also allows handling distortion.
+
+            var xradius = Vector3.TransformNormal(Vector3.UnitY * radius, _Camera);
+
+            var a = Vector4.Transform(center.XYZ - xradius * 0.5f, _Final);
+            var b = Vector4.Transform(center.XYZ + xradius * 0.5f, _Final);
+            var aa = GetPerspective(a);
+            var bb = GetPerspective(b);
+            return (aa - bb).Length();
         }
 
         /// <inheritdoc/>
@@ -188,13 +195,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             if (!_ClipPlane.ClipLineToPlane(ref aa, ref bb)) return;
 
-            var www = (aa + bb) * 0.5f;
+            var cen = (a + b) * 0.5f;
             var aaa = GetPerspective(aa);
             var bbb = GetPerspective(bb);
-            diameter = GetPerspective(diameter, www);
-            var ow = GetPerspective(brush.Style.OutlineWidth, www);
+            diameter = GetPerspectiveRadius(diameter, cen);
+            var ow = GetPerspectiveRadius(brush.Style.OutlineWidth, cen);
 
-            _RenderTarget.DrawLine(aaa, bbb, diameter, brush = brush.WithOutline(ow));
+            _RenderTarget.DrawLine(aaa, bbb, diameter, brush.WithOutline(ow));
         }        
 
         /// <inheritdoc/>
@@ -205,8 +212,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (!_ClipPlane.IsInPositiveSideOfPlane(aa.SelectXYZ(), 0)) return;
             
             var aaa = GetPerspective(aa);
-            diameter = GetPerspective(diameter, aa);
-            var ow = GetPerspective(brush.OutlineWidth, aa);
+            diameter = GetPerspectiveRadius(diameter, center);
+            var ow = GetPerspectiveRadius(brush.OutlineWidth, center);
 
             _RenderTarget.DrawEllipse(aaa, diameter, diameter, brush.WithOutline(ow));
         }
@@ -214,14 +221,14 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <inheritdoc/>
         public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle brush)
         {
-            brush = brush.WithOutline(brush.Style.OutlineWidth * _ProjectionScale);
+            brush = brush.WithOutline(brush.Style.OutlineWidth * _CameraScale);
 
             Span<Vector4> projected = stackalloc Vector4[vertices.Length];
             for (int i = 0; i < projected.Length; ++i) projected[i] = GetProjection(vertices[i]);
 
             if (_ClipPlane.IsInPositiveSideOfPlane(projected))
             {
-                _DrawProjectedPolygon(projected, brush);
+                _DrawProjectedPolygon(projected, Point3.Centroid(vertices), brush);
                 return;
             }
 
@@ -231,7 +238,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (cvertices < 3) return;
             clippedProjected = clippedProjected.Slice(0, cvertices);
 
-            _DrawProjectedPolygon(clippedProjected, brush);
+            _DrawProjectedPolygon(clippedProjected, Point3.Centroid(vertices), brush);
         }
 
         /// <inheritdoc/>
@@ -242,7 +249,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             if (_ClipPlane.IsInPositiveSideOfPlane(projected))
             {
-                _DrawProjectedPolygon(projected, brush);
+                _DrawProjectedPolygon(projected, Point3.Centroid(vertices), brush);
                 return;
             }
 
@@ -252,10 +259,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (cvertices < 3) return;
             clippedProjected = clippedProjected.Slice(0, cvertices);
 
-            _DrawProjectedPolygon(clippedProjected, brush);
+            _DrawProjectedPolygon(clippedProjected, Point3.Centroid(vertices), brush);
         }
 
-        private void _DrawProjectedPolygon(ReadOnlySpan<Vector4> projected, SurfaceStyle brush)
+        private void _DrawProjectedPolygon(ReadOnlySpan<Vector4> projected, Vector3 center, SurfaceStyle brush)
         {
             if (!brush.DoubleSided)
             {
@@ -270,11 +277,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 var v = projected[i];
                 www += v;
                 perspective[i] = GetPerspective(v);
-            }
+            }            
 
-            www /= perspective.Length;
-
-            brush = brush.WithOutline(GetPerspective(brush.Style.OutlineWidth, www));
+            brush = brush.WithOutline(GetPerspectiveRadius(brush.Style.OutlineWidth, center));
 
             _RenderTarget.DrawPolygon(perspective, brush.Style);
         }

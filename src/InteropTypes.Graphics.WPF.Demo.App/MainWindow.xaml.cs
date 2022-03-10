@@ -29,28 +29,18 @@ namespace WPFDemo
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var gltfScene = new InteropTypes.Graphics.Backends.GltfSceneBuilder();
+            var camera = mySceneView.Viewport.GetCameraTransform3D();
 
-            using(var dc = gltfScene.Create3DContext())
-            {
-                // mySceneRoot.DrawTo(dc);                
-            }
+            var gltfScene = new InteropTypes.Graphics.Backends.GltfSceneBuilder();            
 
-            // var cam = mySceneRoot.Camera;
+            gltfScene.SetCamera(camera);
 
-            // gltfScene.SetCamera(cam);
+            using (var dc = gltfScene.Create3DContext())
+            {                
+                mySceneView.Scene.DrawTo(dc);                
+            }            
 
             gltfScene.Save("result.glb", new InteropTypes.Graphics.Backends.GLTFWriteSettings { CameraSize=2 });            
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            var record = new InteropTypes.Graphics.Drawing.Record3D();
-            // mySceneRoot.DrawTo(record);            
-
-            var camView = InteropTypes.Graphics.Drawing.CameraView3D.CreateDefaultFrom(record.BoundingMatrix);
-
-            // mySceneRoot.Camera = camView;
-        }
+        }        
     }
 }

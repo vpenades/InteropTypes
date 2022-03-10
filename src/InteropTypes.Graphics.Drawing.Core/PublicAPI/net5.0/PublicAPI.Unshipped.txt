@@ -28,8 +28,11 @@ InteropTypes.Graphics.Drawing.CameraTransform2D.WorldMatrix -> System.Numerics.M
 InteropTypes.Graphics.Drawing.CameraTransform3D
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D() -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D(System.Numerics.Matrix4x4 position, float? fov, float? ortho, float? near, float? far) -> void
-InteropTypes.Graphics.Drawing.CameraTransform3D.CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null) -> System.Numerics.Matrix4x4
+InteropTypes.Graphics.Drawing.CameraTransform3D.CreateProjectionMatrix(float aspectRatio) -> System.Numerics.Matrix4x4
+InteropTypes.Graphics.Drawing.CameraTransform3D.CreateProjectionMatrix(InteropTypes.Graphics.Drawing.Point2 screenSize) -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateViewMatrix() -> System.Numerics.Matrix4x4
+InteropTypes.Graphics.Drawing.CameraTransform3D.CreateViewportMatrix(float width, float height) -> System.Numerics.Matrix3x2
+InteropTypes.Graphics.Drawing.CameraTransform3D.CreateViewportMatrix(InteropTypes.Graphics.Drawing.Point2 screenSize) -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform3D.Equals(InteropTypes.Graphics.Drawing.CameraTransform3D other) -> bool
 InteropTypes.Graphics.Drawing.CameraTransform3D.FarPlane -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.IsInitialized.get -> bool

@@ -153,7 +153,7 @@ namespace InteropTypes.Graphics.Drawing
         public void TestPaintersAlgorythmPipeline(string sceneName)
         {
             var scene = new Record3D();
-            scene.DrawFloor(new Vector2(-50, -50), new Vector2(100, 100), 10, COLOR.Green, COLOR.DarkGreen);
+            scene.DrawFloorXZ((-50,0, -50), (100, 100), 10, COLOR.Green, COLOR.DarkGreen);
             scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, -10), SceneFactory.CreateRecord3D(sceneName));
             // scene.DrawAsset(Matrix4x4.CreateTranslation(0, 5, 0), SceneFactory.CreateRecord3D(sceneName));
             scene.AttachToCurrentTest("scene.glb");

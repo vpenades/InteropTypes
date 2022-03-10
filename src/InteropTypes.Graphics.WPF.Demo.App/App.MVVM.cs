@@ -27,7 +27,14 @@ namespace WPFDemo
             context.DrawSphere((0,0,0), 2, ColorStyle.Red);            
         }
 
-        
+        public IEnumerable<IDrawingBrush<IScene3D>> MultipleScenes
+        {
+            get
+            {
+                yield return Item1;
+                yield return Rocket;
+            }
+        }
 
         public Sphere Item1 => new Sphere();
 

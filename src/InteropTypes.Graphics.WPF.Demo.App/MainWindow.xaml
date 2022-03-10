@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WPFDemo"
         xmlns:itypes="urn:InteropTypes"
         mc:Ignorable="d"
+        x:Name="mySelf"
         Title="MainWindow" Height="450" Width="800">    
     
     <TabControl>
@@ -20,17 +21,16 @@
 
             <DockPanel>
                 <WrapPanel DockPanel.Dock="Top">
-                    <Button Content="Save Scene" Click="Button_Click" />
-                    <Button Content="Recenter" Click="Button_Click_1" />
+                    <Button Content="Save Scene" Click="Button_Click" />                    
                 </WrapPanel>
                 
                 <itypes:Scene3DView x:Name="mySceneView" Scene="{Binding Rocket}" >
 
                     <itypes:Scene3DView.ViewportTemplate>
                         <itypes:Scene3DViewportTemplate>
-                            <local:CustomCamera3DPanel />
+                            <local:CustomCamera3DPanel FrameRate="30" UpDirectionIsZ="True" />
                         </itypes:Scene3DViewportTemplate>
-                    </itypes:Scene3DView.ViewportTemplate>
+                    </itypes:Scene3DView.ViewportTemplate>                    
 
                 </itypes:Scene3DView>
 

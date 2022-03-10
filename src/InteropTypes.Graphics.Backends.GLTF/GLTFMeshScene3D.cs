@@ -152,20 +152,20 @@ namespace InteropTypes.Graphics.Backends
             var material = _UseMaterial(color, doubleSided);
             var prim = _Mesh.UsePrimitive(material);
 
-            var a = new VERTEXBUILDER(vertices[0].ToNumerics());
-            var b = new VERTEXBUILDER(vertices[1].ToNumerics());
+            var a = new VERTEXBUILDER(vertices[0].XYZ);
+            var b = new VERTEXBUILDER(vertices[1].XYZ);
 
             if (vertices.Length == 4)
             {
-                var c = new VERTEXBUILDER(vertices[2].ToNumerics());
-                var d = new VERTEXBUILDER(vertices[3].ToNumerics());
+                var c = new VERTEXBUILDER(vertices[2].XYZ);
+                var d = new VERTEXBUILDER(vertices[3].XYZ);
                 prim.AddQuadrangle(a, b, c, d);
             }
             else
             {
                 for (int i = 2; i < vertices.Length; ++i)
                 {
-                    var c = new VERTEXBUILDER(vertices[i].ToNumerics());
+                    var c = new VERTEXBUILDER(vertices[i].XYZ);
                     prim.AddTriangle(a, b, c);
                     b = c;
                 }
@@ -180,8 +180,8 @@ namespace InteropTypes.Graphics.Backends
 
             var prim = _Mesh.UsePrimitive(material, 2);
 
-            var aa = new VERTEXBUILDER(a.ToNumerics());
-            var bb = new VERTEXBUILDER(b.ToNumerics());
+            var aa = new VERTEXBUILDER(a.XYZ);
+            var bb = new VERTEXBUILDER(b.XYZ);
 
             prim.AddLine(aa, bb);
         }

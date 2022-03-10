@@ -88,11 +88,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public void DrawTo(IScene3D dc, float cameraSize)
         {
-            dc.DrawCamera(WorldMatrix, cameraSize);
-
-            var p = CreateProjectionMatrix(1);
-
-            dc.DrawProjectedPlane(WorldMatrix, p, cameraSize * 0.05f, COLOR.BlueViolet);
+            Camera.DrawCameraTo(dc, cameraSize);
+            Camera.DrawFustrumTo(dc, cameraSize * 0.05f, COLOR.BlueViolet);
         }
 
         /// <summary>
@@ -104,8 +101,8 @@ namespace InteropTypes.Graphics.Drawing
         /// <returns>A world matrix camera.</returns>
         public static Matrix4x4 CreateWorldMatrix(Point3 fromPosition, Point3 targetPosition, float minDist = 0)
         {
-            var targetPos = targetPosition.ToNumerics();
-            var froPos = fromPosition.ToNumerics();
+            var targetPos = targetPosition.XYZ;
+            var froPos = fromPosition.XYZ;
 
             var d = targetPos - froPos;
 
@@ -116,12 +113,7 @@ namespace InteropTypes.Graphics.Drawing
             }
 
             return Matrix4x4.CreateWorld(froPos, d, XYZ.UnitY);
-        }
-
-        public Matrix4x4 CreateProjectionMatrix(float aspectRatio, float? nearPlane = null, float? farPlane = null)
-        {
-            return Camera.CreateProjectionMatrix(aspectRatio, nearPlane, farPlane);
-        }
+        }        
 
         #endregion
     }

@@ -12,6 +12,7 @@ namespace InteropTypes.Graphics.Backends.WPF
     using DRAWABLE = Drawing.IDrawingBrush<Drawing.IScene3D>;
     using CAMERATEMPLATE = Scene3DViewportTemplate;
 
+    [TemplatePart(Name = "PART_Presenter", Type = typeof(ContentPresenter))]
     [System.ComponentModel.DefaultProperty(nameof(Scene))]
     [System.Windows.Markup.ContentProperty(nameof(Scene))]
     public class Scene3DView : Control, PropertyFactory<Scene3DView>.IPropertyChanged
@@ -27,7 +28,12 @@ namespace InteropTypes.Graphics.Backends.WPF
         {
             base.OnApplyTemplate();
 
-            _SetCameraPanel();
+            if (this.Viewport == null && ViewportTemplate != null)
+            {
+                this.Viewport = ViewportTemplate?.GetViewport();
+            }
+
+            InitializeViewport(null, this.Viewport);
         }
 
         #endregion
@@ -40,7 +46,7 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         static readonly StaticProperty<CAMERATEMPLATE> ViewportTemplateProperty = _PropFactory.RegisterCallback(nameof(ViewportTemplate), OrbitCamera3DViewport.CreateDefaultTemplate());
 
-        static readonly StaticProperty<Primitives.Scene3DViewport> PanelProperty = _PropFactory.RegisterCallback<Primitives.Scene3DViewport>(nameof(Viewport), null);
+        static readonly StaticProperty<Primitives.Scene3DViewport> ViewportProperty = _PropFactory.RegisterCallback<Primitives.Scene3DViewport>(nameof(Viewport), null);
 
         #endregion
 
@@ -66,8 +72,8 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         public Primitives.Scene3DViewport Viewport
         {
-            get => PanelProperty.GetValue(this);
-            private set => PanelProperty.SetValue(this, value);
+            get => ViewportProperty.GetValue(this);
+            private set => ViewportProperty.SetValue(this, value);
         }
 
         #endregion        
@@ -86,31 +92,40 @@ namespace InteropTypes.Graphics.Backends.WPF
 
             if (args.Property == ViewportTemplateProperty.Property)
             {
-                _SetCameraPanel();
+                this.Viewport = ViewportTemplate?.GetViewport();
+                return true;
+            }
+
+            if (args.Property == ViewportProperty.Property)
+            {
+                InitializeViewport(args.OldValue as Primitives.Scene3DViewport, args.NewValue as Primitives.Scene3DViewport);
+
                 return true;
             }
 
             return false;
         }
-        private void _SetCameraPanel()
+
+        private void InitializeViewport(Primitives.Scene3DViewport oldViewport, Primitives.Scene3DViewport newViewport)
         {
-            var presenter = this.GetTemplateChild("Presenter") as ContentPresenter;
-            if (presenter == null) return;
-            var panelTmpl = this.ViewportTemplate;
-            if (panelTmpl == null) return;
-            var panelCtrl = panelTmpl.LoadContent();
-            if (panelCtrl == null) return;
+            // notice that this will not be null until after initial bindings.
+            var presenter = this.GetTemplateChild("PART_Presenter") as ContentPresenter;
 
-            var p = panelCtrl as Primitives.Scene3DViewport;
-            Viewport = p;
-
-            if (p == null) return;
-
-            presenter.Content = p;
-
-            p.Scene = this.Scene;
+            if (oldViewport != null)
+            {
+                oldViewport.Scene = null;
+            }
+            if (newViewport != null)
+            {
+                newViewport.Scene = this.Scene;
+                if (presenter != null) presenter.Content = newViewport;
+            }
+            else if (presenter != null)
+            {
+                presenter.Content = null;
+            }
         }
 
-        #endregion        
+        #endregion
     }
 }

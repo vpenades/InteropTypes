@@ -116,8 +116,7 @@ namespace InteropTypes.Graphics.Backends
 
         public ModelRoot ToModel(GLTFWriteSettings? settings = null)
         {
-            var scene = ToSceneBuilder(settings);
-            return scene.ToGltf2();
+            return ToSceneBuilder(settings).ToGltf2();
         }
 
         public void Save(string filePath)
@@ -171,47 +170,50 @@ namespace InteropTypes.Graphics.Backends
         /// </summary>
         public float? CameraSize;
 
-
-
         internal static void _AddCameraTo(CameraTransform3D? _Camera, GLTFWriteSettings? settings, SharpGLTF.Scenes.SceneBuilder scene)
         {
-            if (_Camera.HasValue)
+            if (!_Camera.HasValue) return;            
+
+            var vcam = _Camera.Value;
+
+            var camNode = new SharpGLTF.Scenes.NodeBuilder("CameraNode");
+            camNode.WorldMatrix = vcam.WorldMatrix;
+
+            var cam = vcam;
+            cam.WorldMatrix = Matrix4x4.Identity;
+            vcam = cam;
+
+            if (vcam.VerticalFieldOfView.HasValue)
             {
-                var vcam = _Camera.Value;
+                var yfov = vcam.VerticalFieldOfView.Value;
 
-                var camNode = new SharpGLTF.Scenes.NodeBuilder("CameraNode");
-                camNode.WorldMatrix = vcam.WorldMatrix;
+                var persp = new SharpGLTF.Scenes.CameraBuilder.Perspective(null, yfov, 0.1f);
 
-                var cam = vcam;
-                cam.WorldMatrix = Matrix4x4.Identity;
-                vcam = cam;
+                scene.AddCamera(persp, camNode);
+            }
 
-                if (vcam.VerticalFieldOfView.HasValue)
-                {
-                    var yfov = vcam.VerticalFieldOfView.Value;
+            else if (vcam.OrthographicScale.HasValue)
+            {
+                var s = vcam.OrthographicScale.Value;
 
-                    var persp = new SharpGLTF.Scenes.CameraBuilder.Perspective(null, yfov, 0.1f);
+                var ortho = new SharpGLTF.Scenes.CameraBuilder.Orthographic(s, s, 0.1f, 1000);
 
-                    scene.AddCamera(persp, camNode);
-                }
+                scene.AddCamera(ortho, camNode);
+            }
 
-                else if (vcam.OrthographicScale.HasValue)
-                {
-                    var s = vcam.OrthographicScale.Value;
+            if ((settings?.CameraSize ?? 0) > 0)
+            {
+                var camMesh = new GltfMeshScene3D();
 
-                    var ortho = new SharpGLTF.Scenes.CameraBuilder.Orthographic(s, s, 0.1f, 1000);
+                vcam.DrawCameraTo(camMesh, settings.Value.CameraSize.Value);
+                vcam.DrawFustrumTo(camMesh, settings.Value.CameraSize.Value * 0.05f, System.Drawing.Color.Yellow);
 
-                    scene.AddCamera(ortho, camNode);
-                }
+                scene.AddRigidMesh(camMesh.Mesh, camNode);
+            }
 
-                if ((settings?.CameraSize ?? 0) > 0)
-                {
-                    var camMesh = new GltfMeshScene3D();                    
-
-                    new CameraView3D(vcam).DrawTo(camMesh, settings.Value.CameraSize.Value);
-
-                    scene.AddRigidMesh(camMesh.Mesh, camNode);
-                }
+            if (Matrix4x4.Invert(_Camera.Value.AxisMatrix, out var invMatrix))
+            {
+                // scene.ApplyBasisTransform(invMatrix);
             }
         }
     }

@@ -15,12 +15,12 @@ namespace InteropTypes.Graphics.Backends
 
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
-            var a = vertices[0].ToNumerics();
+            var a = vertices[0].XYZ;
 
             for (int i = 2; i < vertices.Length; ++i)
             {
-                var b = vertices[i - 1].ToNumerics();
-                var c = vertices[i + 0].ToNumerics();
+                var b = vertices[i - 1].XYZ;
+                var c = vertices[i + 0].XYZ;
 
                 var tri = (a, b, c, style.ToGDI());
 

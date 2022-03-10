@@ -112,13 +112,13 @@ namespace InteropTypes.Graphics.Backends
         private static unsafe Vector3 _CalculateNormal(ReadOnlySpan<Point3> points)
         {
             var n = Vector3.Zero;
-            var a = points[0].ToNumerics();
-            var ab = points[1].ToNumerics() - a;
+            var a = points[0].XYZ;
+            var ab = points[1].XYZ - a;
 
 
             for (int i = 2; i < points.Length; ++i)
             {
-                var ac = points[i].ToNumerics() - a;
+                var ac = points[i].XYZ - a;
                 var x = Vector3.Cross(ab, ac);
                 n += x;
             }

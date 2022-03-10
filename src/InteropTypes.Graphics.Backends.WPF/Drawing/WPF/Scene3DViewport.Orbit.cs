@@ -30,9 +30,7 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         #endregion
 
-        #region data
-
-        private CameraTransform3D _Camera = CameraTransform3D.Identity;
+        #region data        
 
         private BoundingSphere _SceneBounds;
 
@@ -63,24 +61,36 @@ namespace InteropTypes.Graphics.Backends.WPF
         static readonly StaticProperty<float> CameraYawProperty = _PropFactory.Register<float>(nameof(CameraYaw), 0, PROPERTYFLAGS.AffectsRender);
         static readonly StaticProperty<float> CameraPitchProperty = _PropFactory.Register<float>(nameof(CameraPitch), 0, PROPERTYFLAGS.AffectsRender);
         static readonly StaticProperty<float> CameraZoomProperty = _PropFactory.Register<float>(nameof(CameraZoom), 0, PROPERTYFLAGS.AffectsRender);
+        static readonly StaticProperty<float> FieldOfViewProperty = _PropFactory.Register<float>(nameof(FieldOfView), 40, _ClampFov,  PROPERTYFLAGS.AffectsRender);
 
-        public float CameraYaw
+        private static float _ClampFov(float fov)
+        {
+            return Math.Max(10, Math.Min(150, fov));
+        }
+
+        public virtual float CameraYaw
         {
             get => CameraYawProperty.GetValue(this);
             set => CameraYawProperty.SetValue(this, value);
         }
 
-        public float CameraPitch
+        public virtual float CameraPitch
         {
             get => CameraPitchProperty.GetValue(this);
             set => CameraPitchProperty.SetValue(this, value);
         }
 
-        public float CameraZoom
+        public virtual float CameraZoom
         {
             get => CameraZoomProperty.GetValue(this);
             set => CameraZoomProperty.SetValue(this, value);
-        }        
+        }
+
+        public virtual float FieldOfView
+        {
+            get => FieldOfViewProperty.GetValue(this);
+            set => FieldOfViewProperty.SetValue(this, value);
+        }
 
         #endregion
 
@@ -88,30 +98,47 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         protected override void OnSceneChanged(IDrawingBrush<IScene3D> scene)
         {
-            _SceneBounds = BoundingSphere.From(scene);
-            if (!_SceneBounds.IsValid) _Camera = CameraTransform3D.Identity;
+            _SceneBounds = BoundingSphere.From(scene);            
         }
 
         public override CameraTransform3D GetCameraTransform3D()
         {
-            // if (Pitch < -80) Pitch = -80;
-            // if (Pitch > -5) Pitch = -5;
+            if (!_SceneBounds.IsValid)
+            {
+                // System.Diagnostics.Debug.Fail("invalid camera");
+                return CameraTransform3D.Identity;
+            }
 
-            var z = (float)Math.Pow(2, CameraZoom);
+            var axisMatrix = UpDirectionIsZ
+                ? Matrix4x4.CreateRotationX((float)Math.PI / 2)
+                : Matrix4x4.Identity;            
 
+            
             var dist = _SceneBounds.Radius * 3;
-            dist *= z;
-            dist += _SceneBounds.Radius;
+            dist *= (float)Math.Pow(2, CameraZoom);
+            dist += _SceneBounds.Radius;            
 
             var matrix
                 = Matrix4x4.CreateTranslation(0, 0, dist)
                 * Matrix4x4.CreateFromAxisAngle(XYZ.UnitX, (float)(CameraPitch * Math.PI / 180.0))
-                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitY, -(float)(CameraYaw * Math.PI / 180.0))
-                * Matrix4x4.CreateTranslation(this._SceneBounds.Center);
+                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitY, -(float)(CameraYaw * Math.PI / 180.0));             
+            
+            if (this.UpDirectionIsZ)
+            {
+                matrix
+                = Matrix4x4.CreateTranslation(0, -dist, 0)
+                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitX, (float)(CameraPitch * Math.PI / 180.0))
+                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitZ, -(float)(CameraYaw * Math.PI / 180.0));
+            }
 
-            var fov = (float)(40 * Math.PI / 180.0);
+            matrix *= Matrix4x4.CreateTranslation(this._SceneBounds.Center);
 
-            return new CameraTransform3D(matrix, fov, null, 0.5f, float.PositiveInfinity);
+            var fov = (float)(FieldOfView * Math.PI / 180.0);            
+
+            var camxform = new CameraTransform3D(matrix, fov, null, 0.5f, float.PositiveInfinity);
+            camxform.AxisMatrix = axisMatrix;
+
+            return camxform;
         }        
 
         #endregion

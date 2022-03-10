@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net6.0-windows</TargetFramework>    
     <UseWPF>true</UseWPF>    
     <RootNamespace>WPFDemo</RootNamespace>
   </PropertyGroup>

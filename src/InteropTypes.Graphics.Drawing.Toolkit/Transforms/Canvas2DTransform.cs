@@ -8,6 +8,7 @@ using System.Drawing;
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
     readonly partial struct Canvas2DTransform :
+        IEquatable<Canvas2DTransform>,
         ICanvas2D,
         IScene3D,
         ITransformer2D,
@@ -90,11 +91,25 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region data
 
         private readonly ICoreCanvas2D _Target;
-        private readonly ICanvas2D _TargetEx;
-
-        // two way transform
-
+        private readonly ICanvas2D _TargetEx;        
         private readonly TwoWayTransform2D _Transform;
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return _Target.GetHashCode() ^ _Transform.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is Canvas2DTransform other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(Canvas2DTransform other)
+        {
+            if (this._Target != other._Target) return false;
+            if (this._Transform != other._Transform) return false;
+            return true;
+        }
 
         #endregion
 
@@ -114,6 +129,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             {
                 if (_Target is IMeshCanvas2D meshTarget) return new MeshCanvas2DTransform(meshTarget, _Transform);
             }
+
+            if (serviceType == typeof(Matrix3x2)) return _Transform.Forward;
 
             return this.TryGetService(serviceType, _Target);
         }
@@ -321,8 +338,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #endregion
     }
 
-    readonly struct TwoWayTransform2D
+    readonly struct TwoWayTransform2D : IEquatable<TwoWayTransform2D>
     {
+        #region lifecycle
+
         public TwoWayTransform2D(in Matrix3x2 xform)
         {
             Forward = xform;
@@ -343,13 +362,35 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             #endif
         }
 
+        #endregion
+
+        #region data
+
         public readonly Matrix3x2 Forward;
         public readonly Matrix3x2 Inverse;
         public readonly float ScaleForward;
         public readonly float ScaleInverse;
+
+        /// <inheritdoc/>
+        public override int GetHashCode() { return Forward.GetHashCode(); }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is TwoWayTransform2D other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(TwoWayTransform2D other) { return this.Forward == other.Forward; }
+
+        public static bool operator ==(TwoWayTransform2D left, TwoWayTransform2D right) { return left.Equals(right); }
+
+        public static bool operator !=(TwoWayTransform2D left, TwoWayTransform2D right) { return !left.Equals(right); }
+
+        #endregion
     }
 
 
+    /// <summary>
+    /// transformer for <see cref="IMeshCanvas2D"/>
+    /// </summary>
     readonly partial struct MeshCanvas2DTransform :
         IMeshCanvas2D,
         ITransformer2D,

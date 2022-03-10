@@ -10,16 +10,23 @@ namespace InteropTypes.Graphics.Backends.WPF
 {
     public class Scene3DViewportTemplate : ControlTemplate
     {
-        public Scene3DViewportTemplate() : base(typeof(Scene3DView)) { }        
+        public Scene3DViewportTemplate() : base(typeof(Scene3DView)) { }
 
-        protected override void ValidateTemplatedParent(FrameworkElement templatedParent)
+        private Primitives.Scene3DViewport _CachedViewport;
+
+        public Primitives.Scene3DViewport GetViewport()
         {
-            base.ValidateTemplatedParent(templatedParent);
+            if (_CachedViewport != null) return _CachedViewport;
 
-            if (!(templatedParent is Scene3DView))
-            {
-                throw new ArgumentException("TemplateTargetTypeMismatch; expected Scene3DView", templatedParent.GetType().Name);
-            }
-        }
+            var panelCtrl = this.LoadContent();
+            if (panelCtrl == null) return null;
+
+            var p = panelCtrl as Primitives.Scene3DViewport;
+            if (p == null) return null;
+
+            _CachedViewport = p;
+
+            return _CachedViewport;
+        }        
     }
 }

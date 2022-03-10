@@ -8,6 +8,7 @@ using System.Drawing;
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
     readonly partial struct Scene3DTransform :
+        IEquatable<Scene3DTransform>,
         ICanvas2D,
         IScene3D,
         IServiceProvider,
@@ -45,9 +46,27 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region data
 
         private readonly ICoreScene3D _Target;
-        private readonly IScene3D _TargetEx;
         private readonly Matrix4x4 _Transform;
+
+        private readonly IScene3D _TargetEx;        
         private readonly float _SizeScale;
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return _Target.GetHashCode() ^ _Transform.GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) { return obj is Scene3DTransform other && Equals(other); }
+
+        /// <inheritdoc/>
+        public bool Equals(Scene3DTransform other)
+        {
+            if (this._Target != other._Target) return false;
+            if (this._Transform != other._Transform) return false;
+            return true;
+        }
 
         #endregion
 
@@ -67,6 +86,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <inheritdoc/>
         public object GetService(Type serviceType)
         {
+            if (serviceType == typeof(Matrix4x4)) return _Transform;
+
             return this.TryGetService(serviceType, _Target);
         }
 
