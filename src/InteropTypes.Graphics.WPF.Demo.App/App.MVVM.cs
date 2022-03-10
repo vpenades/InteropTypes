@@ -25,20 +25,13 @@ namespace WPFDemo
         public void DrawTo(IScene3D context)
         {
             context.DrawSphere((0,0,0), 2, ColorStyle.Red);            
-        }
-
-        public IEnumerable<IDrawingBrush<IScene3D>> MultipleScenes
-        {
-            get
-            {
-                yield return Item1;
-                yield return Rocket;
-            }
-        }
+        }       
 
         public Sphere Item1 => new Sphere();
 
         public Cube Item2 => new Cube();
+
+        public IDrawingBrush<IScene3D> Combined => Toolkit.Combine(Item1, Item2);
 
         public ThunderbirdRocket Rocket => new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(20,0,0));
 

@@ -126,13 +126,6 @@ namespace InteropTypes.Graphics.Drawing
 
         public void DrawTo((ICanvas2D target, float width, float height) renderTarget, Matrix3x2 projection, Matrix3x2 camera)
         {
-
-            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-            Before:
-                        var context = Transforms.Drawing2DTransform.Create(renderTarget, projection, camera);
-            After:
-                        var context = Drawing2DTransform.Create(renderTarget, projection, camera);
-            */
             var context = Transforms.Canvas2DTransform.Create(renderTarget, projection, camera);
 
             DrawTo(context);

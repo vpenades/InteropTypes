@@ -61,17 +61,4 @@ namespace InteropTypes.Graphics.Backends
             return new System.Windows.Point(p.X, p.Y);
         }
     }
-
-    public static class WPFExtensions
-    {
-        [Obsolete("Use PerspectiveTransform instead.")]
-        public static void Draw(this System.Windows.Media.DrawingContext dc, Record3D scene, CameraProjection3D camera)
-        {
-            throw new NotImplementedException();
-
-            // scene.DrawTo(new WPFDrawingContext2D(dc), camera);
-        }
-    }
-        
-
 }

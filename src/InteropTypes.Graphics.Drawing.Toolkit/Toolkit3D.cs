@@ -28,50 +28,48 @@ namespace InteropTypes.Graphics.Drawing
 
         public static ICanvas2D CreateTransformed2D(this ICanvas2D source, XFORM2 xform)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
-After:
-            return xform.IsIdentity ? source : Drawing2DTransform.Create(source, xform);
-*/
-            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Canvas2DTransform.Create(source, xform);
+            return xform.IsIdentity ? source : Transforms.Canvas2DTransform.Create(source, xform);
         }
 
         public static ICoreCanvas2D CreateTransformed2D(this ICoreCanvas2D source, XFORM2 xform)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            return xform.IsIdentity ? source : Transforms.Drawing2DTransform.Create(source, xform);
-After:
-            return xform.IsIdentity ? source : Drawing2DTransform.Create(source, xform);
-*/
-            return xform.IsIdentity ? source : InteropTypes.Graphics.Drawing.Transforms.Canvas2DTransform.Create(source, xform);
+            return xform.IsIdentity ? source : Transforms.Canvas2DTransform.Create(source, xform);
         }
 
         public static ICanvas2D CreateTransformed2D(this IScene3D t, XFORM4 xform)
         {
-
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            return Transforms.Drawing3DTransform.Create(t, xform);
-After:
-            return Drawing3DTransform.Create(t, xform);
-*/
-            return InteropTypes.Graphics.Drawing.Transforms.Scene3DTransform.Create(t, xform);
+            return Transforms.Scene3DTransform.Create(t, xform);
         }
 
         public static IScene3D CreateTransformed3D(this IScene3D t, XFORM4 xform)
         {
+            return xform.IsIdentity ? t : Transforms.Scene3DTransform.Create(t, xform);
+        }
 
-/* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-Before:
-            return xform.IsIdentity ? t : Transforms.Drawing3DTransform.Create(t, xform);
-After:
-            return xform.IsIdentity ? t : Drawing3DTransform.Create(t, xform);
-*/
-            return xform.IsIdentity ? t : InteropTypes.Graphics.Drawing.Transforms.Scene3DTransform.Create(t, xform);
+        #endregion
+
+        #region Linq
+
+        public static IDrawingBrush<IScene3D> Combine(params IDrawingBrush<IScene3D>[] drawables)
+        {
+            return new _Combined<IScene3D>(drawables);
+        }
+
+        public static IDrawingBrush<IScene3D> Combine(this IEnumerable<IDrawingBrush<IScene3D>> drawables)
+        {
+            return new _Combined<IScene3D>(drawables);
+        }
+
+        private readonly struct _Combined<T> : IDrawingBrush<T>
+        {
+            public _Combined(IEnumerable<IDrawingBrush<T>> elements) { _Elements = elements; }
+
+            private readonly IEnumerable<IDrawingBrush<T>> _Elements;
+
+            public void DrawTo(T context)
+            {
+                foreach (var element in _Elements) element.DrawTo(context);
+            }
         }
 
         #endregion

@@ -107,36 +107,24 @@ namespace InteropTypes.Graphics.Backends.WPF
             {
                 // System.Diagnostics.Debug.Fail("invalid camera");
                 return CameraTransform3D.Identity;
-            }
-
-            var axisMatrix = UpDirectionIsZ
-                ? Matrix4x4.CreateRotationX((float)Math.PI / 2)
-                : Matrix4x4.Identity;            
-
-            
-            var dist = _SceneBounds.Radius * 3;
-            dist *= (float)Math.Pow(2, CameraZoom);
-            dist += _SceneBounds.Radius;            
-
-            var matrix
-                = Matrix4x4.CreateTranslation(0, 0, dist)
-                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitX, (float)(CameraPitch * Math.PI / 180.0))
-                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitY, -(float)(CameraYaw * Math.PI / 180.0));             
-            
-            if (this.UpDirectionIsZ)
-            {
-                matrix
-                = Matrix4x4.CreateTranslation(0, -dist, 0)
-                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitX, (float)(CameraPitch * Math.PI / 180.0))
-                * Matrix4x4.CreateFromAxisAngle(XYZ.UnitZ, -(float)(CameraYaw * Math.PI / 180.0));
-            }
-
-            matrix *= Matrix4x4.CreateTranslation(this._SceneBounds.Center);
+            }            
 
             var fov = (float)(FieldOfView * Math.PI / 180.0);            
 
-            var camxform = new CameraTransform3D(matrix, fov, null, 0.5f, float.PositiveInfinity);
-            camxform.AxisMatrix = axisMatrix;
+            var camxform = new CameraTransform3D(fov, null, 0.5f, float.PositiveInfinity);
+
+            camxform.AxisMatrix = UpDirectionIsZ
+                ? CameraTransform3D.ZUpAxisMatrix
+                : Matrix4x4.Identity;
+
+            var targetDist = _SceneBounds.Radius * 3;
+            targetDist *= (float)Math.Pow(2, CameraZoom);
+            targetDist += _SceneBounds.Radius;
+
+            var yaw = -(float)(CameraYaw * Math.PI / 180.0);
+            var pitch = (float)(CameraPitch * Math.PI / 180.0);
+
+            camxform.SetOrbitWorldMatrix(this._SceneBounds.Center, targetDist, yaw, pitch, 0);
 
             return camxform;
         }        

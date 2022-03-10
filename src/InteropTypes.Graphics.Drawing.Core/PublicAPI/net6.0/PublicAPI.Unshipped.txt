@@ -26,13 +26,19 @@ InteropTypes.Graphics.Drawing.CameraTransform2D.KeepAspectRatio -> bool?
 InteropTypes.Graphics.Drawing.CameraTransform2D.VirtualSize -> System.Numerics.Vector2?
 InteropTypes.Graphics.Drawing.CameraTransform2D.WorldMatrix -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform3D
+InteropTypes.Graphics.Drawing.CameraTransform3D.AxisMatrix -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D() -> void
+InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D(float? fov, float? ortho, float? near, float? far) -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.CameraTransform3D(System.Numerics.Matrix4x4 position, float? fov, float? ortho, float? near, float? far) -> void
+InteropTypes.Graphics.Drawing.CameraTransform3D.CreateCameraMatrix() -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateProjectionMatrix(float aspectRatio) -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateProjectionMatrix(InteropTypes.Graphics.Drawing.Point2 screenSize) -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateViewMatrix() -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateViewportMatrix(float width, float height) -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform3D.CreateViewportMatrix(InteropTypes.Graphics.Drawing.Point2 screenSize) -> System.Numerics.Matrix3x2
+InteropTypes.Graphics.Drawing.CameraTransform3D.DrawCameraTo(InteropTypes.Graphics.Drawing.IScene3D dc, float cameraSize) -> void
+InteropTypes.Graphics.Drawing.CameraTransform3D.DrawFustrumTo((InteropTypes.Graphics.Drawing.IScene3D Context, float AspectRatio) target, float lineDiameter, InteropTypes.Graphics.Drawing.ColorStyle brush) -> void
+InteropTypes.Graphics.Drawing.CameraTransform3D.DrawFustrumTo(InteropTypes.Graphics.Drawing.IScene3D dc, float lineDiameter, InteropTypes.Graphics.Drawing.ColorStyle brush) -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.Equals(InteropTypes.Graphics.Drawing.CameraTransform3D other) -> bool
 InteropTypes.Graphics.Drawing.CameraTransform3D.FarPlane -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.IsInitialized.get -> bool
@@ -41,6 +47,7 @@ InteropTypes.Graphics.Drawing.CameraTransform3D.ISource.GetCameraTransform3D() -
 InteropTypes.Graphics.Drawing.CameraTransform3D.IsValid.get -> bool
 InteropTypes.Graphics.Drawing.CameraTransform3D.NearPlane -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.OrthographicScale -> float?
+InteropTypes.Graphics.Drawing.CameraTransform3D.SetOrbitWorldMatrix(InteropTypes.Graphics.Drawing.Point3 target, float distanceToTarget, float yaw, float pitch, float roll) -> void
 InteropTypes.Graphics.Drawing.CameraTransform3D.VerticalFieldOfView -> float?
 InteropTypes.Graphics.Drawing.CameraTransform3D.WorldMatrix -> System.Numerics.Matrix4x4
 InteropTypes.Graphics.Drawing.ColorStyle
@@ -378,6 +385,7 @@ static InteropTypes.Graphics.Drawing.CameraTransform3D.Identity.get -> InteropTy
 static InteropTypes.Graphics.Drawing.CameraTransform3D.operator !=(in InteropTypes.Graphics.Drawing.CameraTransform3D a, in InteropTypes.Graphics.Drawing.CameraTransform3D b) -> bool
 static InteropTypes.Graphics.Drawing.CameraTransform3D.operator ==(in InteropTypes.Graphics.Drawing.CameraTransform3D a, in InteropTypes.Graphics.Drawing.CameraTransform3D b) -> bool
 static InteropTypes.Graphics.Drawing.CameraTransform3D.TryGetFromServiceProvider(object obj, out InteropTypes.Graphics.Drawing.CameraTransform3D cameraTransform) -> bool
+static InteropTypes.Graphics.Drawing.CameraTransform3D.ZUpAxisMatrix.get -> System.Numerics.Matrix4x4
 static InteropTypes.Graphics.Drawing.ColorStyle.AreEqual(uint colorA, uint colorB) -> bool
 static InteropTypes.Graphics.Drawing.ColorStyle.FromOpacity(float opacity) -> InteropTypes.Graphics.Drawing.ColorStyle
 static InteropTypes.Graphics.Drawing.ColorStyle.GetDefaultFrom(object source, InteropTypes.Graphics.Drawing.ColorStyle defval) -> InteropTypes.Graphics.Drawing.ColorStyle

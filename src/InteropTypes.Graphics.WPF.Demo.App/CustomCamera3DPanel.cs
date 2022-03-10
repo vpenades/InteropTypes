@@ -10,9 +10,7 @@ using InteropTypes.Graphics.Drawing;
 
 namespace WPFDemo
 {
-    
-
-    internal class CustomCamera3DPanel : OrbitCamera3DViewport
+    public class CustomCamera3DPanel : OrbitCamera3DViewport
     {
         public override float CameraPitch
         {

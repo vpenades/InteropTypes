@@ -145,14 +145,7 @@ namespace InteropTypes.Graphics.Drawing
             var avgsize = (dimensions.X + dimensions.Y + dimensions.Z) / 3;
 
             var cameraWTF = CreateWorldMatrix(cameraPosition, bounds.MinMaxCenter(), avgsize * 2);
-
-
-            /* Unmerged change from project 'InteropTypes.Graphics.Drawing.Toolkit (netstandard2.1)'
-            Before:
-                        var context = Transforms.PerspectiveTransform.CreatePerspective((target, width, height), 1.2f, cameraWTF);
-            After:
-                        var context = PerspectiveTransform.CreatePerspective((target, width, height), 1.2f, cameraWTF);
-            */
+            
             var context = Transforms.PerspectiveTransform.CreatePerspective((target, width, height), 1.2f, cameraWTF);
 
             context.DrawScene(this);

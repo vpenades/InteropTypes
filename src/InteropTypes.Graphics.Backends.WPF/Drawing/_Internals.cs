@@ -85,15 +85,15 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region metadata functions
+        #region metadata functions        
 
         private FrameworkPropertyMetadata Metadata<TValue>(TValue defval)
-        {
+        {            
             return new FrameworkPropertyMetadata(defval);
         }
 
         private FrameworkPropertyMetadata Metadata<TValue>(TValue defval, METADATAOPTIONS options)
-        {
+        {            
             return new FrameworkPropertyMetadata(defval, options);
         }
 
@@ -201,12 +201,15 @@ namespace InteropTypes.Graphics.Backends
         public TValue GetValue(DependencyObject context)
         {
             var obj = context.GetValue(_Property);
-            return obj is TValue val ? val : default;
+
+            // if (obj == null || obj == DependencyProperty.UnsetValue || obj == System.Windows.Data.Binding.DoNothing) return default;
+
+            return obj is TValue value ? value : default;
         }
 
         public void SetValue(DependencyObject context, TValue value)
-        {
-            context.SetValue(_Property, value);            
+        {            
+            context.SetValue(_Property, value);
         }
 
         #endregion

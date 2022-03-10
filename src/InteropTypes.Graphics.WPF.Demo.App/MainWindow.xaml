@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFDemo"
         xmlns:itypes="urn:InteropTypes"
+        d:DataContext="{d:DesignInstance Type=local:AppMVVM}"
         mc:Ignorable="d"
         x:Name="mySelf"
         Title="MainWindow" Height="450" Width="800">    
@@ -13,7 +14,7 @@
 
         <TabItem Header="3D">
 
-            <itypes:Scene3DView Scene="{Binding Item1}" />
+            <itypes:Scene3DView Scene="{Binding Combined}" />
 
         </TabItem>
 
@@ -27,8 +28,8 @@
                 <itypes:Scene3DView x:Name="mySceneView" Scene="{Binding Rocket}" >
 
                     <itypes:Scene3DView.ViewportTemplate>
-                        <itypes:Scene3DViewportTemplate>
-                            <local:CustomCamera3DPanel FrameRate="30" UpDirectionIsZ="True" />
+                        <itypes:Scene3DViewportTemplate>                            
+                            <local:CustomCamera3DPanel FrameRate="30" UpDirectionIsZ="true" />                            
                         </itypes:Scene3DViewportTemplate>
                     </itypes:Scene3DView.ViewportTemplate>                    
 

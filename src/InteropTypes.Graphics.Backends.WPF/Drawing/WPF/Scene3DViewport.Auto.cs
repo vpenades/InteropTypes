@@ -10,6 +10,9 @@ namespace InteropTypes.Graphics.Backends.WPF
 {
     public class AutoCamera3DViewport : Primitives.Scene3DViewport
     {
+        #region lifecycle        
+
+        #endregion
         private CameraTransform3D _Camera = CameraTransform3D.Identity;
 
         protected override void OnSceneChanged(IDrawingBrush<IScene3D> scene)

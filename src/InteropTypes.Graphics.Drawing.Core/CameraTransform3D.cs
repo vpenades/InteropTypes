@@ -19,7 +19,10 @@ namespace InteropTypes.Graphics.Drawing
     /// This structure is divided into two section:<br/>
     /// - A <see cref="WorldMatrix"/> representing the position of the camera within the scene.
     /// - A <see cref="CreateProjectionMatrix(float)"/> method to retrieve the projection matrix.
-    /// </para>    
+    /// </para>
+    /// <para>
+    /// <see href="https://en.wikipedia.org/wiki/Orthographic_projection#/media/File:Graphical_projection_comparison.png">Graphical projection comparison</see>
+    /// </para>
     /// </remarks>
     public struct CameraTransform3D : IEquatable<CameraTransform3D>
     {
@@ -35,7 +38,25 @@ namespace InteropTypes.Graphics.Drawing
             cameraTransform = default;
             return false;
         }
-        
+
+        public CameraTransform3D(float? fov, float? ortho, float? near, float? far)
+        {            
+            nameof(fov).GuardIsFiniteOrNull(fov);
+            nameof(ortho).GuardIsFiniteOrNull(ortho);
+            nameof(near).GuardIsFiniteOrNull(near);
+
+            if (fov.HasValue && ortho.HasValue) throw new ArgumentException("FOV and Ortho are defined. Only one of the two must be defined", nameof(ortho));
+
+            if (near.HasValue && far.HasValue && far.Value <= near.Value) throw new ArgumentException("far value must be higher than near", nameof(far));
+
+            WorldMatrix = Matrix4x4.Identity;
+            AxisMatrix = Matrix4x4.Identity;
+            VerticalFieldOfView = fov;
+            OrthographicScale = ortho;
+            NearPlane = near;
+            FarPlane = far;
+        }
+
         public CameraTransform3D(Matrix4x4 position, float? fov, float? ortho, float? near, float? far)
         {
             nameof(position).GuardIsFinite(position);
@@ -62,6 +83,11 @@ namespace InteropTypes.Graphics.Drawing
         public static CameraTransform3D Empty => default;
 
         public static CameraTransform3D Identity => new CameraTransform3D(Matrix4x4.Identity, null, null, -1f, 1f);
+
+        /// <summary>
+        /// Use this matrix on <see cref="AxisMatrix"/> to set up a Z up camera.
+        /// </summary>
+        public static Matrix4x4 ZUpAxisMatrix => new Matrix4x4(1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1);
 
         #endregion
 
@@ -168,6 +194,31 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API
 
+        /// <summary>
+        /// Sets <see cref="WorldMatrix"/> so it points at <paramref name="target"/>
+        /// </summary>
+        /// <param name="target">The target to look at.</param>
+        /// <param name="distanceToTarget">The distance from the target.</param>
+        /// <param name="yaw">The camera's yaw angle, in radians.</param>
+        /// <param name="pitch">The camera's pitch angle, in radians.</param>
+        /// <param name="roll">The camera's roll angle, in radians.</param>
+        /// <remarks>
+        /// This call takes <see cref="AxisMatrix"/> into account, so it must be set
+        /// before calling this method.
+        /// </remarks>
+        public void SetOrbitWorldMatrix(Point3 target, float distanceToTarget, float yaw, float pitch, float roll)
+        {
+            var axisPitch = new Vector3(AxisMatrix.M11, AxisMatrix.M12, AxisMatrix.M13);
+            var axisYaw = new Vector3(AxisMatrix.M21, AxisMatrix.M22, AxisMatrix.M23);
+            var axisForward = new Vector3(AxisMatrix.M31, AxisMatrix.M32, AxisMatrix.M33);            
+
+            WorldMatrix = Matrix4x4.CreateTranslation(axisForward * distanceToTarget)
+                * Matrix4x4.CreateFromAxisAngle(axisForward, roll)
+                * Matrix4x4.CreateFromAxisAngle(axisPitch, pitch)
+                * Matrix4x4.CreateFromAxisAngle(axisYaw, yaw)
+                * Matrix4x4.CreateTranslation(target.XYZ);
+        }
+
         public Matrix4x4 CreateCameraMatrix()
         {
             return AxisMatrix * WorldMatrix;
@@ -272,6 +323,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public void DrawCameraTo(IScene3D dc, float cameraSize)
         {
+            if (dc == null) throw new ArgumentNullException(nameof(dc));
+
             if (!this.IsValid) return;
 
             // draw the camera object

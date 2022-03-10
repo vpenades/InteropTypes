@@ -21,12 +21,18 @@ namespace InteropTypes.Graphics.Backends.WPF
             var panelCtrl = this.LoadContent();
             if (panelCtrl == null) return null;
 
-            var p = panelCtrl as Primitives.Scene3DViewport;
-            if (p == null) return null;
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                if (panelCtrl.GetType().IsNotPublic) throw new InvalidOperationException($"{this.GetType().FullName} must be a public class so it can be used with {nameof(Scene3DViewportTemplate)}");
+            }
 
-            _CachedViewport = p;
+            if (panelCtrl is Primitives.Scene3DViewport viewport)
+            {
+                _CachedViewport = viewport;
+                return _CachedViewport;
+            }
 
-            return _CachedViewport;
+            return null;
         }        
     }
 }
