@@ -71,7 +71,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public bool IsEmpty => _Commands.Count == 0;
 
-        public ColorStyle DefaultColorStyle { get; set; } = ColorStyle.White;
+        public ColorStyle DefaultColorStyle { get; set; }
 
         #endregion
 
@@ -86,7 +86,7 @@ namespace InteropTypes.Graphics.Drawing
         public void Clear()
         {
             _Commands.Clear();
-            DefaultColorStyle = ColorStyle.White;
+            DefaultColorStyle = default;
             _ImmutableKey = null;
         }
 

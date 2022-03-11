@@ -12,7 +12,7 @@ using MESHBUILDER = SharpGLTF.Geometry.IMeshBuilder<SharpGLTF.Materials.Material
 
 namespace InteropTypes.Graphics.Backends
 {
-    public class GltfSceneBuilder
+    public class GltfSceneBuilder : ColorStyle.IBackendDefaultValue
     {
         #region factory        
 
@@ -49,6 +49,7 @@ namespace InteropTypes.Graphics.Backends
         /// Gets or sets the quality of Spheres.
         /// </summary>
         public int SphereLOD { get; set; } = 2;
+        public ColorStyle DefaultColorStyle { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         #endregion
 
@@ -140,8 +141,10 @@ namespace InteropTypes.Graphics.Backends
         #endregion
     }
 
-    sealed class _GltfDrawing3DContext : GltfMeshScene3D, IDisposableScene3D
+    sealed class _GltfDrawing3DContext : GltfMeshScene3D, IDisposableScene3D, ColorStyle.IBackendDefaultValue
     {
+        #region lifecycle
+
         public _GltfDrawing3DContext(GltfSceneBuilder owner, Matrix4x4 xform)
         {
             _Owner = owner;
@@ -159,8 +162,24 @@ namespace InteropTypes.Graphics.Backends
             _Owner = null;
         }
 
+        #endregion
+
+        #region data
+
         private GltfSceneBuilder _Owner;
         private Matrix4x4 _Transform;
+
+        #endregion
+
+        #region properties
+
+        public ColorStyle DefaultColorStyle
+        {
+            get => _Owner.DefaultColorStyle;
+            set => _Owner.DefaultColorStyle = value;
+        }
+
+        #endregion
     }
 
     public struct GLTFWriteSettings
