@@ -58,7 +58,7 @@ namespace InteropTypes.Graphics.Drawing
         public static IDrawingBrush<IScene3D> Combine(this IEnumerable<IDrawingBrush<IScene3D>> drawables)
         {
             return new _Combined<IScene3D>(drawables);
-        }
+        }        
 
         private readonly struct _Combined<T> : IDrawingBrush<T>
         {
@@ -69,6 +69,29 @@ namespace InteropTypes.Graphics.Drawing
             public void DrawTo(T context)
             {
                 foreach (var element in _Elements) element.DrawTo(context);
+            }
+        }
+
+        public static IDrawingBrush<T> Tinted<T>(this IDrawingBrush<T> drawable, ColorStyle color)
+        {
+            return new _Tinted<T>(drawable, color);
+        }
+
+        private readonly struct _Tinted<T> : IDrawingBrush<T>
+        {
+            public _Tinted(IDrawingBrush<T> d, ColorStyle c)
+            {
+                _Drawable = d;
+                _TintColor = c;
+            }
+
+            private readonly IDrawingBrush<T> _Drawable;
+            private readonly ColorStyle _TintColor;
+
+            public void DrawTo(T context)
+            {
+                _TintColor.TrySetDefaultTo(context);
+                _Drawable.DrawTo(context);
             }
         }
 

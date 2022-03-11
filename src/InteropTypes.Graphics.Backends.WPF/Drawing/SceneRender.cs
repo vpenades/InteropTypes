@@ -24,7 +24,7 @@ namespace InteropTypes.Graphics.Backends
         private DrawingVisual _VectorDrawing = new DrawingVisual();
         private DrawingImage _VectorImage = new DrawingImage();
 
-        private DrawingContext2D _DeviceContext2D = new DrawingContext2D();        
+        private Canvas2DFactory _DeviceContext2D = new Canvas2DFactory();        
 
         private Record2D _SafeClone2D = new Record2D();
         private Record3D _SafeClone3D = new Record3D();

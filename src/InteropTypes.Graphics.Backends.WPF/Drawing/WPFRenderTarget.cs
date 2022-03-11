@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 using InteropTypes.Graphics.Drawing;
 
@@ -13,9 +14,9 @@ namespace InteropTypes.Graphics.Backends
     {
         #region lifecycle
 
-        public WPFRenderTarget(int width, int height) : this(width,height,System.Windows.Media.PixelFormats.Default) { }
+        public WPFRenderTarget(int width, int height) : this(width, height, PixelFormats.Default) { }
 
-        public WPFRenderTarget(int width, int height, System.Windows.Media.PixelFormat format)
+        public WPFRenderTarget(int width, int height, PixelFormat format)
         {
             _RenderTarget = new System.Windows.Media.Imaging.RenderTargetBitmap(width, height, 96, 96, format);
         }
@@ -26,17 +27,54 @@ namespace InteropTypes.Graphics.Backends
 
         private readonly System.Windows.Media.Imaging.RenderTargetBitmap _RenderTarget;
 
-        private bool _IsOpen;
-
         #endregion
 
-        #region API        
+        #region API
 
-        public IDisposableCanvas2D OpenDrawingContext()
+        public void Draw(IDrawingBrush<ICanvas2D> drawable)
         {
-            if (_IsOpen) throw new InvalidOperationException("already open.");
+            Draw(dc => drawable.DrawTo(dc));
+        }
 
-            return new _DrawingContext(this, _RenderTarget);
+        public void Draw(IDrawingBrush<IScene3D> drawable, CameraTransform3D camera)
+        {
+            if (!(drawable is Record3D record))
+            {
+                record = new Record3D();
+                drawable.DrawTo(record);
+            }            
+
+            Draw((dc,size) => record.DrawTo( (dc,size.X,size.Y), camera));
+        }
+
+        public void Draw(Action<ICanvas2D,Point2> action)
+        {
+            var visual = new DrawingVisual();
+            var context = visual.RenderOpen();
+            var canvas2DFactory = new Canvas2DFactory(context);
+
+            using (var dc = canvas2DFactory.UsingCanvas2D(_RenderTarget.PixelWidth, _RenderTarget.PixelHeight))
+            {
+                action(dc,(_RenderTarget.PixelWidth, _RenderTarget.PixelHeight));
+            }
+
+            context.Close();
+            _RenderTarget.Render(visual);
+        }
+
+        public  void Draw(Action<ICanvas2D> action)
+        {
+            var visual = new DrawingVisual();
+            var context = visual.RenderOpen();
+            var canvas2DFactory = new Canvas2DFactory(context);
+            
+            using(var dc = canvas2DFactory.UsingCanvas2D(_RenderTarget.PixelWidth,_RenderTarget.PixelHeight))
+            {
+                action(dc);
+            }
+
+            context.Close();
+            _RenderTarget.Render(visual);
         }
 
         public void SaveToPNG(string filePath)
@@ -71,70 +109,11 @@ namespace InteropTypes.Graphics.Backends
         {
             var renderTarget = new WPFRenderTarget(width, height);
 
-            using (var dc = renderTarget.OpenDrawingContext())
-            {
-                scene.DrawTo(dc);
-            }
+            renderTarget.Draw(scene);
 
             renderTarget.SaveToPNG(filePath);
         }
 
-        #endregion
-
-        #region nested types
-
-        sealed class _DrawingContext :
-            DrawingContext2D,
-            IDisposableCanvas2D,
-            IBackendViewportInfo
-
-        {
-            #region lifecycle
-
-            public _DrawingContext(WPFRenderTarget owner, System.Windows.Media.Imaging.RenderTargetBitmap rt)
-            {
-                owner._IsOpen = true;
-
-                _Owner = owner;
-                _RenderTarget = rt;
-                _Visual = new System.Windows.Media.DrawingVisual();
-                _Context = _Visual.RenderOpen();
-
-                SetContext(_Context);
-            }
-
-            public void Dispose()
-            {
-                _Context.Close();
-                _RenderTarget.Render(_Visual);
-
-                _Owner._IsOpen = false;
-            }
-
-            #endregion
-
-            #region API
-
-            private WPFRenderTarget _Owner;
-
-            private System.Windows.Media.Imaging.RenderTargetBitmap _RenderTarget;
-            private System.Windows.Media.DrawingVisual _Visual;
-            private System.Windows.Media.DrawingContext _Context;
-
-            private Action _OnDispose;
-
-            #endregion
-
-            #region properties
-
-            public int PixelsWidth => _RenderTarget.PixelWidth;
-            public int PixelsHeight => _RenderTarget.PixelHeight;
-            public float DotsPerInchX => (float)_RenderTarget.DpiX;
-            public float DotsPerInchY => (float)_RenderTarget.DpiY;
-
-            #endregion
-        }
-
-        #endregion
+        #endregion        
     }
 }

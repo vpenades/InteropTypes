@@ -25,7 +25,7 @@
                     <Button Content="Save Scene" Click="Button_Click" />                    
                 </WrapPanel>
                 
-                <itypes:Scene3DView x:Name="mySceneView" Scene="{Binding Rocket}" >
+                <itypes:Scene3DView x:Name="mySceneView" Scene="{Binding Rockets}" >
 
                     <itypes:Scene3DView.ViewportTemplate>
                         <itypes:Scene3DViewportTemplate>                            

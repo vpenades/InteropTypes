@@ -30,7 +30,7 @@ namespace InteropTypes.Graphics.Backends.WPF.Primitives
     {
         #region data        
 
-        private readonly DrawingContext2D _Context2D = new DrawingContext2D();
+        private readonly Canvas2DFactory _Context2D = new Canvas2DFactory();
 
         private Record3D _SceneRecordCache;
 
@@ -122,8 +122,8 @@ namespace InteropTypes.Graphics.Backends.WPF.Primitives
             base.OnRender(dc); // draw background
 
             // do we have an area to render?
-            var portSize = this.RenderSize;
-            if (double.IsNaN(portSize.Width) || double.IsNaN(portSize.Height)) return;                        
+            Point2 portSize = (this.RenderSize.Width, this.RenderSize.Height);
+            if (!Point2.IsFinite(portSize)) return;                        
 
             // prepare the scene
             if (EnableSceneRedraw) _DrawSceneToCache();
@@ -136,7 +136,10 @@ namespace InteropTypes.Graphics.Backends.WPF.Primitives
             this.ClipToBounds = true;
 
             _Context2D.SetContext(dc);
-            _SceneRecordCache.DrawTo((_Context2D, (float)portSize.Width, (float)portSize.Height), currCam);            
+            using (var canvas2D = _Context2D.UsingCanvas2D(portSize.X, portSize.Y))
+            {
+                _SceneRecordCache.DrawTo((canvas2D, portSize.X, portSize.Y), currCam);
+            }
             _Context2D.SetContext(null);            
         }
 

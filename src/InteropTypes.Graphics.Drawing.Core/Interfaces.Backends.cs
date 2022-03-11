@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing
     /// queried through any exposed <see cref="ICanvas2D"/> casted to a
     /// <see cref="IServiceProvider"/>
     /// </remarks>
-    public interface IBackendViewportInfo
+    public interface IRenderTargetInfo
     {
         /// <summary>
         /// The viewport width in pixels

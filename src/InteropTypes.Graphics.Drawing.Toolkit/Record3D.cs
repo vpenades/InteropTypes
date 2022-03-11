@@ -12,7 +12,11 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IScene3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Record3D : IScene3D, IDrawingBrush<IScene3D>, IPseudoImmutable, BoundingSphere.ISource
+    public class Record3D : IScene3D,
+        IDrawingBrush<IScene3D>,
+        ColorStyle.IBackendDefaultValue,
+        BoundingSphere.ISource,
+        IPseudoImmutable        
     {
         #region data
 
@@ -67,6 +71,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public bool IsEmpty => _Commands.Count == 0;
 
+        public ColorStyle DefaultColorStyle { get; set; } = ColorStyle.White;
+
         #endregion
 
         #region API
@@ -79,9 +85,9 @@ namespace InteropTypes.Graphics.Drawing
 
         public void Clear()
         {
-            _ImmutableKey = null;
-
             _Commands.Clear();
+            DefaultColorStyle = ColorStyle.White;
+            _ImmutableKey = null;
         }
 
         /// <inheritdoc/>        
@@ -174,6 +180,7 @@ namespace InteropTypes.Graphics.Drawing
         public void CopyTo(Record3D other)
         {
             other._Commands.Set(_Commands);
+            other.DefaultColorStyle = DefaultColorStyle;
             other._ImmutableKey = null;
         }
 

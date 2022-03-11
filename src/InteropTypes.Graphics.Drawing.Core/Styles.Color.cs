@@ -186,19 +186,22 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region nested types
+        #region nested types        
 
         public static ColorStyle TryGetDefaultFrom(Object source) { return GetDefaultFrom(source, default); }
 
         public static ColorStyle GetDefaultFrom(Object source, ColorStyle defval)
         {
-            if (source is IServiceProvider serviceProvider)
+            if (source is IBackendDefaultValue valueOwner)
             {
-                if (serviceProvider.GetService(typeof(IBackendDefaultValue)) is IBackendDefaultValue clientDefault)
-                {
-                    var val = clientDefault.DefaultColorStyle;
-                    if (val.IsVisible) return val;
-                }                
+                var val = valueOwner.DefaultColorStyle;
+                return val.IsVisible ? val : defval;
+            }
+
+            else if (source is IServiceProvider serviceProvider)
+            {
+                var child = serviceProvider.GetService(typeof(IBackendDefaultValue));
+                if (child != null) return GetDefaultFrom(child, defval);
             }
 
             return defval;
@@ -206,13 +209,16 @@ namespace InteropTypes.Graphics.Drawing
 
         public bool TrySetDefaultTo(Object target)
         {
-            if (target is IServiceProvider serviceProvider)
+            if (target is IBackendDefaultValue valueOwner)
             {
-                if (serviceProvider.GetService(typeof(IBackendDefaultValue)) is IBackendDefaultValue clientDefault)
-                {
-                    clientDefault.DefaultColorStyle = this;
-                    return true;
-                }
+                valueOwner.DefaultColorStyle = this;
+                return true;
+            }
+
+            else if (target is IServiceProvider serviceProvider)
+            {
+                var child = serviceProvider.GetService(typeof(IBackendDefaultValue));
+                if (child != null) return TrySetDefaultTo(child);
             }
 
             return false;

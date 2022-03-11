@@ -101,7 +101,7 @@ namespace InteropTypes.Graphics.Backends
 
     abstract class _BaseDrawingContext<TPixel> :
         Decompose2D.PassToSelf,
-        IBackendViewportInfo,
+        IRenderTargetInfo,
         IBackendCanvas2D,        
         ColorStyle.IBackendDefaultValue
         where TPixel: unmanaged

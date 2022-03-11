@@ -35,6 +35,13 @@ namespace WPFDemo
 
         public ThunderbirdRocket Rocket => new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(20,0,0));
 
+        public IDrawingBrush<IScene3D> Rockets =>
+            Toolkit.Combine
+            (
+                new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(20, 0, 0)).Tinted(ColorStyle.Green),
+                new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(0, 20, 0)).Tinted(ColorStyle.Red)
+            );
+
         public WPFClientBitmap ClientBitmap { get; } = new WPFClientBitmap();
 
 

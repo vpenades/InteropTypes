@@ -138,14 +138,14 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             {
                 var r = radius + brush.OutlineWidth * 0.5f;
 
-                if (r > 0) Parametric.ShapeFactory3D.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.OutlineColor, true);
+                if (r > 0) Parametric.ShapeFactory3D.PlatonicFactory.DrawOctahedron(dc, center.XYZ, r, lod, brush.OutlineColor, true);
             }
 
             if (brush.HasFill)
             {
                 var r = radius - brush.OutlineWidth * 0.5f;
 
-                if (r > 0) Parametric.ShapeFactory3D.PlatonicFactory.DrawOctahedron(dc, center.ToNumerics(), r, lod, brush.FillColor, false);
+                if (r > 0) Parametric.ShapeFactory3D.PlatonicFactory.DrawOctahedron(dc, center.XYZ, r, lod, brush.FillColor, false);
             }
         }
     }

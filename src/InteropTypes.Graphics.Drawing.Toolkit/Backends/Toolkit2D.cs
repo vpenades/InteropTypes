@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             if (TryGetBackendViewportBounds(dc, out var viewport)) return viewport;
 
-            throw new ArgumentException($"Backend must implement interface {nameof(IBackendViewportInfo)}", nameof(dc));
+            throw new ArgumentException($"Backend must implement interface {nameof(IRenderTargetInfo)}", nameof(dc));
         }
 
         public static bool TryGetBackendViewportBounds(this PRIMITIVE2D dc, out BRECT bounds)
@@ -24,7 +24,7 @@ namespace InteropTypes.Graphics.Drawing
             bounds = BRECT.Empty;
 
             if (!(dc is IServiceProvider srv)) return false;
-            if (!(srv.GetService(typeof(IBackendViewportInfo)) is IBackendViewportInfo vinfo)) return false;
+            if (!(srv.GetService(typeof(IRenderTargetInfo)) is IRenderTargetInfo vinfo)) return false;
             if (!(dc is ITransformer2D xform)) return false;
 
             var w = vinfo.PixelsWidth;

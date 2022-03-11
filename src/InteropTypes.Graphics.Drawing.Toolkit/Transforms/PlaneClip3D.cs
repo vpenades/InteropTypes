@@ -87,8 +87,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         private void _DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
-            var aa = a.ToNumerics();
-            var bb = b.ToNumerics();
+            var aa = a.XYZ;
+            var bb = b.XYZ;
 
             if (!_Plane.ClipLineToPlane(ref aa, ref bb)) return;
 

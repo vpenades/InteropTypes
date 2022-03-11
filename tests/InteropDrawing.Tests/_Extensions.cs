@@ -40,7 +40,7 @@ namespace InteropTypes.Graphics.Drawing
             if (filePath.ToLower().EndsWith(".png") || filePath.ToLower().EndsWith(".jpg") || filePath.ToLower().EndsWith(".gif"))
             {
                 
-                DrawingContext2D.SaveToBitmap(filePath, 1024, 1024, null, batch);
+                Canvas2DFactory.SaveToBitmap(filePath, 1024, 1024, null, batch);
                 NUnit.Framework.TestContext.AddTestAttachment(filePath);
                 return;
             }

@@ -117,14 +117,14 @@ namespace InteropTypes.Graphics.Drawing
             var tilesPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Assets\\Tiles.jpg");
             var tiles = ImageSource.CreateFromBitmap(tilesPath, (1024, 1024), (512, 512));
 
-            using (var dc = renderTarget.OpenDrawingContext())
+            renderTarget.Draw(dc =>
             {
                 dc.DrawLine(new Vector2(2, 2), new Vector2(100, 100), 2, COLOR.SkyBlue);
 
                 dc.DrawEllipse(new Vector2(30, 50), 20, 20, COLOR.Violet);
 
                 dc.DrawImage(Matrix3x2.Identity, tiles);
-            }
+            });
 
             var path = TestContext.CurrentContext.UseFilePath("testrender1.png");
 
@@ -142,7 +142,7 @@ namespace InteropTypes.Graphics.Drawing
 
             var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
 
-            DrawingContext2D.SaveToBitmap(path, 1024, 1024, null, scene);
+            Canvas2DFactory.SaveToBitmap(path, 1024, 1024, null, scene);
 
             TestContext.AddTestAttachment(path);
         }
@@ -162,13 +162,12 @@ namespace InteropTypes.Graphics.Drawing
             // render scene with WPF
 
             var renderTarget = new WPFRenderTarget(1024, 1024);
-            using (var dc = renderTarget.OpenDrawingContext())
+            renderTarget.Draw(dc =>
             {
                 PerspectiveTransform
                     .CreateLookingAtCenter((dc, 1024, 1024), (10, 5, 30))
                     .DrawScene(scene);
-                
-            }
+            });
 
             var path = TestContext.CurrentContext.UseFilePath($"WPF_{sceneName}.png");
 
@@ -254,10 +253,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             var renderTarget = new WPFRenderTarget(512, 512);
 
-            using (var dc = renderTarget.OpenDrawingContext())
-            {
-                DrawDirectVsPolygon(dc);
-            }
+            renderTarget.Draw(DrawDirectVsPolygon);
 
             var path = TestContext.CurrentContext.UseFilePath("referenceWPF.png");
             renderTarget.SaveToPNG(path);

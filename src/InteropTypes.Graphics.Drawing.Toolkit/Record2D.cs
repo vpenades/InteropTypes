@@ -8,7 +8,10 @@ using RECT = System.Drawing.RectangleF;
 namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model2DProxy))]
-    public class Record2D : ICanvas2D, IDrawingBrush<ICanvas2D>, IPseudoImmutable
+    public class Record2D : ICanvas2D,
+        IDrawingBrush<ICanvas2D>,
+        ColorStyle.IBackendDefaultValue,
+        IPseudoImmutable
     {
         #region data
 
@@ -59,6 +62,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public bool IsEmpty => _Commands.Count == 0;
 
+        public ColorStyle DefaultColorStyle { get; set; } = ColorStyle.White;
+
         #endregion
 
         #region API
@@ -67,6 +72,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             _ImmutableKey = null;
             _Commands.Clear();
+            DefaultColorStyle = ColorStyle.White;
         }
 
         /// <inheritdoc/>
@@ -134,7 +140,8 @@ namespace InteropTypes.Graphics.Drawing
         public void CopyTo(Record2D other)
         {
             other._Commands.Set(_Commands);
-            other._ImmutableKey = null;
+            other.DefaultColorStyle = this.DefaultColorStyle;
+            other._ImmutableKey = null;            
         }
 
         #endregion
