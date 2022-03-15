@@ -18,10 +18,9 @@ namespace WPFDemo
     {
         public AppMVVM()
         {
-            System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
+            System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);            
         }
-
-
+        
         public void DrawTo(IScene3D context)
         {
             context.DrawSphere((0,0,0), 2, ColorStyle.Red);            
@@ -30,6 +29,8 @@ namespace WPFDemo
         public Sphere Item1 => new Sphere();
 
         public Cube Item2 => new Cube();
+
+        public SentLand Sentinel => SentLand.GenerateLandscape(0);
 
         public IDrawingBrush<IScene3D> Combined => Toolkit.Combine(Item1, Item2);
 

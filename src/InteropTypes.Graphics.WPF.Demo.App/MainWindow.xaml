@@ -14,7 +14,7 @@
 
         <TabItem Header="3D">
 
-            <itypes:Scene3DView Scene="{Binding Combined}" />
+            <itypes:Scene3DView Scene="{Binding Sentinel}" />
 
         </TabItem>
 
