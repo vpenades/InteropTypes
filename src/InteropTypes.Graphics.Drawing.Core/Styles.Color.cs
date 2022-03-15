@@ -188,47 +188,24 @@ namespace InteropTypes.Graphics.Drawing
 
         #region nested types        
 
-        public static ColorStyle TryGetDefaultFrom(Object source) { return GetDefaultFrom(source, default); }
+        public static ColorStyle TryGetDefaultFrom(Object source)
+        {
+            return GlobalStyle.TryGetGlobalProperty<ColorStyle>(source, GlobalStyle.COLOR, out var color)
+                ? color
+                : default;
+        }
 
         public static ColorStyle GetDefaultFrom(Object source, ColorStyle defval)
         {
-            if (source is IBackendDefaultValue valueOwner)
-            {
-                var val = valueOwner.DefaultColorStyle;
-                return val.IsVisible ? val : defval;
-            }
-
-            else if (source is IServiceProvider serviceProvider)
-            {
-                var child = serviceProvider.GetService(typeof(IBackendDefaultValue));
-                if (child != null) return GetDefaultFrom(child, defval);
-            }
-
-            return defval;
+            return GlobalStyle.TryGetGlobalProperty<ColorStyle>(source, GlobalStyle.COLOR, out var color)
+                ? color
+                : defval;
         }
 
         public bool TrySetDefaultTo(Object target)
         {
-            if (target is IBackendDefaultValue valueOwner)
-            {
-                valueOwner.DefaultColorStyle = this;
-                return true;
-            }
-
-            else if (target is IServiceProvider serviceProvider)
-            {
-                var child = serviceProvider.GetService(typeof(IBackendDefaultValue));
-                if (child != null) return TrySetDefaultTo(child);
-            }
-
-            return false;
+            return GlobalStyle.TrySetGlobalProperty(target, GlobalStyle.COLOR, this);
         }
-
-        public interface IBackendDefaultValue
-        {
-            ColorStyle DefaultColorStyle { get; set; }
-        }
-
 
         #endregion
     }

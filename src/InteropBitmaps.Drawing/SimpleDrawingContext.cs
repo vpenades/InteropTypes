@@ -103,7 +103,7 @@ namespace InteropTypes.Graphics.Backends
         Decompose2D.PassToSelf,
         IRenderTargetInfo,
         IBackendCanvas2D,        
-        ColorStyle.IBackendDefaultValue
+        GlobalStyle.ISource
         where TPixel: unmanaged
     {
         #region constructor
@@ -126,6 +126,8 @@ namespace InteropTypes.Graphics.Backends
 
         private MemoryBitmap _TempBitmap;
 
+        private GlobalStyle _GlobalStyle;
+
         #endregion
 
         #region properties
@@ -140,16 +142,23 @@ namespace InteropTypes.Graphics.Backends
         public float DotsPerInchX => 96;
 
         /// <inheritdoc/>
-        public float DotsPerInchY => 96;
-
-        /// <inheritdoc/>
-        public ColorStyle DefaultColorStyle { get ; set ; }
+        public float DotsPerInchY => 96;        
 
         #endregion
 
         #region API
 
         protected abstract SpanBitmap<TPixel> GetRenderTarget();
+
+        bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
+        {
+            return GlobalStyle.TryGetGlobalProperty(_GlobalStyle, name, out value);
+        }
+
+        bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, name, value);
+        }
 
         private bool _TryGetImageSource(ImageSource src, out SpanBitmap bitmap)
         {

@@ -18,6 +18,7 @@ namespace InteropTypes.Graphics.Backends
         public MonoGameDrawing2D(GraphicsDevice device)
         {
             _Device = device;
+            _Textures = new TextureCache(device);
             _View = System.Numerics.Matrix3x2.Identity;
             SetPassImageThroughTarget(_VectorsBatch);
         }
@@ -29,10 +30,7 @@ namespace InteropTypes.Graphics.Backends
             _Device = null;
 
             Interlocked.Exchange(ref _Effect, null)?.Dispose();
-            Interlocked.Exchange(ref _WhiteTexture, null)?.Dispose();
-
-            foreach (var tex in _SpriteTextures.Values) tex.Item1.Dispose();
-            _SpriteTextures.Clear();
+            Interlocked.Exchange(ref _Textures, null)?.Dispose();
 
             _CurrTexture = null;
 
@@ -48,8 +46,7 @@ namespace InteropTypes.Graphics.Backends
 
         private GlobalState _PrevState;
 
-        private Texture2D _WhiteTexture;
-        private readonly Dictionary<object, (Texture2D, SpriteTextureAttributes)> _SpriteTextures = new Dictionary<object, (Texture2D, SpriteTextureAttributes)>();
+        private TextureCache _Textures;
 
         private Texture2D _CurrTexture;
 
@@ -91,11 +88,7 @@ namespace InteropTypes.Graphics.Backends
 
         private void SetTexture(Texture2D texture, in SpriteTextureAttributes attr = default)
         {
-            if (texture == null)
-            {
-                if (_WhiteTexture == null) _WhiteTexture = MonoGameToolkit._CreateSolidTexture(_Device, 16, 16, Color.White);
-                texture = _WhiteTexture;
-            }
+            if (texture == null) texture = _Textures.FetchTexture(Color.White).tex;
 
             if (_CurrTexture == texture) return;
 
@@ -145,19 +138,7 @@ namespace InteropTypes.Graphics.Backends
         public void SetSpriteMirror(bool hflip, bool vflip)
         {
             _VectorsBatch.SetSpriteGlobalMirror(hflip, vflip);
-        }
-
-        /// <inheritdoc />
-        public (Texture2D tex, SpriteTextureAttributes bleed) FetchTexture(object imageSource)
-        {
-            if (imageSource is Texture2D xnaTex) return (xnaTex, SpriteTextureAttributes.Default);
-
-            if (_SpriteTextures.TryGetValue(imageSource, out (Texture2D, SpriteTextureAttributes) xtex)) return xtex;
-
-            xtex = MonoGameToolkit.CreateTexture(_Device, imageSource);
-
-            return _SpriteTextures[imageSource] = xtex;
-        }
+        }        
 
 
         public void Flush()
@@ -220,7 +201,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (image == null) { SetTexture(null); return; }
 
-            var (tex, attr) = FetchTexture(image.Source);
+            var (tex, attr) = _Textures.FetchTexture(image.Source);
             if (tex == null) { SetTexture(null); return; }
 
             image.WithSourceSize(tex.Width, tex.Height);
@@ -230,7 +211,7 @@ namespace InteropTypes.Graphics.Backends
 
         public void DrawMeshPrimitive(ReadOnlySpan<Vertex2> vertices, ReadOnlySpan<int> indices, object texture)
         {
-            var (tex, attr) = FetchTexture(texture);
+            var (tex, attr) = _Textures.FetchTexture(texture);
             if (tex == null) { SetTexture(null); return; }
 
             SetTexture(tex, attr);

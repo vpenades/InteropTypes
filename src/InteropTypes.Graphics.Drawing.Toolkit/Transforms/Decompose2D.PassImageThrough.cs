@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         /// <summary>
         /// Base class for <see cref="ICoreScene3D"/> pass through classes.
         /// </summary>
-        public abstract class PassImageThrough : ICanvas2D, ColorStyle.IBackendDefaultValue
+        public abstract class PassImageThrough : ICanvas2D, GlobalStyle.ISource
         {
             #region data
 
@@ -23,12 +23,15 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             #endregion
 
             #region API
-
-            /// <inheritdoc/>
-            public ColorStyle DefaultColorStyle
+            
+            bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
             {
-                get => ColorStyle.TryGetDefaultFrom(_Target);
-                set => value.TrySetDefaultTo(_Target);
+                return GlobalStyle.TryGetGlobalProperty(_Target, name, out value);
+            }
+            
+            bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
+            {
+                return GlobalStyle.TrySetGlobalProperty(_Target, name, value);
             }
 
             /// <summary>
@@ -104,7 +107,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
                 if (_Backend != null) Decompose2D.DrawPolygon(_Backend, points, style);
                 else Decompose2D.DrawPolygon(_Target, points, style);
-            }
+            }            
 
             #endregion
         }

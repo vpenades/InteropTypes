@@ -13,7 +13,8 @@ namespace InteropTypes.Graphics.Drawing
     public struct BoundingSphere : IEquatable<BoundingSphere>, 
         IFormattable,
         IComparable<Plane>,
-        IComparable<BoundingSphere>
+        IComparable<BoundingSphere>,
+        IDrawingBrush<IScene3D>
     {
         #region constructor
 
@@ -108,6 +109,11 @@ namespace InteropTypes.Graphics.Drawing
         #endregion
 
         #region API
+
+        public static BoundingSphere Lerp(BoundingSphere left, BoundingSphere right, float amount)
+        {
+            return new BoundingSphere(Vector3.Lerp(left.Center, right.Center, amount), left.Radius * (1 - amount) + right.Radius * amount);
+        }
 
         public static bool Overlap(in BoundingSphere left, in BoundingSphere right)
         {
@@ -214,6 +220,13 @@ namespace InteropTypes.Graphics.Drawing
         public string ToString(string format, IFormatProvider formatProvider)
         {
             return new Vector4(Center, Radius).ToString(format, formatProvider);
+        }
+
+        /// <inheritdoc/>
+        public void DrawTo(IScene3D context)
+        {
+            var style = ColorStyle.TryGetDefaultFrom(context);
+            context.DrawSphere(this.Center, this.Radius * 2, style);
         }
 
         #endregion

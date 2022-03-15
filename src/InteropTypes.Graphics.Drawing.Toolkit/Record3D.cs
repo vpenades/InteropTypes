@@ -14,13 +14,15 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
     public class Record3D : IScene3D,
         IDrawingBrush<IScene3D>,
-        ColorStyle.IBackendDefaultValue,
+        GlobalStyle.ISource,
         BoundingSphere.ISource,
         IPseudoImmutable        
     {
         #region data
 
         internal readonly _CommandStream3D _Commands = new _CommandStream3D();
+
+        private GlobalStyle _GlobalStyle;
 
         private Model3DVersionKey _ImmutableKey;
 
@@ -70,9 +72,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         public bool IsEmpty => _Commands.Count == 0;
-
-        public ColorStyle DefaultColorStyle { get; set; }
-
+        
         #endregion
 
         #region API
@@ -86,8 +86,18 @@ namespace InteropTypes.Graphics.Drawing
         public void Clear()
         {
             _Commands.Clear();
-            DefaultColorStyle = default;
+            _GlobalStyle = null;
             _ImmutableKey = null;
+        }
+
+        public bool TryGetGlobalProperty<T>(string name, out T value)
+        {
+            return GlobalStyle.TryGetGlobalProperty(_GlobalStyle, name, out value);
+        }
+
+        public bool TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, name, value);
         }
 
         /// <inheritdoc/>        
@@ -179,10 +189,9 @@ namespace InteropTypes.Graphics.Drawing
 
         public void CopyTo(Record3D other)
         {
-            other._Commands.Set(_Commands);
-            other.DefaultColorStyle = DefaultColorStyle;
+            other._Commands.Set(_Commands);            
             other._ImmutableKey = null;
-        }
+        }        
 
         #endregion
     }

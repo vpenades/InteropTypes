@@ -9,9 +9,9 @@ namespace InteropTypes.Graphics.Drawing
     {
         public static object TryGetService(this IServiceProvider owner, Type serviceType, Object parent = null)
         {
+            // parent service provider has preference
             if (parent is IServiceProvider psp)
-            {
-                // service provider has preference
+            {                
                 if (serviceType == typeof(IServiceProvider)) return psp;
 
                 return serviceType.IsAssignableFrom(owner.GetType())

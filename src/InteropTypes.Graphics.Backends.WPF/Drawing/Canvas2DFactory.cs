@@ -14,7 +14,7 @@ namespace InteropTypes.Graphics.Backends
     /// uses it as a factory to create <see cref="IDisposableCanvas2D"/>
     /// </summary>
     public partial class Canvas2DFactory : System.Windows.Threading.DispatcherObject,
-        ColorStyle.IBackendDefaultValue
+        GlobalStyle.ISource
     {
         #region lifecycle
 
@@ -38,16 +38,11 @@ namespace InteropTypes.Graphics.Backends
         private readonly _WPFResourcesCache _ResourcesCache = new _WPFResourcesCache();
 
         private readonly List<System.Windows.Media.MatrixTransform> _TransformCache = new List<System.Windows.Media.MatrixTransform>();
-        private int _TransformDepth = 0;        
+        private int _TransformDepth = 0;
 
-        #endregion
+        private GlobalStyle _GlobalStyle;
 
-        #region properties
-
-        /// <inheritdoc/>        
-        public ColorStyle DefaultColorStyle { get; set; }
-
-        #endregion
+        #endregion        
 
         #region API - Core Resources
 
@@ -74,6 +69,16 @@ namespace InteropTypes.Graphics.Backends
             --_TransformDepth;
 
             _Context.Pop(); // only valid if we pushed a matrix.
+        }
+
+        bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
+        {
+            return GlobalStyle.TryGetGlobalProperty(_GlobalStyle, name, out value);
+        }
+
+        bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, name, value);
         }
 
         #endregion
@@ -289,7 +294,7 @@ namespace InteropTypes.Graphics.Backends
     struct _ActualCanvas2DContext :
         IDisposableCanvas2D,
         IRenderTargetInfo,
-        ColorStyle.IBackendDefaultValue
+        GlobalStyle.ISource
     {
         #region lifecycle
 
@@ -334,14 +339,17 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region properties
+        #region API
 
-        /// <inheritdoc/>        
-        public ColorStyle DefaultColorStyle
+        bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
         {
-            get => _Owner.DefaultColorStyle;
-            set => _Owner.DefaultColorStyle = value;
-        }        
+            return GlobalStyle.TryGetGlobalProperty(_Owner,name,out value);
+        }
+
+        bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(_Owner, name, value);
+        }
 
         #endregion
 
@@ -485,7 +493,7 @@ namespace InteropTypes.Graphics.Backends
             _Context.DrawImage(cropped, dstRect);
 
             // PopMatrix();
-        }
+        }        
 
         #endregion
     }

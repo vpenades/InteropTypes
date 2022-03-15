@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         ICanvas2D,
         IScene3D,
         IServiceProvider,
-        ColorStyle.IBackendDefaultValue
+        GlobalStyle.ISource
     {
         #region constructors
 
@@ -68,18 +68,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return true;
         }
 
-        #endregion
-
-        #region properties
-
-        /// <inheritdoc/>        
-        public ColorStyle DefaultColorStyle
-        {
-            get => ColorStyle.TryGetDefaultFrom(_Target);
-            set => value.TrySetDefaultTo(_Target);
-        }
-
-        #endregion
+        #endregion        
 
         #region API
 
@@ -89,6 +78,16 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             if (serviceType == typeof(Matrix4x4)) return _Transform;
 
             return this.TryGetService(serviceType, _Target);
+        }
+
+        bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
+        {
+            return GlobalStyle.TryGetGlobalProperty(_Target, name, out value);
+        }
+
+        bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(_Target, name, value);
         }
 
         private float _GetTransformed(float size) { return size <= 0 ? size : size * _SizeScale; }

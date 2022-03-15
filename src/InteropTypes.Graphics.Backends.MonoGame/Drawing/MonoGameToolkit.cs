@@ -59,7 +59,7 @@ namespace InteropTypes.Graphics.Backends
             return new MonoGameSpriteTexture(source, sampler ?? SamplerState.LinearClamp, textureBleed);
         }
 
-        internal static (Texture2D Texture, SpriteTextureAttributes Attributes) CreateTexture(GraphicsDevice gd, object imageSource)
+        internal static (Texture2D Texture, SpriteTextureAttributes Attributes) _CreateTexture(GraphicsDevice gd, object imageSource)
         {
             var attr = SpriteTextureAttributes.Default;
 
@@ -72,6 +72,26 @@ namespace InteropTypes.Graphics.Backends
             if (imageSource is FileInfo finfo)
             {
                 imageSource = finfo.FullName;
+            }
+
+            if (imageSource is System.Drawing.Color gdicolor)
+            {
+                var tex = _CreateSolidTexture(gd, 16, 16, gdicolor.ToXna());
+                return (tex, attr);
+            }
+
+            if (imageSource is XNACOLOR xnacolor)
+            {
+                var tex = _CreateSolidTexture(gd, 16, 16, xnacolor);
+                return (tex, attr);
+            }
+
+            if (imageSource is Bitmaps.IMemoryBitmap ibmp)
+            {
+                if (TryCreateTexture(ibmp.AsSpanBitmap(), gd, out var tex))
+                {
+                    return (tex, attr);
+                }
             }
 
             if (imageSource is string texPath)

@@ -23,7 +23,8 @@ namespace InteropTypes
 
         public static void DrawTo(IScene3D context)
         {
-            var style = new OutlineFillStyle(ColorStyle.GetDefaultFrom(context, COLOR.Red), COLOR.Black, 0.1f);
+            var color = ColorStyle.GetDefaultFrom(context, COLOR.Red);
+            var style = new OutlineFillStyle(color, COLOR.Black, 0.1f);
 
             context.DrawSphere(Point3.UnitY, 2.5f, style);
 

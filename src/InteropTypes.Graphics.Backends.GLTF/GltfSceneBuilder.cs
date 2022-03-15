@@ -12,7 +12,7 @@ using MESHBUILDER = SharpGLTF.Geometry.IMeshBuilder<SharpGLTF.Materials.Material
 
 namespace InteropTypes.Graphics.Backends
 {
-    public class GltfSceneBuilder : ColorStyle.IBackendDefaultValue
+    public class GltfSceneBuilder : GlobalStyle.ISource
     {
         #region factory        
 
@@ -36,6 +36,8 @@ namespace InteropTypes.Graphics.Backends
 
         private CameraTransform3D? _Camera;
 
+        private GlobalStyle _GlobalStyle;
+
         #endregion
 
         #region properties        
@@ -49,7 +51,21 @@ namespace InteropTypes.Graphics.Backends
         /// Gets or sets the quality of Spheres.
         /// </summary>
         public int SphereLOD { get; set; } = 2;
-        public ColorStyle DefaultColorStyle { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+
+        #endregion
+
+        #region API
+
+        bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
+        {
+            return GlobalStyle.TryGetGlobalProperty(_GlobalStyle, name, out value);
+        }
+
+        bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, name, value);
+        }
 
         #endregion
 
@@ -136,12 +152,12 @@ namespace InteropTypes.Graphics.Backends
             }
 
             model.Save(filePath);
-        }
+        }        
 
         #endregion
     }
 
-    sealed class _GltfDrawing3DContext : GltfMeshScene3D, IDisposableScene3D, ColorStyle.IBackendDefaultValue
+    sealed class _GltfDrawing3DContext : GltfMeshScene3D, IDisposableScene3D, GlobalStyle.ISource
     {
         #region lifecycle
 
@@ -171,12 +187,18 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region properties
+        #region API
 
-        public ColorStyle DefaultColorStyle
+        /// <inheritdoc/>
+        bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
         {
-            get => _Owner.DefaultColorStyle;
-            set => _Owner.DefaultColorStyle = value;
+            return GlobalStyle.TryGetGlobalProperty(_Owner, name, out value);
+        }
+
+        /// <inheritdoc/>
+        bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(_Owner, name, value);
         }
 
         #endregion

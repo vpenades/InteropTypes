@@ -10,12 +10,14 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model2DProxy))]
     public class Record2D : ICanvas2D,
         IDrawingBrush<ICanvas2D>,
-        ColorStyle.IBackendDefaultValue,
+        GlobalStyle.ISource,
         IPseudoImmutable
     {
         #region data
 
         internal readonly _CommandStream2D _Commands = new _CommandStream2D();
+
+        private GlobalStyle _GlobalStyle;
 
         private Model2DVersionKey _ImmutableKey;
 
@@ -60,9 +62,7 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        public bool IsEmpty => _Commands.Count == 0;
-
-        public ColorStyle DefaultColorStyle { get; set; }
+        public bool IsEmpty => _Commands.Count == 0;        
 
         #endregion
 
@@ -70,9 +70,19 @@ namespace InteropTypes.Graphics.Drawing
 
         public void Clear()
         {
-            _ImmutableKey = null;
             _Commands.Clear();
-            DefaultColorStyle = default;
+            _GlobalStyle = null;
+            _ImmutableKey = null;
+        }
+
+        public bool TryGetGlobalProperty<T>(string name, out T value)
+        {
+            return GlobalStyle.TryGetGlobalProperty(_GlobalStyle, name, out value);
+        }
+
+        public bool TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, name, value);
         }
 
         /// <inheritdoc/>
@@ -139,10 +149,9 @@ namespace InteropTypes.Graphics.Drawing
 
         public void CopyTo(Record2D other)
         {
-            other._Commands.Set(_Commands);
-            other.DefaultColorStyle = this.DefaultColorStyle;
+            other._Commands.Set(_Commands);            
             other._ImmutableKey = null;            
-        }
+        }        
 
         #endregion
     }
