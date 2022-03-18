@@ -124,8 +124,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         private void _DrawSegment(Point3 a, Point3 b, float diameter, LineStyle brush)
         {
-            var aa = a.ToNumerics();
-            var bb = b.ToNumerics();
+            var aa = a.XYZ;
+            var bb = b.XYZ;
 
             if (!_FrustumNearPlane.ClipLineToPlane(ref aa, ref bb)) return;
 
@@ -138,7 +138,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         void IScene3D.DrawSphere(Point3 center, float diameter, OutlineFillStyle brush)
         {
-            var c = center.ToNumerics();
+            var c = center.XYZ;
 
             if (!_FrustumNearPlane.IsInPositiveSideOfPlane(c)) return;
 

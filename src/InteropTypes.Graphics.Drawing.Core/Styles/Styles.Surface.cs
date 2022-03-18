@@ -132,7 +132,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region * with
+        #region Fluent API
 
         private static readonly SurfaceStyle _Default = new SurfaceStyle(ColorStyle.Transparent);
 

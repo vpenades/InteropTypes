@@ -35,7 +35,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         public static PerspectiveTransform CreatePerspective((ICanvas2D rt, float w, float h) viewport, float projectionFOV, Matrix4x4 camera)
         {
-            var cam = new CameraTransform3D(camera, projectionFOV, null, 0.1f, 1000);
+            var cam = CameraTransform3D
+                .CreatePerspective(projectionFOV)
+                .WithPlanes(0.1f, 1000)
+                .WithWorldMatrix(camera);
 
             return Create(viewport, cam);
         }        

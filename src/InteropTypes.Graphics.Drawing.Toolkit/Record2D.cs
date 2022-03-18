@@ -138,14 +138,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public IEnumerable<string> ToLog() { return new _Model2DProxy(this).Primitives; }
 
-        public void DrawTo(IScene3D dc, Matrix4x4 xform) { DrawTo(dc.CreateTransformed2D(xform)); }
-
-        public void DrawTo((ICanvas2D target, float width, float height) renderTarget, Matrix3x2 projection, Matrix3x2 camera)
-        {
-            var context = Transforms.Canvas2DTransform.Create(renderTarget, projection, camera);
-
-            DrawTo(context);
-        }
+        public void DrawTo(IScene3D dc, Matrix4x4 xform) { DrawTo(dc.CreateTransformed2D(xform)); }        
 
         public void CopyTo(Record2D other)
         {

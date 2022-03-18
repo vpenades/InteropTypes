@@ -30,6 +30,16 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         [Test]
+        public void createSphereFromDrawable()
+        {
+            var spheres = RandomSpheres.CreateRandom(new Random(117));
+            var bounds = BoundingSphere.From(spheres);
+
+            Assert.IsTrue(Point3.AreEqual(bounds.Center, (5.929292f, 3.881005f, 4.277648f), 0.00001f));
+            Assert.AreEqual(7.21709871f, bounds.Radius, 0.000001f);
+        }
+
+        [Test]
         public void CreateSphereFromTwoPoints()
         {
             var sphere = BoundingSphere.FromPoints(new Point3[] { (-1, 0, 0), (1, 0, 0), (0,0,0) });

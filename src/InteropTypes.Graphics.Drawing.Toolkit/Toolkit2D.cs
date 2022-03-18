@@ -86,22 +86,11 @@ namespace InteropTypes.Graphics.Drawing
 
         public static Transforms.Canvas2DTransform CreateTransformed(PRIMITIVE2D target, POINT2 physicalSize, POINT2 virtualSize, XFORM2 xform)            
         {
-
-
             return Transforms.Canvas2DTransform.Create(target, physicalSize, virtualSize, xform);
-        }
-
-        public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, POINT2 virtualSize)
-        {
-
-
-            return Transforms.Canvas2DTransform.Create(t, physicalSize, virtualSize);
         }        
 
         public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, BRECT virtualBounds)
         {
-
-
             return Transforms.Canvas2DTransform.Create(t, physicalSize, virtualBounds);
         }
 
@@ -187,8 +176,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public static void DrawLine(this PRIMITIVE2D dc, POINT2 a, POINT2 b, float diameter, in ImageStyle style)
         {
-            var aa = a.ToNumerics();
-            var ab = b.ToNumerics() - aa;            
+            var aa = a.XY;
+            var ab = b.XY - aa;            
 
             var imageXform = style.GetTransform();
             var sx = new VECTOR2(imageXform.M11, imageXform.M12).Length();

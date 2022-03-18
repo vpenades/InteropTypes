@@ -113,7 +113,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                         {
                             sequence.Add(tail);
 
-                            (tcpt, tail) = _ApplySmoothCurveTo(sequence, tcpt.ToNumerics(), tail, values, cmd.IsRelative);
+                            (tcpt, tail) = _ApplySmoothCurveTo(sequence, tcpt.XY, tail, values, cmd.IsRelative);
                             break;
                         }
 
@@ -153,7 +153,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
         {
             for (int i = 0; i < src.Count; i += 7)
             {
-                var p1 = tail.ToNumerics();
+                var p1 = tail.XY;
 
                 var rr = new Vector2(src[i + 0], src[i + 1]);
 
@@ -184,7 +184,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
         private static (Point2, Point2) _ApplyCurveTo(List<Point2> dst, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
         {
-            var p1 = tail.ToNumerics();
+            var p1 = tail.XY;
 
             var mid = p1;
 
@@ -211,7 +211,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
         private static (Point2, Point2) _ApplySmoothCurveTo(List<Point2> dst, Vector2 p2, Point2 tail, IReadOnlyList<float> src, bool srcIsRelative)
         {
-            var p1 = tail.ToNumerics();
+            var p1 = tail.XY;
 
             for (int i = 0; i < src.Count; i += 4)
             {

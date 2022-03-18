@@ -6,15 +6,16 @@ using System.Text;
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents a sphere, used to wrap 3D geometry to allow overlapping and frustrum culling.
+    /// Represents a sphere in 3D space.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Center} {Radius}")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1036:Override methods on comparable types", Justification = "The API would be misleading")]
-    public struct BoundingSphere : IEquatable<BoundingSphere>, 
-        IFormattable,
-        IComparable<Plane>,
-        IComparable<BoundingSphere>,
-        IDrawingBrush<IScene3D>
+    public struct BoundingSphere
+        : IEquatable<BoundingSphere>
+        , IFormattable
+        , IComparable<Plane>
+        , IComparable<BoundingSphere>
+        , IDrawingBrush<IScene3D>
     {
         #region constructor
 
@@ -210,6 +211,10 @@ namespace InteropTypes.Graphics.Drawing
             return dot.CompareTo(0);
         }
 
+        #endregion
+
+        #region convert to
+
         /// <inheritdoc/>
         public override string ToString()
         {
@@ -225,8 +230,13 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         public void DrawTo(IScene3D context)
         {
-            var style = ColorStyle.TryGetDefaultFrom(context);
-            context.DrawSphere(this.Center, this.Radius * 2, style);
+            var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
+            DrawTo(context, style);
+        }
+
+        public void DrawTo(IScene3D context, OutlineFillStyle color)
+        {            
+            context.DrawSphere(this.Center, this.Radius * 2, color);
         }
 
         #endregion
@@ -246,112 +256,5 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         #endregion
-    }
-
-
-    sealed class _Scene3DBoundsBuilder : IScene3D
-    {
-        #region constructor
-
-        public static _Scene3DBoundsBuilder CreateEmpty()
-        {
-            return new _Scene3DBoundsBuilder
-            {
-                Min = new Vector3(float.MaxValue),
-                Max = new Vector3(float.MinValue),
-                Sphere = BoundingSphere.Undefined
-            };
-        }
-
-        #endregion
-
-        #region data
-
-        public Vector3 Min;
-        public Vector3 Max;
-
-        public BoundingSphere Sphere;
-
-        #endregion
-
-        #region API
-
-        public void AddVertex(in Vector3 v, float radius)
-        {
-            // Bounding Box
-            Min = Vector3.Min(Min, v - new Vector3(radius));
-            Max = Vector3.Max(Max, v + new Vector3(radius));
-
-            // Bounding Sphere
-            if (Sphere.Radius < 0) { Sphere = (v, radius); return; }
-
-            Sphere = BoundingSphere.Merge(Sphere, (v, radius));
-        }
-
-        public void AddVertex(in Vector3 v)
-        {
-            // Bounding Box
-            Min = Vector3.Min(Min, v);
-            Max = Vector3.Max(Max, v);
-
-            // Bounding Sphere
-            if (Sphere.Radius < 0) { Sphere = (v, 0); return; }
-
-            Sphere = BoundingSphere.Merge(Sphere, v);
-        }
-
-        #endregion
-
-        #region data
-
-        public void DrawAsset(in Matrix4x4 transform, object asset)
-        {
-            if (asset is IDrawingBrush<IScene3D> drawable)
-            {
-                var s = BoundingSphere.From(drawable);
-                s = BoundingSphere.Transform(s, transform);
-                Sphere = BoundingSphere.Merge(Sphere, s);
-                return;
-            }
-
-            if (asset is IDrawingBrush<ICoreScene3D> core)
-            {
-                var s = BoundingSphere.From(core);
-                s = BoundingSphere.Transform(s, transform);
-                Sphere = BoundingSphere.Merge(Sphere, s);
-                return;
-            }
-
-            if (asset is IPseudoImmutable pseudo)
-            {
-                DrawAsset(transform, pseudo);
-            }
-        }
-
-        public void DrawSurface(ReadOnlySpan<Point3> vertices, SurfaceStyle style)
-        {
-            foreach (var p in vertices) AddVertex(p.XYZ, 0);
-        }
-
-        public void DrawSegments(ReadOnlySpan<Point3> vertices, float diameter, LineStyle style)
-        {
-            diameter *= 0.5f;
-            diameter += style.OutlineWidth * 0.5f;
-            foreach (var p in vertices) AddVertex(p.XYZ, diameter);
-        }
-
-        public void DrawSphere(Point3 center, float diameter, OutlineFillStyle style)
-        {
-            diameter *= 0.5f;
-            diameter += style.OutlineWidth * 0.5f;
-            AddVertex(center.XYZ, diameter);
-        }
-
-        public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
-        {
-            foreach (var p in vertices) AddVertex(p.XYZ, 0);
-        }
-
-        #endregion
-    }
+    }    
 }

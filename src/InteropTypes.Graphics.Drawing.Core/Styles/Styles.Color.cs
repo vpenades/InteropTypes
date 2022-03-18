@@ -23,6 +23,19 @@ namespace InteropTypes.Graphics.Drawing
         public static implicit operator ColorStyle(float opacity) { return FromOpacity(opacity); }
 
         [System.Diagnostics.DebuggerStepThrough]
+        public ColorStyle(Random rnd, int? alpha = 255) : this()
+        {
+            if (rnd == null) throw new ArgumentNullException(nameof(rnd));
+            #pragma warning disable CA5394 // Do not use insecure randomness
+            B = (Byte)rnd.Next(255);
+
+            G = (Byte)rnd.Next(255);
+            R = (Byte)rnd.Next(255);
+            A = (Byte)(alpha ?? rnd.Next(255));
+            #pragma warning restore CA5394 // Do not use insecure randomness
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(GDICOLOR fillColor) : this() { Packed = (uint)fillColor.ToArgb(); }
 
         [System.Diagnostics.DebuggerStepThrough]
@@ -38,7 +51,7 @@ namespace InteropTypes.Graphics.Drawing
             G = (Byte)green;
             R = (Byte)red;
             A = (Byte)alpha;
-        }
+        }        
 
         #endregion
 
@@ -166,7 +179,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region API * With
+        #region Fluent API
 
         public static ColorStyle FromOpacity(float opacity)
         {

@@ -22,13 +22,6 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             return new Canvas2DTransform(t, xform);
         }        
 
-        public static Canvas2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, Point2 virtualSize)
-        {
-            var xform = Matrix3x2.CreateTranslation(virtualSize.ToNumerics() / 2);
-
-            return Create(t, physicalSize, virtualSize, xform);
-        }
-
         public static Canvas2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, RectangleF virtualBounds)
         {
             Point2 virtualOrig = virtualBounds.Location;
@@ -42,47 +35,24 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
         public static Canvas2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
         {
-            var xform = Matrix3x2.Identity;
-
-            var scaleX = physicalSize.X / virtualSize.X;
-            var scaleY = physicalSize.Y / virtualSize.Y;
-            var scale = Math.Min(scaleX, scaleY);
-
-            xform.M11 = +scale;
-            xform.M22 = -scale;
-
-            xform.M31 = physicalSize.X * 0.5f;
-            xform.M32 = physicalSize.Y * 0.5f;
-
-            Matrix3x2.Invert(virtualOffset, out Matrix3x2 invVirtOffset);
-
-            xform = Matrix3x2.Multiply(invVirtOffset, xform);
-
-            return new Canvas2DTransform(t, xform);
+            var camera = CameraTransform2D.Create(virtualOffset, virtualSize);
+            return Create(t, camera, physicalSize);
         }
 
         public static Canvas2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, CameraTransform2D camera)
-        {            
-            return Create(viewport, camera.CreateFinalMatrix((viewport.width,viewport.height)));
+        {
+            return Create(viewport.target, camera, (viewport.width, viewport.height));
         }
 
-        public static Canvas2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, Matrix3x2 projection, Matrix3x2 camera)
+        public static Canvas2DTransform Create(ICoreCanvas2D target, in CameraTransform2D camera, Point2 physicalSize)
         {
-            Matrix3x2.Invert(camera, out Matrix3x2 view);
-            return Create(viewport, view * projection);
-        }
-
-        public static Canvas2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, Matrix3x2 projview)
-        {
-            var xform = projview * (viewport.width, viewport.height).CreateViewport2D();
-            return new Canvas2DTransform(viewport.target, xform);
+            return new Canvas2DTransform(target, camera.CreateFinalMatrix(physicalSize));
         }
 
         private Canvas2DTransform(ICoreCanvas2D t, Matrix3x2 xform)
         {
             _Target = t;
             _TargetEx = t as ICanvas2D;
-
             _Transform = new TwoWayTransform2D(xform);
         }        
 

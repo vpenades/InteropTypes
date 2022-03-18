@@ -12,34 +12,48 @@ namespace InteropTypes.Graphics.Drawing
     /// </summary>
     /// <remarks>
     /// <para>
-    /// All proyection parameters used to construct a projection matrix can be set up in advanced except one;
-    /// <b>Aspect Ratio</b>, which depends on the actual display window.
-    /// </para>
-    /// <para>
-    /// This structure is divided into two section:<br/>
-    /// - A <see cref="WorldMatrix"/> representing the position of the camera within the scene.
-    /// - A <see cref="CreateProjectionMatrix(float)"/> method to retrieve the projection matrix.
-    /// </para>
+    /// To construct the transform pipeline, the viewport's dimensions and aspect ration are usually required,
+    /// which are usually available only at the beginning of the rendering stage. This structure contains
+    /// everything's required to build the final pipeline, except the viewport's data.
+    /// </para>    
     /// <para>
     /// <see href="https://en.wikipedia.org/wiki/Orthographic_projection#/media/File:Graphical_projection_comparison.png">Graphical projection comparison</see>
     /// </para>
     /// </remarks>
-    public struct CameraTransform3D : IEquatable<CameraTransform3D>
+    public struct CameraTransform3D
+        : IEquatable<CameraTransform3D>
     {
         #region constructors
 
         public static bool TryGetFromServiceProvider(Object obj, out CameraTransform3D cameraTransform)
         {
+            if (obj is ISource source)
+            {
+                cameraTransform = source.GetCameraTransform3D();
+                return true;
+            }
+
             if (obj is IServiceProvider provider)
             {
                 if (provider.GetService(typeof(CameraTransform3D)) is CameraTransform3D ct3d) { cameraTransform = ct3d; return true; }
+                if (provider.GetService(typeof(ISource)) is ISource ct3ds) { cameraTransform = ct3ds.GetCameraTransform3D(); return true; }
             }
 
             cameraTransform = default;
             return false;
         }
 
-        public CameraTransform3D(float? fov, float? ortho, float? near, float? far)
+        public static CameraTransform3D CreatePerspective(float fov)
+        {
+            return new CameraTransform3D(fov, null, null, null);
+        }
+
+        public static CameraTransform3D CreateOrthographic(float scale)
+        {
+            return new CameraTransform3D(null, scale, null, null);
+        }
+
+        private CameraTransform3D(float? fov, float? ortho, float? near, float? far)
         {            
             nameof(fov).GuardIsFiniteOrNull(fov);
             nameof(ortho).GuardIsFiniteOrNull(ortho);
@@ -51,29 +65,10 @@ namespace InteropTypes.Graphics.Drawing
 
             WorldMatrix = Matrix4x4.Identity;
             AxisMatrix = Matrix4x4.Identity;
-            VerticalFieldOfView = fov;
-            OrthographicScale = ortho;
-            NearPlane = near;
-            FarPlane = far;
-        }
-
-        public CameraTransform3D(Matrix4x4 position, float? fov, float? ortho, float? near, float? far)
-        {
-            nameof(position).GuardIsFinite(position);
-            nameof(fov).GuardIsFiniteOrNull(fov);
-            nameof(ortho).GuardIsFiniteOrNull(ortho);
-            nameof(near).GuardIsFiniteOrNull(near);
-
-            if (fov.HasValue && ortho.HasValue) throw new ArgumentException("FOV and Ortho are defined. Only one of the two must be defined", nameof(ortho));
-
-            if (near.HasValue && far.HasValue && far.Value <= near.Value) throw new ArgumentException("far value must be higher than near", nameof(far));
-            
-            WorldMatrix = position;
-            AxisMatrix = Matrix4x4.Identity;
-            VerticalFieldOfView = fov;
-            OrthographicScale = ortho;
-            NearPlane = near;
-            FarPlane = far;
+            _VerticalFieldOfView = fov;
+            _OrthographicScale = ortho;
+            _NearPlane = near;
+            _FarPlane = far;
         }
 
         #endregion
@@ -82,7 +77,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public static CameraTransform3D Empty => default;
 
-        public static CameraTransform3D Identity => new CameraTransform3D(Matrix4x4.Identity, null, null, -1f, 1f);
+        public static CameraTransform3D Identity => new CameraTransform3D(null, null, -1f, 1f);
 
         /// <summary>
         /// Use this matrix on <see cref="AxisMatrix"/> to set up a Z up camera.
@@ -112,22 +107,22 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// If defined, the camera is a perspective matrix
         /// </summary>
-        public float? VerticalFieldOfView;
+        private float? _VerticalFieldOfView;
 
         /// <summary>
         /// if defined, the camera is ortographic camera.
         /// </summary>
-        public float? OrthographicScale;
+        private float? _OrthographicScale;
 
         /// <summary>
-        /// Near plane must be more than zero and less than <see cref="FarPlane"/>
+        /// Near plane must be more than zero and less than <see cref="_FarPlane"/>
         /// </summary>
-        public float? NearPlane;
+        private float? _NearPlane;
 
         /// <summary>
-        /// Far plane must be more than <see cref="NearPlane"/> or infinite.
+        /// Far plane must be more than <see cref="_NearPlane"/> or infinite.
         /// </summary>
-        public float? FarPlane;
+        private float? _FarPlane;
 
         /// <inheritdoc/>
         public override int GetHashCode()
@@ -136,9 +131,9 @@ namespace InteropTypes.Graphics.Drawing
 
             return WorldMatrix.GetHashCode()
                 ^ AxisMatrix.GetHashCode()
-                ^ VerticalFieldOfView.GetHashCode()
-                ^ OrthographicScale.GetHashCode()
-                ^ NearPlane.GetHashCode();
+                ^ _VerticalFieldOfView.GetHashCode()
+                ^ _OrthographicScale.GetHashCode()
+                ^ _NearPlane.GetHashCode();
         }
 
         /// <inheritdoc/>
@@ -150,11 +145,11 @@ namespace InteropTypes.Graphics.Drawing
             if (this.WorldMatrix != other.WorldMatrix) return false;
             if (this.AxisMatrix != other.AxisMatrix) return false;
 
-            if (this.VerticalFieldOfView != other.VerticalFieldOfView) return false;
-            if (this.OrthographicScale != other.OrthographicScale) return false;
+            if (this._VerticalFieldOfView != other._VerticalFieldOfView) return false;
+            if (this._OrthographicScale != other._OrthographicScale) return false;
 
-            if (this.NearPlane != other.NearPlane) return false;
-            if (this.FarPlane != other.FarPlane) return false;
+            if (this._NearPlane != other._NearPlane) return false;
+            if (this._FarPlane != other._FarPlane) return false;
 
             return true;
         }
@@ -176,9 +171,9 @@ namespace InteropTypes.Graphics.Drawing
                 if (!IsInitialized) return false;
                 if (!WorldMatrix.IsFiniteAndNotZero()) return false;
                 if (!AxisMatrix.IsFiniteAndNotZero()) return false;
-                if (VerticalFieldOfView.HasValue)
+                if (_VerticalFieldOfView.HasValue)
                 {
-                    if (VerticalFieldOfView.Value <= 0.0f || VerticalFieldOfView.Value >= Math.PI) return false;
+                    if (_VerticalFieldOfView.Value <= 0.0f || _VerticalFieldOfView.Value >= Math.PI) return false;
                 }
 
                 return true;
@@ -188,11 +183,51 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Gets a value indicating whether this object has been initialized.
         /// </summary>
-        public bool IsInitialized => VerticalFieldOfView.HasValue || OrthographicScale.HasValue;
+        public bool IsInitialized => _VerticalFieldOfView.HasValue || _OrthographicScale.HasValue;
+
+        #endregion
+
+        #region  fluent API
+
+        public CameraTransform3D WithPlanes(float nearPlane, float farPlane)
+        {
+            var clone = this;
+            clone._NearPlane = nearPlane;
+            clone._FarPlane = farPlane;
+            return clone;
+        }        
+
+        public CameraTransform3D WithAxisMatrix(in Matrix4x4 axisMatrix)
+        {
+            var clone = this;
+            clone.AxisMatrix = axisMatrix;
+            return clone;
+        }
+
+        public CameraTransform3D WithWorldMatrix(in Matrix4x4 worldMatrix)
+        {
+            var clone = this;
+            clone.WorldMatrix = worldMatrix;
+            return clone;
+        }
 
         #endregion
 
         #region API
+
+        public static CameraTransform3D Multiply(CameraTransform3D camera, in Matrix4x4 xform)
+        {
+            camera.WorldMatrix = camera.WorldMatrix * xform;
+            return camera;
+        }
+
+        public static CameraTransform3D Multiply(in Matrix4x4 xform, CameraTransform3D camera)
+        {
+            camera.WorldMatrix = xform * camera.WorldMatrix;
+            return camera;
+        }
+
+        #pragma warning disable CA1822 // Mark members as static
 
         /// <summary>
         /// Sets <see cref="WorldMatrix"/> so it points at <paramref name="target"/>
@@ -219,15 +254,47 @@ namespace InteropTypes.Graphics.Drawing
                 * Matrix4x4.CreateTranslation(target.XYZ);
         }
 
+        /// <summary>
+        /// If this represents a perspective camera, it gets the vertical field of view.
+        /// </summary>
+        /// <param name="verticalFOV">The Vertical Field of View.</param>
+        /// <returns>true if this is a perspective camera.</returns>
+        public bool TryGetPerspectiveFieldOfView(out float verticalFOV)
+        {
+            if (_VerticalFieldOfView.HasValue) { verticalFOV = _VerticalFieldOfView.Value; return true; }
+            verticalFOV = 0f; return false;
+        }
+
+        /// <summary>
+        /// If this represents an orthographic camera, it gets the orthographic scale.
+        /// </summary>
+        /// <param name="scale">The orthographic scale.</param>
+        /// <returns>true if this is an orthographic camera.</returns>
+        public bool TryGetOrthographicScale(out float scale)
+        {
+            if (_VerticalFieldOfView.HasValue) { scale = _OrthographicScale.Value; return true; }
+            scale = 0f; return false;
+        }
+
+        /// <summary>
+        /// Gets the actual camera matrix, which is the concatenation of <see cref="AxisMatrix"/> and <see cref="WorldMatrix"/>.
+        /// </summary>
+        /// <returns>A matrix.</returns>
         public Matrix4x4 CreateCameraMatrix()
         {
+            if (!WorldMatrix.IsFiniteAndNotZero()) throw new InvalidOperationException($"Invalid {nameof(WorldMatrix)}");
+
             return AxisMatrix * WorldMatrix;
         }
 
+        /// <summary>
+        /// Gets the inverse of <see cref="CreateCameraMatrix"/>
+        /// </summary>
+        /// <returns>A matrix.</returns>        
         public Matrix4x4 CreateViewMatrix()
         {
             return !Matrix4x4.Invert(CreateCameraMatrix(), out Matrix4x4 viewMatrix)
-                ? throw new InvalidOperationException("Can't invert")
+                ? Matrix4x4.Identity
                 : viewMatrix;
         }
 
@@ -240,19 +307,19 @@ namespace InteropTypes.Graphics.Drawing
         {
             nameof(aspectRatio).GuardIsFinite(aspectRatio);                      
 
-            float near = NearPlane ?? 0.1f;
-            float far = FarPlane ?? 1000f;
+            float near = _NearPlane ?? 0.1f;
+            float far = _FarPlane ?? 1000f;
 
-            if (VerticalFieldOfView.HasValue)
+            if (_VerticalFieldOfView.HasValue)
             {
                 #if NETSTANDARD2_1_OR_GREATER                
-                return Matrix4x4.CreatePerspectiveFieldOfView(VerticalFieldOfView.Value, aspectRatio, near, far);
+                return Matrix4x4.CreatePerspectiveFieldOfView(_VerticalFieldOfView.Value, aspectRatio, near, far);
                 #else
-                return _CreatePerspectiveFieldOfView(VerticalFieldOfView.Value, aspectRatio, near, far);
+                return _CreatePerspectiveFieldOfView(_VerticalFieldOfView.Value, aspectRatio, near, far);
                 #endif
             }
             
-            var scale = OrthographicScale ?? 1;
+            var scale = _OrthographicScale ?? 1;
             return Matrix4x4.CreateOrthographic(scale, scale, near, far); // TODO: should scale be multiplied by aspect ratio?            
         }
 
@@ -260,10 +327,9 @@ namespace InteropTypes.Graphics.Drawing
         {
             return CreateViewportMatrix(screenSize.X, screenSize.Y);
         }
-
-        #pragma warning disable CA1822 // Mark members as static
+        
         public Matrix3x2 CreateViewportMatrix(float width, float height)
-        #pragma warning restore CA1822 // Mark members as static
+        
         {
             return new Matrix3x2
                 (0.5f * width, 0
@@ -306,6 +372,9 @@ namespace InteropTypes.Graphics.Drawing
 
             return result;
         }
+
+        #pragma warning restore CA1822 // Mark members as static
+
         #endif
 
         #endregion

@@ -29,8 +29,8 @@ namespace InteropTypes.Graphics.Drawing
             var segment = Segment3.Create((-10, 0, 0), (10, 0, 0));
 
             Assert.AreEqual(1, segment.CompareTo(new BoundingSphere((0, 2, 0), 1)));
-            Assert.AreEqual(0, segment.CompareTo(new BoundingSphere((0, 1, 0), 1)));
-            Assert.AreEqual(-1, segment.CompareTo(new BoundingSphere((0, 0, 0), 1)));
+            Assert.AreEqual(0, segment.CompareTo(new BoundingSphere((0, 1, 0), 1)));            
+            Assert.AreEqual(-1, segment.CompareTo(new BoundingSphere((0, 0, 0), 12)));
 
         }
     }

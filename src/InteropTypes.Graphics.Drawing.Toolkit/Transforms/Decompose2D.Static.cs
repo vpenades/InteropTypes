@@ -165,8 +165,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             var endCapCount = Parametric.ShapeFactory2D.GetLineCapVertexCount(endCapStyle);
             Span<POINT2> vertices = stackalloc POINT2[startCapCount + endCapCount];
 
-            var aa = a.ToNumerics();
-            var bb = b.ToNumerics();
+            var aa = a.XY;
+            var bb = b.XY;
 
             var delta = bb - aa;
 

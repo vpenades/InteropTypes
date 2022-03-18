@@ -230,7 +230,7 @@ namespace InteropTypes.Graphics.Drawing
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveEllipse>(command)[0];
 
-                var c = src.Center.ToNumerics();
+                var c = src.Center.XY;
                 var r = src.Style.OutlineWidth;
                 var rr = new XY(src.Width, src.Height) * 0.5f;
 

@@ -103,7 +103,7 @@ namespace InteropTypes.Graphics.Backends
 
             for (int i = 0; i < vertices.Length; ++i)
             {
-                vertices[i] = new Vertex3D { Position = points[i].ToNumerics(), Normal =n,  Color = c };
+                vertices[i] = new Vertex3D { Position = points[i].XYZ, Normal =n,  Color = c };
             }
 
             AddConvexPolygon(vertices, _NullTextureId);

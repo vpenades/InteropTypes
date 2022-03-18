@@ -274,7 +274,7 @@ namespace InteropTypes.Graphics.Drawing
             public static XYZ GetCenter(ReadOnlySpan<byte> command)
             {
                 var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveSphere>(command)[0];
-                return src.Center.ToNumerics();
+                return src.Center.XYZ;
             }
 
             public static void DrawTo(IScene3D dst, ReadOnlySpan<byte> command)

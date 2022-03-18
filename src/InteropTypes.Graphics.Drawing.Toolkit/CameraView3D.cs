@@ -27,11 +27,9 @@ namespace InteropTypes.Graphics.Drawing
 
         public static CameraView3D CreatePerspective(Point3 from, Point3 to)
         {
-            var cam = new CameraTransform3D
-            {
-                WorldMatrix = CreateWorldMatrix(from, to, 1),
-                VerticalFieldOfView = MathF.PI / 4
-            };
+            var cam = CameraTransform3D
+                .CreatePerspective(MathF.PI / 4)
+                .WithWorldMatrix(CreateWorldMatrix(from, to, 1));
 
             return new CameraView3D(cam);
         }
@@ -67,20 +65,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <remarks>
         /// The camera looks into the negative Z
         /// </remarks>
-        public Matrix4x4 WorldMatrix => Camera.WorldMatrix;
-
-        /// <summary>
-        /// If defined, the camera is a perspective matrix
-        /// </summary>
-        public float? VerticalFieldOfView => Camera.VerticalFieldOfView;
-
-        /// <summary>
-        /// if defined, the camera is ortographic camera.
-        /// </summary>
-        public float? OrthographicScale => Camera.OrthographicScale;
-
-        public float? NearPlane => Camera.NearPlane;
-        public float? FarPlane => Camera.FarPlane;
+        public Matrix4x4 WorldMatrix => Camera.WorldMatrix;        
 
         #endregion        
 
@@ -116,7 +101,5 @@ namespace InteropTypes.Graphics.Drawing
         }        
 
         #endregion
-    }
-
-    
+    }    
 }

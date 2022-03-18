@@ -136,11 +136,11 @@ namespace InteropTypes.Graphics.Drawing
 
         public CameraTransform3D GetCameraTransform3D()
         {
-            return new CameraTransform3D(
-                GetCameraMatrix(),
-                _ProjectionFactor > 0 ? _ProjectionFactor : (float?)null,
-                _ProjectionFactor < 0 ? -_ProjectionFactor : (float?)null,
-                0.1f, 10000f);
+            var cam = _ProjectionFactor > 0
+                ? CameraTransform3D.CreatePerspective(_ProjectionFactor)
+                : CameraTransform3D.CreateOrthographic(-_ProjectionFactor);
+
+            return cam.WithPlanes(0.1f, 10000f).WithWorldMatrix(GetCameraMatrix());
         }        
 
         public Matrix4x4 GetProjectionMatrix(float width, float height)

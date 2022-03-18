@@ -8,6 +8,7 @@ using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
 
 using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
+using System.Collections;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -32,6 +33,7 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1036:Override methods on comparable types", Justification = "The API would be misleading")]
     public partial struct Point3
         : IFormattable
+        , IEnumerable<Single>
         , IEquatable<Point3>
         , IEquatable<VECTOR3>
         , IComparable<BoundingSphere>
@@ -91,9 +93,31 @@ namespace InteropTypes.Graphics.Drawing
             #endif
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Point3(Random rnd) { return new Point3(rnd); }
+
         #endregion
 
         #region constructors
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3(Random rnd) : this()
+        {
+            if (rnd == null) throw new ArgumentNullException(nameof(rnd));
+
+            #pragma warning disable CA5394 // Do not use insecure randomness
+            #if NET6_0_OR_GREATER
+            X = rnd.NextSingle();
+            Y = rnd.NextSingle();
+            Z = rnd.NextSingle();
+            #else
+            X = (float)rnd.NextDouble();
+            Y = (float)rnd.NextDouble();
+            Z = (float)rnd.NextDouble();
+            #endif
+            #pragma warning restore CA5394 // Do not use insecure randomness
+        }
 
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -151,13 +175,13 @@ namespace InteropTypes.Graphics.Drawing
         public VECTOR2 XY;
 
         /// <summary>
-        /// The Y and Z component of the point.
+        /// The Y and Z components of the point.
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(4)]
-        public VECTOR2 YZ;
+        public VECTOR2 YZ;        
 
         /// <summary>
-        /// The X, Y and Z component of the point.
+        /// The X, Y and Z components of the point.
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
         public VECTOR3 XYZ;
@@ -191,9 +215,12 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         public static bool operator !=(in Point3 a, in VECTOR3 b) => !AreEqual(a, b);
 
-        public static bool AreEqual(in Point3 a, in Point3 b) { return a.XYZ == b.XYZ; }
+        public static bool AreEqual(in Point3 a, in Point3 b) { return a.XYZ == b.XYZ; }        
 
-        public static bool AreEqual(in Point3 a, in VECTOR3 b) { return a.XYZ == b; }
+        public static bool AreEqual(in Point3 a, in Point3 b, float tolerance)
+        {
+            return VECTOR3.Distance(a.XYZ, b.XYZ) <= tolerance;
+        }
 
         #endregion
 
@@ -204,11 +231,14 @@ namespace InteropTypes.Graphics.Drawing
         public static Point3 One => VECTOR3.One;
         public static Point3 UnitX => VECTOR3.UnitX;
         public static Point3 UnitY => VECTOR3.UnitY;
-        public static Point3 UnitZ => VECTOR3.UnitZ;        
+        public static Point3 UnitZ => VECTOR3.UnitZ;
 
         public float Length => XYZ.Length();
-        
-        public VECTOR3 Normalized => VECTOR3.Normalize(this.XYZ);
+
+        /// <summary>
+        /// The X and Z components of the point.
+        /// </summary>
+        public VECTOR2 XZ => new VECTOR2(X, Z);
 
         public int DominantAxis
         {
@@ -278,7 +308,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <returns>The angle, in radians.</returns>
         public static float AngleInRadians(Point3 a, Point3 b)
         {
-            var dot = VECTOR3.Dot(a.Normalized, b.Normalized);
+            var dot = VECTOR3.Dot(a.Normalized(), b.Normalized());
             if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
@@ -287,6 +317,23 @@ namespace InteropTypes.Graphics.Drawing
             #else
             return (float)Math.Acos(dot);
             #endif
+        }
+
+        public VECTOR3 Normalized()
+        {
+            return VECTOR3.Normalize(this.XYZ);
+        }
+
+        public VECTOR3 Normalized(out float length)
+        {
+            length = this.XYZ.Length();
+            return this.XYZ / length;
+        }
+
+        public static VECTOR3 Normalize(Point3 value, out float length)
+        {
+            length = value.XYZ.Length();
+            return value.XYZ / length;
         }
 
         public VECTOR3 WithLength(float len)
@@ -417,11 +464,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             return ref Unsafe.As<VECTOR3, Point3>(ref point);
         }
-        #endif
-
-        [Obsolete("Use .XYZ")]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public VECTOR3 ToNumerics() { return XYZ; }
+        #endif        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float[] ToArray() { return new float[] { X, Y, Z}; }
@@ -431,6 +474,21 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         public string ToString(string format, IFormatProvider formatProvider) { return XYZ.ToString(format, formatProvider); }
+
+        /// <inheritdoc/>
+        public IEnumerator<float> GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+            yield return Z;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+            yield return Z;
+        }
 
         #endregion
     }

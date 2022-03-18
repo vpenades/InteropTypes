@@ -94,7 +94,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region With * API
+        #region Fluent API
 
         public OutlineFillStyle WithFill(ColorStyle fillColor)
         {

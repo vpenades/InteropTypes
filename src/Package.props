@@ -22,7 +22,13 @@
 
   <PropertyGroup>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>  
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- https://docs.microsoft.com/en-us/dotnet/core/deploying/trimming/prepare-libraries-for-trimming -->
+    <IsTrimmable>true</IsTrimmable>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+  </PropertyGroup>
 
 
 <!--

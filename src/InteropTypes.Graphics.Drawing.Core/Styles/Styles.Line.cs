@@ -162,7 +162,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region With * API
+        #region Fluent API
 
         private static readonly LineStyle _Default = ColorStyle.Transparent;
 

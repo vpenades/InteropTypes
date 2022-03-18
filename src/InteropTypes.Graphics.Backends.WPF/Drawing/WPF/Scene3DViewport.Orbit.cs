@@ -111,17 +111,16 @@ namespace InteropTypes.Graphics.Backends.WPF
 
             var fov = (float)(FieldOfView * Math.PI / 180.0);            
 
-            var camxform = new CameraTransform3D(fov, null, 0.5f, float.PositiveInfinity);
-
-            camxform.AxisMatrix = UpDirectionIsZ
-                ? CameraTransform3D.ZUpAxisMatrix
-                : Matrix4x4.Identity;
+            var camxform = CameraTransform3D
+                .CreatePerspective(fov)
+                .WithPlanes(0.5f, float.PositiveInfinity)
+                .WithAxisMatrix(UpDirectionIsZ ? CameraTransform3D.ZUpAxisMatrix : Matrix4x4.Identity);            
 
             var targetDist = _SceneBounds.Radius * 3;
             targetDist *= (float)Math.Pow(2, CameraZoom);
             targetDist += _SceneBounds.Radius;
 
-            var yaw = -(float)(CameraYaw * Math.PI / 180.0);
+            var yaw = (float)(CameraYaw * Math.PI / 180.0);
             var pitch = (float)(CameraPitch * Math.PI / 180.0);
 
             camxform.SetOrbitWorldMatrix(this._SceneBounds.Center, targetDist, yaw, pitch, 0);

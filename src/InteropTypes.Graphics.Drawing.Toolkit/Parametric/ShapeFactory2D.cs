@@ -244,8 +244,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             var left = segments.Slice(lidx * 4 + 2, 2);
             var right = segments.Slice(ridx * 4, 2);
 
-            var l = (left[0].ToNumerics() + right[1].ToNumerics()) * 0.5f;
-            var r = (left[1].ToNumerics() + right[0].ToNumerics()) * 0.5f;
+            var l = (left[0].XY + right[1].XY) * 0.5f;
+            var r = (left[1].XY + right[0].XY) * 0.5f;
 
             var c = (r + l) * 0.5f;
             var d = new POINT2(r - l).WithLength(diameter) * 0.5f;
@@ -256,8 +256,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
         private static void _FillSegmentVertices(Span<POINT2> dst, POINT2 a, POINT2 b, float diameter)
         {
-            var aa = a.ToNumerics();
-            var bb = b.ToNumerics();
+            var aa = a.XY;
+            var bb = b.XY;
 
             var axisX = VECTOR2.Normalize(bb - aa) * diameter * 0.25f;
             var axisY = new VECTOR2(axisX.Y, -axisX.X);

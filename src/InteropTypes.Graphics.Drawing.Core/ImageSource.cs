@@ -8,7 +8,7 @@ using XYZ = System.Numerics.Vector3;
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents an image resource defined as a bitmap source and a region within that bitmap.
+    /// Represents an image resource defined as a bitmap source and a rectangular region within that bitmap.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -73,10 +73,10 @@ namespace InteropTypes.Graphics.Drawing
         public ImageSource(object source, Point2 origin, Point2 size, Point2 pivot, bool pivotPrecedence = false, bool mirrorX = false, bool mirrorY = false)
         {
             _Source = source;
-            _SourceUVMin = origin.ToNumerics();
-            _SourceUVMax = _SourceUVMin + size.ToNumerics();
+            _SourceUVMin = origin.XY;
+            _SourceUVMax = _SourceUVMin + size.XY;
 
-            _Pivot = pivot.ToNumerics();
+            _Pivot = pivot.XY;
             _PivotPrecedence = pivotPrecedence;
 
             _OrientationMask = _ImageFlags.None;
@@ -235,7 +235,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region With* Api
+        #region Fluent API
 
         /// <summary>
         /// Sets a new pivot.
@@ -353,11 +353,13 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API        
 
+        #pragma warning disable CA1024 // Use properties where appropriate
+
         /// <summary>
         /// Gets the region within the source image, defined by the UV0,UV1,UV2,V3 coordinates.
         /// </summary>
         /// <returns>A rectangle.</returns>
-        public System.Drawing.RectangleF GetSourceRectangle()
+        public System.Drawing.RectangleF GetSourceRectangle()        
         {
             var wh = _SourceUVMax - _SourceUVMin;
             return new System.Drawing.RectangleF(_SourceUVMin.X, _SourceUVMin.Y, wh.X, wh.Y);
@@ -392,6 +394,8 @@ namespace InteropTypes.Graphics.Drawing
                 return final;
             }
         }
+
+        #pragma warning restore CA1024 // Use properties where appropriate
 
         #endregion
     }

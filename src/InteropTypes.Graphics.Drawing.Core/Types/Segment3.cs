@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents a segment delimited by two <see cref="System.Numerics.Vector3"/>.
+    /// Represents a segment delimited by two <see cref="Vector3"/>.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{A}⊶{B}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1036:Override methods on comparable types", Justification = "The API would be misleading")]
-    public readonly struct Segment3 : IEquatable<Segment3>,
-        IComparable<BoundingSphere>
+    public readonly struct Segment3
+        : IEquatable<Segment3>
+        , IComparable<BoundingSphere>
+        , IDrawingBrush<ICoreScene3D>
+        , IDrawingBrush<IScene3D>
     {
         #region constructor
 
@@ -23,7 +27,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <summary>
-        /// Creates a <see cref="System.Numerics.Vector3"/> segment, ensuring that the endpoints are ordered, in ascending ordinal X,Y,Z component wise.
+        /// Creates a <see cref="Vector3"/> segment, ensuring that the endpoints are ordered, in ascending ordinal X,Y,Z component wise.
         /// </summary>
         /// <param name="a">the first segment end point.</param>
         /// <param name="b">the other segment end point.</param>
@@ -61,12 +65,19 @@ namespace InteropTypes.Graphics.Drawing
             this.B = b.XYZ;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        private Segment3(in Vector3 a, in Vector3 b)
+        {
+            this.A = a;
+            this.B = b;
+        }
+
         #endregion
 
         #region data
 
-        public readonly System.Numerics.Vector3 A;
-        public readonly System.Numerics.Vector3 B;
+        public readonly Vector3 A;
+        public readonly Vector3 B;
 
         /// <inheritdoc/>            
         public override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
@@ -93,7 +104,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public System.Numerics.Vector3 Direction => B - A;
 
-        public System.Numerics.Vector3 DirectionNormalized => System.Numerics.Vector3.Normalize(B - A);
+        public System.Numerics.Vector3 DirectionNormalized => Vector3.Normalize(B - A);
 
         public float Length => Direction.Length();
 
@@ -102,6 +113,18 @@ namespace InteropTypes.Graphics.Drawing
         #endregion
 
         #region API
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Segment3 Lerp(Segment3 a, Segment3 b, float amount)
+        {
+            return new Segment3(Vector3.Lerp(a.A, b.A, amount), Vector3.Lerp(a.B, b.B, amount));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Segment3 LerpOrdinal(Segment3 a, Segment3 b, float amount)
+        {
+            return CreateOrdinal(Vector3.Lerp(a.A, b.A, amount), Vector3.Lerp(a.B, b.B, amount));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasEnd(in Point3 point) { return point == A || point == B; }
@@ -132,18 +155,18 @@ namespace InteropTypes.Graphics.Drawing
         {
             var ab = segment.B - segment.A;
             var ac = point - segment.A;
-            return System.Numerics.Vector3.Dot(ab, ac) / ab.LengthSquared();
+            return Vector3.Dot(ab, ac) / ab.LengthSquared();
         }
 
         public static float Distance(in Segment3 segment, Point3 point)
         {
             var ab = segment.B - segment.A;
             var ac = point - segment.A;
-            var u = System.Numerics.Vector3.Dot(ab, ac) / ab.LengthSquared();
+            var u = Vector3.Dot(ab, ac) / ab.LengthSquared();
 
             u = Math.Max(0, u);
             u = Math.Min(1, u);
-            return System.Numerics.Vector3.Distance(point.XYZ, segment.A + ab * u);
+            return Vector3.Distance(point.XYZ, segment.A + ab * u);
         }        
 
 
@@ -152,13 +175,52 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="other">the sphere to compare against.</param>
         /// <returns>
-        /// -1 if inside or intersects <paramref name="other"/> sphere.<br/>
-        /// 0 if touches the <paramref name="other"/> sphere boundary.<br/>
+        /// -1 if inside <paramref name="other"/> sphere.<br/>
+        /// 0 if touches or intersects the <paramref name="other"/> sphere boundary.<br/>
         /// 1 if outside <paramref name="other"/> sphere.<br/>
         /// </returns>
         public int CompareTo(BoundingSphere other)
         {
-            return Distance(this, other.Center).CompareTo(other.Radius);
+            if (Distance(this, other.Center) > other.Radius) return 1; // fully outside
+            if (new Point3(A).CompareTo(other) > 0) return 0; // partially inside
+            if (new Point3(B).CompareTo(other) > 0) return 0; // partially inside
+            return -1; // fully inside
+        }
+
+        #endregion
+
+        #region convert to
+
+        /// <inheritdoc/>
+        void IDrawingBrush<IScene3D>.DrawTo(IScene3D context)
+        {
+            var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
+            DrawTo(context, style);
+        }
+
+        /// <inheritdoc/>
+        public void DrawTo(ICoreScene3D context)
+        {
+            var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
+            DrawTo(context, style);
+        }
+
+        public void DrawTo(ICoreScene3D context, ColorStyle color)
+        {
+            Span<Point3> points = stackalloc Point3[2];
+            points[0] = A;
+            points[1] = B;
+            
+            context.DrawConvexSurface(points, color);
+        }
+
+        public void DrawTo(IScene3D context, float diameter, OutlineFillStyle style)
+        {
+            Span<Point3> points = stackalloc Point3[2];
+            points[0] = A;
+            points[1] = B;
+
+            context.DrawSegments(points, diameter, style);
         }
 
         #endregion

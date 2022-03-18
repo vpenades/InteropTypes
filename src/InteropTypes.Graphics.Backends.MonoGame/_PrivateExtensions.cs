@@ -58,7 +58,7 @@ namespace InteropTypes.Graphics.Backends
 
         public static Matrix3x2 CreateVirtualToPhysical(this GraphicsDevice device, (float width, float height) virtualSize, bool keepAspect)
         {
-            var camera = new CameraTransform2D(Matrix3x2.Identity, virtualSize, keepAspect);
+            var camera = CameraTransform2D.Create(Matrix3x2.Identity, virtualSize, keepAspect);
 
             var physicalSize = new Vector2(device.Viewport.Width, device.Viewport.Height);
 

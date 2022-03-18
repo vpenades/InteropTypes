@@ -23,7 +23,7 @@ namespace InteropTypes.Graphics.Drawing
         public static void DrawFont(this CANVAS2DEX dc, POINT2 origin, float size, String text, FontStyle style)
         {
             var xform = XFORM2.CreateScale(size);
-            xform.Translation = origin.ToNumerics();
+            xform.Translation = origin.XY;
 
             style = style.With(style.Strength * size);
 

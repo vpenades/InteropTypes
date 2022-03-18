@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents a segment delimited by two <see cref="System.Numerics.Vector2"/>.
+    /// Represents a segment delimited by two <see cref="Vector2"/>.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{A}⊶{B}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public readonly struct Segment2 : IEquatable<Segment2>
+    public readonly struct Segment2
+        : IEquatable<Segment2>
+        , IDrawingBrush<ICoreCanvas2D>
+        , IDrawingBrush<ICanvas2D>
     {
         #region constructor
 
@@ -21,14 +25,14 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <summary>
-        /// Creates a <see cref="System.Numerics.Vector2"/> segment, ensuring that the endpoints are ordered, in ascending ordinal X,Y,Z component wise.
+        /// Creates a <see cref="Vector2"/> segment, ensuring that the endpoints are ordered, in ascending ordinal X,Y,Z component wise.
         /// </summary>
         /// <param name="a">the first segment end point.</param>
         /// <param name="b">the other segment end point.</param>
         /// <returns>A segment pair</returns>
         /// <remarks>
         /// CreateOrdinal(a,b) == CreateOrdinal(b,a);
-        /// </remarks>
+        /// </remarks>        
         public static Segment2 CreateOrdinal(in Point2 a, in Point2 b)
         {
             switch (a.X.CompareTo(b.X))
@@ -53,12 +57,19 @@ namespace InteropTypes.Graphics.Drawing
             this.B = b.XY;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        private Segment2(in Vector2 a, in Vector2 b)
+        {
+            this.A = a;
+            this.B = b;
+        }
+
         #endregion
 
         #region data
 
-        public readonly System.Numerics.Vector2 A;
-        public readonly System.Numerics.Vector2 B;
+        public readonly Vector2 A;
+        public readonly Vector2 B;
 
         /// <inheritdoc/>
         public override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
@@ -83,9 +94,9 @@ namespace InteropTypes.Graphics.Drawing
 
         public int DominantAxis => Point2.GetDominantAxis(Direction);
 
-        public System.Numerics.Vector2 Direction => B - A;        
+        public Vector2 Direction => B - A;        
 
-        public System.Numerics.Vector2 DirectionNormalized => System.Numerics.Vector2.Normalize(B - A);
+        public Vector2 DirectionNormalized => Vector2.Normalize(B - A);
 
         public float Length => Direction.Length();
 
@@ -94,6 +105,18 @@ namespace InteropTypes.Graphics.Drawing
         #endregion
 
         #region API
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Segment2 Lerp(Segment2 a, Segment2 b, float amount)
+        {
+            return new Segment2(Vector2.Lerp(a.A, b.A, amount), Vector2.Lerp(a.B, b.B, amount));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Segment2 LerpOrdinal(Segment2 a, Segment2 b, float amount)
+        {
+            return CreateOrdinal(Vector2.Lerp(a.A, b.A, amount), Vector2.Lerp(a.B, b.B, amount));
+        }
 
         /// <summary>
         /// Checks whether one of the ends of the segment is <paramref name="point"/>.
@@ -124,23 +147,59 @@ namespace InteropTypes.Graphics.Drawing
         {
             var ab = segment.B - segment.A;
             var ac = point - segment.A;
-            return System.Numerics.Vector2.Dot(ab, ac) / ab.LengthSquared();
+            return Vector2.Dot(ab, ac) / ab.LengthSquared();
         }
 
         public static float Distance(in Segment2 segment, Point2 point)
         {
             var ab = segment.B - segment.A;
             var ac = point - segment.A;
-            var u = System.Numerics.Vector2.Dot(ab, ac) / ab.LengthSquared();
+            var u = Vector2.Dot(ab, ac) / ab.LengthSquared();
 
             u = Math.Max(0, u);
             u = Math.Min(1, u);
-            return System.Numerics.Vector2.Distance(point.XY, segment.A + ab * u);
+            return Vector2.Distance(point.XY, segment.A + ab * u);
         }
 
         public static IEqualityComparer<Segment2> GetEqualityComparer(bool ordinal)
         {
             return ordinal ? _OrderedComparer.Instance : _UnorderedComparer.Instance;
+        }
+
+        #endregion
+
+        #region convert to
+
+        /// <inheritdoc/>
+        void IDrawingBrush<ICanvas2D>.DrawTo(ICanvas2D context)
+        {
+            var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
+            DrawTo(context, style);
+        }
+
+        /// <inheritdoc/>
+        public void DrawTo(ICoreCanvas2D context)
+        {
+            var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
+            DrawTo(context, style);
+        }
+
+        public void DrawTo(ICoreCanvas2D context, ColorStyle color)
+        {
+            Span<Point2> points = stackalloc Point2[2];
+            points[0] = A;
+            points[1] = B;
+
+            context.DrawConvexPolygon(points, color);
+        }
+
+        public void DrawTo(ICanvas2D context, float diameter, OutlineFillStyle style)
+        {
+            Span<Point2> points = stackalloc Point2[2];
+            points[0] = A;
+            points[1] = B;
+
+            context.DrawLines(points, diameter, style);
         }
 
         #endregion

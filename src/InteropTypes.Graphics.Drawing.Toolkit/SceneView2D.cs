@@ -108,10 +108,10 @@ namespace InteropTypes.Graphics.Drawing
             if (_SceneBounds.HasValue)
             {
                 var ss = _SceneBounds.Value.Max - _SceneBounds.Value.Min;
-                return new CameraTransform2D(_CameraMatrix ?? Matrix3x2.Identity, ss);
+                return CameraTransform2D.Create(_CameraMatrix ?? Matrix3x2.Identity, ss);
             }
 
-            return new CameraTransform2D(_CameraMatrix ?? Matrix3x2.Identity, null);
+            return CameraTransform2D.Create(_CameraMatrix ?? Matrix3x2.Identity);
         }
 
         public virtual (Matrix3x2 Camera, Matrix3x2 Projection) GetMatrices(float renderWidth, float renderHeight)

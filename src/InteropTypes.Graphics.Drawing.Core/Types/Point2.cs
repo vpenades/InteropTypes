@@ -11,6 +11,7 @@ using GDIPOINT = System.Drawing.Point;
 using GDIPOINTF = System.Drawing.PointF;
 using GDISIZE = System.Drawing.Size;
 using GDISIZEF = System.Drawing.SizeF;
+using System.Collections;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -36,10 +37,11 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.DebuggerDisplay("{XY}")]
     public partial struct Point2
         : IFormattable
+        , IEnumerable<Single>
         , IEquatable<Point2>
         , IEquatable<VECTOR2>
         , IEquatable<GDIPOINTF>
-        , IEquatable<GDISIZEF>
+        , IEquatable<GDISIZEF>        
     {
         #region diagnostics
 
@@ -127,9 +129,29 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator Point2(GDISIZEF p) { return new Point2(p.Width, p.Height); }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Point2(Random rnd) { return new Point2(rnd); }
+
         #endregion
 
         #region constructors
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point2(Random rnd) : this()
+        {
+            if (rnd == null) throw new ArgumentNullException(nameof(rnd));
+
+            #pragma warning disable CA5394 // Do not use insecure randomness
+            #if NET6_0_OR_GREATER
+            X = rnd.NextSingle();
+            Y = rnd.NextSingle();
+            #else
+            X = (float)rnd.NextDouble();
+            Y = (float)rnd.NextDouble();
+            #endif
+            #pragma warning restore CA5394 // Do not use insecure randomness
+        }
 
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -217,14 +239,12 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         public static bool operator !=(in Point2 a, VECTOR2 b) => !AreEqual(a, b);
 
+        public static bool AreEqual(in Point2 a, in Point2 b) { return a.XY == b.XY; }        
 
-        public static bool AreEqual(in Point2 a, in Point2 b) { return a.XY == b.XY; }
-
-        public static bool AreEqual(in Point2 a, in VECTOR2 b) { return a.XY == b; }
-
-        public static bool AreEqual(in Point2 a, in GDIPOINTF b) { return a.X == b.X && a.Y == b.Y; }
-
-        public static bool AreEqual(in Point2 a, in GDISIZEF b) { return a.X == b.Width && a.Y == b.Height; }
+        public static bool AreEqual(in Point2 a, in Point2 b, float tolerance)
+        {
+            return VECTOR2.Distance(a.XY, b.XY) <= tolerance;
+        }
 
         #endregion
 
@@ -236,7 +256,7 @@ namespace InteropTypes.Graphics.Drawing
         public static Point2 UnitX => VECTOR2.UnitX;
         public static Point2 UnitY => VECTOR2.UnitY;
         public float Length => XY.Length();
-        public VECTOR2 Normalized => VECTOR2.Normalize(this.XY);
+        
         public int DominantAxis
         {
             get
@@ -311,7 +331,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <returns>The angle, in radians.</returns>
         public static float AngleInRadians(Point2 a, Point2 b)
         {
-            var dot = VECTOR2.Dot(a.Normalized,b.Normalized);
+            var dot = VECTOR2.Dot(a.Normalized(), b.Normalized());
             if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
@@ -346,6 +366,23 @@ namespace InteropTypes.Graphics.Drawing
         public static float Cross(Point2 a, Point2 b, Point2 c)
         {
             return Cross(b-a, c-b);
+        }
+
+        public VECTOR2 Normalized()
+        {
+            return VECTOR2.Normalize(this.XY);
+        }
+
+        public VECTOR2 Normalized(out float length)
+        {
+            length = this.XY.Length();
+            return this.XY / length;
+        }
+
+        public static VECTOR2 Normalize(Point2 value, out float length)
+        {
+            length = value.XY.Length();
+            return value.XY / length;
         }
 
         public VECTOR2 WithLength(float len)
@@ -549,10 +586,7 @@ namespace InteropTypes.Graphics.Drawing
         public GDIPOINTF ToGDIPoint() { return new GDIPOINTF(X, Y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public VECTOR2 ToNumerics() { return XY; }
+        public GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float[] ToArray() { return new float[] { X, Y }; }
@@ -562,6 +596,19 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         public string ToString(string format, IFormatProvider formatProvider) { return XY.ToString(format, formatProvider); }
+
+        /// <inheritdoc/>
+        public IEnumerator<float> GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return X;
+            yield return Y;
+        }
 
         #endregion
 

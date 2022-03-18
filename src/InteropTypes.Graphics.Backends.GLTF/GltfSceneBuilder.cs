@@ -224,20 +224,16 @@ namespace InteropTypes.Graphics.Backends
             cam.WorldMatrix = Matrix4x4.Identity;
             vcam = cam;
 
-            if (vcam.VerticalFieldOfView.HasValue)
+            if (vcam.TryGetPerspectiveFieldOfView(out var vfov))
             {
-                var yfov = vcam.VerticalFieldOfView.Value;
-
-                var persp = new SharpGLTF.Scenes.CameraBuilder.Perspective(null, yfov, 0.1f);
+                var persp = new SharpGLTF.Scenes.CameraBuilder.Perspective(null, vfov, 0.1f);
 
                 scene.AddCamera(persp, camNode);
             }
 
-            else if (vcam.OrthographicScale.HasValue)
+            else if (vcam.TryGetOrthographicScale(out var oscale))
             {
-                var s = vcam.OrthographicScale.Value;
-
-                var ortho = new SharpGLTF.Scenes.CameraBuilder.Orthographic(s, s, 0.1f, 1000);
+                var ortho = new SharpGLTF.Scenes.CameraBuilder.Orthographic(oscale, oscale, 0.1f, 1000);
 
                 scene.AddCamera(ortho, camNode);
             }
