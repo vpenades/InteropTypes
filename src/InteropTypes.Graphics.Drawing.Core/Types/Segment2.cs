@@ -173,6 +173,8 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         void IDrawingBrush<ICanvas2D>.DrawTo(ICanvas2D context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
             DrawTo(context, style);
         }
@@ -180,12 +182,16 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         public void DrawTo(ICoreCanvas2D context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
             DrawTo(context, style);
         }
 
         public void DrawTo(ICoreCanvas2D context, ColorStyle color)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             Span<Point2> points = stackalloc Point2[2];
             points[0] = A;
             points[1] = B;
@@ -195,6 +201,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public void DrawTo(ICanvas2D context, float diameter, OutlineFillStyle style)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             Span<Point2> points = stackalloc Point2[2];
             points[0] = A;
             points[1] = B;

@@ -17,7 +17,7 @@ namespace InteropTypes.Graphics.Drawing
             for(int i=0; i < 10; ++i)
             {
                 var s = new BoundingSphere(new Point3(10,10,10) * rnd, (float)rnd.NextDouble());
-                var c = new ColorStyle(rnd);
+                var c = new ColorStyle(rnd, 255);
                 l.Add((s, c));
             }
 

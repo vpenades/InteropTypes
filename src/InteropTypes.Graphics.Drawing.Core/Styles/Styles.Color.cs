@@ -23,12 +23,11 @@ namespace InteropTypes.Graphics.Drawing
         public static implicit operator ColorStyle(float opacity) { return FromOpacity(opacity); }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public ColorStyle(Random rnd, int? alpha = 255) : this()
+        public ColorStyle(Random rnd, int? alpha) : this()
         {
             if (rnd == null) throw new ArgumentNullException(nameof(rnd));
             #pragma warning disable CA5394 // Do not use insecure randomness
             B = (Byte)rnd.Next(255);
-
             G = (Byte)rnd.Next(255);
             R = (Byte)rnd.Next(255);
             A = (Byte)(alpha ?? rnd.Next(255));
@@ -45,13 +44,22 @@ namespace InteropTypes.Graphics.Drawing
         public ColorStyle(uint color) : this() { Packed = color; }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public ColorStyle(int red, int green, int blue, int alpha = 255) : this()
+        public ColorStyle(int red, int green, int blue) : this()
+        {
+            B = (Byte)blue;
+            G = (Byte)green;
+            R = (Byte)red;
+            A = 255;
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public ColorStyle(int red, int green, int blue, int alpha) : this()
         {
             B = (Byte)blue;
             G = (Byte)green;
             R = (Byte)red;
             A = (Byte)alpha;
-        }        
+        }
 
         #endregion
 

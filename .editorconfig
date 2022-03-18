@@ -35,6 +35,9 @@ csharp_style_expression_bodied_local_functions = false:silent
 csharp_style_throw_expression = true:suggestion
 csharp_indent_labels = one_less_than_current
 csharp_style_prefer_null_check_over_type_check = true:suggestion
+dotnet_diagnostic.IL2026.severity = error
+dotnet_diagnostic.IL2046.severity = error
+dotnet_diagnostic.IL2109.severity = error
 
 [*.{cs,vb}]
 #### Naming styles ####

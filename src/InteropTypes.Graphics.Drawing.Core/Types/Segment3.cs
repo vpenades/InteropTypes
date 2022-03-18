@@ -194,6 +194,8 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         void IDrawingBrush<IScene3D>.DrawTo(IScene3D context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
             DrawTo(context, style);
         }
@@ -201,12 +203,16 @@ namespace InteropTypes.Graphics.Drawing
         /// <inheritdoc/>
         public void DrawTo(ICoreScene3D context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
             DrawTo(context, style);
         }
 
         public void DrawTo(ICoreScene3D context, ColorStyle color)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             Span<Point3> points = stackalloc Point3[2];
             points[0] = A;
             points[1] = B;
@@ -216,6 +222,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public void DrawTo(IScene3D context, float diameter, OutlineFillStyle style)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             Span<Point3> points = stackalloc Point3[2];
             points[0] = A;
             points[1] = B;

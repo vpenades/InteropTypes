@@ -1,5 +1,5 @@
-﻿/// Taken from: https://github.com/dotnet/runtime/blob/master/src/libraries/System.Private.CoreLib/src/System/MathF.cs
-/// And modified to remove intrinsics and SIMD support.
+﻿// Taken from: https://github.com/dotnet/runtime/blob/master/src/libraries/System.Private.CoreLib/src/System/MathF.cs
+// And modified to remove intrinsics and SIMD support.
 
 namespace System
 {    

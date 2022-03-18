@@ -40,8 +40,7 @@ namespace InteropTypes.Graphics.Backends
         /// <summary>
         /// Draws a sequence of lines between points.
         /// </summary>
-        /// <param name="a">The point 1</param>
-        /// <param name="b">The point 1</param>
+        /// <param name="points">The seg,emts points</param>
         /// <param name="diameter">The thickness of the line, usually 1 or less.</param>
         /// <param name="color">The color of the line.</param>
         void DrawSegments(ReadOnlySpan<Point3> points, float diameter, ColorStyle color);

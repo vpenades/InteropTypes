@@ -235,7 +235,8 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         public void DrawTo(IScene3D context, OutlineFillStyle color)
-        {            
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
             context.DrawSphere(this.Center, this.Radius * 2, color);
         }
 
