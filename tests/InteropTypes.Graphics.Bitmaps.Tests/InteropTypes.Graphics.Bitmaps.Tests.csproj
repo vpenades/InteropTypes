@@ -31,16 +31,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />
-    
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.FFmpeg.AutoGen\InteropTypes.Graphics.Backends.FFmpeg.AutoGen.csproj" />        
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.VideoLAN\InteropTypes.Graphics.Backends.VideoLAN.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ZXing\InteropTypes.Graphics.Backends.ZXing.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.FFmpeg.AutoGen\InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />        
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.VideoLAN\InteropTypes.Codecs.VideoLAN.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
   </ItemGroup>  
