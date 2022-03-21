@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropTensors.Core\InteropTypes.Tensors.csproj" />
+    <ProjectReference Include="..\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
 

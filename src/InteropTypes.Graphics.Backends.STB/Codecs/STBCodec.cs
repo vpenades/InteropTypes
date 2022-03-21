@@ -41,15 +41,13 @@ namespace InteropTypes.Codecs
         /// <inheritdoc/>
         public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
-            bitmap = default;
+            bitmap = default;            
 
             try
             {
-                var img = STBREAD.ImageResult.FromStream(context.Stream, STBREAD.ColorComponents.RedGreenBlueAlpha);
+                var img = STBREAD.ImageResult.FromStream(context.Stream, STBREAD.ColorComponents.RedGreenBlueAlpha);                
 
-                var info = _Implementation.GetBitmapInfo(img);
-
-                bitmap = new MemoryBitmap(img.Data, info);
+                bitmap = _Implementation.AsMemoryBitmap(img);
 
                 return true;
             }

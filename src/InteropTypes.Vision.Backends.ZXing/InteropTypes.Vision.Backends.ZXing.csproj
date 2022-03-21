@@ -9,7 +9,7 @@
   <Import Project="..\Version.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropVision.Core\InteropTypes.Vision.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Vision.Core\InteropTypes.Vision.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,8 +11,7 @@
   <Import Project="..\Version.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
-    <ProjectReference Include="..\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,11 +17,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.Bitmaps.PixelFormats.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.PixelFormats\InteropTypes.Graphics.Bitmaps.PixelFormats.csproj" />
   </ItemGroup>
 
 </Project>

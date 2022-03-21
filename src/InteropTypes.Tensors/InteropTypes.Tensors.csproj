@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
   </ItemGroup>  
   
   <!-- Templates -->

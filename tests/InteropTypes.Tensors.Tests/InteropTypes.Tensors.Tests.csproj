@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropTensors.Core\InteropTypes.Tensors.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
   </ItemGroup>
 
 </Project>

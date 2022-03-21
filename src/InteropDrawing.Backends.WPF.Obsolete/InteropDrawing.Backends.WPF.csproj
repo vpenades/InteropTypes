@@ -11,7 +11,7 @@
   <Import Project="..\SourceLink.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
   </ItemGroup>  
 
 </Project>

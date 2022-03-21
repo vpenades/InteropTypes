@@ -4,23 +4,23 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vision", "Vision", "{227D251E-A653-47FC-AAF3-60FE3AD17C89}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GDI", "src\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj", "{B054109D-EE89-4D47-B454-59053223D0DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GDI", "src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj", "{B054109D-EE89-4D47-B454-59053223D0DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.ImageSharp", "src\InteropBitmaps.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj", "{A8FC67C8-3E5C-482E-B038-70C837122DD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.ImageSharp", "src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj", "{A8FC67C8-3E5C-482E-B038-70C837122DD7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.OpenCvSharp4", "src\InteropBitmaps.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj", "{14CED860-9374-4BA4-932A-B9AD55FCF996}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.OpenCvSharp4", "src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj", "{14CED860-9374-4BA4-932A-B9AD55FCF996}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.ZXing", "src\InteropBitmaps.Backends.ZXing\InteropTypes.Graphics.Backends.ZXing.csproj", "{C7538BBF-8C64-4BCA-9BCA-DE67B7DC9B90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.ZXing", "src\InteropTypes.Graphics.Backends.ZXing\InteropTypes.Graphics.Backends.ZXing.csproj", "{C7538BBF-8C64-4BCA-9BCA-DE67B7DC9B90}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.WPF", "src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj", "{9120AFE7-EB78-4BDF-8427-229C89420B1A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.STB", "src\InteropBitmaps.Backends.STB\InteropTypes.Graphics.Backends.STB.csproj", "{9CA81805-301D-4BDD-9E92-133C9C4EB203}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.STB", "src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj", "{9CA81805-301D-4BDD-9E92-133C9C4EB203}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SkiaSharp", "src\InteropBitmaps.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj", "{D1B6A472-4873-40FD-BB8A-EBDE0851F07B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SkiaSharp", "src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj", "{D1B6A472-4873-40FD-BB8A-EBDE0851F07B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{88681588-D801-4956-ACA7-ADE65AF158A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.Tests", "tests\InteropBitmaps.Tests\InteropTypes.Graphics.Bitmaps.Tests.csproj", "{9C5BACF5-66B9-4F15-80AD-DF4CE139333E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.Tests", "tests\InteropTypes.Graphics.Bitmaps.Tests\InteropTypes.Graphics.Bitmaps.Tests.csproj", "{9C5BACF5-66B9-4F15-80AD-DF4CE139333E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{17B219B6-2393-4D14-B532-F23C7EC56364}"
 	ProjectSection(SolutionItems) = preProject
@@ -34,19 +34,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\Version.props = src\Version.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.NUnit", "src\InteropBitmaps.NUnit\InteropTypes.Graphics.Bitmaps.NUnit.csproj", "{2D2FFE85-0690-43C4-883C-39C2BCDC3968}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.NUnit", "src\InteropTypes.Graphics.Bitmaps.NUnit\InteropTypes.Graphics.Bitmaps.NUnit.csproj", "{2D2FFE85-0690-43C4-883C-39C2BCDC3968}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.FFmpeg.AutoGen", "src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropTypes.Graphics.Backends.FFmpeg.AutoGen.csproj", "{29E95C5F-F272-4818-ACBF-7E0CB442796E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.FFmpeg.AutoGen", "src\InteropTypes.Graphics.Backends.FFmpeg.AutoGen\InteropTypes.Graphics.Backends.FFmpeg.AutoGen.csproj", "{29E95C5F-F272-4818-ACBF-7E0CB442796E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.FFMpegCore", "src\InteropBitmaps.Backends.FFMpegCore\InteropTypes.Graphics.Backends.FFMpegCore.csproj", "{B422472F-8F74-460E-A39F-2E63E2A9C0BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.FFMpegCore", "src\InteropTypes.Graphics.Backends.FFMpegCore\InteropTypes.Graphics.Backends.FFMpegCore.csproj", "{B422472F-8F74-460E-A39F-2E63E2A9C0BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors", "src\InteropTensors.Core\InteropTypes.Tensors.csproj", "{028899A0-2B8F-4F31-A54F-3CE3A8F98987}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors", "src\InteropTypes.Tensors\InteropTypes.Tensors.csproj", "{028899A0-2B8F-4F31-A54F-3CE3A8F98987}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors.Tests", "tests\InteropTensors.Tests\InteropTypes.Tensors.Tests.csproj", "{A53FBD64-B5ED-4DB1-A57D-19F037BEDF00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors.Tests", "tests\InteropTypes.Tensors.Tests\InteropTypes.Tensors.Tests.csproj", "{A53FBD64-B5ED-4DB1-A57D-19F037BEDF00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropDrawing.Extensions.Source", "src\InteropDrawing.Extensions.Source\InteropDrawing.Extensions.Source.csproj", "{7E86739E-14A4-4A90-AC28-FCE795566A90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Core", "src\InteropVision.Core\InteropTypes.Vision.Core.csproj", "{A2291C06-5E31-43A1-805D-A0693B944221}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Core", "src\InteropTypes.Vision.Core\InteropTypes.Vision.Core.csproj", "{A2291C06-5E31-43A1-805D-A0693B944221}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bitmaps", "Bitmaps", "{F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}"
 EndProject
@@ -54,15 +54,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drawing", "Drawing", "{1B0945CE-4A72-4CB0-92FC-F0B648814095}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Tests", "tests\InteropDrawing.Tests\InteropTypes.Graphics.Drawing.Tests.csproj", "{C5CB5055-D2FF-4B6E-8368-847E3A991A42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Tests", "tests\InteropTypes.Graphics.Drawing.Tests\InteropTypes.Graphics.Drawing.Tests.csproj", "{C5CB5055-D2FF-4B6E-8368-847E3A991A42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SVG", "src\InteropDrawing.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj", "{F2363BC6-B5DB-4D16-850B-B561A03CC18B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SVG", "src\InteropTypes.Graphics.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj", "{F2363BC6-B5DB-4D16-850B-B561A03CC18B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GLTF", "src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj", "{B67426F4-ED6D-4F3D-A50D-E142DD985AEC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.MonoGame", "src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj", "{6DA6AAE3-0896-4188-9036-23EFB4E2EE22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.MonoGame.Demo.App", "tests\InteropDrawing.MonoGame.Demo\InteropTypes.Graphics.MonoGame.Demo.App.csproj", "{6D8D03AB-2DDB-4A22-9591-07001CC40645}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.MonoGame.Demo.App", "tests\InteropTypes.Graphics.MonoGame.Demo.App\InteropTypes.Graphics.MonoGame.Demo.App.csproj", "{6D8D03AB-2DDB-4A22-9591-07001CC40645}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{3CEF3DF0-92F3-43E7-84ED-A145547996B6}"
 EndProject
@@ -70,37 +70,37 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interop.MathF.Source", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interop.MathF.Source.Tests", "tests\Interop.MathF.Source.Tests\Interop.MathF.Source.Tests.csproj", "{5F316E96-DBC1-424A-87C7-B4DE18237289}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SpanBitmap", "src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj", "{B6EACF05-2A76-472D-9EE9-A906C70DEB8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SpanBitmap", "src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj", "{B6EACF05-2A76-472D-9EE9-A906C70DEB8D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Plotly", "src\InteropDrawing.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj", "{3C34B3B5-C92E-45B0-A3DE-26A72FC2EC35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Plotly", "src\InteropTypes.Graphics.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj", "{3C34B3B5-C92E-45B0-A3DE-26A72FC2EC35}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Android", "src\InteropBitmaps.Backends.Android\InteropTypes.Graphics.Backends.Android.csproj", "{A8C9FC2F-2624-4AFE-AE0E-434A2B965430}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Android", "src\InteropTypes.Graphics.Backends.Android\InteropTypes.Graphics.Backends.Android.csproj", "{A8C9FC2F-2624-4AFE-AE0E-434A2B965430}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Droid.Tests", "tests\InteropTypes.Droid.Tests\InteropTypes.Droid.Tests.csproj", "{AD7B78B0-AE51-4FB7-9B11-4E22A2B538CA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Tests", "tests\InteropVision.Tests\InteropTypes.Vision.Tests.csproj", "{AC53DF1D-7081-4269-947B-4D0150E22609}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Tests", "tests\InteropTypes.Vision.Tests\InteropTypes.Vision.Tests.csproj", "{AC53DF1D-7081-4269-947B-4D0150E22609}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backends", "Backends", "{8BAB1140-2A9B-450A-8B38-A1203E72F060}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.VideoLAN", "src\InteropBitmaps.Backends.VideoLAN\InteropTypes.Graphics.Backends.VideoLAN.csproj", "{20F71865-1AEC-4B69-8C7C-F32086ECD946}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.VideoLAN", "src\InteropTypes.Graphics.Backends.VideoLAN\InteropTypes.Graphics.Backends.VideoLAN.csproj", "{20F71865-1AEC-4B69-8C7C-F32086ECD946}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Veldrid", "src\InteropWith.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj", "{F7B1B478-9F05-497A-A67F-9CAD2AB01E68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Veldrid", "src\InteropTypes.Graphics.Backends.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj", "{F7B1B478-9F05-497A-A67F-9CAD2AB01E68}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Veldrid.Demo.App", "tests\InteropWith.Veldrid.Demo\InteropTypes.Graphics.Veldrid.Demo.App.csproj", "{7D4D8596-946E-4D9C-B2D8-072AD4DA73C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Veldrid.Demo.App", "tests\InteropTypes.Graphics.Veldrid.Demo.App\InteropTypes.Graphics.Veldrid.Demo.App.csproj", "{7D4D8596-946E-4D9C-B2D8-072AD4DA73C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.MAUI", "src\InteropWith.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj", "{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.MAUI", "src\InteropTypes.Graphics.Backends.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj", "{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Veldrid.ShaderGen", "src\InteropWith.Veldrid.ShaderGen\InteropTypes.Graphics.Backends.Veldrid.ShaderGen.csproj", "{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Veldrid.ShaderGen", "src\InteropTypes.Graphics.Backends.Veldrid.ShaderGen\InteropTypes.Graphics.Backends.Veldrid.ShaderGen.csproj", "{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Backends.OnnxRuntime", "src\InteropWith.OnnxRuntime\InteropTypes.Vision.Backends.OnnxRuntime.csproj", "{4D350D45-1AEA-4398-9A65-D47094A733ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Backends.OnnxRuntime", "src\InteropTypes.Vision.Backends.OnnxRuntime\InteropTypes.Vision.Backends.OnnxRuntime.csproj", "{4D350D45-1AEA-4398-9A65-D47094A733ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.PixelFormats", "src\InteropTypes.Graphics.PixelFormats\InteropTypes.Graphics.Bitmaps.PixelFormats.csproj", "{B97CEF29-BDE8-442F-B182-2C78A63713BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.PixelFormats", "src\InteropTypes.Graphics.Bitmaps.PixelFormats\InteropTypes.Graphics.Bitmaps.PixelFormats.csproj", "{B97CEF29-BDE8-442F-B182-2C78A63713BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.PixelFormats.Tests", "tests\InteropTypes.Graphics.PixelFormats.Tests\InteropTypes.Graphics.Bitmaps.PixelFormats.Tests.csproj", "{52ED81F6-147E-436F-8D4B-1575D0E7548E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.PixelFormats.Tests", "tests\InteropTypes.Graphics.Bitmaps.PixelFormats.Tests\InteropTypes.Graphics.Bitmaps.PixelFormats.Tests.csproj", "{52ED81F6-147E-436F-8D4B-1575D0E7548E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.PixelFormats.Benchmark", "tests\InteropTypes.Graphics.PixelFormats.Benchmark\InteropTypes.Graphics.Bitmaps.PixelFormats.Benchmark.csproj", "{B4A4BD11-BF09-4E70-9FD0-D5FE7F7EC795}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.Core", "src\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj", "{7E54CEAF-A67A-4093-9EAA-6F5B27A16D15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.Core", "src\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj", "{7E54CEAF-A67A-4093-9EAA-6F5B27A16D15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Toolkit", "src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj", "{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785}"
 EndProject
@@ -108,13 +108,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.WPF.Demo.App", "src\InteropTypes.Graphics.WPF.Demo.App\InteropTypes.Graphics.WPF.Demo.App.csproj", "{CA316A21-B1D5-48ED-9297-35CA4972BA60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.MJPEG", "src\InteropTypes.Graphics.Video\InteropTypes.Codecs.MJPEG.csproj", "{FEF78B0C-600C-4697-BFEF-BC272105B391}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.MJPEG", "src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj", "{FEF78B0C-600C-4697-BFEF-BC272105B391}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{B682D47D-DFCA-4CC7-B1F2-E934E69932E6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Backends.ZXing", "src\InteropVision.With.ZXing\InteropTypes.Vision.Backends.ZXing.csproj", "{FE5DEF62-98EC-4711-BCD9-DAB3E0E307E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Backends.ZXing", "src\InteropTypes.Vision.Backends.ZXing\InteropTypes.Vision.Backends.ZXing.csproj", "{FE5DEF62-98EC-4711-BCD9-DAB3E0E307E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Demos.Common", "src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj", "{C6C47C85-CC36-4BEE-AFED-CBB51760F994}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Demos.Common", "src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj", "{C6C47C85-CC36-4BEE-AFED-CBB51760F994}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

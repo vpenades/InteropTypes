@@ -31,14 +31,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.FFmpeg.AutoGen\InteropTypes.Graphics.Backends.FFmpeg.AutoGen.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.STB\InteropTypes.Graphics.Backends.STB.csproj" />    
-    <ProjectReference Include="..\..\src\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />    
-    <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.FFmpeg.AutoGen\InteropTypes.Graphics.Backends.FFmpeg.AutoGen.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
+
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />    
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
     
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj" />
@@ -46,11 +46,14 @@
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
     
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Video\InteropTypes.Codecs.MJPEG.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj" />
 
-    <ProjectReference Include="..\..\src\InteropWith.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />    
+
+
   </ItemGroup>
 
 </Project>

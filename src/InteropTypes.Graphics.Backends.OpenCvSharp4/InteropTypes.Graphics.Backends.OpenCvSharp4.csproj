@@ -16,9 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropTensors.Core\InteropTypes.Tensors.csproj" />
-    <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
-    <ProjectReference Include="..\InteropVision.Core\InteropTypes.Vision.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Vision.Core\InteropTypes.Vision.Core.csproj" />
   </ItemGroup>
 
 </Project>

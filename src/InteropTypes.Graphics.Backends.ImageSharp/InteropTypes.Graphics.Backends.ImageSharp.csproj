@@ -19,13 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropBitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>    
     <PackageReference Include="MathNet.Numerics" Version="4.15.0" />    
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>

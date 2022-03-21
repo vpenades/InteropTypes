@@ -40,9 +40,7 @@
   -->
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.Android\InteropBitmaps.Backends.Android.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Core\InteropBitmaps.Core.csproj" />
-    <ProjectReference Include="..\..\src\InteropBitmaps.Drawing\InteropBitmaps.Drawing.csproj" />
-    <ProjectReference Include="..\..\src\InteropDrawing.Core\InteropDrawing.Core.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Android\InteropTypes.Graphics.Backends.Android.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
   </ItemGroup>
 </Project>

@@ -25,9 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropBitmaps.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
-    <ProjectReference Include="..\..\src\InteropWith.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj" />
   </ItemGroup>
 
 </Project>

@@ -87,5 +87,11 @@ namespace InteropTypes
             var binfo = GetBitmapInfo(image);
             return new SpanBitmap(image.Data, binfo);
         }
+
+        public static MemoryBitmap AsMemoryBitmap(STBREAD.ImageResult image)
+        {
+            var binfo = GetBitmapInfo(image);
+            return new MemoryBitmap(image.Data, binfo);
+        }
     }
 }
