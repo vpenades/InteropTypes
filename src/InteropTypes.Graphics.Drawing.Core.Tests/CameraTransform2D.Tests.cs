@@ -49,8 +49,38 @@ namespace InteropTypes.Graphics.Drawing
             p1 = Vector2.Transform(Vector2.Zero, cam1.CreateFinalMatrix((1000, 500)));
             Assert.AreEqual(new Point2(250, 0), p1);
         }
-        
-        
-        
+
+        [Test]
+        public void CameraOuterBoundsTests()
+        {
+            // create physical viewport
+            var backend = new DummyBackend2D(2000, 500);
+
+            // virtual camera
+            var innerCamera = CameraTransform2D.Create(Matrix3x2.CreateTranslation(700,0), (500, -500));
+
+            // get virtual viewport
+            Assert.IsTrue(Transforms.Canvas2DTransform.TryCreate(backend, innerCamera, out var virtualCanvas));
+
+            // draw onto the virtual canvas
+            virtualCanvas.DrawRectangle((2, 2), (1, 1), System.Drawing.Color.Red);
+
+            // check bounds in the physical backend
+            var (bMin, bMax) = backend.BoundingBox;            
+            Assert.AreEqual(53, bMax.X);
+            Assert.AreEqual(498, bMax.Y);
+            bMax -= bMin;
+            Assert.AreEqual(1, bMax.X);
+            Assert.AreEqual(1, bMax.Y);
+
+            // check if we can retrieve the outer camera bounds
+            Assert.IsTrue(CameraTransform2D.TryGetOuterCamera(virtualCanvas, out var outerCamera));
+
+            var outerRect = outerCamera.GetOuterBoundingRect();
+            Assert.AreEqual(-50, outerRect.X);
+            Assert.AreEqual(0, outerRect.Y);
+            Assert.AreEqual(2000, outerRect.Width);
+            Assert.AreEqual(500, outerRect.Height);
+        }        
     }
 }

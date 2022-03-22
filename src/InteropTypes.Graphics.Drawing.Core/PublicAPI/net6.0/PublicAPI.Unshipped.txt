@@ -21,12 +21,13 @@ InteropTypes.Graphics.Drawing.CameraTransform2D.CreateFinalMatrix(InteropTypes.G
 InteropTypes.Graphics.Drawing.CameraTransform2D.CreateViewMatrix() -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform2D.CreateViewportMatrix(InteropTypes.Graphics.Drawing.Point2 physicalSize) -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform2D.Equals(InteropTypes.Graphics.Drawing.CameraTransform2D other) -> bool
-InteropTypes.Graphics.Drawing.CameraTransform2D.GetOuterRectangle() -> System.Drawing.RectangleF
+InteropTypes.Graphics.Drawing.CameraTransform2D.GetOuterBoundingRect() -> System.Drawing.RectangleF
 InteropTypes.Graphics.Drawing.CameraTransform2D.IsInitialized.get -> bool
 InteropTypes.Graphics.Drawing.CameraTransform2D.ISource
 InteropTypes.Graphics.Drawing.CameraTransform2D.ISource.GetCameraTransform2D() -> InteropTypes.Graphics.Drawing.CameraTransform2D
 InteropTypes.Graphics.Drawing.CameraTransform2D.IsValid.get -> bool
 InteropTypes.Graphics.Drawing.CameraTransform2D.KeepAspectRatio -> bool?
+InteropTypes.Graphics.Drawing.CameraTransform2D.TryCreateFinalMatrix(InteropTypes.Graphics.Drawing.ICoreCanvas2D dc, out System.Numerics.Matrix3x2 finalMatrix) -> bool
 InteropTypes.Graphics.Drawing.CameraTransform2D.VirtualSize -> System.Numerics.Vector2?
 InteropTypes.Graphics.Drawing.CameraTransform2D.WorldMatrix -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.CameraTransform3D
@@ -405,6 +406,7 @@ static InteropTypes.Graphics.Drawing.CameraTransform2D.operator !=(in InteropTyp
 static InteropTypes.Graphics.Drawing.CameraTransform2D.operator ==(in InteropTypes.Graphics.Drawing.CameraTransform2D a, in InteropTypes.Graphics.Drawing.CameraTransform2D b) -> bool
 static InteropTypes.Graphics.Drawing.CameraTransform2D.TryGetFromServiceProvider(object obj, out InteropTypes.Graphics.Drawing.CameraTransform2D cameraTransform) -> bool
 static InteropTypes.Graphics.Drawing.CameraTransform2D.TryGetOuterCamera(InteropTypes.Graphics.Drawing.ICoreCanvas2D dc, out InteropTypes.Graphics.Drawing.CameraTransform2D camera) -> bool
+static InteropTypes.Graphics.Drawing.CameraTransform2D.TryGetRenderTargetInfo(InteropTypes.Graphics.Drawing.ICoreCanvas2D dc, out InteropTypes.Graphics.Drawing.IRenderTargetInfo rtinfo) -> bool
 static InteropTypes.Graphics.Drawing.CameraTransform3D.CreateOrthographic(float scale) -> InteropTypes.Graphics.Drawing.CameraTransform3D
 static InteropTypes.Graphics.Drawing.CameraTransform3D.CreatePerspective(float fov) -> InteropTypes.Graphics.Drawing.CameraTransform3D
 static InteropTypes.Graphics.Drawing.CameraTransform3D.Empty.get -> InteropTypes.Graphics.Drawing.CameraTransform3D

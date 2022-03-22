@@ -17,12 +17,35 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     {
         #region constructors
 
-        public static Canvas2DTransform Create(ICoreCanvas2D t, Matrix3x2 xform)
+        /// <summary>
+        /// Tries to create a virtual canvas from a physical canvas and a camera.
+        /// </summary>
+        /// <param name="physicalCanvas">This is typically a <see cref="ICanvas2D"/> backend. It must implement <see cref="IRenderTargetInfo"/>.</param>
+        /// <param name="camera">The current camera</param>
+        /// <param name="virtualCanvas">the resulting virtual canvas.</param>
+        /// <returns>true if it succeeded in creating the virtual canvas.</returns>
+        /// <remarks>
+        /// The method may fail if the <paramref name="physicalCanvas"/> does not implement <see cref="IRenderTargetInfo"/> at one point in the chain,
+        /// or if the <see cref="IRenderTargetInfo.PixelsWidth"/> or <see cref="IRenderTargetInfo.PixelsHeight"/> are zero or negative.
+        /// </remarks>
+        public static bool TryCreate(ICoreCanvas2D physicalCanvas, CameraTransform2D camera, out Canvas2DTransform virtualCanvas)
         {
-            return new Canvas2DTransform(t, xform);
+            if (!camera.TryCreateFinalMatrix(physicalCanvas, out var finalMatrix))
+            {
+                virtualCanvas = default;
+                return false;
+            }
+
+            virtualCanvas = Create(physicalCanvas, finalMatrix);
+            return true;
+        }
+
+        public static Canvas2DTransform Create(ICoreCanvas2D target, Matrix3x2 xform)
+        {
+            return new Canvas2DTransform(target, xform);
         }        
 
-        public static Canvas2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, RectangleF virtualBounds)
+        public static Canvas2DTransform Create(ICoreCanvas2D target, Point2 physicalSize, RectangleF virtualBounds)
         {
             Point2 virtualOrig = virtualBounds.Location;
             Point2 virtualSize = virtualBounds.Size;
@@ -30,13 +53,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             var xform = Matrix3x2.CreateTranslation(virtualCenter);
 
-            return Create(t, physicalSize, virtualSize, xform);
+            return Create(target, physicalSize, virtualSize, xform);
         }
 
-        public static Canvas2DTransform Create(ICoreCanvas2D t, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
+        public static Canvas2DTransform Create(ICoreCanvas2D target, Point2 physicalSize, Point2 virtualSize, Matrix3x2 virtualOffset)
         {
             var camera = CameraTransform2D.Create(virtualOffset, virtualSize);
-            return Create(t, camera, physicalSize);
+            return Create(target, camera, physicalSize);
         }
 
         public static Canvas2DTransform Create((ICoreCanvas2D target, float width, float height) viewport, CameraTransform2D camera)

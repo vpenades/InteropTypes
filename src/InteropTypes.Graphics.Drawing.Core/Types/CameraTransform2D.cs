@@ -42,23 +42,17 @@ namespace InteropTypes.Graphics.Drawing
         {
             camera = default;
 
-            // if this is a render target, return direct values.
-            if (dc is IRenderTargetInfo vinfo0)
-            {
-                camera = Create(Matrix3x2.Identity, new Vector2(vinfo0.PixelsWidth, vinfo0.PixelsHeight));
-                return true;
-            }
+            if (!TryGetRenderTargetInfo(dc, out var vinfo)) return false;
 
-            // query for the IRenderTargetInfo down the chain.
-            if (!(dc is IServiceProvider srv)) return false;
-            if (!(srv.GetService(typeof(IRenderTargetInfo)) is IRenderTargetInfo vinfo)) return false;
+            if (vinfo == null) return false;
+
+            var w = vinfo.PixelsWidth;
+            var h = vinfo.PixelsHeight;
+            if (w <= 0 || h <= 0) return false;
 
             // query for any in between transformations
             if (dc is ITransformer2D xform)
             {
-                var w = vinfo.PixelsWidth;
-                var h = vinfo.PixelsHeight;
-
                 // transform points from physical screen space to virtual space
                 Span<Point2> points = stackalloc Point2[3];
                 points[0] = (0, 0);
@@ -72,12 +66,16 @@ namespace InteropTypes.Graphics.Drawing
                 var m = new Matrix3x2(dx.X, dx.Y, dy.X, dy.Y, points[0].X, points[0].Y);
 
                 // create camera
-                camera = new CameraTransform2D(m, new Vector2(ww, hh), false);
-                return true;
-            }            
+                camera = new CameraTransform2D(m, new Vector2(ww, hh), false);                
+            }
+            else
+            {
+                camera = Create(Matrix3x2.Identity, new Vector2(w, h));                
+            }
 
-            camera = Create(Matrix3x2.Identity, new Vector2(vinfo.PixelsWidth, vinfo.PixelsHeight));
             return true;
+
+
         }
 
         public static CameraTransform2D Create(Matrix3x2 worldMatrix)
@@ -95,11 +93,11 @@ namespace InteropTypes.Graphics.Drawing
             return new CameraTransform2D(worldMatrix, virtualSize.XY, keepAspectRatio);
         }
 
-        private CameraTransform2D(Matrix3x2 position, Vector2? virtualSize, bool? keepAspectRatio)
+        private CameraTransform2D(Matrix3x2 worldMatrix, Vector2? virtualSize, bool? keepAspectRatio)
         {
-            nameof(position).GuardIsFinite(position);
+            nameof(worldMatrix).GuardIsFinite(worldMatrix);
 
-            this.WorldMatrix = position;
+            this.WorldMatrix = worldMatrix;
             this.VirtualSize = virtualSize;
             this.KeepAspectRatio = keepAspectRatio;
         }
@@ -127,6 +125,9 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Represents the world's scale size onscreen.
         /// </summary>
+        /// <remarks>
+        /// X and Y values cannot be zero, but they can be negative to reverse the axis.
+        /// </remarks>
         public Vector2? VirtualSize;
 
         /// <summary>
@@ -190,6 +191,44 @@ namespace InteropTypes.Graphics.Drawing
         #endregion
 
         #region API
+        
+        public bool TryCreateFinalMatrix(ICoreCanvas2D dc, out Matrix3x2 finalMatrix)
+        {
+            finalMatrix = Matrix3x2.Identity;
+
+            if (!TryGetRenderTargetInfo(dc, out var vinfo)) return false;
+            if (vinfo == null) return false;
+
+            int w = vinfo.PixelsWidth;
+            int h = vinfo.PixelsHeight;
+            if (w <= 0 || h <= 0) return false;
+
+            finalMatrix = CreateFinalMatrix((vinfo.PixelsWidth, vinfo.PixelsHeight));
+            return true;
+        }        
+
+        public static bool TryGetRenderTargetInfo(ICoreCanvas2D dc, out IRenderTargetInfo rtinfo)
+        {
+            rtinfo = null;
+
+            // if this is a render target, return direct values.
+            if (dc is IRenderTargetInfo vinfo0)
+            {
+                rtinfo = vinfo0;
+                return true;
+            }
+
+            // query for the IRenderTargetInfo down the chain.
+            if (!(dc is IServiceProvider srv)) return false;
+
+            if (srv.GetService(typeof(IRenderTargetInfo)) is IRenderTargetInfo vinfo)
+            {
+                rtinfo = vinfo;
+                return true;
+            }
+
+            return false;
+        }
 
         public static CameraTransform2D Multiply(CameraTransform2D camera, in Matrix3x2 xform)
         {
@@ -203,15 +242,9 @@ namespace InteropTypes.Graphics.Drawing
             return camera;
         }
 
-        public System.Drawing.RectangleF GetOuterRectangle()
+        public System.Drawing.RectangleF GetOuterBoundingRect()
         {
-            if (!VirtualSize.HasValue)
-            {
-                var t = WorldMatrix.Translation;
-                return new System.Drawing.RectangleF(t.X, t.Y, 0, 0);
-            }
-
-            var vs = VirtualSize.Value;
+            var vs = VirtualSize ?? Vector2.One;
 
             Span<Vector2> points = stackalloc Vector2[4];
             points[0] = Vector2.Transform(Vector2.Zero, WorldMatrix);
@@ -236,7 +269,7 @@ namespace InteropTypes.Graphics.Drawing
         public Matrix3x2 CreateFinalMatrix(Point2 physicalSize)
         {
             return CreateViewMatrix() * CreateViewportMatrix(physicalSize);
-        }
+        }        
 
         /// <summary>
         /// Gets the inverse of <see cref="WorldMatrix"/>

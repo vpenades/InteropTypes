@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
 
 </Project>
