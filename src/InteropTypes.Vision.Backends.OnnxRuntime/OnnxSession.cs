@@ -62,7 +62,7 @@ namespace InteropTypes.Vision.Backends
             throw new NotImplementedException();
         }
 
-        private static IDenseTensor _Create(ONNX.NamedOnnxValue namedValue)
+        private static ITensor _Create(ONNX.NamedOnnxValue namedValue)
         {
             if (namedValue.Value is ONNX.Tensors.DenseTensor<byte> tbyte) return new OnnxDenseTensor<byte>(tbyte, namedValue.Name);
             if (namedValue.Value is ONNX.Tensors.DenseTensor<int> tint32) return new OnnxDenseTensor<int>(tint32, namedValue.Name);
@@ -105,7 +105,7 @@ namespace InteropTypes.Vision.Backends
             return new OnnxDenseTensor<T>(denseTensor, input.Name);
         }
 
-        public IDenseTensor GetInputTensor(int idx) { return _Create(_Inputs[idx]); }
+        public ITensor GetInputTensor(int idx) { return _Create(_Inputs[idx]); }
 
         public IDenseTensor<T> GetInputTensor<T>(int idx) where T : unmanaged
         {

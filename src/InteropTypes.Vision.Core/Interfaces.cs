@@ -47,7 +47,7 @@ namespace InteropTypes.Vision
     /// </summary>
     public interface IModelSession : IDisposable
     {
-        IDenseTensor GetInputTensor(int idx);
+        ITensor GetInputTensor(int idx);
 
         /// <summary>
         /// Gets an existing tensor.

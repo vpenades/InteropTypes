@@ -174,7 +174,7 @@ namespace InteropTypes.Tensors
         /// <param name="srcImage">The source image.</param>
         /// <param name="srcImageROI">The region of interest of the source image.</param>
         /// <param name="dstToSrcXform">A transform to transform from <paramref name="dstTensor"/> coordinates to <paramref name="srcImage"/> coordinates. </param>
-        public static void SetPixels(this IDenseTensor dstTensor, int dstTensorSizeIdx, PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
+        public static void SetPixels(this ITensor dstTensor, int dstTensorSizeIdx, PointerBitmap srcImage, Matrix3x2 srcImageROI, out Matrix3x2 dstToSrcXform)
         {
             if (!(dstTensor is IInputImageTensor dstImage)) throw new ArgumentException($"Does not implement {nameof(IInputImageTensor)}.", nameof(dstTensor));
 

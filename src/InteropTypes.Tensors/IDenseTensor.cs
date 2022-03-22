@@ -10,7 +10,7 @@ namespace InteropTypes.Tensors
     /// <summary>
     /// Declares an object implementing this interface as a Dense Tensor.
     /// </summary>
-    public interface IDenseTensor
+    public interface ITensor
     {
         String Name { get; }
         ReadOnlySpan<int> Dimensions { get; }
@@ -24,7 +24,7 @@ namespace InteropTypes.Tensors
     /// </remarks>
     /// <typeparam name="T">The element type.</typeparam>
     /// <see href="https://github.com/dotnet/runtime/issues/28867"/>
-    public interface IDenseTensor<T> : IDenseTensor
+    public interface IDenseTensor<T> : ITensor
         where T:unmanaged
     {
         /// <summary>
