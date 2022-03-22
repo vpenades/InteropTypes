@@ -47,7 +47,7 @@ namespace InteropTypes.Tensors
                 var dsty = srcy * stepy / 65536;
 
                 var srcRow = src.GetRowSpan(srcy);
-                var dstRow = dst.GetRowSpan(dsty);
+                var dstRow = dst.UseRowSpan(dsty);
 
                 if (dsty != lasty) dstRow.Fill(new Vector3(offset)); // initialize the new row
 
@@ -81,8 +81,8 @@ namespace InteropTypes.Tensors
 
             for (int sidx = 0; sidx < w.Length; ++sidx)
             {
-                var didx = (sidx * istep / 65536); // the weights need to be duplicated, and acounted twice like a LERP
-                
+                var didx = (sidx * istep / 65536); // the weights need to be duplicated, and acounted twice like a LERP                
+                throw new NotImplementedException();
             }
         }
 
@@ -105,14 +105,6 @@ namespace InteropTypes.Tensors
                 d[didx] += s[sidx + 0] * w[sidx * 2 + 0] * scale;
                 d[didx] += s[sidx + 1] * w[sidx * 2 + 1] * scale;
             }
-        }
-
-        struct _bgr
-        {
-            public Byte B;
-            public Byte G;
-            public Byte R;
-            public Vector3 ToVector3() => new Vector3(B, G, R);
-        }
+        }        
     }
 }

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropTypes.Graphics.Bitmaps;
-using InteropTypes.Graphics;
-
 using TENSOR2S = InteropTypes.Tensors.SpanTensor2<float>;
 using TENSOR3S = InteropTypes.Tensors.SpanTensor3<float>;
 
@@ -120,22 +117,7 @@ namespace InteropTypes.Tensors
                     result[y, x] = sum;
                 }
             }
-        }        
-
-        public static void FitBitmap(TENSOR2V3 dst, SpanBitmap src)
-        {
-            var dstData = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, byte>(dst.Span);
-            var dstBmp = new SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], Pixel.BGR96F.Format);
-
-            if (src.PixelFormat.IsFloating)
-            {
-                dstBmp.FitPixels(src);                
-            }
-            else
-            {
-                SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));             
-            }            
-        }
+        }                
 
         public static void ApplyAddMultiply(TENSOR2V3 target, in XFORM3 xform)
         {
@@ -147,9 +129,7 @@ namespace InteropTypes.Tensors
                     row[i] = xform.Transform(row[i]); 
                 }
             }
-        }
-
-        
+        }        
 
         public static void Copy(TENSOR2V3 src, TENSOR3S dst, in XFORM3 xform)
         {
@@ -309,7 +289,7 @@ namespace InteropTypes.Tensors
             XFORM4.Transform(srcSpan, dstSpan, xform);
         }
 
-        public static void Copy(SpanTensor3<Byte> src, TENSOR2V3 dst, MultiplyAdd xform)
+        public static void Copy(SpanTensor3<Byte> src, TENSOR2V3 dst, XFORM3 xform)
         {            
             if (src.Dimensions[2] == 3)
             {
@@ -334,7 +314,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(SpanTensor3<Byte> src, SpanTensor2<float> dstX, SpanTensor2<float> dstY, SpanTensor2<float> dstZ, MultiplyAdd xform)
+        public static void Copy(SpanTensor3<Byte> src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, XFORM3 xform)
         {
             if (src.Dimensions[2] == 3)
             {
@@ -363,7 +343,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(TENSOR2S src, SpanTensor2<Byte> dst, MultiplyAdd xform)
+        public static void Copy(TENSOR2S src, SpanTensor2<Byte> dst, XFORM3 xform)
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
 

@@ -4,12 +4,12 @@ using System.Text;
 
 using NUnit.Framework;
 
-namespace InteropVision
+namespace InteropTypes.Vision
 {
     public class CaptureTimeTests
     {
         [Test]
-        public void TestPrecission()
+        public void TestTimePrecission()
         {
             long t0 = 1000;
             long t1 = 1001;
@@ -22,8 +22,6 @@ namespace InteropVision
             var ttt = tt.Ticks;
 
             Assert.AreEqual(1, ttt);
-        }
-
-        
+        }        
     }
 }

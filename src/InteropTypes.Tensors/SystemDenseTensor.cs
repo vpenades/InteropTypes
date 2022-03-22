@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Numerics.Tensors;
 using System.Text;
 
-using InteropTypes.Graphics.Bitmaps;
-
 namespace InteropTypes.Tensors
 {
     /// <summary>
@@ -49,9 +47,7 @@ namespace InteropTypes.Tensors
         public DenseTensor<T> ToDenseTensor()
         {
             return _Tensor.Clone() as DenseTensor<T>;
-        }
-
-        public SpanBitmap AsSpanBitmap() { return _Implementation.GetSpanBitmap(this); }
+        }        
 
         #endregion
     }

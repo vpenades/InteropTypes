@@ -5,8 +5,6 @@ using System.Numerics.Tensors;
 using System.Text;
 using System.Threading;
 
-using InteropTypes.Graphics.Bitmaps;
-
 namespace InteropTypes.Tensors
 {
     /// <summary>
@@ -45,11 +43,5 @@ namespace InteropTypes.Tensors
         IntPtr DataPointer { get; }
 
         int ByteSize { get; }        
-    }
-
-    public interface IInputImageTensor : IDenseTensor
-    {
-        void FitPixels(PointerBitmap src);
-        void SetPixels(PointerBitmap src, Matrix3x2 transform);
-    }
+    }    
 }

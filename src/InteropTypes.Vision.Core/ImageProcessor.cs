@@ -30,9 +30,9 @@ namespace InteropTypes.Vision
         {
             if (dst.Dimensions[2] == 3)
             {
-                var tmpTensor = dst.UpCast<System.Numerics.Vector3>();
+                var tmpTensor = dst.UpCast<System.Numerics.Vector3>();                
 
-                CopyImage(src, tmpTensor.AsSpanBitmap<TPixel>());
+                CopyImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector3, TPixel>());
 
                 Transform.ApplyTransformTo(tmpTensor.Span);
 
@@ -43,7 +43,7 @@ namespace InteropTypes.Vision
             {
                 var tmpTensor = dst.UpCast<System.Numerics.Vector4>();
 
-                CopyImage(src, tmpTensor.AsSpanBitmap<TPixel>());
+                CopyImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector4, TPixel>());
 
                 Transform.ApplyTransformTo(tmpTensor.Span);
 
@@ -57,7 +57,7 @@ namespace InteropTypes.Vision
 
                 var tmpTensor = new SpanTensor2<System.Numerics.Vector3>(h, w);
 
-                CopyImage(src, tmpTensor.AsSpanBitmap<TPixel>());
+                CopyImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector3, TPixel>());
 
                 SpanTensor.Copy(tmpTensor, dst, Transform);
                 return;
@@ -70,7 +70,7 @@ namespace InteropTypes.Vision
 
                 var tmpTensor = new SpanTensor2<System.Numerics.Vector4>(h, w);
 
-                CopyImage(src, tmpTensor.AsSpanBitmap<TPixel>());
+                CopyImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector4, TPixel>());
 
                 SpanTensor.Copy(tmpTensor, dst, Transform);
                 return;

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropTypes.Graphics;
-using InteropTypes.Graphics.Bitmaps;
+// using InteropTypes.Graphics;
+// using InteropTypes.Graphics.Bitmaps;
 
 using SIZE = System.Drawing.Size;
 
@@ -18,11 +18,17 @@ namespace InteropTypes.Tensors
     {
         public SIZE BitmapSize => new SIZE(this._Dimensions.Dim1, this._Dimensions.Dim0);
 
-        public Span<T> GetRowSpan(int y)
+        public ReadOnlySpan<T> GetRowSpan(int y)
         {
             return _Buffer.Slice(y * this._Dimensions.Dim0, this._Dimensions.Dim0);
         }
 
+        public Span<T> UseRowSpan(int y)
+        {
+            return _Buffer.Slice(y * this._Dimensions.Dim0, this._Dimensions.Dim0);
+        }
+
+        /*
         public SpanBitmap<T> AsSpanBitmap(PixelFormat fmt)
         {
             return new SpanBitmap<T>(this._Buffer, BitmapSize.Width, BitmapSize.Height, fmt);
@@ -54,7 +60,7 @@ namespace InteropTypes.Tensors
             var pfmt = PixelFormat.TryIdentifyFormat<TPixel>();
 
             return new SpanBitmap<TPixel>(data, BitmapSize.Width, BitmapSize.Height, pfmt);
-        }
+        }*/
 
         public void DrawLine(Vector2 a, Vector2 b, T value)
         {
