@@ -38,6 +38,64 @@ namespace InteropTypes.Tensors
             return tensor;
         }
 
-        
+        public static SpanTensor1<T> AsSpanTensor1<T>(this IDenseTensor<T> tensor)
+            where T : unmanaged
+        {
+            return new SpanTensor1<T>(tensor.Span, tensor.Dimensions);
+        }
+
+        public static SpanTensor2<T> AsSpanTensor2<T>(this IDenseTensor<T> tensor)
+            where T : unmanaged
+        {
+            return new SpanTensor2<T>(tensor.Span, tensor.Dimensions);
+        }
+
+        public static SpanTensor3<T> AsSpanTensor3<T>(this IDenseTensor<T> tensor)
+            where T : unmanaged
+        {
+            return new SpanTensor3<T>(tensor.Span, tensor.Dimensions);
+        }
+
+        public static SpanTensor4<T> AsSpanTensor4<T>(this IDenseTensor<T> tensor)
+            where T : unmanaged
+        {
+            return new SpanTensor4<T>(tensor.Span, tensor.Dimensions);
+        }
+
+        public static SpanTensor5<T> AsSpanTensor5<T>(this IDenseTensor<T> tensor)
+            where T : unmanaged
+        {
+            return new SpanTensor5<T>(tensor.Span, tensor.Dimensions);
+        }
+
+        public static SpanTensor1<T> AsSpanTensor1<T>(this IDenseTensor<T> tensor, int idx)
+            where T : unmanaged
+        {
+            return new SpanTensor2<T>(tensor.Span, tensor.Dimensions)[idx];
+        }
+
+        public static SpanTensor2<T> AsSpanTensor2<T>(this IDenseTensor<T> tensor, int idx)
+            where T : unmanaged
+        {
+            return new SpanTensor3<T>(tensor.Span, tensor.Dimensions)[idx];
+        }
+
+        public static SpanTensor3<T> AsSpanTensor3<T>(this IDenseTensor<T> tensor, int idx)
+            where T : unmanaged
+        {
+            return new SpanTensor4<T>(tensor.Span, tensor.Dimensions)[idx];
+        }
+
+        public static SpanTensor4<T> AsSpanTensor4<T>(this IDenseTensor<T> tensor, int idx)
+            where T : unmanaged
+        {
+            return new SpanTensor5<T>(tensor.Span, tensor.Dimensions)[idx];
+        }
+
+        public static SpanTensor5<T> AsSpanTensor5<T>(this IDenseTensor<T> tensor, int idx)
+            where T : unmanaged
+        {
+            return new SpanTensor6<T>(tensor.Span, tensor.Dimensions)[idx];
+        }
     }
 }

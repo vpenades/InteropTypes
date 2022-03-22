@@ -9,6 +9,20 @@ namespace InteropTypes.Tensors
 {
     internal static class _ArrayUtilities
     {
+        /// <summary>
+        /// verifies that the memory buffers represented by <paramref name="a"/> and <paramref name="b"/> don't overlap
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <exception cref="ArgumentException"></exception>
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void VerifyOverlap<T>(ReadOnlySpan<T> a, ReadOnlySpan<T> b)
+            where T : unmanaged
+        {
+            if (a.Overlaps(b)) throw new ArgumentException("buffers must not overlap");
+        }
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static void Split(Span<float> span, out Span<Vector4> span4, out Span<float> span1)
         {

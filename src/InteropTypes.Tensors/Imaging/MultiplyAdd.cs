@@ -213,6 +213,8 @@ namespace InteropTypes.Tensors
 
         public static void Transform(ReadOnlySpan<Vector4> src, Span<Vector4> dst, MultiplyAdd xform)
         {
+            _ArrayUtilities.VerifyOverlap(src, dst);
+
             if (xform.IsIdentity)
             {
                 src.Slice(0, dst.Length).CopyTo(dst);
@@ -338,6 +340,8 @@ namespace InteropTypes.Tensors
 
         public static void Transform(ReadOnlySpan<Vector3> src3, Span<Vector3> dst3, MultiplyAdd xform)
         {
+            _ArrayUtilities.VerifyOverlap(src3, dst3);
+
             if (xform.IsIdentity)
             {
                 src3.Slice(0, dst3.Length).CopyTo(dst3);
@@ -427,6 +431,8 @@ namespace InteropTypes.Tensors
 
         public static void Transform(ReadOnlySpan<Vector2> src, Span<Vector2> dst, MultiplyAdd xform)
         {
+            _ArrayUtilities.VerifyOverlap(src, dst);
+
             if (xform.IsIdentity)
             {
                 src.Slice(0, dst.Length).CopyTo(dst);
@@ -529,6 +535,8 @@ namespace InteropTypes.Tensors
 
         public static void Transform(ReadOnlySpan<Single> src, Span<Single> dst, MultiplyAdd xform)
         {
+            _ArrayUtilities.VerifyOverlap(src, dst);
+
             if (xform.IsIdentity)
             {
                 src.Slice(0, dst.Length).CopyTo(dst);

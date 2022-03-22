@@ -77,8 +77,36 @@ namespace InteropTypes.Tensors
                 var rv = right.GetValue(i);
                 result.SetValue(i, lv + rv);
             }
-        }        
+        }
 
         // OrdinalMultiply, MatrixMultiply  
+
+        [Obsolete("Use SystemDenseTensor wrapper")]
+        public static SpanTensor1<T> AsSpanTensor1<T>(this DenseTensor<T> tensor)
+            where T : unmanaged, IEquatable<T>
+        {
+            return new SpanTensor1<T>(tensor.Buffer.Span, tensor.Dimensions);
+        }
+
+        [Obsolete("Use SystemDenseTensor wrapper")]
+        public static SpanTensor2<T> AsSpanTensor2<T>(this DenseTensor<T> tensor)
+            where T : unmanaged, IEquatable<T>
+        {
+            return new SpanTensor2<T>(tensor.Buffer.Span, tensor.Dimensions);
+        }
+
+        [Obsolete("Use SystemDenseTensor wrapper")]
+        public static SpanTensor3<T> AsSpanTensor3<T>(this DenseTensor<T> tensor)
+            where T : unmanaged, IEquatable<T>
+        {
+            return new SpanTensor3<T>(tensor.Buffer.Span, tensor.Dimensions);
+        }
+
+        [Obsolete("Use SystemDenseTensor wrapper")]
+        public static SpanTensor4<T> AsSpanTensor4<T>(this DenseTensor<T> tensor)
+            where T : unmanaged, IEquatable<T>
+        {
+            return new SpanTensor4<T>(tensor.Buffer.Span, tensor.Dimensions);
+        }
     }
 }

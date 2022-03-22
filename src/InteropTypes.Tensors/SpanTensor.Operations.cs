@@ -35,14 +35,15 @@ namespace InteropTypes.Tensors
             return count;
         }
 
-        public static void Transpose<T>(SpanTensor2<T> src, SpanTensor2<T> dst) where T : unmanaged, IEquatable<T>
+        public static void Transpose<T>(SpanTensor2<T> src, SpanTensor2<T> dst)
+            where T : unmanaged
         {
             if (src.Dimensions[0] != dst.Dimensions[1]) throw new ArgumentException(nameof(dst.Dimensions));
             if (src.Dimensions[1] != dst.Dimensions[0]) throw new ArgumentException(nameof(dst.Dimensions));
 
             // keep in mind that although the src and dst "objects" may be different,
             // they might be sharing the same memory.
-            if (src._Buffer == dst._Buffer) throw new ArgumentException(nameof(dst._Buffer));
+            _ArrayUtilities.VerifyOverlap<T>(src._Buffer, dst._Buffer);
 
             for (int y = 0; y < dst.Dimensions[0]; ++y)
             {
