@@ -43,12 +43,7 @@ namespace InteropTypes.Vision.Backends
 
         #endregion
 
-        #region API              
-
-        System.Numerics.Tensors.DenseTensor<T> IDenseTensor<T>.ToDenseTensor()
-        {
-            throw new NotImplementedException();
-        }
+        #region API        
 
         public object GetService(Type serviceType)
         {

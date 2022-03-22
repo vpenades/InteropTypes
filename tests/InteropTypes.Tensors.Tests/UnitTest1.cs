@@ -42,7 +42,7 @@ namespace InteropTypes.Tensors
             var t1 = SpanTensor.Wrap(m1)[0];
             var t2 = SpanTensor.Wrap(m2)[0];
             var tr = SpanTensor.Wrap(Matrix4x4.Identity)[0];
-            SpanTensor.Multiply(t1, t2, tr);
+            SpanTensor.MatrixMultiply(t1, t2, tr);
             var trm = SpanTensor.ToMatrix4x4(tr);
 
             Assert.AreEqual(mr, trm);            
@@ -86,7 +86,7 @@ namespace InteropTypes.Tensors
 
             // multiplied
             var combined = new SpanTensor2<float>(3, 3);
-            SpanTensor.Multiply(t1t, t0, combined);
+            SpanTensor.MatrixMultiply(t1t, t0, combined);
 
             // decomposition
             var v = new SpanTensor2<float>(3, 3);

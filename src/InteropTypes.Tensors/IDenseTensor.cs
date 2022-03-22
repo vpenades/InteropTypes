@@ -30,13 +30,13 @@ namespace InteropTypes.Tensors
         /// <summary>
         /// Gets the flattened data span of the tensor.
         /// </summary>
-        Span<T> Span { get; }
-
-
-        [Obsolete]
-        DenseTensor<T> ToDenseTensor();        
+        Span<T> Span { get; }              
     }
 
+    /// <summary>
+    /// Declares an object implementing this interface as a native Dense Tensor
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface INativeDenseTensor<T> : IDenseTensor<T>, IDisposable
         where T : unmanaged
     {

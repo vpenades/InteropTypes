@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InteropTypes.Tensors
 {
-    public static class NativeTensorExtensions
+    partial class SpanTensor
     {
         /// <summary>
         /// Throws an exception if <paramref name="tensor"/> name doesn't meet <paramref name="nameConstraint"/>

@@ -9,8 +9,11 @@ namespace InteropTypes.Tensors
     /// <see cref="IDenseTensor{T}"/> implementation over <see cref="System.Numerics.Tensors.DenseTensor{T}"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <see href="https://devblogs.microsoft.com/dotnet/introducing-tensor-for-multi-dimensional-machine-learning-and-ai-data/"/>
-    /// <seealso href="https://github.com/dotnet/runtime/labels/area-System.Numerics.Tensors"/>
+    /// <remarks>
+    /// <see href="https://devblogs.microsoft.com/dotnet/introducing-tensor-for-multi-dimensional-machine-learning-and-ai-data/">DevBlogs - introducing tensors</see><br/>
+    /// <seealso href="https://github.com/dotnet/runtime/tree/main/src/libraries/System.Numerics.Tensors">DotNet - System.Numerics.Tensors</seealso><br/>
+    /// <seealso href="https://github.com/dotnet/runtime/labels/area-System.Numerics.Tensors">DotNet - Issues</seealso>
+    /// </remarks>
     public struct SystemDenseTensor<T> : IDenseTensor<T>
         where T : unmanaged
     {
@@ -40,15 +43,42 @@ namespace InteropTypes.Tensors
 
         public Span<T> Span => _Tensor.Buffer.Span;
 
-        #endregion
+        #endregion        
+    }
 
-        #region API
-
-        public DenseTensor<T> ToDenseTensor()
+    partial class SpanTensor
+    {
+        public static void Sum(Tensor<float> left, Tensor<float> right, ref Tensor<float> result)
         {
-            return _Tensor.Clone() as DenseTensor<T>;
+            if (!left.Dimensions.SequenceEqual(right.Dimensions)) throw new ArgumentException("incompatible dimensions", nameof(right));
+
+            if (result.Dimensions.SequenceEqual(left.Dimensions)) result = null;
+
+            if (left is DenseTensor<float> denseLeft && right is DenseTensor<float> denseRight && result is DenseTensor<float> denseResult)
+            {
+                if (result == null) result = new DenseTensor<float>(left.Dimensions);
+
+                _ArrayUtilities.VectorSum(denseLeft.Buffer.Span, denseRight.Buffer.Span, denseResult.Buffer.Span);
+                return;
+            }
+
+            if (result == null)
+            {
+                result = left is SparseTensor<float> && right is SparseTensor<float>
+                    ? new SparseTensor<float>(left.Dimensions)
+                    : (Tensor<float>)new DenseTensor<float>(left.Dimensions);
+            }
+
+            var count = left.DimensionsDotProduct();
+
+            for (int i = 0; i < count; ++i)
+            {
+                var lv = left.GetValue(i);
+                var rv = right.GetValue(i);
+                result.SetValue(i, lv + rv);
+            }
         }        
 
-        #endregion
+        // OrdinalMultiply, MatrixMultiply  
     }
 }

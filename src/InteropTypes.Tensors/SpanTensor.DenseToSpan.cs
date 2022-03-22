@@ -8,7 +8,7 @@ using System.Text;
 
 namespace InteropTypes.Tensors
 {
-    public static partial class TensorExtensions
+    partial class SpanTensor
     {
         public static SpanTensor1<T> AsSpanTensor1<T>(this IDenseTensor<T> tensor)
             where T : unmanaged
