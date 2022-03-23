@@ -14,6 +14,14 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream3D_DebuggerProxy))]    
     sealed class _CommandStream3D : Collection.CommandList, IScene3D
     {
+        #region lifecycle
+
+        public _CommandStream3D() { }
+
+        public _CommandStream3D(_CommandStream3D other) : base(other) { }
+
+        #endregion
+
         #region IScene3D
 
         public void DrawAsset(in XFORM3 transform, object asset)

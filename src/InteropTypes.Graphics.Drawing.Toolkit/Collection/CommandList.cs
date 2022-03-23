@@ -8,6 +8,17 @@ namespace InteropTypes.Graphics.Drawing.Collection
 {
     class CommandList
     {
+        #region lifecycle
+
+        public CommandList() { }
+
+        public CommandList(CommandList other)
+        {
+            this.Set(other);
+        }
+
+        #endregion
+
         #region data
 
         private byte[] _Buffer;

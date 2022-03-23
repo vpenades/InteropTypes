@@ -12,12 +12,34 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IScene3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Record3D : IScene3D,
-        IDrawingBrush<IScene3D>,
-        GlobalStyle.ISource,
-        BoundingSphere.ISource,
-        IPseudoImmutable        
+    public class Record3D
+        : ICloneable
+        , IScene3D
+        , IPseudoImmutable
+        , IDrawingBrush<IScene3D>
+        , GlobalStyle.ISource
+        , BoundingSphere.ISource        
     {
+        #region lifecycle
+
+        Object ICloneable.Clone() { return new Record3D(this); }
+
+        public Record3D Clone() { return new Record3D(this); }
+
+        public Record3D() { }
+
+        protected Record3D(Record3D other)
+        {
+            _Commands.Set(other._Commands);
+            _GlobalStyle = other._GlobalStyle?.Clone();
+
+            // whenever the original or the clone changes,
+            // this will be refreshed, so it's safe to share.
+            _ImmutableKey = other._ImmutableKey;
+        }
+
+        #endregion
+
         #region data
 
         internal readonly _CommandStream3D _Commands = new _CommandStream3D();

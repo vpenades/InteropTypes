@@ -12,6 +12,14 @@ namespace InteropTypes.Graphics.Drawing
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream2D_DebuggerProxy))]
     sealed class _CommandStream2D : Collection.CommandList, ICanvas2D
     {
+        #region lifecycle
+
+        public _CommandStream2D() { }
+
+        public _CommandStream2D(_CommandStream2D other) : base(other) { }
+
+        #endregion
+
         #region constructors 2D
 
         /// <inheritdoc/>

@@ -8,11 +8,33 @@ using RECT = System.Drawing.RectangleF;
 namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model2DProxy))]
-    public class Record2D : ICanvas2D,
-        IDrawingBrush<ICanvas2D>,
-        GlobalStyle.ISource,
-        IPseudoImmutable
+    public class Record2D
+        : ICloneable
+        , ICanvas2D
+        , IPseudoImmutable
+        , IDrawingBrush<ICanvas2D>
+        , GlobalStyle.ISource        
     {
+        #region lifecycle
+
+        Object ICloneable.Clone() { return new Record2D(this); }
+
+        public Record2D Clone() { return new Record2D(this); }
+
+        public Record2D() { }
+
+        protected Record2D(Record2D other)
+        {
+            _Commands.Set(other._Commands);
+            _GlobalStyle = other._GlobalStyle?.Clone();
+
+            // whenever the original or the clone changes,
+            // this will be refreshed, so it's safe to share.
+            _ImmutableKey = other._ImmutableKey;
+        }
+
+        #endregion
+
         #region data
 
         internal readonly _CommandStream2D _Commands = new _CommandStream2D();
