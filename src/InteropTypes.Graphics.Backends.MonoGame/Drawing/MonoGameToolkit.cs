@@ -12,6 +12,7 @@ namespace InteropTypes.Graphics.Backends
 {
     public interface IMonoGameCanvas2D :
         IRenderTargetInfo,
+        GlobalStyle.ISource,
         IDisposableCanvas2D,
         IMeshCanvas2D,
         ITransformer2D,
@@ -25,6 +26,7 @@ namespace InteropTypes.Graphics.Backends
 
     public interface IMonoGameScene3D :
         IRenderTargetInfo,
+        GlobalStyle.ISource,
         IDisposableScene3D,
         // IMeshScene3D,
         IServiceProvider
