@@ -13,7 +13,7 @@ using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
 namespace InteropTypes.Graphics.Backends
 {
-    using MESHBUILDER = SharpGLTF.Geometry.MeshBuilder<VertexPosition, VertexEmpty, VertexEmpty>;
+    using MESHBUILDER = SharpGLTF.Geometry.MeshBuilder<SharpGLTF.Materials.MaterialBuilder, VertexPosition, VertexEmpty, VertexEmpty>;
     using VERTEXBUILDER = SharpGLTF.Geometry.VertexBuilder<VertexPosition, VertexEmpty, VertexEmpty>;
 
     /// <summary>
@@ -23,13 +23,15 @@ namespace InteropTypes.Graphics.Backends
     {
         #region factory        
 
-        public static SharpGLTF.Scenes.SceneBuilder Convert(Record3D srcModel, GLTFWriteSettings? settings = null)
+        public static MESHBUILDER Convert(IDrawingBrush<IScene3D> srcModel)
         {
             var dst = new GltfMeshScene3D();
 
             srcModel.DrawTo(dst);
 
-            return dst.ToSceneBuilder(settings);
+            return dst.IsEmpty
+                ? null
+                : dst._Mesh.Clone(m => m.Clone());
         }
 
         #endregion 

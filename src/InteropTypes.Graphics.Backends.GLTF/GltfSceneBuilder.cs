@@ -16,13 +16,13 @@ namespace InteropTypes.Graphics.Backends
     {
         #region factory        
 
-        public static SharpGLTF.Scenes.SceneBuilder Convert(Record3D srcModel, GLTFWriteSettings? settings = null)
+        public static SharpGLTF.Scenes.SceneBuilder Convert(IDrawingBrush<IScene3D> drawable, GLTFWriteSettings? settings = null)
         {
             var dst = new GltfSceneBuilder();
 
             using (var dc = dst.Create3DContext())
             {
-                srcModel.DrawTo(dc);
+                drawable.DrawTo(dc);
             }
 
             return dst.ToSceneBuilder(settings);
