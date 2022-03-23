@@ -19,8 +19,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region constructors        
 
-        public static implicit operator ColorStyle(GDICOLOR fillColor) { return new ColorStyle(fillColor); }
-        public static implicit operator ColorStyle(float opacity) { return FromOpacity(opacity); }
+        public static implicit operator ColorStyle(GDICOLOR fillColor) { return new ColorStyle(fillColor); }        
 
         [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(Random rnd, int? alpha) : this()
@@ -200,9 +199,11 @@ namespace InteropTypes.Graphics.Drawing
 
         public ColorStyle WithOpacity(float opacity)
         {
-            var a = (float)this.A * opacity;
+            var o = (int)(((float)this.A) * opacity);
+            o = Math.Min(255, o);
+            o = Math.Max(0, o);
 
-            return new ColorStyle(R, G, B,(int)a);
+            return new ColorStyle(R, G, B, o);
         }
 
         #endregion
