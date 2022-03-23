@@ -69,8 +69,9 @@ namespace InteropTypes.Tensors
 
         
         
-         public readonly int Dim0;
+        public readonly int Dim0;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -91,8 +92,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize1 a, in TensorSize1 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize1 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize1 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -114,9 +117,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 1;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -135,6 +140,7 @@ namespace InteropTypes.Tensors
             yield return Dim0;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
@@ -318,9 +324,10 @@ namespace InteropTypes.Tensors
         public static readonly (int idx0, int idx1) Invalid = (-1, -1);
 
         
-         public readonly int Dim0;
-         public readonly int Dim1;
+        public readonly int Dim0;
+        public readonly int Dim1;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -343,8 +350,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize2 a, in TensorSize2 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize2 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize2 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -370,9 +379,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 2;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -393,6 +404,7 @@ namespace InteropTypes.Tensors
             yield return Dim1;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
@@ -625,10 +637,11 @@ namespace InteropTypes.Tensors
         public static readonly (int idx0, int idx1, int idx2) Invalid = (-1, -1, -1);
 
         
-         public readonly int Dim0;
-         public readonly int Dim1;
-         public readonly int Dim2;
+        public readonly int Dim0;
+        public readonly int Dim1;
+        public readonly int Dim2;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -653,8 +666,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize3 a, in TensorSize3 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize3 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize3 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -684,9 +699,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 3;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -709,6 +726,7 @@ namespace InteropTypes.Tensors
             yield return Dim2;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
@@ -968,11 +986,12 @@ namespace InteropTypes.Tensors
         public static readonly (int idx0, int idx1, int idx2, int idx3) Invalid = (-1, -1, -1, -1);
 
         
-         public readonly int Dim0;
-         public readonly int Dim1;
-         public readonly int Dim2;
-         public readonly int Dim3;
+        public readonly int Dim0;
+        public readonly int Dim1;
+        public readonly int Dim2;
+        public readonly int Dim3;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -999,8 +1018,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize4 a, in TensorSize4 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize4 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize4 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -1034,9 +1055,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 4;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -1061,6 +1084,7 @@ namespace InteropTypes.Tensors
             yield return Dim3;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
@@ -1350,12 +1374,13 @@ namespace InteropTypes.Tensors
         public static readonly (int idx0, int idx1, int idx2, int idx3, int idx4) Invalid = (-1, -1, -1, -1, -1);
 
         
-         public readonly int Dim0;
-         public readonly int Dim1;
-         public readonly int Dim2;
-         public readonly int Dim3;
-         public readonly int Dim4;
+        public readonly int Dim0;
+        public readonly int Dim1;
+        public readonly int Dim2;
+        public readonly int Dim3;
+        public readonly int Dim4;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -1384,8 +1409,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize5 a, in TensorSize5 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize5 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize5 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -1423,9 +1450,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 5;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -1452,6 +1481,7 @@ namespace InteropTypes.Tensors
             yield return Dim4;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
@@ -1774,13 +1804,14 @@ namespace InteropTypes.Tensors
         public static readonly (int idx0, int idx1, int idx2, int idx3, int idx4, int idx5) Invalid = (-1, -1, -1, -1, -1, -1);
 
         
-         public readonly int Dim0;
-         public readonly int Dim1;
-         public readonly int Dim2;
-         public readonly int Dim3;
-         public readonly int Dim4;
-         public readonly int Dim5;
+        public readonly int Dim0;
+        public readonly int Dim1;
+        public readonly int Dim2;
+        public readonly int Dim3;
+        public readonly int Dim4;
+        public readonly int Dim5;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -1811,8 +1842,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize6 a, in TensorSize6 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize6 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize6 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -1854,9 +1887,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 6;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -1885,6 +1920,7 @@ namespace InteropTypes.Tensors
             yield return Dim5;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
@@ -2243,14 +2279,15 @@ namespace InteropTypes.Tensors
         public static readonly (int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6) Invalid = (-1, -1, -1, -1, -1, -1, -1);
 
         
-         public readonly int Dim0;
-         public readonly int Dim1;
-         public readonly int Dim2;
-         public readonly int Dim3;
-         public readonly int Dim4;
-         public readonly int Dim5;
-         public readonly int Dim6;
+        public readonly int Dim0;
+        public readonly int Dim1;
+        public readonly int Dim2;
+        public readonly int Dim3;
+        public readonly int Dim4;
+        public readonly int Dim5;
+        public readonly int Dim6;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -2283,8 +2320,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize7 a, in TensorSize7 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize7 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize7 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -2330,9 +2369,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 7;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -2363,6 +2404,7 @@ namespace InteropTypes.Tensors
             yield return Dim6;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
@@ -2760,15 +2802,16 @@ namespace InteropTypes.Tensors
         public static readonly (int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6, int idx7) Invalid = (-1, -1, -1, -1, -1, -1, -1, -1);
 
         
-         public readonly int Dim0;
-         public readonly int Dim1;
-         public readonly int Dim2;
-         public readonly int Dim3;
-         public readonly int Dim4;
-         public readonly int Dim5;
-         public readonly int Dim6;
-         public readonly int Dim7;
+        public readonly int Dim0;
+        public readonly int Dim1;
+        public readonly int Dim2;
+        public readonly int Dim3;
+        public readonly int Dim4;
+        public readonly int Dim5;
+        public readonly int Dim6;
+        public readonly int Dim7;
         
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -2803,8 +2846,10 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorSize8 a, in TensorSize8 b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(TensorSize8 other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is TensorSize8 other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -2854,9 +2899,11 @@ namespace InteropTypes.Tensors
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => 8;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -2889,6 +2936,7 @@ namespace InteropTypes.Tensors
             yield return Dim7;
         }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }

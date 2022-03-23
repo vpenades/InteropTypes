@@ -113,9 +113,10 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
 
         <# } #>
 
-        <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> public readonly int Dim<#= TDIM#>;
+        <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #>public readonly int Dim<#= TDIM#>;
         <# } #>
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             int h=0;
@@ -138,8 +139,10 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
 
         public static bool operator !=(in <#= TTENSORSIZE#> a, in <#= TTENSORSIZE#> b) { return !AreEqual(a,b); }
 
+        /// <inheritdoc/>
         public bool Equals(<#= TTENSORSIZE#> other) { return AreEqual(this, other); }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) { return obj is <#= TTENSORSIZE#> other ? AreEqual(this, other) : false; }
 
         #endregion
@@ -172,9 +175,11 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
 
         #region API - List
 
+        /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public int Count => <#= TDIMCOUNT#>;
 
+        /// <inheritdoc/>
         public int this[int index]
         {
             get
@@ -196,6 +201,7 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         <# } #>
 }
 
+        /// <inheritdoc/>
         public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
