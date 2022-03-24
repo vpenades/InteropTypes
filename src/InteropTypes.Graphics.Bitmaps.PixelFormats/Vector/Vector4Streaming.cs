@@ -9,21 +9,24 @@ namespace InteropTypes.Graphics.Bitmaps
 {
     public static partial class Vector4Streaming
     {
-        private static readonly float[] _ByteToFloatLUT = Enumerable.Range(0, 256).Select(idx => (float)idx / 255f).ToArray();
-
         private const float _Reciprocal255 = 1f / 255f;
 
         [MethodImpl(_PrivateConstants.Fastest)]
-        private static Span<Vector4> _ToVector4(Span<Single> span)
-        {            
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, span.Length & ~3));
+        private static void _Divide4(Span<Single> span, out Span<Vector4> quotient, out Span<Single> remainder)
+        {
+            var len = span.Length / 4;
+            quotient = System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, len));
+            remainder = span.Slice(len * 4);
         }
 
         [MethodImpl(_PrivateConstants.Fastest)]
-        private static ReadOnlySpan<Vector4> _ToVector4(ReadOnlySpan<Single> span)
-        {            
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, span.Length & ~3));
+        private static void _Divide4(ReadOnlySpan<Single> span, out ReadOnlySpan<Vector4> quotient, out ReadOnlySpan<Single> remainder)
+        {
+            var len = span.Length / 4;
+            quotient = System.Runtime.InteropServices.MemoryMarshal.Cast<float, Vector4>(span.Slice(0, len));
+            remainder = span.Slice(len * 4);
         }
+        
 
         [MethodImpl(_PrivateConstants.Fastest)]
         private static Single _Min(Single a, Single b, Single c, Single d)
@@ -48,11 +51,12 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static Single Min(ReadOnlySpan<Single> span)
         {
-            var span4 = _ToVector4(span);
+            _Divide4(span, out var span4, out span);
+            
             var min4 = Min(span4);
             var min = _Min(min4.X, min4.Y, min4.Z, min4.W);
 
-            for (int i = span4.Length * 4; i < span.Length; ++i)
+            for (int i = 0; i < span.Length; ++i)
             {
                 var v = span[i];
                 if (min > v) min = v;
@@ -64,11 +68,12 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static Single Max(ReadOnlySpan<Single> span)
         {
-            var span4 = _ToVector4(span);
+            _Divide4(span, out var span4, out span);
+
             var max4 = Max(span4);
             var max = _Max(max4.X, max4.Y, max4.Z, max4.W);
 
-            for (int i = span4.Length * 4; i < span.Length; ++i)
+            for (int i = 0; i < span.Length; ++i)
             {
                 var v = span[i];
                 if (max < v) max = v;
@@ -106,12 +111,13 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static (Single Min, Single Max) MinMax(ReadOnlySpan<Single> span)
         {
-            var span4 = _ToVector4(span);
+            _Divide4(span, out var span4, out span);
+
             var (min4, max4) = MinMax(span4);
             var min = _Min(min4.X, min4.Y, min4.Z, min4.W);
             var max = _Max(max4.X, max4.Y, max4.Z, max4.W);
 
-            for (int i = span4.Length * 4; i < span.Length; ++i)
+            for (int i = 0; i < span.Length; ++i)
             {
                 var v = span[i];
                 if (min > v) min = v;
@@ -142,17 +148,17 @@ namespace InteropTypes.Graphics.Bitmaps
 
             if (a.Length != b.Length) return false;
 
-            var a4 = _ToVector4(a);
-            var b4 = _ToVector4(b);
+            _Divide4(a, out var a4, out a);
+            _Divide4(b, out var b4, out b);
 
-            // vector4
+            // quotient
             for (int i = 0; i < a4.Length; ++i)
             {
                 if (a4[i] != b4[i]) return false;
             }
 
             // remainder
-            for (int i = a4.Length * 4; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
                 if (a[i] != b[i]) return false;
             }
@@ -163,18 +169,18 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static void Clamp(Span<Single> span, Single min, Single max)
         {
-            var span4 = _ToVector4(span);
+            _Divide4(span, out var span4, out span);
             var min4 = new Vector4(min);
             var max4 = new Vector4(max);
 
-            // vector4
+            // quotient
             for (int i = 0; i < span4.Length; ++i)
             {
                 span4[i] = Vector4.Max(Vector4.Min(span4[i], max4), min4);
             }
 
             // remainder
-            for (int i = span4.Length * 4; i < span.Length; ++i)
+            for (int i = 0; i < span.Length; ++i)
             {
                 span[i] = Math.Max(Math.Min(span[i], max), min);
             }
@@ -189,7 +195,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static void MultiplyAdd(Span<Single> span, Single mul, Single add)
         {
-            var span4 = _ToVector4(span);
+            _Divide4(span, out var span4, out span);
             var mul4 = new Vector4(mul);
             var add4 = new Vector4(add);
 
@@ -199,7 +205,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 span4[i] += add4;
             }
 
-            for (int i = span4.Length * 4; i < span.Length; ++i)
+            for (int i = 0; i < span.Length; ++i)
             {
                 span[i] *= mul;
                 span[i] += add;
@@ -209,7 +215,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static void AddMultiply(Span<Single> span, Single add, Single mul)
         {
-            var span4 = _ToVector4(span);
+            _Divide4(span, out var span4, out span);
             var mul4 = new Vector4(mul);
             var add4 = new Vector4(add);
 
@@ -219,7 +225,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 span4[i] *= mul4;
             }
 
-            for (int i = span4.Length * 4; i < span.Length; ++i)
+            for (int i = 0; i < span.Length; ++i)
             {
                 span[i] += add;
                 span[i] *= mul;
@@ -239,8 +245,8 @@ namespace InteropTypes.Graphics.Bitmaps
             while (l-- > 0)
             {
                 dPtr = sPtr * _Reciprocal255;
-                dPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref dPtr, 1);
-                sPtr = ref System.Runtime.CompilerServices.Unsafe.Add(ref sPtr, 1);                
+                dPtr = ref Unsafe.Add(ref dPtr, 1);
+                sPtr = ref Unsafe.Add(ref sPtr, 1);                
             }
         }
 
@@ -275,6 +281,8 @@ namespace InteropTypes.Graphics.Bitmaps
         {            
             System.Diagnostics.Debug.Assert(dst.Length <= left.Length);
             System.Diagnostics.Debug.Assert(dst.Length <= right.Length);
+            System.Diagnostics.Debug.Assert(!left.Overlaps(dst));
+            System.Diagnostics.Debug.Assert(!right.Overlaps(dst));
 
             var lweight = 16384 - amount;
 
@@ -296,16 +304,21 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static void Lerp(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<float> dst)
         {
-            var l = _ToVector4(left);
-            var r = _ToVector4(right);
-            var d = _ToVector4(dst);
+            System.Diagnostics.Debug.Assert(dst.Length <= left.Length);
+            System.Diagnostics.Debug.Assert(dst.Length <= right.Length);
+            System.Diagnostics.Debug.Assert(!left.Overlaps(dst));
+            System.Diagnostics.Debug.Assert(!right.Overlaps(dst));
 
-            for (int i = 0; i < d.Length; ++i)
+            _Divide4(left, out var left4, out left);
+            _Divide4(right, out var right4, out right);
+            _Divide4(dst, out var dst4, out dst);            
+
+            for (int i = 0; i < dst4.Length; ++i)
             {
-                d[i] = Vector4.Lerp(l[i], r[i], amount);
+                dst4[i] = Vector4.Lerp(left4[i], right4[i], amount);
             }
 
-            for (int i = d.Length * 4; i < dst.Length; ++i)
+            for (int i = 0; i < dst.Length; ++i)
             {
                 dst[i] = left[i] * (1 - amount) + right[i] * amount;
             }
@@ -314,14 +327,18 @@ namespace InteropTypes.Graphics.Bitmaps
         [MethodImpl(_PrivateConstants.Fastest)]
         public static void Lerp(ReadOnlySpan<float> left, ReadOnlySpan<float> right, float amount, Span<Byte> dst, float scale)
         {
-            var l = _ToVector4(left);
-            var r = _ToVector4(right);
+            System.Diagnostics.Debug.Assert(dst.Length <= left.Length);
+            System.Diagnostics.Debug.Assert(dst.Length <= right.Length);            
+
+            _Divide4(left, out var left4, out left);
+            _Divide4(right, out var right4, out right);
+            
             var d = dst.Length / 4;
             var s4 = new Vector4(scale);
 
             for (int i = 0; i < d; ++i)
             {
-                var v = Vector4.Lerp(l[i], r[i], amount) * s4;
+                var v = Vector4.Lerp(left4[i], right4[i], amount) * s4;
 
                 dst[i * 4 + 0] = (Byte)v.X;
                 dst[i * 4 + 1] = (Byte)v.Y;
@@ -329,7 +346,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 dst[i * 4 + 3] = (Byte)v.W;
             }
 
-            for (int i = d * 4; i < dst.Length; ++i)
+            for (int i = 0; i < dst.Length; ++i)
             {
                 dst[i] = (Byte)((left[i] * (1 - amount) + right[i] * amount) *scale);
             }
