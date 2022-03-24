@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Bitmaps
         
         public static void PinTransferPointers(SpanBitmap src, SpanBitmap dst, PointerBitmap.Action2 onPinned)
         {
-            SpanBitmapImpl.PinTransferPointers(src, dst, onPinned);
+            _SpanBitmapImpl.PinTransferPointers(src, dst, onPinned);
         }
 
         public static (Single Min, Single Max) MinMax(SpanBitmap<float> src)
@@ -187,9 +187,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             throw new NotImplementedException();
         }
-
-
-        
 
         public static void SplitPixels(SpanBitmap<Vector3> src, SpanBitmap<Single> dstB, SpanBitmap<Single> dstG, SpanBitmap<Single> dstR)
         {

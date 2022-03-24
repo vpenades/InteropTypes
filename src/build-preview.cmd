@@ -26,6 +26,7 @@ md bin
 
 move InteropTypes.Graphics.Bitmaps.PixelFormats\bin\release\*.*nupkg bin
 move InteropTypes.Graphics.Bitmaps.Core\bin\release\*.*nupkg bin
+move InteropTypes.Graphics.Bitmaps.Toolkit\bin\release\*.*nupkg bin
 
 move InteropTypes.Graphics.Drawing.Core\bin\release\*.*nupkg bin
 move InteropTypes.Graphics.Drawing.Toolkit\bin\release\*.*nupkg bin

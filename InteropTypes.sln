@@ -119,6 +119,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Demos
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Codecs", "Codecs", "{554325E7-82B1-4A1F-8F6F-0E63E82537EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Bitmaps.Toolkit", "src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj", "{4608565E-1185-4492-84C2-BEE08C16B3EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -483,6 +485,14 @@ Global
 		{C6C47C85-CC36-4BEE-AFED-CBB51760F994}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6C47C85-CC36-4BEE-AFED-CBB51760F994}.Release|x64.ActiveCfg = Release|Any CPU
 		{C6C47C85-CC36-4BEE-AFED-CBB51760F994}.Release|x64.Build.0 = Release|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{4608565E-1185-4492-84C2-BEE08C16B3EB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -532,6 +542,7 @@ Global
 		{FEF78B0C-600C-4697-BFEF-BC272105B391} = {554325E7-82B1-4A1F-8F6F-0E63E82537EC}
 		{FE5DEF62-98EC-4711-BCD9-DAB3E0E307E8} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 		{C6C47C85-CC36-4BEE-AFED-CBB51760F994} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
+		{4608565E-1185-4492-84C2-BEE08C16B3EB} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

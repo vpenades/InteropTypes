@@ -189,19 +189,19 @@ namespace InteropTypes.Graphics.Bitmaps
         public unsafe void PinWritablePointer(Action<PointerBitmap> onPin)
         {
             Guard.IsFalse(nameof(SpanBitmap), _Writable.IsEmpty);
-            SpanBitmapImpl.PinWritablePointer(_Writable, _Info, onPin);
+            _SpanBitmapImpl.PinWritablePointer(_Writable, _Info, onPin);
         }
 
         public unsafe void PinReadablePointer(Action<PointerBitmap> onPin)
         {
             Guard.IsFalse(nameof(SpanBitmap), _Readable.IsEmpty);
-            SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
+            _SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
         }
 
         public unsafe TResult PinReadablePointer<TResult>(PointerBitmap.Function1<TResult> onPin)
         {
             Guard.IsFalse(nameof(SpanBitmap), _Readable.IsEmpty);
-            return SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
+            return _SpanBitmapImpl.PinReadablePointer(_Readable, _Info, onPin);
         }
 
         public static implicit operator SpanBitmap(SpanBitmap<TPixel> other)

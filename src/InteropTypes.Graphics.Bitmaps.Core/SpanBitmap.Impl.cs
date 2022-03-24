@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
-    static class SpanBitmapImpl
+    static class _SpanBitmapImpl
     {
         public static unsafe void PinWritablePointer(Span<Byte> writable, in BitmapInfo binfo, Action<PointerBitmap> onPinned)
         {
