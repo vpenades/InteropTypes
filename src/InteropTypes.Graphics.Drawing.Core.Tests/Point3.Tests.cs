@@ -29,5 +29,29 @@ namespace InteropTypes.Graphics.Drawing
             Assert.AreEqual(0, new Point3(-5, 1, 0).CompareTo(sphere)); // at boundary
             Assert.AreEqual(1, new Point3(-5, 2, 0).CompareTo(sphere)); // outside
         }
+
+        [Test]
+        public void SerializeQuantized()
+        {
+            var data = new Queue<Byte>();
+
+            var p1 = new Point3(5, -37, 47);
+            
+            Point3.SerializeQuantizedDirectionLength(data.Enqueue, p1);
+            Point3.DeserializeQuantizedDirectionLength(data.Dequeue, out var p2);
+            Assert.AreEqual(0, data.Count);
+
+            Assert.AreEqual(p1.X, p2.X, 0.5f);
+            Assert.AreEqual(p1.Y, p2.Y, 0.5f);
+            Assert.AreEqual(p1.Z, p2.Z, 0.5f);
+
+            Point3.SerializeQuantizedScaled(data.Enqueue, p1);
+            Point3.DeserializeQuantizedScaled(data.Dequeue, out p2);
+            Assert.AreEqual(0, data.Count);
+
+            Assert.AreEqual(p1.X, p2.X);
+            Assert.AreEqual(p1.Y, p2.Y);
+            Assert.AreEqual(p1.Z, p2.Z);
+        }
     }
 }

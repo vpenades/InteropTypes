@@ -22,7 +22,11 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">    
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
-  </ItemGroup>  
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">    
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
 
   <ItemGroup>    
     <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Core.Tests" />
