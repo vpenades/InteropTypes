@@ -16,7 +16,7 @@ using BBOX = System.Numerics.Matrix3x2; // Column 0 is Min, Column 1 is Max
 
 namespace InteropTypes.Graphics.Drawing
 {
-    public static partial class Toolkit
+    public static partial class DrawingToolkit
     {
         #region data
 

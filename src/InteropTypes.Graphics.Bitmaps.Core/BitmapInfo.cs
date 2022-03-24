@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Bitmaps
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public readonly struct BitmapInfo : IEquatable<BitmapInfo>
+    public readonly partial struct BitmapInfo : IEquatable<BitmapInfo>
     {
         // Todo: Maybe a better name for this struct is BitmapDesc or BitmapLayout
 

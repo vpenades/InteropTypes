@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
+using InteropTypes.Graphics.Bitmaps;
+
 namespace InteropTypes.Graphics.Bitmaps.Transform
 {
     internal class Kernet3x3Tests
@@ -16,9 +18,9 @@ namespace InteropTypes.Graphics.Bitmaps.Transform
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.webp");
 
             // Use SkiaSharp to load a WEBP image:
-            var bmp = MemoryBitmap<Pixel.BGR24>.Load(filePath, Codecs.SkiaCodec.Default);
+            var bmp = MemoryBitmap<Pixel.BGR24>.Load(filePath, Codecs.SkiaCodec.Default);            
 
-            bmp.AsSpanBitmap().Apply<Pixel.RGBA128F>(Laplacian);
+            bmp.AsSpanBitmap().Apply<Pixel.BGR24, Pixel.RGBA128F>(Laplacian);
 
             bmp.AttachToCurrentTest("laplacian.jpg");
         }

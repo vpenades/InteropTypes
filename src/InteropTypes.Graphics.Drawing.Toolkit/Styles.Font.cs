@@ -35,7 +35,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Style used for font rendering WIP.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="Toolkit.DrawFont(ICanvas2D, System.Numerics.Matrix3x2, string, FontStyle)"/>.
+    /// Style used by <see cref="DrawingToolkit.DrawFont(ICanvas2D, System.Numerics.Matrix3x2, string, FontStyle)"/>.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {Strength} {Alignment}")]
     public readonly struct FontStyle

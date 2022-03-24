@@ -5,14 +5,15 @@ using System.Linq;
 
 using XYZ = System.Numerics.Vector3;
 using XFORM3 = System.Numerics.Matrix4x4;
-
 using POINT3 = InteropTypes.Graphics.Drawing.Point3;
 
 
 namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream3D_DebuggerProxy))]    
-    sealed class _CommandStream3D : Collection.CommandList, IScene3D
+    sealed class _CommandStream3D
+        : Collection.CommandList
+        , IScene3D
     {
         #region lifecycle
 
@@ -376,7 +377,7 @@ namespace InteropTypes.Graphics.Drawing
 
                 if (src.Transform == XFORM3.Identity)
                 {
-                    var box = Toolkit.GetAssetBoundingMinMax(xref);
+                    var box = DrawingToolkit.GetAssetBoundingMinMax(xref);
 
                     // todo: add all 8 vertices
                     if (box.HasValue)

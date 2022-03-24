@@ -18,7 +18,7 @@ namespace InteropTypes.Graphics.Drawing
     using PRIMITIVE2D = ICoreCanvas2D;
     using CANVAS2DEX = ICanvas2D;
 
-    public static partial class Toolkit
+    public static partial class DrawingToolkit
     {
         #region data
 

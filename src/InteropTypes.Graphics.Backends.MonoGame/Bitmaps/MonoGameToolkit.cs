@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using INTEROP = InteropTypes.Graphics.Bitmaps;
 using XNA = Microsoft.Xna.Framework.Graphics;
 
@@ -12,7 +14,7 @@ namespace InteropTypes.Graphics.Backends
         private static UInt16[] _16BitBuffer;
         private static UInt32[] _32BitBuffer;
 
-        public static XNA.SurfaceFormat ToSurfaceFormat(INTEROP.PixelFormat fmt)
+        public static XNA.SurfaceFormat ToSurfaceFormat(PixelFormat fmt)
         {
             switch(fmt.Code)
             {
@@ -27,22 +29,22 @@ namespace InteropTypes.Graphics.Backends
             throw new NotSupportedException($"{fmt}");
         }
 
-        public static INTEROP.PixelFormat ToInteropFormat(XNA.SurfaceFormat fmt)
+        public static PixelFormat ToInteropFormat(XNA.SurfaceFormat fmt)
         {
             switch(fmt)
             {
-                case XNA.SurfaceFormat.Alpha8: return INTEROP.Pixel.Alpha8.Format;
-                case XNA.SurfaceFormat.Bgr565: return INTEROP.Pixel.BGR565.Format;
-                case XNA.SurfaceFormat.Bgra4444: return INTEROP.Pixel.BGRA4444.Format;
-                case XNA.SurfaceFormat.Bgra5551: return INTEROP.Pixel.BGRA5551.Format;
-                case XNA.SurfaceFormat.Bgra32: return INTEROP.Pixel.BGRA32.Format;
-                case XNA.SurfaceFormat.Vector4: return INTEROP.Pixel.BGRA128F.Format;
+                case XNA.SurfaceFormat.Alpha8: return Pixel.Alpha8.Format;
+                case XNA.SurfaceFormat.Bgr565: return Pixel.BGR565.Format;
+                case XNA.SurfaceFormat.Bgra4444: return Pixel.BGRA4444.Format;
+                case XNA.SurfaceFormat.Bgra5551: return Pixel.BGRA5551.Format;
+                case XNA.SurfaceFormat.Bgra32: return Pixel.BGRA32.Format;
+                case XNA.SurfaceFormat.Vector4: return Pixel.BGRA128F.Format;
             }
 
             throw new NotSupportedException($"{fmt}");
         }
 
-        public static bool TryCreateTexture(INTEROP.SpanBitmap src, XNA.GraphicsDevice device, out XNA.Texture2D tex)
+        public static bool TryCreateTexture(SpanBitmap src, XNA.GraphicsDevice device, out XNA.Texture2D tex)
         {
             try
             {
@@ -53,14 +55,14 @@ namespace InteropTypes.Graphics.Backends
             catch(ArgumentException) { tex = null; return false; }
         }
 
-        public static void Copy(INTEROP.SpanBitmap src, ref XNA.Texture2D dst, bool fit, XNA.GraphicsDevice device, int? width = null, int? height = null, XNA.SurfaceFormat? fmt = null)
+        public static void Copy(SpanBitmap src, ref XNA.Texture2D dst, bool fit, XNA.GraphicsDevice device, int? width = null, int? height = null, XNA.SurfaceFormat? fmt = null)
         {
-            var fmtx = fmt.HasValue ? fmt.Value : ToSurfaceFormat(src.PixelFormat);
+            var fmtx = fmt ?? ToSurfaceFormat(src.PixelFormat);
 
-            Copy(src, ref dst, fit , (w,h)=> new XNA.Texture2D(device, width ?? w, height ?? h, false, fmtx));
+            Copy(src, ref dst,fit ,(w,h)=> new XNA.Texture2D(device, width ?? w, height ?? h, false, fmtx));
         }
 
-        public static void Copy(INTEROP.SpanBitmap src, ref XNA.Texture2D dst, bool fit, Func<int, int, XNA.Texture2D> texFactory)
+        public static void Copy(SpanBitmap src, ref XNA.Texture2D dst, bool fit, Func<int, int, XNA.Texture2D> texFactory)
         {
             if (dst == null || dst.Width != src.Width || dst.Height != src.Height)
             {
@@ -83,7 +85,7 @@ namespace InteropTypes.Graphics.Backends
             }
         }
 
-        private static void _Copy16(INTEROP.SpanBitmap src, XNA.Texture2D dst, bool fit)
+        private static void _Copy16(SpanBitmap src, XNA.Texture2D dst, bool fit)
         {
             if (dst == null) throw new ArgumentNullException(nameof(dst));
             var fmt = ToInteropFormat(dst.Format);
@@ -92,7 +94,7 @@ namespace InteropTypes.Graphics.Backends
             var l = dst.Width * dst.Height;
             if (_16BitBuffer == null || _16BitBuffer.Length < l) Array.Resize(ref _16BitBuffer, l);
 
-            var dstx = new INTEROP.SpanBitmap<UInt16>(_16BitBuffer, dst.Width, dst.Height, fmt);
+            var dstx = new SpanBitmap<ushort>(_16BitBuffer, dst.Width, dst.Height, fmt);
 
             fit &= !(src.Width == dst.Width && src.Height == dst.Height);
             if (fit) dstx.AsTypeless().FitPixels(src);
@@ -102,18 +104,18 @@ namespace InteropTypes.Graphics.Backends
             return;
         }
 
-        private static void _Copy32(INTEROP.SpanBitmap src, XNA.Texture2D dst, bool fit)
+        private static void _Copy32(SpanBitmap src, XNA.Texture2D dst, bool fit)
         {
             if (dst == null) throw new ArgumentNullException(nameof(dst));
             var fmt = dst.Format == XNA.SurfaceFormat.Bgr32
-                ? INTEROP.Pixel.BGRA32.Format
+                ? Pixel.BGRA32.Format
                 : ToInteropFormat(dst.Format);
             if (fmt.ByteCount != 4) throw new ArgumentException("invalid pixel size", nameof(dst));
 
             var l = dst.Width * dst.Height;
             if (_32BitBuffer == null || _32BitBuffer.Length < l) Array.Resize(ref _32BitBuffer, l);            
 
-            var dstx = new INTEROP.SpanBitmap<UInt32>(_32BitBuffer, dst.Width, dst.Height, fmt);
+            var dstx = new SpanBitmap<UInt32>(_32BitBuffer, dst.Width, dst.Height, fmt);
 
             fit &= !(src.Width == dst.Width && src.Height == dst.Height);
             if (fit) dstx.AsTypeless().FitPixels(src);

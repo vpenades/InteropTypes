@@ -18,7 +18,7 @@ namespace InteropTypes.Graphics.Drawing
     using PRIMITIVE2D = ICoreCanvas2D;
     using CANVAS2DEX = ICanvas2D;
 
-    partial class Toolkit
+    partial class DrawingToolkit
     {
         public static void DrawFont(this CANVAS2DEX dc, POINT2 origin, float size, String text, FontStyle style)
         {

@@ -231,12 +231,7 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
 
-        public static void FitPixels(SpanBitmap src, SpanBitmap dst, (Single offset, Single scale) transform)
-        {
-            src = src.AsReadOnly();
-
-            Processing._BilinearResizeImplementation.FitPixels(src, dst, transform);
-        }
+        
 
         public static bool ArePixelsEqual(SpanBitmap a, SpanBitmap b)
         {

@@ -23,10 +23,10 @@ namespace InteropTypes.Graphics.Bitmaps
             var src = LoadShannonImage();
             var dst = new MemoryBitmap(dstSize, dstSize, Pixel.BGR24.Format , dstSize * 3 + 17);
 
-            SpanBitmap.FitPixels(src, dst, (0, 1));
+            BitmapsToolkit.FitPixels(src, dst, (0, 1));
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            SpanBitmap.FitPixels(src, dst, (0, 1));
+            BitmapsToolkit.FitPixels(src, dst, (0, 1));
             var elapsed = sw.Elapsed;
 
             TestContext.WriteLine($"{elapsed.Milliseconds}ms {elapsed.Ticks}ticks");

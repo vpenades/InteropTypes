@@ -14,6 +14,9 @@
   <Import Project="..\Package.props" />
   <Import Project="..\Version.props" />
   <Import Project="..\SourceLink.props" />
+  <ItemGroup>
+    <Compile Include="..\InteropTypes.Graphics.Bitmaps.Core\Diagnostics\Guard.cs" Link="Diagnostics\Guard.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.Tests" />

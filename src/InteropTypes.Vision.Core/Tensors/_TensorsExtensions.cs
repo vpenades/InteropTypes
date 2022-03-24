@@ -4,14 +4,11 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-using InteropTypes.Graphics;
 using InteropTypes.Graphics.Bitmaps;
 
 using MEMMARSHAL = System.Runtime.InteropServices.MemoryMarshal;
 
-using TENSOR2FLOAT = InteropTypes.Tensors.SpanTensor2<float>;
 using TENSOR2V3 = InteropTypes.Tensors.SpanTensor2<System.Numerics.Vector3>;
-using TENSOR3FLOAT = InteropTypes.Tensors.SpanTensor3<float>;
 using TENSOR4FLOAT = InteropTypes.Tensors.SpanTensor4<float>;
 
 namespace InteropTypes.Tensors
@@ -29,7 +26,7 @@ namespace InteropTypes.Tensors
             }
             else
             {
-                SpanBitmap.FitPixels(src, dstBmp, (0, 1f / 255f));
+                BitmapsToolkit.FitPixels(src, dstBmp, (0, 1f / 255f));
             }
         }
 
@@ -48,7 +45,7 @@ namespace InteropTypes.Tensors
 
             if (dims[2] != 1) return false;
 
-            var data = System.Runtime.InteropServices.MemoryMarshal.Cast<float, byte>(src.Span);
+            var data = MEMMARSHAL.Cast<float, byte>(src.Span);
             bmp = new SpanBitmap<float>(data, dims[1], dims[0], Pixel.Luminance32F.Format);
             return true;
         }

@@ -32,12 +32,12 @@ namespace WPFDemo
 
         public SentLand Sentinel => SentLand.GenerateLandscape(0);
 
-        public IDrawingBrush<IScene3D> Combined => Toolkit.Combine(Item1, Item2);
+        public IDrawingBrush<IScene3D> Combined => DrawingToolkit.Combine(Item1, Item2);
 
         public ThunderbirdRocket Rocket => new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(20,0,0));
 
         public IDrawingBrush<IScene3D> Rockets =>
-            Toolkit.Combine
+            DrawingToolkit.Combine
             (
                 new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(20, 0, 0)).Tinted(ColorStyle.Green),
                 new ThunderbirdRocket(System.Numerics.Matrix4x4.CreateTranslation(0, 20, 0)).Tinted(ColorStyle.Red)

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-using InteropTypes.Graphics.Drawing;
-
 namespace InteropTypes.Graphics.Drawing.Collection
-{
+{    
     class CommandList
     {
         #region lifecycle
@@ -138,9 +136,22 @@ namespace InteropTypes.Graphics.Drawing.Collection
             return System.Runtime.InteropServices.MemoryMarshal.Cast<byte, THeader>(chunk);
         }
 
+        /// <summary>
+        /// Used to store external references.
+        /// </summary>
+        /// <param name="o">The external reference object</param>
+        /// <returns>the index of the reference</returns>
+        /// <remarks>
+        /// This is usually used for external asset references and <see cref="ImageSource.Source"/> references.
+        /// </remarks>
         public int AddReference(object o)
         {
             if (_References == null) _References = new List<object>();
+
+            for(int i=0; i < _References.Count; ++i) // reuse existing references, specially bitmaps
+            {
+                if (Object.Equals(o, _References[i])) return i;
+            }
 
             _References.Add(o);
             return _References.Count - 1;
@@ -156,6 +167,6 @@ namespace InteropTypes.Graphics.Drawing.Collection
             return h;
         }
 
-        #endregion
+        #endregion        
     }
 }

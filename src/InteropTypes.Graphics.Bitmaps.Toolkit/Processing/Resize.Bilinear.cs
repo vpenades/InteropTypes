@@ -6,33 +6,7 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps.Processing
 {
-    
-    static class _NearestResizeImplementation
-    {
-        public static void FitPixelsNearest<TPixel>(SpanBitmap<TPixel> dst, SpanBitmap<TPixel> src)
-            where TPixel : unmanaged
-        {
-            // TODO: cannot run in parallel because src & dst cannot be passed to lambdas
-            //       we would need to pin and use PointerBitmaps
-
-            for (int y = 0; y < dst.Height; ++y)
-            {
-                var yy = y * src.Height / dst.Height;
-
-                for (int x = 0; x < dst.Height; ++x)
-                {
-                    var xx = x * src.Width / dst.Width;
-
-                    var p = src.GetPixel(xx, yy);
-
-                    dst.SetPixel(x, y, p);
-                }
-            }
-        }
-    }
-
-
-    static class _BilinearResizeImplementation
+    static class _ResizeBilinearImplementation
     {
         #region API
 
@@ -51,7 +25,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 switch (src.PixelFormat.Code)
                 {
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
-                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;                    
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
                     case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
                     case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
@@ -94,7 +68,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                     case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
                     case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
                     case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
-                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;                    
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;
                 }
             }
 
@@ -119,9 +93,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             // TODO: for pixels with alpha support, alpha premultiplication should be required.
 
             throw new NotImplementedException($"{dst.PixelFormat} format not inplemented on {nameof(dst)}.");
-        }       
+        }
 
-        private static void _FitPixels3<TSrcPixel,TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)
+        private static void _FitPixels3<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, (float offset, float scale) transform)
             where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.RGB96F>
             where TDstPixel : unmanaged, Pixel.IValueSetter<Pixel.RGB96F>
         {
@@ -138,7 +112,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 var dstRow = dst.UseScanlinePixels(dstY);
 
-                Pixel.LerpArray(r0, r1, rowPair.Amount, dstRow);                
+                Pixel.LerpArray(r0, r1, rowPair.Amount, dstRow);
             }
         }
 
@@ -165,7 +139,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 var dst0 = new ArraySegment<Vector3>(_Vector3Cache, srcw, dstw);
                 var dst1 = new ArraySegment<Vector3>(_Vector3Cache, srcw + dstw, dstw);
 
-                return (src,dst0,dst1);
+                return (src, dst0, dst1);
             }
 
             public _RowBlendKernel3(SpanBitmap<TSrcPixel> srcBitmap, ReadOnlySpan<_BilinearSampleSource> pairs, (float offset, float scale) transform)
@@ -207,11 +181,11 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 var srcRow = _Source.GetScanlinePixels(idx);
                 var dstRow = _Temp;
 
-                for(int i=0; i < srcRow.Length; ++i)
+                for (int i = 0; i < srcRow.Length; ++i)
                 {
                     var pixel = srcRow[i].GetValue().RGB;
                     dstRow[i] = new Vector3(pixel.X, pixel.Y, pixel.Z);
-                }                
+                }
 
                 return _Temp;
             }
@@ -221,7 +195,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 // if the row already exists from a previous pass, use it
                 if (idx == _Index0) return _Row0;
                 if (idx == _Index1) return _Row1;
-                
+
                 var srcRow = _GetSourceRow(idx);
 
                 if (_Index0 < 0)
@@ -288,7 +262,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 if (srcLen > dstPairs.Length) { InitializeShrink(srcLen, dstPairs); return; }
                 if (srcLen < dstPairs.Length) { InitializeExpand(srcLen, dstPairs); return; }
 
-                for(int i=0; i < dstPairs.Length; ++i)
+                for (int i = 0; i < dstPairs.Length; ++i)
                 {
                     dstPairs[i] = new _BilinearSampleSource(i, i, 0);
                 }
@@ -321,14 +295,14 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                     }
                     else if (idx0 == idx1 - 2) // 3 pixels sampling
                     {
-                        var lw = leftSide - (float)(idx0+1);
+                        var lw = leftSide - (float)(idx0 + 1);
                         var rw = rightSide - (float)idx1;
 
                         // at least 1 pixel is fully covered, we need to pick the other pixels that has more coverage
 
                         if (lw > rw)
                         {
-                            idx1 = idx0 + 1;                            
+                            idx1 = idx0 + 1;
                             amount = 1 / (lw + 1);
                         }
                         else
@@ -345,7 +319,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                         idx0 += 1;
                         idx1 -= 1;
-                        amount = 0.5f;                        
+                        amount = 0.5f;
                     }
 
                     System.Diagnostics.Debug.Assert(amount >= 0 && amount <= 1);
@@ -360,18 +334,18 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 for (int i = 0; i < dstPairs.Length; ++i)
                 {
-                    float samplePoint = ((float)i + 0.5f) * ratio;                    
+                    float samplePoint = ((float)i + 0.5f) * ratio;
 
-                    
+
                     var idx0 = (int)samplePoint;
                     var idx1 = idx0;
 
                     float amount = (samplePoint - idx0);
 
                     if (amount < 0.5f)
-                    {                        
+                    {
                         idx0 -= 1; if (idx0 < 0) idx0 = 0;
-                        amount +=0.5f;
+                        amount += 0.5f;
                     }
                     else
                     {
@@ -380,7 +354,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                     }
 
 
-                    dstPairs[i] = new _BilinearSampleSource(idx0, idx1, amount);                    
+                    dstPairs[i] = new _BilinearSampleSource(idx0, idx1, amount);
                 }
             }
 
@@ -449,7 +423,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             public Single GetSample(ReadOnlySpan<Single> src)
             {
-                return src[IndexLeft] * (1-Amount) + src[IndexRight] * Amount;
+                return src[IndexLeft] * (1 - Amount) + src[IndexRight] * Amount;
             }
 
             public Vector2 GetSample(ReadOnlySpan<Vector2> src)

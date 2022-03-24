@@ -60,7 +60,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         
-        public static void AttachToCurrentTest(this Record3D batch, string filePath)
+        public static string AttachToCurrentTest(this Record3D batch, string filePath)
         {
             filePath = NUnit.Framework.TestContext.CurrentContext.UseFilePath(filePath);
 
@@ -85,6 +85,12 @@ namespace InteropTypes.Graphics.Drawing
                 NUnit.Framework.TestContext.AddTestAttachment(filePath);
             }
 
+            if (filePath.ToLower().EndsWith(".InteropDrawing"))
+            {
+                // batch.Save(filePath);
+                // NUnit.Framework.TestContext.AddTestAttachment(filePath);
+            }
+
             if (filePath.ToLower().EndsWith(".gltf") || filePath.ToLower().EndsWith(".glb") || filePath.ToLower().EndsWith(".obj"))
             {
                 GltfSceneBuilder
@@ -92,9 +98,10 @@ namespace InteropTypes.Graphics.Drawing
                     .ToGltf2()
                     .Save(filePath);
                 
-                NUnit.Framework.TestContext.AddTestAttachment(filePath);
-                return;
+                NUnit.Framework.TestContext.AddTestAttachment(filePath);                
             }
+
+            return filePath;
         }
 
         /*

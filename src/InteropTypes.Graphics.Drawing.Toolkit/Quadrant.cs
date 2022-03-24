@@ -48,7 +48,7 @@ namespace InteropTypes.Graphics.Drawing
         BottomRight = Bottom | Right
     }
 
-    public static partial class Toolkit
+    public static partial class DrawingToolkit
     {
         /// <summary>
         /// Tries to get the quadrant used by the render target.

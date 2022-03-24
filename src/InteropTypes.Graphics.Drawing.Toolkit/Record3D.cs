@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Represents a collection of drawing commands that can be replayed against an <see cref="IScene3D"/> target.
     /// </summary>
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model3DProxy))]
-    public class Record3D
+    public partial class Record3D
         : ICloneable
         , IScene3D
         , IPseudoImmutable

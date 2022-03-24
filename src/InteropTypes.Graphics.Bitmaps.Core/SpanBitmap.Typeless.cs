@@ -365,12 +365,7 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
 
-        public void FitPixels(SpanBitmap src)
-        {
-            // _Implementation.FitPixelsNearest(this, src);
-
-            SpanBitmap.FitPixels(src, this, (0, 1));            
-        }
+        
 
         public void SetPixels(Random rnd)
         {
@@ -469,16 +464,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return refreshed;
         }
 
-        /// <summary>
-        /// Flips the pixels horizontally, vertically, or both, in place.
-        /// </summary>
-        /// <param name="horizontal"></param>
-        /// <param name="vertical"></param>
-        /// <param name="multiThread"></param>
-        public void ApplyMirror(bool horizontal, bool vertical, bool multiThread = true)
-        {
-            Processing._MirrorImplementation.ApplyMirror(this, horizontal, vertical, multiThread);
-        }
+        
 
         /// <summary>
         /// Tries to in-place convert the pixels to a RGB? format.

@@ -6,37 +6,35 @@ namespace InteropTypes.Graphics.Bitmaps
 {
     using Diagnostics;
 
-    partial struct SpanBitmap<TPixel>
+    partial class BitmapsToolkit
     {
-        public void Apply(Processing.Kernel3x3<TPixel>.KernelEvaluator<TPixel> function)            
+        public static void Apply<TPixel>(this SpanBitmap<TPixel> target, Processing.Kernel3x3<TPixel>.KernelEvaluator<TPixel> function)
+            where TPixel : unmanaged
         {
-            Processing.Kernel3x3<TPixel>.Apply(this, function);
+            Processing.Kernel3x3<TPixel>.Apply(target, function);
         }
 
-        public void Apply<TKernelPixel>(Processing.Kernel3x3<TKernelPixel>.KernelEvaluator<TPixel> function)
+        public static void Apply<TPixel, TKernelPixel>(this SpanBitmap<TPixel> target, Processing.Kernel3x3<TKernelPixel>.KernelEvaluator<TPixel> function)
+            where TPixel : unmanaged
             where TKernelPixel : unmanaged
         {
-            Processing.Kernel3x3<TKernelPixel>.Apply(this, function);
+            Processing.Kernel3x3<TKernelPixel>.Apply(target, function);
         }
 
-        public void SetPixels<TSrcPixel>(SpanBitmap<TSrcPixel> src, Processing.Kernel3x3<TPixel>.KernelEvaluator<TPixel> function)
-            where TSrcPixel: unmanaged
+        public static void SetPixels<TSrcPixel, TDstPixel>(this SpanBitmap<TDstPixel> target, SpanBitmap<TSrcPixel> source, Processing.Kernel3x3<TDstPixel>.KernelEvaluator<TDstPixel> function)
+            where TSrcPixel : unmanaged
+            where TDstPixel : unmanaged
         {
-            Processing.Kernel3x3<TPixel>.Copy(src,this, function);
+            Processing.Kernel3x3<TDstPixel>.Copy(source, target, function);
         }
     }
 
     namespace Processing
     {
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         public readonly struct Kernel3x3<TPixel>
             where TPixel : unmanaged
         {
-            #region delegates
-
-            public delegate TResult KernelEvaluator<TResult>(in Kernel3x3<TPixel> kernel);
-
-            #endregion
-
             #region constructor        
 
             internal Kernel3x3(in _RollingRows rows, int idx1, int idx2, int idx3)
@@ -246,6 +244,8 @@ namespace InteropTypes.Graphics.Bitmaps
             #endregion
 
             #region nested types
+
+            public delegate TResult KernelEvaluator<TResult>(in Kernel3x3<TPixel> kernel);
 
             internal ref struct _RollingRows
             {

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 using XY = System.Numerics.Vector2;
 using XFORM2 = System.Numerics.Matrix3x2;
-
-using COLOR = System.Drawing.Color;
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
 namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream2D_DebuggerProxy))]
-    sealed class _CommandStream2D : Collection.CommandList, ICanvas2D
+    sealed class _CommandStream2D
+        : Collection.CommandList
+        , ICanvas2D
     {
         #region lifecycle
 
@@ -326,7 +326,7 @@ namespace InteropTypes.Graphics.Drawing
 
                 if (src.Transform == XFORM2.Identity)
                 {
-                    var rect = Toolkit.GetAssetBoundingRect(asset);
+                    var rect = DrawingToolkit.GetAssetBoundingRect(asset);
 
                     // todo: add all 8 vertices
                     if (rect.HasValue)
@@ -337,7 +337,7 @@ namespace InteropTypes.Graphics.Drawing
                 }
                 else
                 {
-                    var circle = Toolkit.GetAssetBoundingCircle(asset);
+                    var circle = DrawingToolkit.GetAssetBoundingCircle(asset);
                     if (circle.HasValue)
                     {
                         var (c, r) = src.Transform.TransformCircle(circle.Value);
@@ -393,6 +393,4 @@ namespace InteropTypes.Graphics.Drawing
 
         public readonly string[] Primitives;
     }
-
-
 }

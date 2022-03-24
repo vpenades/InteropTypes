@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace InteropTypes.Graphics.Drawing
 {
     partial struct Point3
     {
+        
+
+
         private static readonly System.Numerics.Vector3 XYZ_127 =new System.Numerics.Vector3(127);
                
         public static void SerializeQuantizedScaled(Action<Byte> writer, in Point3 point)

@@ -10,7 +10,7 @@ namespace InteropTypes.Graphics.Drawing
 {
     using PRIMITIVE2D = ICoreCanvas2D;    
 
-    partial class Toolkit
+    partial class DrawingToolkit
     {
         public static BRECT GetBackendViewportBoundsOrDefault(this PRIMITIVE2D dc)
         {

@@ -291,13 +291,6 @@ namespace InteropTypes.Graphics.Bitmaps
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
-        }
-
-        public void FitPixels(SpanBitmap<TPixel> src)
-        {
-            // _Implementation.FitPixelsNearest(this, src);
-
-            SpanBitmap.FitPixels(src, this, (0, 1));
         }        
 
         /// <summary>
@@ -365,12 +358,7 @@ namespace InteropTypes.Graphics.Bitmaps
             new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
 
             return refreshed;
-        }
-
-        public void ApplyMirror(bool horizontal, bool vertical, bool useMultiThreading = true)
-        {
-            Processing._MirrorImplementation.ApplyMirror(this, horizontal, vertical, useMultiThreading);
-        }
+        }        
         
         #endregion
 

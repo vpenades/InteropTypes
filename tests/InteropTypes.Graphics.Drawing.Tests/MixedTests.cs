@@ -43,7 +43,7 @@ namespace InteropTypes.Graphics.Drawing
             var srcScene = SceneFactory.CreateRecord3D(sceneName);
 
             srcScene.AttachToCurrentTest($"{sceneName}.glb");
-            srcScene.AttachToCurrentTest($"{sceneName}.html");
+            srcScene.AttachToCurrentTest($"{sceneName}.html");            
         }        
 
 

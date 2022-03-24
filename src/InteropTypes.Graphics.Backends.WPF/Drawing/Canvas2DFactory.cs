@@ -135,7 +135,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (xform == null)
             {
-                var bounds = Toolkit.GetAssetBoundingRect(scene);
+                var bounds = DrawingToolkit.GetAssetBoundingRect(scene);
                 xform = new SceneView2D().WithSceneBounds(bounds.Value);
             }
 
@@ -146,7 +146,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (xform == null)
             {
-                var bounds = Toolkit.GetAssetBoundingMinMax(scene);
+                var bounds = DrawingToolkit.GetAssetBoundingMinMax(scene);
                 xform = new SceneView3D().WithSceneBounds(bounds.Value);
             }
 
