@@ -100,7 +100,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public static void DrawAsset(this CANVAS2DEX dc, in XFORM2 transform, Object asset)
         {
-            dc.DrawAsset(transform, asset, ColorStyle.White);
+            dc.DrawAsset(transform, asset);
         }        
         
         public static BRECT? GetAssetBoundingRect(Object asset)

@@ -96,9 +96,9 @@ namespace InteropTypes.Graphics.Backends
         #region API - IDrawing2D
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
-            new InteropTypes.Graphics.Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset, color);
+            new InteropTypes.Graphics.Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset);
         }
 
         /// <inheritdoc/>

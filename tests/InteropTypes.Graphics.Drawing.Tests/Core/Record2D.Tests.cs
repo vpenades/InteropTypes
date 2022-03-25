@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Drawing
             mdl.DrawLine((1, 2), (3, 4), 5, COLOR.Red);
             mdl.DrawCircle((4, 5), 6, COLOR.Blue);
             mdl.DrawPolygon(COLOR.Gray, (1, 1), (2, 2), (3, 3));
-            mdl.DrawAsset(System.Numerics.Matrix3x2.Identity, "Hello", COLOR.White);
+            mdl.DrawAsset(System.Numerics.Matrix3x2.Identity, "Hello");
 
             var lines = mdl.ToLog().ToArray();
 

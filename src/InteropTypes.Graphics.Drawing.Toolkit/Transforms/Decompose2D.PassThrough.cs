@@ -68,9 +68,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             #region API - ICanvas2D
 
             /// <inheritdoc/>
-            public virtual void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+            public virtual void DrawAsset(in Matrix3x2 transform, object asset)
             {
-                _Check(); Decompose2D.DrawAsset(_Target, transform, asset, style);
+                _Check(); Decompose2D.DrawAsset(_Target, transform, asset);
             }            
 
             /// <inheritdoc/>

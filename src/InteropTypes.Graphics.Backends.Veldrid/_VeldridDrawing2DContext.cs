@@ -142,9 +142,8 @@ namespace InteropTypes.Graphics.Backends
             this.AddConvexPolygon(points, color);
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
-        {
-            if (!style.IsVisible) return;
+        public void DrawAsset(in Matrix3x2 transform, object asset)
+        {            
             if (asset is IDrawingBrush<ICanvas2D> drawable) { drawable.DrawTo(this); return; }
             _Collapsed2D.DrawAsset(transform, asset);
         }

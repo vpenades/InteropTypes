@@ -96,7 +96,7 @@ namespace InteropTypes.Graphics.Drawing
 
             var scene = new Record2D();
 
-            scene.DrawAsset(Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(50, 50), model, COLOR.White);
+            scene.DrawAsset(Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(50, 50), model);
 
             // scene.RectBounds.DrawTo(scene, (COLOR.Red, 0.1f));
             // scene.CircleBounds.DrawTo(scene, (COLOR.Red, 0.1f));

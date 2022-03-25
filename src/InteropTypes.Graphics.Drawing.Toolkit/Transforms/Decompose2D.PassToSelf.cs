@@ -27,9 +27,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             #region extended
 
             /// <inheritdoc/>
-            public virtual void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+            public virtual void DrawAsset(in Matrix3x2 transform, object asset)
             {
-                Decompose2D.DrawAsset(this, transform, asset, style);
+                Decompose2D.DrawAsset(this, transform, asset);
             }            
 
             /// <inheritdoc/>

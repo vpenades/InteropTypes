@@ -54,7 +54,7 @@ namespace InteropTypes.Graphics.Backends
             _Canvas.StrokeSize = style.Style.OutlineWidth;
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
             throw new NotImplementedException();
         }

@@ -23,12 +23,11 @@ namespace InteropTypes.Graphics.Drawing
         #region constructors 2D
 
         /// <inheritdoc/>
-        public void DrawAsset(in XFORM2 xform, object asset, ColorStyle color)
+        public void DrawAsset(in XFORM2 xform, object asset)
         {
             ref var xref = ref AddHeaderAndStruct<_PrimitiveAsset>((int)_PrimitiveType.Asset)[0];
             xref.Transform = xform;
-            xref.AssetRef = AddReference(asset);
-            xref.Style = color;
+            xref.AssetRef = AddReference(asset);            
         }
 
         /// <inheritdoc/>
@@ -315,8 +314,7 @@ namespace InteropTypes.Graphics.Drawing
         struct _PrimitiveAsset
         {
             public XFORM2 Transform;
-            public int AssetRef;
-            public ColorStyle Style;
+            public int AssetRef;            
 
             public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
             {
@@ -353,11 +351,11 @@ namespace InteropTypes.Graphics.Drawing
 
                 if (collapse)
                 {
-                    new Transforms.Decompose2D(dst).DrawAsset(body.Transform, references[body.AssetRef], body.Style);
+                    new Transforms.Decompose2D(dst).DrawAsset(body.Transform, references[body.AssetRef]);
                     return;
                 }
 
-                dst.DrawAsset(body.Transform, references[body.AssetRef], ColorStyle.White);
+                dst.DrawAsset(body.Transform, references[body.AssetRef]);
             }
         }
 

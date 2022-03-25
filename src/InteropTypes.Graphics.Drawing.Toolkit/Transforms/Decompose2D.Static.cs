@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
     {
         #region API - Static ICanvas2D
 
-        public static bool DrawAsset<TAsset>(ICoreCanvas2D dc, in Matrix3x2 transform, TAsset asset, ColorStyle color)
+        public static bool DrawAsset<TAsset>(ICoreCanvas2D dc, in Matrix3x2 transform, TAsset asset)
         {
             if (asset == null) return true; // nothing to draw  
 
@@ -29,10 +29,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 ? ((IPseudoImmutable)asset).ImmutableKey
                 : (ASSET)asset;
 
-            return DrawAsset(dc, transform, xasset, color);
+            return DrawAsset(dc, transform, xasset);
         }
 
-        public static bool DrawAsset(ICoreCanvas2D dc, in Matrix3x2 transform, ASSET asset, ColorStyle color)
+        public static bool DrawAsset(ICoreCanvas2D dc, in Matrix3x2 transform, ASSET asset)
         {
             if (asset == null) return true; // nothing to draw            
 
@@ -42,7 +42,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             // fallback
 
-            return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey, color);
+            return asset is IPseudoImmutable inmutable && DrawAsset(dc, transform, inmutable.ImmutableKey);
         }
 
         public static void DrawEllipse(ICoreCanvas2D dc, POINT2 center, SCALAR width, SCALAR height, in OutlineFillStyle style)

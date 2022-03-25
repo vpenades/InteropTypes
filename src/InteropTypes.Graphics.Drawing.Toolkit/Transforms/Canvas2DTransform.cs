@@ -194,11 +194,11 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region 2D Drawing API
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
             if (_TargetEx != null)
             {
-                _TargetEx.DrawAsset(transform * _Transform.Forward, asset, color);
+                _TargetEx.DrawAsset(transform * _Transform.Forward, asset);
             }
             else
             {

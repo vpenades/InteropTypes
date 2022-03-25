@@ -48,7 +48,7 @@ namespace InteropTypes.Graphics.Backends
         #region API
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
             throw new NotImplementedException();
         }

@@ -56,12 +56,11 @@ namespace InteropTypes.Graphics.Drawing
         /// Draws an asset.
         /// </summary>
         /// <param name="transform">The transform to apply to the asset.</param>
-        /// <param name="asset">The asset to draw.</param>
-        /// <param name="style">The style to apply to the asset.</param>
+        /// <param name="asset">The asset to draw.</param>        
         /// <remarks>
         /// Assets are dependant on the backend implementation.        
         /// </remarks>
-        void DrawAsset(in XFORM2 transform, ASSET asset, ColorStyle style);
+        void DrawAsset(in XFORM2 transform, ASSET asset);
 
         /// <summary>
         /// Draws/Fills a closed polygon.

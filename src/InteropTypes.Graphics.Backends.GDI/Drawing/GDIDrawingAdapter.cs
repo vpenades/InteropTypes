@@ -40,7 +40,7 @@ namespace InteropTypes.Graphics.Backends
             return _PointsX;
         }
 
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle style)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
             throw new NotImplementedException();
         }

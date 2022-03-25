@@ -361,11 +361,11 @@ namespace InteropTypes.Graphics.Backends
         }
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle brush)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
             VerifyDisposed();
 
-            new Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset, brush);
+            new Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset);
         }
 
         /// <inheritdoc/>

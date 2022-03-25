@@ -108,10 +108,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
             _ImmutableKey = null;
-            _Commands.DrawAsset(transform, asset, color);
+            _Commands.DrawAsset(transform, asset);
         }
 
         /// <inheritdoc/>

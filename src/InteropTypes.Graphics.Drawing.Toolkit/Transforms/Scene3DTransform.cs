@@ -109,9 +109,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region 2D Drawing API
 
         /// <inheritdoc/>
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
-            new Decompose2D(this).DrawAsset(transform, asset, color);
+            new Decompose2D(this).DrawAsset(transform, asset);
         }
 
         /// <inheritdoc/>

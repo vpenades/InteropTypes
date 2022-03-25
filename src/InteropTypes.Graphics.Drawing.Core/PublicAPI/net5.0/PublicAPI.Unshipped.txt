@@ -71,12 +71,13 @@ InteropTypes.Graphics.Drawing.ColorStyle.ToString(string format, System.IFormatP
 InteropTypes.Graphics.Drawing.ColorStyle.TrySetDefaultTo(object target) -> bool
 InteropTypes.Graphics.Drawing.ColorStyle.WithOpacity(float opacity) -> InteropTypes.Graphics.Drawing.ColorStyle
 InteropTypes.Graphics.Drawing.GlobalStyle
+InteropTypes.Graphics.Drawing.GlobalStyle.Clone() -> InteropTypes.Graphics.Drawing.GlobalStyle
 InteropTypes.Graphics.Drawing.GlobalStyle.GlobalStyle() -> void
 InteropTypes.Graphics.Drawing.GlobalStyle.ISource
 InteropTypes.Graphics.Drawing.GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value) -> bool
 InteropTypes.Graphics.Drawing.GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value) -> bool
 InteropTypes.Graphics.Drawing.ICanvas2D
-InteropTypes.Graphics.Drawing.ICanvas2D.DrawAsset(in System.Numerics.Matrix3x2 transform, object asset, InteropTypes.Graphics.Drawing.ColorStyle style) -> void
+InteropTypes.Graphics.Drawing.ICanvas2D.DrawAsset(in System.Numerics.Matrix3x2 transform, object asset) -> void
 InteropTypes.Graphics.Drawing.ICanvas2D.DrawEllipse(InteropTypes.Graphics.Drawing.Point2 center, float width, float height, InteropTypes.Graphics.Drawing.OutlineFillStyle style) -> void
 InteropTypes.Graphics.Drawing.ICanvas2D.DrawLines(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points, float diameter, InteropTypes.Graphics.Drawing.LineStyle style) -> void
 InteropTypes.Graphics.Drawing.ICanvas2D.DrawPolygon(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points, InteropTypes.Graphics.Drawing.PolygonStyle style) -> void
@@ -420,7 +421,6 @@ static InteropTypes.Graphics.Drawing.CameraTransform3D.ZUpAxisMatrix.get -> Syst
 static InteropTypes.Graphics.Drawing.ColorStyle.AreEqual(uint colorA, uint colorB) -> bool
 static InteropTypes.Graphics.Drawing.ColorStyle.FromOpacity(float opacity) -> InteropTypes.Graphics.Drawing.ColorStyle
 static InteropTypes.Graphics.Drawing.ColorStyle.GetDefaultFrom(object source, InteropTypes.Graphics.Drawing.ColorStyle defval) -> InteropTypes.Graphics.Drawing.ColorStyle
-static InteropTypes.Graphics.Drawing.ColorStyle.implicit operator InteropTypes.Graphics.Drawing.ColorStyle(float opacity) -> InteropTypes.Graphics.Drawing.ColorStyle
 static InteropTypes.Graphics.Drawing.ColorStyle.implicit operator InteropTypes.Graphics.Drawing.ColorStyle(System.Drawing.Color fillColor) -> InteropTypes.Graphics.Drawing.ColorStyle
 static InteropTypes.Graphics.Drawing.ColorStyle.operator !=(InteropTypes.Graphics.Drawing.ColorStyle a, InteropTypes.Graphics.Drawing.ColorStyle b) -> bool
 static InteropTypes.Graphics.Drawing.ColorStyle.operator ==(InteropTypes.Graphics.Drawing.ColorStyle a, InteropTypes.Graphics.Drawing.ColorStyle b) -> bool

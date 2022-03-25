@@ -98,9 +98,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         #region API - IDrawing2D        
 
         /// <inheritdoc />
-        public void DrawAsset(in Matrix3x2 transform, ASSET asset, ColorStyle color)
+        public void DrawAsset(in Matrix3x2 transform, ASSET asset)
         {
-            DrawAsset(_RenderTarget, transform, asset, color);
+            DrawAsset(_RenderTarget, transform, asset);
         }
 
         /// <inheritdoc />

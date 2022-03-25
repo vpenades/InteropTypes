@@ -27,9 +27,9 @@ namespace InteropTypes.Graphics.Drawing.Diagnostics
         #region API 2D
 
         /// <inheritdoc />
-        public void DrawAsset(in Matrix3x2 transform, object asset, ColorStyle color)
+        public void DrawAsset(in Matrix3x2 transform, object asset)
         {
-            Write($"Asset {transform} {asset} {color}");
+            Write($"Asset {transform} {asset}");
         }
 
         /// <inheritdoc />
