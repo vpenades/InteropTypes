@@ -54,10 +54,10 @@ namespace InteropTypes.Graphics.Bitmaps
             var src = LoadShannonImage();
             src.AttachToCurrentTest("input.png");
 
-            src.AsSpanBitmap().ApplyMirror(true, false);
+            src.AsSpanBitmap().ApplyEffect(new Processing.BitmapMirror(true,false));
             src.AttachToCurrentTest("horizontalFlip.png");
 
-            src.AsSpanBitmap().ApplyMirror(false, true);
+            src.AsSpanBitmap().ApplyEffect(new Processing.BitmapMirror(false, true));
             src.AttachToCurrentTest("VerticalFlip.png");
         }
 
@@ -69,13 +69,15 @@ namespace InteropTypes.Graphics.Bitmaps
         [TestCase(1920, 1080, true, true, true)]
         public void TestFlipPerformance(int w, int h, bool multiThread, bool hflip, bool vflip)
         {
-            var bmp = new MemoryBitmap<Pixel.RGB24>(w, h).AsSpanBitmap();            
+            var bmp = new MemoryBitmap<Pixel.RGB24>(w, h).AsSpanBitmap();
+
+            var mirrorEffect = new Processing.BitmapMirror(hflip,vflip,multiThread);
 
             using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"{w}x{h} HFlip:{hflip} VFlip:{vflip} {Math.Round(t.TotalMilliseconds / 1000)}ms")))
             {
                 for (int r = 0; r < 1000; ++r)
                 {
-                    bmp.ApplyMirror(hflip, vflip, multiThread);
+                    bmp.ApplyEffect(mirrorEffect);
                 }
             }
         }
@@ -89,7 +91,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var sampler = new Processing._BitmapTransformImplementation.SpanNearestSampler<Pixel.BGRA32>(map);
 
-            var pix = sampler.GetPixelZero(8, 8);
+            var pix = sampler.GetPixelOrDefault(8, 8);
         }
 
         [Test]
@@ -106,7 +108,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {t}")))
             {
-                dst.AsSpanBitmap().SetPixels(xx, src);                
+                dst.AsSpanBitmap().TransferFrom(src.AsSpanBitmap(), new Processing.BitmapTransform(xx));                
             }
 
 
@@ -120,8 +122,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 var xform = Matrix3x2.CreateRotation(r) * Matrix3x2.CreateTranslation(50, 15);                
                 xform = Matrix3x2.CreateTranslation(-50, -50) * xform * Matrix3x2.CreateTranslation(50, 50);
-                xform = xform * Matrix3x2.CreateScale(3, 3);                
-
+                xform = xform * Matrix3x2.CreateScale(3, 3);
+                
                 dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), r);
                 DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
 
@@ -131,9 +133,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), r);
                 DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
-            }
+            }            
 
-            
+            dst.AsSpanBitmap().SetPixels(Matrix3x2.Identity, cat00.AsSpanBitmap());            
 
             dst.AttachToCurrentTest("transformed.png");
         }

@@ -11,7 +11,8 @@ namespace InteropTypes.Graphics.Bitmaps
     /// </summary>    
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy))]
-    public readonly partial struct MemoryBitmap : IMemoryBitmap , IEquatable<MemoryBitmap>
+    public readonly partial struct MemoryBitmap        
+        : IEquatable<MemoryBitmap>
     {
         #region lifecycle        
         public MemoryBitmap(in BitmapInfo info)
@@ -168,7 +169,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static implicit operator SpanBitmap(MemoryBitmap bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
 
-        public SpanBitmap AsSpanBitmap() { return this; }
+        
 
         public unsafe MemoryBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged
@@ -277,22 +278,6 @@ namespace InteropTypes.Graphics.Bitmaps
         public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Write(stream, format, factory);
-        }
-
-        #endregion
-
-        #region nested types
-
-        /// <summary>
-        /// Represents an object that promises a <see cref="MemoryBitmap"/> and controls its life cycle.
-        /// </summary>
-        public interface ISource : IDisposable
-        {
-            /// <summary>
-            /// Gets the <see cref="MemoryBitmap"/> owned by this instance.<br/>
-            /// If this <see cref="ISource"/> is disposed, the <see cref="Bitmap"/> will no longet be valid.
-            /// </summary>
-            MemoryBitmap Bitmap { get; }
         }
 
         #endregion

@@ -33,12 +33,12 @@ namespace InteropTypes.Graphics.Backends
 
         #region As MemoryBitmap
 
-        public static PointerBitmap.ISource UsingPointerBitmap(this GDIBITMAP bmp)
+        public static PointerBitmap.IDisposableSource UsingPointerBitmap(this GDIBITMAP bmp)
         {
             return new Adapters.GDIMemoryManager(bmp);
         }
 
-        public static MemoryBitmap.ISource UsingMemoryBitmap(this GDIBITMAP bmp)
+        public static MemoryBitmap.IDisposableSource UsingMemoryBitmap(this GDIBITMAP bmp)
         {
             return new Adapters.GDIMemoryManager(bmp);
         }

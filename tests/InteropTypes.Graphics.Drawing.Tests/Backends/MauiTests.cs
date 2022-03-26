@@ -32,7 +32,7 @@ namespace InteropTypes.Graphics.Drawing
 
                 using (var memBmp = skBmp.UsingMemoryBitmap())
                 {
-                    memBmp.Bitmap
+                    memBmp.AsMemoryBitmap()
                         .ToMemoryBitmap(Pixel.RGBA32.Format)
                         .AttachToCurrentTest("maui.png");
                 }

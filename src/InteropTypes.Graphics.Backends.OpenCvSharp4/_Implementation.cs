@@ -268,11 +268,9 @@ namespace InteropTypes.Graphics
         {
             void _onPin(PointerBitmap ptrSrc, PointerBitmap ptrDst)
             {
-                using (var cvSrc = WrapAsMat(ptrSrc))
-                using (var cvDst = WrapAsMat(ptrDst))
-                {
-                    action(cvSrc, cvDst);
-                }
+                using var cvSrc = WrapAsMat(ptrSrc);
+                using var cvDst = WrapAsMat(ptrDst);                
+                action(cvSrc, cvDst);                
             }            
 
             SpanBitmap.PinTransferPointers(src, dst, _onPin);

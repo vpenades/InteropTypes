@@ -31,7 +31,7 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             using (var owner = image.UsingMemoryBitmap())
             {
-                owner.Bitmap.AttachToCurrentTest(filePath);
+                owner.AsMemoryBitmap().AttachToCurrentTest(filePath);
             }                
         }
 

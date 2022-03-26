@@ -14,17 +14,20 @@ namespace InteropTypes.Graphics.Bitmaps
     /// Defines yet another rectangle structure.
     /// </summary>
     /// <remarks>
-    /// Pretty much every imaging library around defines some sort of Rectangle structure:    
-    /// - (GDI+) <see cref="System.Drawing.Rectangle"/> <see href="https://github.com/dotnet/runtime/blob/master/src/libraries/System.Drawing.Primitives/src/System/Drawing/Rectangle.cs"/>
-    /// - (GDI+) <see cref="System.Drawing.RectangleF"/>
-    /// - (WPF) System.Windows.Rect (WPF)
-    /// - (WPF) System.Windows.Int32Rect
-    /// - (ImageSharp) Sixlabors.Primitives.Rectangle
-    /// - (OpenCV) OpenCvSharp.Rect
-    /// - (Skia) SkiaSharp.SKRectI:
-    /// - (Monogame) Microsoft.Xna.Framework.Rectangle:
+    /// Pretty much every imaging library around defines some sort of Rectangle structure:<br/>
+    /// <list type="bullet">
+    /// <item>(GDI+) <see cref="System.Drawing.Rectangle"/> <see href="https://github.com/dotnet/runtime/blob/master/src/libraries/System.Drawing.Primitives/src/System/Drawing/Rectangle.cs">Source</see></item>
+    /// <item>(GDI+) <see cref="System.Drawing.RectangleF"/> <see href="https://github.com/dotnet/runtime/blob/master/src/libraries/System.Drawing.Primitives/src/System/Drawing/RectangleF.cs">Source</see></item>
+    /// <item>(WPF) System.Windows.Rect (WPF) <see href="https://github.com/dotnet/wpf/blob/main/src/Microsoft.DotNet.Wpf/src/WindowsBase/System/Windows/Rect.cs">Source</see></item>
+    /// <item>(WPF) System.Windows.Int32Rect (WPF) <see href="https://github.com/dotnet/wpf/blob/main/src/Microsoft.DotNet.Wpf/src/WindowsBase/System/Windows/Int32Rect.cs">Source</see></item>
+    /// <item>(ImageSharp) Sixlabors.Primitives.Rectangle</item>
+    /// <item>(OpenCV) OpenCvSharp.Rect</item>
+    /// <item>(Skia) SkiaSharp.SKRectI:</item>
+    /// <item>(Monogame) Microsoft.Xna.Framework.Rectangle</item>
+    /// </list>
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{X},{Y} {Width}x{Height}")]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly struct BitmapBounds : IEquatable<BitmapBounds>
     {
         #region constructor

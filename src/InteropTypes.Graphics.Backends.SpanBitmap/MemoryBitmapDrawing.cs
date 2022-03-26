@@ -13,7 +13,9 @@ namespace InteropTypes.Graphics.Backends
     public static class SpanBitmapDrawing
     {
         public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, Action<ICanvas2D> canvas)
-            where TPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRA32>
+            where TPixel : unmanaged
+            , Pixel.IValueSetter<Pixel.BGRA32>
+            , Pixel.IValueSetter<Pixel.QVectorBGRP>
         {
             ICanvas2D onPin(PointerBitmap ptr)
             {
@@ -24,7 +26,9 @@ namespace InteropTypes.Graphics.Backends
         }
 
         public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, POINT virtualSize, Action<ICanvas2D> canvas)
-            where TPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRA32>
+            where TPixel : unmanaged
+            , Pixel.IValueSetter<Pixel.BGRA32>
+            , Pixel.IValueSetter<Pixel.QVectorBGRP>
         {
             if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
             if (virtualSize.Y == 0) throw new ArgumentException(nameof(virtualSize));
@@ -78,7 +82,9 @@ namespace InteropTypes.Graphics.Backends
         public static ICanvas2D CreateDrawingContext(this MemoryBitmap bitmap)
         {
             ICanvas2D _Create<TPixel>()
-                where TPixel : unmanaged , Pixel.IValueSetter<Pixel.BGRA32>
+                where TPixel : unmanaged
+                , Pixel.IValueSetter<Pixel.BGRA32>
+                , Pixel.IValueSetter<Pixel.QVectorBGRP>
             {                
                 return new _MemoryDrawingContext<TPixel>(bitmap.OfType<TPixel>(), c => Pixel.GetColor<TPixel>(c));
             }
@@ -87,12 +93,12 @@ namespace InteropTypes.Graphics.Backends
             {
                 case Pixel.Alpha8.Code: return _Create<Pixel.Alpha8>();
 
-                case Pixel.Luminance8.Code: return _Create<Pixel.Luminance8>();
-                case Pixel.Luminance16.Code: return _Create<Pixel.Luminance16>();
+                // case Pixel.Luminance8.Code: return _Create<Pixel.Luminance8>();
+                // case Pixel.Luminance16.Code: return _Create<Pixel.Luminance16>();
 
-                case Pixel.BGR565.Code: return _Create<Pixel.BGR565>();
-                case Pixel.BGRA4444.Code: return _Create<Pixel.BGRA4444>();
-                case Pixel.BGRA5551.Code: return _Create<Pixel.BGRA5551>();
+                // case Pixel.BGR565.Code: return _Create<Pixel.BGR565>();
+                // case Pixel.BGRA4444.Code: return _Create<Pixel.BGRA4444>();
+                // case Pixel.BGRA5551.Code: return _Create<Pixel.BGRA5551>();
 
                 case Pixel.BGR24.Code: return _Create<Pixel.BGR24>();
                 case Pixel.RGB24.Code: return _Create<Pixel.RGB24>();
@@ -101,17 +107,18 @@ namespace InteropTypes.Graphics.Backends
                 case Pixel.RGBA32.Code: return _Create<Pixel.RGBA32>();
                 case Pixel.BGRA32.Code: return _Create<Pixel.BGRA32>();
 
-                case Pixel.RGB96F.Code: return _Create<Pixel.RGB96F>();
-                case Pixel.BGR96F.Code: return _Create<Pixel.BGR96F>();
-                case Pixel.RGBA128F.Code: return _Create<Pixel.RGBA128F>();
-                case Pixel.BGRA128F.Code: return _Create<Pixel.BGRA128F>();
+                // case Pixel.RGB96F.Code: return _Create<Pixel.RGB96F>();
+                // case Pixel.BGR96F.Code: return _Create<Pixel.BGR96F>();
+                // case Pixel.RGBA128F.Code: return _Create<Pixel.RGBA128F>();
+                // case Pixel.BGRA128F.Code: return _Create<Pixel.BGRA128F>();
             }            
 
-            throw new NotImplementedException();
+            throw new NotImplementedException($"{bitmap.PixelFormat}");
         }
 
         public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, Converter<System.Drawing.Color, TPixel> converter)
             where TPixel : unmanaged
+            , Pixel.IValueSetter<Pixel.QVectorBGRP>
         {
             return new _MemoryDrawingContext<TPixel>(bitmap, converter);
         }

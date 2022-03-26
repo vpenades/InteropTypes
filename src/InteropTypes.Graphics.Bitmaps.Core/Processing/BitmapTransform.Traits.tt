@@ -1,0 +1,79 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#@ include file="..\\..\\Shared\\CodeGenUtils.t4" #>
+
+namespace InteropTypes.Graphics.Bitmaps.Processing
+{
+    using TRANSFORM = System.Numerics.Matrix3x2;
+
+<# //-------------------------------------------------------------------------------------------------------------------
+
+var interfaces = new List<string>();
+
+var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32","RGBP32" };
+var dstPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32","RGBP32" };
+
+var pixelPairs = dstPixels
+                    .SelectMany( dstp => srcPixels.Select(srcp => (dstp,srcp) ) )
+                    .Distinct()
+                    .ToArray();
+
+bool IsOpaque(string pixelFmt)
+{
+    if (pixelFmt == "BGR24") return true;
+    if (pixelFmt == "RGB24") return true;
+    return false;
+}
+
+foreach(var (dstPixel,srcPixel) in pixelPairs)
+{
+    interfaces.Add($"SpanBitmap.ITransfer<Pixel.{srcPixel}, Pixel.{dstPixel}>");    
+}
+
+//-----------------------------------------
+
+    _writeStructBegin("BitmapTransform", interfaces.ToArray());
+
+    WriteLine("public BitmapTransform(in TRANSFORM xform, float opacity = 1)");
+    _writeOpenBlock();
+        WriteLine("Transform = xform;");
+        WriteLine("Opacity = opacity;");
+    _writeCloseBlock();
+
+    WriteLine("public TRANSFORM Transform {get;set;}");
+
+    WriteLine("public float Opacity {get;set;}");    
+
+    foreach(var (dstPixel,srcPixel) in pixelPairs)
+    {   
+        _writeDocInherit();
+        WriteLine($"public bool TryTransfer(SpanBitmap<Pixel.{srcPixel}> source, SpanBitmap<Pixel.{dstPixel}> target)");
+        _writeOpenBlock();            
+
+            if (IsOpaque(srcPixel))
+            {
+                WriteLine("if (Opacity >= 1)");
+                _writeOpenBlock();
+
+                var method = srcPixel == dstPixel
+                    ? "_OverwritePixelsNearestDirect"
+                    : "_OverwritePixelsNearestConvert";
+
+                WriteLine($"_BitmapTransformImplementation.{method}(source, target, Transform);");
+                WriteLine("return true;");
+                _writeCloseBlock();
+            }
+
+            WriteLine("_BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);");
+            WriteLine("return true;");
+        _writeCloseBlock();
+    }
+
+_writeEnd();
+
+// --------------------------------------------------------------------------------------------------------------------- #>
+}

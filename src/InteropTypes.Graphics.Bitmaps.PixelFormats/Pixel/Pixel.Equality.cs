@@ -2,7 +2,6 @@
 // GENERATED CODE: using CodeGenUtils.t4
 // GENERATED CODE: using Pixel.Constants.t4
 
-
 using System;
 
 namespace InteropTypes.Graphics.Bitmaps

@@ -34,7 +34,7 @@ namespace InteropTypes.Vision
             {
                 text += ptrBmp.Info.ToDebuggerDisplayString();
             }
-            else if (Content is IBitmapInfo bmpNfo)
+            else if (Content is BitmapInfo.ISource bmpNfo)
             {
                 text += bmpNfo.Info.ToDebuggerDisplayString();
             }

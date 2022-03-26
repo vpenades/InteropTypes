@@ -206,22 +206,12 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static implicit operator SpanBitmap(SpanBitmap<TPixel> other)
         {
-            return other._Writable.IsEmpty ? new SpanBitmap(other._Readable, other._Info) : new SpanBitmap(other._Writable, other._Info);
+            return other._Writable.IsEmpty
+                ? new SpanBitmap(other._Readable, other._Info)
+                : new SpanBitmap(other._Writable, other._Info);
         }
 
-        /// <summary>
-        /// Returns a pixel typeless <see cref="SpanBitmap"/>.
-        /// </summary>
-        /// <returns>A <see cref="SpanBitmap"/></returns>
-        /// <remarks>
-        /// This is the opposite operation of <see cref="SpanBitmap.OfType{TPixel}"/>
-        /// </remarks>
-        public SpanBitmap AsTypeless()
-        {
-            return _Writable.IsEmpty
-                ? new SpanBitmap(_Readable, _Info)
-                : new SpanBitmap(_Writable, _Info);
-        }
+        
 
         public unsafe SpanBitmap<TDstPixel> ReinterpretOfType<TDstPixel>()
             where TDstPixel : unmanaged
@@ -264,9 +254,7 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }        
 
-        public TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
-
-        public void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }           
+            
 
         public void SetPixels(TPixel value)
         {            
@@ -291,28 +279,7 @@ namespace InteropTypes.Graphics.Bitmaps
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
             _Implementation.CopyPixels(this, dstX, dstY, src);
-        }        
-
-        /// <summary>
-        /// Draws <paramref name="src"/> at the location defined by <paramref name="dstSRT"/>.
-        /// </summary>
-        /// <param name="dstSRT">Where to draw the image.</param>
-        /// <param name="src">Image to draw.</param>
-        /// <remarks>
-        /// This is equivalent to OpenCV's WarpAffine
-        /// </remarks>
-        public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap<TPixel> src)
-        {
-            // TODO: if dstSRT has no rotation, use _NearestResizeImplementation
-            
-            Processing._BitmapTransformImplementation.SetPixelsNearest(this, src, dstSRT);
         }
-
-        public void SetPixels<TSrcPixel>(in Matrix3x2 dstSRT, SpanBitmap<TSrcPixel> src, float opacity)
-            where TSrcPixel: unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
-        {
-            Processing._BitmapTransformImplementation.ComposePixelsNearest(this, src, dstSRT, opacity);
-        }        
 
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)
             where TSrcPixel: unmanaged
@@ -358,8 +325,57 @@ namespace InteropTypes.Graphics.Bitmaps
             new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
 
             return refreshed;
-        }        
-        
+        }
+
+        #endregion
+
+        #region API - Effects & Transfers
+
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, float opacity = 1)
+            where TSrcPixel : unmanaged
+        {
+            var xform = new Processing.BitmapTransform(location, opacity);
+            this.TransferFrom(src, xform);
+        }
+
+        public void ApplyEffect(SpanBitmap.IEffect effect)
+        {
+            // try applying the effect with a known pixel type:
+            if (effect.TryApplyTo<TPixel>(this)) return;
+
+            // try applying the effect as bytes:
+            if (effect.TryApplyTo(this.AsTypeless())) return;
+
+            throw new NotSupportedException();
+        }
+
+        public void TransferFrom<TSrcPixel>(in SpanBitmap<TSrcPixel> src, SpanBitmap.ITransfer transfer)
+            where TSrcPixel : unmanaged
+        {
+            // 1st try with explicit exact types:
+            if (transfer is SpanBitmap.ITransfer<TSrcPixel, TPixel> xtransfer)
+            {
+                if (xtransfer.TryTransfer(src, this)) return;
+            }
+
+            // 2nd try with generic exact types:
+            if (transfer.TryTransfer<TSrcPixel,TPixel>(src.AsReadOnly(), this)) return;
+            
+
+            // 3rd try with generic exact and matching types:
+            if (typeof(TPixel) == typeof(TSrcPixel))
+            {
+                var srcx = src.ReinterpretOfType<TPixel>();
+                if (transfer.TryTransfer<TPixel>(srcx, this)) return;
+            }
+
+            // 4th try typeless:
+            if (transfer.TryTransfer(src.AsTypeless(), this.AsTypeless())) return;
+
+            // 5th unable to transfer.
+            throw new NotSupportedException($"Transfers from {typeof(TSrcPixel).Name} to {typeof(TPixel).Name} with {transfer.GetType().Name} are not supported.");
+        }
+
         #endregion
 
         #region API - IO
@@ -377,7 +393,6 @@ namespace InteropTypes.Graphics.Bitmaps
         #endregion
 
         #region nested types
-
         public ref struct PixelEnumerator
         {
             private readonly SpanBitmap<TPixel> _Span;

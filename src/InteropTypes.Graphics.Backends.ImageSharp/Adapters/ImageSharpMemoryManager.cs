@@ -10,7 +10,10 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Adapters
 {
-    class ImageSharpMemoryManager<TPixel> : MemoryManager<Byte>, MemoryBitmap.ISource
+    class ImageSharpMemoryManager<TPixel>
+        : MemoryManager<Byte>
+        , MemoryBitmap.IDisposableSource
+        , MemoryBitmap<TPixel>.IDisposableSource
         where TPixel : unmanaged, IPixel<TPixel>
     {
         #region lifecycle
@@ -66,9 +69,25 @@ namespace InteropTypes.Graphics.Adapters
 
         #endregion
 
+        #region properties
+
+        public BitmapInfo Info => _Binfo;
+
+        public PixelFormat PixelFormat => _Binfo.PixelFormat;
+
+        public System.Drawing.Size Size => _Binfo.Size;
+
+        public int Width => _Binfo.Width;
+
+        public int Height => _Binfo.Height;
+
+        #endregion
+
         #region  API
 
-        public MemoryBitmap Bitmap => new MemoryBitmap(this.Memory, _Binfo);
+        MemoryBitmap MemoryBitmap.ISource.AsMemoryBitmap() => new MemoryBitmap(this.Memory, _Binfo);
+
+        public MemoryBitmap<TPixel> AsMemoryBitmap() => new MemoryBitmap<TPixel>(this.Memory, _Binfo);
 
         public override Span<byte> GetSpan()
         {

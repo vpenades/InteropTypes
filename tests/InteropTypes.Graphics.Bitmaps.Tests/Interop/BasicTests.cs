@@ -154,7 +154,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             using var ptr = bmp.UsingPointerBitmap();
 
-            ptr.Bitmap
+            ptr.AsPointerBitmap()
                 .AsSpanBitmapOfType<Pixel.BGRA32>()
                 .ReadAsImageSharp(img => img.AttachToCurrentTest("result.png"));
         }

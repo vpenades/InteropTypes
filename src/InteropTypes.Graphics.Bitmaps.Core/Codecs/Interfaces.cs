@@ -74,11 +74,8 @@ namespace InteropTypes.Codecs
         [Obsolete("Use WebpLossy and WebpLossless")]
         Webp,
         WebpLossy,
-        WebpLossless,
-        
+        WebpLossless,        
 
         Psd,
-
-
     }    
 }

@@ -12,10 +12,9 @@ namespace InteropTypes.Graphics.Bitmaps
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     // [System.Diagnostics.DebuggerTypeProxy(typeof(Debug.SpanBitmapProxy<>))]
-    public readonly struct MemoryBitmap<TPixel>
-        : IMemoryBitmap
-        , IBitmap<TPixel>
-        , IEquatable<MemoryBitmap<TPixel>>
+    public readonly partial struct MemoryBitmap<TPixel>
+        
+        : IEquatable<MemoryBitmap<TPixel>>
         where TPixel : unmanaged        
     {
         #region debug
@@ -24,6 +23,16 @@ namespace InteropTypes.Graphics.Bitmaps
         internal ReadOnlySpan<TPixel> _Row1 => AsSpanBitmap().GetScanlinePixels(1);
         internal ReadOnlySpan<TPixel> _Row2 => AsSpanBitmap().GetScanlinePixels(2);
         internal ReadOnlySpan<TPixel> _Row3 => AsSpanBitmap().GetScanlinePixels(3);
+
+        #endregion
+
+        #region implicit
+
+        public static implicit operator SpanBitmap(MemoryBitmap<TPixel> bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
+
+        public static implicit operator SpanBitmap<TPixel>(MemoryBitmap<TPixel> bmp) { return new SpanBitmap<TPixel>(bmp._Data.Span, bmp._Info); }
+
+        public static implicit operator MemoryBitmap(MemoryBitmap<TPixel> bmp) { return new MemoryBitmap(bmp._Data, bmp._Info); }
 
         #endregion
 
@@ -184,30 +193,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #endregion
 
-        #region API - Cast
-
-        public static implicit operator SpanBitmap(MemoryBitmap<TPixel> bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
-
-        public static implicit operator SpanBitmap<TPixel>(MemoryBitmap<TPixel> bmp) { return new SpanBitmap<TPixel>(bmp._Data.Span, bmp._Info); }
-
-        public static implicit operator MemoryBitmap(MemoryBitmap<TPixel> bmp) { return new MemoryBitmap(bmp._Data, bmp._Info); }
-
-        [System.Diagnostics.DebuggerStepThrough]
-        public SpanBitmap<TPixel> AsSpanBitmap() { return this; }
-
-        /// <inheritdoc />        
-        [System.Diagnostics.DebuggerStepThrough]
-        SpanBitmap IMemoryBitmap.AsSpanBitmap() { return this; }
-
-        [System.Diagnostics.DebuggerStepThrough]
-        public MemoryBitmap AsTypeless() { return new MemoryBitmap(this._Data, this._Info); }
-
-        #endregion
-
-        #region API - Pixel Ops        
-
+        #region API - Pixel Ops
+        
         public void SetPixels(TPixel value) { AsSpanBitmap().SetPixels(value); }
-
+        
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }
 
         public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel, TSrcPixel, TPixel> pixelFunc)
@@ -223,13 +212,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return new MemoryBitmap<TPixel>(memory, info);
         }
         
-        public TPixel GetPixel(int x, int y) { return UseScanlinePixels(y)[x]; }
-
-        public void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
-
-        public TPixel GetPixel(POINT point) { return UseScanlinePixels(point.Y)[point.X]; }
-
-        public void SetPixel(POINT point, TPixel value) { UseScanlinePixels(point.Y)[point.X] = value; }
+        
 
         public IEnumerable<(POINT Location, TPixel Pixel)> EnumeratePixels()
         {

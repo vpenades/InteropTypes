@@ -19,7 +19,8 @@ namespace InteropTypes.Graphics.Bitmaps
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public readonly partial struct BitmapInfo : IEquatable<BitmapInfo>
+    public readonly partial struct BitmapInfo
+        : IEquatable<BitmapInfo>
     {
         // Todo: Maybe a better name for this struct is BitmapDesc or BitmapLayout
 
@@ -126,28 +127,28 @@ namespace InteropTypes.Graphics.Bitmaps
         /// Width of the bitmap, in pixels.
         /// </summary>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public readonly int Width;
+        public int Width { get; }
 
         /// <summary>
         /// Height of the bitmap, in pixels.
         /// </summary>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public readonly int Height;        
+        public int Height { get; }
 
         /// <summary>
         /// Number of bytes to advance from the beginning of one row to the next.
         /// </summary>        
-        public readonly int StepByteSize;
+        public int StepByteSize { get; }
 
         /// <summary>
         /// format of the pixel.
         /// </summary>
-        public readonly PixelFormat PixelFormat;
+        public PixelFormat PixelFormat { get; }
 
         /// <summary>
         /// Byte size of a single pixel.
         /// </summary>
-        public readonly int PixelByteSize;
+        public int PixelByteSize { get; }
 
         /// <inheritdoc/>
         public override int GetHashCode()
@@ -319,8 +320,16 @@ namespace InteropTypes.Graphics.Bitmaps
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize * pixelCount);
         }
 
+        /// <summary>
+        /// Gets the pixel at the given location.
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>The pixel at the given location, or default if outside bounds</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe TPixel GetPixelZero<TPixel>(RSPAN data, int x, int y)
+        public unsafe TPixel GetPixelOrDefault<TPixel>(RSPAN data, int x, int y)
             where TPixel: unmanaged
         {
             System.Diagnostics.Debug.Assert(sizeof(TPixel) == PixelByteSize, $"pixel type size mismatch, expected {PixelByteSize}, but found {sizeof(TPixel)}");
@@ -336,7 +345,7 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe TPixel GetPixelClamp<TPixel>(RSPAN data, int x, int y)
+        public unsafe TPixel GetPixelOrClamp<TPixel>(RSPAN data, int x, int y)
             where TPixel : unmanaged
         {
             if (x < 0) x = 0;

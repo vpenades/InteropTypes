@@ -40,13 +40,12 @@ namespace InteropTypes.Codecs
             Guard.NotNull(nameof(stream), stream);
             Guard.NotNull(nameof(encoders), encoders);
             Guard.IsFalse(nameof(format), format == CodecFormat.Undefined);
-            Guard.GreaterThan(nameof(encoders), encoders.Length, 0);
-
-            // if the stream has been created already, remember the start position:
+            Guard.GreaterThan(nameof(encoders), encoders.Length, 0);            
 
             long position = 0;
             bool keepOpen = false;
 
+            // if the stream has been created already, remember the start position.
             if (stream.IsValueCreated)
             {
                 Guard.IsTrue(nameof(stream), stream.Value.CanWrite);
@@ -55,14 +54,11 @@ namespace InteropTypes.Codecs
             }
 
             // loop over each encoder:
-
             foreach (var encoder in encoders)
             {
                 if (encoder.TryWrite(stream, format, bmp)) return;
 
-                if (!stream.IsValueCreated) continue;
-
-                // if encoder failed, amend the stream
+                if (!stream.IsValueCreated) continue;                
                 
                 if (!keepOpen) throw new ArgumentException(_CodecError000, nameof(encoders));
 
@@ -83,6 +79,7 @@ namespace InteropTypes.Codecs
             Guard.IsTrue(nameof(stream), stream.CanRead);
             Guard.NotNull(nameof(decoders), decoders);
             Guard.GreaterThan(nameof(decoders), decoders.Length, 0);
+            Guard.GreaterThan(nameof(bytesToReadHint), bytesToReadHint ?? 1, 0);
 
             // it the stream position cannot be reset,
             // and there's more than one decoder, 
@@ -90,20 +87,17 @@ namespace InteropTypes.Codecs
 
             if (!stream.CanSeek && decoders.Length > 1)
             {
-                using (var mem = new System.IO.MemoryStream())
-                {
-                    stream.CopyTo(mem);
-                    stream.Flush();
+                using var mem = _ToMemoryStream(stream, bytesToReadHint);
+                return Read(mem, decoders, (int)mem.Length);
+            }            
 
-                    mem.Position = 0;
-                    return Read(mem, decoders);
-                }
-            }
+            System.Diagnostics.Debug.Assert(stream.CanSeek);
+            System.Diagnostics.Debug.Assert(stream.CanRead);
 
-            // loop over each decoder:            
-
+            // remember the current stream position in case we need to reset it:
             var startPos = stream.Position;
 
+            // loop over each decoder:
             foreach (var decoder in decoders)
             {
                 var context = new BitmapDecoderContext
@@ -112,14 +106,41 @@ namespace InteropTypes.Codecs
                     BytesToRead = bytesToReadHint
                 };
 
+                // try to load the file with the current decoder:
                 if (decoder.TryRead(context, out MemoryBitmap bmp)) return bmp;
 
-                // current decoder failed, amend the stream:
-
+                // last decoder failed, reset the stream position:
                 stream.Position = startPos;
             }
 
-            throw new ArgumentException("invalid format", nameof(stream));
+            throw new ArgumentException("invalid format or incompatible decoder.", nameof(stream));
+        }
+
+        private static System.IO.MemoryStream _ToMemoryStream(System.IO.Stream stream, int? bytesToReadHint = null)
+        {
+            if (bytesToReadHint.HasValue)
+            {
+                var buffer = new Byte[bytesToReadHint.Value];
+
+                int p = 0;
+                while (p < buffer.Length)
+                {
+                    var r = stream.Read(buffer, p, bytesToReadHint.Value - p);
+                    p += r > 0 ? r : throw new System.IO.EndOfStreamException();
+                }
+
+                return new System.IO.MemoryStream(buffer, false);
+            }
+            else
+            {
+                var mem = new System.IO.MemoryStream();
+
+                stream.CopyTo(mem);
+                stream.Flush();
+
+                mem.Position = 0;
+                return mem;
+            }
         }
     }
 }

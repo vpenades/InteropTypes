@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Backends
 
         #region As MemoryBitmap
 
-        public static MemoryBitmap.ISource UsingMemoryBitmap(this SkiaSharp.SKBitmap bmp)
+        public static MemoryBitmap.IDisposableSource UsingMemoryBitmap(this SkiaSharp.SKBitmap bmp)
         {
             return new Adapters.SkiaMemoryManager(bmp);
         }

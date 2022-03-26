@@ -8,8 +8,7 @@ namespace InteropTypes.Graphics.Bitmaps
     using Diagnostics;
 
     partial struct SpanBitmap
-    {
-        
+    {        
         public static void PinTransferPointers(SpanBitmap src, SpanBitmap dst, PointerBitmap.Action2 onPinned)
         {
             _SpanBitmapImpl.PinTransferPointers(src, dst, onPinned);

@@ -335,59 +335,69 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </remarks>
         public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap src)
         {
-            if (src.PixelFormat != this.PixelFormat) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
+            if (src.PixelFormat != this.PixelFormat) throw new PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
+
+            var xform = new Processing.BitmapTransform(dstSRT);
 
             switch(this.PixelFormat.Code)
             {
-                case Pixel.Alpha8.Code: this.OfType<Pixel.Alpha8>().SetPixels(dstSRT, src.OfType<Pixel.Alpha8>()); break;
+                case Pixel.Alpha8.Code: this.OfType<Pixel.Alpha8>().TransferFrom(src.OfType<Pixel.Alpha8>(), xform); break;
 
-                case Pixel.Luminance8.Code: this.OfType<Pixel.Luminance8>().SetPixels(dstSRT, src.OfType<Pixel.Luminance8>()); break;
-                case Pixel.Luminance16.Code: this.OfType<Pixel.Luminance16>().SetPixels(dstSRT, src.OfType<Pixel.Luminance16>()); break;
-                case Pixel.Luminance32F.Code: this.OfType<Pixel.Luminance32F>().SetPixels(dstSRT, src.OfType<Pixel.Luminance32F>()); break;
+                case Pixel.Luminance8.Code: this.OfType<Pixel.Luminance8>().TransferFrom(src.OfType<Pixel.Luminance8>(), xform); break;
+                case Pixel.Luminance16.Code: this.OfType<Pixel.Luminance16>().TransferFrom(src.OfType<Pixel.Luminance16>(), xform); break;
+                case Pixel.Luminance32F.Code: this.OfType<Pixel.Luminance32F>().TransferFrom(src.OfType<Pixel.Luminance32F>(), xform); break;
 
-                case Pixel.BGR565.Code: this.OfType<Pixel.BGR565>().SetPixels(dstSRT, src.OfType<Pixel.BGR565>()); break;
-                case Pixel.BGRA5551.Code: this.OfType<Pixel.BGRA5551>().SetPixels(dstSRT, src.OfType<Pixel.BGRA5551>()); break;
-                case Pixel.BGRA4444.Code: this.OfType<Pixel.BGRA4444>().SetPixels(dstSRT, src.OfType<Pixel.BGRA4444>()); break;
+                case Pixel.BGR565.Code: this.OfType<Pixel.BGR565>().TransferFrom(src.OfType<Pixel.BGR565>(), xform); break;
+                case Pixel.BGRA5551.Code: this.OfType<Pixel.BGRA5551>().TransferFrom(src.OfType<Pixel.BGRA5551>(), xform); break;
+                case Pixel.BGRA4444.Code: this.OfType<Pixel.BGRA4444>().TransferFrom(src.OfType<Pixel.BGRA4444>(), xform); break;
 
-                case Pixel.BGR24.Code: this.OfType<Pixel.BGR24>().SetPixels(dstSRT, src.OfType<Pixel.BGR24>()); break;
-                case Pixel.RGB24.Code: this.OfType<Pixel.RGB24>().SetPixels(dstSRT, src.OfType<Pixel.RGB24>()); break;
+                case Pixel.BGR24.Code: this.OfType<Pixel.BGR24>().TransferFrom(src.OfType<Pixel.BGR24>(), xform); break;
+                case Pixel.RGB24.Code: this.OfType<Pixel.RGB24>().TransferFrom(src.OfType<Pixel.RGB24>(), xform); break;
 
-                case Pixel.BGRA32.Code: this.OfType<Pixel.BGRA32>().SetPixels(dstSRT, src.OfType<Pixel.BGRA32>()); break;
-                case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().SetPixels(dstSRT, src.OfType<Pixel.RGBA32>()); break;
-                case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().SetPixels(dstSRT, src.OfType<Pixel.ARGB32>()); break;
+                case Pixel.BGRA32.Code: this.OfType<Pixel.BGRA32>().TransferFrom(src.OfType<Pixel.BGRA32>(), xform); break;
+                case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().TransferFrom(src.OfType<Pixel.RGBA32>(), xform); break;
+                case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().TransferFrom(src.OfType<Pixel.ARGB32>(), xform); break;
 
-                case Pixel.RGB96F.Code: this.OfType<Pixel.RGB96F>().SetPixels(dstSRT, src.OfType<Pixel.RGB96F>()); break;
-                case Pixel.BGR96F.Code: this.OfType<Pixel.BGR96F>().SetPixels(dstSRT, src.OfType<Pixel.BGR96F>()); break;
-                case Pixel.BGRA128F.Code: this.OfType<Pixel.BGRA128F>().SetPixels(dstSRT, src.OfType<Pixel.BGRA128F>()); break;
-                case Pixel.RGBA128F.Code: this.OfType<Pixel.RGBA128F>().SetPixels(dstSRT, src.OfType<Pixel.RGBA128F>()); break;                
+                case Pixel.RGB96F.Code: this.OfType<Pixel.RGB96F>().TransferFrom(src.OfType<Pixel.RGB96F>(), xform); break;
+                case Pixel.BGR96F.Code: this.OfType<Pixel.BGR96F>().TransferFrom(src.OfType<Pixel.BGR96F>(), xform); break;
+                case Pixel.BGRA128F.Code: this.OfType<Pixel.BGRA128F>().TransferFrom(src.OfType<Pixel.BGRA128F>(), xform); break;
+                case Pixel.RGBA128F.Code: this.OfType<Pixel.RGBA128F>().TransferFrom(src.OfType<Pixel.RGBA128F>(), xform); break;                
+
+                default: throw new NotSupportedException();
+            }
+        }        
+        
+        public void ApplyEffect(IEffect effect)            
+        {
+            if (effect.TryApplyTo(this)) return;
+
+            switch (this.PixelFormat.Code)
+            {
+                case Pixel.Alpha8.Code: this.OfType<Pixel.Alpha8>().ApplyEffect(effect); break;
+
+                case Pixel.Luminance8.Code: this.OfType<Pixel.Luminance8>().ApplyEffect(effect); break;
+                case Pixel.Luminance16.Code: this.OfType<Pixel.Luminance16>().ApplyEffect(effect); break;
+                case Pixel.Luminance32F.Code: this.OfType<Pixel.Luminance32F>().ApplyEffect(effect); break;
+
+                case Pixel.BGR565.Code: this.OfType<Pixel.BGR565>().ApplyEffect(effect); break;
+                case Pixel.BGRA5551.Code: this.OfType<Pixel.BGRA5551>().ApplyEffect(effect); break;
+                case Pixel.BGRA4444.Code: this.OfType<Pixel.BGRA4444>().ApplyEffect(effect); break;
+
+                case Pixel.BGR24.Code: this.OfType<Pixel.BGR24>().ApplyEffect(effect); break;
+                case Pixel.RGB24.Code: this.OfType<Pixel.RGB24>().ApplyEffect(effect); break;
+
+                case Pixel.BGRA32.Code: this.OfType<Pixel.BGRA32>().ApplyEffect(effect); break;
+                case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().ApplyEffect(effect); break;
+                case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().ApplyEffect(effect); break;
+
+                case Pixel.RGB96F.Code: this.OfType<Pixel.RGB96F>().ApplyEffect(effect); break;
+                case Pixel.BGR96F.Code: this.OfType<Pixel.BGR96F>().ApplyEffect(effect); break;
+                case Pixel.BGRA128F.Code: this.OfType<Pixel.BGRA128F>().ApplyEffect(effect); break;
+                case Pixel.RGBA128F.Code: this.OfType<Pixel.RGBA128F>().ApplyEffect(effect); break;
 
                 default: throw new NotSupportedException();
             }
         }
-
-        
-
-        public void SetPixels(Random rnd)
-        {
-            for(int y=0; y < this.Height; ++y)
-            {
-                var row = UseScanlineBytes(y);
-
-                var fourCount = row.Length & ~3;
-
-                var rowInts = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(row.Slice(0, fourCount));
-
-                for(int x=0; x < rowInts.Length; ++x)
-                {
-                    rowInts[x] = rnd.Next();
-                }
-
-                for (int x = rowInts.Length * 4; x < row.Length; ++x)
-                {
-                    row[x] = (Byte)rnd.Next();
-                }
-            }
-        }        
 
         public bool CopyTo(ref MemoryBitmap other)
         {
@@ -463,7 +473,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             return refreshed;
         }
-
         
 
         /// <summary>
@@ -554,8 +563,6 @@ namespace InteropTypes.Graphics.Bitmaps
             Codecs.CodecFactory.Write(stream, format, factory, this);
         }
 
-        #endregion
-
-        
+        #endregion        
     }
 }

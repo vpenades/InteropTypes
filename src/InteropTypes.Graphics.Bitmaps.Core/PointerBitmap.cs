@@ -17,7 +17,7 @@ namespace InteropTypes.Graphics.Bitmaps
     /// This structure just wraps the pointer; in order to access it, use <see cref="AsSpanBitmap"/> or <see cref="AsSpanBitmapOfType{TPixel}"/>.    
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Pointer} {Info.ToDebuggerDisplayString(),nq}")]
-    public readonly partial struct PointerBitmap : IBitmapInfo
+    public readonly partial struct PointerBitmap        
     {
         #region constructors
 
@@ -86,20 +86,17 @@ namespace InteropTypes.Graphics.Bitmaps
 
         /// <summary>
         /// Gets the size of the bitmap, in pixels.
-        /// </summary>
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        /// </summary>        
         public SIZE Size => _Info.Size;
 
         /// <summary>
         /// Gets the width of the bitmap, in pixels.
-        /// </summary>
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        /// </summary>        
         public int Width => _Info.Width;
 
         /// <summary>
         /// Gets the height of the bitmap, in pixels.
-        /// </summary>
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        /// </summary>        
         public int Height => _Info.Height;
 
         /// <summary>
@@ -114,8 +111,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         /// <summary>
         /// Gets the bounds of the bitmap, in pixels.
-        /// </summary>
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        /// </summary>        
         public BitmapBounds Bounds => _Info.Bounds;
 
         #endregion        
@@ -140,7 +136,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static implicit operator SpanBitmap(PointerBitmap bmp) { return new SpanBitmap(bmp._Pointer, bmp._Info); }
 
-        public SpanBitmap AsSpanBitmap() { return this; }
+        
 
         /// <summary>
         /// Casts this <see cref="PointerBitmap"/> to a <see cref="SpanBitmap{TPixel}"/>.
@@ -153,7 +149,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return new SpanBitmap<TPixel>(_Pointer, _Info, _IsReadOnly);
         }
 
-        public MemoryBitmap.ISource UsingMemoryBitmap()
+        public MemoryBitmap.IDisposableSource UsingMemoryBitmap()
         {
             return new _MemoryManager(this);
         }
@@ -240,15 +236,6 @@ namespace InteropTypes.Graphics.Bitmaps
                 Initialize(bmp);
             }        
         }        
-
-        public interface ISource : IDisposable
-        {
-            /// <summary>
-            /// Gets the <see cref="PointerBitmap"/> owned by this instance.<br/>
-            /// If this <see cref="ISource"/> is disposed, the <see cref="Bitmap"/> will no longet be valid.
-            /// </summary>
-            PointerBitmap Bitmap { get; }
-        }
 
         #endregion
     }

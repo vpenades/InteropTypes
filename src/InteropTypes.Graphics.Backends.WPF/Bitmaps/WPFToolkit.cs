@@ -28,7 +28,7 @@ namespace InteropTypes.Graphics.Backends
             where TPixel:unmanaged
         { return new WPFAdapter(bmp); }
 
-        public static MemoryBitmap.ISource UsingMemoryBitmap(this WIC_WRITABLE src) { return new WPFMemoryManager(src); }
+        public static MemoryBitmap.IDisposableSource UsingMemoryBitmap(this WIC_WRITABLE src) { return new WPFMemoryManager(src); }
 
         public static void SetPixels(this WIC_WRITABLE bmp, int dstX, int dstY, SpanBitmap spanSrc)
         {

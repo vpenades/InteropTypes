@@ -11,8 +11,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
     static class _SpanSingleExtensions
     {
-              
-
         public static void CopyPixels(ReadOnlySpan<Single> src, Span<Byte> dst, (Single offset, Single scale) transform, (Single min, Single max) range)
         {
             Guard.AreEqual(nameof(dst), dst.Length, src.Length);

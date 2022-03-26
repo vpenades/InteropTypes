@@ -30,6 +30,7 @@ namespace InteropTypes.Graphics.Drawing
             Assert.AreEqual(1, new Point3(-5, 2, 0).CompareTo(sphere)); // outside
         }
 
+        /*
         [Test]
         public void SerializeQuantized()
         {
@@ -52,6 +53,6 @@ namespace InteropTypes.Graphics.Drawing
             Assert.AreEqual(p1.X, p2.X);
             Assert.AreEqual(p1.Y, p2.Y);
             Assert.AreEqual(p1.Z, p2.Z);
-        }
+        }*/
     }
 }

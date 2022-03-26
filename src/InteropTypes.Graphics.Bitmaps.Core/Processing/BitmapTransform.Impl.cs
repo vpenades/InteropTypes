@@ -4,13 +4,41 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps.Processing
 {
-    using TRANSFORM = System.Numerics.Matrix3x2;    
+    using TRANSFORM = System.Numerics.Matrix3x2;
+
+    public partial struct BitmapTransform : SpanBitmap.ITransfer
+    {
+        bool SpanBitmap.ITransfer.TryTransfer(SpanBitmap source, SpanBitmap target)
+        {
+            return false;
+        }
+
+        bool SpanBitmap.ITransfer.TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target)
+        {
+            if (this is SpanBitmap.ITransfer<TPixel, TPixel> transferX)
+            {
+                return transferX.TryTransfer(source, target);
+            }
+
+            return false;
+        }
+
+        bool SpanBitmap.ITransfer.TryTransfer<TsrcPixel, TDstPixel>(SpanBitmap<TsrcPixel> source, SpanBitmap<TDstPixel> target)
+        {
+            if (this is SpanBitmap.ITransfer<TsrcPixel, TDstPixel> transferX)
+            {
+                return transferX.TryTransfer(source, target);
+            }
+
+            return false;
+        }
+    }
 
     static class _BitmapTransformImplementation
     {
         #region API
 
-        public static void SetPixelsNearest<TPixel>(SpanBitmap<TPixel> dst, SpanBitmap<TPixel> src, TRANSFORM srcXform)
+        public static void _OverwritePixelsNearestDirect<TPixel>(SpanBitmap<TPixel> src, SpanBitmap<TPixel> dst, TRANSFORM srcXform)
             where TPixel : unmanaged
         {
             void _rowProcessor(Span<TPixel> dst, SpanNearestSampler<TPixel> src, _PixelTransformIterator srcIterator)
@@ -19,7 +47,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 {
                     if (srcIterator.MoveNext(out int sx, out int sy))
                     {
-                        dst[i] = src.GetPixelZero(sx, sy);
+                        dst[i] = src.GetPixelOrDefault(sx, sy);
                     }
                 }
             }
@@ -27,43 +55,25 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
         }
 
-        public static void FillPixelsNearest<TPixel>(SpanBitmap<TPixel> dst, SpanBitmap<TPixel> src, TRANSFORM srcXform)
-            where TPixel : unmanaged
+        public static void _OverwritePixelsNearestConvert<TDstPixel, TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform)
+           where TSrcPixel : unmanaged, Pixel.ICopyValueTo<TDstPixel>
+           where TDstPixel : unmanaged
         {
-            void _rowProcessor(Span<TPixel> dst, SpanNearestSampler<TPixel> src, _PixelTransformIterator srcIterator)
+            void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
             {
-                for (int dx = 0; dx < dst.Length; ++dx)
+                for (int i = 0; i < dst.Length; ++i)
                 {
-                    dst[dx] = src.GetPixelZero(srcIterator.X, srcIterator.Y);
-                    srcIterator.MoveNext();
+                    if (srcIterator.MoveNext(out int sx, out int sy))
+                    {
+                        src.GetPixelOrDefault(sx, sy).CopyTo(ref dst[i]);
+                    }
                 }
             }
 
             _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
         }
 
-        public static void ComposePixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
-            where TDstPixel : unmanaged
-        {
-            var typeInfo = default(TDstPixel) as Pixel.IReflection;
-            if (typeInfo == null) return;
-
-            switch(typeInfo.GetCode())
-            {
-                case Pixel.BGR24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGR24>(), src, srcXform, opacity); break;
-                case Pixel.RGB24.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGB24>(), src, srcXform, opacity); break;
-                case Pixel.BGRA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRA32>(), src, srcXform, opacity); break;
-                case Pixel.RGBA32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBA32>(), src, srcXform, opacity); break;
-                // case Pixel.ARGB32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.ARGB32>(), src, srcXform, opacity); break;
-                case Pixel.BGRP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.BGRP32>(), src, srcXform, opacity); break;
-                case Pixel.RGBP32.Code: _ComposePixelsNearest(dst.ReinterpretOfType<Pixel.RGBP32>(), src, srcXform, opacity); break;
-                default:throw new NotImplementedException($"{typeof(TDstPixel)} not supported as target of ComposePixelsNearest");
-
-            }
-        }
-
-        static void _ComposePixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, float opacity = 1)
+        public static void _ComposePixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform, float opacity = 1)
             where TSrcPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
             where TDstPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>, Pixel.IValueSetter<Pixel.QVectorBGRP>
         {
@@ -78,7 +88,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 {
                     if (srcIterator.MoveNext(out int sx, out int sy))
                     {                        
-                        src.GetPixelZero(sx, sy).CopyTo(ref srcQ); // sample src
+                        src.GetPixelOrDefault(sx, sy).CopyTo(ref srcQ); // sample src
 
                         if (srcQ.A == 0) continue;
                         srcQ.ScaleAlpha(opacityQ);
@@ -140,7 +150,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             private readonly BitmapInfo _BInfo;
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public TPixel GetPixelZero(int x, int y) { return _BInfo.GetPixelZero<TPixel>(_Bytes, x, y); }
+            public TPixel GetPixelOrDefault(int x, int y) { return _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x, y); }
         }
 
         [Obsolete("WIP")]

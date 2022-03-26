@@ -2,9 +2,8 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-<#@ include file="..\\CodeGenUtils.t4" #>
+<#@ include file="..\\..\\Shared\\CodeGenUtils.t4" #>
 <#@ include file="Pixel.Constants.t4" #>
-
 
 using System;
 

@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Backends
     sealed class _MemoryDrawingContext<TPixel> :
         _BaseDrawingContext<TPixel>,        
         IServiceProvider
-        where TPixel : unmanaged
+        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.QVectorBGRP>
     {
         #region constructor
         public _MemoryDrawingContext(MemoryBitmap<TPixel> target, Converter<GDICOLOR, TPixel> converter)
@@ -59,7 +59,7 @@ namespace InteropTypes.Graphics.Backends
     sealed class _PointerDrawingContext<TPixel> :
         _BaseDrawingContext<TPixel>,        
         IServiceProvider
-        where TPixel : unmanaged
+        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.QVectorBGRP>
     {
         #region constructor
         public _PointerDrawingContext(PointerBitmap target, Converter<GDICOLOR, TPixel> converter)
@@ -104,7 +104,7 @@ namespace InteropTypes.Graphics.Backends
         IRenderTargetInfo,
         IBackendCanvas2D,        
         GlobalStyle.ISource
-        where TPixel: unmanaged
+        where TPixel: unmanaged, Pixel.IValueSetter<Pixel.QVectorBGRP>
     {
         #region constructor
         protected _BaseDrawingContext(int width, int height, Converter<GDICOLOR, TPixel> converter)
@@ -162,16 +162,16 @@ namespace InteropTypes.Graphics.Backends
 
         private bool _TryGetImageSource(ImageSource src, out SpanBitmap bitmap)
         {
-            if (src.Source is IMemoryBitmap typeless)
+            if (src.Source is SpanBitmap.ISource typeless)
             {
                 bitmap = typeless.AsSpanBitmap().AsReadOnly(); if (bitmap.IsEmpty) return false;
                 src.WithSourceSize(bitmap.Width, bitmap.Height);
                 return true;
             }
 
-            if (src.Source is MemoryBitmap.ISource isrc)
+            if (src.Source is MemoryBitmap.IDisposableSource isrc)
             {
-                bitmap = isrc.Bitmap.AsSpanBitmap().AsReadOnly(); if (bitmap.IsEmpty) return false;
+                bitmap = isrc.AsMemoryBitmap().AsSpanBitmap().AsReadOnly(); if (bitmap.IsEmpty) return false;
                 src.WithSourceSize(bitmap.Width, bitmap.Height);
                 return true;
             }
@@ -205,37 +205,39 @@ namespace InteropTypes.Graphics.Backends
             {
                 xform = Matrix3x2.CreateScale(1f / srcBmp.Width, 1f / srcBmp.Height) * xform;
 
+                var bmpXform = new Bitmaps.Processing.BitmapTransform(xform, opacity) as SpanBitmap.ITransfer;
+
                 switch (srcBmp.PixelFormat.Code)
                 {
                     case Pixel.BGRP32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.BGRP32>();
-                            dstBmp.SetPixels(xform, src, opacity); return;
+                            dstBmp.TransferFrom(src, bmpXform); return;
                         }
                     case Pixel.RGBP32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.RGBP32>();
-                            dstBmp.SetPixels(xform, src, opacity); return;
+                            dstBmp.TransferFrom(src, bmpXform); return;
                         }
                     case Pixel.BGRA32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.BGRA32>();
-                            dstBmp.SetPixels(xform, src, opacity); return;
+                            dstBmp.TransferFrom(src, bmpXform); return;
                         }
                     case Pixel.RGBA32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.RGBA32>();
-                            dstBmp.SetPixels(xform, src, opacity); return;
+                            dstBmp.TransferFrom(src, bmpXform); return;
                         }
                     case Pixel.BGR24.Code:
                         {
                             var src = srcBmp.OfType<Pixel.BGR24>();
-                            dstBmp.SetPixels(xform, src, opacity); return;
+                            dstBmp.TransferFrom(src, bmpXform); return;
                         }
                     case Pixel.RGB24.Code:
                         {
                             var src = srcBmp.OfType<Pixel.RGB24>();
-                            dstBmp.SetPixels(xform, src, opacity); return;
+                            dstBmp.TransferFrom(src, bmpXform); return;
                         }
                 }
             }            

@@ -88,7 +88,7 @@ namespace InteropTypes.Graphics.Backends
                 return (tex, attr);
             }
 
-            if (imageSource is Bitmaps.IMemoryBitmap ibmp)
+            if (imageSource is Bitmaps.SpanBitmap.ISource ibmp)
             {
                 if (TryCreateTexture(ibmp.AsSpanBitmap(), gd, out var tex))
                 {

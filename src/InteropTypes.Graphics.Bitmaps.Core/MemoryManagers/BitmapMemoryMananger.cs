@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps.MemoryManagers
@@ -11,8 +12,8 @@ namespace InteropTypes.Graphics.Bitmaps.MemoryManagers
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
     public abstract unsafe class BitmapMemoryManager
         : System.Buffers.MemoryManager<Byte>
-        , MemoryBitmap.ISource
-        , PointerBitmap.ISource
+        , MemoryBitmap.IDisposableSource
+        , PointerBitmap.IDisposableSource
     {
         #region debug
 
@@ -66,30 +67,38 @@ namespace InteropTypes.Graphics.Bitmaps.MemoryManagers
         {
             manager._CheckDisposed();
             return manager._PointerBitmap;
-        }
-
-        PointerBitmap PointerBitmap.ISource.Bitmap
-        {
-            get
-            {
-                _CheckDisposed();
-                return _PointerBitmap;
-            }
-        }
+        }        
 
         public static implicit operator MemoryBitmap(BitmapMemoryManager manager)
         {
             manager._CheckDisposed();
             return new MemoryBitmap(manager.Memory, manager._PointerBitmap.Info);
+        }        
+
+        public BitmapInfo Info => _PointerBitmap.Info;
+
+        public PixelFormat PixelFormat => _PointerBitmap.PixelFormat;
+
+        public Size Size => _PointerBitmap.Size;
+
+        public int Width => _PointerBitmap.Width;
+
+        public int Height => _PointerBitmap.Height;
+
+        #endregion
+
+        #region API
+
+        public PointerBitmap AsPointerBitmap()
+        {
+            _CheckDisposed();
+            return _PointerBitmap;
         }
 
-        MemoryBitmap MemoryBitmap.ISource.Bitmap
+        public MemoryBitmap AsMemoryBitmap()
         {
-            get
-            {
-                _CheckDisposed();
-                return new MemoryBitmap(this.Memory, _PointerBitmap.Info);
-            }
+            _CheckDisposed();
+            return new MemoryBitmap(this.Memory, _PointerBitmap.Info);
         }
 
         #endregion
