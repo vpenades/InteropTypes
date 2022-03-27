@@ -537,6 +537,33 @@ namespace InteropTypes.Graphics.Bitmaps
                 result.A = (left.A * lx + right.A * rx) / FixedMathCC8.UnitValue;
             }
 
+            public static QVectorBGRP Lerp(in QVectorBGRP p00, in QVectorBGRP p01, in QVectorBGRP p10, in QVectorBGRP p11, uint rx, uint by)
+            {
+                // calculate quantized weights
+                var lx = FixedMathCC8.UnitValue - rx;
+                var ty = FixedMathCC8.UnitValue - by;
+                var w00 = lx * ty / FixedMathCC8.UnitValue;
+                var w01 = rx * ty / FixedMathCC8.UnitValue;
+                var w10 = lx * by / FixedMathCC8.UnitValue;
+                var w11 = rx * by / FixedMathCC8.UnitValue;
+
+                System.Diagnostics.Debug.Assert((w00 + w01 + w10 + w11) == FixedMathCC8.UnitValue);
+
+                // calculate final alpha
+
+                uint a = (p00.A * w00 + p01.A * w01 + p10.A * w10 + p11.A * w11) / FixedMathCC8.UnitValue;
+
+                if (a == 0) return default;
+
+                uint r = (p00.R * w00 + p01.R * w01 + p10.R * w10 + p11.R * w11) / FixedMathCC8.UnitValue;
+                uint g = (p00.G * w00 + p01.G * w01 + p10.G * w10 + p11.G * w11) / FixedMathCC8.UnitValue;
+                uint b = (p00.B * w00 + p01.B * w01 + p10.B * w10 + p11.B * w11) / FixedMathCC8.UnitValue;
+
+                // return new BGRP32(r, g, b, a);
+
+                return default;
+            }
+
             #endregion
 
             #region composition            

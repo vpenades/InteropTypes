@@ -36,17 +36,7 @@ foreach(var (dstPixel,srcPixel) in pixelPairs)
 
 //-----------------------------------------
 
-    _writeStructBegin("BitmapTransform", interfaces.ToArray());
-
-    WriteLine("public BitmapTransform(in TRANSFORM xform, float opacity = 1)");
-    _writeOpenBlock();
-        WriteLine("Transform = xform;");
-        WriteLine("Opacity = opacity;");
-    _writeCloseBlock();
-
-    WriteLine("public TRANSFORM Transform {get;set;}");
-
-    WriteLine("public float Opacity {get;set;}");    
+    _writeStructBegin("BitmapTransform", interfaces.ToArray());    
 
     foreach(var (dstPixel,srcPixel) in pixelPairs)
     {   

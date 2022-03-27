@@ -6,10 +6,38 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 {
     using TRANSFORM = System.Numerics.Matrix3x2;
 
+    using TOVECTORQ = Pixel.ICopyValueTo<Pixel.QVectorBGRP>;
+    using FROMVECTORQ = Pixel.IValueSetter<Pixel.QVectorBGRP>;
+
     public partial struct BitmapTransform : SpanBitmap.ITransfer
     {
-        bool SpanBitmap.ITransfer.TryTransfer(SpanBitmap source, SpanBitmap target)
+        public BitmapTransform(in TRANSFORM xform, float opacity = 1)
         {
+            Transform = xform;
+            Opacity = opacity;
+            UseBilinear = false;
+        }
+
+        public BitmapTransform(in TRANSFORM xform, bool useBilinear, float opacity)
+        {
+            Transform = xform;
+            Opacity = opacity;
+            UseBilinear = useBilinear;
+        }
+
+        public TRANSFORM Transform { get; set; }
+        public float Opacity { get; set; }
+
+        public bool UseBilinear { get; set; }
+
+
+        bool SpanBitmap.ITransfer.TryTransfer<TsrcPixel, TDstPixel>(SpanBitmap<TsrcPixel> source, SpanBitmap<TDstPixel> target)
+        {
+            if (this is SpanBitmap.ITransfer<TsrcPixel, TDstPixel> transferX)
+            {
+                return transferX.TryTransfer(source, target);
+            }
+
             return false;
         }
 
@@ -23,12 +51,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             return false;
         }
 
-        bool SpanBitmap.ITransfer.TryTransfer<TsrcPixel, TDstPixel>(SpanBitmap<TsrcPixel> source, SpanBitmap<TDstPixel> target)
+        bool SpanBitmap.ITransfer.TryTransfer(SpanBitmap source, SpanBitmap target)
         {
-            if (this is SpanBitmap.ITransfer<TsrcPixel, TDstPixel> transferX)
-            {
-                return transferX.TryTransfer(source, target);
-            }
+            // TODO: try to infer the pixel size for basic overwrite transform
+
 
             return false;
         }
@@ -39,9 +65,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         #region API
 
         public static void _OverwritePixelsNearestDirect<TPixel>(SpanBitmap<TPixel> src, SpanBitmap<TPixel> dst, TRANSFORM srcXform)
-            where TPixel : unmanaged
+            where TPixel : unmanaged, TOVECTORQ
         {
-            void _rowProcessor(Span<TPixel> dst, SpanNearestSampler<TPixel> src, _PixelTransformIterator srcIterator)
+            void _rowProcessor(Span<TPixel> dst, SpanSampler<TPixel> src, _PixelTransformIterator srcIterator)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -52,14 +78,31 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 }
             }
 
-            _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
+            _ProcessRows(dst, src, srcXform, _rowProcessor);
+        }
+
+        public static void _OverwritePixelsBilinearDirect<TPixel>(SpanBitmap<TPixel> src, SpanBitmap<TPixel> dst, TRANSFORM srcXform)
+            where TPixel : unmanaged, TOVECTORQ, FROMVECTORQ
+        {
+            void _rowProcessor(Span<TPixel> dst, SpanSampler<TPixel> src, _PixelTransformIterator srcIterator)
+            {
+                for (int i = 0; i < dst.Length; ++i)
+                {
+                    if (srcIterator.MoveNext(out int sx, out int sy, out int rx, out int ry))
+                    {
+                        dst[i] = src.GetPixelOrDefault(sx, sy, rx, ry);
+                    }
+                }
+            }
+
+            _ProcessRows(dst, src, srcXform, _rowProcessor);
         }
 
         public static void _OverwritePixelsNearestConvert<TDstPixel, TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform)
-           where TSrcPixel : unmanaged, Pixel.ICopyValueTo<TDstPixel>
+           where TSrcPixel : unmanaged, TOVECTORQ, Pixel.ICopyValueTo<TDstPixel>
            where TDstPixel : unmanaged
         {
-            void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
+            void _rowProcessor(Span<TDstPixel> dst, SpanSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
@@ -70,16 +113,16 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 }
             }
 
-            _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
+            _ProcessRows(dst, src, srcXform, _rowProcessor);
         }
 
         public static void _ComposePixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform, float opacity = 1)
-            where TSrcPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
-            where TDstPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>, Pixel.IValueSetter<Pixel.QVectorBGRP>
+            where TSrcPixel : unmanaged, TOVECTORQ
+            where TDstPixel : unmanaged, TOVECTORQ, FROMVECTORQ
         {
             uint opacityQ = Pixel.QVectorBGRP.FromFloat(opacity);
 
-            void _rowProcessor(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
+            void _rowProcessor(Span<TDstPixel> dst, SpanSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
             {
                 var srcQ = new Pixel.QVectorBGRP();
                 var dstQ = new Pixel.QVectorBGRP();                
@@ -102,26 +145,26 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 }
             }
 
-            _CopyPixelsNearest(dst, src, srcXform, _rowProcessor);
+            _ProcessRows(dst, src, srcXform, _rowProcessor);
         }
 
         #endregion
 
-        #region runners
+        #region rows processor
 
-        delegate void _NearestProcessRow<TSrcPixel, TDstPixel>(Span<TDstPixel> dst, SpanNearestSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
-            where TSrcPixel : unmanaged
+        delegate void _ProcessRowCallback<TSrcPixel, TDstPixel>(Span<TDstPixel> dst, SpanSampler<TSrcPixel> src, _PixelTransformIterator srcIterator)
+            where TSrcPixel : unmanaged, TOVECTORQ
             where TDstPixel : unmanaged;
 
-        static void _CopyPixelsNearest<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, _NearestProcessRow<TSrcPixel, TDstPixel> rowProcessor)
-            where TSrcPixel : unmanaged
+        static void _ProcessRows<TDstPixel, TSrcPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, _ProcessRowCallback<TSrcPixel, TDstPixel> rowProcessor)
+            where TSrcPixel : unmanaged, TOVECTORQ
             where TDstPixel : unmanaged
         {
             _PixelTransformIterator iter;
             var iterFactory = new _PixelTransformIterator.Factory(srcXform, src.Width, src.Height);
             var destBounds = new BitmapBounds(srcXform, src.Width, src.Height).Clipped(dst.Bounds);
 
-            var srcSampler = new SpanNearestSampler<TSrcPixel>(src);
+            var srcSampler = new SpanSampler<TSrcPixel>(src);
 
             for (int dy = destBounds.Top; dy < destBounds.Bottom; ++dy)
             {
@@ -131,62 +174,51 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 rowProcessor(dstRow, srcSampler, iter);
             }
-        }
+        }        
 
         #endregion
 
         #region nested types
 
-        public readonly ref struct SpanNearestSampler<TPixel>
-        where TPixel : unmanaged
+        public ref struct SpanSampler<TPixel>
+        where TPixel : unmanaged, TOVECTORQ
         {
-            public SpanNearestSampler(SpanBitmap<TPixel> rt)
+            public SpanSampler(SpanBitmap<TPixel> rt)
             {
                 _BInfo = rt.Info;
                 _Bytes = rt.ReadableBytes;
+
+                _A = _B = _C = _D = default;
             }
 
             private readonly ReadOnlySpan<byte> _Bytes;
             private readonly BitmapInfo _BInfo;
 
+            private Pixel.QVectorBGRP _A;
+            private Pixel.QVectorBGRP _B;
+            private Pixel.QVectorBGRP _C;
+            private Pixel.QVectorBGRP _D;
+
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public TPixel GetPixelOrDefault(int x, int y) { return _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x, y); }
-        }
-
-        [Obsolete("WIP")]
-        readonly ref struct SpanRenderTarget<TSrcPixel, TDstPixel>
-            where TSrcPixel : unmanaged
-            where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<TSrcPixel, TDstPixel>
-        {
-            public SpanRenderTarget(SpanBitmap<TDstPixel> rt)
+            public TPixel GetPixelOrDefault(int x, int y)
             {
-                _Bytes = rt.WritableBytes;
-                _ByteStride = rt.Info.StepByteSize;
-                _Width = rt.Info.Width;
-                _Height = rt.Info.Height;
-
-                if (_ByteStride * _Height > _Bytes.Length) throw new ArgumentException("invalid", nameof(rt));
+                return _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x, y);
             }
 
-            private readonly Span<Byte> _Bytes;
-            private readonly int _ByteStride;
-            private readonly int _Width;
-            private readonly int _Height;
-
-            public void SetPixel(int x, int y, TSrcPixel pixel, int amount)
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+            public TPixel GetPixelOrDefault(int x, int y, int rx, int ry)
             {
-                if (y < 0 || y >= _Height) return;
-                if (x < 0 || x >= _Width) return;
+                _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x, y).CopyTo(ref _A);
+                _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x + 1, y).CopyTo(ref _B);
+                _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x, y + 1).CopyTo(ref _C);
+                _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x + 1, y + 1).CopyTo(ref _D);
 
-                var row = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TDstPixel>(_Bytes.Slice(_ByteStride * y));
+                var r = Pixel.QVectorBGRP.Lerp(_A, _B, _C, _D, (uint)rx, (uint)ry);
 
-                ref var rPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(row);
-
-                rPtr = System.Runtime.CompilerServices.Unsafe.Add(ref rPtr, x);
-
-                rPtr = rPtr.AlphaBlendWith(pixel, amount);
+                return _BInfo.GetPixelOrDefault<TPixel>(_Bytes, x, y);
             }
-        }
+        }     
+        
 
         struct _PixelTransformIterator
         {

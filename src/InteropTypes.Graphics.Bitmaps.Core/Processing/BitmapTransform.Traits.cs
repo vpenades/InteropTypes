@@ -43,13 +43,6 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             , SpanBitmap.ITransfer<Pixel.BGRP32, Pixel.RGBP32>
             , SpanBitmap.ITransfer<Pixel.RGBP32, Pixel.RGBP32>
         {
-            public BitmapTransform(in TRANSFORM xform, float opacity = 1)
-            {
-                Transform = xform;
-                Opacity = opacity;
-            }
-            public TRANSFORM Transform {get;set;}
-            public float Opacity {get;set;}
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGR24> source, SpanBitmap<Pixel.BGR24> target)
