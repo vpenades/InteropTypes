@@ -7,8 +7,7 @@
 <#@ include file="..\\..\\Shared\\CodeGenUtils.t4" #>
 
 namespace InteropTypes.Graphics.Bitmaps.Processing
-{
-    using TRANSFORM = System.Numerics.Matrix3x2;
+{    
 
 <# //-------------------------------------------------------------------------------------------------------------------
 
@@ -49,16 +48,24 @@ foreach(var (dstPixel,srcPixel) in pixelPairs)
                 WriteLine("if (Opacity >= 1)");
                 _writeOpenBlock();
 
-                var method = srcPixel == dstPixel
-                    ? "_OverwritePixelsNearestDirect"
-                    : "_OverwritePixelsNearestConvert";
-
-                WriteLine($"_BitmapTransformImplementation.{method}(source, target, Transform);");
+                if (srcPixel == dstPixel)
+                {
+                    WriteLine("switch(UseBilinear)");
+                    _writeOpenBlock();
+                    WriteLine(" case true: _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, true); break;");                    
+                    WriteLine(" case false: _BitmapTransformImplementation.OpaquePixelsDirect(source, target, Transform); break;");                
+                    _writeCloseBlock();
+                }
+                else
+                {
+                    WriteLine("_BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);");
+                }
+                
                 WriteLine("return true;");
                 _writeCloseBlock();
             }
 
-            WriteLine("_BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);");
+            WriteLine("_BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);");
             WriteLine("return true;");
         _writeCloseBlock();
     }

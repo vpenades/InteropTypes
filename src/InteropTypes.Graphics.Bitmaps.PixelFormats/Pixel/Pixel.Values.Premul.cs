@@ -399,6 +399,27 @@ namespace InteropTypes.Graphics.Bitmaps
             }
 
             #endregion
+
+            #region COMPOSITION
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void Over(BGRP32 src, BGRP32 blend)
+            {
+                var wmix = (this.A * src.A) / 255;
+                var wdst = this.A - wmix;
+                var wsrc = src.A - wmix;
+
+                System.Diagnostics.Debug.Assert(wmix + wdst + wsrc == 255);
+
+                this.PreB = (Byte)((this.PreB * wdst + src.PreB * wsrc + blend.PreB * wmix) >> 8);
+                this.PreG = (Byte)((this.PreG * wdst + src.PreG * wsrc + blend.PreG * wmix) >> 8);
+                this.PreR = (Byte)((this.PreR * wdst + src.PreR * wsrc + blend.PreR * wmix) >> 8);
+                this.A = (Byte)(wdst + src.A);
+            }
+
+            #endregion
+
+            #endregion
         }
 
         /// <summary>
@@ -511,9 +532,26 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public Single R => A == 0 ? 0 : Math.Min(1, PreR / A);
             public Single G => A == 0 ? 0 : Math.Min(1, PreG / A);
-            public Single B => A == 0 ? 0 : Math.Min(1, PreB / A);            
+            public Single B => A == 0 ? 0 : Math.Min(1, PreB / A);
 
-            #endregion      
+            #endregion
+
+            #region API
+
+            public static RGBP128F Lerp(in RGBP128F p00, in RGBP128F p01, in RGBP128F p10, in RGBP128F p11, float rx, float by)
+            {                
+                var lx = 1f - rx;
+                var ty = 1f - by;               
+
+                var r = p00.RGBP * (lx * ty);
+                r += p01.RGBP * (rx * ty);
+                r += p10.RGBP * (lx * by);
+                r += p11.RGBP * (rx * by);
+
+                return new RGBP128F(r);
+            }
+
+            #endregion
         }
 
         #endregion

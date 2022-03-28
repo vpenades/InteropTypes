@@ -252,9 +252,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var span = _Writable.Slice(offset, info.BitmapByteSize);
                 return new SpanBitmap<TPixel>(span, info);
             }
-        }        
-
-            
+        }                    
 
         public void SetPixels(TPixel value)
         {            
@@ -331,10 +329,17 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - Effects & Transfers
 
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, float opacity = 1)
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src,float opacity = 1)
             where TSrcPixel : unmanaged
         {
-            var xform = new Processing.BitmapTransform(location, opacity);
+            var xform = new Processing.BitmapTransform(location, true, opacity);
+            this.TransferFrom(src, xform);
+        }
+
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, float opacity = 1)
+            where TSrcPixel : unmanaged
+        {
+            var xform = new Processing.BitmapTransform(location, useBilinear, opacity);
             this.TransferFrom(src, xform);
         }
 

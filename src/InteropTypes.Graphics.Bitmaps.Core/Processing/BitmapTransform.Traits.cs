@@ -2,8 +2,7 @@
 // GENERATED CODE: using CodeGenUtils.t4
 
 namespace InteropTypes.Graphics.Bitmaps.Processing
-{
-    using TRANSFORM = System.Numerics.Matrix3x2;
+{    
 
         partial struct BitmapTransform
             : SpanBitmap.ITransfer<Pixel.BGR24, Pixel.BGR24>
@@ -49,10 +48,14 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestDirect(source, target, Transform);
+                    switch(UseBilinear)
+                    {
+                         case true: _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, true); break;
+                         case false: _BitmapTransformImplementation.OpaquePixelsDirect(source, target, Transform); break;
+                    }
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -61,38 +64,38 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.BGR24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.BGR24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.BGR24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBP32> source, SpanBitmap<Pixel.BGR24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -101,10 +104,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -113,38 +116,42 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestDirect(source, target, Transform);
+                    switch(UseBilinear)
+                    {
+                         case true: _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, true); break;
+                         case false: _BitmapTransformImplementation.OpaquePixelsDirect(source, target, Transform); break;
+                    }
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.RGB24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.RGB24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.RGB24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBP32> source, SpanBitmap<Pixel.RGB24> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -153,10 +160,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -165,38 +172,38 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.RGBA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.RGBA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.RGBA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBP32> source, SpanBitmap<Pixel.RGBA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -205,10 +212,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -217,38 +224,38 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.BGRA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.BGRA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.BGRA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBP32> source, SpanBitmap<Pixel.BGRA32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -257,10 +264,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -269,38 +276,38 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.BGRP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.BGRP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.BGRP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBP32> source, SpanBitmap<Pixel.BGRP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -309,10 +316,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
@@ -321,38 +328,38 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 if (Opacity >= 1)
                 {
-                    _BitmapTransformImplementation._OverwritePixelsNearestConvert(source, target, Transform);
+                    _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
                     return true;
                 }
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.RGBP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.RGBP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.RGBP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.RGBP32> source, SpanBitmap<Pixel.RGBP32> target)
             {
-                _BitmapTransformImplementation._ComposePixelsNearest(source, target, Transform, Opacity);
+                _BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;
             }
         }

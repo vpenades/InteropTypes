@@ -89,16 +89,28 @@ namespace InteropTypes.Graphics.Bitmaps
             var map = new MemoryBitmap<Pixel.BGRA32>(16,16);
             map.SetPixels(new Pixel.BGRA32(255,127,63,31));
 
-            var sampler = new Processing._BitmapTransformImplementation.SpanSampler<Pixel.BGRA32>(map);
+            var sampler = new Processing._BitmapTransformImplementation.SpanQuantizedSampler<Pixel.BGRA32>(map);
 
-            var pix = sampler.GetPixelOrDefault(8, 8);
+            var pix = sampler.GetPixelOrClamp(8, 8);
         }
 
-        [Test]
-        public void TestTransform()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TestTransform(bool useBilinear)
         {
             var src = LoadShannonImage().OfType<Pixel.BGR24>();
             src.AttachToCurrentTest("input.png");
+
+            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");
+            var cat00 = MemoryBitmap
+                .Load(filePath, Codecs.GDICodec.Default)
+                .OfType<Pixel.BGRA32>();
+            
+
+            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\QRCode.png");
+            var qrcode = MemoryBitmap
+                .Load(filePath, Codecs.GDICodec.Default)
+                .OfType<Pixel.BGRA32>();
 
             var x = Matrix3x2.CreateScale(0.75f, 0.75f) * Matrix3x2.CreateRotation(0.25f);
             x.Translation = new Vector2(20, 20);
@@ -108,13 +120,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {t}")))
             {
-                dst.AsSpanBitmap().TransferFrom(src.AsSpanBitmap(), new Processing.BitmapTransform(xx));                
-            }
-
-
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");            
-            var cat = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
-            var cat00 = cat.OfType<Pixel.BGRA32>();
+                dst.AsSpanBitmap().SetPixels(xx, src.AsSpanBitmap(), useBilinear);
+            }            
 
             for(float r=0.1f; r < 1; r+=0.2f)
             {
@@ -124,18 +131,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 xform = Matrix3x2.CreateTranslation(-50, -50) * xform * Matrix3x2.CreateTranslation(50, 50);
                 xform = xform * Matrix3x2.CreateScale(3, 3);
                 
-                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), r);
+                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), useBilinear, r);
                 DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
 
                 // 2nd API
 
                 xform *= Matrix3x2.CreateTranslation(0, 150);
 
-                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), r);
+                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), useBilinear, r);
                 DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
             }            
 
-            dst.AsSpanBitmap().SetPixels(Matrix3x2.Identity, cat00.AsSpanBitmap());            
+            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(3), cat00.AsSpanBitmap(), useBilinear);
+            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(.6f) * Matrix3x2.CreateTranslation(0,200), cat00.AsSpanBitmap(), useBilinear);
+            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(.3f) * Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(150, 300), qrcode.AsSpanBitmap(), useBilinear);
 
             dst.AttachToCurrentTest("transformed.png");
         }
