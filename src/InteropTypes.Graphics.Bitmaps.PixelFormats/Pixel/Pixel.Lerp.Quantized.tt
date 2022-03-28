@@ -1,0 +1,356 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#@ include file="..\\..\\Shared\\CodeGenUtils.t4" #>
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Numerics;
+
+namespace InteropTypes.Graphics.Bitmaps
+{
+    partial class Pixel
+    {
+
+<# //-------------------------------------------------------------------------------------------------------------------
+
+var interfaces = new List<string>();
+
+var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32","RGBP32" };
+
+bool IsOpaque(string pixelFmt)
+{
+    if (pixelFmt == "BGR24") return true;
+    if (pixelFmt == "RGB24") return true;
+    return false;
+}
+
+bool IsPremul(string pixelFmt)
+{
+    if (pixelFmt == "BGRP32") return true;
+    if (pixelFmt == "RGBP32") return true;
+    return false;
+}
+
+IEnumerable<string> GetPixelComponents(string pixelFmt)
+{
+    switch(pixelFmt)
+    {
+        case "RGB24": return new string[] {"R","G","B"};
+        case "BGR24": return new string[] {"B","G","R"};
+        case "BGRP32": return new string[] {"PreB","PreG","PreR","A"};
+        case "RGBP32": return new string[] {"PreR","PreG","PreB","A"};
+        default: return null;
+    }
+
+    return null;
+}
+
+void _WritePixelTypeStruct(string pixelFmt, params string[] extraPixels)
+{
+    var pairs = new List<(string,string)>();
+    pairs.Add((pixelFmt,pixelFmt));
+    foreach(var exp in extraPixels) pairs.Add((pixelFmt, exp));
+
+    var interfaces = pairs.Select(item => $"IQuantizedLerpFactory<{item.Item1}, {item.Item2}>").ToArray();
+
+    _writeStructBegin($"{pixelFmt}", interfaces.ToArray());
+
+    WriteLine("const int _QLERPSHIFT = 11;");    
+    WriteLine("const int _QLERPVALUE = 1 << _QLERPSHIFT;");
+    WriteLine("const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;");
+    WriteLine("const int _QLERPVALUESQUARED = 1 << _QLERPSHIFTSQUARED;");
+
+    _writeDocInherit();
+    WriteLine("public int QuantizedLerpShift => _QLERPSHIFT;");
+
+    foreach(var (srcPixel,dstPixel) in pairs)
+    {
+        string method = srcPixel == dstPixel ? string.Empty : dstPixel;
+
+        _writeDocInherit();
+        WriteLine($"{dstPixel} IQuantizedLerpFactory<{srcPixel}, {dstPixel}>.InterpolateLinear({srcPixel} left, {srcPixel} right, uint wx) {{ return Lerp{method}(left,right,wx); }}");
+
+        _writeDocInherit();
+        WriteLine($"{dstPixel} IQuantizedLerpFactory<{srcPixel}, {dstPixel}>.InterpolateBilinear({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint wx, uint wy) {{ return Lerp{method}(tl,tr,bl,br,wx,wy); }}");
+    }    
+}
+
+void _WriteOpaqueQ2(string srcPixel)
+{
+    _writeDocInherit();
+    _writeFastestMethodAttribute();
+    WriteLine($"public static {srcPixel} Lerp({srcPixel} left, {srcPixel} right, uint rx)");
+    _writeOpenBlock();
+
+        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
+
+        _writeComment("calculate quantized weights");
+        WriteLine("var lx = _QLERPVALUE - rx;");
+
+        _writeComment("lerp");
+        _WriteSkipInitVar(srcPixel, "result");
+        foreach(var cmp in GetPixelComponents(srcPixel))
+        {
+            WriteLine($"result.{cmp} = (Byte)((left.{cmp} * lx + right.{cmp} * rx) >> _QLERPSHIFT);");
+        }
+
+        WriteLine("return result;");
+
+    _writeCloseBlock();
+}
+
+void _WriteOpaqueQ4(string srcPixel)
+{
+    _writeDocInherit();
+    _writeFastestMethodAttribute();
+    WriteLine($"public static {srcPixel} Lerp({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint rx, uint by)");
+    _writeOpenBlock();
+
+        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
+        WriteLine("System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);");
+
+        _writeComment("calculate quantized weights");
+        WriteLine("var lx = _QLERPVALUE - rx;");
+        WriteLine("var ty = _QLERPVALUE - by;");
+        WriteLine("var wtl = lx * ty; // top-left weight");
+        WriteLine("var wtr = rx * ty; // top-right weight");
+        WriteLine("var wbl = lx * by; // bottom-left weight");
+        WriteLine("var wbr = rx * by; // bottom-right weight");
+        WriteLine("System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);");
+
+        _writeComment("lerp");
+        _WriteSkipInitVar(srcPixel, "result");
+        foreach(var cmp in GetPixelComponents(srcPixel))
+        {
+            WriteLine($"result.{cmp} = (Byte)((tl.{cmp} * wtl + tr.{cmp} * wtr + bl.{cmp} * wbl + br.{cmp} * wbr) >> _QLERPSHIFTSQUARED);");
+        }        
+
+        WriteLine("return result;");
+
+    _writeCloseBlock();
+}
+
+void _WriteOpaqueQ2Pre(string srcPixel, string dstPremul)
+{
+    _writeDocInherit();
+    _writeFastestMethodAttribute();
+    WriteLine($"public static {dstPremul} Lerp{dstPremul}({srcPixel} left, {srcPixel} right, uint rx)");
+    _writeOpenBlock();
+
+        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
+
+        _writeComment("calculate quantized weights");
+        WriteLine("var lx = _QLERPVALUE - rx;");
+
+        _writeComment("lerp");
+        _WriteSkipInitVar(dstPremul, "result");
+        foreach(var cmp in GetPixelComponents(srcPixel))
+        {
+            WriteLine($"result.Pre{cmp} = (Byte)((left.{cmp} * lx + right.{cmp} * rx) >> _QLERPSHIFT);");
+        }
+        WriteLine("result.A = 255;");
+
+        WriteLine("return result;");
+
+    _writeCloseBlock();
+}
+
+void _WriteOpaqueQ4Pre(string srcPixel, string dstPremul)
+{
+    _writeDocInherit();
+    _writeFastestMethodAttribute();
+    WriteLine($"public static {dstPremul} Lerp{dstPremul}({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint rx, uint by)");
+    _writeOpenBlock();
+
+        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
+        WriteLine("System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);");
+
+        _writeComment("calculate quantized weights");
+        WriteLine("var lx = _QLERPVALUE - rx;");
+        WriteLine("var ty = _QLERPVALUE - by;");
+        WriteLine("var wtl = lx * ty; // top-left weight");
+        WriteLine("var wtr = rx * ty; // top-right weight");
+        WriteLine("var wbl = lx * by; // bottom-left weight");
+        WriteLine("var wbr = rx * by; // bottom-right weight");
+        WriteLine("System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);");
+
+        _writeComment("lerp");
+        _WriteSkipInitVar(dstPremul, "result");
+        foreach(var cmp in GetPixelComponents(srcPixel))
+        {
+            WriteLine($"result.Pre{cmp} = (Byte)((tl.{cmp} * wtl + tr.{cmp} * wtr + bl.{cmp} * wbl + br.{cmp} * wbr) >> _QLERPSHIFTSQUARED);");
+        }
+        WriteLine("result.A = 255;");
+
+        WriteLine("return result;");
+
+    _writeCloseBlock();
+}
+
+void _WriteAlphaQ2(string srcPixel, string dstPixel)
+{
+    string method = srcPixel == dstPixel ? string.Empty : dstPixel;
+
+    _writeDocInherit();
+    _writeFastestMethodAttribute();
+    WriteLine($"public static {dstPixel} Lerp{method}({srcPixel} left, {srcPixel} right, uint rx)");    
+
+    _writeOpenBlock();
+
+        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");    
+
+        _writeComment("calculate quantized weights");
+        WriteLine("var lx = _QLERPVALUE - rx;");            
+
+        _writeComment("calculate final alpha");
+        WriteLine("var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;");
+        WriteLine("if (a == 0) return default;");
+
+        _writeComment("calculate premultiplied weights");
+        WriteLine("lx = (lx * left.A) >> _QLERPSHIFT;");        
+        WriteLine("rx = (rx * right.A) >> _QLERPSHIFT;");
+
+        _writeComment("calculate premultiplied RGB");
+        WriteLine("var r = (left.R * lx + right.R * rx) >> _QLERPSHIFT;");
+        WriteLine("var g = (left.G * lx + right.G * rx) >> _QLERPSHIFT;");
+        WriteLine("var b = (left.B * lx + right.B * rx) >> _QLERPSHIFT;");
+
+        _WriteAlphaQ4Output(dstPixel);    
+
+    _writeCloseBlock();
+}
+
+
+void _WriteAlphaQ4(string srcPixel, string dstPixel)
+{
+    string method = srcPixel == dstPixel ? string.Empty : dstPixel;
+
+    _writeDocInherit();
+    _writeFastestMethodAttribute();
+    WriteLine($"public static {dstPixel} Lerp{method}({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint rx, uint by)");
+
+    _writeOpenBlock();
+
+    WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
+    WriteLine("System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);");
+
+    _writeComment("calculate quantized weights");
+    WriteLine("var lx = _QLERPVALUE - rx;");
+    WriteLine("var ty = _QLERPVALUE - by;");
+    WriteLine("var wtl = lx * ty;");
+    WriteLine("var wtr = rx * ty;");
+    WriteLine("var wbl = lx * by;");
+    WriteLine("var wbr = rx * by;");
+    WriteLine("System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);");
+
+    _writeComment("calculate final alpha");
+    WriteLine("var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;");
+    WriteLine("if (a == 0) return default;");
+
+    // alternatively, we could use "ulong"
+    _writeComment("calculate premultiplied weights (should divide by 255, but precission loss when dividing by 256 is minimal in this case)");
+    WriteLine("wtl = (wtl * tl.A) >> 8;");
+    WriteLine("wtr = (wtr * tr.A) >> 8;");
+    WriteLine("wbl = (wbl * bl.A) >> 8;");
+    WriteLine("wbr = (wbr * br.A) >> 8;");    
+
+    _writeComment("calculate premultiplied RGB");
+    WriteLine("var r = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED;");
+    WriteLine("var g = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED;");
+    WriteLine("var b = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED;");
+
+    _WriteAlphaQ4Output(dstPixel);
+
+    _writeCloseBlock();
+}
+
+void _WriteAlphaQ4Output(string pixelFmt)
+{
+    
+    if (IsPremul(pixelFmt))
+    {
+        _writeComment("set values");
+        _WriteSkipInitVar(pixelFmt, "result");
+        WriteLine("result.PreR = (byte)r;");
+        WriteLine("result.PreG = (byte)g;");
+        WriteLine("result.PreB = (byte)b;");        
+        WriteLine("result.A = (byte)a;");
+    }
+    else
+    {
+        _writeComment("unpremultiply RGB");
+        _WriteSkipInitVar(pixelFmt, "result");
+        WriteLine("var invAlpha = (256 * 255) / a;");
+        WriteLine("result.R = (byte)((r * invAlpha) >> 8);");
+        WriteLine("result.G = (byte)((g * invAlpha) >> 8);");
+        WriteLine("result.B = (byte)((b * invAlpha) >> 8);");        
+        WriteLine("result.A = (byte)a;");
+    }
+
+    WriteLine("return result;");
+}
+
+
+                
+
+//-----------------------------------------
+
+_WritePixelTypeStruct("RGBP32"); 
+_WriteOpaqueQ2("RGBP32");
+_WriteOpaqueQ4("RGBP32");
+_writeEnd();
+
+_WritePixelTypeStruct("BGRP32"); 
+_WriteOpaqueQ2("BGRP32");
+_WriteOpaqueQ4("BGRP32");
+_writeEnd();
+
+_WritePixelTypeStruct("RGB24", "BGRP32"); 
+_WriteOpaqueQ2("RGB24");
+_WriteOpaqueQ4("RGB24");
+_WriteOpaqueQ2Pre("RGB24", "BGRP32");
+_WriteOpaqueQ4Pre("RGB24", "BGRP32");
+_writeEnd();
+
+_WritePixelTypeStruct("BGR24", "BGRP32"); 
+_WriteOpaqueQ2("BGR24");
+_WriteOpaqueQ4("BGR24");
+_WriteOpaqueQ2Pre("BGR24", "BGRP32");
+_WriteOpaqueQ4Pre("BGR24", "BGRP32");
+_writeEnd();
+
+_WritePixelTypeStruct("RGBA32", "BGRP32"); 
+_WriteAlphaQ2("RGBA32", "RGBA32");
+_WriteAlphaQ4("RGBA32", "RGBA32");
+_WriteAlphaQ2("RGBA32", "BGRP32");
+_WriteAlphaQ4("RGBA32", "BGRP32");
+_writeEnd();
+
+_WritePixelTypeStruct("BGRA32", "BGRP32"); 
+_WriteAlphaQ2("BGRA32", "BGRA32");
+_WriteAlphaQ4("BGRA32", "BGRA32");
+_WriteAlphaQ2("BGRA32", "BGRP32");
+_WriteAlphaQ4("BGRA32", "BGRP32");
+
+_writeEnd();
+
+_WritePixelTypeStruct("ARGB32", "BGRP32"); 
+_WriteAlphaQ2("ARGB32", "ARGB32");
+_WriteAlphaQ4("ARGB32", "ARGB32");
+_WriteAlphaQ2("ARGB32", "BGRP32");
+_WriteAlphaQ4("ARGB32", "BGRP32");
+_writeEnd();
+
+ClearIndent();
+// --------------------------------------------------------------------------------------------------------------------- #>
+
+    }
+}

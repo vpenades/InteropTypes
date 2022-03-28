@@ -13,8 +13,8 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
 var interfaces = new List<string>();
 
-var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32","RGBP32" };
-var dstPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32","RGBP32" };
+var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32" };
+var dstPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32" };
 
 var pixelPairs = dstPixels
                     .SelectMany( dstp => srcPixels.Select(srcp => (dstp,srcp) ) )

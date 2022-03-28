@@ -49,6 +49,13 @@ namespace InteropTypes.Graphics.Bitmaps
             Assert.AreEqual(2139045663, _TestLerpQuantized<Pixel.RGBA32, Pixel.BGRP32>(RGBA32_A, RGBA32_B).GetHashCode());
         }
 
+        [Test]
+        public void TestBicubicLerp()
+        {
+            Pixel.RGBA32.LerpBGRP32(RGBA32_A, RGBA32_A, RGBA32_A, RGBA32_A, 100, 700);
+
+        }
+
 
         private TDstPixel _TestLerpQuantized<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
             where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRP32>

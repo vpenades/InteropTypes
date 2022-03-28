@@ -398,28 +398,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 return new BGRP32(r, g, b, a);
             }
 
-            #endregion
-
-            #region COMPOSITION
-
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void Over(BGRP32 src, BGRP32 blend)
-            {
-                var wmix = (this.A * src.A) / 255;
-                var wdst = this.A - wmix;
-                var wsrc = src.A - wmix;
-
-                System.Diagnostics.Debug.Assert(wmix + wdst + wsrc == 255);
-
-                this.PreB = (Byte)((this.PreB * wdst + src.PreB * wsrc + blend.PreB * wmix) >> 8);
-                this.PreG = (Byte)((this.PreG * wdst + src.PreG * wsrc + blend.PreG * wmix) >> 8);
-                this.PreR = (Byte)((this.PreR * wdst + src.PreR * wsrc + blend.PreR * wmix) >> 8);
-                this.A = (Byte)(wdst + src.A);
-            }
-
-            #endregion
-
-            #endregion
+            #endregion            
         }
 
         /// <summary>

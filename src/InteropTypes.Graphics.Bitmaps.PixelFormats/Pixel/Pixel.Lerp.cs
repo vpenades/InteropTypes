@@ -23,18 +23,7 @@ namespace InteropTypes.Graphics.Bitmaps
             TDst Lerp(TSrc left, TSrc right, float amount);
         }
 
-        interface IQuantizedLerpFactory<TSrc>
-            where TSrc : unmanaged
-        {
-            BGRP32 Lerp(TSrc left, TSrc right, int amount);
-        }
-
-        interface IQuantizedLerpFactory<TSrc,TDst>
-            where TSrc:unmanaged, IValueGetter<BGRP32>
-            where TDst:unmanaged, IValueSetter<BGRP32>
-        {
-            TDst Lerp(TSrc left, TSrc right, int amount);
-        }        
+         
 
         partial struct RGBA32            
             : IDelegateProvider<QuadSamplerDelegate<RGBA32,RGBA32>>

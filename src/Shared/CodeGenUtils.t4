@@ -93,12 +93,21 @@ void _writeEnd()
     _writeCloseBlock();
 }
 
-void _WriteSkipInit(string type, string varName)
+void _WriteSkipInitVar(string type, string varName) // _WriteSkipInitVar
 {
     WriteLine("#if NET5_0_OR_GREATER");
     WriteLine($"Unsafe.SkipInit<{type}>(out var {varName});");
     WriteLine("#else");
     WriteLine($"var {varName} = default({type});");
+    WriteLine("#endif");    
+}
+
+void _WriteSkipInitOut(string type, string varName)
+{
+    WriteLine("#if NET5_0_OR_GREATER");
+    WriteLine($"Unsafe.SkipInit<{type}>(out {varName});");
+    WriteLine("#else");
+    WriteLine($"{varName} = default({type});");
     WriteLine("#endif");    
 }
 
