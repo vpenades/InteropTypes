@@ -159,14 +159,14 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<BGR565, BGRP32>.InterpolateLinear(BGR565 left, BGR565 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<BGR565, BGRP32>.InterpolateLinear(BGR565 left, BGR565 right, uint wx) { return LerpToBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<BGR565, BGRP32>.InterpolateBilinear(BGR565 tl, BGR565 tr, BGR565 bl, BGR565 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<BGR565, BGRP32>.InterpolateBilinear(BGR565 tl, BGR565 tr, BGR565 bl, BGR565 br, uint wx, uint wy) { return LerpToBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(BGR565 left, BGR565 right, uint rx)
+            public static BGRP32 LerpToBGRP32(BGR565 left, BGR565 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
 
@@ -188,7 +188,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(BGR565 tl, BGR565 tr, BGR565 bl, BGR565 br, uint rx, uint by)
+            public static BGRP32 LerpToBGRP32(BGR565 tl, BGR565 tr, BGR565 bl, BGR565 br, uint rx, uint by)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
@@ -234,10 +234,10 @@ namespace InteropTypes.Graphics.Bitmaps
             RGB24 IQuantizedInterpolator<RGB24, RGB24>.InterpolateBilinear(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<RGB24, BGRP32>.InterpolateLinear(RGB24 left, RGB24 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<RGB24, BGRP32>.InterpolateLinear(RGB24 left, RGB24 right, uint wx) { return LerpToBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<RGB24, BGRP32>.InterpolateBilinear(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<RGB24, BGRP32>.InterpolateBilinear(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint wx, uint wy) { return LerpToBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -290,7 +290,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(RGB24 left, RGB24 right, uint rx)
+            public static BGRP32 LerpToBGRP32(RGB24 left, RGB24 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
 
@@ -312,7 +312,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint rx, uint by)
+            public static BGRP32 LerpToBGRP32(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint rx, uint by)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
@@ -358,10 +358,10 @@ namespace InteropTypes.Graphics.Bitmaps
             BGR24 IQuantizedInterpolator<BGR24, BGR24>.InterpolateBilinear(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<BGR24, BGRP32>.InterpolateLinear(BGR24 left, BGR24 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<BGR24, BGRP32>.InterpolateLinear(BGR24 left, BGR24 right, uint wx) { return LerpToBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<BGR24, BGRP32>.InterpolateBilinear(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<BGR24, BGRP32>.InterpolateBilinear(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint wx, uint wy) { return LerpToBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -414,7 +414,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(BGR24 left, BGR24 right, uint rx)
+            public static BGRP32 LerpToBGRP32(BGR24 left, BGR24 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
 
@@ -436,7 +436,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint rx, uint by)
+            public static BGRP32 LerpToBGRP32(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint rx, uint by)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
@@ -482,10 +482,10 @@ namespace InteropTypes.Graphics.Bitmaps
             RGBA32 IQuantizedInterpolator<RGBA32, RGBA32>.InterpolateBilinear(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<RGBA32, BGRP32>.InterpolateLinear(RGBA32 left, RGBA32 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<RGBA32, BGRP32>.InterpolateLinear(RGBA32 left, RGBA32 right, uint wx) { return LerpToBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<RGBA32, BGRP32>.InterpolateBilinear(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<RGBA32, BGRP32>.InterpolateBilinear(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint wx, uint wy) { return LerpToBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -570,7 +570,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(RGBA32 left, RGBA32 right, uint rx)
+            public static BGRP32 LerpToBGRP32(RGBA32 left, RGBA32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
 
@@ -605,7 +605,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint rx, uint by)
+            public static BGRP32 LerpToBGRP32(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint rx, uint by)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
@@ -666,10 +666,10 @@ namespace InteropTypes.Graphics.Bitmaps
             BGRA32 IQuantizedInterpolator<BGRA32, BGRA32>.InterpolateBilinear(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<BGRA32, BGRP32>.InterpolateLinear(BGRA32 left, BGRA32 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<BGRA32, BGRP32>.InterpolateLinear(BGRA32 left, BGRA32 right, uint wx) { return LerpToBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<BGRA32, BGRP32>.InterpolateBilinear(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<BGRA32, BGRP32>.InterpolateBilinear(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint wx, uint wy) { return LerpToBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -754,7 +754,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(BGRA32 left, BGRA32 right, uint rx)
+            public static BGRP32 LerpToBGRP32(BGRA32 left, BGRA32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
 
@@ -789,7 +789,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint rx, uint by)
+            public static BGRP32 LerpToBGRP32(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint rx, uint by)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
@@ -850,10 +850,10 @@ namespace InteropTypes.Graphics.Bitmaps
             ARGB32 IQuantizedInterpolator<ARGB32, ARGB32>.InterpolateBilinear(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<ARGB32, BGRP32>.InterpolateLinear(ARGB32 left, ARGB32 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<ARGB32, BGRP32>.InterpolateLinear(ARGB32 left, ARGB32 right, uint wx) { return LerpToBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedInterpolator<ARGB32, BGRP32>.InterpolateBilinear(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<ARGB32, BGRP32>.InterpolateBilinear(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint wx, uint wy) { return LerpToBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -938,7 +938,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(ARGB32 left, ARGB32 right, uint rx)
+            public static BGRP32 LerpToBGRP32(ARGB32 left, ARGB32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
 
@@ -973,7 +973,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public static BGRP32 LerpBGRP32(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint rx, uint by)
+            public static BGRP32 LerpToBGRP32(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint rx, uint by)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);

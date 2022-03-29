@@ -82,7 +82,7 @@ void _WritePixelTypeStruct(string pixelFmt, params string[] extraPixels)
 
     foreach(var (srcPixel,dstPixel) in pairs)
     {
-        string method = srcPixel == dstPixel ? string.Empty : dstPixel;
+        string method = srcPixel == dstPixel ? string.Empty : "To" + dstPixel;
 
         _writeDocInherit();
         WriteLine($"{dstPixel} IQuantizedInterpolator<{srcPixel}, {dstPixel}>.InterpolateLinear({srcPixel} left, {srcPixel} right, uint wx) {{ return Lerp{method}(left,right,wx); }}");
@@ -151,7 +151,7 @@ void _WriteOpaqueQ2Pre(string srcPixel, string dstPremul)
 {
     _writeDocInherit();
     _writeFastestMethodAttribute();
-    WriteLine($"public static {dstPremul} Lerp{dstPremul}({srcPixel} left, {srcPixel} right, uint rx)");
+    WriteLine($"public static {dstPremul} LerpTo{dstPremul}({srcPixel} left, {srcPixel} right, uint rx)");
     _writeOpenBlock();
 
         WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
@@ -176,7 +176,7 @@ void _WriteOpaqueQ4Pre(string srcPixel, string dstPremul)
 {
     _writeDocInherit();
     _writeFastestMethodAttribute();
-    WriteLine($"public static {dstPremul} Lerp{dstPremul}({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint rx, uint by)");
+    WriteLine($"public static {dstPremul} LerpTo{dstPremul}({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint rx, uint by)");
     _writeOpenBlock();
 
         WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
@@ -206,7 +206,7 @@ void _WriteOpaqueQ4Pre(string srcPixel, string dstPremul)
 
 void _WriteAlphaQ2(string srcPixel, string dstPixel)
 {
-    string method = srcPixel == dstPixel ? string.Empty : dstPixel;
+    string method = srcPixel == dstPixel ? string.Empty : "To" + dstPixel;
 
     _writeDocInherit();
     _writeFastestMethodAttribute();
@@ -240,7 +240,7 @@ void _WriteAlphaQ2(string srcPixel, string dstPixel)
 
 void _WriteAlphaQ4(string srcPixel, string dstPixel)
 {
-    string method = srcPixel == dstPixel ? string.Empty : dstPixel;
+    string method = srcPixel == dstPixel ? string.Empty : "To" + dstPixel;
 
     _writeDocInherit();
     _writeFastestMethodAttribute();
