@@ -68,14 +68,14 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         #region API
         
         public static void OpaquePixelsDirect<TPixel>(SpanBitmap<TPixel> src, SpanBitmap<TPixel> dst, TRANSFORM srcXform)
-            where TPixel : unmanaged, Pixel.IQuantizedLerpFactory<TPixel, TPixel>
+            where TPixel : unmanaged
         {
             void _rowProcessor(Span<TPixel> dst, SpanQuantized8Sampler<TPixel, TPixel> src, _RowTransformIterator srcIterator)
             {
                 for (int i = 0; i < dst.Length; ++i)
                 {
                     srcIterator.MoveNext(out int sx, out int sy);                    
-                    dst[i] = src.GetPixelOrClamp(sx, sy);                    
+                    dst[i] = src.GetPixelOrDefault(sx, sy);                    
                 }
             }
             
@@ -83,7 +83,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         }        
 
         public static void OpaquePixelsConvert<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform, bool useBilinear)
-           where TSrcPixel : unmanaged, Pixel.IQuantizedLerpFactory<TSrcPixel, TSrcPixel>, Pixel.ICopyValueTo<TDstPixel>
+           where TSrcPixel : unmanaged, Pixel.ICopyValueTo<TDstPixel>
            where TDstPixel : unmanaged, Pixel.IValueSetter<TSrcPixel>
         {
             void _rowProcessorNearest(Span<TDstPixel> dst, SpanQuantized8Sampler<TSrcPixel, TSrcPixel> src, _RowTransformIterator srcIterator)
@@ -91,7 +91,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 for (int i = 0; i < dst.Length; ++i)
                 {
                     srcIterator.MoveNext(out int sx, out int sy);                    
-                    src.GetPixelOrClamp(sx, sy).CopyTo(ref dst[i]);                    
+                    src.GetPixelOrDefault(sx, sy).CopyTo(ref dst[i]);                    
                 }
             }
 
@@ -113,7 +113,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         }
 
         public static void ComposePixels<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform, bool useBilinear, float opacity)
-            where TSrcPixel : unmanaged, TOPREMULQ, Pixel.IQuantizedLerpFactory<TSrcPixel, Pixel.BGRP32>
+            where TSrcPixel : unmanaged, TOPREMULQ
             where TDstPixel : unmanaged, TOPREMULQ, FROMPREMULQ
         {
             int opacityQ = (int)(opacity * 256);
@@ -127,7 +127,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 {
                     srcIterator.MoveNext(out int sx, out int sy);
 
-                    src.GetPixelOrClamp(sx, sy).CopyTo(ref srcPixel);
+                    src.GetPixelOrDefault(sx, sy).CopyTo(ref srcPixel);
 
                     if (srcPixel.A == 0) continue;                    
 
@@ -173,12 +173,12 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         #region rows processor
 
         delegate void _ProcessRowCallback8<TSrcPixel, TTmpPixel, TDstPixel>(Span<TDstPixel> dst, SpanQuantized8Sampler<TSrcPixel, TTmpPixel> src, _RowTransformIterator srcIterator)
-            where TSrcPixel : unmanaged, Pixel.IQuantizedLerpFactory<TSrcPixel, TTmpPixel>
+            where TSrcPixel : unmanaged
             where TTmpPixel : unmanaged
             where TDstPixel : unmanaged;
 
         static void _ProcessRows<TSrcPixel, TTmpPixel, TDstPixel>(SpanBitmap<TDstPixel> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, _ProcessRowCallback8<TSrcPixel, TTmpPixel, TDstPixel> rowProcessor)
-            where TSrcPixel : unmanaged, Pixel.IQuantizedLerpFactory<TSrcPixel, TTmpPixel>
+            where TSrcPixel : unmanaged
             where TTmpPixel : unmanaged
             where TDstPixel : unmanaged
         {
@@ -202,17 +202,18 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
         #region nested types
 
-        internal ref struct SpanQuantized8Sampler<TPixel, TDstPixel>
-            where TPixel : unmanaged, Pixel.IQuantizedLerpFactory<TPixel, TDstPixel>
+        internal ref struct SpanQuantized8Sampler<TSrcPixel, TDstPixel>
+            where TSrcPixel : unmanaged
             where TDstPixel : unmanaged
         {
             #region constructor
 
-            public SpanQuantized8Sampler(SpanBitmap<TPixel> rt)
+            public SpanQuantized8Sampler(SpanBitmap<TSrcPixel> rt)
             {
                 _BInfo = rt.Info;
                 _Bytes = rt.ReadableBytes;
-                _Interpolator = default(TPixel);
+                _Interpolator = Pixel.GetQuantizedInterpolator<TSrcPixel, TDstPixel>();
+                if (_Interpolator == null) throw new ArgumentException($"{typeof(Pixel.IQuantizedInterpolator<TSrcPixel,TDstPixel>).Name} not implemented.", typeof(TSrcPixel).Name);
             }
 
             #endregion
@@ -222,25 +223,27 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             private readonly ReadOnlySpan<byte> _Bytes;
             private readonly BitmapInfo _BInfo;
 
-            private readonly Pixel.IQuantizedLerpFactory<TPixel, TDstPixel> _Interpolator;            
+            private readonly Pixel.IQuantizedInterpolator<TSrcPixel, TDstPixel> _Interpolator;
+
+            private static readonly TSrcPixel _Default = default(TSrcPixel);
 
             #endregion
 
             #region API
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public ref readonly TPixel GetPixelOrClamp(int x, int y)
+            public ref readonly TSrcPixel GetPixelOrDefault(int x, int y)
             {
-                return ref _BInfo.GetPixelOrClamp<TPixel>(_Bytes, x, y);
+                return ref _BInfo.GetPixelOrDefault(_Bytes, x, y, _Default);
             }
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
             public TDstPixel GetSampleOrClamp(int x, int y, int rx, int ry)
             {
-                var a = GetPixelOrClamp(x, y);
-                var b = GetPixelOrClamp(x + 1, y);
-                var c = GetPixelOrClamp(x, y + 1);
-                var d = GetPixelOrClamp(x + 1, y + 1);
+                var a = GetPixelOrDefault(x, y);
+                var b = GetPixelOrDefault(x + 1, y);
+                var c = GetPixelOrDefault(x, y + 1);
+                var d = GetPixelOrDefault(x + 1, y + 1);
 
                 // _PixelTransformIterator runs at a fraction of 16384
                 // and Pixel.InterpolateBilinear runs at a fraction of 2048

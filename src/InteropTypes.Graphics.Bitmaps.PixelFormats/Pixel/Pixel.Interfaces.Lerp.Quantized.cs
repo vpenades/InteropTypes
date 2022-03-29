@@ -14,7 +14,7 @@ namespace InteropTypes.Graphics.Bitmaps
     partial class Pixel
     {
 
-        partial struct RGBP32 : IQuantizedLerpFactory<RGBP32, RGBP32>
+        partial struct RGBP32 : IQuantizedInterpolator<RGBP32, RGBP32>
         {
             const int _QLERPSHIFT = 11;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
@@ -25,10 +25,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            RGBP32 IQuantizedLerpFactory<RGBP32, RGBP32>.InterpolateLinear(RGBP32 left, RGBP32 right, uint wx) { return Lerp(left,right,wx); }
+            RGBP32 IQuantizedInterpolator<RGBP32, RGBP32>.InterpolateLinear(RGBP32 left, RGBP32 right, uint wx) { return Lerp(left,right,wx); }
 
             /// <inheritdoc/>
-            RGBP32 IQuantizedLerpFactory<RGBP32, RGBP32>.InterpolateBilinear(RGBP32 tl, RGBP32 tr, RGBP32 bl, RGBP32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+            RGBP32 IQuantizedInterpolator<RGBP32, RGBP32>.InterpolateBilinear(RGBP32 tl, RGBP32 tr, RGBP32 bl, RGBP32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -81,7 +81,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 return result;
             }
         }
-        partial struct BGRP32 : IQuantizedLerpFactory<BGRP32, BGRP32>
+        partial struct BGRP32 : IQuantizedInterpolator<BGRP32, BGRP32>
         {
             const int _QLERPSHIFT = 11;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
@@ -92,10 +92,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<BGRP32, BGRP32>.InterpolateLinear(BGRP32 left, BGRP32 right, uint wx) { return Lerp(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<BGRP32, BGRP32>.InterpolateLinear(BGRP32 left, BGRP32 right, uint wx) { return Lerp(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<BGRP32, BGRP32>.InterpolateBilinear(BGRP32 tl, BGRP32 tr, BGRP32 bl, BGRP32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<BGRP32, BGRP32>.InterpolateBilinear(BGRP32 tl, BGRP32 tr, BGRP32 bl, BGRP32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -148,9 +148,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 return result;
             }
         }
-        partial struct RGB24
-            : IQuantizedLerpFactory<RGB24, RGB24>
-            , IQuantizedLerpFactory<RGB24, BGRP32>
+        partial struct BGR565 : IQuantizedInterpolator<BGR565, BGRP32>
         {
             const int _QLERPSHIFT = 11;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
@@ -161,16 +159,85 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            RGB24 IQuantizedLerpFactory<RGB24, RGB24>.InterpolateLinear(RGB24 left, RGB24 right, uint wx) { return Lerp(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<BGR565, BGRP32>.InterpolateLinear(BGR565 left, BGR565 right, uint wx) { return LerpBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            RGB24 IQuantizedLerpFactory<RGB24, RGB24>.InterpolateBilinear(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<BGR565, BGRP32>.InterpolateBilinear(BGR565 tl, BGR565 tr, BGR565 bl, BGR565 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<RGB24, BGRP32>.InterpolateLinear(RGB24 left, RGB24 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public static BGRP32 LerpBGRP32(BGR565 left, BGR565 right, uint rx)
+            {
+                System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+
+                // calculate quantized weights
+                var lx = _QLERPVALUE - rx;
+
+                // lerp
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var result);
+                #else
+                var result = default(BGRP32);
+                #endif
+                result.PreB = (Byte)((left.B * lx + right.B * rx) >> _QLERPSHIFT);
+                result.PreG = (Byte)((left.G * lx + right.G * rx) >> _QLERPSHIFT);
+                result.PreR = (Byte)((left.R * lx + right.R * rx) >> _QLERPSHIFT);
+                result.A = 255;
+                return result;
+            }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<RGB24, BGRP32>.InterpolateBilinear(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public static BGRP32 LerpBGRP32(BGR565 tl, BGR565 tr, BGR565 bl, BGR565 br, uint rx, uint by)
+            {
+                System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+                System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
+
+                // calculate quantized weights
+                var lx = _QLERPVALUE - rx;
+                var ty = _QLERPVALUE - by;
+                var wtl = lx * ty; // top-left weight
+                var wtr = rx * ty; // top-right weight
+                var wbl = lx * by; // bottom-left weight
+                var wbr = rx * by; // bottom-right weight
+                System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
+
+                // lerp
+                #if NET5_0_OR_GREATER
+                Unsafe.SkipInit<BGRP32>(out var result);
+                #else
+                var result = default(BGRP32);
+                #endif
+                result.PreB = (Byte)((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED);
+                result.PreG = (Byte)((tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED);
+                result.PreR = (Byte)((tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED);
+                result.A = 255;
+                return result;
+            }
+        }
+        partial struct RGB24
+            : IQuantizedInterpolator<RGB24, RGB24>
+            , IQuantizedInterpolator<RGB24, BGRP32>
+        {
+            const int _QLERPSHIFT = 11;
+            const int _QLERPVALUE = 1 << _QLERPSHIFT;
+            const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
+            const int _QLERPVALUESQUARED = 1 << _QLERPSHIFTSQUARED;
+
+            /// <inheritdoc/>
+            public int QuantizedLerpShift => _QLERPSHIFT;
+
+            /// <inheritdoc/>
+            RGB24 IQuantizedInterpolator<RGB24, RGB24>.InterpolateLinear(RGB24 left, RGB24 right, uint wx) { return Lerp(left,right,wx); }
+
+            /// <inheritdoc/>
+            RGB24 IQuantizedInterpolator<RGB24, RGB24>.InterpolateBilinear(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+
+            /// <inheritdoc/>
+            BGRP32 IQuantizedInterpolator<RGB24, BGRP32>.InterpolateLinear(RGB24 left, RGB24 right, uint wx) { return LerpBGRP32(left,right,wx); }
+
+            /// <inheritdoc/>
+            BGRP32 IQuantizedInterpolator<RGB24, BGRP32>.InterpolateBilinear(RGB24 tl, RGB24 tr, RGB24 bl, RGB24 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -273,8 +340,8 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
         partial struct BGR24
-            : IQuantizedLerpFactory<BGR24, BGR24>
-            , IQuantizedLerpFactory<BGR24, BGRP32>
+            : IQuantizedInterpolator<BGR24, BGR24>
+            , IQuantizedInterpolator<BGR24, BGRP32>
         {
             const int _QLERPSHIFT = 11;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
@@ -285,16 +352,16 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            BGR24 IQuantizedLerpFactory<BGR24, BGR24>.InterpolateLinear(BGR24 left, BGR24 right, uint wx) { return Lerp(left,right,wx); }
+            BGR24 IQuantizedInterpolator<BGR24, BGR24>.InterpolateLinear(BGR24 left, BGR24 right, uint wx) { return Lerp(left,right,wx); }
 
             /// <inheritdoc/>
-            BGR24 IQuantizedLerpFactory<BGR24, BGR24>.InterpolateBilinear(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+            BGR24 IQuantizedInterpolator<BGR24, BGR24>.InterpolateBilinear(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<BGR24, BGRP32>.InterpolateLinear(BGR24 left, BGR24 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<BGR24, BGRP32>.InterpolateLinear(BGR24 left, BGR24 right, uint wx) { return LerpBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<BGR24, BGRP32>.InterpolateBilinear(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<BGR24, BGRP32>.InterpolateBilinear(BGR24 tl, BGR24 tr, BGR24 bl, BGR24 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -397,8 +464,8 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
         partial struct RGBA32
-            : IQuantizedLerpFactory<RGBA32, RGBA32>
-            , IQuantizedLerpFactory<RGBA32, BGRP32>
+            : IQuantizedInterpolator<RGBA32, RGBA32>
+            , IQuantizedInterpolator<RGBA32, BGRP32>
         {
             const int _QLERPSHIFT = 11;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
@@ -409,16 +476,16 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            RGBA32 IQuantizedLerpFactory<RGBA32, RGBA32>.InterpolateLinear(RGBA32 left, RGBA32 right, uint wx) { return Lerp(left,right,wx); }
+            RGBA32 IQuantizedInterpolator<RGBA32, RGBA32>.InterpolateLinear(RGBA32 left, RGBA32 right, uint wx) { return Lerp(left,right,wx); }
 
             /// <inheritdoc/>
-            RGBA32 IQuantizedLerpFactory<RGBA32, RGBA32>.InterpolateBilinear(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+            RGBA32 IQuantizedInterpolator<RGBA32, RGBA32>.InterpolateBilinear(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<RGBA32, BGRP32>.InterpolateLinear(RGBA32 left, RGBA32 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<RGBA32, BGRP32>.InterpolateLinear(RGBA32 left, RGBA32 right, uint wx) { return LerpBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<RGBA32, BGRP32>.InterpolateBilinear(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<RGBA32, BGRP32>.InterpolateBilinear(RGBA32 tl, RGBA32 tr, RGBA32 bl, RGBA32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -430,7 +497,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
+                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights
@@ -511,7 +578,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
+                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights
@@ -581,8 +648,8 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
         partial struct BGRA32
-            : IQuantizedLerpFactory<BGRA32, BGRA32>
-            , IQuantizedLerpFactory<BGRA32, BGRP32>
+            : IQuantizedInterpolator<BGRA32, BGRA32>
+            , IQuantizedInterpolator<BGRA32, BGRP32>
         {
             const int _QLERPSHIFT = 11;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
@@ -593,16 +660,16 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            BGRA32 IQuantizedLerpFactory<BGRA32, BGRA32>.InterpolateLinear(BGRA32 left, BGRA32 right, uint wx) { return Lerp(left,right,wx); }
+            BGRA32 IQuantizedInterpolator<BGRA32, BGRA32>.InterpolateLinear(BGRA32 left, BGRA32 right, uint wx) { return Lerp(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRA32 IQuantizedLerpFactory<BGRA32, BGRA32>.InterpolateBilinear(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+            BGRA32 IQuantizedInterpolator<BGRA32, BGRA32>.InterpolateBilinear(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<BGRA32, BGRP32>.InterpolateLinear(BGRA32 left, BGRA32 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<BGRA32, BGRP32>.InterpolateLinear(BGRA32 left, BGRA32 right, uint wx) { return LerpBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<BGRA32, BGRP32>.InterpolateBilinear(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<BGRA32, BGRP32>.InterpolateBilinear(BGRA32 tl, BGRA32 tr, BGRA32 bl, BGRA32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -614,7 +681,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
+                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights
@@ -695,7 +762,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
+                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights
@@ -765,8 +832,8 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
         partial struct ARGB32
-            : IQuantizedLerpFactory<ARGB32, ARGB32>
-            , IQuantizedLerpFactory<ARGB32, BGRP32>
+            : IQuantizedInterpolator<ARGB32, ARGB32>
+            , IQuantizedInterpolator<ARGB32, BGRP32>
         {
             const int _QLERPSHIFT = 11;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
@@ -777,16 +844,16 @@ namespace InteropTypes.Graphics.Bitmaps
             public int QuantizedLerpShift => _QLERPSHIFT;
 
             /// <inheritdoc/>
-            ARGB32 IQuantizedLerpFactory<ARGB32, ARGB32>.InterpolateLinear(ARGB32 left, ARGB32 right, uint wx) { return Lerp(left,right,wx); }
+            ARGB32 IQuantizedInterpolator<ARGB32, ARGB32>.InterpolateLinear(ARGB32 left, ARGB32 right, uint wx) { return Lerp(left,right,wx); }
 
             /// <inheritdoc/>
-            ARGB32 IQuantizedLerpFactory<ARGB32, ARGB32>.InterpolateBilinear(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
+            ARGB32 IQuantizedInterpolator<ARGB32, ARGB32>.InterpolateBilinear(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint wx, uint wy) { return Lerp(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<ARGB32, BGRP32>.InterpolateLinear(ARGB32 left, ARGB32 right, uint wx) { return LerpBGRP32(left,right,wx); }
+            BGRP32 IQuantizedInterpolator<ARGB32, BGRP32>.InterpolateLinear(ARGB32 left, ARGB32 right, uint wx) { return LerpBGRP32(left,right,wx); }
 
             /// <inheritdoc/>
-            BGRP32 IQuantizedLerpFactory<ARGB32, BGRP32>.InterpolateBilinear(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
+            BGRP32 IQuantizedInterpolator<ARGB32, BGRP32>.InterpolateBilinear(ARGB32 tl, ARGB32 tr, ARGB32 bl, ARGB32 br, uint wx, uint wy) { return LerpBGRP32(tl,tr,bl,br,wx,wy); }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -798,7 +865,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
+                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights
@@ -879,7 +946,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
+                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights
@@ -947,6 +1014,48 @@ namespace InteropTypes.Graphics.Bitmaps
                 result.A = (byte)a;
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Gets an interpolator interface for the given pixel src and dst combination, or NULL if an interpolator doesn't exist.
+        /// </summary>
+        public static IQuantizedInterpolator<TSrcPixel, TDstPixel> GetQuantizedInterpolator<TSrcPixel, TDstPixel>() where TSrcPixel:unmanaged where TDstPixel:unmanaged
+        {
+            if (typeof(TDstPixel) == typeof(RGBP32))
+            {
+                if (typeof(TSrcPixel) == typeof(RGBP32)) return default(RGBP32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+            }
+            if (typeof(TDstPixel) == typeof(BGRP32))
+            {
+                if (typeof(TSrcPixel) == typeof(BGRP32)) return default(BGRP32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+                if (typeof(TSrcPixel) == typeof(BGR565)) return default(BGR565) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+                if (typeof(TSrcPixel) == typeof(RGB24)) return default(RGB24) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+                if (typeof(TSrcPixel) == typeof(BGR24)) return default(BGR24) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+                if (typeof(TSrcPixel) == typeof(RGBA32)) return default(RGBA32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+                if (typeof(TSrcPixel) == typeof(BGRA32)) return default(BGRA32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+                if (typeof(TSrcPixel) == typeof(ARGB32)) return default(ARGB32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+            }
+            if (typeof(TDstPixel) == typeof(RGB24))
+            {
+                if (typeof(TSrcPixel) == typeof(RGB24)) return default(RGB24) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+            }
+            if (typeof(TDstPixel) == typeof(BGR24))
+            {
+                if (typeof(TSrcPixel) == typeof(BGR24)) return default(BGR24) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+            }
+            if (typeof(TDstPixel) == typeof(RGBA32))
+            {
+                if (typeof(TSrcPixel) == typeof(RGBA32)) return default(RGBA32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+            }
+            if (typeof(TDstPixel) == typeof(BGRA32))
+            {
+                if (typeof(TSrcPixel) == typeof(BGRA32)) return default(BGRA32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+            }
+            if (typeof(TDstPixel) == typeof(ARGB32))
+            {
+                if (typeof(TSrcPixel) == typeof(ARGB32)) return default(ARGB32) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;
+            }
+            return null;
         }
 
     }

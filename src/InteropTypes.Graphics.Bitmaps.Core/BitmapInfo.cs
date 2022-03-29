@@ -323,25 +323,19 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             return bitmap.Slice(y * StepByteSize + x * PixelByteSize, PixelByteSize);
         }
-
-        /// <summary>
-        /// Gets the pixel at the given location.
-        /// </summary>
-        /// <typeparam name="TPixel"></typeparam>
-        /// <param name="data"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns>The pixel at the given location, or default if outside bounds</returns>
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe TPixel GetPixelOrDefault<TPixel>(RSPAN data, int x, int y)
-            where TPixel: unmanaged
+        public unsafe ref readonly TPixel GetPixelOrDefault<TPixel>(RSPAN data, int x, int y, in TPixel defval)
+            where TPixel : unmanaged
         {
             System.Diagnostics.Debug.Assert(sizeof(TPixel) == PixelByteSize, $"pixel type size mismatch, expected {PixelByteSize}, but found {sizeof(TPixel)}");
 
-            if (x < 0 || x >= Width) return default;
-            if (y < 0 || y >= Height) return default;
+            if (x < 0) return ref defval;
+            else if (x >= Width) return ref defval;
+            if (y < 0) return ref defval;
+            else if (y >= Height) return ref defval;
 
-            return MEMMARSHAL.Cast<Byte, TPixel>(data.Slice(y * StepByteSize))[x];
+            return ref MEMMARSHAL.Cast<Byte, TPixel>(data.Slice(y * StepByteSize))[x];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

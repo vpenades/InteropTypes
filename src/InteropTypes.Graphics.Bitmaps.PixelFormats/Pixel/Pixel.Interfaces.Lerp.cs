@@ -6,10 +6,13 @@ namespace InteropTypes.Graphics.Bitmaps
 {
     partial class Pixel
     {
-        public interface IQuantizedLerpFactory<TSrc, TDst>
+        public interface IQuantizedInterpolator<TSrc, TDst>
             where TSrc : unmanaged
             where TDst : unmanaged
         {
+            /// <summary>
+            /// Number of bits to shift the quantized weights used by the interpolators.
+            /// </summary>
             int QuantizedLerpShift { get; }
 
             /// <summary>

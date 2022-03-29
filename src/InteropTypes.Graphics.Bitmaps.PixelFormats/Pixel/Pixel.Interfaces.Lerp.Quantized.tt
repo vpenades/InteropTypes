@@ -23,10 +23,11 @@ namespace InteropTypes.Graphics.Bitmaps
 
 var interfaces = new List<string>();
 
-var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32","RGBP32" };
+var processedInterpolatorPairs = new List<(string srcPixel, string dstPixel)>();
 
 bool IsOpaque(string pixelFmt)
 {
+    if (pixelFmt == "BGR565") return true;
     if (pixelFmt == "BGR24") return true;
     if (pixelFmt == "RGB24") return true;
     return false;
@@ -43,6 +44,7 @@ IEnumerable<string> GetPixelComponents(string pixelFmt)
 {
     switch(pixelFmt)
     {
+        case "BGR565": return new string[] {"B","G","R"};
         case "RGB24": return new string[] {"R","G","B"};
         case "BGR24": return new string[] {"B","G","R"};
         case "BGRP32": return new string[] {"PreB","PreG","PreR","A"};
@@ -56,10 +58,17 @@ IEnumerable<string> GetPixelComponents(string pixelFmt)
 void _WritePixelTypeStruct(string pixelFmt, params string[] extraPixels)
 {
     var pairs = new List<(string,string)>();
-    pairs.Add((pixelFmt,pixelFmt));
+
+    // weird formats don't have lerp
+    if (pixelFmt.Contains("565") || pixelFmt.Contains("4445")) { }
+    else pairs.Add((pixelFmt,pixelFmt));
+
     foreach(var exp in extraPixels) pairs.Add((pixelFmt, exp));
 
-    var interfaces = pairs.Select(item => $"IQuantizedLerpFactory<{item.Item1}, {item.Item2}>").ToArray();
+    processedInterpolatorPairs.AddRange(pairs);
+
+    var interfaces = pairs.Select(item => $"IQuantizedInterpolator<{item.Item1}, {item.Item2}>").ToArray();
+
 
     _writeStructBegin($"{pixelFmt}", interfaces.ToArray());
 
@@ -76,10 +85,10 @@ void _WritePixelTypeStruct(string pixelFmt, params string[] extraPixels)
         string method = srcPixel == dstPixel ? string.Empty : dstPixel;
 
         _writeDocInherit();
-        WriteLine($"{dstPixel} IQuantizedLerpFactory<{srcPixel}, {dstPixel}>.InterpolateLinear({srcPixel} left, {srcPixel} right, uint wx) {{ return Lerp{method}(left,right,wx); }}");
+        WriteLine($"{dstPixel} IQuantizedInterpolator<{srcPixel}, {dstPixel}>.InterpolateLinear({srcPixel} left, {srcPixel} right, uint wx) {{ return Lerp{method}(left,right,wx); }}");
 
         _writeDocInherit();
-        WriteLine($"{dstPixel} IQuantizedLerpFactory<{srcPixel}, {dstPixel}>.InterpolateBilinear({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint wx, uint wy) {{ return Lerp{method}(tl,tr,bl,br,wx,wy); }}");
+        WriteLine($"{dstPixel} IQuantizedInterpolator<{srcPixel}, {dstPixel}>.InterpolateBilinear({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint wx, uint wy) {{ return Lerp{method}(tl,tr,bl,br,wx,wy); }}");
     }    
 }
 
@@ -211,7 +220,7 @@ void _WriteAlphaQ2(string srcPixel, string dstPixel)
         WriteLine("var lx = _QLERPVALUE - rx;");            
 
         _writeComment("calculate final alpha");
-        WriteLine("var a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;");
+        WriteLine("var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;");
         WriteLine("if (a == 0) return default;");
 
         _writeComment("calculate premultiplied weights");
@@ -313,6 +322,11 @@ _WriteOpaqueQ2("BGRP32");
 _WriteOpaqueQ4("BGRP32");
 _writeEnd();
 
+_WritePixelTypeStruct("BGR565", "BGRP32"); 
+_WriteOpaqueQ2Pre("BGR565", "BGRP32");
+_WriteOpaqueQ4Pre("BGR565", "BGRP32");
+_writeEnd();
+
 _WritePixelTypeStruct("RGB24", "BGRP32"); 
 _WriteOpaqueQ2("RGB24");
 _WriteOpaqueQ4("RGB24");
@@ -339,7 +353,6 @@ _WriteAlphaQ2("BGRA32", "BGRA32");
 _WriteAlphaQ4("BGRA32", "BGRA32");
 _WriteAlphaQ2("BGRA32", "BGRP32");
 _WriteAlphaQ4("BGRA32", "BGRP32");
-
 _writeEnd();
 
 _WritePixelTypeStruct("ARGB32", "BGRP32"); 
@@ -348,6 +361,40 @@ _WriteAlphaQ4("ARGB32", "ARGB32");
 _WriteAlphaQ2("ARGB32", "BGRP32");
 _WriteAlphaQ4("ARGB32", "BGRP32");
 _writeEnd();
+
+_writeDocSummary("Gets an interpolator interface for the given pixel src and dst combination, or NULL if an interpolator doesn't exist.");
+WriteLine("public static IQuantizedInterpolator<TSrcPixel, TDstPixel> GetQuantizedInterpolator<TSrcPixel, TDstPixel>() where TSrcPixel:unmanaged where TDstPixel:unmanaged");
+_writeOpenBlock();
+
+    
+    var dstPixels = processedInterpolatorPairs
+        .Select(item => item.dstPixel)
+        .Distinct()
+        .ToArray();
+
+    foreach(var dstPixel in dstPixels)
+    {
+        WriteLine($"if (typeof(TDstPixel) == typeof({dstPixel}))");
+        _writeOpenBlock();
+
+        var srcPixels = processedInterpolatorPairs
+            .Where(item => item.dstPixel == dstPixel)
+            .Select(item => item.srcPixel)
+            .Distinct()
+            .ToArray();
+
+            foreach(var srcPixel in srcPixels)
+            {
+                WriteLine($"if (typeof(TSrcPixel) == typeof({srcPixel})) return default({srcPixel}) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;");
+            }
+
+        _writeCloseBlock();    
+    }
+
+    WriteLine("return null;");
+
+_writeCloseBlock();
+
 
 ClearIndent();
 // --------------------------------------------------------------------------------------------------------------------- #>

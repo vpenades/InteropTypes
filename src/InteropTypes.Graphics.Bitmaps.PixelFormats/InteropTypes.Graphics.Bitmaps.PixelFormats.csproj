@@ -74,9 +74,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Pixel.Equality.cs</LastGenOutput>
     </None>
-    <None Update="Pixel\Pixel.Lerp.Quantized.tt">
+    <None Update="Pixel\Pixel.Interfaces.Lerp.Quantized.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Pixel.Lerp.Quantized.cs</LastGenOutput>
+      <LastGenOutput>Pixel.Interfaces.Lerp.Quantized.cs</LastGenOutput>
     </None>
   </ItemGroup>  
 
@@ -116,10 +116,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Equality.tt</DependentUpon>
     </Compile>
-    <Compile Update="Pixel\Pixel.Lerp.Quantized.cs">
+    <Compile Update="Pixel\Pixel.Interfaces.Lerp.Quantized.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Lerp.Quantized.tt</DependentUpon>
+      <DependentUpon>Pixel.Interfaces.Lerp.Quantized.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
