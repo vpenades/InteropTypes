@@ -52,8 +52,37 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void TestBicubicLerp()
         {
-            Pixel.RGBA32.LerpBGRP32(RGBA32_A, RGBA32_A, RGBA32_A, RGBA32_A, 100, 700);
+            _CheckBicubicOverrun<Pixel.BGRA32, Pixel.BGRA32>();
+            _CheckBicubicOverrun<Pixel.BGRP32, Pixel.BGRP32>();
+            _CheckBicubicOverrun<Pixel.BGRP32, Pixel.BGRP32>();
+            _CheckBicubicOverrun<Pixel.RGB24, Pixel.RGB24>();
+        }
 
+        private void _CheckBicubicOverrun<TSrcPixel, TDstPixel>()
+            where TSrcPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRA32>
+            where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>
+        {
+            var interpolator = Pixel.GetQuantizedInterpolator<TSrcPixel, TDstPixel>();
+
+            TSrcPixel white = default;
+            white.SetValue(Colors.White);
+
+            var scale = 1 << interpolator.QuantizedLerpShift;
+
+            for (uint y = 0; y < scale; y++)
+            {
+                for (uint x = 0; x < scale; x++)
+                {
+                    var result = interpolator
+                        .InterpolateBilinear(white, white, white, white, x, y)
+                        .GetValue();
+
+                    Assert.LessOrEqual(255, result.R);
+                    Assert.LessOrEqual(255, result.G);
+                    Assert.LessOrEqual(255, result.B);
+                    Assert.LessOrEqual(255, result.A);
+                }
+            }
         }
 
 

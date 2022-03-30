@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Numerics;
 
+
 namespace InteropTypes.Graphics.Bitmaps
 {
     partial class Pixel
@@ -67,15 +68,16 @@ void _WritePixelTypeStruct(string pixelFmt, params string[] extraPixels)
 
     processedInterpolatorPairs.AddRange(pairs);
 
-    var interfaces = pairs.Select(item => $"IQuantizedInterpolator<{item.Item1}, {item.Item2}>").ToArray();
-
+    var interfaces = pairs.Select(item => $"IQuantizedInterpolator<{item.Item1}, {item.Item2}>");
+    interfaces = interfaces.Concat( pairs.Select(item => $"IFloatingInterpolator<{item.Item1}, {item.Item2}>"));
 
     _writeStructBegin($"{pixelFmt}", interfaces.ToArray());
 
     WriteLine("const int _QLERPSHIFT = 11;");    
     WriteLine("const int _QLERPVALUE = 1 << _QLERPSHIFT;");
+    WriteLine("const float _QLERPVALUEF = _QLERPVALUE;");    
     WriteLine("const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;");
-    WriteLine("const int _QLERPVALUESQUARED = 1 << _QLERPSHIFTSQUARED;");
+    WriteLine("const int _QLERPVALUESQUARED = 1 << _QLERPSHIFTSQUARED;");    
 
     _writeDocInherit();
     WriteLine("public int QuantizedLerpShift => _QLERPSHIFT;");
@@ -85,10 +87,18 @@ void _WritePixelTypeStruct(string pixelFmt, params string[] extraPixels)
         string method = srcPixel == dstPixel ? string.Empty : "To" + dstPixel;
 
         _writeDocInherit();
+        WriteLine($"{dstPixel} IFloatingInterpolator<{srcPixel}, {dstPixel}>.InterpolateLinear(in {srcPixel} left, in {srcPixel} right, float wx) {{ return Lerp{method}(left, right, (uint)(wx*_QLERPVALUEF) ); }}");
+
+        _writeDocInherit();
+        WriteLine($"{dstPixel} IFloatingInterpolator<{srcPixel}, {dstPixel}>.InterpolateBilinear(in {srcPixel} tl, in {srcPixel} tr, in {srcPixel} bl, in {srcPixel} br, float wx, float wy) {{ return Lerp{method}(tl, tr, bl, br, (uint)(wx*_QLERPVALUEF), (uint)(wx*_QLERPVALUEF) ); }}");
+
+        _writeDocInherit();
         WriteLine($"{dstPixel} IQuantizedInterpolator<{srcPixel}, {dstPixel}>.InterpolateLinear({srcPixel} left, {srcPixel} right, uint wx) {{ return Lerp{method}(left,right,wx); }}");
 
         _writeDocInherit();
         WriteLine($"{dstPixel} IQuantizedInterpolator<{srcPixel}, {dstPixel}>.InterpolateBilinear({srcPixel} tl, {srcPixel} tr, {srcPixel} bl, {srcPixel} br, uint wx, uint wy) {{ return Lerp{method}(tl,tr,bl,br,wx,wy); }}");
+
+
     }    
 }
 
@@ -214,7 +224,7 @@ void _WriteAlphaQ2(string srcPixel, string dstPixel)
 
     _writeOpenBlock();
 
-        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");    
+        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
 
         _writeComment("calculate quantized weights");
         WriteLine("var lx = _QLERPVALUE - rx;");            
@@ -223,16 +233,18 @@ void _WriteAlphaQ2(string srcPixel, string dstPixel)
         WriteLine("var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;");
         WriteLine("if (a == 0) return default;");
 
-        _writeComment("calculate premultiplied weights");
-        WriteLine("lx = (lx * left.A) >> _QLERPSHIFT;");        
-        WriteLine("rx = (rx * right.A) >> _QLERPSHIFT;");
+        // alternatively, we could use "ulong"
+        _writeComment("calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)");
+        WriteLine("lx = (lx * left.A * 257) >> 16;");        
+        WriteLine("rx = (rx * right.A * 257) >> 16;");
 
-        _writeComment("calculate premultiplied RGB");
-        WriteLine("var r = (left.R * lx + right.R * rx) >> _QLERPSHIFT;");
-        WriteLine("var g = (left.G * lx + right.G * rx) >> _QLERPSHIFT;");
-        WriteLine("var b = (left.B * lx + right.B * rx) >> _QLERPSHIFT;");
+        WriteLine("System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);");        
+        
+        var red = "(left.R * lx + right.R * rx) >> _QLERPSHIFT";
+        var green = "(left.G * lx + right.G * rx) >> _QLERPSHIFT";
+        var blue = "(left.B * lx + right.B * rx) >> _QLERPSHIFT";
 
-        _WriteAlphaQ4Output(dstPixel);    
+        _WriteAlphaQOutput(dstPixel, red, green, blue);    
 
     _writeCloseBlock();
 }
@@ -265,49 +277,86 @@ void _WriteAlphaQ4(string srcPixel, string dstPixel)
     WriteLine("if (a == 0) return default;");
 
     // alternatively, we could use "ulong"
-    _writeComment("calculate premultiplied weights (should divide by 255, but precission loss when dividing by 256 is minimal in this case)");
-    WriteLine("wtl = (wtl * tl.A) >> 8;");
-    WriteLine("wtr = (wtr * tr.A) >> 8;");
-    WriteLine("wbl = (wbl * bl.A) >> 8;");
-    WriteLine("wbr = (wbr * br.A) >> 8;");    
+    _writeComment("calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)");
+    // a more precise variant would be: wtl = (((wtl * 257) >> 8) * tl.A) >> 8;");
+    WriteLine("wtl = ((wtl * 258) >> 16) * tl.A;");
+    WriteLine("wtr = ((wtr * 258) >> 16) * tr.A;");
+    WriteLine("wbl = ((wbl * 258) >> 16) * bl.A;");
+    WriteLine("wbr = ((wbr * 258) >> 16) * br.A;");
+    WriteLine("System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );");
+    
+    var red = "(tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED";
+    var green = "(tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED";
+    var blue = "(tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED";
 
-    _writeComment("calculate premultiplied RGB");
-    WriteLine("var r = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED;");
-    WriteLine("var g = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED;");
-    WriteLine("var b = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED;");
-
-    _WriteAlphaQ4Output(dstPixel);
+    _WriteAlphaQOutput(dstPixel, red, green, blue);
 
     _writeCloseBlock();
 }
 
-void _WriteAlphaQ4Output(string pixelFmt)
+void _WriteAlphaQOutput(string pixelFmt, string uintR = "r", string uintG = "g", string uintB = "b")
 {
     
     if (IsPremul(pixelFmt))
     {
         _writeComment("set values");
         _WriteSkipInitVar(pixelFmt, "result");
-        WriteLine("result.PreR = (byte)r;");
-        WriteLine("result.PreG = (byte)g;");
-        WriteLine("result.PreB = (byte)b;");        
+        WriteLine("");
+        WriteLine($"result.PreR = (byte)({uintR});");
+        WriteLine($"result.PreG = (byte)({uintG});");
+        WriteLine($"result.PreB = (byte)({uintB});");        
         WriteLine("result.A = (byte)a;");
     }
     else
     {
         _writeComment("unpremultiply RGB");
         _WriteSkipInitVar(pixelFmt, "result");
+        WriteLine("");
         WriteLine("var invAlpha = (256 * 255) / a;");
-        WriteLine("result.R = (byte)((r * invAlpha) >> 8);");
-        WriteLine("result.G = (byte)((g * invAlpha) >> 8);");
-        WriteLine("result.B = (byte)((b * invAlpha) >> 8);");        
+        WriteLine($"result.R = (byte)(( ({uintR}) * invAlpha) >> 8);");
+        WriteLine($"result.G = (byte)(( ({uintG}) * invAlpha) >> 8);");
+        WriteLine($"result.B = (byte)(( ({uintB}) * invAlpha) >> 8);");        
         WriteLine("result.A = (byte)a;");
     }
 
     WriteLine("return result;");
 }
 
+void _WriteFactory(string methodName, string interfaceName)
+{
+_writeDocSummary("Gets an interpolator interface for the given pixel src and dst combination, or NULL if an interpolator doesn't exist.");
+WriteLine($"public static {interfaceName}<TSrcPixel, TDstPixel> {methodName}<TSrcPixel, TDstPixel>() where TSrcPixel:unmanaged where TDstPixel:unmanaged");
+_writeOpenBlock();
 
+    
+    var dstPixels = processedInterpolatorPairs
+        .Select(item => item.dstPixel)
+        .Distinct()
+        .ToArray();
+
+    foreach(var dstPixel in dstPixels)
+    {
+        WriteLine($"if (typeof(TDstPixel) == typeof({dstPixel}))");
+        _writeOpenBlock();
+
+        var srcPixels = processedInterpolatorPairs
+            .Where(item => item.dstPixel == dstPixel)
+            .Select(item => item.srcPixel)
+            .Distinct()
+            .ToArray();
+
+            foreach(var srcPixel in srcPixels)
+            {
+                WriteLine($"if (typeof(TSrcPixel) == typeof({srcPixel})) return default({srcPixel}) as {interfaceName}<TSrcPixel, TDstPixel>;");
+            }
+
+        _writeCloseBlock();    
+    }
+
+    WriteLine("return null;");
+
+_writeCloseBlock();
+}
                 
 
 //-----------------------------------------
@@ -362,38 +411,8 @@ _WriteAlphaQ2("ARGB32", "BGRP32");
 _WriteAlphaQ4("ARGB32", "BGRP32");
 _writeEnd();
 
-_writeDocSummary("Gets an interpolator interface for the given pixel src and dst combination, or NULL if an interpolator doesn't exist.");
-WriteLine("public static IQuantizedInterpolator<TSrcPixel, TDstPixel> GetQuantizedInterpolator<TSrcPixel, TDstPixel>() where TSrcPixel:unmanaged where TDstPixel:unmanaged");
-_writeOpenBlock();
-
-    
-    var dstPixels = processedInterpolatorPairs
-        .Select(item => item.dstPixel)
-        .Distinct()
-        .ToArray();
-
-    foreach(var dstPixel in dstPixels)
-    {
-        WriteLine($"if (typeof(TDstPixel) == typeof({dstPixel}))");
-        _writeOpenBlock();
-
-        var srcPixels = processedInterpolatorPairs
-            .Where(item => item.dstPixel == dstPixel)
-            .Select(item => item.srcPixel)
-            .Distinct()
-            .ToArray();
-
-            foreach(var srcPixel in srcPixels)
-            {
-                WriteLine($"if (typeof(TSrcPixel) == typeof({srcPixel})) return default({srcPixel}) as IQuantizedInterpolator<TSrcPixel, TDstPixel>;");
-            }
-
-        _writeCloseBlock();    
-    }
-
-    WriteLine("return null;");
-
-_writeCloseBlock();
+_WriteFactory("GetQuantizedInterpolator","IQuantizedInterpolator");
+_WriteFactory("GetFloatingInterpolator","IFloatingInterpolator");
 
 
 ClearIndent();

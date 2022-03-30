@@ -118,7 +118,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var dst = new MemoryBitmap<Pixel.BGR24>(512, 512);
 
-            using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {t}")))
+            using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {(int)t.TotalMilliseconds}ms")))
             {
                 dst.AsSpanBitmap().SetPixels(xx, src.AsSpanBitmap(), useBilinear);
             }            
