@@ -7,6 +7,15 @@ namespace InteropTypes.Graphics.Drawing
 {
     static class _PrivateExtensions
     {
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Clamp(this int value, int min, int max)
+        {
+            if (value < min) return min;
+            else if (value > max) return max;
+            return value;
+        }
+
         /// <summary>
         /// Tells if the value is finite and not NaN
         /// </summary>

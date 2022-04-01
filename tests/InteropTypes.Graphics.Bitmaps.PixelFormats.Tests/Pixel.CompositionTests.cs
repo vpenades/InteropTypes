@@ -20,6 +20,8 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void TestComposition()
         {
+            
+
             // var raf = ComposeFast<Pixel.BGRA32, Pixel.BGR24>(BGRA32_B, (1, 2, 9), 1);
             // var ras = ComposeSlow<Pixel.BGRA32, Pixel.BGR24>(BGRA32_B, (1, 2, 9), 1);
             // var rpf = ComposeFast<Pixel.BGRP32, Pixel.BGR24>(new Pixel.BGRP32(BGRA32_B), (1, 2, 9), 1);

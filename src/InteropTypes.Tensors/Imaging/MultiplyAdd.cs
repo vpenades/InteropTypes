@@ -279,6 +279,8 @@ namespace InteropTypes.Tensors
 
         #region vector3
 
+        public (Vector3 Multiply, Vector3 Add) GetVector3() { return (Multiply.XYZ, Addition.XYZ); }
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private bool _TryGetHomogeneous3(out MultiplyAdd mad)
         {

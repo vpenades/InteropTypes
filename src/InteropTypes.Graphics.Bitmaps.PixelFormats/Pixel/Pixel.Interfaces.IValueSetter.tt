@@ -143,14 +143,14 @@ namespace InteropTypes.Graphics.Bitmaps
         _writeOpenBlock();
         WriteLine("if (value.A == 0) this = default;");
         WriteLine("else");
-        _writeOpenBlock();
+        _writeOpenBlock();                
 
-        WriteLine("uint rcpA = (255 * 256) / (uint)value.A;");
+        WriteLine("uint rcpA = (65536u * 255u) / (uint)value.A;");
 
         foreach(var c in components)
         {
             if (c == "A") WriteLine("A = value.A;");
-            else WriteLine($"{c} = (Byte)Math.Min(255, (uint)value.Pre{c} * rcpA / 256);");
+            else WriteLine($"{c} = (Byte)((value.Pre{c} * rcpA + 255u) >> 16);");
         }        
 
         _writeCloseBlock();
@@ -329,15 +329,11 @@ namespace InteropTypes.Graphics.Bitmaps
             _WriteSetterXYZW("BGR96F", dst, src);
             _WriteSetterXYZW("RGB96F", dst, src);
 
-            // with premul
+            // with premul            
 
-            _writeComment("Premultiplies a component by a shifted alpha.");
-            _writeFastestMethodAttribute();
-            WriteLine("private static Byte __Premul(uint vv, uint aa) { vv |= vv << 8; return (Byte)((vv * aa) >> 24); }");            
+            var premulPrefix = "S=> uint fwdA = (uint)value.A * 257u;";
 
-            var premulPrefix = "S=> var aa = (uint)value.A; aa |= aa << 8;";
-
-            src = ("__Premul((uint)@B, aa)","__Premul((uint)@G, aa)","__Premul((uint)@R, aa)","(Byte)@A");
+            src = ("(Byte)(((uint)@B * fwdA + 255u) >> 16)","(Byte)(((uint)@G * fwdA + 255u) >> 16)","(Byte)(((uint)@R * fwdA + 255u) >> 16)","(Byte)@A");
             _WriteSetterXYZW("BGRA5551", dst, src ,premulPrefix);
             _WriteSetterXYZW("BGRA4444",dst, src ,premulPrefix);
             _WriteSetterXYZW("BGRA32", dst, src ,premulPrefix);

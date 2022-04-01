@@ -14,13 +14,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static void ApplyPremul(ref Byte r, ref Byte g, ref Byte b, Byte a)
         {
-            if (a == 0) { r = g = b = 0; }
-            else
-            {
-                r = (byte)((r * a) / 255);                
-                g = (byte)((g * a) / 255);                
-                b = (byte)((b * a) / 255);
-            }
+            uint fwdA = 257u * (uint)a;
+            r = (Byte)((r * fwdA + 255u) >> 16);
+            g = (Byte)((g * fwdA + 255u) >> 16);
+            b = (Byte)((b * fwdA + 255u) >> 16);
         }
 
         public static void ApplyUnpremul(ref Byte r, ref Byte g, ref Byte b, Byte a)
@@ -28,10 +25,10 @@ namespace InteropTypes.Graphics.Bitmaps
             if (a == 0) { r = g = b = 0; }
             else
             {
-                var x = (255 * 256) / a;
-                r = (Byte)((r * x) / 256);
-                g = (Byte)((g * x) / 256);
-                b = (Byte)((b * x) / 256);                
+                uint rcpA = (65536u * 255u) / (uint)a;
+                r = (Byte)((r * rcpA + 255u) >> 16);
+                g = (Byte)((g * rcpA + 255u) >> 16);
+                b = (Byte)((b * rcpA + 255u) >> 16);            
             }
         }
 
@@ -109,11 +106,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (color.A == 0) this = default;
                 else
                 {
-                    var rcpA = (255 * 256) / color.A;
-                    R = (Byte)((color.PreR * rcpA) / 256);
-                    G = (Byte)((color.PreG * rcpA) / 256);
-                    B = (Byte)((color.PreB * rcpA) / 256);
+                    R = color.PreR;
+                    G = color.PreG;
+                    B = color.PreB;
                     A = color.A;
+                    ApplyUnpremul(ref R, ref G, ref B, A);
                 }
             }
 
@@ -122,11 +119,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (color.A == 0) this = default;
                 else
                 {
-                    var rcpA = (255 * 256) / color.A;
-                    R = (Byte)((color.PreR * rcpA) / 256);
-                    G = (Byte)((color.PreG * rcpA) / 256);
-                    B = (Byte)((color.PreB * rcpA) / 256);
+                    R = color.PreR;
+                    G = color.PreG;
+                    B = color.PreB;
                     A = color.A;
+                    ApplyUnpremul(ref R, ref G, ref B, A);                    
                 }
             }
 
@@ -277,6 +274,14 @@ namespace InteropTypes.Graphics.Bitmaps
                 ApplyPremul(ref PreR, ref PreG, ref PreB, A);
             }
 
+            public BGRP32(in RGBP32 bgra)
+            {
+                PreR = bgra.PreR;
+                PreG = bgra.PreG;
+                PreB = bgra.PreB;
+                A = bgra.A;                
+            }
+
             public BGRP32(Byte premulRed, Byte premulGreen, Byte premulBlue, Byte alpha)
             {
                 PreB = premulBlue;
@@ -311,9 +316,9 @@ namespace InteropTypes.Graphics.Bitmaps
             public Byte PreR;
             public Byte A;
 
-            public Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
-            public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
-            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);
+            public Byte R => A == 0 ? (Byte)0 : (Byte)(((uint)PreR * 255u) / (uint)A);
+            public Byte G => A == 0 ? (Byte)0 : (Byte)(((uint)PreG * 255u) / (uint)A);
+            public Byte B => A == 0 ? (Byte)0 : (Byte)(((uint)PreB * 255u) / (uint)A);
 
             #endregion
 

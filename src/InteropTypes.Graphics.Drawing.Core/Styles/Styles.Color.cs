@@ -45,19 +45,42 @@ namespace InteropTypes.Graphics.Drawing
         [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int red, int green, int blue) : this()
         {
-            B = (Byte)blue;
-            G = (Byte)green;
-            R = (Byte)red;
+            #if NETSTANDARD2_1_OR_GREATER
+            B = (Byte)Math.Clamp(blue,0,255);
+            G = (Byte)Math.Clamp(green,0,255);
+            R = (Byte)Math.Clamp(red,0,255);
             A = 255;
+            #else
+            B = (Byte)blue.Clamp(0,255);
+            G = (Byte)green.Clamp(0,255);
+            R = (Byte)red.Clamp(0,255);
+            A = 255;
+            #endif
         }
 
         [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int red, int green, int blue, int alpha) : this()
         {
-            B = (Byte)blue;
-            G = (Byte)green;
-            R = (Byte)red;
-            A = (Byte)alpha;
+            #if NETSTANDARD2_1_OR_GREATER
+            B = (Byte)Math.Clamp(blue, 0, 255);
+            G = (Byte)Math.Clamp(green, 0, 255);
+            R = (Byte)Math.Clamp(red, 0, 255);
+            A = (Byte)Math.Clamp(alpha, 0, 255);
+            #else
+            B = (Byte)blue.Clamp(0,255);
+            G = (Byte)green.Clamp(0,255);
+            R = (Byte)red.Clamp(0,255);
+            A = (Byte)alpha.Clamp(0,255);
+            #endif
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        private ColorStyle(byte red, byte green, byte blue, byte alpha) : this()
+        {            
+            B = blue;
+            G = green;
+            R = red;
+            A = alpha;
         }
 
         #endregion
@@ -194,7 +217,7 @@ namespace InteropTypes.Graphics.Drawing
             o = Math.Min(255, o);
             o = Math.Max(0, o);
 
-            return new ColorStyle(255, 255, 255, (byte)o);
+            return new ColorStyle((Byte)255, (Byte)255, (Byte)255, (byte)o);
         }
 
         public ColorStyle WithOpacity(float opacity)
@@ -203,7 +226,46 @@ namespace InteropTypes.Graphics.Drawing
             o = Math.Min(255, o);
             o = Math.Max(0, o);
 
-            return new ColorStyle(R, G, B, o);
+            return new ColorStyle((Byte)R, (Byte)G, (Byte)B, (Byte)o);
+        }
+
+        /// <summary>
+        /// Gets the premultiplied representation of this color.
+        /// </summary>
+        /// <returns>This color, in premultiplied representation.</returns>        
+        public ColorStyle ToPremul()
+        {
+            uint fwdA = 257u * (uint)this.A;
+
+            return new ColorStyle
+                (
+                (Byte)((this.R * fwdA + 255u) >> 16),
+                (Byte)((this.G * fwdA + 255u) >> 16),
+                (Byte)((this.B * fwdA + 255u) >> 16),
+                this.A);
+        }
+
+        /// <summary>
+        /// Gets the unpremultiplied representation of this color
+        /// (assuming this color represents a premultiplied color)
+        /// </summary>
+        /// <returns>This color, in unpremultiplied representation.</returns>        
+        public ColorStyle ToUnpremul()
+        {
+            System.Diagnostics.Debug.Assert(this.R <= this.A, "not premultiplied");
+            System.Diagnostics.Debug.Assert(this.G <= this.A, "not premultiplied");
+            System.Diagnostics.Debug.Assert(this.B <= this.A, "not premultiplied");
+
+            if (A == 0) return default;
+
+            uint rcpA = (65536u * 255u) / (uint)this.A;
+
+            return new ColorStyle
+                (
+                (Byte)((this.R * rcpA + 255u) >> 16),
+                (Byte)((this.G * rcpA + 255u) >> 16),
+                (Byte)((this.B * rcpA + 255u) >> 16),
+                this.A);
         }
 
         #endregion

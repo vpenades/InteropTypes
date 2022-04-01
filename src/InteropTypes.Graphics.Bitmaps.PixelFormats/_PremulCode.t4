@@ -1,0 +1,21 @@
+﻿// GENERATED CODE: using Pixel.Constants.t4
+<#
+
+void CodeGen_Premul8(string dstR, string srcR,string dstG, string srcG,string dstB, string srcB,string dstA, string srcA)
+{
+    WriteLine($"uint alphaShift16 = 257u * (uint)({srcA});");
+    WriteLine($"{dstR} = (Byte)((({srcR}) * alphaShift16 + 255u) >> 16)");
+    WriteLine($"{dstG} = (Byte)((({srcG}) * alphaShift16 + 255u) >> 16)");
+    WriteLine($"{dstB} = (Byte)((({srcB}) * alphaShift16 + 255u) >> 16)");
+}
+
+void CodeGen_Unpremul8(string dstR, string srcR,string dstG, string srcG,string dstB, string srcB,string dstA, string srcA)
+{
+    WriteLine($"System.Diagnostics.Debug.Assert({srcR} < 256 && {srcG} < 256 && {srcB} < 256,\"invalid RGB values\")");
+    WriteLine($"uint alphaShift16 = (65536u * 255u) / (uint)({srcA});");
+    WriteLine($"{dstR} = (Byte)((({srcR}) * alphaShift16 + 255u) >> 16)");
+    WriteLine($"{dstG} = (Byte)((({srcG}) * alphaShift16 + 255u) >> 16)");
+    WriteLine($"{dstB} = (Byte)((({srcB}) * alphaShift16 + 255u) >> 16)");    
+}
+
+#>

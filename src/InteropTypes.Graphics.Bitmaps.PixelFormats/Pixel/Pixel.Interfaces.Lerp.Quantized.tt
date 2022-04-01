@@ -226,23 +226,27 @@ void _WriteAlphaQ2(string srcPixel, string dstPixel)
 
         WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
 
+        WriteLine("rx *= rx;");
+
         _writeComment("calculate quantized weights");
-        WriteLine("var lx = _QLERPVALUE - rx;");            
+        WriteLine("uint lx = _QLERPVALUESQUARED - rx;");            
 
         _writeComment("calculate final alpha");
-        WriteLine("var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;");
+        WriteLine("uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;");
         WriteLine("if (a == 0) return default;");
-
-        // alternatively, we could use "ulong"
-        _writeComment("calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)");
-        WriteLine("lx = (lx * left.A * 257) >> 16;");        
-        WriteLine("rx = (rx * right.A * 257) >> 16;");
-
-        WriteLine("System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);");        
         
-        var red = "(left.R * lx + right.R * rx) >> _QLERPSHIFT";
-        var green = "(left.G * lx + right.G * rx) >> _QLERPSHIFT";
-        var blue = "(left.B * lx + right.B * rx) >> _QLERPSHIFT";
+        _writeComment("calculate premultiplied weights");
+        // WriteLine("lx = (lx * left.A * 257u) >> _QLERPSHIFTSQUARED;");        
+        // WriteLine("rx = (rx * right.A * 257u) >> _QLERPSHIFTSQUARED;");
+
+        WriteLine("lx = ((lx * 258) >> 16) * left.A;");
+        WriteLine("rx = ((rx * 258) >> 16) * right.A;");
+
+        // WriteLine("System.Diagnostics.Debug.Assert((rx + lx) <= 65536u);");
+        
+        var red = "(left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED";
+        var green = "(left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED";
+        var blue = "(left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED";
 
         _WriteAlphaQOutput(dstPixel, red, green, blue);    
 
@@ -264,16 +268,16 @@ void _WriteAlphaQ4(string srcPixel, string dstPixel)
     WriteLine("System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);");
 
     _writeComment("calculate quantized weights");
-    WriteLine("var lx = _QLERPVALUE - rx;");
-    WriteLine("var ty = _QLERPVALUE - by;");
-    WriteLine("var wtl = lx * ty;");
-    WriteLine("var wtr = rx * ty;");
-    WriteLine("var wbl = lx * by;");
-    WriteLine("var wbr = rx * by;");
+    WriteLine("uint lx = _QLERPVALUE - rx;");
+    WriteLine("uint ty = _QLERPVALUE - by;");
+    WriteLine("uint wtl = lx * ty;");
+    WriteLine("uint wtr = rx * ty;");
+    WriteLine("uint wbl = lx * by;");
+    WriteLine("uint wbr = rx * by;");
     WriteLine("System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);");
 
     _writeComment("calculate final alpha");
-    WriteLine("var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;");
+    WriteLine("uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;");
     WriteLine("if (a == 0) return default;");
 
     // alternatively, we could use "ulong"
@@ -296,6 +300,7 @@ void _WriteAlphaQ4(string srcPixel, string dstPixel)
 
 void _WriteAlphaQOutput(string pixelFmt, string uintR = "r", string uintG = "g", string uintB = "b")
 {
+    WriteLine("");
     
     if (IsPremul(pixelFmt))
     {
@@ -309,13 +314,24 @@ void _WriteAlphaQOutput(string pixelFmt, string uintR = "r", string uintG = "g",
     }
     else
     {
+        if (true)
+        {
+           WriteLine($"uint preR = {uintR};");
+           WriteLine($"uint preG = {uintG};");
+           WriteLine($"uint preB = {uintB};");
+           uintR = "preR";
+           uintG = "preG";
+           uintB = "preB";        
+        }
+
         _writeComment("unpremultiply RGB");
         _WriteSkipInitVar(pixelFmt, "result");
         WriteLine("");
-        WriteLine("var invAlpha = (256 * 255) / a;");
-        WriteLine($"result.R = (byte)(( ({uintR}) * invAlpha) >> 8);");
-        WriteLine($"result.G = (byte)(( ({uintG}) * invAlpha) >> 8);");
-        WriteLine($"result.B = (byte)(( ({uintB}) * invAlpha) >> 8);");        
+        WriteLine($"System.Diagnostics.Debug.Assert(({uintR}) < 256 && ({uintG}) < 256 && ({uintB}) < 256,\"invalid RGB values\");");
+        WriteLine("uint invAlpha = (65536u * 255u) / (uint)a;");        
+        WriteLine($"result.R = (byte)(( ({uintR}) * invAlpha + 255u) >> 16);");
+        WriteLine($"result.G = (byte)(( ({uintG}) * invAlpha + 255u) >> 16);");
+        WriteLine($"result.B = (byte)(( ({uintB}) * invAlpha + 255u) >> 16);");        
         WriteLine("result.A = (byte)a;");
     }
 

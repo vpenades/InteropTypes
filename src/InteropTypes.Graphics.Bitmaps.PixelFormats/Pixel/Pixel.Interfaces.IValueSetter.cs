@@ -425,10 +425,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                 }
             }
 
@@ -439,10 +439,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
                 }
             }
 
@@ -603,10 +603,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                 }
             }
 
@@ -617,10 +617,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
                 }
             }
 
@@ -834,10 +834,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                     A = value.A;
                 }
             }
@@ -849,10 +849,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                     A = value.A;
                 }
             }
@@ -1029,10 +1029,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                     A = value.A;
                 }
             }
@@ -1044,10 +1044,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                     A = value.A;
                 }
             }
@@ -1224,10 +1224,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                     A = value.A;
                 }
             }
@@ -1239,10 +1239,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (value.A == 0) this = default;
                 else
                 {
-                    uint rcpA = (255 * 256) / (uint)value.A;
-                    B = (Byte)Math.Min(255, (uint)value.PreB * rcpA / 256);
-                    G = (Byte)Math.Min(255, (uint)value.PreG * rcpA / 256);
-                    R = (Byte)Math.Min(255, (uint)value.PreR * rcpA / 256);
+                    uint rcpA = (65536u * 255u) / (uint)value.A;
+                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
                     A = value.A;
                 }
             }
@@ -1348,18 +1348,14 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.A = 255;
             }
 
-            // Premultiplies a component by a shifted alpha.
-            [MethodImpl(_PrivateConstants.Fastest)]
-            private static Byte __Premul(uint vv, uint aa) { vv |= vv << 8; return (Byte)((vv * aa) >> 24); }
-
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRA5551 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1367,10 +1363,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRA4444 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1378,10 +1374,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRA32 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1389,10 +1385,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBA32 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1400,10 +1396,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(ARGB32 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1546,18 +1542,14 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.A = 255;
             }
 
-            // Premultiplies a component by a shifted alpha.
-            [MethodImpl(_PrivateConstants.Fastest)]
-            private static Byte __Premul(uint vv, uint aa) { vv |= vv << 8; return (Byte)((vv * aa) >> 24); }
-
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRA5551 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1565,10 +1557,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRA4444 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1576,10 +1568,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRA32 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1587,10 +1579,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBA32 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 
@@ -1598,10 +1590,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(ARGB32 value)
             {
-                var aa = (uint)value.A; aa |= aa << 8;
-                this.PreB = __Premul((uint)value.B, aa);
-                this.PreG = __Premul((uint)value.G, aa);
-                this.PreR = __Premul((uint)value.R, aa);
+                uint fwdA = (uint)value.A * 257u;
+                this.PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                this.PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                this.PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
                 this.A = (Byte)value.A;
             }
 

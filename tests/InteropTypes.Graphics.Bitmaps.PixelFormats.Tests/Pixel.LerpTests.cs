@@ -13,6 +13,8 @@ namespace InteropTypes.Graphics.Bitmaps
         private static readonly Pixel.RGBA32 RGBA32_A = (255, 127, 63, 255);
         private static readonly Pixel.RGBA32 RGBA32_B = (255, 255, 255, 0);
 
+
+
         [Test]
         public void SamplerTests()
         {
@@ -50,37 +52,88 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [Test]
-        public void TestBicubicLerp()
+        public void TestInterpolations()
         {
-            _CheckBicubicOverrun<Pixel.BGRA32, Pixel.BGRA32>();
-            _CheckBicubicOverrun<Pixel.BGRP32, Pixel.BGRP32>();
-            _CheckBicubicOverrun<Pixel.BGRP32, Pixel.BGRP32>();
-            _CheckBicubicOverrun<Pixel.RGB24, Pixel.RGB24>();
-        }
+            var C0 = new Pixel.BGRA32(0, 100, 255, 1);
+            var C1 = new Pixel.BGRA32(128, 1, 255, 2);
+            var C2 = new Pixel.BGRA32(191, 1, 255, 4);
+            var C3 = new Pixel.BGRA32(0, 1, 255, 7);
+            
 
-        private void _CheckBicubicOverrun<TSrcPixel, TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRA32>
-            where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>
+            foreach (var col in new[] { C2, C1, C0, C3 })
+            {
+                var pp = new Pixel.BGRP32(col);
+                var uu = new Pixel.BGRA32(pp);
+
+                Assert.AreEqual(pp, col.GetValue<Pixel.BGRP32>());
+                Assert.AreEqual(uu, pp.GetValue<Pixel.BGRA32>());
+
+                var xx = Pixel.BGRA32.LerpToBGRP32(col, col, col, col, 0, 0);
+                Assert.AreEqual(pp, xx);
+
+                var yy = Pixel.BGRA32.Lerp(col, col, col, col, 0, 0);                
+                Assert.AreEqual(uu, yy);
+            }
+
+            for (int a=0; a < 256; ++a)
+            {
+                TestContext.Progress.WriteLine($"Alpha {a}");
+
+                for (int r = 0; r < 256; ++r)
+                {
+                    var color = new Pixel.BGRA32(r,1,255,a);
+
+                    _CheckInterpolation<Pixel.BGRP32,Pixel.BGRP32>(new Pixel.BGRP32(color));
+                    _CheckInterpolation<Pixel.BGRA32, Pixel.BGRP32>(color);
+                    _CheckInterpolation<Pixel.BGRA32, Pixel.BGRA32>(color);
+                }
+            }            
+        }        
+
+        private void _CheckInterpolation<TSrcPixel, TDstPixel>(TSrcPixel srcColor)
+            where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IValueGetter<Pixel.BGRP32>, Pixel.IValueSetter<Pixel.BGRP32>
+            where TDstPixel : unmanaged, Pixel.IReflection, Pixel.IValueGetter<Pixel.BGRP32> 
         {
-            var interpolator = Pixel.GetQuantizedInterpolator<TSrcPixel, TDstPixel>();
+            var premulRef = srcColor.GetValue();
+            var unpremulRef = default(TSrcPixel);
+            unpremulRef.SetValue(premulRef);
 
-            TSrcPixel white = default;
-            white.SetValue(Colors.White);
+            var interpolator = Pixel.GetQuantizedInterpolator<TSrcPixel, TDstPixel>();            
 
             var scale = 1 << interpolator.QuantizedLerpShift;
 
-            for (uint y = 0; y < scale; y++)
+            for (uint y = 0; y < scale; y += 256)
             {
-                for (uint x = 0; x < scale; x++)
+                for (uint x = 0; x < scale; x += 256)
                 {
                     var result = interpolator
-                        .InterpolateBilinear(white, white, white, white, x, y)
-                        .GetValue();
+                        .InterpolateBilinear(srcColor, srcColor, srcColor, srcColor, x, y);
 
-                    Assert.LessOrEqual(255, result.R);
-                    Assert.LessOrEqual(255, result.G);
-                    Assert.LessOrEqual(255, result.B);
-                    Assert.LessOrEqual(255, result.A);
+                    if (default(TDstPixel).IsPremultiplied)
+                    {                        
+                        Assert.AreEqual(premulRef, result);
+                    }
+                    else
+                    {                        
+                        Assert.AreEqual(unpremulRef, result);
+                    }                    
+                }
+            }
+
+            for (uint y = 0; y < scale; y += 256)
+            {
+                var result = interpolator.InterpolateLinear(srcColor, srcColor, y);
+
+                if (default(TDstPixel).IsPremultiplied)
+                {
+                    var srcPremul = srcColor.GetValue();
+                    var srcResult = result.GetValue();
+                    Assert.AreEqual(srcPremul, srcResult);
+                }
+                else
+                {
+                    var srcRoundtrip = srcColor.PremulRoundtrip8();
+                    Assert.AreEqual(srcRoundtrip, result);
                 }
             }
         }

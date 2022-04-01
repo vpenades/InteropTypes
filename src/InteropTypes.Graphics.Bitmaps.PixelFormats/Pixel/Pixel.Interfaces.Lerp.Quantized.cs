@@ -565,18 +565,22 @@ namespace InteropTypes.Graphics.Bitmaps
             public static RGBA32 Lerp(RGBA32 left, RGBA32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+                rx *= rx;
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
+                uint lx = _QLERPVALUESQUARED - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
+                uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
-                lx = (lx * left.A * 257) >> 16;
-                rx = (rx * right.A * 257) >> 16;
-                System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);
+                // calculate premultiplied weights
+                lx = ((lx * 258) >> 16) * left.A;
+                rx = ((rx * 258) >> 16) * right.A;
+
+                uint preR = (left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED;
+                uint preG = (left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED;
+                uint preB = (left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED;
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -585,10 +589,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(RGBA32);
                 #endif
 
-                var invAlpha = (256 * 255) / a;
-                result.R = (byte)(( ((left.R * lx + right.R * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
-                result.G = (byte)(( ((left.G * lx + right.G * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
-                result.B = (byte)(( ((left.B * lx + right.B * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
+                System.Diagnostics.Debug.Assert((preR) < 256 && (preG) < 256 && (preB) < 256,"invalid RGB values");
+                uint invAlpha = (65536u * 255u) / (uint)a;
+                result.R = (byte)(( (preR) * invAlpha + 255u) >> 16);
+                result.G = (byte)(( (preG) * invAlpha + 255u) >> 16);
+                result.B = (byte)(( (preB) * invAlpha + 255u) >> 16);
                 result.A = (byte)a;
                 return result;
             }
@@ -601,16 +606,16 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
-                var ty = _QLERPVALUE - by;
-                var wtl = lx * ty;
-                var wtr = rx * ty;
-                var wbl = lx * by;
-                var wbr = rx * by;
+                uint lx = _QLERPVALUE - rx;
+                uint ty = _QLERPVALUE - by;
+                uint wtl = lx * ty;
+                uint wtr = rx * ty;
+                uint wbl = lx * by;
+                uint wbr = rx * by;
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // calculate final alpha
-                var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
+                uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
@@ -620,6 +625,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 wbr = ((wbr * 258) >> 16) * br.A;
                 System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );
 
+                uint preR = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED;
+                uint preG = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED;
+                uint preB = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED;
+
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<RGBA32>(out var result);
@@ -627,10 +636,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(RGBA32);
                 #endif
 
-                var invAlpha = (256 * 255) / a;
-                result.R = (byte)(( ((tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
-                result.G = (byte)(( ((tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
-                result.B = (byte)(( ((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
+                System.Diagnostics.Debug.Assert((preR) < 256 && (preG) < 256 && (preB) < 256,"invalid RGB values");
+                uint invAlpha = (65536u * 255u) / (uint)a;
+                result.R = (byte)(( (preR) * invAlpha + 255u) >> 16);
+                result.G = (byte)(( (preG) * invAlpha + 255u) >> 16);
+                result.B = (byte)(( (preB) * invAlpha + 255u) >> 16);
                 result.A = (byte)a;
                 return result;
             }
@@ -640,18 +650,19 @@ namespace InteropTypes.Graphics.Bitmaps
             public static BGRP32 LerpToBGRP32(RGBA32 left, RGBA32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+                rx *= rx;
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
+                uint lx = _QLERPVALUESQUARED - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
+                uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
-                lx = (lx * left.A * 257) >> 16;
-                rx = (rx * right.A * 257) >> 16;
-                System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);
+                // calculate premultiplied weights
+                lx = ((lx * 258) >> 16) * left.A;
+                rx = ((rx * 258) >> 16) * right.A;
+
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -660,9 +671,9 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(BGRP32);
                 #endif
 
-                result.PreR = (byte)((left.R * lx + right.R * rx) >> _QLERPSHIFT);
-                result.PreG = (byte)((left.G * lx + right.G * rx) >> _QLERPSHIFT);
-                result.PreB = (byte)((left.B * lx + right.B * rx) >> _QLERPSHIFT);
+                result.PreR = (byte)((left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED);
+                result.PreG = (byte)((left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED);
+                result.PreB = (byte)((left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED);
                 result.A = (byte)a;
                 return result;
             }
@@ -675,16 +686,16 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
-                var ty = _QLERPVALUE - by;
-                var wtl = lx * ty;
-                var wtr = rx * ty;
-                var wbl = lx * by;
-                var wbr = rx * by;
+                uint lx = _QLERPVALUE - rx;
+                uint ty = _QLERPVALUE - by;
+                uint wtl = lx * ty;
+                uint wtr = rx * ty;
+                uint wbl = lx * by;
+                uint wbr = rx * by;
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // calculate final alpha
-                var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
+                uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
@@ -693,6 +704,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 wbl = ((wbl * 258) >> 16) * bl.A;
                 wbr = ((wbr * 258) >> 16) * br.A;
                 System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );
+
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -752,18 +764,22 @@ namespace InteropTypes.Graphics.Bitmaps
             public static BGRA32 Lerp(BGRA32 left, BGRA32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+                rx *= rx;
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
+                uint lx = _QLERPVALUESQUARED - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
+                uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
-                lx = (lx * left.A * 257) >> 16;
-                rx = (rx * right.A * 257) >> 16;
-                System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);
+                // calculate premultiplied weights
+                lx = ((lx * 258) >> 16) * left.A;
+                rx = ((rx * 258) >> 16) * right.A;
+
+                uint preR = (left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED;
+                uint preG = (left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED;
+                uint preB = (left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED;
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -772,10 +788,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(BGRA32);
                 #endif
 
-                var invAlpha = (256 * 255) / a;
-                result.R = (byte)(( ((left.R * lx + right.R * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
-                result.G = (byte)(( ((left.G * lx + right.G * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
-                result.B = (byte)(( ((left.B * lx + right.B * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
+                System.Diagnostics.Debug.Assert((preR) < 256 && (preG) < 256 && (preB) < 256,"invalid RGB values");
+                uint invAlpha = (65536u * 255u) / (uint)a;
+                result.R = (byte)(( (preR) * invAlpha + 255u) >> 16);
+                result.G = (byte)(( (preG) * invAlpha + 255u) >> 16);
+                result.B = (byte)(( (preB) * invAlpha + 255u) >> 16);
                 result.A = (byte)a;
                 return result;
             }
@@ -788,16 +805,16 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
-                var ty = _QLERPVALUE - by;
-                var wtl = lx * ty;
-                var wtr = rx * ty;
-                var wbl = lx * by;
-                var wbr = rx * by;
+                uint lx = _QLERPVALUE - rx;
+                uint ty = _QLERPVALUE - by;
+                uint wtl = lx * ty;
+                uint wtr = rx * ty;
+                uint wbl = lx * by;
+                uint wbr = rx * by;
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // calculate final alpha
-                var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
+                uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
@@ -807,6 +824,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 wbr = ((wbr * 258) >> 16) * br.A;
                 System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );
 
+                uint preR = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED;
+                uint preG = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED;
+                uint preB = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED;
+
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<BGRA32>(out var result);
@@ -814,10 +835,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(BGRA32);
                 #endif
 
-                var invAlpha = (256 * 255) / a;
-                result.R = (byte)(( ((tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
-                result.G = (byte)(( ((tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
-                result.B = (byte)(( ((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
+                System.Diagnostics.Debug.Assert((preR) < 256 && (preG) < 256 && (preB) < 256,"invalid RGB values");
+                uint invAlpha = (65536u * 255u) / (uint)a;
+                result.R = (byte)(( (preR) * invAlpha + 255u) >> 16);
+                result.G = (byte)(( (preG) * invAlpha + 255u) >> 16);
+                result.B = (byte)(( (preB) * invAlpha + 255u) >> 16);
                 result.A = (byte)a;
                 return result;
             }
@@ -827,18 +849,19 @@ namespace InteropTypes.Graphics.Bitmaps
             public static BGRP32 LerpToBGRP32(BGRA32 left, BGRA32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+                rx *= rx;
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
+                uint lx = _QLERPVALUESQUARED - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
+                uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
-                lx = (lx * left.A * 257) >> 16;
-                rx = (rx * right.A * 257) >> 16;
-                System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);
+                // calculate premultiplied weights
+                lx = ((lx * 258) >> 16) * left.A;
+                rx = ((rx * 258) >> 16) * right.A;
+
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -847,9 +870,9 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(BGRP32);
                 #endif
 
-                result.PreR = (byte)((left.R * lx + right.R * rx) >> _QLERPSHIFT);
-                result.PreG = (byte)((left.G * lx + right.G * rx) >> _QLERPSHIFT);
-                result.PreB = (byte)((left.B * lx + right.B * rx) >> _QLERPSHIFT);
+                result.PreR = (byte)((left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED);
+                result.PreG = (byte)((left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED);
+                result.PreB = (byte)((left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED);
                 result.A = (byte)a;
                 return result;
             }
@@ -862,16 +885,16 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
-                var ty = _QLERPVALUE - by;
-                var wtl = lx * ty;
-                var wtr = rx * ty;
-                var wbl = lx * by;
-                var wbr = rx * by;
+                uint lx = _QLERPVALUE - rx;
+                uint ty = _QLERPVALUE - by;
+                uint wtl = lx * ty;
+                uint wtr = rx * ty;
+                uint wbl = lx * by;
+                uint wbr = rx * by;
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // calculate final alpha
-                var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
+                uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
@@ -880,6 +903,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 wbl = ((wbl * 258) >> 16) * bl.A;
                 wbr = ((wbr * 258) >> 16) * br.A;
                 System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );
+
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -939,18 +963,22 @@ namespace InteropTypes.Graphics.Bitmaps
             public static ARGB32 Lerp(ARGB32 left, ARGB32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+                rx *= rx;
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
+                uint lx = _QLERPVALUESQUARED - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
+                uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
-                lx = (lx * left.A * 257) >> 16;
-                rx = (rx * right.A * 257) >> 16;
-                System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);
+                // calculate premultiplied weights
+                lx = ((lx * 258) >> 16) * left.A;
+                rx = ((rx * 258) >> 16) * right.A;
+
+                uint preR = (left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED;
+                uint preG = (left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED;
+                uint preB = (left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED;
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -959,10 +987,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(ARGB32);
                 #endif
 
-                var invAlpha = (256 * 255) / a;
-                result.R = (byte)(( ((left.R * lx + right.R * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
-                result.G = (byte)(( ((left.G * lx + right.G * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
-                result.B = (byte)(( ((left.B * lx + right.B * rx) >> _QLERPSHIFT) * invAlpha) >> 8);
+                System.Diagnostics.Debug.Assert((preR) < 256 && (preG) < 256 && (preB) < 256,"invalid RGB values");
+                uint invAlpha = (65536u * 255u) / (uint)a;
+                result.R = (byte)(( (preR) * invAlpha + 255u) >> 16);
+                result.G = (byte)(( (preG) * invAlpha + 255u) >> 16);
+                result.B = (byte)(( (preB) * invAlpha + 255u) >> 16);
                 result.A = (byte)a;
                 return result;
             }
@@ -975,16 +1004,16 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
-                var ty = _QLERPVALUE - by;
-                var wtl = lx * ty;
-                var wtr = rx * ty;
-                var wbl = lx * by;
-                var wbr = rx * by;
+                uint lx = _QLERPVALUE - rx;
+                uint ty = _QLERPVALUE - by;
+                uint wtl = lx * ty;
+                uint wtr = rx * ty;
+                uint wbl = lx * by;
+                uint wbr = rx * by;
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // calculate final alpha
-                var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
+                uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
@@ -994,6 +1023,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 wbr = ((wbr * 258) >> 16) * br.A;
                 System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );
 
+                uint preR = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED;
+                uint preG = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED;
+                uint preB = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED;
+
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<ARGB32>(out var result);
@@ -1001,10 +1034,11 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(ARGB32);
                 #endif
 
-                var invAlpha = (256 * 255) / a;
-                result.R = (byte)(( ((tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
-                result.G = (byte)(( ((tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
-                result.B = (byte)(( ((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED) * invAlpha) >> 8);
+                System.Diagnostics.Debug.Assert((preR) < 256 && (preG) < 256 && (preB) < 256,"invalid RGB values");
+                uint invAlpha = (65536u * 255u) / (uint)a;
+                result.R = (byte)(( (preR) * invAlpha + 255u) >> 16);
+                result.G = (byte)(( (preG) * invAlpha + 255u) >> 16);
+                result.B = (byte)(( (preB) * invAlpha + 255u) >> 16);
                 result.A = (byte)a;
                 return result;
             }
@@ -1014,18 +1048,19 @@ namespace InteropTypes.Graphics.Bitmaps
             public static BGRP32 LerpToBGRP32(ARGB32 left, ARGB32 right, uint rx)
             {
                 System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);
+                rx *= rx;
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
+                uint lx = _QLERPVALUESQUARED - rx;
 
                 // calculate final alpha
-                var a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
+                uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
-                lx = (lx * left.A * 257) >> 16;
-                rx = (rx * right.A * 257) >> 16;
-                System.Diagnostics.Debug.Assert((int)(rx+lx) <= _QLERPVALUE);
+                // calculate premultiplied weights
+                lx = ((lx * 258) >> 16) * left.A;
+                rx = ((rx * 258) >> 16) * right.A;
+
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -1034,9 +1069,9 @@ namespace InteropTypes.Graphics.Bitmaps
                 var result = default(BGRP32);
                 #endif
 
-                result.PreR = (byte)((left.R * lx + right.R * rx) >> _QLERPSHIFT);
-                result.PreG = (byte)((left.G * lx + right.G * rx) >> _QLERPSHIFT);
-                result.PreB = (byte)((left.B * lx + right.B * rx) >> _QLERPSHIFT);
+                result.PreR = (byte)((left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED);
+                result.PreG = (byte)((left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED);
+                result.PreB = (byte)((left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED);
                 result.A = (byte)a;
                 return result;
             }
@@ -1049,16 +1084,16 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert((int)by <= _QLERPVALUE);
 
                 // calculate quantized weights
-                var lx = _QLERPVALUE - rx;
-                var ty = _QLERPVALUE - by;
-                var wtl = lx * ty;
-                var wtr = rx * ty;
-                var wbl = lx * by;
-                var wbr = rx * by;
+                uint lx = _QLERPVALUE - rx;
+                uint ty = _QLERPVALUE - by;
+                uint wtl = lx * ty;
+                uint wtr = rx * ty;
+                uint wbl = lx * by;
+                uint wbr = rx * by;
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // calculate final alpha
-                var a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
+                uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
                 // calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)
@@ -1067,6 +1102,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 wbl = ((wbl * 258) >> 16) * bl.A;
                 wbr = ((wbr * 258) >> 16) * br.A;
                 System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );
+
 
                 // set values
                 #if NET5_0_OR_GREATER
