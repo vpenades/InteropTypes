@@ -7,6 +7,8 @@
     <IsPackable>false</IsPackable>
 
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+
+    <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
