@@ -73,8 +73,8 @@ namespace InteropTypes.Graphics.Bitmaps
             #region reflection
 
             public bool IsOpaque => true;
-
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
 
             public uint GetCode() { return Code; }
 

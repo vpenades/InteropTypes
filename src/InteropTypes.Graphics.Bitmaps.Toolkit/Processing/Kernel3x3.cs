@@ -130,8 +130,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 var xrow = new TPixel[w];
 
-                var converter = Pixel.GetPixelCopyConverter<TSrcPixel, TPixel>();
-                
+                var converter = Pixel.GetPixelCopyConverter<TSrcPixel, TPixel>();                
 
                 var rows = new _RollingRows(w);
                 converter(dstBitmap.GetScanlinePixels(0), rows.Row3);

@@ -14,9 +14,6 @@ namespace InteropTypes.Graphics.Bitmaps
     partial class Pixel    
     {           
 
-
-
-
         partial struct Alpha8 : IConvertTo
         {
 

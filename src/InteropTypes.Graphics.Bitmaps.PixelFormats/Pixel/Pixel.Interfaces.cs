@@ -24,6 +24,11 @@ namespace InteropTypes.Graphics.Bitmaps
             void SetValue(T value);
         }
 
+        public interface IReferenceSetter<T> where T : unmanaged
+        {
+            void SetValue(in T value);
+        }
+
         /// <summary>
         /// interface to allow converting the current pixel type to another pixel type.
         /// </summary>
