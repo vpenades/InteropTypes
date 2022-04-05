@@ -10,6 +10,9 @@ namespace InteropTypes.Codecs
     {
         // https://docs.microsoft.com/en-us/dotnet/core/deploying/trimming/prepare-libraries-for-trimming#dynamicdependency
 
+        private static Type[] _Decoders;
+        private static Type[] _Encoders;
+
         private static IEnumerable<string> _GetDefaultCodecAssemblies()
         {
             var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
@@ -32,9 +35,9 @@ namespace InteropTypes.Codecs
         
         public static IEnumerable<IBitmapEncoder> GetDefaultEncoders()
         {
-            var types = _GetExternalTypes<IBitmapEncoder>();
+            if (_Encoders == null) _Encoders = _GetExternalTypes<IBitmapEncoder>().ToArray();
 
-            foreach (var t in types)
+            foreach (var t in _Encoders)
             {
                 var instance = Activator.CreateInstance(t, true) as IBitmapEncoder;
                 if (instance != null) yield return instance;
@@ -43,9 +46,9 @@ namespace InteropTypes.Codecs
         
         public static IEnumerable<IBitmapDecoder> GetDefaultDecoders()
         {
-            var types = _GetExternalTypes<IBitmapDecoder>();
+            if (_Decoders == null) _Decoders = _GetExternalTypes<IBitmapDecoder>().ToArray();
 
-            foreach(var t in types)
+            foreach(var t in _Decoders)
             {
                 if (Activator.CreateInstance(t, true) is IBitmapDecoder instance) yield return instance;
             }

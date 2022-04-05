@@ -95,11 +95,9 @@ namespace InteropTypes
             if (!src.Info.IsContinuous) throw new ArgumentException("source images with extra row stride are not sopported.", nameof(src));
 
             TryGetExactPixelType(src.PixelFormat, out var pixType);
-            if (pixType != typeof(TPixel)) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
+            if (pixType != typeof(TPixel)) throw new Diagnostics.PixelFormatNotSupportedException(src.PixelFormat, nameof(src));            
 
-            var memMngr = new Graphics.Adapters.CastMemoryManager<Byte, TPixel>(src.Memory);
-
-            return Image.WrapMemory(memMngr, src.Width, src.Height);
+            return Image.WrapMemory<TPixel>(src.Memory, src.Width, src.Height);
         }
 
         public static Image CloneToImageSharp(SpanBitmap src)

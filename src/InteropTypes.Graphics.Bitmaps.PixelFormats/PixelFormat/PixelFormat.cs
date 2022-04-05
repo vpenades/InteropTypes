@@ -204,7 +204,9 @@ namespace InteropTypes.Graphics.Bitmaps
             if (typeof(TPixel) == typeof(Pixel.BGRA128F)) return Pixel.BGRA128F.Format;
             if (typeof(TPixel) == typeof(Pixel.BGRP128F)) return Pixel.BGRP128F.Format;
             if (typeof(TPixel) == typeof(Pixel.RGBA128F)) return Pixel.RGBA128F.Format;
-            if (typeof(TPixel) == typeof(Pixel.RGBP128F)) return Pixel.RGBP128F.Format;            
+            if (typeof(TPixel) == typeof(Pixel.RGBP128F)) return Pixel.RGBP128F.Format;
+
+            if (_TryIdentifyThirdPartyFormat<TPixel>(out var fmt)) return fmt;
 
             return CreateUndefined<TPixel>();
         }

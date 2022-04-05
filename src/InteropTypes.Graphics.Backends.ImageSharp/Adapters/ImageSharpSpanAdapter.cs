@@ -43,8 +43,11 @@ namespace InteropTypes.Graphics.Adapters
         public Image<TPixel> CloneToImage<TPixel>() where TPixel:unmanaged, IPixel<TPixel>
         {
             if (typeof(TPixel) == _ImageSharpPixelType) return _Implementation.CloneToImageSharp<TPixel>(_Bitmap);
-
-            return _Implementation.CloneToImageSharp(_Bitmap).CloneAs<TPixel>();
+            
+            using(var img = _Implementation.CloneToImageSharp(_Bitmap))
+            {
+                return img.CloneAs<TPixel>();
+            }
         }        
 
         public double CalculateBlurFactor()
