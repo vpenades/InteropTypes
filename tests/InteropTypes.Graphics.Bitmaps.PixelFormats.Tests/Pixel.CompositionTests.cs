@@ -35,27 +35,6 @@ namespace InteropTypes.Graphics.Bitmaps
             where TDstPixel : unmanaged, Pixel.IPixelCompositionQ<TSrcPixel, TDstPixel>
         {            
             return dst.AlphaBlendWith(src, amount);
-        }
-
-
-        private TDstPixel ComposeSlow<TSrcPixel,TDstPixel>(TSrcPixel src, TDstPixel dst, float amount)
-            where TSrcPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>
-            where TDstPixel : unmanaged, Pixel.ICopyValueTo<Pixel.QVectorBGRP>, Pixel.IValueSetter<Pixel.QVectorBGRP>
-        {
-            var srcQ = default(Pixel.QVectorBGRP);
-            var dstQ = default(Pixel.QVectorBGRP);
-
-            src.CopyTo(ref srcQ);
-            dst.CopyTo(ref dstQ);
-
-            srcQ *= amount;
-
-            dstQ.SourceOver(srcQ);
-
-            var final = default(TDstPixel);
-            final.SetValue(dstQ);
-
-            return final;
-        }
+        }        
     }
 }

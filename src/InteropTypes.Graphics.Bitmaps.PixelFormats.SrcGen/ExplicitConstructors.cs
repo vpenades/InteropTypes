@@ -23,8 +23,8 @@ namespace InteropTypes.Graphics.Bitmaps
         public void Execute(GeneratorExecutionContext context)
         {
             // Find the main method
-            var mainMethod = context.Compilation.GetEntryPoint(context.CancellationToken);
-            var nameSpace = mainMethod.ContainingNamespace.ToDisplayString();
+            // var mainMethod = context.Compilation.GetEntryPoint(context.CancellationToken);
+            // var nameSpace = mainMethod.ContainingNamespace.ToDisplayString();
 
             // Build up the source code
             string source = $@" // Auto-generated code

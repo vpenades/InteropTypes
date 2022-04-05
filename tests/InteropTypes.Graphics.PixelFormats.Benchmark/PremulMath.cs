@@ -33,15 +33,39 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [Benchmark]
+        public Pixel.BGRP32 TestPremulCode()
+        {
+            return new Pixel.BGRP32(_SrcColor);
+        }
+
+        [Benchmark]
+        public Pixel.BGRP32 TestPremulGeneric()
+        {
+            return Pixel.BGRP32.From(_SrcColor);
+        }
+
+        [Benchmark]
         public Pixel.BGRA32 TestReferenceUnpremul()
         {
             return ToUnpremulReference(_PreSrcColor);
         }
 
         [Benchmark]
-        public Pixel.BGRA32 TestFastUnpremul()
+        public Pixel.BGRA32 TestFast1Unpremul()
         {
-            return ToUnpremulFast(_PreSrcColor);
+            return ToUnpremulFast1(_PreSrcColor);
+        }
+
+        [Benchmark]
+        public Pixel.BGRA32 TestFast2Unpremul()
+        {
+            return ToUnpremulFast2(_PreSrcColor);
+        }
+
+        [Benchmark]
+        public Pixel.BGRA32 TestFast3Unpremul()
+        {
+            return _PreSrcColor.To<Pixel.BGRA32>();
         }
 
         // 7.508 ns
@@ -84,11 +108,25 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         // 8.054 ns
-        public Pixel.BGRA32 ToUnpremulFast(Pixel.BGRP32 src)
+        public Pixel.BGRA32 ToUnpremulFast1(Pixel.BGRP32 src)
         {
             if (src.A == 0) return default;
 
             uint rcpA = (65536u * 255u) / (uint)src.A;
+
+            return new Pixel.BGRA32
+                (
+                (Byte)((src.PreR * rcpA + 255u) >> 16),
+                (Byte)((src.PreG * rcpA + 255u) >> 16),
+                (Byte)((src.PreB * rcpA + 255u) >> 16),
+                src.A);
+        }
+
+        public Pixel.BGRA32 ToUnpremulFast2(Pixel.BGRP32 src)
+        {
+            uint rcpA = src.A == 0
+                ? 0 
+                : (65536u * 255u) / (uint)src.A;
 
             return new Pixel.BGRA32
                 (

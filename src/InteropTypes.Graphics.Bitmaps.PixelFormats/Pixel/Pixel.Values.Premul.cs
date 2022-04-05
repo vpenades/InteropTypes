@@ -10,50 +10,7 @@ namespace InteropTypes.Graphics.Bitmaps
 {
     partial class Pixel
     {
-        #region static methods
-
-        public static void ApplyPremul(ref Byte r, ref Byte g, ref Byte b, Byte a)
-        {
-            uint fwdA = 257u * (uint)a;
-            r = (Byte)((r * fwdA + 255u) >> 16);
-            g = (Byte)((g * fwdA + 255u) >> 16);
-            b = (Byte)((b * fwdA + 255u) >> 16);
-        }
-
-        public static void ApplyUnpremul(ref Byte r, ref Byte g, ref Byte b, Byte a)
-        {
-            if (a == 0) { r = g = b = 0; }
-            else
-            {
-                uint rcpA = (65536u * 255u) / (uint)a;
-                r = (Byte)((r * rcpA + 255u) >> 16);
-                g = (Byte)((g * rcpA + 255u) >> 16);
-                b = (Byte)((b * rcpA + 255u) >> 16);            
-            }
-        }
-
-        public static void ApplyPremul(ref float r, ref float g, ref float b, float a)
-        {
-            if (a == 0) { r = g = b = 0; }
-            else
-            {
-                r *= a;
-                g *= a;
-                b *= a;
-            }
-        }
-
-        public static void ApplyUnpremul(ref float r, ref float g, ref float b, float a)
-        {
-            if (a == 0) { r = g = b = 0; }
-            else
-            {
-                a = 1f / a;
-                r *= a;
-                g *= a;
-                b *= a;
-            }
-        }
+        #region static methods                
 
         public static void ApplyPremul(ref XYZA xxxa)
         {
@@ -75,25 +32,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 xxxa /= a;
                 xxxa.W = a;
             }
-        }
-
-        public static XYZA GetPremul(XYZA xxxa)
-        {
-            if (xxxa.W == 0) return XYZA.Zero;            
-            var a = xxxa.W;
-            xxxa *= a;
-            xxxa.W = a;
-            return xxxa;            
-        }
-
-        public static XYZA GetUnpremul(XYZA xxxa)
-        {
-            if (xxxa.W == 0) return XYZA.Zero;
-            var a = xxxa.W;
-            xxxa /= a;
-            xxxa.W = a;
-            return xxxa;
-        }
+        }        
 
         #endregion
 
@@ -101,30 +40,22 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct BGRA32
         {
-            public BGRA32(RGBP32 color)
+            public BGRA32(RGBP32 value)
             {
-                if (color.A == 0) this = default;
-                else
-                {
-                    R = color.PreR;
-                    G = color.PreG;
-                    B = color.PreB;
-                    A = color.A;
-                    ApplyUnpremul(ref R, ref G, ref B, A);
-                }
+                uint rcpA = value.A == 0 ? 0u : (65536u * 255u) / (uint)value.A;
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
-            public BGRA32(BGRP32 color)
+            public BGRA32(BGRP32 value)
             {
-                if (color.A == 0) this = default;
-                else
-                {
-                    R = color.PreR;
-                    G = color.PreG;
-                    B = color.PreB;
-                    A = color.A;
-                    ApplyUnpremul(ref R, ref G, ref B, A);                    
-                }
+                uint rcpA = value.A == 0 ? 0u : (65536u * 255u) / (uint)value.A;
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
             public BGRA32(RGBP128F color)
@@ -163,6 +94,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 ApplyUnpremul(ref this.RGBA);
             }
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             public XYZA ToNativePremul()
             {
                 return new XYZA(RGB * A, A);
@@ -186,26 +118,29 @@ namespace InteropTypes.Graphics.Bitmaps
         [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
         public partial struct RGBP32
         {
-            #region constructors
+            #region constructors            
 
-            public RGBP32(in RGBA128F rgba)
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public RGBP32(in RGBA128F value)
             {
-                var v = rgba.ToNativePremul() * 255f;
+                var v = value.ToNativePremul() * 255f;
                 PreR = (Byte)v.X;
                 PreG = (Byte)v.Y;
                 PreB = (Byte)v.Z;
                 A = (Byte)v.W;
             }
 
-            public RGBP32(in BGRA32 bgra)
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public RGBP32(BGRA32 value)
             {
-                PreR = bgra.R;
-                PreG = bgra.G;
-                PreB = bgra.B;
-                A = bgra.A;
-                ApplyPremul(ref PreR, ref PreG, ref PreB, A);
+                uint fwdA = 257u * (uint)value.A;
+                PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
+                PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                A = value.A;
             }
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             public RGBP32(Byte premulRed, Byte premulGreen, Byte premulBlue, Byte alpha)
             {
                 PreB = premulBlue;
@@ -214,6 +149,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 A = alpha;
             }
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             public RGBP32(int premulRed, int premulGreen, int premulBlue, int alpha = 255)
             {
                 PreR = (byte)premulRed;
@@ -231,7 +167,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 get
                 {
                     var tmp = this;
-                    return System.Runtime.CompilerServices.Unsafe.As<RGBP32, uint>(ref tmp);
+                    return Unsafe.As<RGBP32, uint>(ref tmp);
                 }
             }
 
@@ -254,34 +190,118 @@ namespace InteropTypes.Graphics.Bitmaps
         [System.Diagnostics.DebuggerDisplay("{PreR} {PreG} {PreB} {A}")]
         public partial struct BGRP32
         {
-            #region constructors
+            #region constructors            
 
-            public BGRP32(in RGBA128F rgba)
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(Alpha8 value)
             {
-                var v = rgba.ToNativePremul() * 255f;
+                PreR = PreG = PreB = A = value.A;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(Luminance8 value)
+            {
+                PreR = PreG = PreB = value.L;
+                A = 255;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(BGR565 value)
+            {
+                PreR = value.R;
+                PreG = value.G;
+                PreB = value.B;
+                A = 255;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(BGR24 value)
+            {
+                PreR = value.R;
+                PreG = value.G;
+                PreB = value.B;
+                A = 255;                
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(RGB24 value)
+            {
+                PreR = value.R;
+                PreG = value.G;
+                PreB = value.B;
+                A = 255;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(BGRA5551 value)
+            {
+                uint alpha = (uint)(value.BGRA >> 15);
+                PreR = (Byte)(value.Ru * alpha);
+                PreG = (Byte)(value.Gu * alpha);
+                PreB = (Byte)(value.Bu * alpha);
+                A = value.A;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(BGRA4444 value)
+            {
+                uint fwdA = 257u * (uint)value.A;
+                PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
+                A = (Byte)value.A;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(BGRA32 value)
+            {
+                uint fwdA = 257u * (uint)value.A;
+                PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
+                A = value.A;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(RGBA32 value)
+            {
+                uint fwdA = 257u * (uint)value.A;
+                PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
+                A = value.A;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(ARGB32 value)
+            {
+                uint fwdA = 257u * (uint)value.A;
+                PreB = (Byte)(((uint)value.B * fwdA + 255u) >> 16);
+                PreG = (Byte)(((uint)value.G * fwdA + 255u) >> 16);
+                PreR = (Byte)(((uint)value.R * fwdA + 255u) >> 16);
+                A = value.A;
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(RGBP32 value)
+            {
+                PreR = value.PreR;
+                PreG = value.PreG;
+                PreB = value.PreB;
+                A = value.A;                
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public BGRP32(in RGBA128F value)
+            {
+                var v = value.ToNativePremul() * 255f;
                 PreB = (Byte)v.Z;
                 PreG = (Byte)v.Y;
                 PreR = (Byte)v.X;
                 A = (Byte)v.W;
             }
 
-            public BGRP32(in BGRA32 bgra)
-            {
-                PreR = bgra.R;
-                PreG = bgra.G;
-                PreB = bgra.B;
-                A = bgra.A;
-                ApplyPremul(ref PreR, ref PreG, ref PreB, A);
-            }
-
-            public BGRP32(in RGBP32 bgra)
-            {
-                PreR = bgra.PreR;
-                PreG = bgra.PreG;
-                PreB = bgra.PreB;
-                A = bgra.A;                
-            }
-
+            [MethodImpl(_PrivateConstants.Fastest)]
             public BGRP32(Byte premulRed, Byte premulGreen, Byte premulBlue, Byte alpha)
             {
                 PreB = premulBlue;
@@ -290,6 +310,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 A = alpha;
             }
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             public BGRP32(int premulRed, int premulGreen, int premulBlue, int alpha = 255)
             {
                 PreR = (byte)premulRed;
@@ -304,6 +325,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public uint BGRP
             {
+                [MethodImpl(_PrivateConstants.Fastest)]
                 get
                 {
                     var tmp = this;
@@ -322,88 +344,32 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #endregion
 
-            #region API - Lerps
+            #region API from-to
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static BGRP32 Lerp(RGB24 left, RGB24 right, int rx)
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public static BGRP32 From<TPixel>(in TPixel value) // according to benchmarks, this method is about as fast as a direct constructor
+                where TPixel : unmanaged
             {
-                // calculate quantized weights
-                var lx = 16384 - rx;
-                System.Diagnostics.Debug.Assert((lx + rx) == 16384);
-                var R = (left.R * lx + right.R * rx) / 16384;
-                var G = (left.G * lx + right.G * rx) / 16384;
-                var B = (left.B * lx + right.B * rx) / 16384;
-                return new BGRP32(R, G, B, 255);
+                if (typeof(TPixel) == typeof(Alpha8)) return new BGRP32(Unsafe.As<TPixel, Alpha8>(ref Unsafe.AsRef(value)));
+                if (typeof(TPixel) == typeof(Luminance8)) return new BGRP32(Unsafe.As<TPixel, Luminance8>(ref Unsafe.AsRef(value)));
+
+                if (typeof(TPixel) == typeof(BGR565)) return new BGRP32(Unsafe.As<TPixel, BGR565>(ref Unsafe.AsRef(value)));
+                if (typeof(TPixel) == typeof(BGR24)) return new BGRP32(Unsafe.As<TPixel, BGR24>(ref Unsafe.AsRef(value)));
+                if (typeof(TPixel) == typeof(RGB24)) return new BGRP32(Unsafe.As<TPixel, RGB24>(ref Unsafe.AsRef(value)));
+
+                if (typeof(TPixel) == typeof(BGRA5551)) return new BGRP32(Unsafe.As<TPixel, BGRA5551>(ref Unsafe.AsRef(value)));
+                if (typeof(TPixel) == typeof(BGRA4444)) return new BGRP32(Unsafe.As<TPixel, BGRA4444>(ref Unsafe.AsRef(value)));
+                if (typeof(TPixel) == typeof(BGRA32)) return new BGRP32(Unsafe.As<TPixel, BGRA32>(ref Unsafe.AsRef(value)));
+                if (typeof(TPixel) == typeof(RGBA32)) return new BGRP32(Unsafe.As<TPixel, RGBA32>(ref Unsafe.AsRef(value)));
+                if (typeof(TPixel) == typeof(ARGB32)) return new BGRP32(Unsafe.As<TPixel, ARGB32>(ref Unsafe.AsRef(value)));
+
+                if (typeof(TPixel) == typeof(BGRP32)) return Unsafe.As<TPixel, BGRP32>(ref Unsafe.AsRef(value));
+                if (typeof(TPixel) == typeof(RGBP32)) return new BGRP32(Unsafe.As<TPixel, RGBP32>(ref Unsafe.AsRef(value)));
+
+                throw new NotImplementedException();
             }
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static BGRP32 Lerp(BGR24 left, BGR24 right, int rx)
-            {
-                // calculate quantized weights
-                var lx = 16384 - rx;
-                System.Diagnostics.Debug.Assert((lx + rx) == 16384);
-                var B = (left.B * lx + right.B * rx) / 16384;
-                var G = (left.G * lx + right.G * rx) / 16384;
-                var R = (left.R * lx + right.R * rx) / 16384;                
-                return new BGRP32(R, G, B, 255);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static BGRP32 Lerp(RGBA32 p00, RGBA32 p01, int rx)
-            {
-                // calculate quantized weights
-                var lx = 16384 - rx;
-                System.Diagnostics.Debug.Assert((lx + rx) == 16384);
-
-                // calculate final alpha
-                int a = (p00.A * lx + p01.A * rx) / 16384;
-                if (a == 0) return default;
-
-                // calculate premultiplied RGB
-                lx *= p00.A;
-                rx *= p01.A;
-                int r = (p00.R * lx + p01.R * rx) / (16384 * 255);
-                int g = (p00.G * lx + p01.G * rx) / (16384 * 255);
-                int b = (p00.B * lx + p01.B * rx) / (16384 * 255);
-
-                // unpremultiply RGB
-                return new BGRP32(r , g , b , a);
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static BGRP32 Lerp(in RGBA32 p00, in RGBA32 p01, in RGBA32 p10, in RGBA32 p11, int rx, int by)
-            {
-                // calculate quantized weights
-                var lx = 16384 - rx;
-                var ty = 16384 - by;
-                var w00 = lx * ty / 16384;
-                var w01 = rx * ty / 16384;
-                var w10 = lx * by / 16384;
-                var w11 = rx * by / 16384;
-
-                System.Diagnostics.Debug.Assert((w00 + w01 + w10 + w11) == 16384);
-
-                // calculate final alpha
-
-                int a = (p00.A * w00 + p01.A * w01 + p10.A * w10 + p11.A * w11) / 16384;
-
-                if (a == 0) return default;
-
-                // calculate premultiplied RGB
-
-                w00 *= p00.A;
-                w01 *= p01.A;
-                w10 *= p10.A;
-                w11 *= p11.A;
-
-                int r = (p00.R * w00 + p01.R * w01 + p10.R * w10 + p11.R * w11) / (16384 * 255);
-                int g = (p00.G * w00 + p01.G * w01 + p10.G * w10 + p11.G * w11) / (16384 * 255);
-                int b = (p00.B * w00 + p01.B * w01 + p10.B * w10 + p11.B * w11) / (16384 * 255);                
-
-                return new BGRP32(r, g, b, a);
-            }
-
-            #endregion            
+            #endregion
         }
 
         /// <summary>

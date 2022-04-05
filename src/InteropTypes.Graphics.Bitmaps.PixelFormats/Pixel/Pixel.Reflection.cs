@@ -11,6 +11,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -19,6 +20,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -27,6 +29,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -35,6 +38,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => false;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -43,6 +47,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -51,6 +56,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -59,6 +65,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -67,6 +74,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -75,6 +83,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -83,6 +92,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -91,6 +101,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -99,6 +110,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -107,6 +119,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => true;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -115,6 +128,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => true;
+            public bool IsQuantized => true;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -123,6 +137,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => false;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -131,6 +146,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => true;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => false;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -139,6 +155,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => false;
             public PixelFormat GetPixelFormat() => Format;
         }
 
@@ -147,6 +164,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => false;
+            public bool IsQuantized => false;
             public PixelFormat GetPixelFormat() => Format;
         }        
 
@@ -155,6 +173,7 @@ namespace InteropTypes.Graphics.Bitmaps
             public uint GetCode() => Code;
             public bool IsOpaque => false;
             public bool IsPremultiplied => true;
+            public bool IsQuantized => false;
             public PixelFormat GetPixelFormat() => Format;
         }
     }

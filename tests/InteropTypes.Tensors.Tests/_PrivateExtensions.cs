@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace InteropTypes.Tensors
+{
+    using V3 = System.Numerics.Vector3;
+    using BGR24 = Graphics.Bitmaps.Pixel.BGR24;
+    using BGR96F = Graphics.Bitmaps.Pixel.BGR96F;
+
+    internal static class _PrivateExtensions
+    {
+        public static void AttachToCurrentTest(this SpanTensor2<BGR24> tensor, string fileName)
+        {
+            tensor.ToSpanBitmap().Save(fileName, Codecs.STBCodec.Default);
+            NUnit.Framework.TestContext.AddTestAttachment(fileName);
+        }
+
+        public static void AttachToCurrentTest(this SpanTensor2<V3> tensor, string fileName)
+        {
+            tensor.ToSpanBitmap().Save(fileName, Codecs.STBCodec.Default);
+            NUnit.Framework.TestContext.AddTestAttachment(fileName);
+        }
+
+        public static Graphics.Bitmaps.SpanBitmap<BGR96F> ToSpanBitmap(this SpanTensor2<V3> tensor)
+        {
+            var data = System.Runtime.InteropServices.MemoryMarshal.Cast<V3, Byte>(tensor.Span);
+
+            return new Graphics.Bitmaps.SpanBitmap<BGR96F>(data, tensor.BitmapSize.Width, tensor.BitmapSize.Height, Graphics.Bitmaps.Pixel.BGR96F.Format);
+        }
+
+        public static Graphics.Bitmaps.SpanBitmap<BGR24> ToSpanBitmap(this SpanTensor2<BGR24> tensor)
+        {
+            var data = System.Runtime.InteropServices.MemoryMarshal.Cast<BGR24, Byte>(tensor.Span);
+
+            return new Graphics.Bitmaps.SpanBitmap<BGR24>(data, tensor.BitmapSize.Width, tensor.BitmapSize.Height, Graphics.Bitmaps.Pixel.BGR24.Format);
+        }
+    }
+}

@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Bitmaps
             : IQuantizedInterpolator<RGBP32, RGBP32>
             , IFloatingInterpolator<RGBP32, RGBP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
@@ -95,7 +95,7 @@ namespace InteropTypes.Graphics.Bitmaps
             : IQuantizedInterpolator<BGRP32, BGRP32>
             , IFloatingInterpolator<BGRP32, BGRP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
@@ -171,7 +171,7 @@ namespace InteropTypes.Graphics.Bitmaps
             : IQuantizedInterpolator<BGR565, BGRP32>
             , IFloatingInterpolator<BGR565, BGRP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
@@ -249,7 +249,7 @@ namespace InteropTypes.Graphics.Bitmaps
             , IFloatingInterpolator<RGB24, RGB24>
             , IFloatingInterpolator<RGB24, BGRP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
@@ -388,7 +388,7 @@ namespace InteropTypes.Graphics.Bitmaps
             , IFloatingInterpolator<BGR24, BGR24>
             , IFloatingInterpolator<BGR24, BGRP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
@@ -527,7 +527,7 @@ namespace InteropTypes.Graphics.Bitmaps
             , IFloatingInterpolator<RGBA32, RGBA32>
             , IFloatingInterpolator<RGBA32, BGRP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
@@ -726,7 +726,7 @@ namespace InteropTypes.Graphics.Bitmaps
             , IFloatingInterpolator<BGRA32, BGRA32>
             , IFloatingInterpolator<BGRA32, BGRP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;
@@ -925,7 +925,7 @@ namespace InteropTypes.Graphics.Bitmaps
             , IFloatingInterpolator<ARGB32, ARGB32>
             , IFloatingInterpolator<ARGB32, BGRP32>
         {
-            const int _QLERPSHIFT = 11;
+            const int _QLERPSHIFT = 10;
             const int _QLERPVALUE = 1 << _QLERPSHIFT;
             const float _QLERPVALUEF = _QLERPVALUE;
             const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;

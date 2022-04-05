@@ -73,7 +73,7 @@ void _WritePixelTypeStruct(string pixelFmt, params string[] extraPixels)
 
     _writeStructBegin($"{pixelFmt}", interfaces.ToArray());
 
-    WriteLine("const int _QLERPSHIFT = 11;");    
+    WriteLine("const int _QLERPSHIFT = 10;");    
     WriteLine("const int _QLERPVALUE = 1 << _QLERPSHIFT;");
     WriteLine("const float _QLERPVALUEF = _QLERPVALUE;");    
     WriteLine("const int _QLERPSHIFTSQUARED = _QLERPSHIFT*2;");

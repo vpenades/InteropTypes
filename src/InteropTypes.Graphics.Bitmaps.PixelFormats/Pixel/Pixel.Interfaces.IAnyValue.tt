@@ -15,38 +15,10 @@ using System.Runtime.InteropServices;
 namespace InteropTypes.Graphics.Bitmaps
 {
     partial class Pixel    
-    {
-        public interface IAnyValueGetter<T> where T : unmanaged
-        {
-            TTo GetValue<TTo>() where TTo : unmanaged, IValueSetter<T>;
-        }
+    {           
 
-        public interface ICopyValueToAny<T> where T : unmanaged
-        {
-            void CopyTo<TTo>(ref TTo value) where TTo : unmanaged, IValueSetter<T>;
-        }
-
-        internal interface _IGetSetCopy<TOther> :
-            IValueGetter<TOther>,            
-            ICopyValueTo<TOther>
-            where TOther : unmanaged
-        {
+<# //-------------------------------------------------------------------------------------------------------------------
         
-        }
-
-<# //-------------------------------------------------------------------------------------------------------------------    
-
-    string _WriteCommonInterface()
-    {
-        string iface ="_IAllGetters";
-
-        var all = PixelFormatsAllNames.Select(item => $"_IGetSetCopy<{item}>" ).ToArray();
-        _writeInternalInterfaceBegin(iface, all);        
-        _writeEnd();
-        return iface;        
-    }
-
-    _WriteCommonInterface();
 
     WriteLine("");
     WriteLine("");
@@ -54,34 +26,30 @@ namespace InteropTypes.Graphics.Bitmaps
 
     foreach(var fmt in PixelFormatsAllNames)
     {
-        _writeStructBegin(fmt, "_IAllGetters", $"IAnyValueGetter<{fmt}>", $"ICopyValueToAny<{fmt}>");
+        _writeStructBegin(fmt, "IConvertTo");
 
         _writeDocInherit();
         _writeFastestMethodAttribute();
-        WriteLine($"public TTo GetValue<TTo>() where TTo:unmanaged,IValueSetter<{fmt}>");
+        WriteLine($"public TPixel To<TPixel>() where TPixel: unmanaged");
         _writeOpenBlock();
-        WriteLine($"var tmp = default(TTo); tmp.SetValue(this); return tmp;");
-        _writeCloseBlock();        
-
-        _writeDocInherit();
-        _writeFastestMethodAttribute();
-        WriteLine($"public void CopyTo<T>(ref T value) where T:unmanaged,IValueSetter<{fmt}> {{ value.SetValue(this); }}");
-
+        _WriteSkipInitVar("TPixel","result");
         foreach(var other in PixelFormatsAllNames)
         {
-            _writeDocInherit();
-            _writeFastestMethodAttribute();            
-
-            WriteLine($"{other} IValueGetter<{other}>.GetValue()");
-            _writeOpenBlock();
-            _WriteSkipInitVar(other,"t");
-            WriteLine("t.SetValue(this); return t;");
-            _writeCloseBlock();
-
-            _writeDocInherit();
-            _writeFastestMethodAttribute();
-            WriteLine($"public void CopyTo(ref {other} value) {{ value.SetValue(this); }}");
+            WriteLine($"if (typeof(TPixel) == typeof({other})) {{ Unsafe.As<TPixel, {other}>(ref result).SetValue(this); return result; }}");            
         }
+        WriteLine("throw new NotImplementedException($\"Cannot convert to {typeof(TPixel).Name}\");");
+        _writeCloseBlock();
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged");
+        _writeOpenBlock();
+        foreach(var other in PixelFormatsAllNames)
+        {
+            WriteLine($"if (typeof(TPixel) == typeof({other})) {{ Unsafe.As<TPixel, {other}>(ref target).SetValue(this); return; }}");            
+        }
+        WriteLine("throw new NotImplementedException($\"Cannot convert to {typeof(TPixel).Name}\");");
+        _writeCloseBlock();
 
         _writeEnd();
     }

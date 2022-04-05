@@ -35,8 +35,8 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void BGRP32LerpTests()
         {
-            Assert.AreEqual(2139045663, Pixel.BGRP32.Lerp(RGBA32_A, RGBA32_B, 8192).GetHashCode());
-            Assert.AreEqual(2139045663, RGBA32_A.LerpToBGRP32(RGBA32_B, 8192).GetHashCode());
+            Assert.AreEqual(2139045663, Pixel.RGBA32.LerpToBGRP32(RGBA32_A, RGBA32_B, 512).GetHashCode());
+            Assert.AreEqual(2139045663, RGBA32_A.LerpToBGRP32(RGBA32_B, 512).GetHashCode());
 
             Assert.AreEqual(127, _TestLerpQuantized<Pixel.RGBA32, Pixel.Alpha8>(RGBA32_A, RGBA32_B).GetHashCode());
 
@@ -65,8 +65,8 @@ namespace InteropTypes.Graphics.Bitmaps
                 var pp = new Pixel.BGRP32(col);
                 var uu = new Pixel.BGRA32(pp);
 
-                Assert.AreEqual(pp, col.GetValue<Pixel.BGRP32>());
-                Assert.AreEqual(uu, pp.GetValue<Pixel.BGRA32>());
+                Assert.AreEqual(pp, col.To<Pixel.BGRP32>());
+                Assert.AreEqual(uu, pp.To<Pixel.BGRA32>());
 
                 var xx = Pixel.BGRA32.LerpToBGRP32(col, col, col, col, 0, 0);
                 Assert.AreEqual(pp, xx);
@@ -91,10 +91,10 @@ namespace InteropTypes.Graphics.Bitmaps
         }        
 
         private void _CheckInterpolation<TSrcPixel, TDstPixel>(TSrcPixel srcColor)
-            where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IValueGetter<Pixel.BGRP32>, Pixel.IValueSetter<Pixel.BGRP32>
-            where TDstPixel : unmanaged, Pixel.IReflection, Pixel.IValueGetter<Pixel.BGRP32> 
+            where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRP32>
+            where TDstPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo
         {
-            var premulRef = srcColor.GetValue();
+            var premulRef = srcColor.To<Pixel.BGRP32>();
             var unpremulRef = default(TSrcPixel);
             unpremulRef.SetValue(premulRef);
 
@@ -126,8 +126,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 if (default(TDstPixel).IsPremultiplied)
                 {
-                    var srcPremul = srcColor.GetValue();
-                    var srcResult = result.GetValue();
+                    var srcPremul = srcColor.To<Pixel.BGRP32>();
+                    var srcResult = result.To<Pixel.BGRP32>();
                     Assert.AreEqual(srcPremul, srcResult);
                 }
                 else
@@ -140,11 +140,11 @@ namespace InteropTypes.Graphics.Bitmaps
 
 
         private TDstPixel _TestLerpQuantized<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
-            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRP32>
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
             where TDstPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
         {
-            var ap = a.GetValue();
-            var bp = b.GetValue();
+            var ap = a.To<Pixel.BGRP32>();
+            var bp = b.To<Pixel.BGRP32>();
 
             var rgbp = Pixel.BGRP32.Lerp(ap, bp, 8192);
 
@@ -157,11 +157,11 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         private TDstPixel _TestLerpFloating<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
-            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRP128F>
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
             where TDstPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP128F>
         {
-            var ap = a.GetValue();
-            var bp = b.GetValue();
+            var ap = a.To<Pixel.BGRP128F>();
+            var bp = b.To<Pixel.BGRP128F>();
 
             // var rgbp = Pixel.BGRP128F.Lerp(ap, bp, 0.5f);
             // var final = default(TDstPixel).From(rgbp);

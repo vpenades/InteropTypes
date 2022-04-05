@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Backends
         public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, Action<ICanvas2D> canvas)
             where TPixel : unmanaged
             , Pixel.IValueSetter<Pixel.BGRA32>
-            , Pixel.IValueSetter<Pixel.QVectorBGRP>
+            , Pixel.IValueSetter<Pixel.BGRP32>
         {
             ICanvas2D onPin(PointerBitmap ptr)
             {
@@ -28,7 +28,7 @@ namespace InteropTypes.Graphics.Backends
         public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, POINT virtualSize, Action<ICanvas2D> canvas)
             where TPixel : unmanaged
             , Pixel.IValueSetter<Pixel.BGRA32>
-            , Pixel.IValueSetter<Pixel.QVectorBGRP>
+            , Pixel.IValueSetter<Pixel.BGRP32>
         {
             if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
             if (virtualSize.Y == 0) throw new ArgumentException(nameof(virtualSize));
@@ -84,7 +84,7 @@ namespace InteropTypes.Graphics.Backends
             ICanvas2D _Create<TPixel>()
                 where TPixel : unmanaged
                 , Pixel.IValueSetter<Pixel.BGRA32>
-                , Pixel.IValueSetter<Pixel.QVectorBGRP>
+                , Pixel.IValueSetter<Pixel.BGRP32>
             {                
                 return new _MemoryDrawingContext<TPixel>(bitmap.OfType<TPixel>(), c => Pixel.GetColor<TPixel>(c));
             }
@@ -118,7 +118,7 @@ namespace InteropTypes.Graphics.Backends
 
         public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, Converter<System.Drawing.Color, TPixel> converter)
             where TPixel : unmanaged
-            , Pixel.IValueSetter<Pixel.QVectorBGRP>
+            , Pixel.IValueSetter<Pixel.BGRP32>
         {
             return new _MemoryDrawingContext<TPixel>(bitmap, converter);
         }

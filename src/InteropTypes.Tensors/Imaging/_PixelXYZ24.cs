@@ -19,7 +19,7 @@ namespace InteropTypes.Tensors
 
         #region API
 
-        const int _QLERPSHIFT = 11;
+        const int _QLERPSHIFT = 10;
         const int _QLERPVALUE = 1 << _QLERPSHIFT;        
         const int _QLERPSHIFTSQUARED = _QLERPSHIFT * 2;
         const int _QLERPVALUESQUARED = 1 << _QLERPSHIFTSQUARED;
@@ -42,13 +42,15 @@ namespace InteropTypes.Tensors
 
             // lerp
             #if NET5_0_OR_GREATER
-            Unsafe.SkipInit<BGR24>(out var result);
+            Unsafe.SkipInit<_PixelXYZ24>(out var result);
             #else
             var result = default(_PixelXYZ24);
             #endif
-            result.Z = (Byte)((tl.Z * wtl + tr.Z * wtr + bl.Z * wbl + br.Z * wbr) >> _QLERPSHIFTSQUARED);
-            result.Y = (Byte)((tl.Y * wtl + tr.Y * wtr + bl.Y * wbl + br.Y * wbr) >> _QLERPSHIFTSQUARED);
+
             result.X = (Byte)((tl.X * wtl + tr.X * wtr + bl.X * wbl + br.X * wbr) >> _QLERPSHIFTSQUARED);
+            result.Y = (Byte)((tl.Y * wtl + tr.Y * wtr + bl.Y * wbl + br.Y * wbr) >> _QLERPSHIFTSQUARED);
+            result.Z = (Byte)((tl.Z * wtl + tr.Z * wtr + bl.Z * wbl + br.Z * wbr) >> _QLERPSHIFTSQUARED);            
+            
             return result;
         }
 
@@ -160,10 +162,10 @@ namespace InteropTypes.Tensors
                 var d = GetPixel(x + 1, y + 1);
 
                 // _PixelTransformIterator runs at a fraction of 16384
-                // and Pixel.InterpolateBilinear runs at a fraction of 2048
+                // and Pixel.InterpolateBilinear runs at a fraction of 1024
                 // so we need to divide by 4 to convert the fractions.                
 
-                return BiLerp(a, b, c, d, (uint)rx / 8, (uint)ry / 8);
+                return BiLerp(a, b, c, d, (uint)rx / 16, (uint)ry / 16);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

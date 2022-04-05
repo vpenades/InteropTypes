@@ -140,20 +140,16 @@ namespace InteropTypes.Graphics.Bitmaps
         _writeDocInherit();
         _writeFastestMethodAttribute();
         WriteLine($"public void SetValue({srcType} value)");
-        _writeOpenBlock();
-        WriteLine("if (value.A == 0) this = default;");
-        WriteLine("else");
-        _writeOpenBlock();                
+        _writeOpenBlock();        
 
-        WriteLine("uint rcpA = (65536u * 255u) / (uint)value.A;");
+        WriteLine("uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;");
 
         foreach(var c in components)
         {
             if (c == "A") WriteLine("A = value.A;");
             else WriteLine($"{c} = (Byte)((value.Pre{c} * rcpA + 255u) >> 16);");
-        }        
-
-        _writeCloseBlock();
+        }
+        
         _writeCloseBlock();
     }
 

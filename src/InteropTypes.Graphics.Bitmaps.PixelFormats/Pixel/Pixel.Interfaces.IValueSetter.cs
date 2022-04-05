@@ -422,28 +422,20 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
             }
 
             /// <inheritdoc/>
@@ -600,28 +592,20 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
             }
 
             /// <inheritdoc/>
@@ -831,30 +815,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    A = value.A;
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    A = value.A;
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
             /// <inheritdoc/>
@@ -1026,30 +1002,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    A = value.A;
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    A = value.A;
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
             /// <inheritdoc/>
@@ -1221,30 +1189,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(BGRP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    A = value.A;
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP32 value)
             {
-                if (value.A == 0) this = default;
-                else
-                {
-                    uint rcpA = (65536u * 255u) / (uint)value.A;
-                    B = (Byte)((value.PreB * rcpA + 255u) >> 16);
-                    G = (Byte)((value.PreG * rcpA + 255u) >> 16);
-                    R = (Byte)((value.PreR * rcpA + 255u) >> 16);
-                    A = value.A;
-                }
+                uint rcpA = value.A == 0 ? 0 : (65536u * 255u) / (uint)value.A;
+                B = (Byte)((value.PreB * rcpA + 255u) >> 16);
+                G = (Byte)((value.PreG * rcpA + 255u) >> 16);
+                R = (Byte)((value.PreR * rcpA + 255u) >> 16);
+                A = value.A;
             }
 
             /// <inheritdoc/>

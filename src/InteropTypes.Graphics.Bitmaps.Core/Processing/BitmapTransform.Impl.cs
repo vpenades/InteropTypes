@@ -6,10 +6,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 {
     using TRANSFORM = System.Numerics.Matrix3x2;    
 
-    using TOPREMULQ = Pixel.ICopyValueTo<Pixel.BGRP32>;
+    using TOPREMULQ = Pixel.IConvertTo;
     using FROMPREMULQ = Pixel.IValueSetter<Pixel.BGRP32>;
 
-    using TOVECTORF = Pixel.ICopyValueTo<Pixel.RGBP128F>;
+    using TOVECTORF = Pixel.IConvertTo;
     using FROMVECTORF = Pixel.IValueSetter<Pixel.RGBP128F>;    
 
     public partial struct BitmapTransform : SpanBitmap.ITransfer
@@ -83,7 +83,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         }        
 
         public static void OpaquePixelsConvert<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform, bool useBilinear)
-           where TSrcPixel : unmanaged, Pixel.ICopyValueTo<TDstPixel>
+           where TSrcPixel : unmanaged, Pixel.IConvertTo
            where TDstPixel : unmanaged, Pixel.IValueSetter<TSrcPixel>
         {
             void _rowProcessorNearest(Span<TDstPixel> dst, SpanQuantized8Sampler<TSrcPixel, TSrcPixel> src, _RowTransformIterator srcIterator)
@@ -246,10 +246,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 var d = GetPixelOrDefault(x + 1, y + 1);
 
                 // _PixelTransformIterator runs at a fraction of 16384
-                // and Pixel.InterpolateBilinear runs at a fraction of 2048
+                // and Pixel.InterpolateBilinear runs at a fraction of 1024
                 // so we need to divide by 4 to convert the fractions.
 
-                return _Interpolator.InterpolateBilinear(a, b, c, d, (uint)rx / 8 , (uint)ry / 8 );
+                return _Interpolator.InterpolateBilinear(a, b, c, d, (uint)rx / 16 , (uint)ry / 16 );
             }
 
             #endregion

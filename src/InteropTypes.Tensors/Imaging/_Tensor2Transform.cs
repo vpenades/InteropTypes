@@ -5,33 +5,54 @@ using System.Text;
 namespace InteropTypes.Tensors
 {
     using TRANSFORM = System.Numerics.Matrix3x2;    
-    using POINT = System.Drawing.Point;
-    using SIZE = System.Drawing.Size;
     using XY = System.Numerics.Vector2;
 
     partial struct SpanTensor2<T>
     {
-        public static unsafe void FillPixels(SpanTensor2<T> target, SpanTensor2<T> source, in TRANSFORM srcXform, bool useBilinear)
+        public unsafe void FitPixels<TSrcPixel>(SpanTensor2<TSrcPixel> source, MultiplyAdd mad, bool useBilinear)
+            where TSrcPixel : unmanaged
         {
-            if (sizeof(T) == 3)
+            var w = (float)source.BitmapSize.Width / (float)this.BitmapSize.Width;
+            var h = (float)source.BitmapSize.Height / (float)this.BitmapSize.Height;
+
+            var matrix = TRANSFORM.CreateScale(w, h);
+
+            FillPixels(source, matrix, mad, useBilinear);
+        }
+
+        public unsafe void FillPixels<TSrcPixel>(SpanTensor2<TSrcPixel> source, in TRANSFORM srcXform, MultiplyAdd mad, bool useBilinear)
+            where TSrcPixel : unmanaged
+        {
+            if (sizeof(TSrcPixel) == 3)
             {
-                var srcXYZ = _PixelXYZ24.SpanTensor2Sampler.From(source.Cast<_PixelXYZ24>());
-                var dstXYZ = target.Cast<_PixelXYZ24>();
-                _Tensor2TransformSource.TransferPixels(srcXYZ, srcXform, dstXYZ, useBilinear);
+                var data = System.Runtime.InteropServices.MemoryMarshal.Cast<TSrcPixel,Byte>(source.Span);
+                var w = source.BitmapSize.Width;
+                var h = source.BitmapSize.Height;
+
+                FillPixelsBGR24(data, w * 3, w, h, srcXform, mad, useBilinear);
                 return;
-            }
+            }            
 
             throw new NotImplementedException();
         }
 
-        public static unsafe void FillPixels(SpanTensor2<System.Numerics.Vector3> target, SpanTensor2<T> source, in TRANSFORM srcXform, MultiplyAdd mad, bool useBilinear)
+        public unsafe void FillPixelsBGR24(ReadOnlySpan<Byte> source, int byteStride, int width, int height, in TRANSFORM srcXform, MultiplyAdd mad, bool useBilinear)
         {
-            if (sizeof(T) == 3)
+            var srcXYZ = _PixelXYZ24.SpanTensor2Sampler.From(source, byteStride, width, height, mad);
+
+            if (typeof(T) == typeof(System.Numerics.Vector3))
             {
-                var srcXYZ = _PixelXYZ24.SpanTensor2Sampler.From(source.Cast<_PixelXYZ24>(), mad);
-                _Tensor2TransformSource.TransferPixels(srcXYZ, srcXform, target, useBilinear);
+                var dstXYZ = this.Cast<System.Numerics.Vector3>();
+                _Tensor2TransformSource.TransferPixels(srcXYZ, srcXform, dstXYZ, useBilinear);
                 return;
             }
+
+            if (sizeof(T) == 3)
+            {                
+                var dstXYZ = this.Cast<_PixelXYZ24>();
+                _Tensor2TransformSource.TransferPixels(srcXYZ, srcXform, dstXYZ, useBilinear);
+                return;
+            }            
 
             throw new NotImplementedException();
         }
@@ -43,16 +64,13 @@ namespace InteropTypes.Tensors
 
         public static void TransferPixels(_PixelXYZ24.SpanTensor2Sampler srcSampler, in TRANSFORM srcXform, SpanTensor2<System.Numerics.Vector3> dst, bool useBilinear)
         {
-            TRANSFORM.Invert(srcXform, out var boundsXform);
-            var destBounds = new _BitmapBounds(boundsXform, srcSampler.Width, srcSampler.Height).Clipped(dst.BitmapSize);
-            
             _RowTransformIterator iter;            
 
-            for (int dy = destBounds.Top; dy < destBounds.Bottom; ++dy)
+            for (int dy = 0; dy < dst.BitmapSize.Height; ++dy)
             {
-                iter = new _RowTransformIterator(destBounds.Left, dy, srcXform);                
+                iter = new _RowTransformIterator(0, dy, srcXform);                
 
-                var dstRow = dst[dy].Span.Slice(destBounds.Left, destBounds.Width);
+                var dstRow = dst[dy].Span.Slice(0, dst.BitmapSize.Width);
 
                 if (useBilinear) _rowProcessorBilinear(dstRow, srcSampler, iter);
                 else _rowProcessorNearest(dstRow, srcSampler, iter);
@@ -61,16 +79,13 @@ namespace InteropTypes.Tensors
 
         public static void TransferPixels(_PixelXYZ24.SpanTensor2Sampler srcSampler, TRANSFORM srcXform, SpanTensor2<_PixelXYZ24> dst, bool useBilinear)
         {
-            TRANSFORM.Invert(srcXform, out var boundsXform);
-            var destBounds = new _BitmapBounds(boundsXform, srcSampler.Width, srcSampler.Height).Clipped(dst.BitmapSize);            
-            
             _RowTransformIterator iter;
 
-            for (int dy = destBounds.Top; dy < destBounds.Bottom; ++dy)
+            for (int dy = 0; dy < dst.BitmapSize.Height; ++dy)
             {
-                iter = new _RowTransformIterator(destBounds.Left, dy, srcXform);
+                iter = new _RowTransformIterator(0, dy, srcXform);
 
-                var dstRow = dst[dy].Span.Slice(destBounds.Left, destBounds.Width);
+                var dstRow = dst[dy].Span.Slice(0, dst.BitmapSize.Width);
 
                 if (useBilinear) _rowProcessorBilinear(dstRow, srcSampler, iter);
                 else _rowProcessorNearest(dstRow, srcSampler, iter);
@@ -114,98 +129,7 @@ namespace InteropTypes.Tensors
         }
 
         #endregion
-    }
-
-    [System.Diagnostics.DebuggerDisplay("{X},{Y} {Width}x{Height}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    readonly struct _BitmapBounds
-    {
-        #region constructor        
-
-        public _BitmapBounds(int x, int y, int w, int h)
-        {
-            this.X = x;
-            this.Y = y;
-            this.Width = Math.Max(0, w);
-            this.Height = Math.Max(0, h);
-        }
-
-        public _BitmapBounds(TRANSFORM srcXform, float srcW, float srcH)
-        {
-            var a = srcXform.Translation;
-            var b = XY.Transform(new XY(srcW, 0), srcXform);
-            var c = XY.Transform(new XY(srcW, srcH), srcXform);
-            var d = XY.Transform(new XY(0, srcH), srcXform);
-
-            var min = XY.Min(XY.Min(XY.Min(a, b), c), d);
-            var max = XY.Max(XY.Max(XY.Max(a, b), c), d);
-
-            this.X = (int)min.X;
-            this.Y = (int)min.Y;
-
-            this.Width = (int)max.X + 1 - this.X;
-            this.Height = (int)max.Y + 1 - this.Y;
-        }
-
-        #endregion
-
-        #region data
-
-        public readonly int X;
-        public readonly int Y;
-        public readonly int Width;
-        public readonly int Height;
-
-        #endregion
-
-        #region properties
-
-        /// <summary>
-        /// Gets the area of this object, in pixels
-        /// </summary>
-        public int Area => Width * Height;
-
-        public POINT Location => new POINT(X, Y);
-
-        public SIZE Size => new SIZE(Width, Height);
-
-        public int Left => this.X;
-
-        public int Top => this.Y;
-
-        public int Right => unchecked(this.X + this.Width);
-
-        public int Bottom => unchecked(this.Y + this.Height);
-
-        #endregion
-
-        #region API        
-
-        public _BitmapBounds Clipped(in SIZE clip) { return _Clip(this, new _BitmapBounds(0, 0, clip.Width, clip.Height)); }
-
-        public _BitmapBounds Clipped(in _BitmapBounds clip) { return _Clip(this, clip); }
-
-        private static _BitmapBounds _Clip(in _BitmapBounds rect, in _BitmapBounds clip)
-        {
-            var x = rect.X;
-            var y = rect.Y;
-            var w = rect.Width;
-            var h = rect.Height;
-
-            if (x < clip.X) { w -= (clip.X - x); x = clip.X; }
-            if (y < clip.Y) { h -= (clip.Y - y); y = clip.Y; }
-
-            if (x + w > clip.X + clip.Width) w -= (x + w) - (clip.X + clip.Width);
-            if (y + h > clip.Y + clip.Height) h -= (y + h) - (clip.Y + clip.Height);
-
-            if (w < 0) w = 0;
-            if (h < 0) h = 0;
-
-            return new _BitmapBounds(x, y, w, h);
-        }
-
-        #endregion
-    }
+    }    
 
     /// <summary>
     /// Iterates over the pixels of a transformed row.

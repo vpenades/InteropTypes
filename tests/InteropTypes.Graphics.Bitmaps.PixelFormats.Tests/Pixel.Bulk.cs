@@ -58,8 +58,8 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         public void ConversionTest<TSrcPixel,TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
-            where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
+            where TDstPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
         {
             var srcFmt = PixelFormat.TryIdentifyFormat<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
@@ -76,8 +76,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             for (int i = 0; i < 5; ++i)
             {
-                var srcP = src[i].GetValue();
-                var dstP = dst[i].GetValue();
+                var srcP = src[i].To<Pixel.BGRA32>();
+                var dstP = dst[i].To<Pixel.BGRA32>();
 
                 if (!srcFmt.HasUnpremulAlpha || !dstFmt.HasUnpremulAlpha)
                 {
@@ -90,8 +90,8 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         public void ConversionPremulTest<TSrcPixel, TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
-            where TDstPixel : unmanaged, Pixel.IValueGetter<Pixel.BGRA32>, Pixel.IValueSetter<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
+            where TDstPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
         {
             var srcFmt = PixelFormat.TryIdentifyFormat<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
@@ -109,8 +109,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             for (int i = 0; i < 5; ++i)
             {
-                var srcA = src[i].GetValue();
-                var dstA = dst[i].GetValue();
+                var srcA = src[i].To<Pixel.BGRA32>();
+                var dstA = dst[i].To<Pixel.BGRA32>();
 
                 var srcP = new Pixel.RGBP32(srcA);
                 var dstP = new Pixel.RGBP32(dstA);

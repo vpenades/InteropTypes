@@ -8,12 +8,12 @@ namespace InteropTypes.Graphics.Bitmaps
     partial class Pixel
     {
         public static void LerpArray<TSrcPixel, TDstPixel>(ReadOnlySpan<TSrcPixel> left, ReadOnlySpan<TSrcPixel> right, float amount, Span<TDstPixel> dst)
-            where TSrcPixel : unmanaged, IValueGetter<RGBA128F>
+            where TSrcPixel : unmanaged, IConvertTo
             where TDstPixel : unmanaged, IValueSetter<RGBA128F>
         {
             for (int i = 0; i < dst.Length; ++i)
             {
-                var v = System.Numerics.Vector4.Lerp(left[i].GetValue().RGBA, right[i].GetValue().RGBA, amount);
+                var v = System.Numerics.Vector4.Lerp(left[i].To<RGBA128F>().RGBA, right[i].To<RGBA128F>().RGBA, amount);
                 dst[i].SetValue(new RGBA128F(v));
             }
         }

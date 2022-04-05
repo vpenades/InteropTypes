@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using XYZ = System.Numerics.Vector3;
@@ -261,10 +262,26 @@ namespace InteropTypes.Graphics.Bitmaps
             #region data
 
             public UInt16 BGR;
+            public Byte R => (Byte)Ru;
+            public Byte G => (Byte)Gu;
+            public Byte B => (Byte)Bu;
 
-            public int R { get { var p = (BGR >> 11) & 0x1f; return (p * 8) | (p >> 2); } }
-            public int G { get { var p = (BGR >> 5) & 0x3f; return (p * 4) | (p >> 4); } }
-            public int B { get { var p = BGR & 0x1f; return (p * 8) | (p >> 2); } }
+            public uint Ru
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get { var p = (uint)(BGR >> 11) & 0x1f; return (p * 8) | (p >> 2); }
+            }
+
+            public uint Gu
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get { var p = (uint)(BGR >> 5) & 0x3f; return (p * 4) | (p >> 4); }
+            }
+            public uint Bu
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get { var p = (uint)BGR & 0x1f; return (p * 8) | (p >> 2); }
+            }            
 
             #endregion
 
@@ -334,10 +351,31 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public UInt16 BGRA;
 
-            public int R { get { var p = (BGRA >> 10) & 0x1f; return p * 8 + (p >> 2); } }
-            public int G { get { var p = (BGRA >> 5) & 0x1f; return p * 8 + (p >> 2); } }
-            public int B { get { var p = BGRA & 0x1f; return p * 8 + (p >> 2); } }
-            public int A => (BGRA >> 15) * 255;            
+            public Byte R => (Byte)Ru;
+            public Byte G => (Byte)Gu;
+            public Byte B => (Byte)Bu;
+            public Byte A => (Byte)Au;
+
+            public uint Ru
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get { var p = (uint)(BGRA >> 10) & 0x1f; return p * 8 + (p >> 2); }
+            }
+            public uint Gu
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get { var p = (uint)(BGRA >> 5) & 0x1f; return p * 8 + (p >> 2); }
+            }
+            public uint Bu
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get { var p = (uint)BGRA & 0x1f; return p * 8 + (p >> 2); }
+            }
+            public uint Au
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get { return (uint)(BGRA >> 15) * 255; }
+            }
 
             #endregion
 

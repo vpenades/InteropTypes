@@ -28,14 +28,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 var pixel = Activator.CreateInstance(pixelType);
 
-                if (pixel is Pixel.IValueGetter<Pixel.BGRA32> pixelToRGBA32)
+                if (pixel is Pixel.IConvertTo pixelTo)
                 {
-                    var dstp = pixelToRGBA32.GetValue();
-                }
-
-                if (pixel is Pixel.IValueGetter<Pixel.RGBA128F> pixelToRGBA128F)
-                {
-                    var dstp = pixelToRGBA128F.GetValue();
+                    var dstp1 = pixelTo.To<Pixel.RGBA32>();
+                    var dstp2 = pixelTo.To<Pixel.RGBA128F>();
                 }
             }            
         }

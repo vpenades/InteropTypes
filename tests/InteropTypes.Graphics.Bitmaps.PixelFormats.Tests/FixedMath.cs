@@ -157,51 +157,6 @@ namespace InteropTypes.Graphics.Bitmaps
             var final = FixedMathCC8.ToByte(FixedMathCC8.FromByte(color), rcpa);
 
             Assert.AreEqual(color, final);            
-        }
-
-
-        [Test]
-        public void QuantizedMath()
-        {
-            var q1 = default(Pixel.QVectorBGRP);
-
-            q1.SetValue(new Pixel.BGRA32(255,255,255,255));            
-            Assert.AreEqual(q1.AQ8, 255);
-            Assert.AreEqual(q1.RQ8, 255);
-            Assert.AreEqual(q1.GQ8, 255);
-            Assert.AreEqual(q1.BQ8, 255);
-
-            q1.SetValue(new Pixel.BGRA32(255, 255, 255, 127));
-            Assert.AreEqual(q1.A, 2039);
-
-            
-
-            q1.SetValue(new Pixel.BGRA32(255, 127, 63, 255));            
-            Assert.AreEqual(q1.G, 2038);
-            Assert.AreEqual(q1.B, 1010);
-            Assert.AreEqual(q1.AQ8, 255);
-            Assert.AreEqual(q1.RQ8, 255);
-            Assert.AreEqual(q1.GQ8, 127);
-            Assert.AreEqual(q1.BQ8, 63);
-
-            for (uint i = 1; i < 256; ++i)
-            {
-                var ra = new Pixel.BGRA32(255, 127, 63, (Byte)i);                
-                var rp = new Pixel.BGRA32(new Pixel.BGRP32(ra));
-
-                q1.SetValue(ra);                
-                Assert.AreEqual(q1.AQ8, rp.A);
-                Assert.AreEqual(q1.RQ8, rp.R, 255 - rp.A);
-                Assert.AreEqual(q1.GQ8, rp.G, 255 - rp.A);
-                Assert.AreEqual(q1.BQ8, rp.B, 255 - rp.A);
-
-                var rgba = default(Pixel.BGRA32); rgba.SetValue(q1);
-                Assert.AreEqual(rgba.A, rp.A);
-                Assert.AreEqual(rgba.R, rp.R, 255 - rp.A);
-                Assert.AreEqual(rgba.G, rp.G, 255 - rp.A);
-                Assert.AreEqual(rgba.B, rp.B, 255 - rp.A);
-            }
-
-        }
+        }        
     }
 }

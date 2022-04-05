@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Backends
     sealed class _MemoryDrawingContext<TPixel> :
         _BaseDrawingContext<TPixel>,        
         IServiceProvider
-        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.QVectorBGRP>
+        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
     {
         #region constructor
         public _MemoryDrawingContext(MemoryBitmap<TPixel> target, Converter<GDICOLOR, TPixel> converter)
@@ -59,7 +59,7 @@ namespace InteropTypes.Graphics.Backends
     sealed class _PointerDrawingContext<TPixel> :
         _BaseDrawingContext<TPixel>,        
         IServiceProvider
-        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.QVectorBGRP>
+        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
     {
         #region constructor
         public _PointerDrawingContext(PointerBitmap target, Converter<GDICOLOR, TPixel> converter)
@@ -104,7 +104,7 @@ namespace InteropTypes.Graphics.Backends
         IRenderTargetInfo,
         IBackendCanvas2D,        
         GlobalStyle.ISource
-        where TPixel: unmanaged, Pixel.IValueSetter<Pixel.QVectorBGRP>
+        where TPixel: unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
     {
         #region constructor
         protected _BaseDrawingContext(int width, int height, Converter<GDICOLOR, TPixel> converter)

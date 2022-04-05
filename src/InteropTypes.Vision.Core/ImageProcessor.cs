@@ -28,13 +28,20 @@ namespace InteropTypes.Vision
 
         public void CopyImage(SpanBitmap src, SpanTensor3<float> dst)
         {
-            if (dst.Dimensions[2] == 3)
+            if (dst.Dimensions[2] == 3) // BGR24
             {
-                var tmpTensor = dst.UpCast<System.Numerics.Vector3>();                
+                var tmpTensor = dst.UpCast<System.Numerics.Vector3>();
 
-                _FitImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector3, TPixel>());
-
-                Transform.ApplyTransformTo(tmpTensor.Span);
+                /*
+                if (src.PixelFormat == Pixel.BGR24.Format)
+                {
+                    tmpTensor.FillPixelsBGR24(src.ReadableBytes, src.Info.StepByteSize, src.Width, src.Height, System.Numerics.Matrix3x2.Identity, Transform, true);
+                }
+                else*/
+                {
+                    _FitImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector3, TPixel>());
+                    Transform.ApplyTransformTo(tmpTensor.Span);
+                }
 
                 return;
             }
@@ -86,6 +93,8 @@ namespace InteropTypes.Vision
 
         protected virtual void _FitImage(SpanBitmap src, SpanBitmap<TPixel> dst)
         {
+            
+
             dst.AsTypeless().FitPixels(src);
         }
 
