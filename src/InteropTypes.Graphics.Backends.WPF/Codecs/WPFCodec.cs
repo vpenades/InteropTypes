@@ -10,6 +10,9 @@ using InteropTypes.Graphics.Bitmaps;
 namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("WPF(WIC) Codec")]
+    #if NET6_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
+    #endif
     public sealed class WPFCodec : IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle

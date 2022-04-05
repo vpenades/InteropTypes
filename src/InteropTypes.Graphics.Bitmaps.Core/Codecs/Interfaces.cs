@@ -6,7 +6,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Codecs
 {
-    public class CodecException : System.IO.IOException { }
+    public class BitmapCodecException : System.IO.IOException { }
 
     public struct BitmapDecoderContext
     {

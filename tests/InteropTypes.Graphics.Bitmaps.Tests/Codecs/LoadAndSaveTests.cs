@@ -23,6 +23,21 @@ namespace InteropTypes.Codecs
         [TestCase("Resources\\shannon.jpg")]
         [TestCase("Resources\\diagram.jpg")]
         [TestCase("Resources\\white.png")]
+        public void LoadImageWithDefaultCodec(string filePath)
+        {
+            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var bitmap = MemoryBitmap.Load(filePath);
+            Assert.IsFalse(bitmap.IsEmpty);
+            TestContext.WriteLine(bitmap.Info);
+            sw.Stop();
+        }
+
+
+        [TestCase("Resources\\shannon.jpg")]
+        [TestCase("Resources\\diagram.jpg")]
+        [TestCase("Resources\\white.png")]
         public void LoadImage(string filePath)
         {
             TestContext.CurrentContext.AttachShowDirLink();

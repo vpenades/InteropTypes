@@ -369,6 +369,12 @@ namespace InteropTypes.Graphics.Bitmaps
             return ref MEMMARSHAL.Cast<Byte, TPixel>(data.Slice(y * StepByteSize))[x];
         }
 
+        /// <inheritdoc/>        
+        public override string ToString()
+        {
+            return $"{PixelFormat} x {Width} x {Height}";
+        }
+
         #endregion
 
         #region factory

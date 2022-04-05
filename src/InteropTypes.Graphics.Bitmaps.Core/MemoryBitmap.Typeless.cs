@@ -259,14 +259,14 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
         {
-            return Codecs.CodecFactory.Read(s, factory);
+            return Codecs.BitmapCodecFactory.Read(s, factory);
         }
 
         public static MemoryBitmap Load(string filePath, params Codecs.IBitmapDecoder[] factory)
         {            
             using (var s = System.IO.File.OpenRead(filePath))
             {
-                return Codecs.CodecFactory.Read(s, factory, (int)s.Length);
+                return Codecs.BitmapCodecFactory.Read(s, factory, (int)s.Length);
             }
         }
 

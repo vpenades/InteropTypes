@@ -9,6 +9,9 @@ using STBDIRECTX = StbDxtSharp;
 
 namespace InteropTypes.Codecs
 {
+    #if NET6_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
+    #endif
     public class STBCodec : IBitmapDecoder , IBitmapEncoder
     {
         #region lifecycle
@@ -25,6 +28,8 @@ namespace InteropTypes.Codecs
             if (quality > 100) quality = 100;
             return new STBCodec(quality);
         }
+
+        private STBCodec() : this(80) { } // required for reflection
 
         private STBCodec(int jpegQuality) { _JpegQuality = jpegQuality; }
 

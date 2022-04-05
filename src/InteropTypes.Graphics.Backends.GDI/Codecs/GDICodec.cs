@@ -11,6 +11,9 @@ using GDIIMAGEFORMAT = System.Drawing.Imaging.ImageFormat;
 namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
+    #if NET5_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
+    #endif
     public sealed class GDICodec : IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle        

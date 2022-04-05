@@ -9,6 +9,9 @@ using InteropTypes.Graphics.Bitmaps;
 namespace InteropTypes.Codecs
 {
     [System.Diagnostics.DebuggerDisplay("SkiaSharp Codec")]
+    #if NET6_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]    
+    #endif
     public class SkiaCodec: IBitmapDecoder, IBitmapEncoder
     {
         #region lifecycle

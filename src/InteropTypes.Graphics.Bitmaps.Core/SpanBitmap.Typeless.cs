@@ -541,10 +541,10 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
 
-            var fmt = Codecs.CodecFactory.ParseFormat(filePath);
+            var fmt = Codecs.BitmapCodecFactory.ParseFormat(filePath);
             var lzs = new Lazy<System.IO.Stream>(() => System.IO.File.Create(filePath));
 
-            try { Codecs.CodecFactory.Write(lzs, fmt, factory, this); }
+            try { Codecs.BitmapCodecFactory.Write(lzs, fmt, factory, this); }
             finally { if (lzs.IsValueCreated) lzs.Value.Dispose(); }            
         }
 
@@ -555,12 +555,12 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var lzs = new Lazy<System.IO.Stream>(() => stream);
 
-            Codecs.CodecFactory.Write(lzs, format, factory, this);
+            Codecs.BitmapCodecFactory.Write(lzs, format, factory, this);
         }        
 
         public void Write(Lazy<System.IO.Stream> stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
         {
-            Codecs.CodecFactory.Write(stream, format, factory, this);
+            Codecs.BitmapCodecFactory.Write(stream, format, factory, this);
         }
 
         #endregion        
