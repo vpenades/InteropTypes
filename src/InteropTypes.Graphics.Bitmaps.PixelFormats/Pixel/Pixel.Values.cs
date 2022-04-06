@@ -172,33 +172,41 @@ namespace InteropTypes.Graphics.Bitmaps
             const float RLuminanceWeightF = 0.2989f;
             const float GLuminanceWeightF = 0.5870f;
             const float BLuminanceWeightF = 0.1140f;
+            const float Reciprocal255 = 1f / 255f;
+            const float Reciprocal65025 = 1f / 65025f;
+            const float Reciprocal65535 = 1f / 65535f;
 
             #endregion
 
             #region constructors
-            public Luminance32F(UInt16 luminance) { L = luminance; }
-
-            public Luminance32F(BGRA32 color)
+            public Luminance32F(float luminance)
             {
-                float accum = color.R * RLuminanceWeightF + color.G * GLuminanceWeightF + color.B * BLuminanceWeightF;                
-
-                L = accum / 255f;
+                System.Diagnostics.Debug.Assert(luminance >= 0 && luminance <= 1, "out of range");
+                L = luminance;
             }
 
-            public Luminance32F(RGBA128F color)
-            {
-                L = color.R * RLuminanceWeightF + color.G * GLuminanceWeightF + color.B * BLuminanceWeightF;
-            }
+            public Luminance32F(BGR565 color) { L = _FromRGB(color.R, color.G, color.B) * Reciprocal255; }
+            public Luminance32F(BGR24 color) { L = _FromRGB(color.R, color.G, color.B) * Reciprocal255; }
+            public Luminance32F(RGB24 color) { L = _FromRGB(color.R, color.G, color.B) * Reciprocal255; }
+            public Luminance32F(BGRA32 color) { L = _FromRGBA(color.R, color.G, color.B, color.A) * Reciprocal65025; }
+            public Luminance32F(RGBA32 color) { L = _FromRGBA(color.R, color.G, color.B, color.A) * Reciprocal65025; }
+            public Luminance32F(ARGB32 color) { L = _FromRGBA(color.R, color.G, color.B, color.A) * Reciprocal65025; }
+            public Luminance32F(BGRP32 color) { L = _FromRGB(color.R, color.G, color.B) * Reciprocal255; }
+            public Luminance32F(RGBP32 color) { L = _FromRGB(color.R, color.G, color.B) * Reciprocal255; }
+            public Luminance32F(BGR96F color) { L = _FromRGB(color.R, color.G, color.B); }
+            public Luminance32F(RGB96F color) { L = _FromRGB(color.R, color.G, color.B); }
+            public Luminance32F(RGBA128F color) { L = _FromRGBA(color.R, color.G, color.B, color.A); }
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             internal static float _FromRGB(float r, float g, float b)
             {
-                float accum = 0;
+                return RLuminanceWeightF * r + GLuminanceWeightF * g + BLuminanceWeightF * b;
+            }
 
-                accum += RLuminanceWeightF * r;
-                accum += GLuminanceWeightF * g;
-                accum += BLuminanceWeightF * b;                
-
-                return accum;
+            [MethodImpl(_PrivateConstants.Fastest)]
+            internal static float _FromRGBA(float r, float g, float b, float a)
+            {
+                return (RLuminanceWeightF * r + GLuminanceWeightF * g + BLuminanceWeightF * b) * a;
             }
 
             #endregion

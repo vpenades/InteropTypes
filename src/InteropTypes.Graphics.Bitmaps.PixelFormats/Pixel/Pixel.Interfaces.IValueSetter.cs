@@ -313,6 +313,142 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.L = _FromRGB(value.R,value.G,value.B);
             }
         }
+        partial struct Luminance32F : _IAllSetters
+        {
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(Luminance32F value)
+            {
+                this = value;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(Alpha8 value)
+            {
+                this.L = value.A * Reciprocal255;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(Luminance8 value)
+            {
+                this.L = value.L * Reciprocal255;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(Luminance16 value)
+            {
+                this.L = value.L * Reciprocal65535;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGR565 value)
+            {
+                this.L = _FromRGB(value.R, value.G, value.B) * Reciprocal255;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGRA5551 value)
+            {
+                this.L = _FromRGBA(value.R, value.G, value.B, value.A) * Reciprocal65025;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGRA4444 value)
+            {
+                this.L = _FromRGBA(value.R, value.G, value.B, value.A) * Reciprocal65025;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGR24 value)
+            {
+                this.L = _FromRGB(value.R, value.G, value.B) * Reciprocal255;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(RGB24 value)
+            {
+                this.L = _FromRGB(value.R, value.G, value.B) * Reciprocal255;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGRA32 value)
+            {
+                this.L = _FromRGBA(value.R, value.G, value.B, value.A) * Reciprocal65025;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(RGBA32 value)
+            {
+                this.L = _FromRGBA(value.R, value.G, value.B, value.A) * Reciprocal65025;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(ARGB32 value)
+            {
+                this.L = _FromRGBA(value.R, value.G, value.B, value.A) * Reciprocal65025;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGRP32 value)
+            {
+                this.L = _FromRGB(value.PreR, value.PreG, value.PreB) * Reciprocal255;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(RGBP32 value)
+            {
+                this.L = _FromRGB(value.PreR, value.PreG, value.PreB) * Reciprocal255;
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGR96F value)
+            {
+                this.L = _FromRGB(value.R,value.G,value.B);
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(RGB96F value)
+            {
+                this.L = _FromRGB(value.R,value.G,value.B);
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(BGRA128F value)
+            {
+                this.L = _FromRGBA(value.R,value.G,value.B,value.A);
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(RGBA128F value)
+            {
+                this.L = _FromRGBA(value.R,value.G,value.B,value.A);
+            }
+
+            /// <inheritdoc/>
+            [MethodImpl(_PrivateConstants.Fastest)]
+            public void SetValue(RGBP128F value)
+            {
+                this.L = _FromRGB(value.PreR,value.PreG,value.PreB);
+            }
+        }
         partial struct BGR24 : _IAllSetters
         {
 
@@ -2412,142 +2548,6 @@ namespace InteropTypes.Graphics.Bitmaps
             public void SetValue(Luminance32F value)
             {
                 throw new NotImplementedException("Setting Luminance32F not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGR565 value)
-            {
-                throw new NotImplementedException("Setting BGR565 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGRA5551 value)
-            {
-                throw new NotImplementedException("Setting BGRA5551 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGRA4444 value)
-            {
-                throw new NotImplementedException("Setting BGRA4444 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGR24 value)
-            {
-                throw new NotImplementedException("Setting BGR24 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(RGB24 value)
-            {
-                throw new NotImplementedException("Setting RGB24 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGRA32 value)
-            {
-                throw new NotImplementedException("Setting BGRA32 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(RGBA32 value)
-            {
-                throw new NotImplementedException("Setting RGBA32 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(ARGB32 value)
-            {
-                throw new NotImplementedException("Setting ARGB32 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(RGBP32 value)
-            {
-                throw new NotImplementedException("Setting RGBP32 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGRP32 value)
-            {
-                throw new NotImplementedException("Setting BGRP32 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(RGB96F value)
-            {
-                throw new NotImplementedException("Setting RGB96F not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGR96F value)
-            {
-                throw new NotImplementedException("Setting BGR96F not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(BGRA128F value)
-            {
-                throw new NotImplementedException("Setting BGRA128F not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(RGBA128F value)
-            {
-                throw new NotImplementedException("Setting RGBA128F not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(RGBP128F value)
-            {
-                throw new NotImplementedException("Setting RGBP128F not implemented.");
-            }
-        }
-        partial struct Luminance32F : _IAllSetters
-        {
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(Luminance32F value)
-            {
-                this = value;
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(Alpha8 value)
-            {
-                throw new NotImplementedException("Setting Alpha8 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(Luminance8 value)
-            {
-                throw new NotImplementedException("Setting Luminance8 not implemented.");
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetValue(Luminance16 value)
-            {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
             }
 
             /// <inheritdoc/>

@@ -163,6 +163,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
         var remainingNotImplemented = PixelFormatsAllNames.ToList();
 
+        // --------------------------------------------- Alpha8
+
         remainingNotImplemented.Remove("Alpha8");
         _writeStructBegin("Alpha8", commonInterface);
         _WriteSetterSelf("Alpha8");
@@ -188,7 +190,7 @@ namespace InteropTypes.Graphics.Bitmaps
         _WriteSetterCmps("RGBP128F","A","(Byte)(@A*255f)");
         _writeEnd();
 
-
+        // --------------------------------------------- Luminance8
 
         remainingNotImplemented.Remove("Luminance8");        
         _writeStructBegin("Luminance8", commonInterface);
@@ -213,7 +215,35 @@ namespace InteropTypes.Graphics.Bitmaps
         _WriteSetterCmps("BGRA128F","L","_FromRGB(@R,@G,@B)");
         _WriteSetterCmps("RGBA128F","L","_FromRGB(@R,@G,@B)");        
         _WriteSetterCmps("RGBP128F","L","_FromRGB(@R,@G,@B)");
-        _writeEnd();        
+        _writeEnd();
+
+        // --------------------------------------------- Luminance32F
+
+        remainingNotImplemented.Remove("Luminance32F");        
+        _writeStructBegin("Luminance32F", commonInterface);
+        _WriteSetterSelf("Luminance32F");
+
+        _WriteSetterCmps("Alpha8","L","A * Reciprocal255");
+        _WriteSetterCmps("Luminance8","L","L * Reciprocal255");
+        _WriteSetterCmps("Luminance16","L","L * Reciprocal65535");        
+        _WriteSetterCmps("BGR565","L","_FromRGB(@R, @G, @B) * Reciprocal255");
+        _WriteSetterCmps("BGRA5551","L","_FromRGBA(@R, @G, @B, @A) * Reciprocal65025");
+        _WriteSetterCmps("BGRA4444","L","_FromRGBA(@R, @G, @B, @A) * Reciprocal65025");
+        _WriteSetterCmps("BGR24","L","_FromRGB(@R, @G, @B) * Reciprocal255");
+        _WriteSetterCmps("RGB24","L","_FromRGB(@R, @G, @B) * Reciprocal255");
+        _WriteSetterCmps("BGRA32","L","_FromRGBA(@R, @G, @B, @A) * Reciprocal65025");
+        _WriteSetterCmps("RGBA32","L","_FromRGBA(@R, @G, @B, @A) * Reciprocal65025");
+        _WriteSetterCmps("ARGB32","L","_FromRGBA(@R, @G, @B, @A) * Reciprocal65025");
+        _WriteSetterCmps("BGRP32","L","_FromRGB(@PreR, @PreG, @PreB) * Reciprocal255");
+        _WriteSetterCmps("RGBP32","L","_FromRGB(@PreR, @PreG, @PreB) * Reciprocal255");
+        _WriteSetterCmps("BGR96F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGB96F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("BGRA128F","L","_FromRGBA(@R,@G,@B,@A)");
+        _WriteSetterCmps("RGBA128F","L","_FromRGBA(@R,@G,@B,@A)");        
+        _WriteSetterCmps("RGBP128F","L","_FromRGB(@PreR,@PreG,@PreB)");
+        _writeEnd();
+
+        // --------------------------------------------- BGR24 & RGB24
 
         foreach(var dstType in new [] {"BGR24", "RGB24"})        
         {

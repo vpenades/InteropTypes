@@ -162,10 +162,38 @@ namespace InteropTypes.Graphics.Bitmaps
                 }                
             }
 
-            public static void Process<TSrcPixel>(SpanBitmap<TSrcPixel> dstBitmap, KernelEvaluator<TPixel> kernelFunction, Action<TPixel> outputFunction)
+            public static bool Process(SpanBitmap srcBitmap, KernelEvaluator<TPixel> kernelFunction, Action<TPixel> valueOut)
+            {
+                switch(srcBitmap.PixelFormat.Code)
+                {
+                    case Pixel.Alpha8.Code: return Process(srcBitmap.OfType<Pixel.Alpha8>(), kernelFunction, valueOut);
+                    case Pixel.Luminance8.Code: return Process(srcBitmap.OfType<Pixel.Luminance8>(), kernelFunction, valueOut);
+                    case Pixel.Luminance16.Code: return Process(srcBitmap.OfType<Pixel.Luminance16>(), kernelFunction, valueOut);
+                    case Pixel.Luminance32F.Code: return Process(srcBitmap.OfType<Pixel.Luminance32F>(), kernelFunction, valueOut);
+                    case Pixel.BGR565.Code: return Process(srcBitmap.OfType<Pixel.BGR565>(), kernelFunction, valueOut);
+                    case Pixel.BGRA5551.Code: return Process(srcBitmap.OfType<Pixel.BGRA5551>(), kernelFunction, valueOut);
+                    case Pixel.BGRA4444.Code: return Process(srcBitmap.OfType<Pixel.BGRA4444>(), kernelFunction, valueOut);
+                    case Pixel.BGR24.Code: return Process(srcBitmap.OfType<Pixel.BGR24>(), kernelFunction, valueOut);
+                    case Pixel.RGB24.Code: return Process(srcBitmap.OfType<Pixel.RGB24>(), kernelFunction, valueOut);
+                    case Pixel.BGRA32.Code: return Process(srcBitmap.OfType<Pixel.BGRA32>(), kernelFunction, valueOut);
+                    case Pixel.RGBA32.Code: return Process(srcBitmap.OfType<Pixel.RGBA32>(), kernelFunction, valueOut);
+                    case Pixel.ARGB32.Code: return Process(srcBitmap.OfType<Pixel.ARGB32>(), kernelFunction, valueOut);
+                    case Pixel.BGR96F.Code: return Process(srcBitmap.OfType<Pixel.BGR96F>(), kernelFunction, valueOut);
+                    case Pixel.RGB96F.Code: return Process(srcBitmap.OfType<Pixel.RGB96F>(), kernelFunction, valueOut);
+                    case Pixel.BGRA128F.Code: return Process(srcBitmap.OfType<Pixel.BGRA128F>(), kernelFunction, valueOut);
+                    case Pixel.RGBA128F.Code: return Process(srcBitmap.OfType<Pixel.RGBA128F>(), kernelFunction, valueOut);
+
+                    case Pixel.BGRP32.Code: return Process(srcBitmap.OfType<Pixel.BGRP32>(), kernelFunction, valueOut);
+                    case Pixel.RGBP32.Code: return Process(srcBitmap.OfType<Pixel.RGBP32>(), kernelFunction, valueOut);
+                }
+
+                throw new PixelFormatNotSupportedException(srcBitmap.PixelFormat, nameof(srcBitmap));
+            }
+
+            public static bool Process<TSrcPixel>(SpanBitmap<TSrcPixel> srcBitmap, KernelEvaluator<TPixel> kernelFunction, Action<TPixel> valueOut)
                 where TSrcPixel : unmanaged
             {
-                var w = dstBitmap.Width;
+                var w = srcBitmap.Width;
 
                 var xrow = new TPixel[w];
 
@@ -173,31 +201,33 @@ namespace InteropTypes.Graphics.Bitmaps
 
 
                 var rows = new _RollingRows(w);
-                converter(dstBitmap.GetScanlinePixels(0), rows.Row3);
-                converter(dstBitmap.GetScanlinePixels(0), rows.Row2);
+                converter(srcBitmap.GetScanlinePixels(0), rows.Row3);
+                converter(srcBitmap.GetScanlinePixels(0), rows.Row2);
 
                 --w;
 
-                for (int y = 0; y < dstBitmap.Height; y++)
+                for (int y = 0; y < srcBitmap.Height; y++)
                 {
                     // cycle tmp rows:
                     rows.Roll();
-                    converter(dstBitmap.GetScanlinePixels(Math.Min(dstBitmap.Height - 1, y + 1)), rows.Row3);
+                    converter(srcBitmap.GetScanlinePixels(Math.Min(srcBitmap.Height - 1, y + 1)), rows.Row3);
 
                     // apply to dst row:                    
 
                     var kernel = new Kernel3x3<TPixel>(rows, 0, 0, 1);
-                    outputFunction(kernelFunction(kernel));
+                    valueOut.Invoke(kernelFunction(kernel));
 
                     for (int x = 1; x < w; x++)
                     {
                         kernel = new Kernel3x3<TPixel>(rows, x - 1, x, x + 1);
-                        outputFunction(kernelFunction(kernel));
+                        valueOut.Invoke(kernelFunction(kernel));
                     }
 
                     kernel = new Kernel3x3<TPixel>(rows, w - 1, w, w);
-                    outputFunction(kernelFunction(kernel));
+                    valueOut.Invoke(kernelFunction(kernel));
                 }
+
+                return true;
             }
 
             public static void Copy<TSrcPixel>(SpanBitmap<TSrcPixel> srcBitmap, SpanBitmap<TPixel> dstBitmap, KernelEvaluator<TPixel> function)
