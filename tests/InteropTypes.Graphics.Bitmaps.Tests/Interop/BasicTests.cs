@@ -23,17 +23,17 @@ namespace InteropTypes.Graphics.Bitmaps
                 .Load(filePath, Codecs.GDICodec.Default)
                 .AsSpanBitmap();
             
-            var blurfactor1 = bitmap.GetPerceivedSharpness(0.25);
+            var blurfactor1 = Processing.SharpnessEvaluator.Evaluate(bitmap, 0.25);
 
             // blur with openCV
             bitmap.WithOpenCv().ApplyBlur((5, 5));
             
-            var blurfactor2 = bitmap.GetPerceivedSharpness(0.25);
+            var blurfactor2 = Processing.SharpnessEvaluator.Evaluate(bitmap, 0.25);
 
             // blur with openCV
             bitmap.WithOpenCv().ApplyBlur((32, 32));
             
-            var blurfactor3 = bitmap.GetPerceivedSharpness(0.25);
+            var blurfactor3 = Processing.SharpnessEvaluator.Evaluate(bitmap, 0.25);
 
             TestContext.WriteLine($"{filePath} => {blurfactor1}, {blurfactor2}, {blurfactor3}");
 

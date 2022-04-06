@@ -58,9 +58,10 @@ namespace InteropTypes.Graphics.Bitmaps
             var C1 = new Pixel.BGRA32(128, 1, 255, 2);
             var C2 = new Pixel.BGRA32(191, 1, 255, 4);
             var C3 = new Pixel.BGRA32(0, 1, 255, 7);
-            
+            var C4 = new Pixel.BGRA32(0, 0, 255, 64);
 
-            foreach (var col in new[] { C2, C1, C0, C3 })
+
+            foreach (var col in new[] { C4, C2, C1, C0, C3 })
             {
                 var pp = new Pixel.BGRP32(col);
                 var uu = new Pixel.BGRA32(pp);
@@ -120,6 +121,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 }
             }
 
+            /*
             for (uint y = 0; y < scale; y += 256)
             {
                 var result = interpolator.InterpolateLinear(srcColor, srcColor, y);
@@ -135,7 +137,7 @@ namespace InteropTypes.Graphics.Bitmaps
                     var srcRoundtrip = srcColor.PremulRoundtrip8();
                     Assert.AreEqual(srcRoundtrip, result);
                 }
-            }
+            }*/
         }
 
 

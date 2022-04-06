@@ -278,20 +278,22 @@ void _WriteAlphaQ4(string srcPixel, string dstPixel)
 
     _writeComment("calculate final alpha");
     WriteLine("uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;");
-    WriteLine("if (a == 0) return default;");
+    WriteLine("if (a == 0) return default;");    
 
     // alternatively, we could use "ulong"
-    _writeComment("calculate premultiplied weights (should divide by 255, but compensate precission loss by multiplying by 257)");
-    // a more precise variant would be: wtl = (((wtl * 257) >> 8) * tl.A) >> 8;");
-    WriteLine("wtl = ((wtl * 258) >> 16) * tl.A;");
-    WriteLine("wtr = ((wtr * 258) >> 16) * tr.A;");
-    WriteLine("wbl = ((wbl * 258) >> 16) * bl.A;");
-    WriteLine("wbr = ((wbr * 258) >> 16) * br.A;");
-    WriteLine("System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= (_QLERPVALUESQUARED + (_QLERPVALUESQUARED >> 8) -1) );");
-    
-    var red = "(tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr) >> _QLERPSHIFTSQUARED";
-    var green = "(tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr) >> _QLERPSHIFTSQUARED";
-    var blue = "(tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr) >> _QLERPSHIFTSQUARED";
+    // (should divide by 255, but we compensate precission loss by multiplying by 257) and adding 1023x4 later on.
+    _writeComment("calculate premultiplied weights:");    
+    WriteLine("wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);");
+    WriteLine("wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);");
+    WriteLine("wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);");
+    WriteLine("wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);");    
+    WriteLine("System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);");
+
+    _writeComment("Final adjustment to ensure exact results:");
+    WriteLine("const uint remainder = 1023 * 4;");    
+    var red = "(tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + remainder) >> _QLERPSHIFTSQUARED";
+    var green = "(tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + remainder) >> _QLERPSHIFTSQUARED";
+    var blue = "(tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + remainder) >> _QLERPSHIFTSQUARED";
 
     _WriteAlphaQOutput(dstPixel, red, green, blue);
 
