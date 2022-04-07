@@ -18,38 +18,15 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void SamplerTests()
         {
-
             var a = new Pixel.RGBA32(255, 255, 255, 255);
             var b = new Pixel.RGBA32(0, 255, 255, 255);
             var c = new Pixel.RGBA32(255, 0, 255, 255);
             var d = new Pixel.RGBA32(255, 0, 0, 0);
 
-            var x = Pixel.RGBA32.Lerp(a, b, c, d, 8192, 8192);
+            var x = Pixel.RGBA32.Lerp(a, b, c, d, 512, 512);
 
-            // var sampler = Pixel.TryGetQuadSampler<Pixel.RGBA32, Pixel.RGBA32>();
-
-            // var x = sampler(a, b, c, d, 8192, 8192);
-
-        }
-
-        [Test]
-        public void BGRP32LerpTests()
-        {
-            Assert.AreEqual(2139045663, Pixel.RGBA32.LerpToBGRP32(RGBA32_A, RGBA32_B, 512).GetHashCode());
-            Assert.AreEqual(2139045663, RGBA32_A.LerpToBGRP32(RGBA32_B, 512).GetHashCode());
-
-            Assert.AreEqual(127, _TestLerpQuantized<Pixel.RGBA32, Pixel.Alpha8>(RGBA32_A, RGBA32_B).GetHashCode());
-
-            Assert.AreEqual(-25281024, _TestLerpQuantized<Pixel.RGBA32, Pixel.RGB24>(RGBA32_A, RGBA32_B).GetHashCode());
-            Assert.AreEqual(1048509952, _TestLerpQuantized<Pixel.RGBA32, Pixel.BGR24>(RGBA32_A, RGBA32_B).GetHashCode());
-
-            Assert.AreEqual(2147384894, _TestLerpQuantized<Pixel.RGBA32, Pixel.BGRA32>(RGBA32_A, RGBA32_B).GetHashCode());
-            Assert.AreEqual(2134802174, _TestLerpQuantized<Pixel.RGBA32, Pixel.RGBA32>(RGBA32_A, RGBA32_B).GetHashCode());
-            Assert.AreEqual(1048510079, _TestLerpQuantized<Pixel.RGBA32, Pixel.ARGB32>(RGBA32_A, RGBA32_B).GetHashCode());
-
-            Assert.AreEqual(2132688510, _TestLerpQuantized<Pixel.RGBA32, Pixel.RGBP32>(RGBA32_A, RGBA32_B).GetHashCode());
-            Assert.AreEqual(2139045663, _TestLerpQuantized<Pixel.RGBA32, Pixel.BGRP32>(RGBA32_A, RGBA32_B).GetHashCode());
-        }
+            Assert.AreEqual(new Pixel.RGBA32(169, 169, 255, 191), x);
+        }        
 
         [Test]
         public void TestInterpolations()
@@ -121,7 +98,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 }
             }
 
-            /*
+            
             for (uint y = 0; y < scale; y += 256)
             {
                 var result = interpolator.InterpolateLinear(srcColor, srcColor, y);
@@ -137,26 +114,8 @@ namespace InteropTypes.Graphics.Bitmaps
                     var srcRoundtrip = srcColor.PremulRoundtrip8();
                     Assert.AreEqual(srcRoundtrip, result);
                 }
-            }*/
-        }
-
-
-        private TDstPixel _TestLerpQuantized<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
-            where TSrcPixel : unmanaged, Pixel.IConvertTo
-            where TDstPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
-        {
-            var ap = a.To<Pixel.BGRP32>();
-            var bp = b.To<Pixel.BGRP32>();
-
-            var rgbp = Pixel.BGRP32.Lerp(ap, bp, 8192);
-
-            var final = default(TDstPixel);
-            final.SetValue(rgbp);
-
-            TestContext.WriteLine($"{a} ^ {b} = {final}");
-
-            return final;
-        }
+            }
+        }        
 
         private TDstPixel _TestLerpFloating<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
             where TSrcPixel : unmanaged, Pixel.IConvertTo

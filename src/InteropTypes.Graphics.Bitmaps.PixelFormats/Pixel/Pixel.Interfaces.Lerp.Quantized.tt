@@ -224,29 +224,26 @@ void _WriteAlphaQ2(string srcPixel, string dstPixel)
 
     _writeOpenBlock();
 
-        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");
-
-        WriteLine("rx *= rx;");
+        WriteLine("System.Diagnostics.Debug.Assert((int)rx <= _QLERPVALUE);");        
 
         _writeComment("calculate quantized weights");
-        WriteLine("uint lx = _QLERPVALUESQUARED - rx;");            
+        WriteLine("uint lx = _QLERPVALUE - rx;");            
 
         _writeComment("calculate final alpha");
-        WriteLine("uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFTSQUARED;");
+        WriteLine("uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;");
         WriteLine("if (a == 0) return default;");
         
         _writeComment("calculate premultiplied weights");
-        // WriteLine("lx = (lx * left.A * 257u) >> _QLERPSHIFTSQUARED;");        
-        // WriteLine("rx = (rx * right.A * 257u) >> _QLERPSHIFTSQUARED;");
+        WriteLine("lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);");
+        WriteLine("rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);");
+        WriteLine("System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);");        
 
-        WriteLine("lx = ((lx * 258) >> 16) * left.A;");
-        WriteLine("rx = ((rx * 258) >> 16) * right.A;");
-
-        // WriteLine("System.Diagnostics.Debug.Assert((rx + lx) <= 65536u);");
+        _writeComment("Final adjustment to ensure exact results:");
+        WriteLine("const uint offset = 1023 * 4;");
         
-        var red = "(left.R * lx + right.R * rx) >> _QLERPSHIFTSQUARED";
-        var green = "(left.G * lx + right.G * rx) >> _QLERPSHIFTSQUARED";
-        var blue = "(left.B * lx + right.B * rx) >> _QLERPSHIFTSQUARED";
+        var red = "(left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED";
+        var green = "(left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED";
+        var blue = "(left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED";
 
         _WriteAlphaQOutput(dstPixel, red, green, blue);    
 
@@ -287,13 +284,14 @@ void _WriteAlphaQ4(string srcPixel, string dstPixel)
     WriteLine("wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);");
     WriteLine("wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);");
     WriteLine("wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);");    
-    WriteLine("System.Diagnostics.Debug.Assert((int)(wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);");
+    WriteLine("System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);");
 
     _writeComment("Final adjustment to ensure exact results:");
-    WriteLine("const uint remainder = 1023 * 4;");    
-    var red = "(tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + remainder) >> _QLERPSHIFTSQUARED";
-    var green = "(tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + remainder) >> _QLERPSHIFTSQUARED";
-    var blue = "(tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + remainder) >> _QLERPSHIFTSQUARED";
+    WriteLine("const uint offset = 1023 * 4;");
+
+    var red = "(tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED";
+    var green = "(tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED";
+    var blue = "(tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED";
 
     _WriteAlphaQOutput(dstPixel, red, green, blue);
 
