@@ -135,8 +135,8 @@ namespace InteropTypes.Vision
 
         public void TransformBy(Matrix4x4 xform)
         {
-            _InnerBounds = null;
-            _LineBounds = null;
+            _Bounds = null;
+            _Size = null;
             if (_Landmarks == null) return;
             if (!_Score.IsValid) return;
 
@@ -145,8 +145,8 @@ namespace InteropTypes.Vision
 
         public void TransformBy(Matrix3x2 xform)
         {
-            _InnerBounds = null;
-            _LineBounds = null;
+            _Bounds = null;
+            _Size = null;
             if (_Landmarks == null) return;
             if (!_Score.IsValid) return;
 
@@ -155,12 +155,12 @@ namespace InteropTypes.Vision
 
         public void TransformByOffCenter(Matrix4x4 xform)
         {
-            _InnerBounds = null;
-            _LineBounds = null;
+            _Bounds = null;
+            _Size = null;
             if (_Landmarks == null) return;
             if (!_Score.IsValid) return;
 
-            var bounds = this.OuterBounds;
+            var bounds = this.Bounds;
             var center = new Vector3(bounds.X +bounds.Width*0.5f, bounds.Y + bounds.Height * 0.5f, 0);
 
             xform = Matrix4x4.CreateTranslation(-center) * xform * Matrix4x4.CreateTranslation(center);
