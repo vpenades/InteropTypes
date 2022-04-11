@@ -4,6 +4,9 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using XY = System.Numerics.Vector2;
+using TRANSFORM = System.Numerics.Matrix3x2;
+
 namespace InteropTypes.Tensors.Imaging
 {
     ref struct _Sampler2D<TPixel>
@@ -225,6 +228,88 @@ namespace InteropTypes.Tensors.Imaging
 
             throw new NotImplementedException();
         }        
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Iterates over the pixels of a transformed row.
+    /// </summary>
+    internal struct _RowTransformIterator
+    {
+        #region constructor            
+
+        public _RowTransformIterator(float x, float y, in TRANSFORM srcXform)
+        {
+            var dst = new XY(x, y);
+
+            var origin = XY.Transform(dst, srcXform);
+            var delta = XY.TransformNormal(XY.UnitX, srcXform);
+
+            origin *= 1 << BITSHIFT;
+            delta *= 1 << BITSHIFT;
+
+            _X = (int)origin.X;
+            _Y = (int)origin.Y;
+            _Dx = (int)delta.X;
+            _Dy = (int)delta.Y;
+
+            _X += 1 << (BITSHIFT - 1);
+            _Y += 1 << (BITSHIFT - 1);
+        }
+
+        #endregion
+
+        #region data
+
+        const int BITSHIFT = 14; // 16384
+        const int BITMASK = (1 << BITSHIFT) - 1;
+
+        private int _X;
+        private int _Y;
+
+        private readonly int _Dx;
+        private readonly int _Dy;
+
+        #endregion
+
+        #region API
+
+        // gets the rectangle representing the source region that contains the pixels to be sampled for this row.
+        public System.Drawing.Rectangle GetSourceRect(int targetWidth)
+        {
+            var xx = _X + _Dx * targetWidth;
+            var minX = Math.Min(_X, xx) >> BITSHIFT;
+            var maxX = Math.Max(_X, xx) >> BITSHIFT;
+
+            var yy = _Y + _Dy * targetWidth;
+            var minY = Math.Min(_Y, yy) >> BITSHIFT;
+            var maxY = Math.Max(_Y, yy) >> BITSHIFT;
+
+            return new System.Drawing.Rectangle(minX, minY, maxX - minX, maxY - minY);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void MoveNext(out int x, out int y)
+        {
+            x = _X >> BITSHIFT;
+            y = _Y >> BITSHIFT;
+
+            _X += _Dx;
+            _Y += _Dy;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void MoveNext(out int x, out int y, out int fpx, out int fpy)
+        {
+            x = _X >> BITSHIFT;
+            y = _Y >> BITSHIFT;
+            fpx = _X & BITMASK;
+            fpy = _Y & BITMASK;
+
+            _X += _Dx;
+            _Y += _Dy;
+        }
 
         #endregion
     }

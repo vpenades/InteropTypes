@@ -143,7 +143,7 @@ namespace InteropTypes.Graphics.Bitmaps
             }            
 
             dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(3), cat00.AsSpanBitmap(), useBilinear);
-            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(.6f) * Matrix3x2.CreateTranslation(0,200), cat00.AsSpanBitmap(), useBilinear);
+            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(-.6f) * Matrix3x2.CreateTranslation(40,200), cat00.AsSpanBitmap(), useBilinear);
             dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(.3f) * Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(150, 300), qrcode.AsSpanBitmap(), useBilinear);
 
             dst.AttachToCurrentTest("transformed.png");

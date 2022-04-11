@@ -7,6 +7,11 @@ namespace InteropTypes.Vision
     /// <summary>
     /// Represents the output score of an inference.
     /// </summary>
+    /// <remarks>
+    /// Whether the result of an inference can be successfull or not is entirely up to
+    /// the implementation, so there's no fixed thresold that can render a score to
+    /// be true or false. So this Score structure has both.
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplayString(),nq}")]
     public readonly struct Score :
         IEquatable<Score>,
@@ -175,6 +180,9 @@ namespace InteropTypes.Vision
 
         #region nested types
 
+        /// <summary>
+        /// Determines how to interpret the score.
+        /// </summary>
         public enum ResultType
         {
             /// <summary>

@@ -29,22 +29,29 @@ namespace InteropTypes.Tensors
         public static unsafe void FillBitmap<TSrcPixel>(this TENSOR2V3 dst, SpanBitmap<TSrcPixel> src, in Matrix3x2 srcXform, MultiplyAdd mad, bool useBilinear)
             where TSrcPixel:unmanaged
         {
-            var data = src.ReadableBytes;
-            var w = src.Width;
-            var h = src.Height;
-            var stride = src.Info.StepByteSize;
+            var srcData = src.ReadableBytes;
+            var srcW = src.Width;
+            var srcH = src.Height;
+            var srcStride = src.Info.StepByteSize;
 
             // TODO: support RGB component swapping.
 
-            if (typeof(TSrcPixel) == typeof(Vector3)) { dst.FillPixelsXYZ96F(data, stride, w, h, srcXform, mad, useBilinear); return; }
+            var xform = new Imaging.BitmapTransform
+            {
+                Transform = srcXform,
+                ColorTransform = mad,
+                UseBilinear = useBilinear
+            };
 
-            if (typeof(TSrcPixel) == typeof(Pixel.BGR96F)) { dst.FillPixelsXYZ96F(data, stride, w, h, srcXform, mad, useBilinear); return; }
-            if (typeof(TSrcPixel) == typeof(Pixel.RGB96F)) { dst.FillPixelsXYZ96F(data, stride, w, h, srcXform, mad, useBilinear); return; }
+            if (typeof(TSrcPixel) == typeof(Vector3)) { xform.FillPixelsXYZ96F(dst, srcData, srcStride, srcW, srcH); return; }
 
-            if (typeof(TSrcPixel) == typeof(Pixel.BGR24)) { dst.FillPixelsXYZ24(data, stride, w, h, srcXform, mad, useBilinear); return; }
-            if (typeof(TSrcPixel) == typeof(Pixel.RGB24)) { dst.FillPixelsXYZ24(data, stride, w, h, srcXform, mad, useBilinear); return; }
+            if (typeof(TSrcPixel) == typeof(Pixel.BGR96F)) { xform.FillPixelsXYZ96F(dst, srcData, srcStride, srcW, srcH); return; }
+            if (typeof(TSrcPixel) == typeof(Pixel.RGB96F)) { xform.FillPixelsXYZ96F(dst, srcData, srcStride, srcW, srcH); return; }
 
-            if (sizeof(TSrcPixel) == 3) { dst.FillPixelsXYZ24(data, stride, w, h, srcXform, mad, useBilinear); return; }
+            if (typeof(TSrcPixel) == typeof(Pixel.BGR24)) { xform.FillPixelsXYZ24(dst, srcData, srcStride, srcW, srcH); return; }
+            if (typeof(TSrcPixel) == typeof(Pixel.RGB24)) { xform.FillPixelsXYZ24(dst, srcData, srcStride, srcW, srcH); return; }
+
+            if (sizeof(TSrcPixel) == 3) { xform.FillPixelsXYZ24(dst, srcData, srcStride, srcW, srcH); return; }
         }
 
         public static void FitBitmap(this TENSOR2V3 dst, SpanBitmap src)
