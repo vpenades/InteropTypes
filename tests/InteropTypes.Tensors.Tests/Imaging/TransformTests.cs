@@ -14,7 +14,7 @@ namespace InteropTypes.Tensors
     {       
 
         [Test]
-        public void TestPixelTransferWithTransform()
+        public void TestPixelTransferWithTransform1()
         {
             var src = new SpanTensor2<BGR24>(16, 16);
             var dst = new SpanTensor2<BGR24>(50, 50);
@@ -39,6 +39,41 @@ namespace InteropTypes.Tensors
             // dst.FitPixels(src, MultiplyAdd.Identity, true);            
 
             dst.AttachToCurrentTest("tensorTransform.png");
+        }
+
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TestPixelTransferWithTransform2(bool useBilinear)
+        {
+            var imgPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "dog.jpeg");
+
+            var img = Graphics.Bitmaps.MemoryBitmap<BGR24>.Load(imgPath);
+
+            if (!img.AsSpanBitmap().TryGetAsSpanTensor(out var src))
+            {
+                throw new InvalidOperationException();
+            }
+            
+            var dst = new SpanTensor2<BGR24>(384, 384);
+            var dst2 = new SpanTensor2<System.Numerics.Vector3>(384, 384);
+
+            var srcX =
+                System.Numerics.Matrix3x2.CreateScale(0.4f)
+                * System.Numerics.Matrix3x2.CreateRotation(0.3f);
+            srcX.Translation = new System.Numerics.Vector2(15, 35);
+
+            var time = System.Diagnostics.Stopwatch.StartNew();
+            dst.FillPixels(src, srcX, MultiplyAdd.Identity, useBilinear);
+            time.Stop();
+            TestContext.WriteLine($"{time.Elapsed.TotalMilliseconds}");
+
+            time = System.Diagnostics.Stopwatch.StartNew();
+            dst2.FillPixels(src, srcX, MultiplyAdd.Identity, useBilinear);
+            time.Stop();
+            TestContext.WriteLine($"{time.Elapsed.TotalMilliseconds}");   
+
+            dst.AttachToCurrentTest($"tensorTransform-{useBilinear}.png");
         }
     }
 }

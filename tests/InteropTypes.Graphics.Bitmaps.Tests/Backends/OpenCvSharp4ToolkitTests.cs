@@ -33,7 +33,7 @@ namespace InteropTypes.Graphics.Backends
         }
 
         [Test]
-        public void WarpAffine()
+        public void WarpAffineTransform()
         {
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
 
@@ -41,10 +41,12 @@ namespace InteropTypes.Graphics.Backends
             var dst = new MemoryBitmap(512, 512, src.Info.PixelFormat);
 
             var xform = System.Numerics.Matrix3x2.CreateScale(1.3f, 1.3f) * System.Numerics.Matrix3x2.CreateRotation(0.25f);
-            xform.Translation = new System.Numerics.Vector2(5, 40);
+            xform.Translation = new System.Numerics.Vector2(5, 40);            
 
             using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"OpenCV {t}")))
             {
+                using var bm = PerformanceBenchmark.Run(result => TestContext.WriteLine(result.TotalMilliseconds) );
+
                 OpenCvSharp4Toolkit.WarpAffine(src, dst, xform);
             }
             dst.AttachToCurrentTest("result.opencv.jpg");            
@@ -52,6 +54,8 @@ namespace InteropTypes.Graphics.Backends
             dst.AsSpanBitmap().WritableBytes.Fill(0);
             using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"Soft {t}")))
             {
+                using var bm = PerformanceBenchmark.Run(result => TestContext.WriteLine(result.TotalMilliseconds));
+
                 dst.AsSpanBitmap().SetPixels(xform, src);
             }
             dst.AttachToCurrentTest("result.soft.jpg");

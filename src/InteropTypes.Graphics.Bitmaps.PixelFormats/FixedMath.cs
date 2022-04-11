@@ -61,7 +61,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return unitByte / dividend;
         }
 
-        #endregion
+        #endregion        
 
         #region old but useful
 
@@ -109,6 +109,6 @@ namespace InteropTypes.Graphics.Bitmaps
             // return (byte)value;
         }
 
-        #endregion
+#endregion
     }
 }

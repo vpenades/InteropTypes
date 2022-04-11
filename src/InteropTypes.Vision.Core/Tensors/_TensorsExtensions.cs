@@ -15,6 +15,38 @@ namespace InteropTypes.Tensors
 {
     public static class _TensorsExtensions
     {
+        public static bool TryGetAsSpanTensor<TPixel>(this SpanBitmap<TPixel> src, out SpanTensor2<TPixel> result)
+            where TPixel : unmanaged
+        {
+            if (!src.Info.IsContinuous) { result = default; return false; }
+
+            var data = MEMMARSHAL.Cast<Byte, TPixel>(src.WritableBytes);
+
+            result = new SpanTensor2<TPixel>(data, src.Height, src.Width);
+            return true;
+        }
+
+        public static unsafe void FillBitmap<TSrcPixel>(this TENSOR2V3 dst, SpanBitmap<TSrcPixel> src, in Matrix3x2 srcXform, MultiplyAdd mad, bool useBilinear)
+            where TSrcPixel:unmanaged
+        {
+            var data = src.ReadableBytes;
+            var w = src.Width;
+            var h = src.Height;
+            var stride = src.Info.StepByteSize;
+
+            // TODO: support RGB component swapping.
+
+            if (typeof(TSrcPixel) == typeof(Vector3)) { dst.FillPixelsXYZ96F(data, stride, w, h, srcXform, mad, useBilinear); return; }
+
+            if (typeof(TSrcPixel) == typeof(Pixel.BGR96F)) { dst.FillPixelsXYZ96F(data, stride, w, h, srcXform, mad, useBilinear); return; }
+            if (typeof(TSrcPixel) == typeof(Pixel.RGB96F)) { dst.FillPixelsXYZ96F(data, stride, w, h, srcXform, mad, useBilinear); return; }
+
+            if (typeof(TSrcPixel) == typeof(Pixel.BGR24)) { dst.FillPixelsXYZ24(data, stride, w, h, srcXform, mad, useBilinear); return; }
+            if (typeof(TSrcPixel) == typeof(Pixel.RGB24)) { dst.FillPixelsXYZ24(data, stride, w, h, srcXform, mad, useBilinear); return; }
+
+            if (sizeof(TSrcPixel) == 3) { dst.FillPixelsXYZ24(data, stride, w, h, srcXform, mad, useBilinear); return; }
+        }
+
         public static void FitBitmap(this TENSOR2V3 dst, SpanBitmap src)
         {
             var dstData = MEMMARSHAL.Cast<Vector3, byte>(dst.Span);

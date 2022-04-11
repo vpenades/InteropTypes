@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using NUnit.Framework;
+
 using MEMUNSAFE = System.Runtime.CompilerServices.Unsafe;
 
 namespace InteropTypes.Graphics.Bitmaps
@@ -188,6 +190,95 @@ namespace InteropTypes.Graphics.Bitmaps
             uint b = ((uint)pixel.PreB * 255u) / (uint)pixel.A;
 
             return new Pixel.RGB24((Byte)r, (Byte)g, (Byte)b);
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public static void AssertEqualsWithPremul(this Pixel.BGRA32 a, Pixel.BGRP32 b)
+        {
+            // Comparing Premultiplied values is tricky. Because As Alpha become smaller,
+            // the precission loss in the RGB components increases.
+
+            if (b.A == 255)
+            {
+                var bb = new Pixel.BGRA32(b);
+                Assert.AreEqual(a, bb);
+                return;
+            }
+
+            if (b.PreR > b.A) throw new ArgumentOutOfRangeException(nameof(b));
+            if (b.PreG > b.A) throw new ArgumentOutOfRangeException(nameof(b));
+            if (b.PreB > b.A) throw new ArgumentOutOfRangeException(nameof(b));
+
+            Assert.AreEqual(a.A, b.A, "Alpha");            
+            if (a.A == 0) return;
+
+            // premultiply usually rounds down the RGB components.
+            // roundtrip:
+            var art = new Pixel.BGRA32(new Pixel.BGRP32(a));
+            var brt = new Pixel.BGRA32(b);
+
+            var errorR = a.R - art.R;
+            var errorG = a.G - art.G;
+            var errorB = a.B - art.B;
+
+            // valid values must be between the rounded down values and the true values.
+
+            Assert.GreaterOrEqual(brt.R, art.R, "Red");
+            Assert.LessOrEqual(brt.R, a.R + errorR, "Red");
+
+            Assert.GreaterOrEqual(brt.G, art.G, "Green");
+            Assert.LessOrEqual(brt.G, a.G + errorG, "Green");
+
+            Assert.GreaterOrEqual(brt.B, art.B, "Blue");
+            Assert.LessOrEqual(brt.B, a.B + errorB, "Blue");
+        }
+
+        public static bool EqualsWithPremul(this Pixel.BGRA32 a, Pixel.BGRP32 b)
+        {
+            if (b.PreR > b.A) throw new ArgumentOutOfRangeException(nameof(b));
+            if (b.PreG > b.A) throw new ArgumentOutOfRangeException(nameof(b));
+            if (b.PreB > b.A) throw new ArgumentOutOfRangeException(nameof(b));
+
+            if (a.A != b.A) return false;
+            if (a.A == 0) return true;
+
+            // premultiply usually rounds down the RGB components.
+            // roundtrip:
+            var rt = new Pixel.BGRA32(new Pixel.BGRP32(a));
+
+            // valid values must be between the rounded down values and the true values.
+            if (b.R < rt.R || b.R > a.R) return false;
+            if (b.G < rt.G || b.G > a.G) return false;
+            if (b.B < rt.B || b.B > a.B) return false;
+            return true;            
+        }
+
+
+        public static bool EqualsWithPremul(this Pixel.BGRA32 a, Pixel.BGRA32 b)
+        {
+            return EqualsWithPremul(new Pixel.BGRP32(a), new Pixel.BGRP32(b));
+        }
+
+
+        public static bool EqualsWithPremul(this Pixel.BGRP32 a, Pixel.BGRP32 b)
+        {
+            if (a.A != b.A) return false;
+            if (a.A == 0) return true;            
+
+            var error = 256 / a.A;            
+
+            var aa = a.GetReferenceRGBA32();
+            var bb = b.GetReferenceRGBA32();
+
+            var xr = Math.Abs((int)aa.R - (int)bb.R);
+            var xg = Math.Abs((int)aa.G - (int)bb.G);
+            var xb = Math.Abs((int)aa.B - (int)bb.B);
+
+            if (xr > error) return false;
+            if (xg > error) return false;
+            if (xb > error) return false;
+
+            return true;
         }
 
 

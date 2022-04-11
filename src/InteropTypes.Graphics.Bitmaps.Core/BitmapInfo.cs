@@ -65,7 +65,12 @@ namespace InteropTypes.Graphics.Bitmaps
         public BitmapInfo WithSize(int width, int height, int stepByteSize = 0)
         {
             return new BitmapInfo(width, height, this.PixelFormat, stepByteSize);
-        }        
+        }
+
+        public BitmapInfo WithStride(int stepByteSize = 0)
+        {
+            return new BitmapInfo(this.Width, this.Height, this.PixelFormat, stepByteSize);
+        }
 
         #endregion
 

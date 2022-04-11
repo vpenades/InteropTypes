@@ -33,13 +33,6 @@ namespace InteropTypes.Graphics.Bitmaps
         private static readonly Pixel.BGRA128F Pixel_2_C = new Pixel.BGRA128F(1, 0, 1, 1);
         private static readonly Pixel.BGRA128F Pixel_2_D = new Pixel.BGRA128F(1, 0, 0, 0);
 
-
-        [Benchmark]
-        public Pixel.RGBA32 TestProductionAPI()
-        {
-            return Pixel.RGBA32.Lerp(Pixel_A, Pixel_B, Pixel_C, Pixel_D, 8192, 8192);
-        }
-
         [Benchmark]
         public Pixel.RGBA32 TestReferenceVector4()
         {
@@ -48,19 +41,25 @@ namespace InteropTypes.Graphics.Bitmaps
 
 
         [Benchmark]
-        public Pixel.BGRP32 TestQuantizedBilinear()
+        public Pixel.BGRA32 TestProductionAPI_Q_Unpremul()
+        {
+            return Pixel.BGRA32.Lerp(Pixel_0_A, Pixel_0_B, Pixel_0_C, Pixel_0_D, 511, 251);
+        }
+
+        [Benchmark]
+        public Pixel.BGRP32 TestProductionAPI_Q_Premul()
         {
             return Pixel.BGRA32.LerpToBGRP32(Pixel_0_A, Pixel_0_B, Pixel_0_C, Pixel_0_D, 1024, 700);
         }
 
         [Benchmark]
-        public Pixel.RGBP128F TestFloatingBilinear()
+        public Pixel.RGBP128F TestProductionAPI_QtoF_Unpremul()
         {
             return Pixel.BGRA32.LerpToRGBP128F(Pixel_0_A, Pixel_0_B, Pixel_0_C, Pixel_0_D, 0.5f, 0.3f);
         }
 
         [Benchmark]
-        public Pixel.RGBP128F TestFloatingBilinear2()
+        public Pixel.RGBP128F TestProductionAPI_F_Premul()
         {
             return Pixel.BGRA128F.LerpToRGBP128F(Pixel_2_A, Pixel_2_B, Pixel_2_C, Pixel_2_D, 0.5f, 0.3f);
         }
@@ -96,11 +95,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
             // unpremultiply RGB
 
-            r /= a;
-            g /= a;
-            b /= a;
+            var rgb = new Vector3(r, g, b) / a;
 
-            return new Pixel.RGBA32(new Pixel.RGBA128F(r, g, b, a));
+            return new Pixel.RGBA32(new Pixel.RGBA128F(rgb, a));
         }
 
         #endregion

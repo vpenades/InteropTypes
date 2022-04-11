@@ -252,8 +252,8 @@ namespace InteropTypes.Graphics.Bitmaps
             var raw = MemoryBitmap.Load(filePath, factory);
             if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
 
-            var fmt = raw.Info.WithPixelFormat<TPixel>();
-            var dst = new MemoryBitmap<TPixel>(fmt);
+            var nfo = raw.Info.WithPixelFormat<TPixel>().WithStride(0);
+            var dst = new MemoryBitmap<TPixel>(nfo);
             dst.AsTypeless().SetPixels(0, 0, raw);
             return dst;
         }

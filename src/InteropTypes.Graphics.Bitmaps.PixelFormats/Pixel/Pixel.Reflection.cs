@@ -6,6 +6,58 @@ namespace InteropTypes.Graphics.Bitmaps
 {
     partial class Pixel
     {
+        public static bool IsFloating<TPixel>()
+            where TPixel : unmanaged
+        {            
+            if (typeof(TPixel) == typeof(Luminance32F)) return true;
+            if (typeof(TPixel) == typeof(RGB96F)) return true;
+            if (typeof(TPixel) == typeof(BGR96F)) return true;
+
+            if (typeof(TPixel) == typeof(BGRA128F)) return true;
+            if (typeof(TPixel) == typeof(RGBA128F)) return true;
+
+            if (typeof(TPixel) == typeof(BGRP128F)) return true;
+
+            if (typeof(TPixel) == typeof(float)) return true;
+            if (typeof(TPixel) == typeof(System.Numerics.Vector2)) return true;
+            if (typeof(TPixel) == typeof(System.Numerics.Vector3)) return true;
+            if (typeof(TPixel) == typeof(System.Numerics.Vector4)) return true;
+            if (typeof(TPixel) == typeof(System.Numerics.Quaternion)) return true;
+
+            return false;
+        }
+
+        public static bool IsPremultiplied<TPixel>()
+             where TPixel : unmanaged
+        {
+            if (typeof(TPixel) == typeof(BGRP32)) return true;
+            if (typeof(TPixel) == typeof(RGBP32)) return true;
+            if (typeof(TPixel) == typeof(BGRP128F)) return true;
+
+            return false;
+        }
+
+        public static unsafe bool IsOpaque<TPixel>()
+             where TPixel : unmanaged
+        {
+            if (typeof(TPixel) == typeof(Luminance8)) return true;
+            if (typeof(TPixel) == typeof(Luminance16)) return true;
+            if (typeof(TPixel) == typeof(Luminance32F)) return true;
+
+            if (typeof(TPixel) == typeof(BGR565)) return true;
+            if (typeof(TPixel) == typeof(BGR24)) return true;
+            if (typeof(TPixel) == typeof(RGB24)) return true;
+
+            if (typeof(TPixel) == typeof(BGR96F)) return true;
+            if (typeof(TPixel) == typeof(RGB96F)) return true;
+
+            if (typeof(TPixel) == typeof(System.Numerics.Vector3)) return true;
+
+            if (sizeof(TPixel) == 3) return true;
+
+            return false;
+        }
+
         partial struct Alpha8 : IReflection
         {
             public uint GetCode() => Code;

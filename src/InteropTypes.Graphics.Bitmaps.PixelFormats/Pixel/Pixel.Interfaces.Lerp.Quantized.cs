@@ -573,17 +573,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights
-                lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);
-                rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
+
+                // calculate premultiplied weights
+                lx = (lx * scale * (uint)left.A) >> (16 - _QLERPSHIFT);
+                rx = (rx * scale * (uint)right.A) >> (16 - _QLERPSHIFT);
 
                 uint preR = (left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED;
                 uint preG = (left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED;
                 uint preB = (left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED;
+                System.Diagnostics.Debug.Assert(preR < 256);
+                System.Diagnostics.Debug.Assert(preG < 256);
+                System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -621,19 +624,23 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights:
-                wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);
-                wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);
-                wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);
-                wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
+
+                // calculate premultiplied weights:
+                wtl = (((wtl * scale) >> _QLERPSHIFT) * (uint)tl.A) >> (16 - _QLERPSHIFT);
+                wtr = (((wtr * scale) >> _QLERPSHIFT) * (uint)tr.A) >> (16 - _QLERPSHIFT);
+                wbl = (((wbl * scale) >> _QLERPSHIFT) * (uint)bl.A) >> (16 - _QLERPSHIFT);
+                wbr = (((wbr * scale) >> _QLERPSHIFT) * (uint)br.A) >> (16 - _QLERPSHIFT);
+                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= 263160 * 4);
 
                 uint preR = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED;
                 uint preG = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED;
                 uint preB = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED;
+                System.Diagnostics.Debug.Assert(preR < 256);
+                System.Diagnostics.Debug.Assert(preG < 256);
+                System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -664,14 +671,17 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights
-                lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);
-                rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
 
+                // calculate premultiplied weights
+                lx = (lx * scale * (uint)left.A) >> (16 - _QLERPSHIFT);
+                rx = (rx * scale * (uint)right.A) >> (16 - _QLERPSHIFT);
+
+                System.Diagnostics.Debug.Assert(((left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -707,16 +717,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights:
-                wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);
-                wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);
-                wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);
-                wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
 
+                // calculate premultiplied weights:
+                wtl = (((wtl * scale) >> _QLERPSHIFT) * (uint)tl.A) >> (16 - _QLERPSHIFT);
+                wtr = (((wtr * scale) >> _QLERPSHIFT) * (uint)tr.A) >> (16 - _QLERPSHIFT);
+                wbl = (((wbl * scale) >> _QLERPSHIFT) * (uint)bl.A) >> (16 - _QLERPSHIFT);
+                wbr = (((wbr * scale) >> _QLERPSHIFT) * (uint)br.A) >> (16 - _QLERPSHIFT);
+                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= 263160 * 4);
+
+                System.Diagnostics.Debug.Assert(((tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -784,17 +798,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights
-                lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);
-                rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
+
+                // calculate premultiplied weights
+                lx = (lx * scale * (uint)left.A) >> (16 - _QLERPSHIFT);
+                rx = (rx * scale * (uint)right.A) >> (16 - _QLERPSHIFT);
 
                 uint preR = (left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED;
                 uint preG = (left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED;
                 uint preB = (left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED;
+                System.Diagnostics.Debug.Assert(preR < 256);
+                System.Diagnostics.Debug.Assert(preG < 256);
+                System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -832,19 +849,23 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights:
-                wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);
-                wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);
-                wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);
-                wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
+
+                // calculate premultiplied weights:
+                wtl = (((wtl * scale) >> _QLERPSHIFT) * (uint)tl.A) >> (16 - _QLERPSHIFT);
+                wtr = (((wtr * scale) >> _QLERPSHIFT) * (uint)tr.A) >> (16 - _QLERPSHIFT);
+                wbl = (((wbl * scale) >> _QLERPSHIFT) * (uint)bl.A) >> (16 - _QLERPSHIFT);
+                wbr = (((wbr * scale) >> _QLERPSHIFT) * (uint)br.A) >> (16 - _QLERPSHIFT);
+                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= 263160 * 4);
 
                 uint preR = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED;
                 uint preG = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED;
                 uint preB = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED;
+                System.Diagnostics.Debug.Assert(preR < 256);
+                System.Diagnostics.Debug.Assert(preG < 256);
+                System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -875,14 +896,17 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights
-                lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);
-                rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
 
+                // calculate premultiplied weights
+                lx = (lx * scale * (uint)left.A) >> (16 - _QLERPSHIFT);
+                rx = (rx * scale * (uint)right.A) >> (16 - _QLERPSHIFT);
+
+                System.Diagnostics.Debug.Assert(((left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -918,16 +942,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights:
-                wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);
-                wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);
-                wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);
-                wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
 
+                // calculate premultiplied weights:
+                wtl = (((wtl * scale) >> _QLERPSHIFT) * (uint)tl.A) >> (16 - _QLERPSHIFT);
+                wtr = (((wtr * scale) >> _QLERPSHIFT) * (uint)tr.A) >> (16 - _QLERPSHIFT);
+                wbl = (((wbl * scale) >> _QLERPSHIFT) * (uint)bl.A) >> (16 - _QLERPSHIFT);
+                wbr = (((wbr * scale) >> _QLERPSHIFT) * (uint)br.A) >> (16 - _QLERPSHIFT);
+                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= 263160 * 4);
+
+                System.Diagnostics.Debug.Assert(((tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -995,17 +1023,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights
-                lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);
-                rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
+
+                // calculate premultiplied weights
+                lx = (lx * scale * (uint)left.A) >> (16 - _QLERPSHIFT);
+                rx = (rx * scale * (uint)right.A) >> (16 - _QLERPSHIFT);
 
                 uint preR = (left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED;
                 uint preG = (left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED;
                 uint preB = (left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED;
+                System.Diagnostics.Debug.Assert(preR < 256);
+                System.Diagnostics.Debug.Assert(preG < 256);
+                System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -1043,19 +1074,23 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights:
-                wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);
-                wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);
-                wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);
-                wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
+
+                // calculate premultiplied weights:
+                wtl = (((wtl * scale) >> _QLERPSHIFT) * (uint)tl.A) >> (16 - _QLERPSHIFT);
+                wtr = (((wtr * scale) >> _QLERPSHIFT) * (uint)tr.A) >> (16 - _QLERPSHIFT);
+                wbl = (((wbl * scale) >> _QLERPSHIFT) * (uint)bl.A) >> (16 - _QLERPSHIFT);
+                wbr = (((wbr * scale) >> _QLERPSHIFT) * (uint)br.A) >> (16 - _QLERPSHIFT);
+                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= 263160 * 4);
 
                 uint preR = (tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED;
                 uint preG = (tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED;
                 uint preB = (tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED;
+                System.Diagnostics.Debug.Assert(preR < 256);
+                System.Diagnostics.Debug.Assert(preG < 256);
+                System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
                 #if NET5_0_OR_GREATER
@@ -1086,14 +1121,17 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights
-                lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);
-                rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
 
+                // calculate premultiplied weights
+                lx = (lx * scale * (uint)left.A) >> (16 - _QLERPSHIFT);
+                rx = (rx * scale * (uint)right.A) >> (16 - _QLERPSHIFT);
+
+                System.Diagnostics.Debug.Assert(((left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
                 #if NET5_0_OR_GREATER
@@ -1129,16 +1167,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;
                 if (a == 0) return default;
 
-                // calculate premultiplied weights:
-                wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);
-                wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);
-                wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);
-                wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);
-                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);
-
-                // Final adjustment to ensure exact results:
+                // Magic constants:
+                const uint scale = 258;
                 const uint offset = 1023 * 4;
 
+                // calculate premultiplied weights:
+                wtl = (((wtl * scale) >> _QLERPSHIFT) * (uint)tl.A) >> (16 - _QLERPSHIFT);
+                wtr = (((wtr * scale) >> _QLERPSHIFT) * (uint)tr.A) >> (16 - _QLERPSHIFT);
+                wbl = (((wbl * scale) >> _QLERPSHIFT) * (uint)bl.A) >> (16 - _QLERPSHIFT);
+                wbr = (((wbr * scale) >> _QLERPSHIFT) * (uint)br.A) >> (16 - _QLERPSHIFT);
+                System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= 263160 * 4);
+
+                System.Diagnostics.Debug.Assert(((tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
+                System.Diagnostics.Debug.Assert(((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
                 #if NET5_0_OR_GREATER

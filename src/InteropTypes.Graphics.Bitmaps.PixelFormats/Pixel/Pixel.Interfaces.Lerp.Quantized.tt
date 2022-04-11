@@ -232,14 +232,15 @@ void _WriteAlphaQ2(string srcPixel, string dstPixel)
         _writeComment("calculate final alpha");
         WriteLine("uint a = (left.A * lx + right.A * rx) >> _QLERPSHIFT;");
         WriteLine("if (a == 0) return default;");
+
+        _writeComment("Magic constants:");
+        WriteLine("const uint scale = 258;");
+        WriteLine("const uint offset = 1023 * 4;");
         
         _writeComment("calculate premultiplied weights");
-        WriteLine("lx = (lx * 257u * (uint)left.A) >> (16 - _QLERPSHIFT);");
-        WriteLine("rx = (rx * 257u * (uint)right.A) >> (16 - _QLERPSHIFT);");
-        WriteLine("System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);");        
-
-        _writeComment("Final adjustment to ensure exact results:");
-        WriteLine("const uint offset = 1023 * 4;");
+        WriteLine("lx = (lx * scale * (uint)left.A) >> (16 - _QLERPSHIFT);");
+        WriteLine("rx = (rx * scale * (uint)right.A) >> (16 - _QLERPSHIFT);");
+        // WriteLine("System.Diagnostics.Debug.Assert((lx+rx) <= _QLERPVALUESQUARED);");        
         
         var red = "(left.R * lx + right.R * rx + offset) >> _QLERPSHIFTSQUARED";
         var green = "(left.G * lx + right.G * rx + offset) >> _QLERPSHIFTSQUARED";
@@ -275,24 +276,25 @@ void _WriteAlphaQ4(string srcPixel, string dstPixel)
 
     _writeComment("calculate final alpha");
     WriteLine("uint a = (tl.A * wtl + tr.A * wtr + bl.A * wbl + br.A * wbr) >> _QLERPSHIFTSQUARED;");
-    WriteLine("if (a == 0) return default;");    
+    WriteLine("if (a == 0) return default;");
 
+    _writeComment("Magic constants:");
+    WriteLine("const uint scale = 258;");
+    WriteLine("const uint offset = 1023 * 4;");
+    
     // alternatively, we could use "ulong"
     // (should divide by 255, but we compensate precission loss by multiplying by 257) and adding 1023x4 later on.
     _writeComment("calculate premultiplied weights:");    
-    WriteLine("wtl = ((wtl >> _QLERPSHIFT) * 257u * (uint)tl.A) >> (16 - _QLERPSHIFT);");
-    WriteLine("wtr = ((wtr >> _QLERPSHIFT) * 257u * (uint)tr.A) >> (16 - _QLERPSHIFT);");
-    WriteLine("wbl = ((wbl >> _QLERPSHIFT) * 257u * (uint)bl.A) >> (16 - _QLERPSHIFT);");
-    WriteLine("wbr = ((wbr >> _QLERPSHIFT) * 257u * (uint)br.A) >> (16 - _QLERPSHIFT);");    
-    WriteLine("System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= _QLERPVALUESQUARED);");
-
-    _writeComment("Final adjustment to ensure exact results:");
-    WriteLine("const uint offset = 1023 * 4;");
+    WriteLine("wtl = (((wtl * scale) >> _QLERPSHIFT) * (uint)tl.A) >> (16 - _QLERPSHIFT);");
+    WriteLine("wtr = (((wtr * scale) >> _QLERPSHIFT) * (uint)tr.A) >> (16 - _QLERPSHIFT);");
+    WriteLine("wbl = (((wbl * scale) >> _QLERPSHIFT) * (uint)bl.A) >> (16 - _QLERPSHIFT);");
+    WriteLine("wbr = (((wbr * scale) >> _QLERPSHIFT) * (uint)br.A) >> (16 - _QLERPSHIFT);");    
+    WriteLine("System.Diagnostics.Debug.Assert((wtl+wtr+wbl+wbr) <= 263160 * 4);");    
 
     var red = "(tl.R * wtl + tr.R * wtr + bl.R * wbl + br.R * wbr + offset) >> _QLERPSHIFTSQUARED";
     var green = "(tl.G * wtl + tr.G * wtr + bl.G * wbl + br.G * wbr + offset) >> _QLERPSHIFTSQUARED";
     var blue = "(tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED";
-
+    
     _WriteAlphaQOutput(dstPixel, red, green, blue);
 
     _writeCloseBlock();
@@ -304,6 +306,10 @@ void _WriteAlphaQOutput(string pixelFmt, string uintR = "r", string uintG = "g",
     
     if (IsPremul(pixelFmt))
     {
+        WriteLine($"System.Diagnostics.Debug.Assert(({uintR}) < 256);");
+        WriteLine($"System.Diagnostics.Debug.Assert(({uintG}) < 256);");
+        WriteLine($"System.Diagnostics.Debug.Assert(({uintB}) < 256);");
+
         _writeComment("set values");
         _WriteSkipInitVar(pixelFmt, "result");
         WriteLine("");
@@ -322,6 +328,10 @@ void _WriteAlphaQOutput(string pixelFmt, string uintR = "r", string uintG = "g",
            uintR = "preR";
            uintG = "preG";
            uintB = "preB";        
+
+           WriteLine("System.Diagnostics.Debug.Assert(preR < 256);");
+           WriteLine("System.Diagnostics.Debug.Assert(preG < 256);");
+           WriteLine("System.Diagnostics.Debug.Assert(preB < 256);");
         }
 
         _writeComment("unpremultiply RGB");
