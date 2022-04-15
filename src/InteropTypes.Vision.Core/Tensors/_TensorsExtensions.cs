@@ -15,59 +15,70 @@ namespace InteropTypes.Tensors
 {
     public static class _TensorsExtensions
     {
-        public static bool TryGetAsSpanTensor<TPixel>(this SpanBitmap<TPixel> src, out SpanTensor2<TPixel> result)
-            where TPixel : unmanaged
+        public static Imaging.ColorEncoding GetColorEncoding<TPixel>()
         {
-            if (!src.Info.IsContinuous) { result = default; return false; }
+            if (typeof(TPixel) == typeof(Pixel.Alpha8)) return Imaging.ColorEncoding.A;
 
-            var data = MEMMARSHAL.Cast<Byte, TPixel>(src.WritableBytes);
+            if (typeof(TPixel) == typeof(Pixel.Luminance8)) return Imaging.ColorEncoding.L;
+            if (typeof(TPixel) == typeof(Pixel.Luminance16)) return Imaging.ColorEncoding.L;
+            if (typeof(TPixel) == typeof(Pixel.Luminance32F)) return Imaging.ColorEncoding.L;
 
-            result = new SpanTensor2<TPixel>(data, src.Height, src.Width);
-            return true;
+            if (typeof(TPixel) == typeof(Pixel.BGR24)) return Imaging.ColorEncoding.BGR;
+            if (typeof(TPixel) == typeof(Pixel.RGB24)) return Imaging.ColorEncoding.RGB;
+            if (typeof(TPixel) == typeof(Pixel.RGBA32)) return Imaging.ColorEncoding.RGBA;
+            if (typeof(TPixel) == typeof(Pixel.BGRA32)) return Imaging.ColorEncoding.BGRA;
+            if (typeof(TPixel) == typeof(Pixel.ARGB32)) return Imaging.ColorEncoding.ARGB;            
+
+            if (typeof(TPixel) == typeof(Pixel.BGR96F)) return Imaging.ColorEncoding.BGR;
+            if (typeof(TPixel) == typeof(Pixel.BGRA128F)) return Imaging.ColorEncoding.BGRA;
+
+            if (typeof(TPixel) == typeof(Pixel.RGB96F)) return Imaging.ColorEncoding.RGB;
+            if (typeof(TPixel) == typeof(Pixel.RGBA128F)) return Imaging.ColorEncoding.RGBA;
+
+            if (typeof(TPixel) == typeof(float)) return Imaging.ColorEncoding.X;
+            if (typeof(TPixel) == typeof(Vector2)) return Imaging.ColorEncoding.XY;
+            if (typeof(TPixel) == typeof(Vector3)) return Imaging.ColorEncoding.XYZ;
+            if (typeof(TPixel) == typeof(Vector4)) return Imaging.ColorEncoding.XYZW;
+
+            return Imaging.ColorEncoding.Undefined;
         }
 
-        public static unsafe void FillBitmap<TSrcPixel>(this TENSOR2V3 dst, SpanBitmap<TSrcPixel> src, in Matrix3x2 srcXform, MultiplyAdd mad, bool useBilinear)
+        public static Imaging.BitmapSampler<TPixel> AsBitmapSampler<TPixel>(this SpanBitmap<TPixel> src)
+            where TPixel:unmanaged
+        {
+            var encoding = GetColorEncoding<TPixel>();
+
+            return new Imaging.BitmapSampler<TPixel>(src.ReadableBytes, src.Info.StepByteSize, src.Width, src.Height, encoding);
+        }
+
+        public static unsafe void FillBitmap(this TENSOR2V3 dst, SpanBitmap src, in Imaging.BitmapTransform xform)            
+        {
+            switch(src.PixelFormat.Code)
+            {
+                case Pixel.Luminance8.Code: FillBitmap(dst, src.OfType<Pixel.Luminance8>(), xform); return;
+                case Pixel.Luminance32F.Code: FillBitmap(dst, src.OfType<Pixel.Luminance32F>(), xform); return;
+                case Pixel.BGR24.Code: FillBitmap(dst, src.OfType<Pixel.BGR24>(), xform); return;
+                case Pixel.RGB24.Code: FillBitmap(dst, src.OfType<Pixel.RGB24>(), xform); return;
+                case Pixel.BGRA32.Code: FillBitmap(dst, src.OfType<Pixel.BGRA32>(), xform); return;
+                case Pixel.RGBA32.Code: FillBitmap(dst, src.OfType<Pixel.RGBA32>(), xform); return;
+                case Pixel.ARGB32.Code: FillBitmap(dst, src.OfType<Pixel.ARGB32>(), xform); return;
+                case Pixel.BGR96F.Code: FillBitmap(dst, src.OfType<Pixel.BGR96F>(), xform); return;
+                case Pixel.RGB96F.Code: FillBitmap(dst, src.OfType<Pixel.RGB96F>(), xform); return;
+                case Pixel.BGRA128F.Code: FillBitmap(dst, src.OfType<Pixel.BGRA128F>(), xform); return;
+                case Pixel.RGBA128F.Code: FillBitmap(dst, src.OfType<Pixel.RGBA128F>(), xform); return;
+            }
+
+            throw new NotSupportedException($"{src.PixelFormat}");
+        }
+
+        public static unsafe void FillBitmap<TSrcPixel>(this TENSOR2V3 dst, SpanBitmap<TSrcPixel> src, in Imaging.BitmapTransform xform)
             where TSrcPixel:unmanaged
         {
-            var srcData = src.ReadableBytes;
-            var srcW = src.Width;
-            var srcH = src.Height;
-            var srcStride = src.Info.StepByteSize;
-
-            // TODO: support RGB component swapping.
-
-            var xform = new Imaging.BitmapTransform
-            {
-                Transform = srcXform,
-                ColorTransform = mad,
-                UseBilinear = useBilinear
-            };
-
-            if (typeof(TSrcPixel) == typeof(Vector3)) { xform.FillPixelsXYZ96F(dst, srcData, srcStride, srcW, srcH); return; }
-
-            if (typeof(TSrcPixel) == typeof(Pixel.BGR96F)) { xform.FillPixelsXYZ96F(dst, srcData, srcStride, srcW, srcH); return; }
-            if (typeof(TSrcPixel) == typeof(Pixel.RGB96F)) { xform.FillPixelsXYZ96F(dst, srcData, srcStride, srcW, srcH); return; }
-
-            if (typeof(TSrcPixel) == typeof(Pixel.BGR24)) { xform.FillPixelsXYZ24(dst, srcData, srcStride, srcW, srcH); return; }
-            if (typeof(TSrcPixel) == typeof(Pixel.RGB24)) { xform.FillPixelsXYZ24(dst, srcData, srcStride, srcW, srcH); return; }
-
-            if (sizeof(TSrcPixel) == 3) { xform.FillPixelsXYZ24(dst, srcData, srcStride, srcW, srcH); return; }
+            var sampler = src.AsBitmapSampler();
+            dst.FillPixels(sampler, xform);
         }
 
-        public static void FitBitmap(this TENSOR2V3 dst, SpanBitmap src)
-        {
-            var dstData = MEMMARSHAL.Cast<Vector3, byte>(dst.Span);
-            var dstBmp = new SpanBitmap(dstData, dst.Dimensions[1], dst.Dimensions[0], Pixel.BGR96F.Format);
-
-            if (src.PixelFormat.IsFloating)
-            {
-                dstBmp.FitPixels(src);
-            }
-            else
-            {
-                BitmapsToolkit.FitPixels(src, dstBmp, (0, 1f / 255f));
-            }
-        }
+        
 
         public static bool TryGetBitmapGray(this IDenseTensor<float> src, out SpanBitmap<float> bmp)
         {

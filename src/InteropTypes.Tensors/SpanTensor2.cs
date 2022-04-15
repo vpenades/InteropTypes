@@ -64,7 +64,7 @@ namespace InteropTypes.Tensors
 
         public void DrawLine(Vector2 a, Vector2 b, T value)
         {
-            _Drawing.DrawPixelLine(this, a, b, value);
+            Imaging._Drawing.DrawPixelLine(this, a, b, value);
         }
 
         

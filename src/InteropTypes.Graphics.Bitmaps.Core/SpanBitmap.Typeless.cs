@@ -473,13 +473,17 @@ namespace InteropTypes.Graphics.Bitmaps
 
             return refreshed;
         }
-        
+
 
         /// <summary>
         /// Tries to in-place convert the pixels to a RGB? format.
         /// </summary>
         /// <param name="newBitmap">If the conversion is successful, a new span with the new format</param>
         /// <returns>true if the conversion was successful</returns>
+        /// <remarks>
+        /// The current bitmap is no longer valid because its internal
+        /// pixel format will not match the actual data.
+        /// </remarks>
         public bool TrySetPixelsFormatRGBX(out SpanBitmap newBitmap)
         {
             if (!PixelFormat.TryGetFormatAsRGBX(this.PixelFormat, out var newFmt))
@@ -488,7 +492,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 return false;
             }
 
-            this.TrySetPixelsFormat(newFmt, out newBitmap);
+            this.TryConvertPixelsFormat(newFmt, out newBitmap);
             return true;
         }
 
@@ -497,7 +501,11 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </summary>
         /// <param name="newBitmap">If the conversion is successful, a new span with the new format</param>
         /// <returns>true if the conversion was successful</returns>
-        public bool TrySetPixelsFormatBGRX(out SpanBitmap newBitmap)
+        /// <remarks>
+        /// The current bitmap is no longer valid because its internal
+        /// pixel format will not match the actual data.
+        /// </remarks>
+        public bool TryConvertPixelsFormatBGRX(out SpanBitmap newBitmap)
         {
             if (!PixelFormat.TryGetFormatAsBGRX(this.PixelFormat, out var newFmt))
             {
@@ -505,30 +513,42 @@ namespace InteropTypes.Graphics.Bitmaps
                 return false;
             }
 
-            this.TrySetPixelsFormat(newFmt, out newBitmap);
+            this.TryConvertPixelsFormat(newFmt, out newBitmap);
             return true;
         }
 
-        public bool TrySetPixelsFormat(PixelFormat newFormat, out SpanBitmap newBitmap)
+        /// <summary>
+        /// Tries to in-place convert the pixels to a new format.
+        /// </summary>
+        /// <param name="newFormat">The new pixel format</param>
+        /// <param name="newBitmap">The new bitmap, sharing the pixels</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// The current bitmap is no longer valid because its internal
+        /// pixel format will not match the actual data.
+        /// </remarks>
+        public bool TryConvertPixelsFormat(PixelFormat newFormat, out SpanBitmap newBitmap)
         {
-            if (this.PixelFormat.ByteCount != newFormat.ByteCount)
+            if (this.PixelFormat.ByteCount < newFormat.ByteCount)
             {
                 newBitmap = default;
                 return false;
             }
 
             var converter = Pixel.GetByteCopyConverter(this.PixelFormat, newFormat);
+            var newInfo = this.Info.WithPixelFormat(newFormat);
 
-            Span<byte> tmpRow = stackalloc byte[this.StepByteSize];
+            // we need a temporary row because some pixel coverters don't handle self conversion
+            Span<byte> tmpRow = stackalloc byte[this.Info.RowByteSize];
 
             for(int y=0; y < this.Height; ++y)
             {
                 var row = UseScanlineBytes(y);
                 row.CopyTo(tmpRow);
+                row = row.Slice(0, newInfo.RowByteSize);
                 converter.Invoke(tmpRow, row);
             }
-
-            var newInfo = this.Info.WithPixelFormat(newFormat);
+            
             newBitmap = new SpanBitmap(this._Readable, newInfo);
             return true;
         }

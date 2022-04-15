@@ -9,7 +9,7 @@
   <Import Project="..\Version.props" />  
 
   <ItemGroup>
-    <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0025" />
+    <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0026" />
   </ItemGroup>
 
   <ItemGroup>

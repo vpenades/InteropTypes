@@ -227,7 +227,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public bool TrySetPixelsFormatBGRX(out MemoryBitmap newBitmap)
         {
-            if (this.AsSpanBitmap().TrySetPixelsFormatBGRX(out var newSpan))
+            if (this.AsSpanBitmap().TryConvertPixelsFormatBGRX(out var newSpan))
             {
                 newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
                 return true;
@@ -241,7 +241,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public bool TrySetPixelsFormat(PixelFormat newFormat, out MemoryBitmap newBitmap)
         {
-            if (this.AsSpanBitmap().TrySetPixelsFormat(newFormat, out var newSpan))
+            if (this.AsSpanBitmap().TryConvertPixelsFormat(newFormat, out var newSpan))
             {
                 newBitmap = new MemoryBitmap(this._Data, newSpan.Info);
                 return true;

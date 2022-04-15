@@ -18,10 +18,9 @@ namespace InteropTypes.Tensors
     {
         #region constructor        
 
-        public static MultiplyAdd CreateAdd(in Vector4 add)
-        {
-            return new MultiplyAdd(Vector4.One, add);
-        }
+        public static MultiplyAdd CreateAdd(in Vector3 add) { return new MultiplyAdd(Vector4.One, new Vector4(add, add.Z)); }
+
+        public static MultiplyAdd CreateAdd(in Vector4 add) { return new MultiplyAdd(Vector4.One, add); }
 
         public static MultiplyAdd CreateAdd(float x)
         {
@@ -47,10 +46,9 @@ namespace InteropTypes.Tensors
             return new MultiplyAdd(Vector4.One, add);
         }
 
-        public static MultiplyAdd CreateMul(in Vector4 mul)
-        {
-            return new MultiplyAdd(mul, Vector4.Zero);
-        }
+        public static MultiplyAdd CreateMul(in Vector3 mul) { return new MultiplyAdd(new Vector4(mul, mul.Z), Vector4.Zero); }
+
+        public static MultiplyAdd CreateMul(in Vector4 mul) { return new MultiplyAdd(mul, Vector4.Zero); }
         
         public static MultiplyAdd CreateMul(float x)
         {
@@ -128,6 +126,12 @@ namespace InteropTypes.Tensors
             return new MultiplyAdd(m, -Addition.XYZW * m);
         }
 
+        public MultiplyAdd ConcatMul(in Vector3 mul)
+        {
+            var mul4 = new Vector4(mul, mul.Z);
+            return new MultiplyAdd(Multiply * mul4, Addition * mul4);
+        }
+
         public MultiplyAdd ConcatMul(in Vector4 mul)
         {
             return new MultiplyAdd(Multiply * mul, Addition * mul);
@@ -155,6 +159,11 @@ namespace InteropTypes.Tensors
         {
             var mul = new Vector4(x, y, z, w);
             return new MultiplyAdd(Multiply * mul, Addition * mul);
+        }
+
+        public MultiplyAdd ConcatAdd(in Vector3 add)
+        {
+            return new MultiplyAdd(Multiply.XYZW, Addition + new Vector4(add, add.Z));
         }
 
         public MultiplyAdd ConcatAdd(in Vector4 add)
@@ -190,13 +199,22 @@ namespace InteropTypes.Tensors
 
         #region vector4
 
+        public (Vector4 Multiply, Vector4 Add) GetVector4() { return (Multiply.XYZW, Addition.XYZW); }
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public Vector4 Transform(Vector4 value)
         {
             value *= Multiply.XYZW;
             value += Addition.XYZW;
             return value;
-        }        
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void Transform(ref Vector4 value)
+        {
+            value *= Multiply.XYZW;
+            value += Addition.XYZW;            
+        }
 
         public void ApplyTransformTo(Span<Vector4> dst)
         {
@@ -320,6 +338,13 @@ namespace InteropTypes.Tensors
             value *= Multiply.XYZ;
             value += Addition.XYZ;
             return value;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void Transform(ref Vector3 value)
+        {
+            value *= Multiply.XYZ;
+            value += Addition.XYZ;            
         }
 
         public void ApplyTransformTo(Span<Vector3> dst3)

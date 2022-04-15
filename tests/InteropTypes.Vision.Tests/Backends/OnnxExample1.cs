@@ -20,9 +20,9 @@ namespace InteropTypes.Vision.Backends
             OnnxModel.DeviceID = -1;
         }        
 
-        [TestCase("Resources\\dog.jpeg")]
-        [TestCase("Resources\\shannon.jpg")]
-        public void TestResnet50(string imagePath)
+        [TestCase("Resources\\dog.jpeg", "Golden Retriever")]
+        [TestCase("Resources\\shannon.jpg", "cowboy hat")]
+        public void TestResnet50(string imagePath, string expectedResult)
         {
             // https://onnxruntime.ai/docs/tutorials/resnet50_csharp.html            
 
@@ -33,8 +33,8 @@ namespace InteropTypes.Vision.Backends
             // image normalization
             // https://github.com/onnx/models/tree/master/vision/classification/resnet#preprocessing            
             var modelXform = MultiplyAdd
-                .CreateMul(0.229f, 0.224f, 0.225f, 1)
-                .ConcatAdd(0.485f, 0.456f, 0.406f, 0)
+                .CreateMul(0.229f, 0.224f, 0.225f)
+                .ConcatAdd(0.485f, 0.456f, 0.406f)                
                 .GetTransposedZYXW()
                 .GetInverse();
 
@@ -66,12 +66,14 @@ namespace InteropTypes.Vision.Backends
                 var pairs = Labels.resnet50_v2_7_Labels
                     .Zip(scores, (Label,Score) =>(Label,Score))
                     .OrderByDescending(item => item.Score)
-                    .ToList();
+                    .ToList();                
 
                 foreach(var pair in pairs)
                 {
                     TestContext.WriteLine($"{pair.Label} = {pair.Score}");
                 }
+
+                Assert.AreEqual(expectedResult, pairs[0].Label);
             }
         }
 
@@ -439,9 +441,9 @@ namespace InteropTypes.Vision.Backends
 
             // increase image contrast (optional)
             var imagePreprocessor = new ImageProcessor<Pixel.RGB96F>();
-            imagePreprocessor.Transform = MultiplyAdd.CreateAdd(-0.5f).ConcatMul(1.7f);
+            imagePreprocessor.ColorTransform = MultiplyAdd.CreateAdd(-0.5f).ConcatMul(1.7f);
 
-            imagePreprocessor.Transform.ApplyTransformTo(workingTensor.Span);
+            imagePreprocessor.ColorTransform.ApplyTransformTo(workingTensor.Span);
 
             _Session.Inference();
 

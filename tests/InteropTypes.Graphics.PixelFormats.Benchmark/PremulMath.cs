@@ -14,8 +14,12 @@ namespace InteropTypes.Graphics.Bitmaps
     // [MonoJob("Mono x64", @"C:\Program Files\Mono\bin\mono.exe")]    
     [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.Throughput, BenchmarkDotNet.Jobs.RuntimeMoniker.Net472)]
     [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.Throughput, BenchmarkDotNet.Jobs.RuntimeMoniker.Net60)]
+    [DisassemblyDiagnoser]
     public class PremulMath
     {
+        // benchmarks on swapping variables: https://hyr.mn/swapping-numbers/
+
+
         private static Pixel.BGRA32 _SrcColor = new Pixel.BGRA32(255, 255, 255, 255);
 
         private static Pixel.BGRP32 _PreSrcColor = new Pixel.BGRP32(new Pixel.BGRA32(255, 255, 255, 255));

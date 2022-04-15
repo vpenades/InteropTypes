@@ -6,9 +6,22 @@ using System.Text;
 
 namespace InteropTypes.Tensors
 {
+    /// <summary>
+    /// Represents a 24 bit pixel components
+    /// </summary>
+    /// <remarks>The R,G,B component order is undefined.</remarks>
     [System.Diagnostics.DebuggerDisplay("{X} {Y} {Z}")]
     struct _PixelXYZ24
     {
+        #region constructor
+
+        public _PixelXYZ24(Byte x, Byte y, Byte z)
+        {
+            X = x; Y = y; Z = z;
+        }
+
+        #endregion
+
         #region data
 
         public Byte X;

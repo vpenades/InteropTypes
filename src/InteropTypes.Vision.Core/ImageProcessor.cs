@@ -8,96 +8,88 @@ using InteropTypes.Tensors;
 
 namespace InteropTypes.Vision
 {
+    /// <summary>
+    /// Helper class used to copy images to a tensor
+    /// </summary>
+    /// <typeparam name="TPixel"></typeparam>
     public class ImageProcessor<TPixel> : ITensorImageProcessor<float>
-            where TPixel : unmanaged
+            where TPixel : unmanaged, Pixel.IReflection
     {
         #region constructor
-        public ImageProcessor() { }
+        public ImageProcessor()
+        {
+            TensorFormat = PixelFormat.TryIdentifyFormat<TPixel>();
+        }
         
-        public ImageProcessor(MultiplyAdd transform) { Transform = transform; }
+        public ImageProcessor(MultiplyAdd transform) : this()
+        {
+            ColorTransform = transform;
+        }
 
         #endregion
 
         #region properties
 
-        public MultiplyAdd Transform { get; set; } = MultiplyAdd.Identity;
+        public PixelFormat TensorFormat { get; }
+
+        public MultiplyAdd ColorTransform { get; set; } = MultiplyAdd.Identity;
 
         #endregion
 
-        #region API        
+        #region API
+
+        void ITensorImageProcessor<float>.CopyImage(SpanTensor3<float> src, SpanBitmap dst)
+        {
+            throw new NotImplementedException();
+        }
 
         public void CopyImage(SpanBitmap src, SpanTensor3<float> dst)
         {
-            if (dst.Dimensions[2] == 3) // BGR24
+            switch(src.PixelFormat.Code)
+            {
+                case Pixel.BGR24.Code: CopyImage(src.OfType<Pixel.BGR24>(), dst); return;
+                case Pixel.RGB24.Code: CopyImage(src.OfType<Pixel.RGB24>(), dst); return;
+                case Pixel.BGRA32.Code: CopyImage(src.OfType<Pixel.BGRA32>(), dst); return;
+                case Pixel.RGBA32.Code: CopyImage(src.OfType<Pixel.RGBA32>(), dst); return;
+                case Pixel.Undefined24.Code: CopyImage(src.OfType<Pixel.Undefined24>(), dst); return;
+            }
+
+            throw new NotImplementedException($"{src.PixelFormat}");
+        }
+
+        public void CopyImage<TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanTensor3<float> dst)
+            where TSrcPixel:unmanaged, Pixel.IReflection
+        {
+            var dstEncoding = _TensorsExtensions.GetColorEncoding<TPixel>();
+
+            var cmad = ColorTransform;
+            if (default(TSrcPixel).IsQuantized) cmad = cmad.ConcatMul(1f / 255f);
+
+            var sampler = src.AsBitmapSampler();            
+
+            if (dst.Dimensions[2] == 3) // dst[h][w][3]
             {
                 var tmpTensor = dst.UpCast<System.Numerics.Vector3>();
-
-                /*
-                if (src.PixelFormat == Pixel.BGR24.Format)
-                {
-                    tmpTensor.FillPixelsBGR24(src.ReadableBytes, src.Info.StepByteSize, src.Width, src.Height, System.Numerics.Matrix3x2.Identity, Transform, true);
-                }
-                else*/
-                {
-                    _FitImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector3, TPixel>());
-                    Transform.ApplyTransformTo(tmpTensor.Span);
-                }
-
+                tmpTensor.FitPixels(sampler, cmad, dstEncoding);
                 return;
             }
 
-            if (dst.Dimensions[2] == 4)
+            if (dst.Dimensions[2] == 4) // dst[h][w][4]
             {
                 var tmpTensor = dst.UpCast<System.Numerics.Vector4>();
-
-                _FitImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector4, TPixel>());
-
-                Transform.ApplyTransformTo(tmpTensor.Span);
-
+                tmpTensor.FitPixels(sampler, cmad, dstEncoding);
                 return;
             }
 
-            if (dst.Dimensions[0] == 3)
+            if (dst.Dimensions[0] == 3) // dst[3][h][w]
             {
-                var h = dst.Dimensions[1];
-                var w = dst.Dimensions[2];
-
-                var tmpTensor = new SpanTensor2<System.Numerics.Vector3>(h, w);
-
-                _FitImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector3, TPixel>());
-
-                SpanTensor.Copy(tmpTensor, dst, Transform);
+                dst.FitPixels(sampler, cmad, dstEncoding);
                 return;
-            }
-
-            if (dst.Dimensions[0] == 4)
-            {
-                var h = dst.Dimensions[0];
-                var w = dst.Dimensions[1];
-
-                var tmpTensor = new SpanTensor2<System.Numerics.Vector4>(h, w);
-
-                _FitImage(src, tmpTensor.AsSpanBitmap<System.Numerics.Vector4, TPixel>());
-
-                SpanTensor.Copy(tmpTensor, dst, Transform);
-                return;
-            }
+            }            
 
             throw new NotImplementedException();
         }
-
-        public void CopyImage(SpanTensor3<float> src, SpanBitmap dst)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void _FitImage(SpanBitmap src, SpanBitmap<TPixel> dst)
-        {
-            
-
-            dst.AsTypeless().FitPixels(src);
-        }
-
+        
         #endregion
     }
 }

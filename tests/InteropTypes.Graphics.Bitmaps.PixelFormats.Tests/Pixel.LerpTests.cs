@@ -64,26 +64,6 @@ namespace InteropTypes.Graphics.Bitmaps
                 var r3 = _LerpToBGRP32(col, col, 1);
                 col.AssertEqualsWithPremul(r3);                
             }
-
-            // brute force tests
-
-            for (int r = 0; r < 256; ++r)
-            {
-                var opaque = new Pixel.BGR24(1, r, 255);
-
-                _CheckLinear<Pixel.BGR24, Pixel.BGR24>(opaque, result => Assert.AreEqual(opaque,result));
-                _CheckLinear<Pixel.BGR24, Pixel.BGRP32>(opaque, result => Assert.AreEqual(opaque, result.To<Pixel.BGR24>()));
-
-                for (int a = 0; a < 256; ++a)
-                {
-                    TestContext.Progress.WriteLine($"Alpha:{a} Red:{r}");
-
-                    var color = new Pixel.BGRA32(r, 1, 255, a);
-
-                    _CheckLinear<Pixel.BGRP32, Pixel.BGRP32>(new Pixel.BGRP32(color), result => color.AssertEqualsWithPremul(result));
-                    _CheckLinear<Pixel.BGRA32, Pixel.BGRP32>(color, result => color.AssertEqualsWithPremul(result));                    
-                }
-            }
         }
 
         [Test]
@@ -122,24 +102,52 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 // var r3 = Pixel.BGRA32.Lerp(col, col, col, col, 427, 31);
                 // col.AssertEqualsWithPremul(r3);
+            }            
+        }
+
+
+        [Test]
+        [Ignore("Very long test")]
+        public void TestLinearInterpolationsBruteForce()
+        {
+            for (int r = 0; r < 256; ++r)
+            {
+                var opaque = new Pixel.BGR24(1, r, 255);
+
+                _CheckLinear<Pixel.BGR24, Pixel.BGR24>(opaque, result => Assert.AreEqual(opaque, result));
+                _CheckLinear<Pixel.BGR24, Pixel.BGRP32>(opaque, result => Assert.AreEqual(opaque, result.To<Pixel.BGR24>()));
+
+                for (int a = 0; a < 256; ++a)
+                {
+                    TestContext.Progress.WriteLine($"Alpha:{a} Red:{r}");
+
+                    var color = new Pixel.BGRA32(r, 1, 255, a);
+
+                    _CheckLinear<Pixel.BGRP32, Pixel.BGRP32>(new Pixel.BGRP32(color), result => color.AssertEqualsWithPremul(result));
+                    _CheckLinear<Pixel.BGRA32, Pixel.BGRP32>(color, result => color.AssertEqualsWithPremul(result));
+                }
             }
-
-            // brute force tests
-
-            for (int a=0; a < 256; ++a)
+        }
+        
+        [Test]
+        [Ignore("Very long test")]
+        public void TestBilinearInterpolationsBruteForce()
+        {
+            for (int a = 0; a < 256; ++a)
             {
                 for (int r = 0; r < 256; ++r)
                 {
                     TestContext.Progress.WriteLine($"Alpha:{a} Red:{r}");
 
-                    var color = new Pixel.BGRA32(r,1,255,a);
+                    var color = new Pixel.BGRA32(r, 1, 255, a);
 
-                    _CheckBilinear<Pixel.BGRP32,Pixel.BGRP32>(new Pixel.BGRP32(color), result => color.AssertEqualsWithPremul(result), 37 + (uint)(r&15));
+                    _CheckBilinear<Pixel.BGRP32, Pixel.BGRP32>(new Pixel.BGRP32(color), result => color.AssertEqualsWithPremul(result), 37 + (uint)(r & 15));
                     _CheckBilinear<Pixel.BGRA32, Pixel.BGRP32>(color, result => color.AssertEqualsWithPremul(result), 37 + (uint)(r & 15));
                     // _CheckInterpolation<Pixel.BGRA32, Pixel.BGRA32>(color);
                 }
-            }            
+            }
         }
+
 
         private void _CheckLinear<TSrcPixel, TDstPixel>(TSrcPixel srcColor, Action<TDstPixel> resultAction)
             where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRP32>
@@ -207,7 +215,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             return default;
         }
-
 
         public static Pixel.BGRP32 _LerpToBGRP32(Pixel.BGRA32 left, Pixel.BGRA32 right, uint rx)
         {

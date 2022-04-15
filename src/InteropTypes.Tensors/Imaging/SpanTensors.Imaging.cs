@@ -8,59 +8,36 @@ namespace InteropTypes.Tensors
 
     partial struct SpanTensor2<T>
     {
-        public unsafe void FitPixels<TSrcPixel>(SpanTensor2<TSrcPixel> source, MultiplyAdd mad, bool useBilinear)
-            where TSrcPixel : unmanaged
+        public void FitPixels<TSrcPixel>(Imaging.BitmapSampler<TSrcPixel> source, Imaging.BitmapTransform xform, Imaging.ColorEncoding targetEncoding = Imaging.ColorEncoding.Undefined)
+            where TSrcPixel:unmanaged
         {
-            var w = (float)source.BitmapSize.Width / (float)this.BitmapSize.Width;
-            var h = (float)source.BitmapSize.Height / (float)this.BitmapSize.Height;
+            var ww = (float)source.Width / (float)this.BitmapSize.Width;
+            var hh = (float)source.Height / (float)this.BitmapSize.Height;
+            xform.Transform *= TRANSFORM.CreateScale(ww, hh);
 
-            var matrix = TRANSFORM.CreateScale(w, h);
-
-            var xform = new Imaging.BitmapTransform
-            {
-                Transform = matrix,
-                ColorTransform = mad,
-                UseBilinear = useBilinear
-            };
-
-            xform.FillPixels(this, source);
-        }
-
-        public unsafe void FillPixels<TSrcPixel>(SpanTensor2<TSrcPixel> source, in TRANSFORM srcXform, MultiplyAdd mad, bool useBilinear)
-            where TSrcPixel : unmanaged
-        {
-            var xform = new Imaging.BitmapTransform
-            {
-                Transform = srcXform,
-                ColorTransform = mad,
-                UseBilinear = useBilinear
-            };
-
-            xform.FillPixels(this, source);
+            xform.FillPixels(this, source, targetEncoding);
         }        
+
+        public void FillPixels<TSrcPixel>(Imaging.BitmapSampler<TSrcPixel> source, Imaging.BitmapTransform xform, Imaging.ColorEncoding targetEncoding = Imaging.ColorEncoding.Undefined)
+            where TSrcPixel : unmanaged
+        {
+            xform.FillPixels(this, source, targetEncoding);
+        }              
     }
 
     partial struct SpanTensor3<T>
     {
-        public unsafe void FitPixels<TSrcPixel>(SpanTensor2<TSrcPixel> source, MultiplyAdd mad, bool useBilinear)
-            where TSrcPixel : unmanaged
+        public void FitPixels<TSrcPixel>(Imaging.BitmapSampler<TSrcPixel> source, Imaging.BitmapTransform xform, Imaging.ColorEncoding targetEncoding = Imaging.ColorEncoding.Undefined)
+            where TSrcPixel:unmanaged
         {
             if (this.Dimensions[0] != 3) throw new InvalidOperationException("Dimension[0] is not 3.");
 
-            var w = (float)source.BitmapSize.Width / (float)this.Dimensions[2];
-            var h = (float)source.BitmapSize.Height / (float)this.Dimensions[1];
+            var ww = (float)source.Width / (float)this.Dimensions[2];
+            var hh = (float)source.Height / (float)this.Dimensions[1];
+            xform.Transform *= TRANSFORM.CreateScale(ww, hh);
 
-            var matrix = TRANSFORM.CreateScale(w, h);
-
-            var xform = new Imaging.BitmapTransform
-            {
-                Transform = matrix,
-                ColorTransform = mad,
-                UseBilinear = useBilinear
-            };
-
-            xform.FillPixels(this, source);
-        }
+            xform.FillPixels(this[0], this[1], this[2], source, targetEncoding);
+        }        
     }
 
     

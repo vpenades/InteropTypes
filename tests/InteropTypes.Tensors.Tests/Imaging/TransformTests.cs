@@ -34,7 +34,7 @@ namespace InteropTypes.Tensors
                 * System.Numerics.Matrix3x2.CreateRotation(0.3f);
             srcX.Translation = new System.Numerics.Vector2(-15, -35);
 
-            dst.FillPixels(src, srcX, MultiplyAdd.Identity, true);
+            dst.FillPixels<BGR24>(src, (srcX, MultiplyAdd.Identity));
 
             // dst.FitPixels(src, MultiplyAdd.Identity, true);            
 
@@ -64,12 +64,12 @@ namespace InteropTypes.Tensors
             srcX.Translation = new System.Numerics.Vector2(15, 35);
 
             var time = System.Diagnostics.Stopwatch.StartNew();
-            dst.FillPixels(src, srcX, MultiplyAdd.Identity, useBilinear);
+            dst.FillPixels<BGR24>(src, (srcX, MultiplyAdd.Identity, useBilinear));
             time.Stop();
             TestContext.WriteLine($"{time.Elapsed.TotalMilliseconds}");
 
             time = System.Diagnostics.Stopwatch.StartNew();
-            dst2.FillPixels(src, srcX, MultiplyAdd.Identity, useBilinear);
+            dst2.FillPixels<BGR24>(src, (srcX, MultiplyAdd.Identity, useBilinear));
             time.Stop();
             TestContext.WriteLine($"{time.Elapsed.TotalMilliseconds}");   
 

@@ -213,7 +213,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         
 
-        public unsafe SpanBitmap<TDstPixel> ReinterpretOfType<TDstPixel>()
+        public unsafe SpanBitmap<TDstPixel> ReinterpretAs<TDstPixel>()
             where TDstPixel : unmanaged
         {
             if (sizeof(TPixel) != sizeof(TDstPixel)) throw new ArgumentException("pixels size mismatch.");            
@@ -370,7 +370,7 @@ namespace InteropTypes.Graphics.Bitmaps
             // 3rd try with generic exact and matching types:
             if (typeof(TPixel) == typeof(TSrcPixel))
             {
-                var srcx = src.ReinterpretOfType<TPixel>();
+                var srcx = src.ReinterpretAs<TPixel>();
                 if (transfer.TryTransfer<TPixel>(srcx, this)) return;
             }
 

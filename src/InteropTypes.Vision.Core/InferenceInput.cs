@@ -356,10 +356,24 @@ namespace InteropTypes.Vision
 
         public float DepthMean;
         public float DepthScale;
-        public Vector3 ColorScale;
+        public Vector3 ColorScale;        
 
         public System.Drawing.Size InputSize;
 
-        #endregion        
+        #endregion
+
+        #region properties
+
+        public Tensors.MultiplyAdd Mad
+        {
+            get
+            {
+                return Tensors.MultiplyAdd
+                    .CreateAdd(DepthMean * DepthScale)
+                    .ConcatMul(ColorScale * DepthScale);
+            }
+        }
+
+        #endregion
     }
 }
