@@ -87,124 +87,119 @@ namespace InteropTypes.Tensors.Imaging
             return false;
         }
 
-        public unsafe void FillPixels<TSrcPixel, TDstPixel>(SpanTensor2<TDstPixel> target, BitmapSampler<TSrcPixel> source, ColorEncoding targetEncoding)
+        public unsafe void FillPixels<TSrcPixel, TDstPixel>(TensorBitmap<TDstPixel> target, BitmapSampler<TSrcPixel> source)
             where TSrcPixel : unmanaged
             where TDstPixel : unmanaged
         {
             // TODO: if Transform is identity, do a plain copy
 
-            var reverseRGB = _NeedsReverse(targetEncoding, source.Encoding);
+            var reverseRGB = _NeedsReverse(target._Encoding, source.Encoding);
 
-            if (sizeof(TSrcPixel) == 3)
+            if (target._Channels == 1)
             {
-                var sampler = source.Cast<_PixelXYZ24>();
-
-                if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB 24 to RGB float
+                if (sizeof(TSrcPixel) == 3)
                 {
-                    var dstXYZ = target.Cast<System.Numerics.Vector3>();
-                    _TransferPixels(sampler, dstXYZ, reverseRGB);
-                    return;
+                    var sampler = source.Cast<_PixelXYZ24>();
+
+                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB 24 to RGB float
+                    {
+                        var dstXYZ = target.GetTensorX<System.Numerics.Vector3>();
+                        _TransferPixels(sampler, dstXYZ, reverseRGB);
+                        return;
+                    }
+
+                    if (typeof(TDstPixel) == typeof(float)) // RGB24 to gray
+                    {
+                        var dstGray = target.GetTensorX<float>();
+                        _TransferPixels(sampler, dstGray);
+                        return;
+                    }
+
+                    if (sizeof(TDstPixel) == 3) // RGB 24 to RGB 24
+                    {
+                        var dstXYZ = target.GetTensorX<_PixelXYZ24>();
+                        _TransferPixels(sampler, dstXYZ);
+                        return;
+                    }
                 }
 
-                if (typeof(TDstPixel) == typeof(float)) // RGB24 to gray
+                if (sizeof(TSrcPixel) == 4)
                 {
-                    var dstGray = target.Cast<float>();
-                    _TransferPixels(sampler, dstGray);
-                    return;
+                    var sampler = source.Cast<uint>();
+
+                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB 24 to RGB float
+                    {
+                        var dstXYZ = target.GetTensorX<System.Numerics.Vector3>();
+                        _TransferPixels(sampler, dstXYZ, reverseRGB);
+                        return;
+                    }
+
+                    if (typeof(TDstPixel) == typeof(float)) // RGB24 to gray
+                    {
+                        var dstGray = target.GetTensorX<float>();
+                        _TransferPixels(sampler, dstGray);
+                        return;
+                    }
                 }
 
-                if (sizeof(TDstPixel) == 3) // RGB 24 to RGB 24
+                if (typeof(TSrcPixel) == typeof(System.Numerics.Vector3))
                 {
-                    var dstXYZ = target.Cast<_PixelXYZ24>();
-                    _TransferPixels(sampler, dstXYZ);
-                    return;
+                    var sampler = source.Cast<System.Numerics.Vector3>();
+
+                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB float to RGB float
+                    {
+                        var dstXYZ = target.GetTensorX<System.Numerics.Vector3>();
+                        _TransferPixels(sampler, dstXYZ, reverseRGB);
+                        return;
+                    }
+                }
+
+                if (typeof(TSrcPixel) == typeof(System.Numerics.Vector4))
+                {
+                    var sampler = source.Cast<System.Numerics.Vector4>();
+
+                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector4)) // RGBA float to RGBA float
+                    {
+                        var dstXYZW = target.GetTensorX<System.Numerics.Vector4>();
+                        _TransferPixels(sampler, dstXYZW);
+                        return;
+                    }
                 }
             }
 
-            if (sizeof(TSrcPixel) == 4)
+            if (target._Channels == 3)
             {
-                var sampler = source.Cast<uint>();
-
-                if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB 24 to RGB float
+                if (sizeof(TSrcPixel) == 3)// RGB24 to RGB split
                 {
-                    var dstXYZ = target.Cast<System.Numerics.Vector3>();
-                    _TransferPixels(sampler, dstXYZ, reverseRGB);
-                    return;
+                    var sampler = source.Cast<_PixelXYZ24>();
+
+                    if (typeof(TDstPixel) == typeof(float)) 
+                    {
+                        var dstX = target.GetTensorX<float>();
+                        var dstY = target.GetTensorY<float>();
+                        var dstZ = target.GetTensorZ<float>();
+                        _TransferPixels(sampler, dstX, dstY, dstZ, reverseRGB);
+                        return;
+                    }
                 }
 
-                if (typeof(TDstPixel) == typeof(float)) // RGB24 to gray
+                if (sizeof(TSrcPixel) == 4) // RGBA32 to RGB split
                 {
-                    var dstGray = target.Cast<float>();
-                    _TransferPixels(sampler, dstGray);
-                    return;
-                }                
-            }
+                    var sampler = source.Cast<uint>();
 
-            if (typeof(TSrcPixel) == typeof(System.Numerics.Vector3))
-            {
-                var sampler = source.Cast<System.Numerics.Vector3>();
-
-                if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB float to RGB float
-                {
-                    var dstXYZ = target.Cast<System.Numerics.Vector3>();
-                    _TransferPixels(sampler, dstXYZ, reverseRGB);
-                    return;
-                }
-            }
-
-            if (typeof(TSrcPixel) == typeof(System.Numerics.Vector4))
-            {
-                var sampler = source.Cast<System.Numerics.Vector4>();
-
-                if (typeof(TDstPixel) == typeof(System.Numerics.Vector4)) // RGBA float to RGBA float
-                {
-                    var dstXYZW = target.Cast<System.Numerics.Vector4>();
-                    _TransferPixels(sampler, dstXYZW);
-                    return;
+                    if (typeof(TDstPixel) == typeof(float)) 
+                    {
+                        var dstX = target.GetTensorX<float>();
+                        var dstY = target.GetTensorY<float>();
+                        var dstZ = target.GetTensorZ<float>();
+                        _TransferPixels(sampler, dstX, dstY, dstZ, reverseRGB);
+                        return;
+                    }
                 }
             }
 
             _ThrowUnsupported(typeof(TDstPixel));
-        }        
-
-        public unsafe void FillPixels<TSrcPixel, TComponent>(SpanTensor2<TComponent> targetX, SpanTensor2<TComponent> targetY, SpanTensor2<TComponent> targetZ, BitmapSampler<TSrcPixel> source, ColorEncoding targetEncoding)
-            where TSrcPixel : unmanaged
-            where TComponent : unmanaged
-        {
-            // TODO: if Transform is identity, do a plain copy
-
-            var reverseRGB = _NeedsReverse(targetEncoding, source.Encoding);
-
-            if (sizeof(TSrcPixel) == 3)
-            {
-                var sampler = source.Cast<_PixelXYZ24>();
-
-                if (typeof(TComponent) == typeof(float)) // RGB 24 to RGB split
-                {
-                    var dstX = targetX.Cast<float>();
-                    var dstY = targetY.Cast<float>();
-                    var dstZ = targetZ.Cast<float>();
-                    _TransferPixels(sampler, dstX, dstY, dstZ, reverseRGB);
-                    return;
-                }
-            }
-
-            if (sizeof(TSrcPixel) == 4)
-            {
-                var sampler = source.Cast<uint>();
-
-                if (typeof(TComponent) == typeof(float)) // RGB 24 to RGB split
-                {
-                    var dstX = targetX.Cast<float>();
-                    var dstY = targetY.Cast<float>();
-                    var dstZ = targetZ.Cast<float>();
-                    _TransferPixels(sampler, dstX, dstY, dstZ, reverseRGB);
-                    return;
-                }
-            }
-
-            _ThrowUnsupported(typeof(TComponent));
-        }        
+        }      
 
         [System.Diagnostics.DebuggerStepThrough]
         static void _ThrowUnsupported(Type type)

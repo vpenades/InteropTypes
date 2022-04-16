@@ -51,7 +51,7 @@ namespace InteropTypes.Tensors
             return new Imaging.BitmapSampler<TPixel>(src.ReadableBytes, src.Info.StepByteSize, src.Width, src.Height, encoding);
         }
 
-        public static unsafe void FillBitmap(this TENSOR2V3 dst, SpanBitmap src, in Imaging.BitmapTransform xform)            
+        public static unsafe void FillBitmap(this Imaging.TensorBitmap<Vector3> dst, SpanBitmap src, in Imaging.BitmapTransform xform)            
         {
             switch(src.PixelFormat.Code)
             {
@@ -71,7 +71,7 @@ namespace InteropTypes.Tensors
             throw new NotSupportedException($"{src.PixelFormat}");
         }
 
-        public static unsafe void FillBitmap<TSrcPixel>(this TENSOR2V3 dst, SpanBitmap<TSrcPixel> src, in Imaging.BitmapTransform xform)
+        public static unsafe void FillBitmap<TSrcPixel>(this Imaging.TensorBitmap<Vector3> dst, SpanBitmap<TSrcPixel> src, in Imaging.BitmapTransform xform)
             where TSrcPixel:unmanaged
         {
             var sampler = src.AsBitmapSampler();
