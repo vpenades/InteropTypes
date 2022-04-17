@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 using InteropTypes.Tensors.Imaging;
 
@@ -57,6 +58,119 @@ namespace InteropTypes.Tensors.Imaging
         #endregion
 
         #region API
+
+        public Vector4  GetPixel(int x, int y)
+        {
+            switch(_Channels)
+            {
+                case 1: return _GetPixelX(x, y);
+                case 3: return _GetPixelXYZ(x, y);
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public void SetPixel(int x, int y, in Vector4 value)
+        {
+            switch(_Channels)
+            {
+                case 1: _SetPixelX(x, y, value); return;
+            }
+        }
+
+        private unsafe Vector4 _GetPixelX(int x, int y)
+        {
+            if (sizeof(T) == 1)
+            {
+                var v = GetChannelX<Byte>()[y * _Width + x];
+                switch (_Encoding)
+                {
+                    case ColorEncoding.A: return new Vector4(255f, 255f, 255f, v) / 255f;
+                    default: return new Vector4(v, v, v, 255f) / 255f;
+                }
+            }
+
+            if (sizeof(T) == 3)
+            {                
+                var xyz = GetChannelX<_PixelXYZ24>()[y * _Width + x];
+                switch(_Encoding)
+                {
+                    case ColorEncoding.BGR: return new Vector4(xyz.Z, xyz.Y, xyz.X, 255f) / 255f;
+                    default: return new Vector4(xyz.X, xyz.Y, xyz.Z, 255f) / 255f;
+                }
+            }
+
+            if (sizeof(T) == 4)
+            {
+                var bytes = MMARSHAL.Cast<T,Byte>(_ChannelX.Slice(y*_Width+x,4));
+                
+                switch (_Encoding)
+                {                    
+                    case ColorEncoding.BGRA: return new Vector4(bytes[2], bytes[1], bytes[0], bytes[3]) / 255f;
+                    case ColorEncoding.ARGB: return new Vector4(bytes[1], bytes[2], bytes[3], bytes[0]) / 255f;
+                    default: return new Vector4(bytes[0], bytes[1], bytes[2], bytes[3]) / 255f;
+                }
+            }
+
+            if (typeof(T) == typeof(Vector3))
+            {
+                var xyz = GetChannelX<Vector3>()[y * _Width + x];
+                switch (_Encoding)
+                {
+                    case ColorEncoding.BGR: return new Vector4(xyz.Z, xyz.Y, xyz.X, 1);
+                    default: return new Vector4(xyz, 1);
+                }
+            }
+
+            if (typeof(T) == typeof(Vector4))
+            {
+                var xyzw = GetChannelX<Vector4>()[y * _Width + x];
+                switch (_Encoding)
+                {
+                    case ColorEncoding.BGRA: return new Vector4(xyzw.Z, xyzw.Y, xyzw.X, xyzw.W);
+                    case ColorEncoding.ARGB: return new Vector4(xyzw.W, xyzw.X, xyzw.Y, xyzw.Z);
+                    default: return xyzw;
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private Vector4 _GetPixelXYZ(int x, int y)
+        {
+            int idx = y * _Width + x;
+            if (typeof(T) == typeof(float))
+            {
+                var xx = GetChannelX<float>()[idx];
+                var yy = GetChannelX<float>()[idx];
+                var zz = GetChannelX<float>()[idx];
+                return new Vector4(xx, yy, zz, 1);
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private unsafe void _SetPixelX(int x, int y, in Vector4 value)
+        {
+            if (sizeof(T) == 3)
+            {
+                var src = value * 255;
+                ref var dst = ref GetChannelX<_PixelXYZ24>()[y * _Width + x];
+                switch (_Encoding)
+                {
+                    case ColorEncoding.BGR:
+                        dst.X = (Byte)src.Z;
+                        dst.Y = (Byte)src.Y;
+                        dst.Z = (Byte)src.X;
+                        break;
+                    default:
+                        dst.X = (Byte)src.X;
+                        dst.Y = (Byte)src.Y;
+                        dst.Z = (Byte)src.Z;
+                        break;
+                }
+            }
+        }
 
         public unsafe SpanTensor2<TT> GetTensorX<TT>()
             where TT : unmanaged
