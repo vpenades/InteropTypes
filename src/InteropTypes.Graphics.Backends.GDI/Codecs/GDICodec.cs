@@ -10,6 +10,9 @@ using GDIIMAGEFORMAT = System.Drawing.Imaging.ImageFormat;
 
 namespace InteropTypes.Codecs
 {
+    /// <remarks>
+    /// Images are read in <see cref="Pixel.BGRA32"/> format.
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("GDI Codec")]
     #if NET5_0_OR_GREATER
     [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]

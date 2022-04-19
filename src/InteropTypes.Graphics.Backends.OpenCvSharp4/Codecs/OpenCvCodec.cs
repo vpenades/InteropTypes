@@ -8,6 +8,9 @@ using InteropTypes.Graphics.Backends;
 
 namespace InteropTypes.Codecs
 {
+    /// <remarks>
+    /// Images are read in <see cref="Pixel.BGR24"/> format.
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("OpenCvSharp Codec")]
     public sealed class OpenCvCodec : IBitmapDecoder, IBitmapEncoder
     {

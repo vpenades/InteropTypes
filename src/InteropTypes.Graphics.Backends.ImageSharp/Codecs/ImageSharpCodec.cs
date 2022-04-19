@@ -9,6 +9,9 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Codecs
 {
+    /// <remarks>
+    /// Images are read in <see cref="Pixel.RGB24"/> format.
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("ImageSharp Codec")]
     public sealed class ImageSharpCodec : IBitmapDecoder, IBitmapEncoder
     {

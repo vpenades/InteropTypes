@@ -104,10 +104,10 @@ namespace InteropTypes.Codecs
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var bgr = MemoryBitmap<Pixel.BGR24>.Load(filePath, Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
+            var bgr = MemoryBitmap<Pixel.BGR24>.Load(filePath, STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
             Assert.NotNull(bgr);
 
-            var rgb = MemoryBitmap<Pixel.BGR24>.Load(filePath, Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
+            var rgb = MemoryBitmap<Pixel.BGR24>.Load(filePath, STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
             Assert.NotNull(rgb);
 
             Assert.AreEqual(512, bgr.Width);
@@ -155,5 +155,83 @@ namespace InteropTypes.Codecs
 
             _getFrames().AttachAviToCurrentTest("video.avi");
         }
+
+
+        [Explicit("Performance test must run in release mode")]
+        [TestCase("Resources\\shannon.jpg")]
+        [TestCase("Resources\\shutterstock_267944357.jpg")]
+        [TestCase("Resources\\ios-11-camera-qr-code-scan.jpg")]
+        [TestCase("Resources\\2awithqr.jpg")]
+        [TestCase("Resources\\dog.jpeg")]
+        public void LoadJpegPerformanceTest(string filePath)
+        {
+            TestContext.WriteLine(filePath);
+            TestContext.WriteLine("");
+
+            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+
+            void _writeToTest(string hdr, TimeSpan t)
+            {
+                TestContext.WriteLine($"{hdr} {t.TotalMilliseconds}ms");
+            }
+
+            void _doNothing(string hdr, TimeSpan t)
+            {
+                
+            }            
+
+
+            Action<string, TimeSpan> _action1 = _writeToTest;
+            Action<string, TimeSpan> _action2 = _writeToTest;
+
+            for (int i = 0; i < 3; ++i)
+            {
+                _action1 = _writeToTest;
+                if (i < 2) _action1 = _doNothing;
+
+                _action2 = _doNothing;
+                if (i == 0) _action2 = _writeToTest;
+
+                using (var perf = PerformanceBenchmark.Run(result => _action1("OpenCV", result)))
+                {
+                    var bmp = MemoryBitmap.Load(filePath, OpenCvCodec.Default);
+                    _action2($"OpenCV  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
+                }
+
+                using (var perf = PerformanceBenchmark.Run(result => _action1("Skia", result)))
+                {
+                    var bmp = MemoryBitmap.Load(filePath, SkiaCodec.Default);
+                    _action2($"Skia  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
+                }
+
+                using (var perf = PerformanceBenchmark.Run(result => _action1("WPF", result)))
+                {
+                    var bmp = MemoryBitmap.Load(filePath, WPFCodec.Default);
+                    _action2($"WPF  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
+                }
+
+                using (var perf = PerformanceBenchmark.Run(result => _action1("ImageSharp", result)))
+                {
+                    var bmp = MemoryBitmap.Load(filePath, ImageSharpCodec.Default);
+                    _action2($"ImageSharp  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
+                }
+
+                using (var perf = PerformanceBenchmark.Run(result => _action1("GDI", result)))
+                {
+                    var bmp = MemoryBitmap.Load(filePath, GDICodec.Default);
+                    _action2($"GDI  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
+                }
+
+                using (var perf = PerformanceBenchmark.Run(result => _action1("STB", result)))
+                {
+                    var bmp = MemoryBitmap.Load(filePath, STBCodec.Default);
+                    _action2($"STB  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
+                }
+
+                TestContext.WriteLine("");
+            }
+        }
+
+
     }
 }

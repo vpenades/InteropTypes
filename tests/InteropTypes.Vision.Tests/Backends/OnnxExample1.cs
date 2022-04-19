@@ -26,7 +26,7 @@ namespace InteropTypes.Vision.Backends
         {
             // https://onnxruntime.ai/docs/tutorials/resnet50_csharp.html            
 
-            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);
+            var srcImage = MemoryBitmap.Load(imagePath);
 
             var model = OnnxModel.FromFile("Models\\resnet50-v2-7.onnx");
 
@@ -35,7 +35,7 @@ namespace InteropTypes.Vision.Backends
             var modelXform = MultiplyAdd
                 .CreateMul(0.229f, 0.224f, 0.225f)
                 .ConcatAdd(0.485f, 0.456f, 0.406f)                
-                .GetTransposedZYXW()
+                // .GetTransposedZYXW()
                 .GetInverse();
 
             var imagePreprocessor = new ImageProcessor<Pixel.RGB96F>(modelXform);            

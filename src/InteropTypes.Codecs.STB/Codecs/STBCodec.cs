@@ -9,6 +9,12 @@ using STBDIRECTX = StbDxtSharp;
 
 namespace InteropTypes.Codecs
 {
+    /// <summary>
+    /// STB Sharp codec for Jpeg, Png and DDS
+    /// </summary>
+    /// <remarks>
+    /// Images are read in <see cref="Pixel.RGBA32"/> format.
+    /// </remarks>
     #if NET6_0_OR_GREATER
     [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     #endif

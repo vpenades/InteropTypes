@@ -9,6 +9,9 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Codecs
 {
+    /// <remarks>
+    /// Images are read in <see cref="Pixel.BGR24"/> format.
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("WPF(WIC) Codec")]
     #if NET6_0_OR_GREATER
     [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
