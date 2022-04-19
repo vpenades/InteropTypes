@@ -17,7 +17,7 @@ namespace InteropTypes.Vision.Backends
         [SetUp]
         public void Setup()
         {
-            OnnxModel.DeviceID = -1;
+            OnnxModel.DeviceID = 0;
         }        
 
         [TestCase("Resources\\dog.jpeg", "Golden Retriever")]
@@ -318,6 +318,8 @@ namespace InteropTypes.Vision.Backends
                     .AsSpanTensor4()
                     .GetSubTensor(0);
 
+                var bmp = result.AsBitmap(Tensors.Imaging.ColorEncoding.RGB);
+
                 var resultBitmap = ToBitmap(result);
 
                 var path = TestContext.CurrentContext.GetTestResultPath(imagePath);
@@ -408,13 +410,6 @@ namespace InteropTypes.Vision.Backends
             srcTensor.AsSpanBitmap().AsTypeless().SetPixels(0, 0, srcImage);
 
             var stats = srcTensor.Statistics as Statistics.Vector3;
-
-            /*
-            var enhance = MultiplyAdd
-                .CreateAdd(stats.Min)
-                .ConcatMul((stats.Max - stats.Min) / 255f);
-            */
-
 
             var dstTensor = new SpanTensor2<Pixel.Luminance8>(srcImage.Height, srcImage.Width);
 

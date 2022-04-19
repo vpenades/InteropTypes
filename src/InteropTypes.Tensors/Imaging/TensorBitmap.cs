@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
-using InteropTypes.Tensors.Imaging;
-
 using TRANSFORM = System.Numerics.Matrix3x2;
 using MMARSHAL = System.Runtime.InteropServices.MemoryMarshal;
 
@@ -57,7 +55,35 @@ namespace InteropTypes.Tensors.Imaging
 
         #endregion
 
+        #region properties
+
+        public ColorEncoding Encoding => _Encoding;
+
+        public int NumChannels => _Channels;
+
+        public int Width => _Width;
+
+        public int Height => _Height;
+
+        #endregion
+
         #region API
+
+        public void CopyTo<TOther>(TensorBitmap<TOther> dst)
+            where TOther : unmanaged
+        {
+            if (this._Width != dst._Width) throw new ArgumentException("width mismatch",nameof(dst));
+            if (this._Height != dst._Height) throw new ArgumentException("height mismatch", nameof(dst));
+
+            for(int y=0; y < dst._Height; ++y)
+            {
+                for (int x = 0; x < dst._Width; ++x)
+                {
+                    var value = this.GetPixel(x, y);
+                    dst.SetPixel(x, y, value);
+                }
+            }
+        }
 
         public Vector4  GetPixel(int x, int y)
         {
@@ -152,6 +178,21 @@ namespace InteropTypes.Tensors.Imaging
 
         private unsafe void _SetPixelX(int x, int y, in Vector4 value)
         {
+            if (sizeof(T) == 1)
+            {
+                var src = value * 255;
+                ref var dst = ref GetChannelX<Byte>()[y * _Width + x];
+                switch (_Encoding)
+                {
+                    case ColorEncoding.A:
+                        dst = (Byte)src.W;
+                        break;
+                    default:
+                        dst = (Byte)((src.X + src.Y + src.Z) / 3f);
+                        break;                    
+                }
+            }
+
             if (sizeof(T) == 3)
             {
                 var src = value * 255;
@@ -199,25 +240,25 @@ namespace InteropTypes.Tensors.Imaging
         public unsafe Span<TT> GetChannelX<TT>()
             where TT : unmanaged
         {
-            return sizeof(T) != sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelX);
+            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelX);
         }
 
         public unsafe Span<TT> GetChannelY<TT>()
             where TT : unmanaged
         {
-            return sizeof(T) != sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelY);
+            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelY);
         }
 
         public unsafe Span<TT> GetChannelZ<TT>()
             where TT : unmanaged
         {
-            return sizeof(T) != sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelZ);
+            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelZ);
         }
 
         public unsafe Span<TT> GetChannelW<TT>()
             where TT : unmanaged
         {
-            return sizeof(T) != sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelW);
+            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelW);
         }
 
         public void FitPixels<TSrcPixel>(BitmapSampler<TSrcPixel> source, BitmapTransform xform)

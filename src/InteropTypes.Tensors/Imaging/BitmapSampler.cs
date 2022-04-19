@@ -15,9 +15,7 @@ namespace InteropTypes.Tensors.Imaging
     public ref struct BitmapSampler<TPixel>
         where TPixel : unmanaged
     {
-        #region constructor
-
-        public static implicit operator BitmapSampler<TPixel>(SpanTensor2<TPixel> source) { return From(source); }
+        #region constructor        
 
         public unsafe BitmapSampler<TOther> Cast<TOther>()
             where TOther : unmanaged
@@ -27,12 +25,12 @@ namespace InteropTypes.Tensors.Imaging
             return new BitmapSampler<TOther>(_Bytes, _ByteStride, _LastX, _LastY, _Encoding);
         }
 
-        public static unsafe BitmapSampler<TPixel> From(SpanTensor2<TPixel> tensor)
+        public static unsafe BitmapSampler<TPixel> From(SpanTensor2<TPixel> tensor, ColorEncoding encoding)
         {
             var w = tensor.BitmapSize.Width;
             var h = tensor.BitmapSize.Height;
             var b = MMARSHALL.Cast<TPixel, byte>(tensor.Span);
-            var e = TryIdentifyEncoding();
+            var e = encoding;
 
             return new BitmapSampler<TPixel>(b, w * sizeof(TPixel), w, h, e);
         }
@@ -51,19 +49,7 @@ namespace InteropTypes.Tensors.Imaging
             _LastX = w -1;
             _LastY = h -1;
             _Encoding = encoding;
-        }
-
-        public static unsafe ColorEncoding TryIdentifyEncoding()
-        {
-            if (typeof(TPixel) == typeof(float)) return ColorEncoding.X;
-            if (typeof(TPixel) == typeof(XY)) return ColorEncoding.XY;
-            if (typeof(TPixel) == typeof(Vector3)) return ColorEncoding.XYZ;
-            if (typeof(TPixel) == typeof(Vector4)) return ColorEncoding.XYZW;
-
-            if (sizeof(TPixel) == 3) return ColorEncoding.XYZ;
-
-            return ColorEncoding.Undefined;
-        }
+        }        
 
         #endregion
 

@@ -15,6 +15,72 @@ namespace InteropTypes.Tensors
 {
     public static class _TensorsExtensions
     {
+        public static bool TryGetSpanBitmap<T>(this Imaging.TensorBitmap<T> src, out SpanBitmap dst)
+            where T:unmanaged
+        {
+            if (src.NumChannels != 1) { dst = default; return false; }
+
+            var fmt = GetFormat<T>(src.Encoding);
+
+            dst = new SpanBitmap(src.GetChannelX<Byte>(), src.Width, src.Height, fmt);
+            return true;
+        }
+
+        
+        public static unsafe PixelFormat GetFormat<TPixel>(Imaging.ColorEncoding encoding)
+            where TPixel:unmanaged
+        {
+            if (sizeof(TPixel) == 1)
+            {
+                if (encoding == Imaging.ColorEncoding.A) return Pixel.Alpha8.Format;                
+                return Pixel.Luminance8.Format;
+            }
+
+            if (sizeof(TPixel) == 2)
+            {                
+                return Pixel.Luminance16.Format;
+            }
+
+            if (sizeof(TPixel) == 3)
+            {
+                if (encoding == Imaging.ColorEncoding.BGR) return Pixel.BGR24.Format;
+                if (encoding == Imaging.ColorEncoding.BGRA) return Pixel.BGR24.Format;
+                return Pixel.RGB24.Format;
+            }
+
+            if (sizeof(TPixel) == 4)
+            {
+                if (typeof(TPixel) == typeof(float))
+                {
+                    if (encoding == Imaging.ColorEncoding.L) return Pixel.Luminance32F.Format;
+                }
+                else
+                {
+                    if (encoding == Imaging.ColorEncoding.RGB) return Pixel.RGBA32.Format;
+                    if (encoding == Imaging.ColorEncoding.BGR) return Pixel.BGRA32.Format;
+                    if (encoding == Imaging.ColorEncoding.BGRA) return Pixel.BGRA32.Format;
+                    if (encoding == Imaging.ColorEncoding.RGBA) return Pixel.RGBA32.Format;
+                    if (encoding == Imaging.ColorEncoding.ARGB) return Pixel.ARGB32.Format;
+                }                
+            }
+
+            if (typeof(TPixel) == typeof(Vector3))
+            {
+                if (encoding == Imaging.ColorEncoding.BGR) return Pixel.BGR96F.Format;
+                if (encoding == Imaging.ColorEncoding.BGRA) return Pixel.BGR96F.Format;
+                return Pixel.RGB96F.Format;
+            }
+
+            if (typeof(TPixel) == typeof(Vector4))
+            {
+                if (encoding == Imaging.ColorEncoding.BGR) return Pixel.BGRA128F.Format;
+                if (encoding == Imaging.ColorEncoding.BGRA) return Pixel.BGRA128F.Format;                
+                return Pixel.RGBA128F.Format;
+            }
+
+            throw new NotImplementedException();
+        }
+
         public static Imaging.ColorEncoding GetColorEncoding<TPixel>()
         {
             if (typeof(TPixel) == typeof(Pixel.Alpha8)) return Imaging.ColorEncoding.A;
@@ -33,12 +99,7 @@ namespace InteropTypes.Tensors
             if (typeof(TPixel) == typeof(Pixel.BGRA128F)) return Imaging.ColorEncoding.BGRA;
 
             if (typeof(TPixel) == typeof(Pixel.RGB96F)) return Imaging.ColorEncoding.RGB;
-            if (typeof(TPixel) == typeof(Pixel.RGBA128F)) return Imaging.ColorEncoding.RGBA;
-
-            if (typeof(TPixel) == typeof(float)) return Imaging.ColorEncoding.X;
-            if (typeof(TPixel) == typeof(Vector2)) return Imaging.ColorEncoding.XY;
-            if (typeof(TPixel) == typeof(Vector3)) return Imaging.ColorEncoding.XYZ;
-            if (typeof(TPixel) == typeof(Vector4)) return Imaging.ColorEncoding.XYZW;
+            if (typeof(TPixel) == typeof(Pixel.RGBA128F)) return Imaging.ColorEncoding.RGBA;            
 
             return Imaging.ColorEncoding.Undefined;
         }

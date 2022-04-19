@@ -25,8 +25,7 @@ namespace InteropTypes.Tensors.Imaging
 
     public enum ColorEncoding
     {
-        Undefined,
-        X,XY,XYZ,XYZW,
+        Undefined,        
         A, L, RGB, BGR, RGBA, BGRA, ARGB
     }
 
