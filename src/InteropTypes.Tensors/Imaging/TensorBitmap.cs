@@ -168,9 +168,21 @@ namespace InteropTypes.Tensors.Imaging
             if (typeof(T) == typeof(float))
             {
                 var xx = GetChannelX<float>()[idx];
-                var yy = GetChannelX<float>()[idx];
-                var zz = GetChannelX<float>()[idx];
-                return new Vector4(xx, yy, zz, 1);
+                var yy = GetChannelY<float>()[idx];
+                var zz = GetChannelZ<float>()[idx];
+
+                if (_Encoding == ColorEncoding.BGR)
+                {
+                    var t = xx;
+                    xx = zz;
+                    zz = t;
+                }
+
+                var rgba = new Vector4(xx, yy, zz, 1);
+
+                rgba = Vector4.Min(Vector4.One, rgba);
+                rgba = Vector4.Max(Vector4.Zero, rgba);
+                return rgba;
             }
 
             throw new NotImplementedException();

@@ -81,7 +81,8 @@ namespace InteropTypes.Vision.Backends
         /// <inheritdoc/> 
         public object GetService(Type serviceType)
         {
-            if (serviceType == typeof(ONNX.OrtEnv)) return ONNX.OrtEnv.Instance();
+            if (serviceType == typeof(OnnxOptions)) return _Options;
+            if (serviceType == typeof(ONNX.OrtEnv)) return ONNX.OrtEnv.Instance();            
             if (serviceType == typeof(ONNX.SessionOptions)) return _Options.Options;
             throw new NotSupportedException();
         }

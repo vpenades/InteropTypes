@@ -10,9 +10,6 @@ namespace InteropTypes.Tensors
 {
     static class _Implementation
     {
-        
-
-
         public static SpanBitmap GetSpanBitmap<T>(IDenseTensor<T> tensor) where T : unmanaged
         {
             var dims = tensor.Dimensions;

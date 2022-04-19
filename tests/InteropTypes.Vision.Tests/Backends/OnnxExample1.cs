@@ -226,9 +226,6 @@ namespace InteropTypes.Vision.Backends
                     .OrderByDescending(item => item.First)
                     .ToArray();
 
-
-
-
                 var prior_variance = new [] { 0.1f, 0.1f, 0.2f, 0.2f };
             }
         }
@@ -318,9 +315,11 @@ namespace InteropTypes.Vision.Backends
                     .AsSpanTensor4()
                     .GetSubTensor(0);
 
-                var bmp = result.AsBitmap(Tensors.Imaging.ColorEncoding.RGB);
+                MemoryBitmap<Pixel.BGR24> resultBitmap = default;
 
-                var resultBitmap = ToBitmap(result);
+                result
+                    .AsTensorBitmap(Tensors.Imaging.ColorEncoding.BGR)
+                    .CopyTo(ref resultBitmap);                
 
                 var path = TestContext.CurrentContext.GetTestResultPath(imagePath);
                 System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
@@ -345,46 +344,34 @@ namespace InteropTypes.Vision.Backends
 
             var path = TestContext.CurrentContext.GetTestResultPath(imagePath);
             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
-            dstImage.Save(path, GDICodec.Default);
+            dstImage.Save(path);
             TestContext.AddTestAttachment(path);
         }
 
-        private static SpanBitmap ToBitmap(SpanTensor3<float> srcTensor)
+        
+        [TestCase("Resources\\shannon.jpg")]        
+        public void TestFullStackFaceDetector(string imagePath)
         {
-            var span = srcTensor.Span;
+            var srcImage = MemoryBitmap.Load(imagePath, GDICodec.Default);            
 
-            for (int i = 0; i < span.Length; ++i)
+            using (var filter = new FullStackFaceInfo.Detector())
             {
-                span[i] = Math.Min(1, Math.Max(0, span[i]));
-            }            
+                var result = filter.Process(srcImage).ToArray();
 
-            if (srcTensor.Dimensions[2] == 3)
-            {
-                return srcTensor.UpCast<System.Numerics.Vector3>().AsSpanBitmap();
+                for(int i=0; i < result.Length; i++)
+                {
+                    var path = TestContext.CurrentContext.GetTestResultPath($"detected image {i}.jpg");
+                    result[0].AlignedImage.Save(path);
+                    TestContext.AddTestAttachment(path);
+                }                
             }
-
-            if (srcTensor.Dimensions[0] == 3)
-            {
-                var h = srcTensor.Dimensions[1];
-                var w = srcTensor.Dimensions[2];
-                var tmpTensor = new SpanTensor2<System.Numerics.Vector3>(h, w);
-                SpanTensor.Copy(srcTensor, tmpTensor, MultiplyAdd.Identity);
-
-                return tmpTensor.AsSpanBitmap();
-            }
-
-            if (srcTensor.Dimensions[0] == 1)
-            {
-                var tmpTensor = srcTensor.GetSubTensor(0);
-
-                return tmpTensor.AsSpanBitmap();
-            }
-
-            throw new NotImplementedException();
-        }        
+        }
     }   
 
 
+    /// <summary>
+    /// Takes an image with colorized anime style content and strips the colors, leaving the ink lineart.
+    /// </summary>
     class Anime2SketchFilter : IDisposable
     {
         public Anime2SketchFilter()
@@ -413,14 +400,11 @@ namespace InteropTypes.Vision.Backends
 
             var dstTensor = new SpanTensor2<Pixel.Luminance8>(srcImage.Height, srcImage.Width);
 
+            // use a fixed 512x512 kernel to iterate through the image, processing small chunks
             srcTensor.CopyTo(dstTensor, new TensorSize2(512, 512), _kernel, new TensorIndices2(32,32));
 
-            if (dstImage.IsEmpty)
-            {
-                dstImage = new MemoryBitmap<Pixel.Luminance8>(srcImage.Width, srcImage.Height);
-            }
-
-            dstImage.SetPixels(0, 0, dstTensor.AsSpanBitmap());
+            // copy the tensor data back to the dst image
+            dstTensor.AsTensorBitmap(Tensors.Imaging.ColorEncoding.L).CopyTo(ref dstImage);
         }
 
         void _kernel(SpanTensor2<Pixel.RGB24> src, SpanTensor2<Pixel.Luminance8> dst)
@@ -449,6 +433,86 @@ namespace InteropTypes.Vision.Backends
                 .GetSubTensor(0);
 
             SpanTensor.Copy(result, dst.Cast<Byte>(), MultiplyAdd.CreateMul(255));
+        }
+    }
+
+
+
+    struct FullStackFaceInfo
+    {
+        // https://github.com/atksh/onnx-facial-lmk-detector
+
+        public float Score { get; set; }
+        public System.Drawing.Rectangle BoundingBox { get; set; }
+        public MemoryBitmap<Pixel.BGR24> AlignedImage { get; set; }
+        public System.Numerics.Vector2[] Landmarks { get; set; }
+
+        public class Detector : IDisposable
+        {
+            #region lifecycle
+
+            public Detector()
+            {
+                var model = OnnxModel.FromFile("Models\\facial-lmk-detector.onnx");
+
+                var modelOptions = (model as IServiceProvider).GetService(typeof(Microsoft.ML.OnnxRuntime.SessionOptions)) as Microsoft.ML.OnnxRuntime.SessionOptions;
+                modelOptions.GraphOptimizationLevel = Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_DISABLE_ALL;
+
+                _Session = model.CreateSession();
+            }
+
+            public void Dispose()
+            {
+                System.Threading.Interlocked.Exchange(ref _Session, null)?.Dispose();
+            }
+
+            #endregion
+
+            #region data
+
+            private IModelSession _Session;
+
+            #endregion
+
+            #region API
+
+            public FullStackFaceInfo[] Process(SpanBitmap srcImage)
+            {
+                var workingTensor = _Session.UseInputTensor<Byte>(0, srcImage.Height,srcImage.Width, 3)
+                        .AsSpanTensor3()
+                        .UpCast<Pixel.RGB24>();
+
+                workingTensor.AsSpanBitmap().AsTypeless().SetPixels(0, 0, srcImage);
+
+                _Session.Inference();
+
+                var scores = _Session.GetOutputTensor<float>(0).VerifyName(n => n == "scores").AsSpanTensor1();
+                var bboxes = _Session.GetOutputTensor<Int64>(1).VerifyName(n => n == "bboxes").AsSpanTensor2();
+                var kpss = _Session.GetOutputTensor<Int64>(2).VerifyName(n => n == "kpss").AsSpanTensor3();
+                var align_imgs = _Session.GetOutputTensor<byte>(3).VerifyName(n => n == "align_imgs").AsSpanTensor4().UpCast<Pixel.BGR24>();
+                var lmks = _Session.GetOutputTensor<Int64>(4).VerifyName(n => n == "lmks").AsSpanTensor3();
+                var M = _Session.GetOutputTensor<float>(5).VerifyName(n => n == "M").AsSpanTensor3().UpCast<System.Numerics.Vector3>();
+
+                var result = new FullStackFaceInfo[scores.Dimensions[0]];
+
+                for(int i=0; i < scores.Dimensions[0]; ++i)
+                {
+                    result[i].Score = scores[i];
+
+                    var bbox = bboxes[i];
+                    result[i].BoundingBox = new System.Drawing.Rectangle((int)bbox[0], (int)bbox[1], (int)bbox[2], (int)bbox[3]);
+
+                    MemoryBitmap<Pixel.BGR24> bmp = default;
+                    align_imgs[i].AsTensorBitmap(Tensors.Imaging.ColorEncoding.RGB).CopyTo(ref bmp);
+                    result[i].AlignedImage = bmp;
+
+                    var lmarks = lmks[i].ToArray();
+                }
+
+                return result;
+            }
+
+            #endregion
         }
     }
 }

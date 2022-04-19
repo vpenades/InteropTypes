@@ -12,11 +12,11 @@
   <Import Project="..\SourceLink.props" />
 
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <InternalsVisibleTo Include="InteropTypes.Tensors.Tests"/>
+    <InternalsVisibleTo Include="InteropTypes.Tensors.Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Numerics.Tensors" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="System.Numerics.Tensors" Version="7.0.0-preview.3.22175.4" />
   </ItemGroup>  
   
   <!-- Templates -->

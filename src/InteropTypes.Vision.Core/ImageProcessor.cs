@@ -70,20 +70,20 @@ namespace InteropTypes.Vision
             if (dst.Dimensions[2] == 3) // dst[h][w][3]
             {
                 var tmpTensor = dst.UpCast<System.Numerics.Vector3>();
-                tmpTensor.AsBitmap(dstEncoding).FitPixels(sampler, cmad);
+                tmpTensor.AsTensorBitmap(dstEncoding).FitPixels(sampler, cmad);
                 return;
             }
 
             if (dst.Dimensions[2] == 4) // dst[h][w][4]
             {
                 var tmpTensor = dst.UpCast<System.Numerics.Vector4>();
-                tmpTensor.AsBitmap(dstEncoding).FitPixels(sampler, cmad);
+                tmpTensor.AsTensorBitmap(dstEncoding).FitPixels(sampler, cmad);
                 return;
             }
 
             if (dst.Dimensions[0] == 3) // dst[3][h][w]
             {
-                dst.AsBitmap(dstEncoding).FitPixels(sampler, cmad);
+                dst.AsBitmapSampler(dstEncoding).FitPixels(sampler, cmad);
                 return;
             }            
 

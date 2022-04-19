@@ -15,6 +15,26 @@ namespace InteropTypes.Tensors
 {
     public static class _TensorsExtensions
     {
+        public static void CopyTo<TSrc, TDst>(this Imaging.TensorBitmap<TSrc> src, ref MemoryBitmap<TDst> dst)
+            where TSrc : unmanaged
+            where TDst : unmanaged
+        {
+            if (dst.Width != src.Width || dst.Height != src.Height)
+            {
+                dst = new MemoryBitmap<TDst>(src.Width, src.Height);
+            }
+
+            for(int y=0; y < dst.Height; y++)
+            {
+                for(int x=0; x <dst.Width; x++)
+                {
+                    var pixel = src.GetPixel(x, y);
+                    var rgba = new Pixel.RGBA128F(pixel).To<TDst>();
+                    dst.SetPixel(x, y, rgba);
+                }
+            }
+        }
+
         public static bool TryGetSpanBitmap<T>(this Imaging.TensorBitmap<T> src, out SpanBitmap dst)
             where T:unmanaged
         {

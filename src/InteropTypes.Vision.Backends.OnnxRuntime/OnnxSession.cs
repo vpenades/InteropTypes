@@ -23,52 +23,12 @@ namespace InteropTypes.Vision.Backends
             _InputMeta = _Session.InputMetadata.ToArray();
             _OutputMeta = _Session.OutputMetadata.ToArray();
 
-            _Inputs = _InputMeta.Select(item => _Create(item.Key, item.Value)).ToArray();
-            _Outputs = _OutputMeta.Select(item => _Create(item.Key, item.Value)).ToArray();
+            _Inputs = _InputMeta.Select(item => item.Value.CreateNamedOnnexValue(item.Key)).ToArray();
+            _Outputs = _OutputMeta.Select(item => item.Value.CreateNamedOnnexValue(item.Key)).ToArray();
             _OutputNames = _Outputs.Select(item => item.Name).ToArray();
-        }             
+        }        
 
-        private static ONNX.NamedOnnxValue _Create(string name, ONNX.NodeMetadata metadata)
-        {
-            System.Diagnostics.Debug.Assert(metadata.OnnxValueType == ONNX.OnnxValueType.ONNX_TYPE_TENSOR);
-
-            if (metadata.IsTensor)
-            {
-                if (metadata.Dimensions.Any(item => item < 0))
-                {
-                    // it's a dynamic tensor
-                    return ONNX.NamedOnnxValue.CreateFromTensor<float>(name, null);
-                }
-
-                if (metadata.ElementType == typeof(Byte))
-                {
-                    var denseTensor = new ONNX.Tensors.DenseTensor<Byte>(metadata.Dimensions);
-                    return ONNX.NamedOnnxValue.CreateFromTensor(name, denseTensor);
-                }
-
-                if (metadata.ElementType == typeof(int))
-                {
-                    var denseTensor = new ONNX.Tensors.DenseTensor<int>(metadata.Dimensions);
-                    return ONNX.NamedOnnxValue.CreateFromTensor(name, denseTensor);
-                }
-
-                if (metadata.ElementType == typeof(float))
-                {                    
-                    var denseTensor = new ONNX.Tensors.DenseTensor<float>(metadata.Dimensions);
-                    return ONNX.NamedOnnxValue.CreateFromTensor(name, denseTensor);                    
-                }                
-            }            
-
-            throw new NotImplementedException();
-        }
-
-        private static ITensor _Create(ONNX.NamedOnnxValue namedValue)
-        {
-            if (namedValue.Value is ONNX.Tensors.DenseTensor<byte> tbyte) return new OnnxDenseTensor<byte>(tbyte, namedValue.Name);
-            if (namedValue.Value is ONNX.Tensors.DenseTensor<int> tint32) return new OnnxDenseTensor<int>(tint32, namedValue.Name);
-            if (namedValue.Value is ONNX.Tensors.DenseTensor<float> tfloat) return new OnnxDenseTensor<float>(tfloat, namedValue.Name);
-            throw new NotSupportedException();           
-        }
+        
 
         public void Dispose()
         {
@@ -105,7 +65,7 @@ namespace InteropTypes.Vision.Backends
             return new OnnxDenseTensor<T>(denseTensor, input.Name);
         }
 
-        public ITensor GetInputTensor(int idx) { return _Create(_Inputs[idx]); }
+        public ITensor GetInputTensor(int idx) { return _Inputs[idx].WrapAsInterface(); }
 
         public IDenseTensor<T> GetInputTensor<T>(int idx) where T : unmanaged
         {
@@ -138,11 +98,26 @@ namespace InteropTypes.Vision.Backends
             return new OnnxDenseTensor<T>(denseTensor, output.Name);
         }
 
-        public void Inference() { _Session.Run(_Inputs, _Outputs); }
+        public void Inference()
+        {
+            var allNull = _Outputs.All(item => item.Value == null);
+
+            if (allNull)
+            {
+                using (var outputs = _Session.Run(_Inputs))
+                {
+                    outputs.CopyToByName(_Outputs);
+                }
+            }
+            else
+            {
+                _Session.Run(_Inputs, _Outputs);
+            }            
+        }
 
         #endregion
 
-        #region helpers
+        #region helpers        
 
         private ONNX.Tensors.DenseTensor<T> _UpdateTensor<T>(ref ONNX.NamedOnnxValue namedValue, params int[] dims) where T:unmanaged
         {
