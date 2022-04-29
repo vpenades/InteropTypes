@@ -22,7 +22,7 @@ namespace InteropTypes.Graphics.Backends
         {
             for(int y=0; y < image.Height; ++y)
             {
-                for (int x = 0; x < image.Height; ++x)
+                for (int x = 0; x < image.Width; ++x)
                 {
                     var l = new POINT(x, y);
 

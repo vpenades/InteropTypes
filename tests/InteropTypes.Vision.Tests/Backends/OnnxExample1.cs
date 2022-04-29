@@ -229,8 +229,7 @@ namespace InteropTypes.Vision.Backends
                 var prior_variance = new [] { 0.1f, 0.1f, 0.2f, 0.2f };
             }
         }
-
-        [Ignore("https://github.com/microsoft/onnxruntime/issues/2175")]
+                
         [TestCase("Resources\\dog.jpeg")]
         [TestCase("Resources\\shannon.jpg")]
         public void TestArcFace(string imagePath)
@@ -442,6 +441,27 @@ namespace InteropTypes.Vision.Backends
     {
         // https://github.com/atksh/onnx-facial-lmk-detector
 
+        public static FullStackFaceInfo[] Parse(SpanTensor1<float> scores, SpanTensor2<Int64> bboxes, SpanTensor3<Pixel.BGR24> align_imgs, SpanTensor3<Int64> lmks)
+        {
+            var result = new FullStackFaceInfo[scores.Dimensions[0]];
+
+            for (int i = 0; i < scores.Dimensions[0]; ++i)
+            {
+                result[i].Score = scores[i];
+
+                var bbox = bboxes[i];
+                result[i].BoundingBox = new System.Drawing.Rectangle((int)bbox[0], (int)bbox[1], (int)bbox[2], (int)bbox[3]);
+
+                MemoryBitmap<Pixel.BGR24> bmp = default;
+                align_imgs[i].AsTensorBitmap(Tensors.Imaging.ColorEncoding.RGB).CopyTo(ref bmp);
+                result[i].AlignedImage = bmp;
+
+                var lmarks = lmks[i].ToArray();
+            }
+
+            return result;
+        }
+
         public float Score { get; set; }
         public System.Drawing.Rectangle BoundingBox { get; set; }
         public MemoryBitmap<Pixel.BGR24> AlignedImage { get; set; }
@@ -493,23 +513,7 @@ namespace InteropTypes.Vision.Backends
                 var lmks = _Session.GetOutputTensor<Int64>(4).VerifyName(n => n == "lmks").AsSpanTensor3();
                 var M = _Session.GetOutputTensor<float>(5).VerifyName(n => n == "M").AsSpanTensor3().UpCast<System.Numerics.Vector3>();
 
-                var result = new FullStackFaceInfo[scores.Dimensions[0]];
-
-                for(int i=0; i < scores.Dimensions[0]; ++i)
-                {
-                    result[i].Score = scores[i];
-
-                    var bbox = bboxes[i];
-                    result[i].BoundingBox = new System.Drawing.Rectangle((int)bbox[0], (int)bbox[1], (int)bbox[2], (int)bbox[3]);
-
-                    MemoryBitmap<Pixel.BGR24> bmp = default;
-                    align_imgs[i].AsTensorBitmap(Tensors.Imaging.ColorEncoding.RGB).CopyTo(ref bmp);
-                    result[i].AlignedImage = bmp;
-
-                    var lmarks = lmks[i].ToArray();
-                }
-
-                return result;
+                return FullStackFaceInfo.Parse(scores, bboxes, align_imgs, lmks);                
             }
 
             #endregion
