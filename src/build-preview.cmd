@@ -38,6 +38,7 @@ move InteropTypes.Vision.Core\bin\release\*.*nupkg bin
 move InteropTypes.Codecs.STB\bin\release\*.*nupkg bin
 move InteropTypes.Codecs.MJPEG\bin\release\*.*nupkg bin
 
+move InteropTypes.Graphics.Backends.SpanBitmap\bin\release\*.*nupkg bin
 move InteropTypes.Graphics.Backends.GDI\bin\release\*.*nupkg bin
 move InteropTypes.Graphics.Backends.WPF\bin\release\*.*nupkg bin
 move InteropTypes.Graphics.Backends.SVG\bin\release\*.*nupkg bin
