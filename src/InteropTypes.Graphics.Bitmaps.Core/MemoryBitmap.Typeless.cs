@@ -270,6 +270,12 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
 
+        public void Save(Action<Action<System.IO.FileInfo>> saveCallback, params Codecs.IBitmapEncoder[] factory)
+        {
+            var image = this;
+            saveCallback(finfo => image.Save(finfo.FullName, factory));
+        }
+
         public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Save(filePath, factory);

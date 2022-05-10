@@ -112,7 +112,7 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region serialization API
+        #region IO API
 
         public SharpGLTF.Scenes.SceneBuilder ToSceneBuilder(GLTFWriteSettings? settings = null)
         {
@@ -134,11 +134,11 @@ namespace InteropTypes.Graphics.Backends
         public ModelRoot ToModel(GLTFWriteSettings? settings = null)
         {
             return ToSceneBuilder(settings).ToGltf2();
-        }
+        }        
 
-        public void Save(string filePath)
+        public void Save(Action<Action<System.IO.FileInfo>> saveCallback, GLTFWriteSettings? settings = null)
         {
-            Save(filePath, default(GLTFWriteSettings));
+            saveCallback(finfo => Save(finfo.FullName, settings));
         }
 
         public void Save(string filePath, GLTFWriteSettings? settings = null)

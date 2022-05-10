@@ -108,6 +108,11 @@ namespace InteropTypes.Graphics.Backends
             return document.Render();
         }
 
+        public void SaveHtml(Action<Action<System.IO.FileInfo>> saveCallback)
+        {
+            saveCallback(finfo => SaveHtml(finfo.FullName));
+        }
+
         public void SaveHtml(string filePath)
         {
             var htmlBody = ToHtml().ToString();
