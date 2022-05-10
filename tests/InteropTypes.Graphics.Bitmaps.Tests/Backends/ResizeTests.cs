@@ -25,17 +25,17 @@ namespace InteropTypes.Graphics.Backends
             bitmap
                 .WithGDI()
                 .ToResizedMemoryBitmap(32, 32)
-                .AttachToCurrentTest("GDI_Resized.png");
+                .Save(new AttachmentInfo("GDI_Resized.png"));
 
             bitmap
                 .WithOpenCv()
                 .ToResizedMemoryBitmap(32, 32, OpenCvSharp.InterpolationFlags.Lanczos4)
-                .AttachToCurrentTest("OpenCV_Resized.png");
+                .Save(new AttachmentInfo("OpenCV_Resized.png"));
 
             bitmap
                 .WithImageSharp()
                 .ToResizedMemoryBitmap(32,32)
-                .AttachToCurrentTest("ImageSharp_Resized.png");
+                .Save(new AttachmentInfo("ImageSharp_Resized.png"));
         }
 
     }

@@ -21,7 +21,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.BGRA32.Format);
             m1.SetPixels(0xff406040);
 
-            m1.AttachToCurrentTest("result.png");
+            m1.Save(new AttachmentInfo("result.png"));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var m2 = new MemoryBitmap<UInt32>(16, 16, Pixel.BGRA32.Format, 17 * 4);
             m2.SetPixels(0, 0, m1);
 
-            m2.AttachToCurrentTest("result.png");
+            m2.Save(new AttachmentInfo("result.png"));
 
             Assert.AreEqual(0xff00ff00, m2.GetPixel(0, 0));
             Assert.AreEqual(0xffff00ff, m2.GetPixel(0, 1));            
@@ -63,7 +63,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             dst.SetPixels(-50, 0, src);
 
-            dst.AttachToCurrentTest("Result.png");
+            dst.Save(new AttachmentInfo("Result.png"));
         }
 
         [Test]

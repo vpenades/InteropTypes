@@ -22,7 +22,7 @@ namespace InteropTypes.Graphics.Backends
 
             var bitmap = MemoryBitmap.Load(filePath, Codecs.ImageSharpCodec.Default);
 
-            bitmap.AttachToCurrentTest("Result.png");
+            bitmap.Save(new AttachmentInfo("Result.png"));
         }
     }
 }

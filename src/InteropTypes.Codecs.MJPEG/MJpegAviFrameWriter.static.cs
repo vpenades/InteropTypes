@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
@@ -10,9 +11,11 @@ namespace InteropTypes.Codecs
 {
     partial class MJpegAviFrameWriter
     {
-        public static void SaveToAVI(IEnumerable<MemoryBitmap> frames, string filePath, decimal fps, IBitmapEncoder encoder)
+        public static void SaveToAVI(string filePath, IEnumerable<MemoryBitmap> frames, decimal fps, IBitmapEncoder jpgEncoder)
         {
             MJpegAviFrameWriter writer = null;
+
+            System.Drawing.Size frameSize = System.Drawing.Size.Empty;
 
             using (var avi = new AviWriter(filePath))
             {
@@ -20,7 +23,10 @@ namespace InteropTypes.Codecs
 
                 foreach (var frame in frames)
                 {
-                    if (writer == null) writer = AddVideoFrameWriter(avi, frame.Width, frame.Height, encoder);
+                    if (frameSize.IsEmpty) frameSize = frame.Size;
+                    else if (frame.Size != frameSize) throw new ArgumentException("all frames must have the same size.",nameof(frames));
+
+                    if (writer == null) writer = AddVideoFrameWriter(avi, frame.Width, frame.Height, jpgEncoder);
                     writer.WriteFrame(frame);
                 }
             }

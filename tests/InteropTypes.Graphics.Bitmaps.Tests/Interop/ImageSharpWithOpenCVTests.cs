@@ -23,7 +23,7 @@ namespace InteropTypes.Graphics.Bitmaps
             
             var membmp = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
 
-            membmp.AttachToCurrentTest("Result.png");
+            membmp.Save(AttachmentInfo.From("Result.png"));
 
 
             // var imgsharp = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(filePath);

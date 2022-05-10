@@ -53,7 +53,7 @@ namespace InteropTypes.Vision.Backends
                 .CreateDrawingContext()
                 .DrawAsset(System.Numerics.Matrix3x2.Identity, result);
 
-            image.AttachToCurrentTest("result.png");            
+            image.Save(new AttachmentInfo("result.png"));            
         }
     }
 }

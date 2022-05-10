@@ -16,74 +16,28 @@ using SixLabors.ImageSharp.Processing;
 
 using POINTF = SixLabors.ImageSharp.PointF;
 
+[assembly: AttachmentPathFormat("?")]
+
 namespace InteropTypes
 {
     static class TestUtils
     {
-        public static string GetTestResultPath(this TestContext context, params string[] parts)
-        {
-            // https://github.com/nunit/nunit/issues/1768#issuecomment-242454699
-
-            var path = System.IO.Path.Combine(context.WorkDirectory, "TestsOutput", context.Test.ID);
-
-            System.IO.Directory.CreateDirectory(path);
-
-            foreach (var part in parts) path = System.IO.Path.Combine(path, part);
-
-            
-
-            return path;
-        }
-
         public static void AttachToCurrentTest(this Image image, string filePath)
         {
-            filePath = TestContext.CurrentContext.GetTestResultPath(filePath);
-
-            var dirPath = System.IO.Path.GetDirectoryName(filePath);
-            System.IO.Directory.CreateDirectory(dirPath);
-
-            ImageExtensions.Save(image, filePath);
-
-            TestContext.AddTestAttachment(filePath);
+            new AttachmentInfo(filePath).WriteFile(finfo => image.Save(finfo.FullName));
         }
 
         public static void AttachToCurrentTest(this System.Drawing.Bitmap image, string filePath)
         {
-            using var owner = image.UsingMemoryBitmap();
-
-            owner.AsMemoryBitmap().AttachToCurrentTest(filePath);
-        }
-
-        
-
-        public static void AttachToCurrentTest(this MemoryBitmap bmp, string filePath)
-        {
-            bmp
-                .AsSpanBitmap()
-                .AsReadOnly()
-                .AttachToCurrentTestAll(filePath);
-        }
-
-        public static void AttachToCurrentTest<TPixel>(this MemoryBitmap<TPixel> bmp, string filePath)
-            where TPixel:unmanaged
-        {
-            bmp
-                .AsSpanBitmap()
-                .AsTypeless()
-                .AsReadOnly()
-                .AttachToCurrentTestAll(filePath);
-        }
+            new AttachmentInfo(filePath).WriteFile(finfo => image.Save(finfo.FullName));
+        }        
 
         public static void AttachToCurrentTestAll(this SpanBitmap bmp, string filePath)
         {
-            bmp = bmp.AsReadOnly();
+            var mem = bmp.ToMemoryBitmap();
 
             TestContext.WriteLine($"{filePath} {bmp.Info.ToDebuggerDisplayString()}");
 
-            filePath = TestContext.CurrentContext.GetTestResultPath(filePath);
-
-            var dirPath = System.IO.Path.GetDirectoryName(filePath);
-            System.IO.Directory.CreateDirectory(dirPath);
 
             if (bmp.PixelFormat == Pixel.BGR96F.Format || bmp.PixelFormat == Pixel.RGB96F.Format)
             {
@@ -92,71 +46,58 @@ namespace InteropTypes
                 bmp = tmp;
             }            
 
-            string _injectExt(string fp, string extPrefix)
+            AttachmentInfo _injectExt(string fp, string extPrefix)
             {
                 var ext = System.IO.Path.GetExtension(fp);
                 fp = fp.Substring(0, fp.Length - ext.Length);
-                return $"{fp}.{extPrefix}{ext}";
+                return new AttachmentInfo($"{fp}.{extPrefix}{ext}");
             }
 
             var f1 = _injectExt(filePath, "WPF");
-            bmp.Save(f1, WPFCodec.Default); TestContext.AddTestAttachment(f1);
+            mem.Save(f1, WPFCodec.Default);
 
             var f2 = _injectExt(filePath, "GDI");
-            bmp.Save(f2, GDICodec.Default); TestContext.AddTestAttachment(f2);
+            mem.Save(f2, GDICodec.Default);
 
             var f3 = _injectExt(filePath, "ImageSharp");
-            bmp.Save(f3, ImageSharpCodec.Default); TestContext.AddTestAttachment(f3);
+            mem.Save(f3, ImageSharpCodec.Default);
 
             var f4 = _injectExt(filePath, "SkiaSharp");
-            bmp.Save(f4, SkiaCodec.Default); TestContext.AddTestAttachment(f4);
+            mem.Save(f4, SkiaCodec.Default);
 
             var f5 = _injectExt(filePath, "OpenCvSharp");
-            bmp.Save(f5, OpenCvCodec.Default); TestContext.AddTestAttachment(f5);
+            mem.Save(f5, OpenCvCodec.Default);
 
             var f6 = _injectExt(filePath, "STB");
-            bmp.Save(f6, STBCodec.WithQuality(80)); TestContext.AddTestAttachment(f6);
+            mem.Save(f6, STBCodec.WithQuality(80));
 
             // TODO: it should compare saved files against bmp
         }
 
         public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath)
         {
-            filePath = TestContext.CurrentContext.GetTestResultPath(filePath);
-
-            var dirPath = System.IO.Path.GetDirectoryName(filePath);
-            System.IO.Directory.CreateDirectory(dirPath);            
-            
-            bmp.Save(filePath, WPFCodec.Default);
-            TestContext.AddTestAttachment(filePath);
+            bmp.ToMemoryBitmap().Save(new AttachmentInfo(filePath));
         }
 
         public static string AttachToCurrentTest(this IEnumerable<PointerBitmap> frames, string videoPath)
         {
-            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
-            FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
-            TestContext.AddTestAttachment(videoPath);
-
-            return videoPath;
-
-        }
-
-        public static void AttachToCurrentTest(this IEnumerable<(PointerBitmap bmp, long pts)> frames, string videoPath)
-        {
-            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
-            FFmpegAutoGenCodec.EncodeFrames(videoPath, frames);
-            TestContext.AddTestAttachment(videoPath);
-        }
+            return AttachmentInfo
+                .From(videoPath)
+                .WriteFile(finfo => FFmpegAutoGenCodec.EncodeFrames(finfo.FullName, frames))
+                .FullName;
+        }        
 
         public static string AttachAviToCurrentTest(this IEnumerable<MemoryBitmap> frames, string videoPath, float frameRate = 25)
         {
-            videoPath = TestContext.CurrentContext.GetTestResultPath(videoPath);
+            void _saveVideo(System.IO.FileInfo finfo)
+            {
+                MJpegAviFrameWriter.SaveToAVI(finfo.FullName, frames, (decimal)frameRate, new GDICodec(50));
+            }
 
-            MJpegAviFrameWriter.SaveToAVI(frames, videoPath, (decimal)frameRate, new GDICodec(50));
-
-            TestContext.AddTestAttachment(videoPath);
-
-            return videoPath;
+            return AttachmentInfo
+                .From(videoPath)
+                .WriteFile(_saveVideo)
+                .FullName;
         }
     }
 
@@ -179,57 +120,7 @@ namespace InteropTypes
 
             return source.DrawPolygon(color, thickness, ppp);
         }        
-    }
-
-    public static class ShortcutUtils
-    {
-        public static void AttachShowDirLink(this TestContext context)
-        {
-            context.AttachLink("📂 Show Directory", context.GetTestResultPath(string.Empty));
-        }
-
-        public static void AttachLink(this TestContext context, string linkPath, string targetPath)
-        {
-            linkPath = context.GetTestResultPath(linkPath);
-
-            linkPath = ShortcutUtils.CreateLink(linkPath, targetPath);
-
-            TestContext.AddTestAttachment(linkPath);
-        }
-
-        public static string CreateLink(string localLinkPath, string targetPath)
-        {
-            if (string.IsNullOrWhiteSpace(localLinkPath)) throw new ArgumentNullException(nameof(localLinkPath));
-            if (string.IsNullOrWhiteSpace(targetPath)) throw new ArgumentNullException(nameof(targetPath));
-
-            if (!Uri.TryCreate(targetPath, UriKind.Absolute, out Uri uri)) throw new UriFormatException(nameof(targetPath));
-
-            var sb = new StringBuilder();
-
-            sb.AppendLine("[{000214A0-0000-0000-C000-000000000046}]");
-            sb.AppendLine("Prop3=19,11");
-            sb.AppendLine("[InternetShortcut]");
-            sb.AppendLine("IDList=");
-            sb.AppendLine($"URL={uri.AbsoluteUri}");
-
-            if (uri.IsFile)
-            {
-                sb.AppendLine("IconIndex=1");
-                string icon = targetPath.Replace('\\', '/');
-                sb.AppendLine("IconFile=" + icon);
-            }
-            else
-            {
-                sb.AppendLine("IconIndex=0");
-            }
-
-            localLinkPath = System.IO.Path.ChangeExtension(localLinkPath, ".url");
-
-            System.IO.File.WriteAllText(localLinkPath, sb.ToString());
-
-            return localLinkPath;
-        }
-    }
+    }    
 
     public static class TestResources
     {

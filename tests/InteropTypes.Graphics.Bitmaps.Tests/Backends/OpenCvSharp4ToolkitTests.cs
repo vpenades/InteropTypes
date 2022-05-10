@@ -29,7 +29,7 @@ namespace InteropTypes.Graphics.Backends
 
             var bitmap = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
 
-            bitmap.AttachToCurrentTest("Result.png");
+            bitmap.Save(new AttachmentInfo("Result.png"));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace InteropTypes.Graphics.Backends
 
                 OpenCvSharp4Toolkit.WarpAffine(src, dst, xform);
             }
-            dst.AttachToCurrentTest("result.opencv.jpg");            
+            dst.Save(new AttachmentInfo("result.opencv.jpg"));            
 
             dst.AsSpanBitmap().WritableBytes.Fill(0);
             using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"Soft {t}")))
@@ -58,7 +58,7 @@ namespace InteropTypes.Graphics.Backends
 
                 dst.AsSpanBitmap().SetPixels(xform, src);
             }
-            dst.AttachToCurrentTest("result.soft.jpg");
+            dst.Save(new AttachmentInfo("result.soft.jpg"));
         }
 
         [TestCase("capture1.jpg")]
@@ -85,7 +85,7 @@ namespace InteropTypes.Graphics.Backends
                 .CreateDrawingContext()
                 .DrawAsset(System.Numerics.Matrix3x2.Identity, arucoContext);
 
-            bitmap.AttachToCurrentTest("output.png");
+            bitmap.Save(new AttachmentInfo("Result.png"));
         }
 
 

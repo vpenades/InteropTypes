@@ -182,7 +182,7 @@ namespace InteropTypes.Graphics.Drawing
                     .CreateLookingAtCenter((mdc, 1024, 1024), (10, 5, 30))
                     .DrawScene(scene);
 
-            mem.AttachToCurrentTest($"Span_{sceneName}.png");
+            mem.Save(new AttachmentInfo($"Span_{sceneName}.png"));
 
 
             TestContext.AddTestAttachment(path);

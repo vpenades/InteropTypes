@@ -22,7 +22,7 @@ namespace InteropTypes.Graphics.Bitmaps.Transform
 
             bmp.AsSpanBitmap().Apply<Pixel.BGR24, Pixel.RGBA128F>(Laplacian);
 
-            bmp.AttachToCurrentTest("laplacian.jpg");
+            bmp.Save(new AttachmentInfo("laplacian.jpg"));
         }
 
         private static Pixel.BGR24 Laplacian(in Processing.Kernel3x3<Pixel.RGBA128F> kernel)

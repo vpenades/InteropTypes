@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Drawing
                 {
                     memBmp.AsMemoryBitmap()
                         .ToMemoryBitmap(Pixel.RGBA32.Format)
-                        .AttachToCurrentTest("maui.png");
+                        .Save("maui.png");
                 }
             }
         }

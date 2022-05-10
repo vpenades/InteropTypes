@@ -29,6 +29,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.A.GetHashCode();
             }
         }
@@ -53,6 +55,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.L.GetHashCode();
             }
         }
@@ -77,6 +81,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.L.GetHashCode();
             }
         }
@@ -101,6 +107,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.L.GetHashCode();
             }
         }
@@ -125,6 +133,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.BGR.GetHashCode();
             }
         }
@@ -150,6 +160,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 if (this.A == 0) return 0;
                 return this.BGRA.GetHashCode();
             }
@@ -176,6 +188,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 if (this.A == 0) return 0;
                 return this.BGRA.GetHashCode();
             }
@@ -204,6 +218,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 int h = 0;
                 h ^= this.B; h <<= 8;
                 h ^= this.G; h <<= 8;
@@ -235,6 +251,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 int h = 0;
                 h ^= this.R; h <<= 8;
                 h ^= this.G; h <<= 8;
@@ -264,6 +282,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 if (this.A == 0) return 0;
                 return this.BGRA.GetHashCode();
             }
@@ -290,6 +310,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 if (this.A == 0) return 0;
                 return this.RGBA.GetHashCode();
             }
@@ -316,6 +338,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 if (this.A == 0) return 0;
                 return this.ARGB.GetHashCode();
             }
@@ -341,6 +365,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.RGBP.GetHashCode();
             }
         }
@@ -365,6 +391,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.BGRP.GetHashCode();
             }
         }
@@ -389,6 +417,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.RGB.GetHashCode();
             }
         }
@@ -413,6 +443,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.BGR.GetHashCode();
             }
         }
@@ -438,6 +470,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 if (this.A == 0) return 0;
                 return this.BGRA.GetHashCode();
             }
@@ -464,6 +498,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 if (this.A == 0) return 0;
                 return this.RGBA.GetHashCode();
             }
@@ -489,6 +525,8 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             public override int GetHashCode()
             {
+
+                // Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.
                 return this.RGBP.GetHashCode();
             }
         }

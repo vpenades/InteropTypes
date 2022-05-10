@@ -31,8 +31,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             TestContext.WriteLine($"{elapsed.Milliseconds}ms {elapsed.Ticks}ticks");
 
-            src.AttachToCurrentTest("input.png");
-            dst.AttachToCurrentTest($"output_{dstSize}.png");
+            src.Save(AttachmentInfo.From("input.png"));
+            dst.Save(AttachmentInfo.From($"output_{dstSize}.png"));
         }
 
         private static MemoryBitmap LoadShannonImage()
@@ -52,13 +52,13 @@ namespace InteropTypes.Graphics.Bitmaps
         public void TestFlip()
         {
             var src = LoadShannonImage();
-            src.AttachToCurrentTest("input.png");
+            src.Save(AttachmentInfo.From("input.png"));
 
             src.AsSpanBitmap().ApplyEffect(new Processing.BitmapMirror(true,false));
-            src.AttachToCurrentTest("horizontalFlip.png");
+            src.Save(AttachmentInfo.From("horizontalFlip.png"));
 
             src.AsSpanBitmap().ApplyEffect(new Processing.BitmapMirror(false, true));
-            src.AttachToCurrentTest("VerticalFlip.png");
+            src.Save(AttachmentInfo.From("VerticalFlip.png"));
         }
 
         [TestCase(1920, 1080, false, true, false)]
@@ -99,7 +99,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public void TestTransform(bool useBilinear)
         {
             var src = LoadShannonImage().OfType<Pixel.BGR24>();
-            src.AttachToCurrentTest("input.png");
+            src.Save(new AttachmentInfo("input.png"));
 
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");
             var cat00 = MemoryBitmap
@@ -146,7 +146,7 @@ namespace InteropTypes.Graphics.Bitmaps
             dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(-.6f) * Matrix3x2.CreateTranslation(40,200), cat00.AsSpanBitmap(), useBilinear);
             dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(.3f) * Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(150, 300), qrcode.AsSpanBitmap(), useBilinear);
 
-            dst.AttachToCurrentTest("transformed.png");
+            dst.Save(new AttachmentInfo("transformed.png"));
         }
 
 

@@ -30,7 +30,7 @@ namespace InteropTypes.Graphics.Drawing
 
             dc.DrawLine((180, 260),(800,300), 9, LineStyle.Yellow.With(LineCapStyle.Round).WithOutline(System.Drawing.Color.Green, 1));
 
-            bmp.AttachToCurrentTest("result.png");
+            bmp.Save(new AttachmentInfo("result.png"));            
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace InteropTypes.Graphics.Drawing
 
             dc.DrawImage(Matrix3x2.CreateScale(3) * Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(70, 150), asset);
 
-            bmp.AttachToCurrentTest("result.png");
+            bmp.Save(new AttachmentInfo("result.png"));
         }
 
         [Test]
@@ -79,9 +79,9 @@ namespace InteropTypes.Graphics.Drawing
             foreach(var tri in _Triangle.GetFillRuleTriangles())
             {
                 dc.DrawPolygon(System.Drawing.Color.Red, tri.A * scale, tri.B * scale, tri.C * scale);
-            }            
+            }
 
-            bmp.AttachToCurrentTest("result.png");
+            bmp.Save(new AttachmentInfo("result.png"));
         }
     }
 }

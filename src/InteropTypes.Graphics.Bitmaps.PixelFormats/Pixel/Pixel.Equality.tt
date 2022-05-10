@@ -79,6 +79,8 @@ namespace InteropTypes.Graphics.Bitmaps
             WriteLine($"public override int GetHashCode()");
             _writeOpenBlock();
 
+            _writeComment("Do not use ValueTuple's (X,Y,Z).GetHashCode(); here because it uses an internal random seed.");
+
             var (ccc,size) = GetPixelFormatChannels(pixelFmt);
             if (ccc == "Alpha") ccc="A";
             if (ccc == "Luminance") ccc="L";

@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Backends
 
             var memory = image.ToMemoryBitmap();
 
-            memory.AttachToCurrentTest("Result.png");
+            memory.Save(AttachmentInfo.From("Result.png"));
 
             var writable = new System.Windows.Media.Imaging.WriteableBitmap(image);
         }        

@@ -40,7 +40,7 @@ namespace InteropTypes.Codecs
         [TestCase("Resources\\white.png")]
         public void LoadImage(string filePath)
         {
-            TestContext.CurrentContext.AttachShowDirLink();
+            TestContext.CurrentContext.AttachFolderBrowserShortcut();
 
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
@@ -58,20 +58,17 @@ namespace InteropTypes.Codecs
                 {
                     // System.Diagnostics.Debug.Assert(!(decoder is WPFCodec && encoder is SkiaCodec));
 
-                    var fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}.png";
-                    fname = TestContext.CurrentContext.GetTestResultPath(fname);
-                    bitmap.Save(fname, encoder);
-                    TestContext.AddTestAttachment(fname);
+                    var fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}.png";                    
+                    bitmap.Save(new AttachmentInfo(fname), encoder);                    
 
-                    fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}.jpg";
-                    fname = TestContext.CurrentContext.GetTestResultPath(fname);
-                    bitmap.Save(fname, encoder);
-                    TestContext.AddTestAttachment(fname);
+                    fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}.jpg";                    
+                    bitmap.Save(new AttachmentInfo(fname), encoder);                    
 
-                    fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}-Gray.jpg";
-                    fname = TestContext.CurrentContext.GetTestResultPath(fname);
-                    bitmap.AsSpanBitmap().ToMemoryBitmap(Pixel.Luminance8.Format).Save(fname, encoder);
-                    TestContext.AddTestAttachment(fname);
+                    fname = $"{decoder.GetType().Name}-To-{encoder.GetType().Name}-Gray.jpg";                    
+                    bitmap
+                        .AsSpanBitmap()
+                        .ToMemoryBitmap(Pixel.Luminance8.Format)
+                        .Save(new AttachmentInfo(fname), encoder);
                 }
             }
         }

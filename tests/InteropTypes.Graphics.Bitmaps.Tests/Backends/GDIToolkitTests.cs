@@ -22,7 +22,7 @@ namespace InteropTypes.Graphics.Backends
 
             var bitmap = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
 
-            bitmap.AttachToCurrentTest("Result.png");
+            bitmap.Save(new AttachmentInfo("Result.png"));
         }        
 
         [Test]
@@ -32,7 +32,7 @@ namespace InteropTypes.Graphics.Backends
             {
                 var bmp = ff.GetGlyph('A');
 
-                bmp.AttachToCurrentTest("A.png");
+                bmp.Save(new AttachmentInfo("A.png"));
             }
 
         }

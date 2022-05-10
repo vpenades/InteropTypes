@@ -319,11 +319,8 @@ namespace InteropTypes.Vision.Backends
                 result
                     .AsTensorBitmap(Tensors.Imaging.ColorEncoding.BGR)
                     .CopyTo(ref resultBitmap);                
-
-                var path = TestContext.CurrentContext.GetTestResultPath(imagePath);
-                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
-                resultBitmap.Save(path, GDICodec.Default);
-                TestContext.AddTestAttachment(path);
+                
+                resultBitmap.Save(new AttachmentInfo(imagePath));
             }
         }
 
@@ -341,10 +338,7 @@ namespace InteropTypes.Vision.Backends
                 filter.Filter(srcImage, ref dstImage);
             }
 
-            var path = TestContext.CurrentContext.GetTestResultPath(imagePath);
-            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
-            dstImage.Save(path);
-            TestContext.AddTestAttachment(path);
+            dstImage.Save(new AttachmentInfo(imagePath));
         }
 
         
@@ -359,13 +353,11 @@ namespace InteropTypes.Vision.Backends
 
                 for(int i=0; i < result.Length; i++)
                 {
-                    var path = TestContext.CurrentContext.GetTestResultPath($"detected image {i}.jpg");
-                    result[0].AlignedImage.Save(path);
-                    TestContext.AddTestAttachment(path);
+                    result[0].AlignedImage.Save(new AttachmentInfo($"detected image {i}.jpg"));
                 }                
             }
         }
-    }   
+    }
 
 
     /// <summary>

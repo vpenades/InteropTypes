@@ -28,6 +28,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="NUnitForImages.WPF" Version="3.0.0-Preview-20210913-1034" />
+    <PackageReference Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220510-1950" />
   </ItemGroup>
 
   <ItemGroup>

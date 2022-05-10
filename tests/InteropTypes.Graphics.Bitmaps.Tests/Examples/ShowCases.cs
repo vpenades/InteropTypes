@@ -72,7 +72,7 @@ namespace InteropTypes.Graphics.Bitmaps
             }
 
             // Use Imagesharp to save to PNG
-            bmp.AttachToCurrentTest("shannon.png");
+            bmp.Save(AttachmentInfo.From("shannon.png"));
         }
 
         [Test]
