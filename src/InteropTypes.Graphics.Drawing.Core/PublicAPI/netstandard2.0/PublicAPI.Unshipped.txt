@@ -483,6 +483,7 @@ static InteropTypes.Graphics.Drawing.Point2.Centroid(System.ReadOnlySpan<System.
 static InteropTypes.Graphics.Drawing.Point2.Cross(InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b) -> float
 static InteropTypes.Graphics.Drawing.Point2.Cross(InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b, InteropTypes.Graphics.Drawing.Point2 c) -> float
 static InteropTypes.Graphics.Drawing.Point2.DebugAssertIsFinite(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points) -> void
+static InteropTypes.Graphics.Drawing.Point2.FromRect(System.Drawing.RectangleF rect) -> InteropTypes.Graphics.Drawing.Point2[]
 static InteropTypes.Graphics.Drawing.Point2.GetDominantAxis(InteropTypes.Graphics.Drawing.Point2 point) -> int
 static InteropTypes.Graphics.Drawing.Point2.Half.get -> InteropTypes.Graphics.Drawing.Point2
 static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2((double X, double Y) p) -> InteropTypes.Graphics.Drawing.Point2

@@ -180,6 +180,21 @@ namespace InteropTypes.Graphics.Drawing
         [System.Diagnostics.DebuggerStepThrough]
         public static Point2[] Array(params Point2[] points) { return points; }
 
+        /// <summary>
+        /// Gets the corner points of a rectangle, in a clockwise order.
+        /// </summary>
+        /// <param name="rect">The source rectangle</param>
+        /// <returns>A collection of 4 points.</returns>        
+        public static Point2[] FromRect(System.Drawing.RectangleF rect)
+        {
+            var points = new Point2[4];
+            points[0] = (rect.Left, rect.Top);
+            points[1] = (rect.Right, rect.Top);
+            points[2] = (rect.Right, rect.Bottom);
+            points[3] = (rect.Left, rect.Bottom);
+            return points;
+        }
+
         #endregion
 
         #region data        
