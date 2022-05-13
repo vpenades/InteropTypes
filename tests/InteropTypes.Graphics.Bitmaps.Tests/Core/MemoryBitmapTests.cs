@@ -25,6 +25,16 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [Test]
+        public void CreateMemoryBitmapWithKnownType()
+        {
+            var m1 = new MemoryBitmap<Pixel.BGRA32>(16, 16);
+            Assert.AreEqual(Pixel.BGRA32.Format, m1.PixelFormat);
+
+            var m2 = new MemoryBitmap<Pixel.BGRA32>(new Byte[256*4], 16, 16);
+            Assert.AreEqual(Pixel.BGRA32.Format, m2.PixelFormat);
+        }
+
+        [Test]
         public void CopyPixelsWithStride()
         {
             var m1 = new MemoryBitmap<UInt32>(16, 16, Pixel.BGRA32.Format);            

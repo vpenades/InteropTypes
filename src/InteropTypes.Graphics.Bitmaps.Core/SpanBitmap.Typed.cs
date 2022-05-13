@@ -55,6 +55,14 @@ namespace InteropTypes.Graphics.Bitmaps
             _Writable = null;
         }
 
+        public SpanBitmap(Span<Byte> data, int width, int height, int stepByteSize = 0)
+           : this(data, width, height, PixelFormat.TryIdentifyFormat<TPixel>(), stepByteSize)
+        { }
+
+        public SpanBitmap(ReadOnlySpan<Byte> data, int width, int height, int stepByteSize = 0)
+           : this(data, width, height, PixelFormat.TryIdentifyFormat<TPixel>(), stepByteSize)
+        { }
+
         public unsafe SpanBitmap(Span<Byte> data, int width, int height, PixelFormat pixelFormat, int scanlineSize = 0)
         {
             _Info = BitmapInfo.Create<TPixel>(width, height, pixelFormat, scanlineSize);            

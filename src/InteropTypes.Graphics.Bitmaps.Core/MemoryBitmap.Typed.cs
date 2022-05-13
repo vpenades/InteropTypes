@@ -54,7 +54,9 @@ namespace InteropTypes.Graphics.Bitmaps
             _Data = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public MemoryBitmap(int width, int height) : this(width, height, PixelFormat.TryIdentifyFormat<TPixel>()) { }
+        public MemoryBitmap(int width, int height)
+            : this(width, height, PixelFormat.TryIdentifyFormat<TPixel>())
+        { }
 
         public unsafe MemoryBitmap(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
@@ -63,7 +65,8 @@ namespace InteropTypes.Graphics.Bitmaps
         }        
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, int stepByteSize = 0)
-            : this(data, width, height, PixelFormat.CreateUndefined<TPixel>(), stepByteSize) { }
+            : this(data, width, height, PixelFormat.TryIdentifyFormat<TPixel>(), stepByteSize)
+        { }
 
         public MemoryBitmap(Memory<Byte> data, int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)            
         {
