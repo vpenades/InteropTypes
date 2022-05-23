@@ -108,6 +108,7 @@ namespace InteropTypes.Graphics.Backends
             return document.Render();
         }
 
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void SaveHtml(Action<Action<System.IO.FileInfo>> saveCallback)
         {
             saveCallback(finfo => SaveHtml(finfo.FullName));

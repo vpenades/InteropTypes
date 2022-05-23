@@ -73,6 +73,7 @@ namespace InteropTypes.Graphics.Backends
             return Drawing.Transforms.Canvas2DTransform.Create(dc, xform);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap)
             where TPixel:unmanaged
         {

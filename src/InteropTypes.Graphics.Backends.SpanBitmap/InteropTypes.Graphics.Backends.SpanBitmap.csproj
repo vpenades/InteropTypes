@@ -14,6 +14,10 @@
   <Import Project="..\SourceLink.props" />
 
   <ItemGroup>
+    <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.Tests"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>

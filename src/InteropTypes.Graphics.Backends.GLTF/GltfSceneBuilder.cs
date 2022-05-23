@@ -134,8 +134,9 @@ namespace InteropTypes.Graphics.Backends
         public ModelRoot ToModel(GLTFWriteSettings? settings = null)
         {
             return ToSceneBuilder(settings).ToGltf2();
-        }        
+        }
 
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void Save(Action<Action<System.IO.FileInfo>> saveCallback, GLTFWriteSettings? settings = null)
         {
             saveCallback(finfo => Save(finfo.FullName, settings));

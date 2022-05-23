@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 using InteropTypes.Graphics.Bitmaps;
@@ -10,7 +11,7 @@ namespace InteropTypes.Graphics.Backends.WPF
 {
 
     /// <summary>
-    /// Defines a WPF <see cref="System.Windows.Media.Imaging.BitmapSource"/> based bitmap that can be updated from any thread.
+    /// Represents an object that exposes a <see cref="WriteableBitmap"/> which can be safely updated from any thread.
     /// </summary>
     public class WPFClientBitmap : DispatcherObject, System.ComponentModel.INotifyPropertyChanged
     {
@@ -25,29 +26,56 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         #region data        
 
-        private InterlockedBitmap _Interlocked = new InterlockedBitmap(3);        
-
-        private System.Windows.Media.Imaging.WriteableBitmap _FrontBuffer;        
-
-        private static readonly System.ComponentModel.PropertyChangedEventArgs _FrontBufferChanged = new System.ComponentModel.PropertyChangedEventArgs(nameof(FrontBuffer));
-
-        #endregion
-
-        #region properties        
+        /// <summary>
+        /// This is the backbuffer that receives the frames asyncronously.
+        /// </summary>
+        protected InterlockedBitmap BackBuffer { get; } = new InterlockedBitmap(3);
 
         /// <summary>
         /// This is the bitmap that is displayed by WPF
         /// </summary>
-        public System.Windows.Media.Imaging.BitmapSource FrontBuffer => _FrontBuffer;
-        
-        /// <summary>
-        /// Called when <see cref="FrontBuffer"/> is updated.
-        /// </summary>
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        private WriteableBitmap _FrontBuffer;
 
         #endregion
 
-        #region API        
+        #region properties
+
+        private static readonly System.ComponentModel.PropertyChangedEventArgs _FrontBufferChanged = new System.ComponentModel.PropertyChangedEventArgs(nameof(FrontBuffer));
+
+        public WriteableBitmap FrontBuffer => _FrontBuffer;
+
+        #endregion
+
+        #region bindable base
+
+        /// <summary>
+        /// Called when <see cref="_FrontBuffer"/> is updated.
+        /// </summary>
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Raises this object's PropertyChanged event.
+        /// </summary>
+        /// <param name="propertyName">Name of the property used to notify listeners. This
+        /// value is optional and can be provided automatically when invoked from compilers
+        /// that support <see cref="System.Runtime.CompilerServices.CallerMemberNameAttribute"/>.</param>
+        protected void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Raises this object's PropertyChanged event.
+        /// </summary>
+        /// <param name="args">The PropertyChangedEventArgs</param>
+        protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs args)
+        {
+            PropertyChanged?.Invoke(this, args);
+        }
+
+        #endregion
+
+        #region API
 
         /// <summary>
         /// Called from any thread to update the display bitmap
@@ -58,7 +86,7 @@ namespace InteropTypes.Graphics.Backends.WPF
             if (!this.CheckAccess())
             {
                 // Create an internal copy
-                if (!_Interlocked.TryEnqueue(src)) return;
+                if (!BackBuffer.TryEnqueue(src)) return;
 
                 // And invoke the update in the UI thread.
                 try { this.Dispatcher.Invoke(_UpdateFromBackBuffer); }
@@ -79,26 +107,36 @@ namespace InteropTypes.Graphics.Backends.WPF
 
             if (src.WithWPF().CopyTo(ref _FrontBuffer))
             {
-                PropertyChanged?.Invoke(this, _FrontBufferChanged);
+                OnPropertyChanged(_FrontBufferChanged);
             }
         }
 
         private void _UpdateFromBackBuffer()
         {
-            VerifyAccess();            
+            VerifyAccess();
 
             void _OnBmpRead(MemoryBitmap bmp)
             {
+                OnPrepareFrameForDisplay(bmp);
                 var src = bmp.AsSpanBitmap();
-
-                var oldBuff = _FrontBuffer;
-
-                src.WithWPF().CopyTo(ref _FrontBuffer);                
-
-                if (ReferenceEquals(oldBuff, _FrontBuffer)) PropertyChanged?.Invoke(this, _FrontBufferChanged);
+                var frontBufferChanged = src.WithWPF().CopyTo(ref _FrontBuffer);
+                if (frontBufferChanged) RaiseFrontBufferChanged();
             }
 
-            _Interlocked.TryDropAndDequeueLast(_OnBmpRead);
+            BackBuffer.TryDropAndDequeueLast(_OnBmpRead);
+        }
+
+        protected virtual void OnPrepareFrameForDisplay(MemoryBitmap bmp)
+        {
+            this.VerifyAccess();
+        }
+
+        /// <summary>
+        /// Called when the front buffer has been rebuilt.
+        /// </summary>
+        protected virtual void RaiseFrontBufferChanged()
+        {
+            PropertyChanged?.Invoke(this, _FrontBufferChanged);
         }
 
         #endregion

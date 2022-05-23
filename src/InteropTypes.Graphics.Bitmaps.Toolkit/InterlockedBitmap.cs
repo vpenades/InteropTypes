@@ -8,8 +8,13 @@ namespace InteropTypes.Graphics.Bitmaps
     /// Represents a producer-consumer interlocked exchange bitmap.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// This class is useful for devices that produce a stream of bitmaps in their own thread
     /// and a client application consuming these bitmaps in the UI thread.
+    /// </para>
+    /// <para>
+    /// Known derived classes: InteropTypes.Graphics.Backends.WPF.WPFClientBitmap
+    /// </para>    
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("Frames In:{_TotalFramesEnqueued} Out:{_TotalFramesDequeued}")]
     public class InterlockedBitmap

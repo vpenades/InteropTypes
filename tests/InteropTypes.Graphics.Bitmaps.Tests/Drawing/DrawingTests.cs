@@ -34,6 +34,32 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         [Test]
+        public void DrawBitmapFont()
+        {
+            TestContext.CurrentContext.AttachFolderBrowserShortcut();
+
+            // test glyph splitter
+
+            var bmp = MemoryBitmap<Pixel.BGRP32>.Load("Resources\\SegoeUiMono16.png");
+
+            var glyphs = MemoryBitmapFontFactory.FindGlyphsFromMonogameFont(bmp).ToArray();
+
+            Assert.AreEqual(224, glyphs.Length);
+
+            // for(int i=0; i < glyphs.Length; ++i) { glyphs[i].Save(new AttachmentInfo($"glyph {i}.png")); }
+
+            // create font and raw some text:
+
+            var font = MemoryBitmapFontFactory.LoadBitmapFont("Resources\\SegoeUiMono16.png");
+
+            var dst = new MemoryBitmap<Pixel.BGR24>(512, 512);
+
+            dst.CreateDrawingContext().DrawFont(Matrix3x2.CreateRotation(0.2f) * Matrix3x2.CreateTranslation(5, 5), "Hello world!", font, System.Drawing.Color.White);
+
+            dst.Save(new AttachmentInfo("text.png"));
+        }
+
+        [Test]
         public void DrawingTest()
         {
             var bmp = new MemoryBitmap<Pixel.BGR24>(512, 512);

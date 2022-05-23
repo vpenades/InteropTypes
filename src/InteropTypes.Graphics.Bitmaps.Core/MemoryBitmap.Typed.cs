@@ -261,6 +261,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return dst;
         }
 
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void Save(Action<Action<System.IO.FileInfo>> saveCallback, params Codecs.IBitmapEncoder[] factory)
         {
             var image = this;

@@ -49,5 +49,10 @@ namespace InteropTypes.Graphics.Drawing
 
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
         }
+
+        public static void DrawFont(this CANVAS2DEX dc, XFORM2 xform, string text, Fonts.IBitmapFont font, FontStyle style)
+        {
+            font.DrawFont(dc, xform, text, style.Style.FillColor);
+        }
     }
 }
