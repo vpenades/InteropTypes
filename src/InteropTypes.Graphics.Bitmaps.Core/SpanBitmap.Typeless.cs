@@ -4,7 +4,6 @@ using System.Text;
 using System.Numerics;
 
 using SIZE = System.Drawing.Size;
-using POINT = System.Drawing.Point;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
@@ -397,6 +396,14 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 default: throw new NotSupportedException();
             }
+        }
+
+        public MemoryBitmap<TPixel> CloneAs<TPixel>()
+            where TPixel : unmanaged
+        {
+            MemoryBitmap<TPixel> newBitmap = default;
+            CopyTo(ref newBitmap);
+            return newBitmap;
         }
 
         public bool CopyTo(ref MemoryBitmap other)

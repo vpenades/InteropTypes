@@ -384,6 +384,11 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region factory
 
+        /// <summary>
+        /// Checks whether the given <typeparamref name="TPixel"/> is compatible with this pixel format.
+        /// </summary>
+        /// <typeparam name="TPixel">The pixel type to test</typeparam>
+        /// <exception cref="PixelFormatNotSupportedException">Exception thrown if not compatible</exception>
         [System.Diagnostics.DebuggerStepThrough]
         public void ArgumentIsCompatiblePixelFormat<TPixel>() where TPixel : unmanaged
         {

@@ -20,100 +20,7 @@ namespace InteropTypes.Graphics.Backends
     //   https://github.com/AuroraBertaOldham/SharpFNT
 
 
-    public static class MemoryBitmapFontFactory
-    {
-        public static Drawing.Fonts.IBitmapFont LoadBitmapFont(string filePath)
-        {
-            return new _AlignedBitmapFont(filePath);
-        }
-
-        internal static IEnumerable<MemoryBitmap<Pixel.BGRP32>> FindGlyphsFromMonogameFont(MemoryBitmap<Pixel.BGRP32> bmp)
-        {
-            foreach(var row in GetGlyphRows(bmp))
-            {
-                var framePix = row.GetPixel(0, 0);
-
-                int x = 0;
-
-                int start = -1;
-
-                while (x < row.Width)
-                {
-                    var isFull = true;
-
-                    for(int y=0; y < row.Height; ++y)
-                    {
-                        if (row.GetPixel(x,y) != framePix) { isFull = false; break; }
-                    }
-
-                    if (!isFull) { ++x; continue; }
-
-                    else
-                    {
-                        if (start < 0) { start = x; ++x; continue; }
-
-                        var w = x - start - 1;                        
-
-                        if (w > 0)
-                        {
-                            var glyph = row.Slice(new BitmapBounds(start + 1, 0, w, row.Height));
-
-                            // trim from the bottom
-                            while(glyph.Height > 0)
-                            {
-                                if (!glyph.GetScanlinePixels(glyph.Height - 1).All(p => p == framePix)) break;
-
-                                glyph = glyph.Slice((0, 0, glyph.Width, glyph.Height - 1));
-                            }
-
-                            if (glyph.Width > 4 && glyph.Height > 4)                            
-                            {
-                                glyph = glyph.Slice((2, 2, glyph.Width - 4, glyph.Height - 4));
-
-                                yield return glyph;
-                            }
-                            else
-                            {
-                                yield return default;
-                            }
-                        }
-
-                        start = x;
-                        ++x;
-                    }
-                }
-            }
-
-        }
-
-        private static IEnumerable<MemoryBitmap<Pixel.BGRP32>> GetGlyphRows(MemoryBitmap<Pixel.BGRP32> bmp)
-        {
-            var framePix = bmp.GetPixel(0, 0);
-
-            int y = 0;
-
-            int start = -1;            
-
-            while(y < bmp.Height)
-            {
-                var isFull = bmp.GetScanlinePixels(y).All(item => item == framePix);
-
-                if (!isFull) { ++y; continue; }
-
-                else
-                {
-                    if (start < 0) { start = y; ++y; continue; }
-
-                    var h = y - start - 1;
-
-                    if (h >= 1) yield return bmp.Slice(new BitmapBounds(0, start + 1, bmp.Width, h));
-
-                    start = y;
-                    ++y;
-                }
-            }            
-        }
-    }
+    
 
     class _AlignedBitmapFont : Drawing.Fonts.IBitmapFont
     {
@@ -121,36 +28,21 @@ namespace InteropTypes.Graphics.Backends
 
         // private http://faculty.salina.k-state.edu/tmertz/Java/072graphicscolorfont/05fontmetrics.pdf
 
-        public _AlignedBitmapFont(string filePath, int leading = 2)
+        public _AlignedBitmapFont(int leading, params MemoryBitmap<Pixel.BGRP32>[] bmps)
         {
-            _FirstChar = 32;
+            _Font = Bitmaps.Fonts.XnaSpriteFont.CreateFrom(bmps);            
 
-            var bmp = MemoryBitmap<Pixel.BGRP32>.Load(filePath);
-
-            var glyphs = MemoryBitmapFontFactory
-                .FindGlyphsFromMonogameFont(bmp)
-                .ToArray();
-
-            _MaxAscent = glyphs[65 - _FirstChar].Height;
-            _MaxDescent = glyphs.Max(item => item.Height) - _MaxAscent;
-
-            _Glyphs = glyphs
+            _Glyphs = _Font.Glyphs
                 .Select(glyph => new ImageSource(glyph, (0,0), (glyph.Width,glyph.Height), (0,0)))
-                .ToArray();            
-
-            Height = _MaxAscent + _MaxDescent + leading;
+                .ToArray();
         }
 
         #endregion
 
         #region data
 
-        private int _FirstChar;
-
+        private Bitmaps.Fonts.XnaSpriteFont _Font;
         private ImageSource[] _Glyphs;
-
-        private int _MaxAscent;
-        private int _MaxDescent;
 
         #endregion
 
@@ -158,37 +50,14 @@ namespace InteropTypes.Graphics.Backends
 
         public int Height { get; }
 
-        public Size Measure(string text)
-        {
-            int width = 0;
-
-            foreach (var c in text)
-            {
-                var idx = (int)c;
-                idx -= _FirstChar;
-
-                var glyph = _Glyphs[idx];
-
-                width += (int)glyph.GetSourceRectangle().Width;                
-            }
-
-            return new Size(width, Height);
-        }
+        public Size Measure(string text) { return _Font.Measure(text); }
 
         public void DrawFont(ICoreCanvas2D target, Matrix3x2 transform, string text, ColorStyle tintColor)
         {
-            foreach(var c in text)
+            foreach(var (idx,xform) in _Font.GetGlyphLocations(transform,text))
             {
-                var idx = (int)c;
-                idx -= _FirstChar;
-
                 var glyph = _Glyphs[idx];
-
-                target.DrawImage(transform, (glyph, tintColor));
-
-                var next = new Vector2(glyph.GetSourceRectangle().Width, 0);
-
-                transform = Matrix3x2.CreateTranslation(next) * transform;
+                target.DrawImage(xform, (glyph, tintColor));
             }
         }
 

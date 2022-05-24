@@ -132,6 +132,8 @@ namespace InteropTypes.Graphics.Backends
 
         #region properties
 
+        public bool EnableImageBilinearFiltering { get; set; } = true;
+
         /// <inheritdoc/>
         public int PixelsWidth { get; }
 
@@ -205,7 +207,9 @@ namespace InteropTypes.Graphics.Backends
             {
                 xform = Matrix3x2.CreateScale(1f / srcBmp.Width, 1f / srcBmp.Height) * xform;
 
-                var bmpXform = new Bitmaps.Processing.BitmapTransform(xform, opacity) as SpanBitmap.ITransfer;
+                var bmpXform = new Bitmaps.Processing.BitmapTransform(xform, opacity);
+
+                bmpXform.UseBilinear = this.EnableImageBilinearFiltering;
 
                 switch (srcBmp.PixelFormat.Code)
                 {
@@ -274,7 +278,7 @@ namespace InteropTypes.Graphics.Backends
                 var a = points[i - 1];
                 var b = points[i + 0];
 
-                SpanBitmapDrawing.DrawPixelLine(target, a, b, outColor);
+                InteropDrawing.DrawPixelLine(target, a, b, outColor);
             }
         }        
 

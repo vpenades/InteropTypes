@@ -38,23 +38,23 @@ namespace InteropTypes.Graphics.Drawing
         {
             TestContext.CurrentContext.AttachFolderBrowserShortcut();
 
-            // test glyph splitter
+            // test glyph splitter            
 
-            var bmp = MemoryBitmap<Pixel.BGRP32>.Load("Resources\\SegoeUiMono16.png");
+            var spriteFont = Graphics.Bitmaps.Fonts.XnaSpriteFont.Load("Resources\\SegoeUiMono16.png");
 
-            var glyphs = MemoryBitmapFontFactory.FindGlyphsFromMonogameFont(bmp).ToArray();
-
-            Assert.AreEqual(224, glyphs.Length);
+            Assert.AreEqual(224, spriteFont.Glyphs.Count);
 
             // for(int i=0; i < glyphs.Length; ++i) { glyphs[i].Save(new AttachmentInfo($"glyph {i}.png")); }
 
             // create font and raw some text:
 
-            var font = MemoryBitmapFontFactory.LoadBitmapFont("Resources\\SegoeUiMono16.png");
+            var font = MemoryBitmap<Pixel.BGRA32>.Load("Resources\\SegoeUiMono16.png").ToBitmapFont();            
 
             var dst = new MemoryBitmap<Pixel.BGR24>(512, 512);
 
-            dst.CreateDrawingContext().DrawFont(Matrix3x2.CreateRotation(0.2f) * Matrix3x2.CreateTranslation(5, 5), "Hello world!", font, System.Drawing.Color.White);
+            var xform = Matrix3x2.CreateScale(2) * Matrix3x2.CreateRotation(0.2f) * Matrix3x2.CreateTranslation(5, 5);
+
+            dst.CreateDrawingContext().DrawFont(xform, "Hello world!", font, System.Drawing.Color.White);
 
             dst.Save(new AttachmentInfo("text.png"));
         }

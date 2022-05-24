@@ -176,7 +176,7 @@ namespace InteropTypes.Graphics.Drawing
             // render with MemoryBitmap
 
             var mem = new Bitmaps.MemoryBitmap(1024, 1024, Bitmaps.Pixel.RGBA32.Format);
-            var mdc = Backends.SpanBitmapDrawing.CreateDrawingContext(mem);
+            var mdc = Backends.InteropDrawing.CreateDrawingContext(mem);
 
             PerspectiveTransform
                     .CreateLookingAtCenter((mdc, 1024, 1024), (10, 5, 30))

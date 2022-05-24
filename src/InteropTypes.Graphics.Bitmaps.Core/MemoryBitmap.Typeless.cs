@@ -167,10 +167,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - Cast
 
-        public static implicit operator SpanBitmap(MemoryBitmap bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }
-
+        public static implicit operator SpanBitmap(MemoryBitmap bmp) { return new SpanBitmap(bmp._Data.Span, bmp._Info); }        
         
-
+        
         public unsafe MemoryBitmap<TPixel> OfType<TPixel>()
             where TPixel : unmanaged
         { return new MemoryBitmap<TPixel>(_Data, _Info); }
@@ -251,6 +250,26 @@ namespace InteropTypes.Graphics.Bitmaps
                 newBitmap = default;
                 return false;
             }
+        }
+
+
+        public MemoryBitmap<TPixel> CloneAs<TPixel>()
+            where TPixel : unmanaged
+        {
+            MemoryBitmap<TPixel> newBitmap = default;
+            CopyTo(ref newBitmap);
+            return newBitmap;
+        }
+
+        public bool CopyTo<TPixel>(ref MemoryBitmap<TPixel> dst)
+            where TPixel : unmanaged
+        {
+            return this.AsSpanBitmap().CopyTo(ref dst);
+        }
+
+        public bool CopyTo(ref MemoryBitmap dst, PixelFormat format)
+        {
+            return this.AsSpanBitmap().CopyTo(ref dst, format);
         }
 
         #endregion

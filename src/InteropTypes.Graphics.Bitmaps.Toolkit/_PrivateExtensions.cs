@@ -6,7 +6,7 @@ namespace InteropTypes
 {
     static class _PrivateExtensions
     {
-
+        // https://github.com/YairHalberstadt/SpanLinq
         public static bool All<T>(this ReadOnlySpan<T> collection, Predicate<T> predicate) where T:unmanaged
         {
             foreach(var item in collection)

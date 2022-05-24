@@ -10,8 +10,26 @@ using POINT = InteropTypes.Graphics.Drawing.Point2;
 
 namespace InteropTypes.Graphics.Backends
 {
-    public static class SpanBitmapDrawing
+    [Obsolete("Use InteropDrawing", true)]
+    public static class SpanBitmapDrawing { }
+
+    public static class InteropDrawing
     {
+        public static Drawing.Fonts.IBitmapFont ToBitmapFont<TPixel>(this MemoryBitmap<TPixel> bmp)
+            where TPixel : unmanaged
+        {
+            return bmp.AsTypeless().ToBitmapFont();
+        }
+
+        public static Drawing.Fonts.IBitmapFont ToBitmapFont(this MemoryBitmap bmp)
+        {
+            MemoryBitmap<Pixel.BGRP32> bmpx = default;
+
+            bmp.CopyTo(ref bmpx);            
+
+            return new _AlignedBitmapFont(2, bmpx);
+        }
+
         public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, Action<ICanvas2D> canvas)
             where TPixel : unmanaged
             , Pixel.IValueSetter<Pixel.BGRA32>
