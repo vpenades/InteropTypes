@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>    
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ShaderGen" Version="1.2.0-beta3" />
-    <PackageReference Include="ShaderGen.Build" PrivateAssets="All" Version="1.2.0-beta3" />
-    <PackageReference Include="ShaderGen.Primitives" Version="1.2.0-beta3" />    
+    <PackageReference Include="ShaderGen" />
+    <PackageReference Include="ShaderGen.Build" PrivateAssets="All" />
+    <PackageReference Include="ShaderGen.Primitives" />    
   </ItemGroup>
 
   <PropertyGroup>

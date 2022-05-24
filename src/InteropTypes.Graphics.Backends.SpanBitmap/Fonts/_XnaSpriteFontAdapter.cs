@@ -10,25 +10,16 @@ using InteropTypes.Graphics.Drawing;
 
 namespace InteropTypes.Graphics.Backends
 {
-    // bitmap fonts format https://en.wikipedia.org/wiki/Computer_font
-
-    // https://fontforge.org/docs/techref/pcf-format.html
-    // C lang https://github.com/notxx/pcf
-    // Go https://github.com/nareix/pcf
-    // C# (kaitai generated) http://formats.kaitai.io/pcf_font/csharp.html
-    // angelcode font https://www.codeproject.com/Articles/317694/AngelCode-bitmap-Font-Parsing-Using-Csharp
-    //   https://github.com/AuroraBertaOldham/SharpFNT
-
-
-    
-
-    class _AlignedBitmapFont : Drawing.Fonts.IBitmapFont
+    /// <summary>
+    /// Adapter for <see cref="Bitmaps.Fonts.XnaSpriteFont"/>
+    /// </summary>
+    class _XnaSpriteFontAdapter : Drawing.Fonts.IBitmapFont
     {
         #region lifecycle
 
         // private http://faculty.salina.k-state.edu/tmertz/Java/072graphicscolorfont/05fontmetrics.pdf
 
-        public _AlignedBitmapFont(int leading, params MemoryBitmap<Pixel.BGRP32>[] bmps)
+        public _XnaSpriteFontAdapter(int leading, params MemoryBitmap<Pixel.BGRP32>[] bmps)
         {
             _Font = Bitmaps.Fonts.XnaSpriteFont.CreateFrom(bmps);            
 
@@ -48,13 +39,13 @@ namespace InteropTypes.Graphics.Backends
 
         #region API
 
-        public int Height { get; }
+        public int Height => _Font.Height;
 
         public Size Measure(string text) { return _Font.Measure(text); }
 
-        public void DrawFont(ICoreCanvas2D target, Matrix3x2 transform, string text, ColorStyle tintColor)
+        public void DrawTextTo(ICoreCanvas2D target, Matrix3x2 origin, string text, ColorStyle tintColor)
         {
-            foreach(var (idx,xform) in _Font.GetGlyphLocations(transform,text))
+            foreach(var (idx,xform) in _Font.GetGlyphLocations(origin,text))
             {
                 var glyph = _Glyphs[idx];
                 target.DrawImage(xform, (glyph, tintColor));

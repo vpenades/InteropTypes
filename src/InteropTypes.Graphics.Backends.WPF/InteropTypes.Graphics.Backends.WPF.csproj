@@ -3,22 +3,12 @@
   <PropertyGroup>
     <TargetFrameworks>net471;net5.0-windows;net6.0-windows</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
+    <UseWPF>true</UseWPF>    
+  </PropertyGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
-
-  <!--
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  -->
 
 </Project>

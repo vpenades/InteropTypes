@@ -2,14 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-  </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />  
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
+  </PropertyGroup>  
 
   <ItemGroup>
-    <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0026" />
+    <PackageReference Include="SharpGLTF.Toolkit" />
   </ItemGroup>
 
   <ItemGroup>

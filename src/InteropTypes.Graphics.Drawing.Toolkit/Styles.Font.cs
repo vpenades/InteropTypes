@@ -42,7 +42,9 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region implicit
 
-        public static implicit operator FontStyle(COLOR fillColor) { return new FontStyle(fillColor); }
+        public static implicit operator FontStyle(COLOR fillColor) { return new FontStyle(fillColor); }        
+
+        public static implicit operator FontStyle((Fonts.IFont, COLOR) style) { return new FontStyle(style.Item1, style.Item2, 0.1f, FontAlignStyle.FlipAuto); }
 
         public static implicit operator FontStyle((COLOR, float) style) { return new FontStyle(style.Item1, style.Item2); }
 
@@ -54,6 +56,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public FontStyle(OutlineFillStyle color, float strength = 0.1f)
         {
+            Font = null;
             Style = color;
             Strength = strength;
             Alignment = FontAlignStyle.FlipAuto;
@@ -61,6 +64,15 @@ namespace InteropTypes.Graphics.Drawing
 
         public FontStyle(OutlineFillStyle color, float strength, FontAlignStyle align)
         {
+            Font = null;
+            Style = color;
+            Strength = strength;
+            Alignment = align;
+        }
+
+        public FontStyle(Fonts.IFont font, OutlineFillStyle color, float strength, FontAlignStyle align)
+        {
+            Font = font;
             Style = color;
             Strength = strength;
             Alignment = align;
@@ -70,6 +82,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region data
 
+        public readonly Fonts.IFont Font;
         public readonly OutlineFillStyle Style;
         public readonly float Strength;
         public readonly FontAlignStyle Alignment;

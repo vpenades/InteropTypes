@@ -2,25 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-using System.Numerics;
-
-using VECTOR2 = System.Numerics.Vector2;
-using BRECT = System.Drawing.RectangleF;
-
-using COLOR = System.Drawing.Color;
-
-using SCALAR = System.Single;
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 using XFORM2 = System.Numerics.Matrix3x2;
 
 namespace InteropTypes.Graphics.Drawing
 {
-    using PRIMITIVE2D = ICoreCanvas2D;
-    using CANVAS2DEX = ICanvas2D;
-
     partial class DrawingToolkit
     {
-        public static void DrawFont(this CANVAS2DEX dc, POINT2 origin, float size, String text, FontStyle style)
+        public static void DrawFont(this ICanvas2D dc, POINT2 origin, float size, String text, FontStyle style)
         {
             var xform = XFORM2.CreateScale(size);
             xform.Translation = origin.XY;
@@ -30,7 +19,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawFont(xform, text, style);
         }
 
-        public static void DrawFont(this CANVAS2DEX dc, XFORM2 xform, String text, FontStyle style)
+        public static void DrawFont(this ICanvas2D dc, XFORM2 xform, String text, FontStyle style)
         {
             float xflip = 1;
             float yflip = 1;
@@ -50,9 +39,15 @@ namespace InteropTypes.Graphics.Drawing
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
         }
 
-        public static void DrawFont(this CANVAS2DEX dc, XFORM2 xform, string text, Fonts.IBitmapFont font, FontStyle style)
+        public static void DrawText(this ICoreCanvas2D dc, XFORM2 xform, string text, FontStyle style)
         {
-            font.DrawFont(dc, xform, text, style.Style.FillColor);
+            if (style.Font is Fonts.IBitmapFont bmpFont)
+            {
+                bmpFont.DrawTextTo(dc, xform, text, style.Style.FillColor);
+                return;
+            }
+
+            throw new NotImplementedException();            
         }
     }
 }

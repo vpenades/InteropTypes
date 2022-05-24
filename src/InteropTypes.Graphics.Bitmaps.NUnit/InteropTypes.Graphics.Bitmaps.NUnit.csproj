@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.13.3" />
+    <PackageReference Include="nunit" />
   </ItemGroup>
 
   <ItemGroup>

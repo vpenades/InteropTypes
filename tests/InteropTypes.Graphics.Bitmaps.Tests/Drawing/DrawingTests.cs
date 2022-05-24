@@ -54,7 +54,7 @@ namespace InteropTypes.Graphics.Drawing
 
             var xform = Matrix3x2.CreateScale(2) * Matrix3x2.CreateRotation(0.2f) * Matrix3x2.CreateTranslation(5, 5);
 
-            dst.CreateDrawingContext().DrawFont(xform, "Hello world!", font, System.Drawing.Color.White);
+            dst.CreateDrawingContext().DrawText(xform, "Hello world!", (font, System.Drawing.Color.White));
 
             dst.Save(new AttachmentInfo("text.png"));
         }

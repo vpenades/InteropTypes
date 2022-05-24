@@ -2,18 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
   </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Vision.Core\InteropTypes.Vision.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ZXing.Net" Version="0.16.8" />
+    <PackageReference Include="ZXing.Net" />
   </ItemGroup>
 
 

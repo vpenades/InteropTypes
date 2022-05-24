@@ -2,16 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-  </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>  
+  </PropertyGroup>  
 
   <ItemGroup>
-    <PackageReference Include="SafeStbImageSharp" Version="2.22.4" />
-    <PackageReference Include="StbDxtSharp" Version="1.10.3" />    
-    <PackageReference Include="StbImageWriteSharp" Version="1.13.5" />    
+    <PackageReference Include="SafeStbImageSharp" />
+    <PackageReference Include="StbDxtSharp" />    
+    <PackageReference Include="StbImageWriteSharp" />    
   </ItemGroup>
 
   <ItemGroup>

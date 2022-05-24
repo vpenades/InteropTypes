@@ -2,14 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
   </PropertyGroup>
 
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.0" />
+    <PackageReference Include="SkiaSharp" />
   </ItemGroup>
 
   <ItemGroup>

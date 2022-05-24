@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>  
   
   <ItemGroup>
@@ -14,7 +14,7 @@
   </ItemGroup>  
 
   <ItemGroup>    
-    <PackageReference Include="Veldrid" Version="4.9.0-beta1" />
+    <PackageReference Include="Veldrid" />
   </ItemGroup>
 
   <ItemGroup>    

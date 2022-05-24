@@ -4,23 +4,16 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
     <LangVersion>7.3</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
+  </PropertyGroup> 
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>
 
 </Project>

@@ -27,7 +27,7 @@ namespace InteropTypes.Graphics.Backends
 
             bmp.CopyTo(ref bmpx);            
 
-            return new _AlignedBitmapFont(2, bmpx);
+            return new _XnaSpriteFontAdapter(2, bmpx);
         }
 
         public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, Action<ICanvas2D> canvas)

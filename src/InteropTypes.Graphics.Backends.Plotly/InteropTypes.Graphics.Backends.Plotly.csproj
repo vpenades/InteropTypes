@@ -2,15 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-  </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
+  </PropertyGroup>  
 
   <ItemGroup>
-    <PackageReference Include="Plotly.Sharp" Version="0.0.8196" />
+    <PackageReference Include="Plotly.Sharp" />
   </ItemGroup>
 
   <ItemGroup>

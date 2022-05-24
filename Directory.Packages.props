@@ -1,0 +1,89 @@
+<Project>
+  
+  <!-- REQUIRES VISUAL STUDIO 2022 v17.2+ -->
+  
+  <!-- https://devblogs.microsoft.com/nuget/introducing-central-package-management/ -->
+  <!-- https://github.com/HeikeHofmann/TestPropsFile -->
+
+  <PropertyGroup>    
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>    
+    <EnablePackageVersionOverride>true</EnablePackageVersionOverride>
+    <!--
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>    
+    -->
+  </PropertyGroup> 
+  
+  <ItemGroup>
+    
+    <!-- System -->
+
+    <PackageVersion Include="System.Memory" Version="4.5.4" />
+    <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="7.0.0-preview.4.22229.4" />
+    <PackageVersion Include="System.Drawing.Common" Version="6.0.0" />    
+
+    <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
+    <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
+    
+    <!-- Game Engines -->
+
+    <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+    
+    <PackageVersion Include="Veldrid" Version="4.9.0-beta1" />
+    <PackageVersion Include="ShaderGen" Version="1.2.0-beta3" />
+    <PackageVersion Include="ShaderGen.Build" Version="1.2.0-beta3" />
+    <PackageVersion Include="ShaderGen.Primitives" Version="1.2.0-beta3" />
+    
+    <!-- Graphics Libraries -->
+
+    <PackageVersion Include="Microsoft.Maui.Graphics" Version="6.0.300" />
+    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="6.0.300" />
+
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.1" />
+
+    <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />
+    <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
+    <PackageVersion Include="StbImageWriteSharp" Version="1.13.5" />
+
+    <PackageVersion Include="SkiaSharp" Version="2.88.0" />
+
+    <PackageVersion Include="SvgNet" Version="2.2.2" />
+
+    <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
+
+    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0026" />
+    
+    <!-- Video Libraries -->
+
+    <PackageVersion Include="FFMpegCore" Version="4.8.0" />
+    <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.17.4" />
+    <PackageVersion Include="SharpAvi" Version="3.0.0" />
+    
+    <!-- Machine Learning -->
+
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.11.0" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.11.0" />
+
+    <PackageVersion Include="OpenCvSharp4" Version="4.5.5.20211231" />
+    <PackageVersion Include="OpenCvSharp4.Windows" Version="4.5.5.20211231" />
+    <PackageVersion Include="ZXing.Net" Version="0.16.8" />
+    
+    <!-- unit Testing -->
+
+    <PackageVersion Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220510-1950" />
+    <PackageVersion Include="TestImages.ImageSharp" Version="3.0.0-Preview-20220510-1950" />    
+    
+    <PackageVersion Include="NUnit" Version="3.13.3" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
+    
+    <!-- Other -->
+
+    <PackageVersion Include="SharpCompress" Version="0.31.0" />
+    
+  </ItemGroup>
+  
+</Project>

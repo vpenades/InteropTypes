@@ -4,19 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.3</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
-  </PropertyGroup>  
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
 
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <ItemGroup>
     <InternalsVisibleTo Include="InteropTypes.Tensors.Tests" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Numerics.Tensors" Version="7.0.0-preview.4.22229.4" />
+    <PackageReference Include="System.Numerics.Tensors" />
   </ItemGroup>  
   
   <!-- Templates -->

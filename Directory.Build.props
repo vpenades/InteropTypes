@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  
+  <!-- https://blog.johnnyreilly.com/2021/07/14/directory-build-props-c-sharp-9-for-all -->
+
+  <!-- Legal =================================================================================== -->
+
+  <PropertyGroup>
+    <Authors>Vicente Penades</Authors>
+    <Copyright>Copyright (c) 2021 Vicente Penades</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <!-- Configuration =================================================================================== -->
+
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>    
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsTrimmable>true</IsTrimmable>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <!-- Analysers =================================================================================== -->
+
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Enable all FxCop rules with NetAnalyzers
+    https://docs.microsoft.com/es-es/visualstudio/code-quality/migrate-from-fxcop-analyzers-to-net-analyzers?view=vs-2022#migration-steps
+    -->
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <!-- <CodeAnalysisRuleSet>$(MsBuildThisFileDirectory)..\solution.ruleset</CodeAnalysisRuleSet>  -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" VersionOverride="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>  
+  
+  <!-- Packaging =================================================================================== -->
+
+  <PropertyGroup>
+    
+    <Description>Heterogeneous collection of types for interop between third party graphics libraries</Description>
+
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/vpenades/InteropTypes</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/vpenades/InteropTypes</PackageProjectUrl>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <PackageTags>Interop graphics</PackageTags>
+  </PropertyGroup>  
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Deterministic>true</Deterministic>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <DebugSymbols>true</DebugSymbols>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>  
+  
+</Project>

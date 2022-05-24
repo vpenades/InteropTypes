@@ -2,16 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
+  </PropertyGroup>    
 
   <ItemGroup>
     <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.Tests"/>

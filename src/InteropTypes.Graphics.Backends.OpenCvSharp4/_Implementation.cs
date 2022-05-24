@@ -119,7 +119,9 @@ namespace InteropTypes.Graphics
         /// <returns>A <see cref="CVMATRIX"/></returns>
         public static CVMATRIX WrapOrCloneAsMat(PointerBitmap src)
         {
+            #pragma warning disable CA2000 // Dispose objects before losing scope
             if (TryWrapAsMat(src, out var wrap)) return wrap;
+            #pragma warning restore CA2000 // Dispose objects before losing scope
             return CloneAsMat(src.AsSpanBitmap());
         }
         
@@ -189,7 +191,7 @@ namespace InteropTypes.Graphics
 
         public static void CopyTo(this in System.Numerics.Matrix3x2 src, ref CVMATRIX dst)
         {
-            if (dst == null) new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F, 1);
+            if (dst == null) dst = new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F, 1);
             else
             {
                 if (dst.Type() != CVDEPTHTYPE.CV_32F) throw new ArgumentOutOfRangeException("Type", nameof(dst));

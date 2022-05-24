@@ -7,7 +7,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>8.0</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
+    <UseWPF>true</UseWPF>    
   </PropertyGroup>
   
   <ItemGroup>
@@ -19,16 +19,16 @@
   </ItemGroup>
 
   <ItemGroup>    
-    <PackageReference Include="nunit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
+    <PackageReference Include="nunit" />
+    <PackageReference Include="NUnit3TestAdapter" >
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />    
-    <PackageReference Include="SkiaSharp" Version="2.88.0" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.5.20211231" />
-    <PackageReference Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220510-1950" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.17.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />    
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="OpenCvSharp4.Windows" />
+    <PackageReference Include="TestAttachments.NUnit" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" />
   </ItemGroup>
 
   <ItemGroup>

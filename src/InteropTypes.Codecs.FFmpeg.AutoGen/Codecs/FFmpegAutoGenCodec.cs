@@ -49,7 +49,7 @@ namespace InteropTypes.Codecs
                 current.AsSpanBitmap().PinReadablePointer(ptr => encoder.PushFrame(ptr));
             }
 
-            System.Threading.Interlocked.Exchange(ref encoder, null)?.Dispose();
+            encoder?.Dispose();
         }
     }
 }

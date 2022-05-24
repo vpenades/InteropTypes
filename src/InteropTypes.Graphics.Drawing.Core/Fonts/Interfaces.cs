@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Drawing.Fonts
 {
-    public interface IBitmapFont
+    public interface IFont
     {
         System.Drawing.Size Measure(string text);
 
@@ -15,7 +15,10 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         /// <see href="http://faculty.salina.k-state.edu/tmertz/Java/072graphicscolorfont/05fontmetrics.pdf"/>
         /// </remarks>
         int Height { get; }
-        
-        void DrawFont(ICoreCanvas2D target, System.Numerics.Matrix3x2 transform, string text, ColorStyle tintColor);
+    }
+
+    public interface IBitmapFont : IFont
+    {        
+        void DrawTextTo(ICoreCanvas2D target, System.Numerics.Matrix3x2 transform, string text, ColorStyle tintColor);
     }
 }

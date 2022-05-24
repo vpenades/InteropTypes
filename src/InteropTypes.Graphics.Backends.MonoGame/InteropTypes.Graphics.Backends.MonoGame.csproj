@@ -3,22 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <LangVersion>10</LangVersion>
+    <LangVersion>10</LangVersion>    
   </PropertyGroup>
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />  
-  
+ 
   <ItemGroup>
     <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />    
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" PrivateAssets="all" />    
+    <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" />    
   </ItemGroup>  
 
   <ItemGroup>

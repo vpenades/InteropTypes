@@ -4,38 +4,30 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>    
     <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
     <LangVersion>8</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>1701;1702;1591</NoWarn>
-  </PropertyGroup>
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
+  </PropertyGroup>  
 
   <ItemGroup>
     <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.Tests" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Memory" />
   </ItemGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.PixelFormats\InteropTypes.Graphics.Bitmaps.PixelFormats.csproj" />
-  </ItemGroup>  
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="Processing\BitmapTransform.Traits.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BitmapTransform.Traits.cs</LastGenOutput>
     </None>
-  </ItemGroup>  
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>  
 
   <ItemGroup>

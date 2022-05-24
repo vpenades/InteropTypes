@@ -4,13 +4,9 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
     <LangVersion>8</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>  
-
-  <Import Project="..\Package.props" />
-  <Import Project="..\Version.props" />
-  <Import Project="..\SourceLink.props" />  
-
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
+  </PropertyGroup>
+  
   <PropertyGroup>
     <Description>
       Defines pixel types, formats, conversions and processing operations.
@@ -37,13 +33,8 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
-    <PackageReference Include="System.Memory" Version="4.5.4" />
-    <PackageReference Include="Ultz.Bcl.Half.Fallback" Version="1.0.0">      
-      <!--
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime</IncludeAssets>
-      -->
-    </PackageReference>
+    <PackageReference Include="System.Memory" />
+    <PackageReference Include="Ultz.Bcl.Half.Fallback" />
   </ItemGroup>
 
   <ItemGroup>

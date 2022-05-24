@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpAvi" Version="3.0.0" />
+    <PackageReference Include="SharpAvi" />
   </ItemGroup>
 
   <ItemGroup>

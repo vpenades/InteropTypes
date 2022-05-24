@@ -4,7 +4,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>InteropDrawing</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>  
 
   <ItemGroup>
@@ -22,13 +22,12 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="6.0.200-preview.14.1092" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
-    <PackageReference Include="NUnitForImages.WPF" Version="3.0.0-Preview-20210913-1034" />
-    <PackageReference Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220510-1950" />
+    <PackageReference Include="Microsoft.Maui.Graphics.Skia" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />    
+    <PackageReference Include="TestAttachments.NUnit" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +52,6 @@
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.FFmpeg.AutoGen\InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />    
-
 
   </ItemGroup>
 

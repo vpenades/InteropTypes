@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>InteropVision</RootNamespace>
+    <RootNamespace>InteropVision</RootNamespace>    
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,12 +26,12 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.11.0" />    
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" />    
 
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <PackageReference Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220510-1950" />    
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="TestAttachments.NUnit" />    
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +49,6 @@
     <ProjectReference Include="..\..\src\InteropTypes.Vision.Core\InteropTypes.Vision.Core.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Vision.Backends.ZXing\InteropTypes.Vision.Backends.ZXing.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Vision.Backends.OnnxRuntime\InteropTypes.Vision.Backends.OnnxRuntime.csproj" />
-
     
   </ItemGroup>
 

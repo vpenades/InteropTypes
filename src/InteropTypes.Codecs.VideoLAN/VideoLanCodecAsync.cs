@@ -87,7 +87,7 @@ namespace InteropTypes.Codecs
             using (var mediaPlayer = new MediaPlayer(libvlc))
             {
                 // Listen to events
-                var processingCancellationTokenSource = new CancellationTokenSource();
+                using var processingCancellationTokenSource = new CancellationTokenSource();
                 mediaPlayer.Stopped += (s, e) => processingCancellationTokenSource.CancelAfter(1);
 
                 // Create new media
