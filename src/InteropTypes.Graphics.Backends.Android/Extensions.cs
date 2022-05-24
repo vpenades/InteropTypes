@@ -45,13 +45,13 @@ namespace InteropTypes.Graphics.Backends
             _Implementation.Mutate(bmp, pinContext);
         }
 
-        public static PointerBitmap.ISource UsingPointerBitmap(this ANDROIDBITMAP bmp)
+        public static PointerBitmap.IDisposableSource UsingPointerBitmap(this ANDROIDBITMAP bmp)
         {
             if (bmp == null) throw new ArgumentNullException(nameof(bmp));
             return new Adapters.AndroidBitmapBits(bmp);
         }
 
-        public static MemoryBitmap.ISource UsingMemoryBitmap(this ANDROIDBITMAP bmp)
+        public static MemoryBitmap.IDisposableSource UsingMemoryBitmap(this ANDROIDBITMAP bmp)
         {
             if (bmp == null) throw new ArgumentNullException(nameof(bmp));            
             return new Adapters.AndroidBitmapBits(bmp);
@@ -60,13 +60,13 @@ namespace InteropTypes.Graphics.Backends
         public static void SetPixels(this ANDROIDBITMAP dst, int x, int y, SpanBitmap src)
         {
             using var pinned = dst.UsingPointerBitmap();
-            pinned.Bitmap.AsSpanBitmap().SetPixels(x, y, src);
+            pinned.AsPointerBitmap().AsSpanBitmap().SetPixels(x, y, src);
         }
 
         public static void SetPixels(this SpanBitmap dst, int x, int y, ANDROIDBITMAP src)
         {
             using var pinned = src.UsingPointerBitmap();
-            dst.SetPixels(x, y, pinned.Bitmap.AsSpanBitmap());
+            dst.SetPixels(x, y, pinned.AsPointerBitmap().AsSpanBitmap());
         }
         
         public static bool CopyTo(this SpanBitmap src, ANDROIDBITMAP dst)

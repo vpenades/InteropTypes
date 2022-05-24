@@ -11,12 +11,12 @@ echo Building 1.0.0-%VERSIONSUFFIX%
 
 :: ============================================= DOTNET builder
 
-dotnet build -restore:true -c:Release --version-suffix %VERSIONSUFFIX% /p:NoWarn=1591 /p:Authors=vpenades ..\InteropTypes.sln
-dotnet pack -c:Release --version-suffix %VERSIONSUFFIX% /p:NoWarn=1591 /p:Authors=vpenades ..\InteropTypes.sln
+dotnet build -restore:true -c:Release --version-suffix %VERSIONSUFFIX% ..\InteropTypes.sln
+dotnet pack -c:Release --version-suffix %VERSIONSUFFIX% ..\InteropTypes.sln
 
 :: ============================================= MSBUILD builder
 
-rem set MSBUILDPROPERTIES=Configuration=Release;VersionSuffix=%VERSIONSUFFIX%;NoWarn=1591
+rem set MSBUILDPROPERTIES=Configuration=Release;VersionSuffix=%VERSIONSUFFIX%
 rem msbuild -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
 rem msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
 
@@ -24,32 +24,7 @@ rem msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
 
 md bin
 
-move InteropTypes.Graphics.Bitmaps.PixelFormats\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Bitmaps.Core\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Bitmaps.Toolkit\bin\release\*.*nupkg bin
-
-move InteropTypes.Graphics.Drawing.Core\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Drawing.Toolkit\bin\release\*.*nupkg bin
-
-move InteropTypes.Tensors\bin\release\*.*nupkg bin
-
-move InteropTypes.Vision.Core\bin\release\*.*nupkg bin
-
-move InteropTypes.Codecs.STB\bin\release\*.*nupkg bin
-move InteropTypes.Codecs.MJPEG\bin\release\*.*nupkg bin
-
-move InteropTypes.Graphics.Backends.SpanBitmap\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.GDI\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.WPF\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.SVG\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.Plotly\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.GLTF\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.MonoGame\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.ImageSharp\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.SkiaSharp\bin\release\*.*nupkg bin
-move InteropTypes.Graphics.Backends.Android\bin\release\*.*nupkg bin
-
-move InteropTypes.Vision.Backends.OnnxRuntime\bin\release\*.*nupkg bin
+for /r %%i in (*.*nupkg) do move %%i bin
 
 pause
 exit /b
