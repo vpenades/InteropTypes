@@ -79,6 +79,8 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageVersion Include="coverlet.collector" Version="3.1.2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
+
+    <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     
     <!-- Other -->
 
