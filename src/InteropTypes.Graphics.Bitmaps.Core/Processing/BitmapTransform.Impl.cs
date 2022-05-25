@@ -225,7 +225,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             private readonly Pixel.IQuantizedInterpolator<TSrcPixel, TDstPixel> _Interpolator;
 
-            private static readonly TSrcPixel _Default = default(TSrcPixel);
+            private static readonly TSrcPixel _Default;
 
             #endregion
 

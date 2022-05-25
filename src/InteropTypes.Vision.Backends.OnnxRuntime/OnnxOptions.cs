@@ -7,7 +7,7 @@ using ONNX = Microsoft.ML.OnnxRuntime;
 
 namespace InteropTypes.Vision.Backends
 {
-    public class OnnxOptions : IDisposable
+    public sealed class OnnxOptions : IDisposable
     {
         #region lifecycle
 

@@ -8,7 +8,7 @@ namespace InteropTypes.Graphics.Bitmaps.MemoryManagers
     /// <summary>
     /// Helper class that wraps a <see cref="PointerBitmap"/> to expose it as a <see cref="MemoryBitmap"/>
     /// </summary>    
-    /// <see cref="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Buffers/MemoryManager.cs"/>
+    /// <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Buffers/MemoryManager.cs"/>
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplayString(),nq}")]
     public abstract unsafe class BitmapMemoryManager
         : System.Buffers.MemoryManager<Byte>
@@ -47,10 +47,9 @@ namespace InteropTypes.Graphics.Bitmaps.MemoryManagers
             if (_Disposed) throw new ObjectDisposedException(nameof(BitmapMemoryManager));
         }
 
-        ~BitmapMemoryManager()
-        {
-            if (!_Disposed) throw new InvalidOperationException("Object must be disposed");
-        }
+        #if DEBUG
+        ~BitmapMemoryManager() { System.Diagnostics.Debug.Assert(_Disposed, "Object must be disposed"); }
+        #endif
 
         #endregion
 

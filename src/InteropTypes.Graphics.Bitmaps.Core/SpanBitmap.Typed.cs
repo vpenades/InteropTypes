@@ -97,7 +97,12 @@ namespace InteropTypes.Graphics.Bitmaps
         private readonly ReadOnlySpan<Byte> _Readable;
 
         /// <inheritdoc/>
-        public override int GetHashCode() { throw new NotSupportedException("Spans don't support GetHashCode"); }
+        public override int GetHashCode()
+        {
+            #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
+            throw new NotSupportedException("Spans don't support GetHashCode");
+            #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object obj) { throw new NotSupportedException(); }

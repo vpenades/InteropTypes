@@ -90,20 +90,20 @@ namespace InteropTypes.Diagnostics
 
 		public static void BitmapRect(int width, int height, int pixelByteSize)
 		{
-			Guard.GreaterThan<int>("width", width, 0);
-			Guard.GreaterThan<int>("height", height, 0);
-			Guard.GreaterThan<int>("pixelByteSize", pixelByteSize, 0);
+			Guard.GreaterThan<int>(nameof(width), width, 0);
+			Guard.GreaterThan<int>(nameof(height), height, 0);
+			Guard.GreaterThan<int>(nameof(pixelByteSize), pixelByteSize, 0);
 		}
 
 		public static void BitmapRect(int width, int height, int pixelByteSize, int stepByteSize)
 		{
-			Guard.GreaterThan<int>("width", width, 0);
-			Guard.GreaterThan<int>("height", height, 0);
-			Guard.GreaterThan<int>("pixelByteSize", pixelByteSize, 0);
+			Guard.GreaterThan<int>(nameof(width), width, 0);
+			Guard.GreaterThan<int>(nameof(height), height, 0);
+			Guard.GreaterThan<int>(nameof(pixelByteSize), pixelByteSize, 0);
 
 			if (stepByteSize > 0)
 			{
-				Guard.EqualOrGreaterThan<int>("stepByteSize", stepByteSize, width * pixelByteSize);
+				Guard.EqualOrGreaterThan<int>(nameof(stepByteSize), stepByteSize, width * pixelByteSize);
 			}
 		}		
 	}

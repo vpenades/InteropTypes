@@ -8,8 +8,9 @@
   </PropertyGroup>
   
   <PropertyGroup>
+    <PackageTags>Graphics Pixel Formats RGB BGR</PackageTags>
     <Description>
-      Defines pixel types, formats, conversions and processing operations.
+      Defines pixel formats, types, and conversions and processing operations.
     </Description>
   </PropertyGroup>
 

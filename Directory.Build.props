@@ -7,7 +7,8 @@
 
   <PropertyGroup>
     <Authors>Vicente Penades</Authors>
-    <Copyright>Copyright (c) 2021 Vicente Penades</Copyright>
+    <Company>Vicente Penades</Company>
+    <Copyright>Copyright (c) 2022 Vicente Penades</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
@@ -20,10 +21,6 @@
   <PropertyGroup>
     <IsTrimmable>true</IsTrimmable>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   
   <!-- Analysers =================================================================================== -->
@@ -63,12 +60,34 @@
   </PropertyGroup>  
   
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Deterministic>true</Deterministic>
     <VersionPrefix>1.0.0</VersionPrefix>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Deterministic>false</Deterministic>
+    <ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>true</DebugSymbols>
     <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>  
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>    
+    
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <!-- Source Control =================================================================================== -->
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">   
+
+    <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md -->
+    
+    <EmbedAllSources>true</EmbedAllSources>
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
+    
+  </PropertyGroup>
   
 </Project>

@@ -21,21 +21,21 @@ namespace InteropTypes.Graphics.Bitmaps
     {
         #region constructors
 
-        public unsafe PointerBitmap(System.Buffers.MemoryHandle ptr, BitmapInfo info, bool isReadOnly = false)
+        public unsafe PointerBitmap(System.Buffers.MemoryHandle bitmapData, BitmapInfo bitmapInfo, bool isReadOnly = false)
         {
-            if (ptr.Pointer == null) throw new ArgumentNullException(nameof(ptr));
+            if (bitmapData.Pointer == null) throw new ArgumentNullException(nameof(bitmapData));
 
-            _Pointer = new IntPtr(ptr.Pointer);
-            _Info = info;
+            _Pointer = new IntPtr(bitmapData.Pointer);
+            _Info = bitmapInfo;
             _IsReadOnly = isReadOnly;
         }
 
-        public PointerBitmap(IntPtr ptr, BitmapInfo info, bool isReadOnly = false)
+        public PointerBitmap(IntPtr bitmapData, BitmapInfo bitmapInfo, bool isReadOnly = false)
         {
-            if (ptr == IntPtr.Zero) throw new ArgumentNullException(nameof(ptr));
+            if (bitmapData == IntPtr.Zero) throw new ArgumentNullException(nameof(bitmapData));
 
-            _Pointer = ptr;
-            _Info = info;
+            _Pointer = bitmapData;
+            _Info = bitmapInfo;
             _IsReadOnly = isReadOnly;
         }
 

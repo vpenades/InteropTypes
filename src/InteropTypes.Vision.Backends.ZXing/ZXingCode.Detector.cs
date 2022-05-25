@@ -9,7 +9,7 @@ namespace InteropTypes.Vision.Backends
 {
     partial class ZXingCode
     {
-        public class Detector :
+        public sealed class Detector :
             PointerBitmapInput.IInference<ZXingCode>,
             IInferenceContext<PointerBitmap, ZXingCode>
         {
