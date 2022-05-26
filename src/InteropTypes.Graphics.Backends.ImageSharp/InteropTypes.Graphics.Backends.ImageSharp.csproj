@@ -4,7 +4,8 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
     <LangVersion>7.3</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>  
 
   <ItemGroup>
@@ -14,7 +15,7 @@
   <ItemGroup>    
     <PackageReference Include="MathNet.Numerics" />    
     <PackageReference Include="SixLabors.ImageSharp.Drawing" />
-    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>

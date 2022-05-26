@@ -15,7 +15,8 @@
   <!-- Configuration =================================================================================== -->
 
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>    
+    <LangVersion>8.0</LangVersion>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>

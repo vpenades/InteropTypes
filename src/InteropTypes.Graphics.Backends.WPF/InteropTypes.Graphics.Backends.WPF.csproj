@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>net471;net5.0-windows;net6.0-windows</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <UseWPF>true</UseWPF>    
+    <UseWPF>true</UseWPF>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>  
 
   <ItemGroup>
