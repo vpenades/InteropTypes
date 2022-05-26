@@ -25,7 +25,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         _writeDocInherit();
         _writeFastestMethodAttribute();
-        WriteLine($"public TPixel To<TPixel>() where TPixel: unmanaged");
+        WriteLine($"public readonly TPixel To<TPixel>() where TPixel: unmanaged");
         _writeOpenBlock();
         _WriteSkipInitVar("TPixel","result");
         foreach(var other in PixelFormatsAllNames)
@@ -37,7 +37,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         _writeDocInherit();
         _writeFastestMethodAttribute();
-        WriteLine($"public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged");
+        WriteLine($"public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged");
         _writeOpenBlock();
         foreach(var other in PixelFormatsAllNames)
         {

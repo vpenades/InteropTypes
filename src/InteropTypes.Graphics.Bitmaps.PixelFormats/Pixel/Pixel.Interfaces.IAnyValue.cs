@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -50,7 +50,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -79,7 +79,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -110,7 +110,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -139,7 +139,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -170,7 +170,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -199,7 +199,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -230,7 +230,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -259,7 +259,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -290,7 +290,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -319,7 +319,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -350,7 +350,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -379,7 +379,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -410,7 +410,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -439,7 +439,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -470,7 +470,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -499,7 +499,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -530,7 +530,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -559,7 +559,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -590,7 +590,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -619,7 +619,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -650,7 +650,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -679,7 +679,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -710,7 +710,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -739,7 +739,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -770,7 +770,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -799,7 +799,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -830,7 +830,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -859,7 +859,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -890,7 +890,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -919,7 +919,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -950,7 +950,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -979,7 +979,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -1010,7 +1010,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -1039,7 +1039,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -1070,7 +1070,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }
@@ -1099,7 +1099,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public TPixel To<TPixel>() where TPixel: unmanaged
+            public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET5_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
@@ -1130,7 +1130,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
+            public readonly void CopyTo<TPixel>(ref TPixel target) where TPixel: unmanaged
             {
                 if (typeof(TPixel) == typeof(Alpha8)) { Unsafe.As<TPixel, Alpha8>(ref target).SetValue(this); return; }
                 if (typeof(TPixel) == typeof(Luminance8)) { Unsafe.As<TPixel, Luminance8>(ref target).SetValue(this); return; }

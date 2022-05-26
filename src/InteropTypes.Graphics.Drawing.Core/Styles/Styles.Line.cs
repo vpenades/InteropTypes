@@ -122,7 +122,7 @@ namespace InteropTypes.Graphics.Drawing
         private readonly short _EndCap;
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             var h = Style.GetHashCode();
             h ^= _StartCap.GetHashCode();
@@ -131,10 +131,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is ImageStyle other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is ImageStyle other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(LineStyle other)
+        public readonly bool Equals(LineStyle other)
         {
             return
                 this.Style == other.Style &&
@@ -152,13 +152,13 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public LineCapStyle StartCap => (LineCapStyle)_StartCap;
-        public LineCapStyle EndCap => (LineCapStyle)_EndCap;
-        public bool IsEmpty => Style.IsEmpty;
-        public bool IsVisible => Style.IsVisible;
-        public ColorStyle FillColor => Style.FillColor;
-        public ColorStyle OutlineColor => Style.OutlineColor;
-        public float OutlineWidth => Style.OutlineWidth;
+        public readonly LineCapStyle StartCap => (LineCapStyle)_StartCap;
+        public readonly LineCapStyle EndCap => (LineCapStyle)_EndCap;
+        public readonly bool IsEmpty => Style.IsEmpty;
+        public readonly bool IsVisible => Style.IsVisible;
+        public readonly ColorStyle FillColor => Style.FillColor;
+        public readonly ColorStyle OutlineColor => Style.OutlineColor;
+        public readonly float OutlineWidth => Style.OutlineWidth;
 
         #endregion
 
@@ -174,19 +174,19 @@ namespace InteropTypes.Graphics.Drawing
         public static readonly LineStyle Blue = ColorStyle.Blue;
         public static readonly LineStyle Yellow = ColorStyle.Yellow;
 
-        public LineStyle With(LineCapStyle caps) { return new LineStyle(Style, caps, caps); }
+        public readonly LineStyle With(LineCapStyle caps) { return new LineStyle(Style, caps, caps); }
 
-        public LineStyle With(LineCapStyle startCap, LineCapStyle endCap) { return new LineStyle(Style, startCap, endCap); }
+        public readonly LineStyle With(LineCapStyle startCap, LineCapStyle endCap) { return new LineStyle(Style, startCap, endCap); }
 
-        public LineStyle With(OutlineFillStyle style) { return new LineStyle(style, StartCap, EndCap); }
+        public readonly LineStyle With(OutlineFillStyle style) { return new LineStyle(style, StartCap, EndCap); }
 
-        public LineStyle WithFill(ColorStyle color) { return new LineStyle(Style.WithFill(color), StartCap, EndCap); }
+        public readonly LineStyle WithFill(ColorStyle color) { return new LineStyle(Style.WithFill(color), StartCap, EndCap); }
 
-        public LineStyle WithOutline(float ow) { return new LineStyle(Style.WithOutline(ow), StartCap, EndCap); }
+        public readonly LineStyle WithOutline(float ow) { return new LineStyle(Style.WithOutline(ow), StartCap, EndCap); }
 
-        public LineStyle WithOutline(ColorStyle color, float ow) { return new LineStyle(Style.WithOutline(color, ow), StartCap, EndCap); }
+        public readonly LineStyle WithOutline(ColorStyle color, float ow) { return new LineStyle(Style.WithOutline(color, ow), StartCap, EndCap); }
 
-        public bool IsSolid(ref float diameter, out ColorStyle solidColor)
+        public readonly bool IsSolid(ref float diameter, out ColorStyle solidColor)
         {
             return Style.IsSolid(ref diameter, out solidColor);
         }

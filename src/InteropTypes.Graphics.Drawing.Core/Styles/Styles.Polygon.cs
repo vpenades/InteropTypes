@@ -57,7 +57,7 @@ namespace InteropTypes.Graphics.Drawing
         public readonly float OutlineWidth;
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             var h = FillColor.GetHashCode();
             h ^= OutlineColor.GetHashCode();
@@ -66,10 +66,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is PolygonStyle other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is PolygonStyle other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(PolygonStyle other)
+        public readonly bool Equals(PolygonStyle other)
         {
             return
                 this.FillColor == other.FillColor &&
@@ -87,37 +87,37 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsVisible => HasFill || HasOutline;
+        public readonly bool IsVisible => HasFill || HasOutline;
 
-        public bool HasFill => FillColor.IsVisible;
+        public readonly bool HasFill => FillColor.IsVisible;
 
-        public bool HasOutline => OutlineColor.IsVisible && OutlineWidth > 0;
+        public readonly bool HasOutline => OutlineColor.IsVisible && OutlineWidth > 0;
 
         #endregion
 
         #region Fluent API       
 
-        public PolygonStyle WithFill(ColorStyle fillColor)
+        public readonly PolygonStyle WithFill(ColorStyle fillColor)
         {
             return new PolygonStyle(fillColor, OutlineColor, OutlineWidth);
         }
 
-        public PolygonStyle WithOutline(ColorStyle outlineColor, float ow)
+        public readonly PolygonStyle WithOutline(ColorStyle outlineColor, float ow)
         {
             return new PolygonStyle(FillColor, outlineColor, ow);
         }
 
-        public PolygonStyle WithOutline(ColorStyle outlineColor)
+        public readonly PolygonStyle WithOutline(ColorStyle outlineColor)
         {
             return new PolygonStyle(FillColor, outlineColor, OutlineWidth);
         }
 
-        public PolygonStyle WithOutline(float ow)
+        public readonly PolygonStyle WithOutline(float ow)
         {
             return new PolygonStyle(FillColor, OutlineColor, ow);
         }
 
-        public bool IsSolid(ref float diameter, out ColorStyle solidColor)
+        public readonly bool IsSolid(ref float diameter, out ColorStyle solidColor)
         {
             if (OutlineColor.IsVisible && diameter < OutlineWidth)
             {

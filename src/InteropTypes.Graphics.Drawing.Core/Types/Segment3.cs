@@ -80,13 +80,13 @@ namespace InteropTypes.Graphics.Drawing
         public readonly Vector3 B;
 
         /// <inheritdoc/>            
-        public override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
+        public readonly override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is Segment3 other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is Segment3 other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(Segment3 other) { return this.A == other.A && this.B == other.B; }
+        public readonly bool Equals(Segment3 other) { return this.A == other.A && this.B == other.B; }
 
         /// <inheritdoc/>
         public static bool operator ==(Segment3 left, Segment3 right) { return left.Equals(right); }
@@ -98,17 +98,17 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsFinite => Point3.IsFinite(A) && Point3.IsFinite(B);
+        public readonly bool IsFinite => Point3.IsFinite(A) && Point3.IsFinite(B);
 
-        public int DominantAxis => Point3.GetDominantAxis(Direction);
+        public readonly int DominantAxis => Point3.GetDominantAxis(Direction);
 
-        public System.Numerics.Vector3 Direction => B - A;
+        public readonly System.Numerics.Vector3 Direction => B - A;
 
-        public System.Numerics.Vector3 DirectionNormalized => Vector3.Normalize(B - A);
+        public readonly System.Numerics.Vector3 DirectionNormalized => Vector3.Normalize(B - A);
 
-        public float Length => Direction.Length();
+        public readonly float Length => Direction.Length();
 
-        public Segment3 Ordinal => CreateOrdinal(A, B);
+        public readonly Segment3 Ordinal => CreateOrdinal(A, B);
 
         #endregion
 
@@ -127,7 +127,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool HasEnd(in Point3 point) { return point == A || point == B; }
+        public readonly bool HasEnd(in Point3 point) { return point == A || point == B; }
 
         /// <summary>
         /// Checks whether the two segments are connected by any of the two ends.
@@ -179,7 +179,7 @@ namespace InteropTypes.Graphics.Drawing
         /// 0 if touches or intersects the <paramref name="other"/> sphere boundary.<br/>
         /// 1 if outside <paramref name="other"/> sphere.<br/>
         /// </returns>
-        public int CompareTo(BoundingSphere other)
+        public readonly int CompareTo(BoundingSphere other)
         {
             if (Distance(this, other.Center) > other.Radius) return 1; // fully outside
             if (new Point3(A).CompareTo(other) > 0) return 0; // partially inside
@@ -192,7 +192,7 @@ namespace InteropTypes.Graphics.Drawing
         #region convert to
 
         /// <inheritdoc/>
-        void IDrawingBrush<IScene3D>.DrawTo(IScene3D context)
+        readonly void IDrawingBrush<IScene3D>.DrawTo(IScene3D context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -201,7 +201,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public void DrawTo(ICoreScene3D context)
+        public readonly void DrawTo(ICoreScene3D context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -209,7 +209,7 @@ namespace InteropTypes.Graphics.Drawing
             DrawTo(context, style);
         }
 
-        public void DrawTo(ICoreScene3D context, ColorStyle color)
+        public readonly void DrawTo(ICoreScene3D context, ColorStyle color)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -220,7 +220,7 @@ namespace InteropTypes.Graphics.Drawing
             context.DrawConvexSurface(points, color);
         }
 
-        public void DrawTo(IScene3D context, float diameter, OutlineFillStyle style)
+        public readonly void DrawTo(IScene3D context, float diameter, OutlineFillStyle style)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 

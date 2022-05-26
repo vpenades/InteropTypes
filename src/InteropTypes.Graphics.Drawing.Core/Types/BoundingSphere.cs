@@ -87,13 +87,13 @@ namespace InteropTypes.Graphics.Drawing
         public Single Radius;
 
         /// <inheritdoc/>
-        public override int GetHashCode() { return Center.GetHashCode() ^ Radius.GetHashCode(); }
+        public readonly override int GetHashCode() { return Center.GetHashCode() ^ Radius.GetHashCode(); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is BoundingSphere other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is BoundingSphere other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(BoundingSphere other) { return this.Center == other.Center && this.Radius == other.Radius; }
+        public readonly bool Equals(BoundingSphere other) { return this.Center == other.Center && this.Radius == other.Radius; }
 
         public static bool operator == (BoundingSphere left, BoundingSphere right) { return left.Equals(right); }
 
@@ -105,7 +105,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public static BoundingSphere Undefined => new BoundingSphere(new Vector3(float.NaN), float.MinValue);
 
-        public bool IsValid => Radius >= 0 && Point3.IsFinite(Center);
+        public readonly bool IsValid => Radius >= 0 && Point3.IsFinite(Center);
 
         #endregion
 
@@ -187,7 +187,7 @@ namespace InteropTypes.Graphics.Drawing
         /// 0 if overlapping <paramref name="other"/> sphere.<br/>
         /// 1 if outside <paramref name="other"/> sphere.<br/>
         /// </returns>
-        public int CompareTo(BoundingSphere other)
+        public readonly int CompareTo(BoundingSphere other)
         {
             var dist = Vector3.Distance(this.Center, other.Center);
             if (dist > (this.Radius + other.Radius)) return 1;
@@ -204,7 +204,7 @@ namespace InteropTypes.Graphics.Drawing
         /// 0 if overlapping <paramref name="other"/> plane.<br/>
         /// 1 if over <paramref name="other"/> plane.<br/>
         /// </returns>
-        public int CompareTo(Plane other)
+        public readonly int CompareTo(Plane other)
         {
             var dot = Plane.DotCoordinate(other, this.Center);
             if (Math.Abs(dot) < Radius) return 0;
@@ -216,25 +216,25 @@ namespace InteropTypes.Graphics.Drawing
         #region convert to
 
         /// <inheritdoc/>
-        public override string ToString()
+        public readonly override string ToString()
         {
             return new Vector4(Center, Radius).ToString();
         }
 
         /// <inheritdoc/>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public readonly string ToString(string format, IFormatProvider formatProvider)
         {
             return new Vector4(Center, Radius).ToString(format, formatProvider);
         }
 
         /// <inheritdoc/>
-        public void DrawTo(IScene3D context)
+        public readonly void DrawTo(IScene3D context)
         {
             var style = ColorStyle.GetDefaultFrom(context, ColorStyle.Red);
             DrawTo(context, style);
         }
 
-        public void DrawTo(IScene3D context, OutlineFillStyle color)
+        public readonly void DrawTo(IScene3D context, OutlineFillStyle color)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             context.DrawSphere(this.Center, this.Radius * 2, color);

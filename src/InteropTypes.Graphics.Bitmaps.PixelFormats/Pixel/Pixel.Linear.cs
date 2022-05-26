@@ -21,7 +21,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct Alpha8 : IPixelBlendOps<Alpha8, Alpha8>
         {
-            public Alpha8 AverageWith(Alpha8 other)
+            public readonly Alpha8 AverageWith(Alpha8 other)
             {
                 return new Alpha8((Byte)((this.A + other.A) / 2));
             }
@@ -29,7 +29,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct BGRA32 : IPixelBlendOps<BGRA32, BGRA32>
         {
-            public BGRA32 AverageWith(BGRA32 other)
+            public readonly BGRA32 AverageWith(BGRA32 other)
             {
                 if (this.A == 0) return other;
                 if (other.A == 0) return this;
@@ -44,7 +44,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct RGBA32 : IPixelBlendOps<RGBA32, RGBA32>
         {
-            public RGBA32 AverageWith(RGBA32 other)
+            public readonly RGBA32 AverageWith(RGBA32 other)
             {
                 if (this.A == 0) return other;
                 if (other.A == 0) return this;
@@ -59,7 +59,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct ARGB32 : IPixelBlendOps<ARGB32, ARGB32>
         {
-            public ARGB32 AverageWith(ARGB32 other)
+            public readonly ARGB32 AverageWith(ARGB32 other)
             {
                 if (this.A == 0) return other;
                 if (other.A == 0) return this;
@@ -74,7 +74,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct BGR24 : IPixelBlendOps<BGR24, BGR24>
         {
-            public BGR24 AverageWith(BGR24 other)
+            public readonly BGR24 AverageWith(BGR24 other)
             {
                 return new BGR24(
                     (this.R + other.R) / 2,
@@ -85,7 +85,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct RGB24 : IPixelBlendOps<RGB24, RGB24>
         {
-            public RGB24 AverageWith(RGB24 other)
+            public readonly RGB24 AverageWith(RGB24 other)
             {
                 return new RGB24(
                     (this.R + other.R) / 2,
@@ -96,7 +96,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct RGBP32 : IPixelBlendOps<RGBP32, RGBP32>
         {
-            public RGBP32 AverageWith(RGBP32 other)
+            public readonly RGBP32 AverageWith(RGBP32 other)
             {
                 if (this.A == 0) return other;
                 if (other.A == 0) return this;
@@ -111,7 +111,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         partial struct BGRP32 : IPixelBlendOps<BGRP32, BGRP32>
         {
-            public BGRP32 AverageWith(BGRP32 other)
+            public readonly BGRP32 AverageWith(BGRP32 other)
             {
                 if (this.A == 0) return other;
                 if (other.A == 0) return this;

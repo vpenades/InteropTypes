@@ -72,13 +72,13 @@ namespace InteropTypes.Graphics.Drawing
         public readonly Vector2 B;
 
         /// <inheritdoc/>
-        public override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
+        public readonly override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is Segment2 other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is Segment2 other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(Segment2 other) { return this.A == other.A && this.B == other.B; }
+        public readonly bool Equals(Segment2 other) { return this.A == other.A && this.B == other.B; }
 
         /// <inheritdoc/>
         public static bool operator ==(Segment2 left, Segment2 right) { return left.Equals(right); }
@@ -90,17 +90,17 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsFinite => Point2.IsFinite(A) && Point2.IsFinite(B);
+        public readonly bool IsFinite => Point2.IsFinite(A) && Point2.IsFinite(B);
 
-        public int DominantAxis => Point2.GetDominantAxis(Direction);
+        public readonly int DominantAxis => Point2.GetDominantAxis(Direction);
 
-        public Vector2 Direction => B - A;        
+        public readonly Vector2 Direction => B - A;        
 
-        public Vector2 DirectionNormalized => Vector2.Normalize(B - A);
+        public readonly Vector2 DirectionNormalized => Vector2.Normalize(B - A);
 
-        public float Length => Direction.Length();
+        public readonly float Length => Direction.Length();
 
-        public Segment2 Ordinal => CreateOrdinal(A, B);
+        public readonly Segment2 Ordinal => CreateOrdinal(A, B);
 
         #endregion
 
@@ -124,7 +124,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="point">The point to check.</param>
         /// <returns>true if <paramref name="point"/> is one of the end of the segment.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool HasEnd(in Point2 point) { return point == A || point == B; }
+        public readonly bool HasEnd(in Point2 point) { return point == A || point == B; }
 
         /// <summary>
         /// Checks whether the two segments are connected by any of the two ends.
@@ -171,7 +171,7 @@ namespace InteropTypes.Graphics.Drawing
         #region convert to
 
         /// <inheritdoc/>
-        void IDrawingBrush<ICanvas2D>.DrawTo(ICanvas2D context)
+        readonly void IDrawingBrush<ICanvas2D>.DrawTo(ICanvas2D context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -180,7 +180,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public void DrawTo(ICoreCanvas2D context)
+        public readonly void DrawTo(ICoreCanvas2D context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -188,7 +188,7 @@ namespace InteropTypes.Graphics.Drawing
             DrawTo(context, style);
         }
 
-        public void DrawTo(ICoreCanvas2D context, ColorStyle color)
+        public readonly void DrawTo(ICoreCanvas2D context, ColorStyle color)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -199,7 +199,7 @@ namespace InteropTypes.Graphics.Drawing
             context.DrawConvexPolygon(points, color);
         }
 
-        public void DrawTo(ICanvas2D context, float diameter, OutlineFillStyle style)
+        public readonly void DrawTo(ICanvas2D context, float diameter, OutlineFillStyle style)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 

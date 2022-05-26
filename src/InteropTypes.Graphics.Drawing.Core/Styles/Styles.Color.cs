@@ -127,17 +127,17 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Represents
         /// </summary>
-        public ColorStyle Opaque => new ColorStyle(Packed | _AlphaMask);
+        public readonly ColorStyle Opaque => new ColorStyle(Packed | _AlphaMask);
 
         /// <summary>
         /// True if this color is transparent.
         /// </summary>
-        public bool IsEmpty => A == 0;
+        public readonly bool IsEmpty => A == 0;
 
         /// <summary>
         /// True if this color is not transparent.
         /// </summary>
-        public bool IsVisible => A != 0;
+        public readonly bool IsVisible => A != 0;
 
         #endregion
 
@@ -166,13 +166,13 @@ namespace InteropTypes.Graphics.Drawing
         /// Converts this color to <see cref="GDICOLOR"/>
         /// </summary>
         /// <returns>A <see cref="GDICOLOR"/> instance.</returns>
-        public GDICOLOR ToGDI() => GDICOLOR.FromArgb((int)Packed);
+        public readonly GDICOLOR ToGDI() => GDICOLOR.FromArgb((int)Packed);
 
         /// <inheritdoc/>
-        public override string ToString() { return ToString(null, System.Globalization.CultureInfo.InvariantCulture); }
+        public readonly override string ToString() { return ToString(null, System.Globalization.CultureInfo.InvariantCulture); }
 
         /// <inheritdoc/>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public readonly string ToString(string format, IFormatProvider formatProvider)
         {
             // From System.Windows.Media.Color
 
@@ -220,7 +220,7 @@ namespace InteropTypes.Graphics.Drawing
             return new ColorStyle((Byte)255, (Byte)255, (Byte)255, (byte)o);
         }
 
-        public ColorStyle WithOpacity(float opacity)
+        public readonly ColorStyle WithOpacity(float opacity)
         {
             var o = (int)(((float)this.A) * opacity);
             o = Math.Min(255, o);
@@ -233,7 +233,7 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the premultiplied representation of this color.
         /// </summary>
         /// <returns>This color, in premultiplied representation.</returns>        
-        public ColorStyle ToPremul()
+        public readonly ColorStyle ToPremul()
         {
             uint fwdA = 257u * (uint)this.A;
 
@@ -250,7 +250,7 @@ namespace InteropTypes.Graphics.Drawing
         /// (assuming this color represents a premultiplied color)
         /// </summary>
         /// <returns>This color, in unpremultiplied representation.</returns>        
-        public ColorStyle ToUnpremul()
+        public readonly ColorStyle ToUnpremul()
         {
             System.Diagnostics.Debug.Assert(this.R <= this.A, "not premultiplied");
             System.Diagnostics.Debug.Assert(this.G <= this.A, "not premultiplied");

@@ -55,13 +55,13 @@ namespace InteropTypes.Graphics.Drawing
         public System.Numerics.Vector2 TextureCoord;
 
         /// <inheritdoc/>
-        public override int GetHashCode() { return Position.GetHashCode(); }
+        public readonly override int GetHashCode() { return Position.GetHashCode(); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is Vertex3 other && AreEqual(this, other); }
+        public readonly override bool Equals(object obj) { return obj is Vertex3 other && AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public bool Equals(Vertex3 other) { return AreEqual(this, other); }
+        public readonly bool Equals(Vertex3 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
         public static bool operator ==(in Vertex3 a, in Vertex3 b) { return AreEqual(a, b); }
@@ -79,7 +79,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsFinite => Point3.IsFinite(Position) && Point2.IsFinite(TextureCoord);
+        public readonly bool IsFinite => Point3.IsFinite(Position) && Point2.IsFinite(TextureCoord);
 
         #endregion
 

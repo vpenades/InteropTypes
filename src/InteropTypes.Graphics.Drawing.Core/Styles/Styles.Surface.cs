@@ -98,7 +98,7 @@ namespace InteropTypes.Graphics.Drawing
         public readonly uint SmoothingGroups;
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             var h = Style.GetHashCode();
             h ^= DoubleSided.GetHashCode();
@@ -107,10 +107,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is SurfaceStyle other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is SurfaceStyle other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(SurfaceStyle other)
+        public readonly bool Equals(SurfaceStyle other)
         {
             return
                 this.Style == other.Style &&
@@ -128,7 +128,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsVisible => Style.IsVisible;
+        public readonly bool IsVisible => Style.IsVisible;
 
         #endregion
 
@@ -152,9 +152,9 @@ namespace InteropTypes.Graphics.Drawing
         public static readonly SurfaceStyle TwoSides_Green = _TwoSides.With(ColorStyle.Green);
         public static readonly SurfaceStyle TwoSides_Blue = _TwoSides.With(ColorStyle.Blue);
 
-        public SurfaceStyle With(OutlineFillStyle style) { return new SurfaceStyle(style, DoubleSided); }
+        public readonly SurfaceStyle With(OutlineFillStyle style) { return new SurfaceStyle(style, DoubleSided); }
 
-        public SurfaceStyle WithOutline(float outlineWidth)
+        public readonly SurfaceStyle WithOutline(float outlineWidth)
         {
             return new SurfaceStyle(Style.WithOutline(outlineWidth), DoubleSided);
         }
