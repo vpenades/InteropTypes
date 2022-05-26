@@ -15,7 +15,7 @@
   <ItemGroup>    
     <PackageReference Include="MathNet.Numerics" />    
     <PackageReference Include="SixLabors.ImageSharp.Drawing" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.2" />
+    <PackageReference Include="SixLabors.ImageSharp" />
   </ItemGroup>
 
   <ItemGroup>
