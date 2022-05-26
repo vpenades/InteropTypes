@@ -125,7 +125,7 @@ namespace InteropTypes.Graphics.Drawing
         private float? _FarPlane;
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             if (!IsInitialized) return 0;
 
@@ -137,10 +137,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is CameraTransform3D other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is CameraTransform3D other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(CameraTransform3D other)
+        public readonly bool Equals(CameraTransform3D other)
         {
             if (this.WorldMatrix != other.WorldMatrix) return false;
             if (this.AxisMatrix != other.AxisMatrix) return false;
@@ -164,7 +164,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsValid
+        public readonly bool IsValid
         {
             get
             {
@@ -183,13 +183,13 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Gets a value indicating whether this object has been initialized.
         /// </summary>
-        public bool IsInitialized => _VerticalFieldOfView.HasValue || _OrthographicScale.HasValue;
+        public readonly bool IsInitialized => _VerticalFieldOfView.HasValue || _OrthographicScale.HasValue;
 
         #endregion
 
         #region  fluent API
 
-        public CameraTransform3D WithPlanes(float nearPlane, float farPlane)
+        public readonly CameraTransform3D WithPlanes(float nearPlane, float farPlane)
         {
             var clone = this;
             clone._NearPlane = nearPlane;
@@ -197,14 +197,14 @@ namespace InteropTypes.Graphics.Drawing
             return clone;
         }        
 
-        public CameraTransform3D WithAxisMatrix(in Matrix4x4 axisMatrix)
+        public readonly CameraTransform3D WithAxisMatrix(in Matrix4x4 axisMatrix)
         {
             var clone = this;
             clone.AxisMatrix = axisMatrix;
             return clone;
         }
 
-        public CameraTransform3D WithWorldMatrix(in Matrix4x4 worldMatrix)
+        public readonly CameraTransform3D WithWorldMatrix(in Matrix4x4 worldMatrix)
         {
             var clone = this;
             clone.WorldMatrix = worldMatrix;
@@ -259,7 +259,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="verticalFOV">The Vertical Field of View.</param>
         /// <returns>true if this is a perspective camera.</returns>
-        public bool TryGetPerspectiveFieldOfView(out float verticalFOV)
+        public readonly bool TryGetPerspectiveFieldOfView(out float verticalFOV)
         {
             if (_VerticalFieldOfView.HasValue) { verticalFOV = _VerticalFieldOfView.Value; return true; }
             verticalFOV = 0f; return false;
@@ -270,7 +270,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="scale">The orthographic scale.</param>
         /// <returns>true if this is an orthographic camera.</returns>
-        public bool TryGetOrthographicScale(out float scale)
+        public readonly bool TryGetOrthographicScale(out float scale)
         {
             if (_VerticalFieldOfView.HasValue) { scale = _OrthographicScale.Value; return true; }
             scale = 0f; return false;
@@ -280,7 +280,7 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the actual camera matrix, which is the concatenation of <see cref="AxisMatrix"/> and <see cref="WorldMatrix"/>.
         /// </summary>
         /// <returns>A matrix.</returns>
-        public Matrix4x4 CreateCameraMatrix()
+        public readonly Matrix4x4 CreateCameraMatrix()
         {
             if (!WorldMatrix.IsFiniteAndNotZero()) throw new InvalidOperationException($"Invalid {nameof(WorldMatrix)}");
 
@@ -291,19 +291,19 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the inverse of <see cref="CreateCameraMatrix"/>
         /// </summary>
         /// <returns>A matrix.</returns>        
-        public Matrix4x4 CreateViewMatrix()
+        public readonly Matrix4x4 CreateViewMatrix()
         {
             return !Matrix4x4.Invert(CreateCameraMatrix(), out Matrix4x4 viewMatrix)
                 ? Matrix4x4.Identity
                 : viewMatrix;
         }
 
-        public Matrix4x4 CreateProjectionMatrix(Point2 screenSize)
+        public readonly Matrix4x4 CreateProjectionMatrix(Point2 screenSize)
         {
             return CreateProjectionMatrix(screenSize.X / screenSize.Y);
         }
 
-        public Matrix4x4 CreateProjectionMatrix(float aspectRatio)
+        public readonly Matrix4x4 CreateProjectionMatrix(float aspectRatio)
         {
             nameof(aspectRatio).GuardIsFinite(aspectRatio);                      
 
@@ -323,12 +323,12 @@ namespace InteropTypes.Graphics.Drawing
             return Matrix4x4.CreateOrthographic(scale, scale, near, far); // TODO: should scale be multiplied by aspect ratio?            
         }
 
-        public Matrix3x2 CreateViewportMatrix(Point2 screenSize)
+        public readonly Matrix3x2 CreateViewportMatrix(Point2 screenSize)
         {
             return CreateViewportMatrix(screenSize.X, screenSize.Y);
         }
         
-        public Matrix3x2 CreateViewportMatrix(float width, float height)
+        public readonly Matrix3x2 CreateViewportMatrix(float width, float height)
         
         {
             return new Matrix3x2
@@ -390,7 +390,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region helpers
 
-        public void DrawCameraTo(IScene3D dc, float cameraSize)
+        public readonly void DrawCameraTo(IScene3D dc, float cameraSize)
         {
             if (dc == null) throw new ArgumentNullException(nameof(dc));
 
@@ -430,12 +430,12 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawSegments(Point3.Array(center + zzz * 1.2f, center + zzz * 2.2f), cameraSize * 0.1f, (colorZ, LineCapStyle.Round, LineCapStyle.Triangle));
         }
 
-        public void DrawFustrumTo(IScene3D dc, Single lineDiameter, ColorStyle brush)
+        public readonly void DrawFustrumTo(IScene3D dc, Single lineDiameter, ColorStyle brush)
         {
             DrawFustrumTo((dc, 1), lineDiameter, brush);
         }
 
-        public void DrawFustrumTo((IScene3D Context, float AspectRatio) target, Single lineDiameter, ColorStyle brush)
+        public readonly void DrawFustrumTo((IScene3D Context, float AspectRatio) target, Single lineDiameter, ColorStyle brush)
         {
             Matrix4x4.Invert(CreateProjectionMatrix(target.AspectRatio), out Matrix4x4 ip);
 

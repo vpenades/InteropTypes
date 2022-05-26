@@ -232,13 +232,13 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             #region API
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public ref readonly TSrcPixel GetPixelOrDefault(int x, int y)
+            public readonly ref readonly TSrcPixel GetPixelOrDefault(int x, int y)
             {
                 return ref _BInfo.GetPixelOrDefault(_Bytes, x, y, _Default);
             }
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public TDstPixel GetSampleOrClamp(int x, int y, int rx, int ry)
+            public readonly TDstPixel GetSampleOrClamp(int x, int y, int rx, int ry)
             {
                 var a = GetPixelOrDefault(x, y);
                 var b = GetPixelOrDefault(x + 1, y);

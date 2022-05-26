@@ -136,7 +136,7 @@ namespace InteropTypes.Graphics.Drawing
         public bool? KeepAspectRatio;
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             if (!IsInitialized) return 0;
 
@@ -144,10 +144,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is CameraTransform2D other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is CameraTransform2D other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(CameraTransform2D other)
+        public readonly bool Equals(CameraTransform2D other)
         {
             if (!this.IsInitialized && !other.IsInitialized) return true;
 
@@ -167,7 +167,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsValid
+        public readonly bool IsValid
         {
             get
             {
@@ -186,13 +186,13 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Gets a value indicating whether this object has been initialized.
         /// </summary>
-        public bool IsInitialized => WorldMatrix.IsFiniteAndNotZero();
+        public readonly bool IsInitialized => WorldMatrix.IsFiniteAndNotZero();
 
         #endregion
 
         #region API
         
-        public bool TryCreateFinalMatrix(ICoreCanvas2D dc, out Matrix3x2 finalMatrix)
+        public readonly bool TryCreateFinalMatrix(ICoreCanvas2D dc, out Matrix3x2 finalMatrix)
         {
             finalMatrix = Matrix3x2.Identity;
 
@@ -242,7 +242,7 @@ namespace InteropTypes.Graphics.Drawing
             return camera;
         }
 
-        public System.Drawing.RectangleF GetOuterBoundingRect()
+        public readonly System.Drawing.RectangleF GetOuterBoundingRect()
         {
             var vs = VirtualSize ?? Vector2.One;
 
@@ -266,7 +266,7 @@ namespace InteropTypes.Graphics.Drawing
             return bounds;
         }
 
-        public Matrix3x2 CreateFinalMatrix(Point2 physicalSize)
+        public readonly Matrix3x2 CreateFinalMatrix(Point2 physicalSize)
         {
             return CreateViewMatrix() * CreateViewportMatrix(physicalSize);
         }        
@@ -275,7 +275,7 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the inverse of <see cref="WorldMatrix"/>
         /// </summary>
         /// <returns>A matrix.</returns>        
-        public Matrix3x2 CreateViewMatrix()
+        public readonly Matrix3x2 CreateViewMatrix()
         {
             if (!WorldMatrix.IsFiniteAndNotZero()) throw new InvalidOperationException($"Invalid {nameof(WorldMatrix)}");
 
@@ -284,7 +284,7 @@ namespace InteropTypes.Graphics.Drawing
                 : viewMatrix;
         }
 
-        public Matrix3x2 CreateViewportMatrix(Point2 physicalSize)
+        public readonly Matrix3x2 CreateViewportMatrix(Point2 physicalSize)
         {            
             return _CreateVirtualToPhysical(physicalSize.XY, this.VirtualSize ?? physicalSize.XY, this.KeepAspectRatio ?? false);
         }

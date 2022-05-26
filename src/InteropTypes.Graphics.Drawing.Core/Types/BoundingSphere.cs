@@ -163,7 +163,7 @@ namespace InteropTypes.Graphics.Drawing
 
         internal const float SCALEDECOMPOSITIONEPSILON = 0.00001f;
 
-        private static Single _DecomposeScale(in Matrix4x4 matrix)
+        private static Single _DecomposeScale(Matrix4x4 matrix)
         {
             var det = matrix.GetDeterminant();
             var volume = Math.Abs(det);

@@ -270,22 +270,22 @@ namespace InteropTypes.Graphics.Bitmaps
             #region data
 
             public UInt16 BGR;
-            public Byte R => (Byte)Ru;
-            public Byte G => (Byte)Gu;
-            public Byte B => (Byte)Bu;
+            public readonly Byte R => (Byte)Ru;
+            public readonly Byte G => (Byte)Gu;
+            public readonly Byte B => (Byte)Bu;
 
-            public uint Ru
+            public readonly uint Ru
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)(BGR >> 11) & 0x1f; return (p * 8) | (p >> 2); }
             }
 
-            public uint Gu
+            public readonly uint Gu
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)(BGR >> 5) & 0x3f; return (p * 4) | (p >> 4); }
             }
-            public uint Bu
+            public readonly uint Bu
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)BGR & 0x1f; return (p * 8) | (p >> 2); }
@@ -359,27 +359,27 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public UInt16 BGRA;
 
-            public Byte R => (Byte)Ru;
-            public Byte G => (Byte)Gu;
-            public Byte B => (Byte)Bu;
-            public Byte A => (Byte)Au;
+            public readonly Byte R => (Byte)Ru;
+            public readonly Byte G => (Byte)Gu;
+            public readonly Byte B => (Byte)Bu;
+            public readonly Byte A => (Byte)Au;
 
-            public uint Ru
+            public readonly uint Ru
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)(BGRA >> 10) & 0x1f; return p * 8 + (p >> 2); }
             }
-            public uint Gu
+            public readonly uint Gu
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)(BGRA >> 5) & 0x1f; return p * 8 + (p >> 2); }
             }
-            public uint Bu
+            public readonly uint Bu
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)BGRA & 0x1f; return p * 8 + (p >> 2); }
             }
-            public uint Au
+            public readonly uint Au
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { return (uint)(BGRA >> 15) * 255; }
@@ -389,7 +389,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #region properties
 
-            public bool IsTransparent => (BGRA & 0x8000) == 0;
+            public readonly bool IsTransparent => (BGRA & 0x8000) == 0;
 
             #endregion
 
@@ -454,16 +454,16 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public UInt16 BGRA;
 
-            public int A => ((BGRA >> 12) & 0xf) * 17;
-            public int R => ((BGRA >> 8) & 0xf) * 17;
-            public int G => ((BGRA >> 4) & 0xf) * 17;
-            public int B => (BGRA & 0xf) * 17;
+            public readonly int A => ((BGRA >> 12) & 0xf) * 17;
+            public readonly int R => ((BGRA >> 8) & 0xf) * 17;
+            public readonly int G => ((BGRA >> 4) & 0xf) * 17;
+            public readonly int B => (BGRA & 0xf) * 17;
 
             #endregion
 
             #region properties
 
-            public bool IsTransparent => (BGRA & 0xF000) == 0;
+            public readonly bool IsTransparent => (BGRA & 0xF000) == 0;
 
             #endregion
         }
@@ -566,7 +566,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #region data
 
-            public uint BGRA
+            public readonly uint BGRA
             {
                 get
                 {
@@ -626,7 +626,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #region data
 
-            public uint RGBA
+            public readonly uint RGBA
             {
                 get
                 {
@@ -683,7 +683,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #region data
 
-            public uint ARGB
+            public readonly uint ARGB
             {
                 get
                 {
@@ -961,7 +961,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #region API
             
-            public RGBA128F FromPremul(XYZA premultiplied)
+            public readonly RGBA128F FromPremul(XYZA premultiplied)
             {
                 if (premultiplied.W == 0) return new RGBA128F(0, 0, 0, 0);
                 

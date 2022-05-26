@@ -477,7 +477,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 return false;
             }
 
-            public ReadOnlySpan<TPixel> Current => _Line;
+            public readonly ReadOnlySpan<TPixel> Current => _Line;
         }
 
         #endregion

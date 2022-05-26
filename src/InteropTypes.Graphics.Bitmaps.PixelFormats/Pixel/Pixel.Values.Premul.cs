@@ -95,7 +95,7 @@ namespace InteropTypes.Graphics.Bitmaps
             }
 
             [MethodImpl(_PrivateConstants.Fastest)]
-            public XYZA ToNativePremul()
+            public readonly XYZA ToNativePremul()
             {
                 return new XYZA(RGB * A, A);
             }
@@ -162,7 +162,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #region data
 
-            public uint RGBP
+            public readonly uint RGBP
             {
                 get
                 {
@@ -176,9 +176,9 @@ namespace InteropTypes.Graphics.Bitmaps
             public Byte PreB;
             public Byte A;
 
-            public Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
-            public Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
-            public Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);            
+            public readonly Byte R => A == 0 ? (Byte)0 : (Byte)(PreR * 255 / A);
+            public readonly Byte G => A == 0 ? (Byte)0 : (Byte)(PreG * 255 / A);
+            public readonly Byte B => A == 0 ? (Byte)0 : (Byte)(PreB * 255 / A);            
 
             #endregion
         }
@@ -323,7 +323,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #region data
 
-            public uint BGRP
+            public readonly uint BGRP
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get
@@ -338,9 +338,9 @@ namespace InteropTypes.Graphics.Bitmaps
             public Byte PreR;
             public Byte A;
 
-            public Byte R => A == 0 ? (Byte)0 : (Byte)(((uint)PreR * 255u) / (uint)A);
-            public Byte G => A == 0 ? (Byte)0 : (Byte)(((uint)PreG * 255u) / (uint)A);
-            public Byte B => A == 0 ? (Byte)0 : (Byte)(((uint)PreB * 255u) / (uint)A);
+            public readonly Byte R => A == 0 ? (Byte)0 : (Byte)(((uint)PreR * 255u) / (uint)A);
+            public readonly Byte G => A == 0 ? (Byte)0 : (Byte)(((uint)PreG * 255u) / (uint)A);
+            public readonly Byte B => A == 0 ? (Byte)0 : (Byte)(((uint)PreB * 255u) / (uint)A);
 
             #endregion
 
@@ -478,11 +478,11 @@ namespace InteropTypes.Graphics.Bitmaps
             [System.Runtime.InteropServices.FieldOffset(12)]
             public Single A;
 
-            public XYZ RGB => A == 0 ? XYZ.Zero : PreRGB / A;
+            public readonly XYZ RGB => A == 0 ? XYZ.Zero : PreRGB / A;
 
-            public Single R => A == 0 ? 0 : Math.Min(1, PreR / A);
-            public Single G => A == 0 ? 0 : Math.Min(1, PreG / A);
-            public Single B => A == 0 ? 0 : Math.Min(1, PreB / A);
+            public readonly Single R => A == 0 ? 0 : Math.Min(1, PreR / A);
+            public readonly Single G => A == 0 ? 0 : Math.Min(1, PreG / A);
+            public readonly Single B => A == 0 ? 0 : Math.Min(1, PreB / A);
 
             #endregion
 

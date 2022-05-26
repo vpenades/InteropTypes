@@ -218,10 +218,10 @@ namespace InteropTypes.Graphics.Drawing
         public VECTOR2 XY;
 
         /// <inheritdoc/>
-        public override int GetHashCode() => XY.GetHashCode();
+        public readonly override int GetHashCode() => XY.GetHashCode();
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
+        public readonly override bool Equals(object obj)
         {
             if (obj is Point2 otherP) return this.XY == otherP.XY;
             if (obj is VECTOR2 otherV) return this.XY == otherV;
@@ -231,16 +231,16 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public bool Equals(Point2 other) => AreEqual(this, other);
+        public readonly bool Equals(Point2 other) => AreEqual(this, other);
 
         /// <inheritdoc/>
-        public bool Equals(VECTOR2 other) => AreEqual(this, other);
+        public readonly bool Equals(VECTOR2 other) => AreEqual(this, other);
 
         /// <inheritdoc/>
-        public bool Equals(GDIPOINTF other) => AreEqual(this, other);
+        public readonly bool Equals(GDIPOINTF other) => AreEqual(this, other);
 
         /// <inheritdoc/>
-        public bool Equals(GDISIZEF other) => AreEqual(this, other);
+        public readonly bool Equals(GDISIZEF other) => AreEqual(this, other);
 
         /// <inheritdoc/>
         public static bool operator ==(in Point2 a, Point2 b) => AreEqual(a, b);
@@ -270,9 +270,9 @@ namespace InteropTypes.Graphics.Drawing
         public static Point2 One => VECTOR2.One;
         public static Point2 UnitX => VECTOR2.UnitX;
         public static Point2 UnitY => VECTOR2.UnitY;
-        public float Length => XY.Length();
+        public readonly float Length => XY.Length();
         
-        public int DominantAxis
+        public readonly int DominantAxis
         {
             get
             {
@@ -383,12 +383,12 @@ namespace InteropTypes.Graphics.Drawing
             return Cross(b-a, c-b);
         }
 
-        public VECTOR2 Normalized()
+        public readonly VECTOR2 Normalized()
         {
             return VECTOR2.Normalize(this.XY);
         }
 
-        public VECTOR2 Normalized(out float length)
+        public readonly VECTOR2 Normalized(out float length)
         {
             length = this.XY.Length();
             return this.XY / length;
@@ -400,7 +400,7 @@ namespace InteropTypes.Graphics.Drawing
             return value.XY / length;
         }
 
-        public VECTOR2 WithLength(float len)
+        public readonly VECTOR2 WithLength(float len)
         {
             len /= XY.Length();
             return XY * len;
@@ -415,7 +415,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="a">The begin point of the segment.</param>
         /// <param name="b">The end point of the segment.</param>
         /// <returns>the point of the segment</returns>
-        public VECTOR2 GetClosestSegmentPoint(Point2 a, Point2 b)
+        public readonly VECTOR2 GetClosestSegmentPoint(Point2 a, Point2 b)
         {
             var v = b - a;
             var u = VECTOR2.Dot(this.XY - a, v) / v.LengthSquared();
@@ -477,13 +477,13 @@ namespace InteropTypes.Graphics.Drawing
         #region API - Bulk
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Span<float> dst) { dst[0] = X; dst[1] = Y; }
+        public readonly void CopyTo(Span<float> dst) { dst[0] = X; dst[1] = Y; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Span<Point2> dst) { dst[0] = this; }
+        public readonly void CopyTo(Span<Point2> dst) { dst[0] = this; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Span<VECTOR2> dst) { dst[0] = this.XY; }
+        public readonly void CopyTo(Span<VECTOR2> dst) { dst[0] = this.XY; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<Point2> AsPoints(Span<VECTOR2> points) { return MEMMARSHALL.Cast<VECTOR2, Point2>(points); }
@@ -598,13 +598,13 @@ namespace InteropTypes.Graphics.Drawing
         #endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public GDIPOINTF ToGDIPoint() { return new GDIPOINTF(X, Y); }
+        public readonly GDIPOINTF ToGDIPoint() { return new GDIPOINTF(X, Y); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }        
+        public readonly GDISIZEF ToGDISize() { return new GDISIZEF(X, Y); }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float[] ToArray() { return new float[] { X, Y }; }
+        public readonly float[] ToArray() { return new float[] { X, Y }; }
 
         /// <inheritdoc/>
         public override string ToString() { return XY.ToString(); }
@@ -613,13 +613,13 @@ namespace InteropTypes.Graphics.Drawing
         public string ToString(string format, IFormatProvider formatProvider) { return XY.ToString(format, formatProvider); }
 
         /// <inheritdoc/>
-        public IEnumerator<float> GetEnumerator()
+        public readonly IEnumerator<float> GetEnumerator()
         {
             yield return X;
             yield return Y;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        readonly IEnumerator IEnumerable.GetEnumerator()
         {
             yield return X;
             yield return Y;
@@ -638,6 +638,6 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-#endregion
+        #endregion
     }
 }

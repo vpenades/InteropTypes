@@ -187,10 +187,10 @@ namespace InteropTypes.Graphics.Drawing
         public VECTOR3 XYZ;
 
         /// <inheritdoc/>
-        public override int GetHashCode() => XYZ.GetHashCode();
+        public readonly override int GetHashCode() => XYZ.GetHashCode();
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
+        public readonly override bool Equals(object obj)
         {
             if (obj is Point3 otherP) return this.XYZ == otherP.XYZ;
             if (obj is VECTOR3 otherV) return this.XYZ == otherV;
@@ -198,10 +198,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public bool Equals(Point3 other) => AreEqual(this, other);
+        public readonly bool Equals(Point3 other) => AreEqual(this, other);
 
         /// <inheritdoc/>
-        public bool Equals(VECTOR3 other) => AreEqual(this, other);
+        public readonly bool Equals(VECTOR3 other) => AreEqual(this, other);
 
         /// <inheritdoc/>
         public static bool operator ==(in Point3 a, in Point3 b) => AreEqual(a, b);
@@ -233,14 +233,14 @@ namespace InteropTypes.Graphics.Drawing
         public static Point3 UnitY => VECTOR3.UnitY;
         public static Point3 UnitZ => VECTOR3.UnitZ;
 
-        public float Length => XYZ.Length();
+        public readonly float Length => XYZ.Length();
 
         /// <summary>
         /// The X and Z components of the point.
         /// </summary>
-        public VECTOR2 XZ => new VECTOR2(X, Z);
+        public readonly VECTOR2 XZ => new VECTOR2(X, Z);
 
-        public int DominantAxis
+        public readonly int DominantAxis
         {
             get
             {
@@ -319,12 +319,12 @@ namespace InteropTypes.Graphics.Drawing
             #endif
         }
 
-        public VECTOR3 Normalized()
+        public readonly VECTOR3 Normalized()
         {
             return VECTOR3.Normalize(this.XYZ);
         }
 
-        public VECTOR3 Normalized(out float length)
+        public readonly VECTOR3 Normalized(out float length)
         {
             length = this.XYZ.Length();
             return this.XYZ / length;
@@ -336,7 +336,7 @@ namespace InteropTypes.Graphics.Drawing
             return value.XYZ / length;
         }
 
-        public VECTOR3 WithLength(float len)
+        public readonly VECTOR3 WithLength(float len)
         {
             len /= XYZ.Length();
             return XYZ * len;
@@ -401,7 +401,7 @@ namespace InteropTypes.Graphics.Drawing
         /// 0 if overlapping <paramref name="other"/> sphere.<br/>
         /// 1 if outside <paramref name="other"/> sphere.<br/>
         /// </returns>
-        public int CompareTo(BoundingSphere other)
+        public readonly int CompareTo(BoundingSphere other)
         {
             return VECTOR3
                 .Distance(this.XYZ, other.Center)
@@ -413,13 +413,13 @@ namespace InteropTypes.Graphics.Drawing
         #region API - Bulk
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Span<float> dst) { dst[0] = X; dst[1] = Y; dst[2] = Z; }
+        public readonly void CopyTo(Span<float> dst) { dst[0] = X; dst[1] = Y; dst[2] = Z; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Span<Point3> dst) { dst[0] = this; }
+        public readonly void CopyTo(Span<Point3> dst) { dst[0] = this; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void CopyTo(Span<VECTOR3> dst) { dst[0] = this.XYZ; }
+        public readonly void CopyTo(Span<VECTOR3> dst) { dst[0] = this.XYZ; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<Point3> AsPoints(Span<VECTOR3> points) { return MEMMARSHALL.Cast<VECTOR3, Point3>(points); }
@@ -467,23 +467,23 @@ namespace InteropTypes.Graphics.Drawing
         #endif        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float[] ToArray() { return new float[] { X, Y, Z}; }
+        public readonly float[] ToArray() { return new float[] { X, Y, Z}; }
 
         /// <inheritdoc/>  
-        public override string ToString() { return XYZ.ToString(); }
+        public readonly override string ToString() { return XYZ.ToString(); }
 
         /// <inheritdoc/>
-        public string ToString(string format, IFormatProvider formatProvider) { return XYZ.ToString(format, formatProvider); }
+        public readonly string ToString(string format, IFormatProvider formatProvider) { return XYZ.ToString(format, formatProvider); }
 
         /// <inheritdoc/>
-        public IEnumerator<float> GetEnumerator()
+        public readonly IEnumerator<float> GetEnumerator()
         {
             yield return X;
             yield return Y;
             yield return Z;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        readonly IEnumerator IEnumerable.GetEnumerator()
         {
             yield return X;
             yield return Y;

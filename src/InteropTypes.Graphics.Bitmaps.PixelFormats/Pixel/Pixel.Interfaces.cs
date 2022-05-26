@@ -45,7 +45,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public interface IConvertTo
         {
             TPIxel To<TPIxel>() where TPIxel : unmanaged;
-            void CopyTo<TPIxel>(ref TPIxel value) where TPIxel : unmanaged;            
+            void CopyTo<TPIxel>(ref TPIxel target) where TPIxel : unmanaged;            
         }        
 
         interface IDelegateProvider<TDelegate>

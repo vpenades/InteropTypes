@@ -18,10 +18,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in Alpha8 a,in Alpha8 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is Alpha8 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is Alpha8 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(Alpha8 other)
+            public readonly bool Equals(Alpha8 other)
             {
                 return this.A == other.A;
             }
@@ -44,10 +44,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in Luminance8 a,in Luminance8 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is Luminance8 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is Luminance8 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(Luminance8 other)
+            public readonly bool Equals(Luminance8 other)
             {
                 return this.L == other.L;
             }
@@ -70,10 +70,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in Luminance16 a,in Luminance16 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is Luminance16 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is Luminance16 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(Luminance16 other)
+            public readonly bool Equals(Luminance16 other)
             {
                 return this.L == other.L;
             }
@@ -96,10 +96,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in Luminance32F a,in Luminance32F b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is Luminance32F other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is Luminance32F other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(Luminance32F other)
+            public readonly bool Equals(Luminance32F other)
             {
                 return this.L == other.L;
             }
@@ -122,10 +122,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGR565 a,in BGR565 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGR565 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGR565 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGR565 other)
+            public readonly bool Equals(BGR565 other)
             {
                 return this.BGR == other.BGR;
             }
@@ -148,10 +148,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGRA5551 a,in BGRA5551 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGRA5551 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGRA5551 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGRA5551 other)
+            public readonly bool Equals(BGRA5551 other)
             {
                 if (this.A == 0 && other.A == 0) return true;
                 return this.BGRA == other.BGRA;
@@ -176,10 +176,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGRA4444 a,in BGRA4444 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGRA4444 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGRA4444 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGRA4444 other)
+            public readonly bool Equals(BGRA4444 other)
             {
                 if (this.A == 0 && other.A == 0) return true;
                 return this.BGRA == other.BGRA;
@@ -204,10 +204,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGR24 a,in BGR24 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGR24 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGR24 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGR24 other)
+            public readonly bool Equals(BGR24 other)
             {
                 if (this.B != other.B) return false;
                 if (this.G != other.G) return false;
@@ -237,10 +237,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in RGB24 a,in RGB24 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is RGB24 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is RGB24 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(RGB24 other)
+            public readonly bool Equals(RGB24 other)
             {
                 if (this.R != other.R) return false;
                 if (this.G != other.G) return false;
@@ -270,10 +270,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGRA32 a,in BGRA32 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGRA32 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGRA32 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGRA32 other)
+            public readonly bool Equals(BGRA32 other)
             {
                 if (this.A == 0 && other.A == 0) return true;
                 return this.BGRA == other.BGRA;
@@ -298,10 +298,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in RGBA32 a,in RGBA32 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is RGBA32 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is RGBA32 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(RGBA32 other)
+            public readonly bool Equals(RGBA32 other)
             {
                 if (this.A == 0 && other.A == 0) return true;
                 return this.RGBA == other.RGBA;
@@ -326,10 +326,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in ARGB32 a,in ARGB32 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is ARGB32 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is ARGB32 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(ARGB32 other)
+            public readonly bool Equals(ARGB32 other)
             {
                 if (this.A == 0 && other.A == 0) return true;
                 return this.ARGB == other.ARGB;
@@ -354,10 +354,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in RGBP32 a,in RGBP32 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is RGBP32 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is RGBP32 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(RGBP32 other)
+            public readonly bool Equals(RGBP32 other)
             {
                 return this.RGBP == other.RGBP;
             }
@@ -380,10 +380,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGRP32 a,in BGRP32 b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGRP32 other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGRP32 other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGRP32 other)
+            public readonly bool Equals(BGRP32 other)
             {
                 return this.BGRP == other.BGRP;
             }
@@ -406,10 +406,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in RGB96F a,in RGB96F b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is RGB96F other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is RGB96F other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(RGB96F other)
+            public readonly bool Equals(RGB96F other)
             {
                 return this.RGB == other.RGB;
             }
@@ -432,10 +432,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGR96F a,in BGR96F b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGR96F other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGR96F other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGR96F other)
+            public readonly bool Equals(BGR96F other)
             {
                 return this.BGR == other.BGR;
             }
@@ -458,10 +458,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in BGRA128F a,in BGRA128F b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is BGRA128F other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is BGRA128F other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(BGRA128F other)
+            public readonly bool Equals(BGRA128F other)
             {
                 if (this.A == 0 && other.A == 0) return true;
                 return this.BGRA == other.BGRA;
@@ -486,10 +486,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in RGBA128F a,in RGBA128F b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is RGBA128F other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is RGBA128F other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(RGBA128F other)
+            public readonly bool Equals(RGBA128F other)
             {
                 if (this.A == 0 && other.A == 0) return true;
                 return this.RGBA == other.RGBA;
@@ -514,10 +514,10 @@ namespace InteropTypes.Graphics.Bitmaps
             public static bool operator !=(in RGBP128F a,in RGBP128F b) { return !a.Equals(b); }
 
             /// <inheritdoc/>
-            public override bool Equals(Object obj) { return obj is RGBP128F other && Equals(other); }
+            public override readonly bool Equals(Object obj) { return obj is RGBP128F other && Equals(other); }
 
             /// <inheritdoc/>
-            public bool Equals(RGBP128F other)
+            public readonly bool Equals(RGBP128F other)
             {
                 return this.RGBP == other.RGBP;
             }
