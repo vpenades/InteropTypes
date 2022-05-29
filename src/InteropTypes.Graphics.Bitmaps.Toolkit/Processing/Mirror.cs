@@ -30,7 +30,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
         #region API
 
-        public bool TryApplyTo(SpanBitmap dst)
+        public readonly bool TryApplyTo(SpanBitmap dst)
         {
             switch (dst.PixelFormat.ByteCount)
             {
@@ -46,7 +46,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             return false;
         }            
 
-        public bool TryApplyTo<TPixel>(SpanBitmap<TPixel> dst)
+        public readonly bool TryApplyTo<TPixel>(SpanBitmap<TPixel> dst)
             where TPixel : unmanaged
         {
             // OpenCV implementation here:

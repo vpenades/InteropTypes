@@ -107,13 +107,13 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public TensorSize<#= TDIMCOUNT#> Dimensions => _Dimensions;
+        public readonly TensorSize<#= TDIMCOUNT#> Dimensions => _Dimensions;
 
-        public Span<T> Span => _Buffer;
+        public readonly Span<T> Span => _Buffer;
 
-        public ReadOnlySpan<T> ReadOnlySpan => _Buffer;
+        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
-        public T[] ToArray() { return _Buffer.ToArray(); }
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
         <# if (TDIMCOUNT > 1) { #>
 
@@ -123,28 +123,28 @@ namespace InteropTypes.Tensors
         {
             <# var TARGVARS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"d{idx}")); #>
 
-            get => _Buffer[_Dimensions.GetFlattenedIndex(<#= TARGVARS#>)];
+            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(<#= TARGVARS#>)];
             set => _Buffer[_Dimensions.GetFlattenedIndex(<#= TARGVARS#>)] = value;
         }
 
         <# } else { #>
 
-        public T this[int idx] { get => _Buffer[idx]; set => _Buffer[idx] = value; }
+        public T this[int idx] { readonly get => _Buffer[idx]; set => _Buffer[idx] = value; }
 
         <# } #>
 
-        public Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
 
         #endregion
 
         #region API
 
-        public void CopyTo(Span<T> dst)
+        public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
         }      
 
-        public void CopyTo(ref DenseTensor<T> dst)
+        public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != <#= TDIMCOUNT#>) dst = null;
             // if dims don't match, dst = null
@@ -156,7 +156,7 @@ namespace InteropTypes.Tensors
 
         <# if (TDIMCOUNT > 1) { #>
 
-        public void CopyTo(SpanTensor<#= TDIMCOUNT-1#><T> dst, int tailIdx)
+        public readonly void CopyTo(SpanTensor<#= TDIMCOUNT-1#><T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail<#= TDIMCOUNT-1#>) throw new ArgumentException(nameof(dst));
 
@@ -166,7 +166,7 @@ namespace InteropTypes.Tensors
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
 
-        public SpanTensor<#= TDIMCOUNT-1#><T> GetSubTensor(int idx)
+        public readonly SpanTensor<#= TDIMCOUNT-1#><T> GetSubTensor(int idx)
         {
             if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
 
@@ -177,7 +177,7 @@ namespace InteropTypes.Tensors
             return new SpanTensor<#= TDIMCOUNT-1#><T>(data,st.dims);
         }
 
-        public unsafe SpanTensor<#= TDIMCOUNT#><TElement> Cast<TElement>()
+        public readonly unsafe SpanTensor<#= TDIMCOUNT#><TElement> Cast<TElement>()
             where TElement:unmanaged
         {
             var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
@@ -189,7 +189,7 @@ namespace InteropTypes.Tensors
             return new SpanTensor<#= TDIMCOUNT#><TElement>(xdata, xdims);
         }
 
-        public unsafe SpanTensor<#= TDIMCOUNT-1#><TElement> UpCast<TElement>()
+        public readonly unsafe SpanTensor<#= TDIMCOUNT-1#><TElement> UpCast<TElement>()
             where TElement:unmanaged
         {
             if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
@@ -199,7 +199,7 @@ namespace InteropTypes.Tensors
             return new SpanTensor<#= TDIMCOUNT-1#><TElement>(xdata, _Dimensions.GetTensorHead());
         }
 
-        public void CopyTransposed(SpanTensor<#= TDIMCOUNT#><T> dst, params int[] indices)
+        public readonly void CopyTransposed(SpanTensor<#= TDIMCOUNT#><T> dst, params int[] indices)
         {
             var size = this.Dimensions[0];
 
@@ -219,7 +219,7 @@ namespace InteropTypes.Tensors
             }
         }
         
-        public bool CopyTransposed(ref SpanTensor<#= TDIMCOUNT#><T> dst, params int[] indices)
+        public readonly bool CopyTransposed(ref SpanTensor<#= TDIMCOUNT#><T> dst, params int[] indices)
         {
             var size = this.Dimensions[0];
 
@@ -263,7 +263,7 @@ namespace InteropTypes.Tensors
 
         <# if (TDIMCOUNT < TDIM_MAX-1) { #>
 
-        public unsafe SpanTensor<#= TDIMCOUNT+1#><TElement> DownCast<TElement>()
+        public readonly unsafe SpanTensor<#= TDIMCOUNT+1#><TElement> DownCast<TElement>()
             where TElement:unmanaged
         {
             var thisSize = sizeof(T);
@@ -291,7 +291,7 @@ namespace InteropTypes.Tensors
             var TNEWSIZE2 = $"new SpanTensor{TDIMCOUNT2}<T>(_Buffer, " + String.Join(", ",Enumerable.Range(0,TDIMCOUNT2).Select(idx => $"d{idx}")) + ")";
         #>
 
-        public SpanTensor<#= TDIMCOUNT2#><T> Reshaped(<#= TARGS2#>)
+        public readonly SpanTensor<#= TDIMCOUNT2#><T> Reshaped(<#= TARGS2#>)
         {
             if (_Buffer.Length != (<#= TVALS2#>)) throw new ArgumentException();
             return <#= TNEWSIZE2#>;

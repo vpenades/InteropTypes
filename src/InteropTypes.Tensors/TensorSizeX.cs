@@ -19,12 +19,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize1 VerifyDimensions(int d0)
+        public readonly TensorSize1 VerifyDimensions(int d0)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
             
@@ -72,7 +72,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim0;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -93,17 +93,17 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize1 a, in TensorSize1 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize1 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize1 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize1 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize1 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim0;
+        public readonly int Last =>  Dim0;
 
         
         
@@ -111,7 +111,7 @@ namespace InteropTypes.Tensors
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0;
+        public readonly int StepSize => Dim0;
 
         #endregion
 
@@ -119,10 +119,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 1;
+        public readonly int Count => 1;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -135,17 +135,17 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0 }; }
 
         #endregion
 
@@ -214,20 +214,20 @@ namespace InteropTypes.Tensors
         
         
         
-        int GetItemIndex(int index)
+        readonly int GetItemIndex(int index)
         {
             if (index < 0 || index >= Dim0) throw new IndexOutOfRangeException(nameof(index));
             return index;
         }
 
-        public int DecomposeIndex(int index)
+        public readonly int DecomposeIndex(int index)
         {
             if (index < 0 || index >= Dim0) throw new IndexOutOfRangeException(nameof(index));
             return index;
         }
 
         
-        public bool ContainsIndices(int idx0)
+        public readonly bool ContainsIndices(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             
@@ -260,12 +260,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize2 VerifyDimensions(int d0, int d1)
+        public readonly TensorSize2 VerifyDimensions(int d0, int d1)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
              if (Dim1 != d1) throw new ArgumentException($"Dimension[1] mismatch; expect {d1}, but found {Dim1}");
@@ -328,7 +328,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim1;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -351,29 +351,29 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize2 a, in TensorSize2 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize2 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize2 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize2 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize2 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim1;
+        public readonly int Last =>  Dim1;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Head1 => new TensorSize1(Dim0);
+        public readonly TensorSize1 Head1 => new TensorSize1(Dim0);
         
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Tail1 => new TensorSize1(Dim1);
+        public readonly TensorSize1 Tail1 => new TensorSize1(Dim1);
         
         
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0 * Dim1;
+        public readonly int StepSize => Dim0 * Dim1;
 
         #endregion
 
@@ -381,10 +381,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 2;
+        public readonly int Count => 2;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -398,18 +398,18 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
             yield return Dim1;
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0, Dim1 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0, Dim1 }; }
 
         #endregion
 
@@ -478,13 +478,13 @@ namespace InteropTypes.Tensors
                 
         
 
-        public TensorSize1 GetTensorHead()
+        public readonly TensorSize1 GetTensorHead()
         {
             return Head1;
         }         
 
         
-        public (TensorSize1 dims, int offs) GetTensorTail(int idx0)
+        public readonly (TensorSize1 dims, int offs) GetTensorTail(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
                         
@@ -503,7 +503,7 @@ namespace InteropTypes.Tensors
         
 
 
-        public int GetFlattenedIndex(int idx0, int idx1)
+        public readonly int GetFlattenedIndex(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -523,7 +523,7 @@ namespace InteropTypes.Tensors
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices2 GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices2 GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -534,7 +534,7 @@ namespace InteropTypes.Tensors
         }
 
         
-        public bool ContainsIndices(int idx0, int idx1)
+        public readonly bool ContainsIndices(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             if (idx1 < 0 || idx1 >= Dim1) return false;
@@ -568,12 +568,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize3 VerifyDimensions(int d0, int d1, int d2)
+        public readonly TensorSize3 VerifyDimensions(int d0, int d1, int d2)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
              if (Dim1 != d1) throw new ArgumentException($"Dimension[1] mismatch; expect {d1}, but found {Dim1}");
@@ -642,7 +642,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim2;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -667,33 +667,33 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize3 a, in TensorSize3 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize3 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize3 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize3 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize3 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim2;
+        public readonly int Last =>  Dim2;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Head1 => new TensorSize1(Dim0);
+        public readonly TensorSize1 Head1 => new TensorSize1(Dim0);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
+        public readonly TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
         
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Tail1 => new TensorSize1(Dim2);
+        public readonly TensorSize1 Tail1 => new TensorSize1(Dim2);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Tail2 => new TensorSize2(Dim1, Dim2);
+        public readonly TensorSize2 Tail2 => new TensorSize2(Dim1, Dim2);
         
         
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0 * Dim1 * Dim2;
+        public readonly int StepSize => Dim0 * Dim1 * Dim2;
 
         #endregion
 
@@ -701,10 +701,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 3;
+        public readonly int Count => 3;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -719,7 +719,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
             yield return Dim1;
@@ -727,11 +727,11 @@ namespace InteropTypes.Tensors
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0, Dim1, Dim2 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0, Dim1, Dim2 }; }
 
         #endregion
 
@@ -800,13 +800,13 @@ namespace InteropTypes.Tensors
                 
         
 
-        public TensorSize2 GetTensorHead()
+        public readonly TensorSize2 GetTensorHead()
         {
             return Head2;
         }         
 
         
-        public (TensorSize2 dims, int offs) GetTensorTail(int idx0)
+        public readonly (TensorSize2 dims, int offs) GetTensorTail(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
                         
@@ -822,7 +822,7 @@ namespace InteropTypes.Tensors
             return (Tail2, idx);
         }
 
-        public (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1)
+        public readonly (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -843,7 +843,7 @@ namespace InteropTypes.Tensors
         
 
 
-        public int GetFlattenedIndex(int idx0, int idx1, int idx2)
+        public readonly int GetFlattenedIndex(int idx0, int idx1, int idx2)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -865,7 +865,7 @@ namespace InteropTypes.Tensors
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices3 GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices3 GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -877,7 +877,7 @@ namespace InteropTypes.Tensors
         }
 
         
-        public bool ContainsIndices(int idx0, int idx1, int idx2)
+        public readonly bool ContainsIndices(int idx0, int idx1, int idx2)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             if (idx1 < 0 || idx1 >= Dim1) return false;
@@ -912,12 +912,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize4 VerifyDimensions(int d0, int d1, int d2, int d3)
+        public readonly TensorSize4 VerifyDimensions(int d0, int d1, int d2, int d3)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
              if (Dim1 != d1) throw new ArgumentException($"Dimension[1] mismatch; expect {d1}, but found {Dim1}");
@@ -992,7 +992,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim3;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -1019,37 +1019,37 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize4 a, in TensorSize4 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize4 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize4 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize4 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize4 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim3;
+        public readonly int Last =>  Dim3;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Head1 => new TensorSize1(Dim0);
+        public readonly TensorSize1 Head1 => new TensorSize1(Dim0);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
+        public readonly TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
+        public readonly TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
         
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Tail1 => new TensorSize1(Dim3);
+        public readonly TensorSize1 Tail1 => new TensorSize1(Dim3);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Tail2 => new TensorSize2(Dim2, Dim3);
+        public readonly TensorSize2 Tail2 => new TensorSize2(Dim2, Dim3);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Tail3 => new TensorSize3(Dim1, Dim2, Dim3);
+        public readonly TensorSize3 Tail3 => new TensorSize3(Dim1, Dim2, Dim3);
         
         
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0 * Dim1 * Dim2 * Dim3;
+        public readonly int StepSize => Dim0 * Dim1 * Dim2 * Dim3;
 
         #endregion
 
@@ -1057,10 +1057,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 4;
+        public readonly int Count => 4;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -1076,7 +1076,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
             yield return Dim1;
@@ -1085,11 +1085,11 @@ namespace InteropTypes.Tensors
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3 }; }
 
         #endregion
 
@@ -1158,13 +1158,13 @@ namespace InteropTypes.Tensors
                 
         
 
-        public TensorSize3 GetTensorHead()
+        public readonly TensorSize3 GetTensorHead()
         {
             return Head3;
         }         
 
         
-        public (TensorSize3 dims, int offs) GetTensorTail(int idx0)
+        public readonly (TensorSize3 dims, int offs) GetTensorTail(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
                         
@@ -1181,7 +1181,7 @@ namespace InteropTypes.Tensors
             return (Tail3, idx);
         }
 
-        public (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1)
+        public readonly (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -1199,7 +1199,7 @@ namespace InteropTypes.Tensors
             return (Tail2, idx);
         }
 
-        public (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
+        public readonly (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -1222,7 +1222,7 @@ namespace InteropTypes.Tensors
         
 
 
-        public int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3)
+        public readonly int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -1246,7 +1246,7 @@ namespace InteropTypes.Tensors
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices4 GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices4 GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -1259,7 +1259,7 @@ namespace InteropTypes.Tensors
         }
 
         
-        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3)
+        public readonly bool ContainsIndices(int idx0, int idx1, int idx2, int idx3)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             if (idx1 < 0 || idx1 >= Dim1) return false;
@@ -1295,12 +1295,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize5 VerifyDimensions(int d0, int d1, int d2, int d3, int d4)
+        public readonly TensorSize5 VerifyDimensions(int d0, int d1, int d2, int d3, int d4)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
              if (Dim1 != d1) throw new ArgumentException($"Dimension[1] mismatch; expect {d1}, but found {Dim1}");
@@ -1381,7 +1381,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim4;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -1410,41 +1410,41 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize5 a, in TensorSize5 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize5 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize5 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize5 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize5 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim4;
+        public readonly int Last =>  Dim4;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Head1 => new TensorSize1(Dim0);
+        public readonly TensorSize1 Head1 => new TensorSize1(Dim0);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
+        public readonly TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
+        public readonly TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
+        public readonly TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
         
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Tail1 => new TensorSize1(Dim4);
+        public readonly TensorSize1 Tail1 => new TensorSize1(Dim4);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Tail2 => new TensorSize2(Dim3, Dim4);
+        public readonly TensorSize2 Tail2 => new TensorSize2(Dim3, Dim4);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Tail3 => new TensorSize3(Dim2, Dim3, Dim4);
+        public readonly TensorSize3 Tail3 => new TensorSize3(Dim2, Dim3, Dim4);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Tail4 => new TensorSize4(Dim1, Dim2, Dim3, Dim4);
+        public readonly TensorSize4 Tail4 => new TensorSize4(Dim1, Dim2, Dim3, Dim4);
         
         
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4;
+        public readonly int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4;
 
         #endregion
 
@@ -1452,10 +1452,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 5;
+        public readonly int Count => 5;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -1472,7 +1472,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
             yield return Dim1;
@@ -1482,11 +1482,11 @@ namespace InteropTypes.Tensors
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4 }; }
 
         #endregion
 
@@ -1555,13 +1555,13 @@ namespace InteropTypes.Tensors
                 
         
 
-        public TensorSize4 GetTensorHead()
+        public readonly TensorSize4 GetTensorHead()
         {
             return Head4;
         }         
 
         
-        public (TensorSize4 dims, int offs) GetTensorTail(int idx0)
+        public readonly (TensorSize4 dims, int offs) GetTensorTail(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
                         
@@ -1579,7 +1579,7 @@ namespace InteropTypes.Tensors
             return (Tail4, idx);
         }
 
-        public (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1)
+        public readonly (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -1598,7 +1598,7 @@ namespace InteropTypes.Tensors
             return (Tail3, idx);
         }
 
-        public (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
+        public readonly (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -1618,7 +1618,7 @@ namespace InteropTypes.Tensors
             return (Tail2, idx);
         }
 
-        public (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
+        public readonly (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -1643,7 +1643,7 @@ namespace InteropTypes.Tensors
         
 
 
-        public int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4)
+        public readonly int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -1669,7 +1669,7 @@ namespace InteropTypes.Tensors
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices5 GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices5 GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -1683,7 +1683,7 @@ namespace InteropTypes.Tensors
         }
 
         
-        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4)
+        public readonly bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             if (idx1 < 0 || idx1 >= Dim1) return false;
@@ -1720,12 +1720,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize6 VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5)
+        public readonly TensorSize6 VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
              if (Dim1 != d1) throw new ArgumentException($"Dimension[1] mismatch; expect {d1}, but found {Dim1}");
@@ -1812,7 +1812,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim5;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -1843,45 +1843,45 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize6 a, in TensorSize6 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize6 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize6 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize6 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize6 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim5;
+        public readonly int Last =>  Dim5;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Head1 => new TensorSize1(Dim0);
+        public readonly TensorSize1 Head1 => new TensorSize1(Dim0);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
+        public readonly TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
+        public readonly TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
+        public readonly TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize5 Head5 => new TensorSize5(Dim0, Dim1, Dim2, Dim3, Dim4);
+        public readonly TensorSize5 Head5 => new TensorSize5(Dim0, Dim1, Dim2, Dim3, Dim4);
         
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Tail1 => new TensorSize1(Dim5);
+        public readonly TensorSize1 Tail1 => new TensorSize1(Dim5);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Tail2 => new TensorSize2(Dim4, Dim5);
+        public readonly TensorSize2 Tail2 => new TensorSize2(Dim4, Dim5);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Tail3 => new TensorSize3(Dim3, Dim4, Dim5);
+        public readonly TensorSize3 Tail3 => new TensorSize3(Dim3, Dim4, Dim5);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Tail4 => new TensorSize4(Dim2, Dim3, Dim4, Dim5);
+        public readonly TensorSize4 Tail4 => new TensorSize4(Dim2, Dim3, Dim4, Dim5);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize5 Tail5 => new TensorSize5(Dim1, Dim2, Dim3, Dim4, Dim5);
+        public readonly TensorSize5 Tail5 => new TensorSize5(Dim1, Dim2, Dim3, Dim4, Dim5);
         
         
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5;
+        public readonly int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5;
 
         #endregion
 
@@ -1889,10 +1889,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 6;
+        public readonly int Count => 6;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -1910,7 +1910,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
             yield return Dim1;
@@ -1921,11 +1921,11 @@ namespace InteropTypes.Tensors
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4, Dim5 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4, Dim5 }; }
 
         #endregion
 
@@ -1994,13 +1994,13 @@ namespace InteropTypes.Tensors
                 
         
 
-        public TensorSize5 GetTensorHead()
+        public readonly TensorSize5 GetTensorHead()
         {
             return Head5;
         }         
 
         
-        public (TensorSize5 dims, int offs) GetTensorTail(int idx0)
+        public readonly (TensorSize5 dims, int offs) GetTensorTail(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
                         
@@ -2019,7 +2019,7 @@ namespace InteropTypes.Tensors
             return (Tail5, idx);
         }
 
-        public (TensorSize4 dims, int offs) GetTensorTail(int idx0, int idx1)
+        public readonly (TensorSize4 dims, int offs) GetTensorTail(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2039,7 +2039,7 @@ namespace InteropTypes.Tensors
             return (Tail4, idx);
         }
 
-        public (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
+        public readonly (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2060,7 +2060,7 @@ namespace InteropTypes.Tensors
             return (Tail3, idx);
         }
 
-        public (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
+        public readonly (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2082,7 +2082,7 @@ namespace InteropTypes.Tensors
             return (Tail2, idx);
         }
 
-        public (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4)
+        public readonly (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2109,7 +2109,7 @@ namespace InteropTypes.Tensors
         
 
 
-        public int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
+        public readonly int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2137,7 +2137,7 @@ namespace InteropTypes.Tensors
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices6 GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices6 GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -2152,7 +2152,7 @@ namespace InteropTypes.Tensors
         }
 
         
-        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
+        public readonly bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             if (idx1 < 0 || idx1 >= Dim1) return false;
@@ -2190,12 +2190,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize7 VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        public readonly TensorSize7 VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
              if (Dim1 != d1) throw new ArgumentException($"Dimension[1] mismatch; expect {d1}, but found {Dim1}");
@@ -2288,7 +2288,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim6;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -2321,49 +2321,49 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize7 a, in TensorSize7 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize7 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize7 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize7 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize7 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim6;
+        public readonly int Last =>  Dim6;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Head1 => new TensorSize1(Dim0);
+        public readonly TensorSize1 Head1 => new TensorSize1(Dim0);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
+        public readonly TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
+        public readonly TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
+        public readonly TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize5 Head5 => new TensorSize5(Dim0, Dim1, Dim2, Dim3, Dim4);
+        public readonly TensorSize5 Head5 => new TensorSize5(Dim0, Dim1, Dim2, Dim3, Dim4);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize6 Head6 => new TensorSize6(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5);
+        public readonly TensorSize6 Head6 => new TensorSize6(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5);
         
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Tail1 => new TensorSize1(Dim6);
+        public readonly TensorSize1 Tail1 => new TensorSize1(Dim6);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Tail2 => new TensorSize2(Dim5, Dim6);
+        public readonly TensorSize2 Tail2 => new TensorSize2(Dim5, Dim6);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Tail3 => new TensorSize3(Dim4, Dim5, Dim6);
+        public readonly TensorSize3 Tail3 => new TensorSize3(Dim4, Dim5, Dim6);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Tail4 => new TensorSize4(Dim3, Dim4, Dim5, Dim6);
+        public readonly TensorSize4 Tail4 => new TensorSize4(Dim3, Dim4, Dim5, Dim6);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize5 Tail5 => new TensorSize5(Dim2, Dim3, Dim4, Dim5, Dim6);
+        public readonly TensorSize5 Tail5 => new TensorSize5(Dim2, Dim3, Dim4, Dim5, Dim6);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize6 Tail6 => new TensorSize6(Dim1, Dim2, Dim3, Dim4, Dim5, Dim6);
+        public readonly TensorSize6 Tail6 => new TensorSize6(Dim1, Dim2, Dim3, Dim4, Dim5, Dim6);
         
         
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5 * Dim6;
+        public readonly int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5 * Dim6;
 
         #endregion
 
@@ -2371,10 +2371,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 7;
+        public readonly int Count => 7;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -2393,7 +2393,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
             yield return Dim1;
@@ -2405,11 +2405,11 @@ namespace InteropTypes.Tensors
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6 }; }
 
         #endregion
 
@@ -2478,13 +2478,13 @@ namespace InteropTypes.Tensors
                 
         
 
-        public TensorSize6 GetTensorHead()
+        public readonly TensorSize6 GetTensorHead()
         {
             return Head6;
         }         
 
         
-        public (TensorSize6 dims, int offs) GetTensorTail(int idx0)
+        public readonly (TensorSize6 dims, int offs) GetTensorTail(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
                         
@@ -2504,7 +2504,7 @@ namespace InteropTypes.Tensors
             return (Tail6, idx);
         }
 
-        public (TensorSize5 dims, int offs) GetTensorTail(int idx0, int idx1)
+        public readonly (TensorSize5 dims, int offs) GetTensorTail(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2525,7 +2525,7 @@ namespace InteropTypes.Tensors
             return (Tail5, idx);
         }
 
-        public (TensorSize4 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
+        public readonly (TensorSize4 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2547,7 +2547,7 @@ namespace InteropTypes.Tensors
             return (Tail4, idx);
         }
 
-        public (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
+        public readonly (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2570,7 +2570,7 @@ namespace InteropTypes.Tensors
             return (Tail3, idx);
         }
 
-        public (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4)
+        public readonly (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2594,7 +2594,7 @@ namespace InteropTypes.Tensors
             return (Tail2, idx);
         }
 
-        public (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
+        public readonly (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2623,7 +2623,7 @@ namespace InteropTypes.Tensors
         
 
 
-        public int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6)
+        public readonly int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -2653,7 +2653,7 @@ namespace InteropTypes.Tensors
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices7 GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices7 GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -2669,7 +2669,7 @@ namespace InteropTypes.Tensors
         }
 
         
-        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6)
+        public readonly bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             if (idx1 < 0 || idx1 >= Dim1) return false;
@@ -2708,12 +2708,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public TensorSize8 VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        public readonly TensorSize8 VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
              if (Dim0 != d0) throw new ArgumentException($"Dimension[0] mismatch; expect {d0}, but found {Dim0}");
              if (Dim1 != d1) throw new ArgumentException($"Dimension[1] mismatch; expect {d1}, but found {Dim1}");
@@ -2812,7 +2812,7 @@ namespace InteropTypes.Tensors
         public readonly int Dim7;
         
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -2847,53 +2847,53 @@ namespace InteropTypes.Tensors
         public static bool operator !=(in TensorSize8 a, in TensorSize8 b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(TensorSize8 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorSize8 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is TensorSize8 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize8 other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim7;
+        public readonly int Last =>  Dim7;
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Head1 => new TensorSize1(Dim0);
+        public readonly TensorSize1 Head1 => new TensorSize1(Dim0);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
+        public readonly TensorSize2 Head2 => new TensorSize2(Dim0, Dim1);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
+        public readonly TensorSize3 Head3 => new TensorSize3(Dim0, Dim1, Dim2);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
+        public readonly TensorSize4 Head4 => new TensorSize4(Dim0, Dim1, Dim2, Dim3);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize5 Head5 => new TensorSize5(Dim0, Dim1, Dim2, Dim3, Dim4);
+        public readonly TensorSize5 Head5 => new TensorSize5(Dim0, Dim1, Dim2, Dim3, Dim4);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize6 Head6 => new TensorSize6(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5);
+        public readonly TensorSize6 Head6 => new TensorSize6(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize7 Head7 => new TensorSize7(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6);
+        public readonly TensorSize7 Head7 => new TensorSize7(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6);
         
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize1 Tail1 => new TensorSize1(Dim7);
+        public readonly TensorSize1 Tail1 => new TensorSize1(Dim7);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize2 Tail2 => new TensorSize2(Dim6, Dim7);
+        public readonly TensorSize2 Tail2 => new TensorSize2(Dim6, Dim7);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize3 Tail3 => new TensorSize3(Dim5, Dim6, Dim7);
+        public readonly TensorSize3 Tail3 => new TensorSize3(Dim5, Dim6, Dim7);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize4 Tail4 => new TensorSize4(Dim4, Dim5, Dim6, Dim7);
+        public readonly TensorSize4 Tail4 => new TensorSize4(Dim4, Dim5, Dim6, Dim7);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize5 Tail5 => new TensorSize5(Dim3, Dim4, Dim5, Dim6, Dim7);
+        public readonly TensorSize5 Tail5 => new TensorSize5(Dim3, Dim4, Dim5, Dim6, Dim7);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize6 Tail6 => new TensorSize6(Dim2, Dim3, Dim4, Dim5, Dim6, Dim7);
+        public readonly TensorSize6 Tail6 => new TensorSize6(Dim2, Dim3, Dim4, Dim5, Dim6, Dim7);
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize7 Tail7 => new TensorSize7(Dim1, Dim2, Dim3, Dim4, Dim5, Dim6, Dim7);
+        public readonly TensorSize7 Tail7 => new TensorSize7(Dim1, Dim2, Dim3, Dim4, Dim5, Dim6, Dim7);
         
         
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5 * Dim6 * Dim7;
+        public readonly int StepSize => Dim0 * Dim1 * Dim2 * Dim3 * Dim4 * Dim5 * Dim6 * Dim7;
 
         #endregion
 
@@ -2901,10 +2901,10 @@ namespace InteropTypes.Tensors
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 8;
+        public readonly int Count => 8;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -2924,7 +2924,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Dim0;
             yield return Dim1;
@@ -2937,11 +2937,11 @@ namespace InteropTypes.Tensors
         }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6, Dim7 }; }
+        public readonly int[] ToArray() { return new int[] { Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6, Dim7 }; }
 
         #endregion
 
@@ -3010,13 +3010,13 @@ namespace InteropTypes.Tensors
                 
         
 
-        public TensorSize7 GetTensorHead()
+        public readonly TensorSize7 GetTensorHead()
         {
             return Head7;
         }         
 
         
-        public (TensorSize7 dims, int offs) GetTensorTail(int idx0)
+        public readonly (TensorSize7 dims, int offs) GetTensorTail(int idx0)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
                         
@@ -3037,7 +3037,7 @@ namespace InteropTypes.Tensors
             return (Tail7, idx);
         }
 
-        public (TensorSize6 dims, int offs) GetTensorTail(int idx0, int idx1)
+        public readonly (TensorSize6 dims, int offs) GetTensorTail(int idx0, int idx1)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -3059,7 +3059,7 @@ namespace InteropTypes.Tensors
             return (Tail6, idx);
         }
 
-        public (TensorSize5 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
+        public readonly (TensorSize5 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -3082,7 +3082,7 @@ namespace InteropTypes.Tensors
             return (Tail5, idx);
         }
 
-        public (TensorSize4 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
+        public readonly (TensorSize4 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -3106,7 +3106,7 @@ namespace InteropTypes.Tensors
             return (Tail4, idx);
         }
 
-        public (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4)
+        public readonly (TensorSize3 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -3131,7 +3131,7 @@ namespace InteropTypes.Tensors
             return (Tail3, idx);
         }
 
-        public (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
+        public readonly (TensorSize2 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -3157,7 +3157,7 @@ namespace InteropTypes.Tensors
             return (Tail2, idx);
         }
 
-        public (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6)
+        public readonly (TensorSize1 dims, int offs) GetTensorTail(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -3188,7 +3188,7 @@ namespace InteropTypes.Tensors
         
 
 
-        public int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6, int idx7)
+        public readonly int GetFlattenedIndex(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6, int idx7)
         {
             if (idx0 < 0 || idx0 >= Dim0) throw new IndexOutOfRangeException(nameof(idx0));
             if (idx1 < 0 || idx1 >= Dim1) throw new IndexOutOfRangeException(nameof(idx1));
@@ -3220,7 +3220,7 @@ namespace InteropTypes.Tensors
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices8 GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices8 GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -3237,7 +3237,7 @@ namespace InteropTypes.Tensors
         }
 
         
-        public bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6, int idx7)
+        public readonly bool ContainsIndices(int idx0, int idx1, int idx2, int idx3, int idx4, int idx5, int idx6, int idx7)
         {
             if (idx0 < 0 || idx0 >= Dim0) return false;
             if (idx1 < 0 || idx1 >= Dim1) return false;

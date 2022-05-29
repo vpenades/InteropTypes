@@ -27,7 +27,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -100,7 +100,7 @@ public static readonly <#= TTENSORINDICES#> Invalid = (<#= TNEGXX#>);
         <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> public int Index<#= TDIM#>;
         <# } #>
 
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -122,18 +122,18 @@ public static readonly <#= TTENSORINDICES#> Invalid = (<#= TNEGXX#>);
 
         public static bool operator !=(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b) { return !AreEqual(a,b); }
 
-        public bool Equals(<#= TTENSORINDICES#> other) { return AreEqual(this, other); }
+        public readonly bool Equals(<#= TTENSORINDICES#> other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is <#= TTENSORINDICES#> other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is <#= TTENSORINDICES#> other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => <#= TDIMCOUNT#>;
+        public readonly int Count => <#= TDIMCOUNT#>;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -147,19 +147,19 @@ public static readonly <#= TTENSORINDICES#> Invalid = (<#= TNEGXX#>);
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
         <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #>
     yield return Index<#= TDIM#>;
         <# } #>
 }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         <# var TITEMS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Index{idx}")); #>
-public int[] ToArray() { return new int[] { <#= TITEMS#> }; }        
+public readonly int[] ToArray() { return new int[] { <#= TITEMS#> }; }        
 
         #endregion
 
@@ -205,7 +205,7 @@ public int[] ToArray() { return new int[] { <#= TITEMS#> }; }
         TITEMS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Index{idx}"));        
         var TRESULT = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int Index{idx}"));        
         #>
-public (<#= TRESULT#>) ToValueTuple() { return (<#= TITEMS#>); }
+public readonly (<#= TRESULT#>) ToValueTuple() { return (<#= TITEMS#>); }
 
         <# } #>
 

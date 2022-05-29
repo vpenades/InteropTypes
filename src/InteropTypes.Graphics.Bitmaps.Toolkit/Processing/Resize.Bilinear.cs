@@ -421,22 +421,22 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 }
             }
 
-            public Single GetSample(ReadOnlySpan<Single> src)
+            public readonly Single GetSample(ReadOnlySpan<Single> src)
             {
                 return src[IndexLeft] * (1 - Amount) + src[IndexRight] * Amount;
             }
 
-            public Vector2 GetSample(ReadOnlySpan<Vector2> src)
+            public readonly Vector2 GetSample(ReadOnlySpan<Vector2> src)
             {
                 return Vector2.Lerp(src[IndexLeft], src[IndexRight], Amount);
             }
 
-            public Vector3 GetSample(ReadOnlySpan<Vector3> src)
+            public readonly Vector3 GetSample(ReadOnlySpan<Vector3> src)
             {
                 return Vector3.Lerp(src[IndexLeft], src[IndexRight], Amount);
             }
 
-            public Vector4 GetSample(ReadOnlySpan<Vector4> src)
+            public readonly Vector4 GetSample(ReadOnlySpan<Vector4> src)
             {
                 return Vector4.Lerp(src[IndexLeft], src[IndexRight], Amount);
             }

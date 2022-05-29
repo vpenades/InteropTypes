@@ -8,13 +8,13 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
     {
         private static Random _Rnd;
 
-        public bool TryApplyTo<TPixel>(SpanBitmap<TPixel> target)
+        public readonly bool TryApplyTo<TPixel>(SpanBitmap<TPixel> target)
             where TPixel : unmanaged
         {
             return false;
         }
 
-        public bool TryApplyTo(SpanBitmap target)
+        public readonly bool TryApplyTo(SpanBitmap target)
         {
             if (_Rnd == null) _Rnd = new Random();
 

@@ -18,7 +18,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -65,7 +65,7 @@ namespace InteropTypes.Tensors
         
          public int Index0;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -85,18 +85,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices1 a, in TensorIndices1 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices1 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices1 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices1 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices1 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 1;
+        public readonly int Count => 1;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -109,16 +109,16 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0 }; }        
 
         #endregion
 
@@ -169,7 +169,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -233,7 +233,7 @@ namespace InteropTypes.Tensors
          public int Index0;
          public int Index1;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -255,18 +255,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices2 a, in TensorIndices2 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices2 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices2 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices2 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices2 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 2;
+        public readonly int Count => 2;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -280,17 +280,17 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
             yield return Index1;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0, Index1 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0, Index1 }; }        
 
         #endregion
 
@@ -325,7 +325,7 @@ namespace InteropTypes.Tensors
         #region API - Other
 
         
-        public (int Index0, int Index1) ToValueTuple() { return (Index0, Index1); }
+        public readonly (int Index0, int Index1) ToValueTuple() { return (Index0, Index1); }
 
         
         #endregion
@@ -342,7 +342,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -411,7 +411,7 @@ namespace InteropTypes.Tensors
          public int Index1;
          public int Index2;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -435,18 +435,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices3 a, in TensorIndices3 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices3 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices3 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices3 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices3 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 3;
+        public readonly int Count => 3;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -461,18 +461,18 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
             yield return Index1;
             yield return Index2;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0, Index1, Index2 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2 }; }        
 
         #endregion
 
@@ -507,7 +507,7 @@ namespace InteropTypes.Tensors
         #region API - Other
 
         
-        public (int Index0, int Index1, int Index2) ToValueTuple() { return (Index0, Index1, Index2); }
+        public readonly (int Index0, int Index1, int Index2) ToValueTuple() { return (Index0, Index1, Index2); }
 
         
         #endregion
@@ -524,7 +524,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -598,7 +598,7 @@ namespace InteropTypes.Tensors
          public int Index2;
          public int Index3;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -624,18 +624,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices4 a, in TensorIndices4 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices4 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices4 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices4 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices4 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 4;
+        public readonly int Count => 4;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -651,7 +651,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
             yield return Index1;
@@ -659,11 +659,11 @@ namespace InteropTypes.Tensors
             yield return Index3;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3 }; }        
 
         #endregion
 
@@ -698,7 +698,7 @@ namespace InteropTypes.Tensors
         #region API - Other
 
         
-        public (int Index0, int Index1, int Index2, int Index3) ToValueTuple() { return (Index0, Index1, Index2, Index3); }
+        public readonly (int Index0, int Index1, int Index2, int Index3) ToValueTuple() { return (Index0, Index1, Index2, Index3); }
 
         
         #endregion
@@ -715,7 +715,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -794,7 +794,7 @@ namespace InteropTypes.Tensors
          public int Index3;
          public int Index4;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -822,18 +822,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices5 a, in TensorIndices5 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices5 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices5 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices5 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices5 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 5;
+        public readonly int Count => 5;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -850,7 +850,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
             yield return Index1;
@@ -859,11 +859,11 @@ namespace InteropTypes.Tensors
             yield return Index4;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4 }; }        
 
         #endregion
 
@@ -898,7 +898,7 @@ namespace InteropTypes.Tensors
         #region API - Other
 
         
-        public (int Index0, int Index1, int Index2, int Index3, int Index4) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4); }
+        public readonly (int Index0, int Index1, int Index2, int Index3, int Index4) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4); }
 
         
         #endregion
@@ -915,7 +915,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -999,7 +999,7 @@ namespace InteropTypes.Tensors
          public int Index4;
          public int Index5;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -1029,18 +1029,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices6 a, in TensorIndices6 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices6 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices6 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices6 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices6 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 6;
+        public readonly int Count => 6;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -1058,7 +1058,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
             yield return Index1;
@@ -1068,11 +1068,11 @@ namespace InteropTypes.Tensors
             yield return Index5;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5 }; }        
 
         #endregion
 
@@ -1107,7 +1107,7 @@ namespace InteropTypes.Tensors
         #region API - Other
 
         
-        public (int Index0, int Index1, int Index2, int Index3, int Index4, int Index5) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4, Index5); }
+        public readonly (int Index0, int Index1, int Index2, int Index3, int Index4, int Index5) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4, Index5); }
 
         
         #endregion
@@ -1124,7 +1124,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -1213,7 +1213,7 @@ namespace InteropTypes.Tensors
          public int Index5;
          public int Index6;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -1245,18 +1245,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices7 a, in TensorIndices7 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices7 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices7 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices7 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices7 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 7;
+        public readonly int Count => 7;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -1275,7 +1275,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
             yield return Index1;
@@ -1286,11 +1286,11 @@ namespace InteropTypes.Tensors
             yield return Index6;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5, Index6 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5, Index6 }; }        
 
         #endregion
 
@@ -1325,7 +1325,7 @@ namespace InteropTypes.Tensors
         #region API - Other
 
         
-        public (int Index0, int Index1, int Index2, int Index3, int Index4, int Index5, int Index6) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4, Index5, Index6); }
+        public readonly (int Index0, int Index1, int Index2, int Index3, int Index4, int Index5, int Index6) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4, Index5, Index6); }
 
         
         #endregion
@@ -1342,7 +1342,7 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }        
@@ -1436,7 +1436,7 @@ namespace InteropTypes.Tensors
          public int Index6;
          public int Index7;
         
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -1470,18 +1470,18 @@ namespace InteropTypes.Tensors
 
         public static bool operator !=(in TensorIndices8 a, in TensorIndices8 b) { return !AreEqual(a,b); }
 
-        public bool Equals(TensorIndices8 other) { return AreEqual(this, other); }
+        public readonly bool Equals(TensorIndices8 other) { return AreEqual(this, other); }
 
-        public override bool Equals(object obj) { return obj is TensorIndices8 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorIndices8 other ? AreEqual(this, other) : false; }
 
         #endregion        
 
         #region API - List
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => 8;
+        public readonly int Count => 8;
 
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -1501,7 +1501,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
             yield return Index0;
             yield return Index1;
@@ -1513,11 +1513,11 @@ namespace InteropTypes.Tensors
             yield return Index7;
         }
 
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5, Index6, Index7 }; }        
+        public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5, Index6, Index7 }; }        
 
         #endregion
 
@@ -1552,7 +1552,7 @@ namespace InteropTypes.Tensors
         #region API - Other
 
         
-        public (int Index0, int Index1, int Index2, int Index3, int Index4, int Index5, int Index6, int Index7) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4, Index5, Index6, Index7); }
+        public readonly (int Index0, int Index1, int Index2, int Index3, int Index4, int Index5, int Index6, int Index7) ToValueTuple() { return (Index0, Index1, Index2, Index3, Index4, Index5, Index6, Index7); }
 
         
         #endregion

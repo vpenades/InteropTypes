@@ -38,12 +38,12 @@ namespace InteropTypes.Tensors
     {
         #region debug
 
-        private string _GetDebuggerDisplayString()
+        private readonly string _GetDebuggerDisplayString()
         {
             return string.Join("×", this);
         }
 
-        public <#= TTENSORSIZE#> VerifyDimensions(<#= TARGS#>)
+        public readonly <#= TTENSORSIZE#> VerifyDimensions(<#= TARGS#>)
         {
             <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> if (Dim<#= TDIM#> != d<#= TDIM#>) throw new ArgumentException($"Dimension[<#= TDIM#>] mismatch; expect {d<#= TDIM#>}, but found {Dim<#= TDIM#>}");
             <# } #>
@@ -117,7 +117,7 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         <# } #>
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             int h=0;
 
@@ -140,28 +140,28 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         public static bool operator !=(in <#= TTENSORSIZE#> a, in <#= TTENSORSIZE#> b) { return !AreEqual(a,b); }
 
         /// <inheritdoc/>
-        public bool Equals(<#= TTENSORSIZE#> other) { return AreEqual(this, other); }
+        public readonly bool Equals(<#= TTENSORSIZE#> other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is <#= TTENSORSIZE#> other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is <#= TTENSORSIZE#> other ? AreEqual(this, other) : false; }
 
         #endregion
 
         #region properties
 
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Last =>  Dim<#= TDIMCOUNT-1#>;
+        public readonly int Last =>  Dim<#= TDIMCOUNT-1#>;
 
         <# for(var TDIM = 1; TDIM < TDIMCOUNT; ++TDIM)
         { var TITEMSX = String.Join(", ",Enumerable.Range(0,TDIM).Select(idx => $"Dim{idx}")); #>
 [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize<#= TDIM#> Head<#= TDIM#> => new TensorSize<#= TDIM#>(<#= TITEMSX#>);
+        public readonly TensorSize<#= TDIM#> Head<#= TDIM#> => new TensorSize<#= TDIM#>(<#= TITEMSX#>);
         <# } #>
 
         <# for(var TDIM = 1; TDIM < TDIMCOUNT; ++TDIM)
         { var TITEMSX = String.Join(", ",Enumerable.Range(TDIMCOUNT-TDIM,TDIM).Select(idx => $"Dim{idx}")); #>
 [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public TensorSize<#= TDIM#> Tail<#= TDIM#> => new TensorSize<#= TDIM#>(<#= TITEMSX#>);
+        public readonly TensorSize<#= TDIM#> Tail<#= TDIM#> => new TensorSize<#= TDIM#>(<#= TITEMSX#>);
         <# } #>
 
         <# var TSTEPLEN = String.Join(" * ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Dim{idx}")); #>
@@ -169,7 +169,7 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         /// <Remarks>
         /// The total number of elements (computed as the dot product of the dimensions)
         /// </Remarks>
-        public int StepSize => <#= TSTEPLEN#>;
+        public readonly int StepSize => <#= TSTEPLEN#>;
 
         #endregion
 
@@ -177,10 +177,10 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Count => <#= TDIMCOUNT#>;
+        public readonly int Count => <#= TDIMCOUNT#>;
 
         /// <inheritdoc/>
-        public int this[int index]
+        public readonly int this[int index]
         {
             get
             {
@@ -194,7 +194,7 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
             }
         }
 
-        private IEnumerable<int> _Enumerate()
+        private readonly IEnumerable<int> _Enumerate()
         {
         <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #>
     yield return Dim<#= TDIM#>;
@@ -202,11 +202,11 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
 }
 
         /// <inheritdoc/>
-        public IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
+        readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
-        public int[] ToArray() { <# var TITEMS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Dim{idx}")); #>return new int[] { <#= TITEMS#> }; }
+        public readonly int[] ToArray() { <# var TITEMS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Dim{idx}")); #>return new int[] { <#= TITEMS#> }; }
 
         #endregion
 
@@ -281,7 +281,7 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         <# if (TDIMCOUNT > 1) { #>        
         
 
-        public TensorSize<#= TDIMCOUNT-1#> GetTensorHead()
+        public readonly TensorSize<#= TDIMCOUNT-1#> GetTensorHead()
         {
             return Head<#= TDIMCOUNT-1#>;
         }         
@@ -289,7 +289,7 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         <#}#>
 
         <# for(var TDIM = 1; TDIM < TDIMCOUNT; ++TDIM) { TARGS = String.Join(", ",Enumerable.Range(0,TDIM).Select(idx => $"int idx{idx}")); #>
-public (TensorSize<#= TDIMCOUNT-TDIM#> dims, int offs) GetTensorTail(<#= TARGS#>)
+public readonly (TensorSize<#= TDIMCOUNT-TDIM#> dims, int offs) GetTensorTail(<#= TARGS#>)
         {
             <# for(var XDIM = 0; XDIM < TDIM; ++XDIM) { #>
 if (idx<#= XDIM#> < 0 || idx<#= XDIM#> >= Dim<#= XDIM#>) throw new IndexOutOfRangeException(nameof(idx<#= XDIM#>));
@@ -310,13 +310,13 @@ if (idx<#= XDIM#> < 0 || idx<#= XDIM#> >= Dim<#= XDIM#>) throw new IndexOutOfRan
 
         <# if (TDIMCOUNT == 1) { #>
 
-        int GetItemIndex(int index)
+        readonly int GetItemIndex(int index)
         {
             if (index < 0 || index >= Dim0) throw new IndexOutOfRangeException(nameof(index));
             return index;
         }
 
-        public int DecomposeIndex(int index)
+        public readonly int DecomposeIndex(int index)
         {
             if (index < 0 || index >= Dim0) throw new IndexOutOfRangeException(nameof(index));
             return index;
@@ -327,7 +327,7 @@ if (idx<#= XDIM#> < 0 || idx<#= XDIM#> >= Dim<#= XDIM#>) throw new IndexOutOfRan
 
 
         <# TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int idx{idx}")); #>
-public int GetFlattenedIndex(<#= TARGS#>)
+public readonly int GetFlattenedIndex(<#= TARGS#>)
         {
             <# for(var XDIM = 0; XDIM < TDIMCOUNT; ++XDIM) { #>
 if (idx<#= XDIM#> < 0 || idx<#= XDIM#> >= Dim<#= XDIM#>) throw new IndexOutOfRangeException(nameof(idx<#= XDIM#>));
@@ -350,7 +350,7 @@ idx += idx0 * len;
         /// </summary>
         /// <param name="flattenedIndex">a flattened index</param>
         /// <returns>The indices for each dimension</returns>
-        public TensorIndices<#= TDIMCOUNT#> GetDecomposedIndex(int flattenedIndex)
+        public readonly TensorIndices<#= TDIMCOUNT#> GetDecomposedIndex(int flattenedIndex)
         {
             if (flattenedIndex < 0 || flattenedIndex >= StepSize) throw new IndexOutOfRangeException(nameof(flattenedIndex));
 
@@ -364,7 +364,7 @@ idx += idx0 * len;
         <# } #>
 
         <# TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int idx{idx}")); #>
-public bool ContainsIndices(<#= TARGS#>)
+public readonly bool ContainsIndices(<#= TARGS#>)
         {
             <# for(var XDIM = 0; XDIM < TDIMCOUNT; ++XDIM) { #>
 if (idx<#= XDIM#> < 0 || idx<#= XDIM#> >= Dim<#= XDIM#>) return false;
