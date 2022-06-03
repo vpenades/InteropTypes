@@ -149,7 +149,7 @@ namespace InteropTypes.Vision
                     case ResultType.Valid: return true;
                     case ResultType.Normalized: return Value >= 0.5f;
                     case ResultType.Sigmoid: return Sigmoid(Value) >= 0.5f;
-                    default: throw new NotImplementedException();                        
+                    default: throw new InvalidOperationException();                        
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace InteropTypes.Vision
                     case ResultType.Valid: return 1;
                     case ResultType.Normalized: return Value;
                     case ResultType.Sigmoid: return Sigmoid(Value);
-                    default: throw new NotImplementedException();
+                    default: throw new InvalidOperationException();
                 }
             }
         }

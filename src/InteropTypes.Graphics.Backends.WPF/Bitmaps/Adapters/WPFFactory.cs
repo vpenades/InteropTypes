@@ -8,7 +8,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Adapters
 {
-    public struct WPFFactory
+    public readonly struct WPFFactory
     {
         internal WPFFactory(BitmapInfo binfo)
         {

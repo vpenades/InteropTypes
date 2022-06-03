@@ -47,9 +47,9 @@ namespace InteropTypes.Graphics.Adapters
 
         #region properties
 
-        public System.Drawing.Bitmap Bitmap => _ProxyBitmap;
+        public readonly System.Drawing.Bitmap Bitmap => _ProxyBitmap;
 
-        public System.Drawing.Graphics Canvas => _DeviceContext;           
+        public readonly  System.Drawing.Graphics Canvas => _DeviceContext;           
 
         #endregion        
     }

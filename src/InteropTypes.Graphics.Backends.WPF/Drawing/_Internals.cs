@@ -174,7 +174,7 @@ namespace InteropTypes.Graphics.Backends
     }
 
     [System.Diagnostics.DebuggerDisplay("{Property.PropertyType.Name,nq} {Property.Name,nq}")]
-    internal struct StaticProperty<TValue>
+    internal readonly struct StaticProperty<TValue>
     {
         #region constructor
         internal StaticProperty(DependencyProperty dep)
@@ -192,13 +192,13 @@ namespace InteropTypes.Graphics.Backends
 
         #region properties
 
-        public DependencyProperty Property => _Property;
+        public readonly DependencyProperty Property => _Property;
 
         #endregion
 
         #region API
 
-        public TValue GetValue(DependencyObject context)
+        public readonly TValue GetValue(DependencyObject context)
         {
             var obj = context.GetValue(_Property);
 
@@ -207,7 +207,7 @@ namespace InteropTypes.Graphics.Backends
             return obj is TValue value ? value : default;
         }
 
-        public void SetValue(DependencyObject context, TValue value)
+        public readonly void SetValue(DependencyObject context, TValue value)
         {            
             context.SetValue(_Property, value);
         }

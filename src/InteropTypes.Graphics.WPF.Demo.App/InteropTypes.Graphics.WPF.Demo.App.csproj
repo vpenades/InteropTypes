@@ -4,12 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>    
     <UseWPF>true</UseWPF>    
-    <RootNamespace>WPFDemo</RootNamespace>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <RootNamespace>WPFDemo</RootNamespace>    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="Prism.Wpf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Remove="ErrorProne.NET.Structs" />
   </ItemGroup>
 
   <ItemGroup>

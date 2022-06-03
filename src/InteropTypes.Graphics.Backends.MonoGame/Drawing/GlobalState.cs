@@ -44,7 +44,7 @@ namespace InteropTypes.Graphics.Backends
             };
         }
 
-        public void ApplyTo(GraphicsDevice device)
+        public readonly void ApplyTo(GraphicsDevice device)
         {
             device.BlendState = blendState;
             device.SamplerStates[0] = samplerState;

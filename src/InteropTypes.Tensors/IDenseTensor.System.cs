@@ -14,7 +14,7 @@ namespace InteropTypes.Tensors
     /// <seealso href="https://github.com/dotnet/runtime/tree/main/src/libraries/System.Numerics.Tensors">DotNet - System.Numerics.Tensors</seealso><br/>
     /// <seealso href="https://github.com/dotnet/runtime/labels/area-System.Numerics.Tensors">DotNet - Issues</seealso>
     /// </remarks>
-    public struct SystemDenseTensor<T> : IDenseTensor<T>
+    public readonly struct SystemDenseTensor<T> : IDenseTensor<T> , IEquatable<SystemDenseTensor<T>>
         where T : unmanaged
     {
         #region constructor
@@ -31,19 +31,47 @@ namespace InteropTypes.Tensors
         private readonly DenseTensor<T> _Tensor;
         private readonly string _Name;
 
+        /// <inheritdoc/>
+        public readonly override int GetHashCode()
+        {
+            var h = _Tensor?.GetHashCode() ?? 0;
+            h ^= _Name?.GetHashCode() ?? 0;
+            return h;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return obj is SystemDenseTensor<T> other && this.Equals(other);
+        }
+
+        /// <inheritdoc/>
+        public readonly bool Equals(SystemDenseTensor<T> other)
+        {
+            if (this._Tensor != other._Tensor) return false;
+            if (this._Name != other._Name) return false;
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==(SystemDenseTensor<T> a, SystemDenseTensor<T> b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(SystemDenseTensor<T> a, SystemDenseTensor<T> b) => !a.Equals(b);
+
         #endregion
 
         #region properties
 
-        public string Name => _Name;
+        public readonly string Name => _Name;
 
-        public ReadOnlySpan<int> Dimensions => _Tensor.Dimensions;
+        public readonly ReadOnlySpan<int> Dimensions => _Tensor.Dimensions;
 
-        public IntPtr DataPointer => throw new NotImplementedException();
+        public readonly IntPtr DataPointer => throw new NotSupportedException();
 
-        public Span<T> Span => _Tensor.Buffer.Span;
+        public readonly Span<T> Span => _Tensor.Buffer.Span;        
 
-        #endregion        
+        #endregion
     }
 
     partial class SpanTensor

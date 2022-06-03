@@ -143,7 +143,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 ctx.DrawTriangle(lod, _ICOVRT9, _ICOVRT8, _ICOVRT1);
             }
 
-            private void DrawTriangle(int lod, XYZ a, XYZ b, XYZ c)
+            private readonly void DrawTriangle(int lod, XYZ a, XYZ b, XYZ c)
             {
                 a = XYZ.Normalize(a);
                 b = XYZ.Normalize(b);

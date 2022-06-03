@@ -176,7 +176,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             #region API
 
-            private Span<Vector3> _GetSourceRow(int idx)
+            private readonly Span<Vector3> _GetSourceRow(int idx)
             {
                 var srcRow = _Source.GetScanlinePixels(idx);
                 var dstRow = _Temp;

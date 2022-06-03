@@ -11,47 +11,47 @@ namespace InteropTypes.Graphics.Drawing
     static partial class _SystemNumericsExtensions
     {
         #region integrity check
-        public static bool IsReal(this Matrix4x4 value) { return value.SelectRowX().IsFinite() && value.SelectRowY().IsFinite() && value.SelectRowZ().IsFinite() && value.SelectRowW().IsFinite(); }
+        public static bool IsReal(this in Matrix4x4 value) { return value.SelectRowX().IsFinite() && value.SelectRowY().IsFinite() && value.SelectRowZ().IsFinite() && value.SelectRowW().IsFinite(); }
 
         #endregion
 
         #region elements access       
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 SelectRowX(this Matrix3x2 matrix) { return new Vector2(matrix.M11, matrix.M12); }
+        public static Vector2 SelectRowX(this in Matrix3x2 matrix) { return new Vector2(matrix.M11, matrix.M12); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 SelectRowY(this Matrix3x2 matrix) { return new Vector2(matrix.M21, matrix.M22); }
+        public static Vector2 SelectRowY(this in Matrix3x2 matrix) { return new Vector2(matrix.M21, matrix.M22); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 SelectRowZ(this Matrix3x2 matrix) { return new Vector2(matrix.M31, matrix.M32); }
+        public static Vector2 SelectRowZ(this in Matrix3x2 matrix) { return new Vector2(matrix.M31, matrix.M32); }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectRowX(this Matrix4x4 matrix) { return new Vector4(matrix.M11, matrix.M12, matrix.M13, matrix.M14); }
+        public static Vector4 SelectRowX(this in Matrix4x4 matrix) { return new Vector4(matrix.M11, matrix.M12, matrix.M13, matrix.M14); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectRowY(this Matrix4x4 matrix) { return new Vector4(matrix.M21, matrix.M22, matrix.M23, matrix.M24); }
+        public static Vector4 SelectRowY(this in Matrix4x4 matrix) { return new Vector4(matrix.M21, matrix.M22, matrix.M23, matrix.M24); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectRowZ(this Matrix4x4 matrix) { return new Vector4(matrix.M31, matrix.M32, matrix.M33, matrix.M34); }
+        public static Vector4 SelectRowZ(this in Matrix4x4 matrix) { return new Vector4(matrix.M31, matrix.M32, matrix.M33, matrix.M34); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectRowW(this Matrix4x4 matrix) { return new Vector4(matrix.M41, matrix.M42, matrix.M43, matrix.M44); }
+        public static Vector4 SelectRowW(this in Matrix4x4 matrix) { return new Vector4(matrix.M41, matrix.M42, matrix.M43, matrix.M44); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectColumnX(this Matrix4x4 matrix) { return new Vector4(matrix.M11, matrix.M21, matrix.M31, matrix.M41); }
+        public static Vector4 SelectColumnX(this in Matrix4x4 matrix) { return new Vector4(matrix.M11, matrix.M21, matrix.M31, matrix.M41); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectColumnY(this Matrix4x4 matrix) { return new Vector4(matrix.M12, matrix.M22, matrix.M32, matrix.M42); }
+        public static Vector4 SelectColumnY(this in Matrix4x4 matrix) { return new Vector4(matrix.M12, matrix.M22, matrix.M32, matrix.M42); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectColumnZ(this Matrix4x4 matrix) { return new Vector4(matrix.M13, matrix.M23, matrix.M33, matrix.M43); }
+        public static Vector4 SelectColumnZ(this in Matrix4x4 matrix) { return new Vector4(matrix.M13, matrix.M23, matrix.M33, matrix.M43); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4 SelectColumnW(this Matrix4x4 matrix) { return new Vector4(matrix.M14, matrix.M24, matrix.M34, matrix.M44); }
+        public static Vector4 SelectColumnW(this in Matrix4x4 matrix) { return new Vector4(matrix.M14, matrix.M24, matrix.M34, matrix.M44); }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Matrix4x4 WithRowX(this Matrix4x4 m, Vector4 rowX) { m.M11 = rowX.X; m.M12 = rowX.Y; m.M13 = rowX.Z; m.M14 = rowX.W; return m; }
+        public static Matrix4x4 WithRowX(this Matrix4x4 m, in Vector4 rowX) { m.M11 = rowX.X; m.M12 = rowX.Y; m.M13 = rowX.Z; m.M14 = rowX.W; return m; }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Matrix4x4 WithRowY(this Matrix4x4 m, Vector4 rowY) { m.M21 = rowY.X; m.M22 = rowY.Y; m.M23 = rowY.Z; m.M24 = rowY.W; return m; }
+        public static Matrix4x4 WithRowY(this Matrix4x4 m, in Vector4 rowY) { m.M21 = rowY.X; m.M22 = rowY.Y; m.M23 = rowY.Z; m.M24 = rowY.W; return m; }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Matrix4x4 WithRowZ(this Matrix4x4 m, Vector4 rowZ) { m.M31 = rowZ.X; m.M32 = rowZ.Y; m.M33 = rowZ.Z; m.M34 = rowZ.W; return m; }
+        public static Matrix4x4 WithRowZ(this Matrix4x4 m, in Vector4 rowZ) { m.M31 = rowZ.X; m.M32 = rowZ.Y; m.M33 = rowZ.Z; m.M34 = rowZ.W; return m; }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Matrix4x4 WithRowW(this Matrix4x4 m, Vector4 rowW) { m.M41 = rowW.X; m.M42 = rowW.Y; m.M43 = rowW.Z; m.M44 = rowW.W; return m; }
+        public static Matrix4x4 WithRowW(this Matrix4x4 m, in Vector4 rowW) { m.M41 = rowW.X; m.M42 = rowW.Y; m.M43 = rowW.Z; m.M44 = rowW.W; return m; }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,14 +66,14 @@ namespace InteropTypes.Graphics.Drawing
         #endregion
 
 
-        public static Matrix4x4 InvertedOrDefault(this Matrix4x4 matrix, Matrix4x4 defval)
+        public static Matrix4x4 InvertedOrDefault(this in Matrix4x4 matrix, Matrix4x4 defval)
         {
             return Matrix4x4.Invert(matrix, out Matrix4x4 mtx) ? mtx : defval;
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Matrix4x4 InverseFast(this Matrix4x4 r) // move to right & left handed
+        public static Matrix4x4 InverseFast(this in Matrix4x4 r) // move to right & left handed
         {
             // only valid for orthogonal matrices with column W being 0,0,0,1
 

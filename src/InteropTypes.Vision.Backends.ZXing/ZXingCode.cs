@@ -32,7 +32,7 @@ namespace InteropTypes.Vision.Backends
 
         public override string ToString()
         {
-            return Results.FirstOrDefault()?.Text ?? string.Empty;
+            return Results.Count > 0 ? Results[0].Text : string.Empty;
         }
 
         #endregion

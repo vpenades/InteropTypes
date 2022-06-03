@@ -25,7 +25,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             #region API
 
-            public float GetScale(float maxScale)
+            public readonly float GetScale(float maxScale)
             {
                 #if NETSTANDARD2_1_OR_GREATER
                 var nt = MathF.Tan(this.Angle * 0.5f);
@@ -119,7 +119,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             }
 
 
-            private void _FillSection(Span<POINT3> points, int divisions, VECTOR3 mainAxis)
+            private readonly void _FillSection(Span<POINT3> points, int divisions, VECTOR3 mainAxis)
             {
                 var r = _AdjustNGonRadius(Diameter / 2, divisions);
 
@@ -186,7 +186,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 return maixAxis;
             }
 
-            private void _DrawCap(ICoreScene3D dc, ColorStyle fillColor, LineCapStyle cap, Span<POINT3> corners, bool dir)
+            private readonly void _DrawCap(ICoreScene3D dc, ColorStyle fillColor, LineCapStyle cap, Span<POINT3> corners, bool dir)
             {
                 var axis = Direction * (Diameter * 0.5f);
 

@@ -52,7 +52,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Drawing", "Drawing", "{1B0945CE-4A72-4CB0-92FC-F0B648814095}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Tests", "tests\InteropTypes.Graphics.Drawing.Tests\InteropTypes.Graphics.Drawing.Tests.csproj", "{C5CB5055-D2FF-4B6E-8368-847E3A991A42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Toolkit.Tests", "tests\InteropTypes.Graphics.Drawing.Tests\InteropTypes.Graphics.Drawing.Toolkit.Tests.csproj", "{C5CB5055-D2FF-4B6E-8368-847E3A991A42}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SVG", "src\InteropTypes.Graphics.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj", "{F2363BC6-B5DB-4D16-850B-B561A03CC18B}"
 EndProject

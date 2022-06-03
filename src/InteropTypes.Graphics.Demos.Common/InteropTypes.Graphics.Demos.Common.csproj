@@ -16,4 +16,8 @@
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Remove="ErrorProne.NET.Structs" />
+  </ItemGroup>
+
 </Project>

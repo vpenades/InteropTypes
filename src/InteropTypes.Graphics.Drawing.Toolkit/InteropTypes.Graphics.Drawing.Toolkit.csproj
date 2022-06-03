@@ -18,7 +18,7 @@
   </ItemGroup>  
 
   <ItemGroup>    
-    <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Tests" />
+    <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Toolkit.Tests" />
   </ItemGroup>
 
   <ItemGroup>

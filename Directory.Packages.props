@@ -17,7 +17,7 @@
     
     <!-- System -->
 
-    <PackageVersion Include="System.Memory" Version="4.5.4" />
+    <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageVersion Include="System.Numerics.Tensors" Version="7.0.0-preview.4.22229.4" />
     <PackageVersion Include="System.Drawing.Common" Version="6.0.0" />    
@@ -27,20 +27,27 @@
     
     <!-- Game Engines -->
 
-    <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+    <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />    
+    <PackageVersion Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
     
     <PackageVersion Include="Veldrid" Version="4.9.0-beta1" />
+    <PackageVersion Include="Veldrid.SDL2" Version="4.9.0-beta1" />
+    <PackageVersion Include="Veldrid.StartupUtilities" Version="4.9.0-beta1" />
+    <PackageVersion Include="Veldrid.VirtualReality" Version="1.0.1" />
+
     <PackageVersion Include="ShaderGen" Version="1.2.0-beta3" />
     <PackageVersion Include="ShaderGen.Build" Version="1.2.0-beta3" />
     <PackageVersion Include="ShaderGen.Primitives" Version="1.2.0-beta3" />
     
     <!-- Graphics Libraries -->
 
+    <PackageVersion Include="Prism.Wpf" Version="8.1.97" />
+
     <PackageVersion Include="Microsoft.Maui.Graphics" Version="6.0.300" />
     <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="6.0.300" />
 
     <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.2" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.2" />    
 
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
@@ -72,13 +79,19 @@
     <!-- unit Testing -->
 
     <PackageVersion Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220510-1950" />
-    <PackageVersion Include="TestImages.ImageSharp" Version="3.0.0-Preview-20220510-1950" />    
+    <PackageVersion Include="TestImages.ImageSharp" Version="3.0.0-Preview-20220510-1950" />
+
+    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.4.0-beta.1" />
     
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
+
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.1" />
 
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     

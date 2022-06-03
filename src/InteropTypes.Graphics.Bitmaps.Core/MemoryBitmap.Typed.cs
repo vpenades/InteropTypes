@@ -85,13 +85,13 @@ namespace InteropTypes.Graphics.Bitmaps
         private readonly Memory<Byte> _Data;
 
         /// <inheritdoc/>
-        public override int GetHashCode() { return _Data.GetHashCode() ^ _Info.GetHashCode(); }
+        public readonly override int GetHashCode() { return _Data.GetHashCode() ^ _Info.GetHashCode(); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is MemoryBitmap<TPixel> other && AreEqual(this,other); }
+        public readonly override bool Equals(object obj) { return obj is MemoryBitmap<TPixel> other && AreEqual(this,other); }
 
         /// <inheritdoc/>
-        public bool Equals(MemoryBitmap<TPixel> other) { return AreEqual(this, other); }
+        public readonly bool Equals(MemoryBitmap<TPixel> other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
         public static bool operator ==(in MemoryBitmap<TPixel> a, in MemoryBitmap<TPixel> b) { return AreEqual(a, b); }
@@ -116,65 +116,65 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region properties
 
-        public Memory<Byte> Memory => _Data;
+        public readonly Memory<Byte> Memory => _Data;
 
-        public bool IsEmpty => _Info.IsEmpty || _Data.IsEmpty;
+        public readonly bool IsEmpty => _Info.IsEmpty || _Data.IsEmpty;
 
         #endregion
 
         #region properties - Info
 
         /// <inheritdoc/>
-        public BitmapInfo Info => _Info;
+        public readonly BitmapInfo Info => _Info;
 
         /// <inheritdoc/>
-        public PixelFormat PixelFormat => _Info.PixelFormat;
-
-        /// <inheritdoc/>
-        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public SIZE Size => _Info.Size;
+        public readonly PixelFormat PixelFormat => _Info.PixelFormat;
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Width => _Info.Width;
+        public readonly SIZE Size => _Info.Size;
 
         /// <inheritdoc/>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public int Height => _Info.Height;
+        public readonly int Width => _Info.Width;
+
+        /// <inheritdoc/>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        public readonly int Height => _Info.Height;
 
         /// <summary>
         /// Gets the size of a single pixel, in bytes.
         /// </summary>
-        public int PixelByteSize => _Info.PixelByteSize;
+        public readonly int PixelByteSize => _Info.PixelByteSize;
 
         /// <summary>
         /// Gets the number of bytes required to jump from one row to the next, in bytes. This is also known as the ByteStride.
         /// </summary>
-        public int StepByteSize => _Info.StepByteSize;
+        public readonly int StepByteSize => _Info.StepByteSize;
 
         /// <summary>
         /// Gets the bounds of the bitmap, in pixels.
         /// </summary>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
-        public BitmapBounds Bounds => _Info.Bounds;
+        public readonly BitmapBounds Bounds => _Info.Bounds;
 
         #endregion        
 
         #region API - Buffers
 
-        public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
-        public Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
+        public readonly Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+        public readonly Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
 
-        public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
-        public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Data.Span, y); }
+        public readonly ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
+        public readonly ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Data.Span, y); }
 
 
-        public Memory<TPixel> GetPixelMemory()
+        public readonly Memory<TPixel> GetPixelMemory()
         {
             return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory;
         }
 
-        public unsafe Memory<TOtherPixel> GetPixelMemory<TOtherPixel>()
+        public readonly unsafe Memory<TOtherPixel> GetPixelMemory<TOtherPixel>()
             where TOtherPixel:unmanaged
         {
             if (sizeof(TPixel) != sizeof(TOtherPixel)) throw new ArgumentException("pixel size mismatch", typeof(TOtherPixel).Name);
@@ -182,12 +182,12 @@ namespace InteropTypes.Graphics.Bitmaps
             return new MemoryManagers.CastMemoryManager<Byte, TOtherPixel>(_Data).Memory;
         }
 
-        public bool TryGetBuffer(out ArraySegment<Byte> segment)
+        public readonly bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);
         }
 
-        public Byte[] ToByteArray()
+        public readonly Byte[] ToByteArray()
         {
             if (TryGetBuffer(out ArraySegment<Byte> array) && array.Offset == 0 && array.Array.Length == _Info.BitmapByteSize) return array.Array;
 
@@ -262,13 +262,13 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public void Save(Action<Action<System.IO.FileInfo>> saveCallback, params Codecs.IBitmapEncoder[] factory)
+        public readonly void Save(Action<Action<System.IO.FileInfo>> saveCallback, params Codecs.IBitmapEncoder[] factory)
         {
             var image = this;
             saveCallback(finfo => image.Save(finfo.FullName, factory));
         }
 
-        public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
+        public readonly void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
             this.AsSpanBitmap().Save(filePath, factory);
         }        

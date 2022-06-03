@@ -23,7 +23,7 @@ namespace InteropTypes.Graphics.Backends
                 var data = string.Join(" ", state.State);
                 TestContext.WriteLine(data);
 
-                bitmap.AsSpanBitmap().AttachToCurrentTest($"frame{idx:D3}.jpg");
+                bitmap.AsSpanBitmap().ToMemoryBitmap().Save( new AttachmentInfo($"frame{idx:D3}.jpg") );
                 ++idx;
             }
         }

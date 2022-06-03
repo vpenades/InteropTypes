@@ -54,7 +54,7 @@ namespace InteropTypes.Graphics.Adapters
 
         #region properties
 
-        public OpenCvSharp.Mat Mat => _ProxyBitmap;        
+        public readonly OpenCvSharp.Mat Mat => _ProxyBitmap;        
 
         #endregion
     }

@@ -47,9 +47,9 @@ namespace InteropTypes.Graphics.Adapters
 
         #region properties
 
-        public SkiaSharp.SKBitmap Bitmap => _ProxyBitmap;
+        public readonly SkiaSharp.SKBitmap Bitmap => _ProxyBitmap;
 
-        public SkiaSharp.SKCanvas Canvas => _DeviceContext;
+        public readonly SkiaSharp.SKCanvas Canvas => _DeviceContext;
 
         #endregion        
     }

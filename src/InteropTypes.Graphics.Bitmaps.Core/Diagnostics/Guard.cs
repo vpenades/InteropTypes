@@ -5,6 +5,8 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
+using static System.FormattableString;
+
 namespace InteropTypes.Diagnostics
 {
 	internal static class Guard
@@ -50,42 +52,42 @@ namespace InteropTypes.Diagnostics
 			{
 				return;
 			}
-			throw new ArgumentException(string.Format("{0} is {1} but should be the same reference as {2}", paramName, param, other), paramName);
+			throw new ArgumentException(Invariant($"{paramName} is {param} but should be the same reference as {other}"), paramName);
 		}
 
 		public static void AreEqual<T>(string paramName, T param, T other) where T : IEquatable<T>
 		{
 			if (param.Equals(other)) return;
 
-			throw new ArgumentException(string.Format("{0} is {1} but should be equal to {2}", paramName, param, other), paramName);
+			throw new ArgumentException(Invariant($"{paramName} is {param} but should be equal to {other}"), paramName);
 		}
 
 		public static void LessThan<T>(string paramName, T param, T min) where T : IComparable<T>
 		{
 			if (param.CompareTo(min) < 0) return;
 
-			throw new ArgumentException(string.Format("{0} is {1} but should be less than {2}", paramName, param, min), paramName);
+			throw new ArgumentException(Invariant($"{paramName} is {param} but should be less than {min}"), paramName);
 		}
 
 		public static void GreaterThan<T>(string paramName, T param, T min) where T : IComparable<T>
 		{
 			if (param.CompareTo(min) > 0) return;
 
-			throw new ArgumentException(string.Format("{0} is {1} but should be greater than {2}", paramName, param, min), paramName);
+			throw new ArgumentException(Invariant($"{paramName} is {param} but should be greater than {min}"), paramName);
 		}
 
 		public static void EqualOrGreaterThan<T>(string paramName, T param, T min) where T : IComparable<T>
 		{
 			if (param.CompareTo(min) >= 0) return; 
 
-			throw new ArgumentException(string.Format("{0} is {1} but should be equal or greater than {2}", paramName, param, min), paramName);
+			throw new ArgumentException(Invariant($"{paramName} is {param} but should be equal or greater than {min}"), paramName);
 		}
 
 		public static void EqualOrLessThan<T>(string paramName, T param, T min) where T : IComparable<T>
 		{
 			if (param.CompareTo(min) <= 0) return;
 
-			throw new ArgumentException(string.Format("{0} is {1} but should be equal or less than {2}", paramName, param, min), paramName);
+			throw new ArgumentException(Invariant($"{paramName} is {param} but should be equal or less than {min}"), paramName);
 		}
 
 		public static void BitmapRect(int width, int height, int pixelByteSize)

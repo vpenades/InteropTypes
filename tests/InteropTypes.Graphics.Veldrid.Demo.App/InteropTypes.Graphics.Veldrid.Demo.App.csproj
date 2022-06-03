@@ -3,8 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>VeldridDemo</RootNamespace>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <RootNamespace>VeldridDemo</RootNamespace>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,15 +19,19 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <PackageReference Include="Veldrid.SDL2" Version="4.9.0-beta1" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-beta1" />
-    <PackageReference Include="Veldrid.VirtualReality" Version="1.0.1" />
+    <PackageReference Include="Veldrid.SDL2" />
+    <PackageReference Include="Veldrid.StartupUtilities" />
+    <PackageReference Include="Veldrid.VirtualReality" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Remove="ErrorProne.NET.Structs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj" />
-  </ItemGroup>
+  </ItemGroup>  
 
 </Project>

@@ -155,10 +155,10 @@ namespace InteropTypes.Graphics.Bitmaps
         
 
         [System.Diagnostics.DebuggerStepThrough]
-        public TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
+        public readonly TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
+        public readonly void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
 
         /// <summary>
         /// Returns a pixel typeless <see cref="SpanBitmap"/>.
@@ -168,7 +168,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// This is the opposite operation of <see cref="SpanBitmap.OfType{TPixel}"/>
         /// </remarks>
         [System.Diagnostics.DebuggerStepThrough]
-        public SpanBitmap AsTypeless() { return this; }
+        public readonly SpanBitmap AsTypeless() { return this; }
     }
 
     partial struct MemoryBitmap<TPixel>
@@ -193,35 +193,35 @@ namespace InteropTypes.Graphics.Bitmaps
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        public TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
+        public readonly TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        public void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
+        public readonly void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
         
         [System.Diagnostics.DebuggerStepThrough]
-        public TPixel GetPixel(POINT point) { return GetScanlinePixels(point.Y)[point.X]; }
+        public readonly TPixel GetPixel(POINT point) { return GetScanlinePixels(point.Y)[point.X]; }
         
         [System.Diagnostics.DebuggerStepThrough]
-        public void SetPixel(POINT point, TPixel value) { UseScanlinePixels(point.Y)[point.X] = value; }
+        public readonly void SetPixel(POINT point, TPixel value) { UseScanlinePixels(point.Y)[point.X] = value; }
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        public SpanBitmap<TPixel> AsSpanBitmap() { return this; }
+        public readonly SpanBitmap<TPixel> AsSpanBitmap() { return this; }
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        SpanBitmap SpanBitmap.ISource.AsSpanBitmap() { return this; }
+        readonly SpanBitmap SpanBitmap.ISource.AsSpanBitmap() { return this; }
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        MemoryBitmap MemoryBitmap.ISource.AsMemoryBitmap() { return this; }
+        readonly MemoryBitmap MemoryBitmap.ISource.AsMemoryBitmap() { return this; }
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        MemoryBitmap<TPixel> ISource.AsMemoryBitmap() { return this; }
+        readonly MemoryBitmap<TPixel> ISource.AsMemoryBitmap() { return this; }
         
         [System.Diagnostics.DebuggerStepThrough]
-        public MemoryBitmap AsTypeless() { return this; }
+        public readonly MemoryBitmap AsTypeless() { return this; }
     }
 }

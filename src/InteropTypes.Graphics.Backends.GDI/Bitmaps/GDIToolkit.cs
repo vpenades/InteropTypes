@@ -15,16 +15,16 @@ namespace InteropTypes.Graphics.Backends
     {
         #region GDI facade
 
-        public static Adapters.GDIFactory WithGDI(this BitmapInfo binfo) { return new Adapters.GDIFactory(binfo); }
+        public static Adapters.GDIFactory WithGDI(this in BitmapInfo binfo) { return new Adapters.GDIFactory(binfo); }
 
-        public static Adapters.GDISpanAdapter WithGDI(this SpanBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }        
+        public static Adapters.GDISpanAdapter WithGDI(this in SpanBitmap bmp) { return new Adapters.GDISpanAdapter(bmp); }        
 
-        public static Adapters.GDISpanAdapter WithGDI<TPixel>(this SpanBitmap<TPixel> bmp) where TPixel : unmanaged
+        public static Adapters.GDISpanAdapter WithGDI<TPixel>(this in SpanBitmap<TPixel> bmp) where TPixel : unmanaged
         { return new Adapters.GDISpanAdapter(bmp.AsTypeless()); }
         
-        public static Adapters.GDIMemoryAdapter UsingGDI(this MemoryBitmap bmp) { return new Adapters.GDIMemoryAdapter(bmp); }
+        public static Adapters.GDIMemoryAdapter UsingGDI(this in MemoryBitmap bmp) { return new Adapters.GDIMemoryAdapter(bmp); }
 
-        public static Adapters.GDIMemoryAdapter WithGDI<TPixel>(this MemoryBitmap<TPixel> bmp) where TPixel : unmanaged
+        public static Adapters.GDIMemoryAdapter WithGDI<TPixel>(this in MemoryBitmap<TPixel> bmp) where TPixel : unmanaged
         { return new Adapters.GDIMemoryAdapter(bmp); }
 
         
@@ -81,7 +81,7 @@ namespace InteropTypes.Graphics.Backends
             _Implementation.WriteAsSpanBitmap(bmp, action);
         }
 
-        public static void MutateAsGDI<TPixel>(this SpanBitmap<TPixel> bmp, Action<System.Drawing.Graphics> mutator) where TPixel : unmanaged
+        public static void MutateAsGDI<TPixel>(this in SpanBitmap<TPixel> bmp, Action<System.Drawing.Graphics> mutator) where TPixel : unmanaged
         {
             bmp.WithGDI().Draw(mutator);
         }
@@ -91,7 +91,7 @@ namespace InteropTypes.Graphics.Backends
             _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
         }
 
-        public static void SetPixels(this SpanBitmap dst, int dstx, int dsty, in GDIBITMAP src)
+        public static void SetPixels(this in SpanBitmap dst, int dstx, int dsty, in GDIBITMAP src)
         {
             _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstx, dsty, s));
         }
@@ -101,7 +101,7 @@ namespace InteropTypes.Graphics.Backends
             _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstSRT, s));
         }
 
-        public static void SetPixels(this SpanBitmap dst, System.Numerics.Matrix3x2 dstSRT, in GDIBITMAP src)
+        public static void SetPixels(this in SpanBitmap dst, System.Numerics.Matrix3x2 dstSRT, in GDIBITMAP src)
         {
             _Implementation.Transfer(src, dst, (s, d) => d.SetPixels(dstSRT, s));
         }
@@ -111,7 +111,7 @@ namespace InteropTypes.Graphics.Backends
             _Implementation.Transfer(src, dst, (s, d) => d.FitPixels(s));
         }
 
-        public static void FitPixels(this SpanBitmap dst, in GDIBITMAP src)
+        public static void FitPixels(this in SpanBitmap dst, in GDIBITMAP src)
         {
             _Implementation.Transfer(src, dst, (s, d) => d.FitPixels(s));
         }

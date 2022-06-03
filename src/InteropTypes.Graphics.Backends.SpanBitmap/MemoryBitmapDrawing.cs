@@ -15,13 +15,13 @@ namespace InteropTypes.Graphics.Backends
 
     public static class InteropDrawing
     {
-        public static Drawing.Fonts.IBitmapFont ToBitmapFont<TPixel>(this MemoryBitmap<TPixel> bmp)
+        public static Drawing.Fonts.IBitmapFont ToBitmapFont<TPixel>(this in MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged
         {
             return bmp.AsTypeless().ToBitmapFont();
         }
 
-        public static Drawing.Fonts.IBitmapFont ToBitmapFont(this MemoryBitmap bmp)
+        public static Drawing.Fonts.IBitmapFont ToBitmapFont(this in MemoryBitmap bmp)
         {
             MemoryBitmap<Pixel.BGRP32> bmpx = default;
 
@@ -30,7 +30,7 @@ namespace InteropTypes.Graphics.Backends
             return new _XnaSpriteFontAdapter(2, bmpx);
         }
 
-        public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, Action<ICanvas2D> canvas)
+        public static void UseDrawingContext<TPixel>(this in SpanBitmap<TPixel> bitmap, Action<ICanvas2D> canvas)
             where TPixel : unmanaged
             , Pixel.IValueSetter<Pixel.BGRA32>
             , Pixel.IValueSetter<Pixel.BGRP32>
@@ -43,7 +43,7 @@ namespace InteropTypes.Graphics.Backends
             bitmap.PinWritablePointer(ptr => canvas(onPin(ptr)));
         }
 
-        public static void UseDrawingContext<TPixel>(this SpanBitmap<TPixel> bitmap, POINT virtualSize, Action<ICanvas2D> canvas)
+        public static void UseDrawingContext<TPixel>(this in SpanBitmap<TPixel> bitmap, POINT virtualSize, Action<ICanvas2D> canvas)
             where TPixel : unmanaged
             , Pixel.IValueSetter<Pixel.BGRA32>
             , Pixel.IValueSetter<Pixel.BGRP32>
@@ -60,7 +60,7 @@ namespace InteropTypes.Graphics.Backends
             bitmap.PinWritablePointer(ptr => canvas(onPin(ptr)));            
         }
 
-        public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, POINT virtualSize)
+        public static ICanvas2D CreateDrawingContext<TPixel>(this in MemoryBitmap<TPixel> bitmap, POINT virtualSize)
             where TPixel : unmanaged
         {
             if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
@@ -70,7 +70,7 @@ namespace InteropTypes.Graphics.Backends
             return _UseVirtualViewport(dc, (bitmap.Width,bitmap.Height), virtualSize);
         }
 
-        public static ICanvas2D CreateDrawingContext(this MemoryBitmap bitmap, POINT virtualSize)
+        public static ICanvas2D CreateDrawingContext(this in MemoryBitmap bitmap, POINT virtualSize)
         {
             if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
             if (virtualSize.Y == 0) throw new ArgumentException(nameof(virtualSize));
@@ -92,7 +92,7 @@ namespace InteropTypes.Graphics.Backends
         }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap)
+        public static ICanvas2D CreateDrawingContext<TPixel>(this in MemoryBitmap<TPixel> bitmap)
             where TPixel:unmanaged
         {
             return bitmap.AsTypeless().CreateDrawingContext();
@@ -135,7 +135,7 @@ namespace InteropTypes.Graphics.Backends
             throw new NotImplementedException($"{bitmap.PixelFormat}");
         }
 
-        public static ICanvas2D CreateDrawingContext<TPixel>(this MemoryBitmap<TPixel> bitmap, Converter<System.Drawing.Color, TPixel> converter)
+        public static ICanvas2D CreateDrawingContext<TPixel>(this in MemoryBitmap<TPixel> bitmap, Converter<System.Drawing.Color, TPixel> converter)
             where TPixel : unmanaged
             , Pixel.IValueSetter<Pixel.BGRP32>
         {
@@ -147,13 +147,13 @@ namespace InteropTypes.Graphics.Backends
             dc.DrawFont(origin, 0.4f, text, FontStyle.Gray.With(color, 1));
         }
 
-        public static void DrawPixelLine<TPixel>(this MemoryBitmap<TPixel> bitmap, POINT a, POINT b, TPixel color)
+        public static void DrawPixelLine<TPixel>(this in MemoryBitmap<TPixel> bitmap, POINT a, POINT b, TPixel color)
             where TPixel : unmanaged
         {
             bitmap.AsSpanBitmap().DrawPixelLine(a, b, color);
         }
 
-        public static void DrawPixelLine<TPixel>(this SpanBitmap<TPixel> bitmap, POINT a, POINT b, TPixel color)
+        public static void DrawPixelLine<TPixel>(this in SpanBitmap<TPixel> bitmap, POINT a, POINT b, TPixel color)
             where TPixel:unmanaged
         {
             var bounds = bitmap.Info;            

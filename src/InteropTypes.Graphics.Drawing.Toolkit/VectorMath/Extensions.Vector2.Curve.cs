@@ -10,7 +10,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Interpolates over a cuadratic curve defined by 3 points
         /// </summary>
-        public static Vector2 LerpCurve(this (Vector2 P1, Vector2 P2, Vector2 P3) curve, float amount)
+        public static Vector2 LerpCurve(this in (Vector2 P1, Vector2 P2, Vector2 P3) curve, float amount)
         {
             var p12 = Vector2.Lerp(curve.P1, curve.P2, amount);
             var p23 = Vector2.Lerp(curve.P2, curve.P3, amount);
@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Interpolates over a cubic curve defined by 4 points
         /// </summary>
-        public static Vector2 LerpCurve(this (Vector2 P1, Vector2 P2, Vector2 P3, Vector2 P4) curve, float amount)
+        public static Vector2 LerpCurve(this in (Vector2 P1, Vector2 P2, Vector2 P3, Vector2 P4) curve, float amount)
         {
             var squared = amount * amount;
             var cubed = squared * amount;

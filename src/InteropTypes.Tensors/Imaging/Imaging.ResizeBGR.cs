@@ -34,7 +34,7 @@ namespace InteropTypes.Tensors
         // how much weight has every src row over the final dst row
         Span<float> _SrcWeightsY;
 
-        private void _Shrink(SpanTensor2<Vector3> src, SpanTensor2<Vector3> dst, float offset = 0, float scale = 1)
+        private readonly void _Shrink(SpanTensor2<Vector3> src, SpanTensor2<Vector3> dst, float offset = 0, float scale = 1)
         {
             if (src.BitmapSize.Width != _SrcWeightsX.Length) throw new ArgumentException(nameof(src.BitmapSize));
             if (src.BitmapSize.Height != _SrcWeightsY.Length) throw new ArgumentException(nameof(src.BitmapSize));

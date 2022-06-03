@@ -9,7 +9,7 @@ namespace InteropTypes.Graphics.Drawing
 	{
 		// Adapted from: https://github.com/MadLittleMods/svg-curve-lib/tree/master/src/c%2B%2B		
 
-		public static Vector2 LerpArc(this (Vector2 p0, Vector2 p1, Vector2 rad, float xrotRadians, bool largeFlag, bool sweepFlag) arc, float t)
+		public static Vector2 LerpArc(this in (Vector2 p0, Vector2 p1, Vector2 rad, float xrotRadians, bool largeFlag, bool sweepFlag) arc, float t)
 		{
 			// rad.X and rad.Y must be positive
 			var rad = Vector2.Abs(arc.rad);

@@ -12,12 +12,12 @@ using MMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
 namespace InteropTypes.Tensors.Imaging
 {
     [System.Diagnostics.DebuggerDisplay("{Width}x{Height}x{Encoding}")]
-    public ref struct BitmapSampler<TPixel>
+    public readonly ref struct BitmapSampler<TPixel>
         where TPixel : unmanaged
     {
         #region constructor        
 
-        public unsafe BitmapSampler<TOther> Cast<TOther>()
+        public readonly unsafe BitmapSampler<TOther> Cast<TOther>()
             where TOther : unmanaged
         {
             if (sizeof(TPixel) != sizeof(TOther)) throw new ArgumentException("type size mismatch.", typeof(TOther).Name);
@@ -64,17 +64,16 @@ namespace InteropTypes.Tensors.Imaging
         #endregion
 
         #region properties
-        public int Width => _LastX + 1;
-        public int Height => _LastY + 1;
-
-        public ColorEncoding Encoding => _Encoding;
+        public readonly int Width => _LastX + 1;
+        public readonly int Height => _LastY + 1;
+        public readonly ColorEncoding Encoding => _Encoding;
 
         #endregion
 
         #region API        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Contains(in System.Drawing.Rectangle other)
+        public readonly bool Contains(in System.Drawing.Rectangle other)
         {
             if (other.Left < 0) return false;
             if (other.Top < 0) return false;
@@ -84,7 +83,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe ref readonly TPixel GetPixel(int x, int y)
+        public readonly unsafe ref readonly TPixel GetPixel(int x, int y)
         {
             #if NETSTANDARD2_1_OR_GREATER
             x = Math.Clamp(x, 0, _LastX);
@@ -104,7 +103,7 @@ namespace InteropTypes.Tensors.Imaging
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private unsafe ref readonly TDstPixel _GetPixelAs<TDstPixel>(int x, int y)
+        private readonly unsafe ref readonly TDstPixel _GetPixelAs<TDstPixel>(int x, int y)
             where TDstPixel : unmanaged
         {
             if (sizeof(TPixel) < sizeof(TDstPixel)) throw new InvalidOperationException();
@@ -127,7 +126,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe TPixel GetSample(int x, int y, int rx, int by, in MultiplyAdd mad)
+        public readonly unsafe TPixel GetSample(int x, int y, int rx, int by, in MultiplyAdd mad)
         {
             if (sizeof(TPixel) == 3)
             {
@@ -170,7 +169,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe float GetScalarPixel(int x, int y)
+        public readonly unsafe float GetScalarPixel(int x, int y)
         {
             if (typeof(TPixel) == typeof(float))
             {
@@ -181,7 +180,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe float GetScalarSample(int x, int y, int rx, int by)
+        public readonly unsafe float GetScalarSample(int x, int y, int rx, int by)
         {
             if (typeof(TPixel) == typeof(float))
             {
@@ -207,7 +206,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe Vector3 GetVector3Pixel(int x, int y)
+        public readonly unsafe Vector3 GetVector3Pixel(int x, int y)
         {
             if (sizeof(TPixel) == 3)
             {
@@ -224,7 +223,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe void GetVector3Pixel(int x, int y, out Vector3 result)
+        public readonly unsafe void GetVector3Pixel(int x, int y, out Vector3 result)
         {
             if (sizeof(TPixel) == 3)
             {
@@ -245,7 +244,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe Vector3 GetVector3Sample(int x, int y, int rx, int by)
+        public readonly unsafe Vector3 GetVector3Sample(int x, int y, int rx, int by)
         {
             if (sizeof(TPixel) == 3)
             {
@@ -299,7 +298,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe Vector4 GetVector4Pixel(int x, int y)
+        public readonly unsafe Vector4 GetVector4Pixel(int x, int y)
         {
             if (typeof(TPixel) == typeof(Vector4))
             {
@@ -310,7 +309,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe Vector4 GetVector4Sample(int x, int y, int rx, int by)
+        public readonly unsafe Vector4 GetVector4Sample(int x, int y, int rx, int by)
         {
             if (typeof(TPixel) == typeof(Vector4))
             {
@@ -382,7 +381,7 @@ namespace InteropTypes.Tensors.Imaging
         #region API
 
         // gets the rectangle representing the source region that contains the pixels to be sampled for this row.
-        public System.Drawing.Rectangle GetSourceRect(int targetWidth)
+        public readonly System.Drawing.Rectangle GetSourceRect(int targetWidth)
         {
             var xx = _X + _Dx * targetWidth;
             var minX = Math.Min(_X, xx) >> BITSHIFT;

@@ -202,7 +202,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
         #region nested types
 
-        internal ref struct SpanQuantized8Sampler<TSrcPixel, TDstPixel>
+        internal readonly ref struct SpanQuantized8Sampler<TSrcPixel, TDstPixel>
             where TSrcPixel : unmanaged
             where TDstPixel : unmanaged
         {
@@ -271,12 +271,12 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 private readonly TRANSFORM _Transform;                
 
-                public void UpdateIterator(float x, float y, out _RowTransformIterator iterator)
+                public readonly void UpdateIterator(float x, float y, out _RowTransformIterator iterator)
                 {
                     iterator = new _RowTransformIterator(new System.Numerics.Vector2(x,y), _Transform);
                 }
 
-                public void UpdateIterator(in System.Numerics.Vector2 dst, out _RowTransformIterator iterator)
+                public readonly void UpdateIterator(in System.Numerics.Vector2 dst, out _RowTransformIterator iterator)
                 {
                     iterator = new _RowTransformIterator(dst, _Transform);
                 }

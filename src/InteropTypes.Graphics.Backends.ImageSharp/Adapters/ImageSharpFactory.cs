@@ -6,7 +6,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Adapters
 {
-    public struct ImageSharpFactory
+    public readonly struct ImageSharpFactory
     {
         internal ImageSharpFactory(BitmapInfo binfo)
         {
@@ -17,7 +17,7 @@ namespace InteropTypes.Graphics.Adapters
         private readonly BitmapInfo _Info;
         private readonly Type _Exact;
 
-        public SixLabors.ImageSharp.Image CreateImage()
+        public readonly SixLabors.ImageSharp.Image CreateImage()
         {
             return _Implementation.CreateImageSharp(_Info.PixelFormat, _Info.Width, _Info.Height);
         }

@@ -36,7 +36,7 @@ namespace InteropTypes.Graphics
 
         [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static Span<Byte> AsBytes<T>(this Span<T> span)
+        public static Span<Byte> AsBytes<T>(this in Span<T> span)
             where T : unmanaged
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<T, byte>(span);
@@ -52,7 +52,7 @@ namespace InteropTypes.Graphics
 
         [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static Span<Single> AsSingles<T>(this Span<T> span)
+        public static Span<Single> AsSingles<T>(this in Span<T> span)
             where T : unmanaged
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<T, Single>(span);
@@ -60,7 +60,7 @@ namespace InteropTypes.Graphics
 
         [System.Diagnostics.DebuggerStepThrough]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<Single> AsSingles<T>(this ReadOnlySpan<T> span)
+        public static ReadOnlySpan<Single> AsSingles<T>(this in ReadOnlySpan<T> span)
             where T : unmanaged
         {
             return System.Runtime.InteropServices.MemoryMarshal.Cast<T, Single>(span);

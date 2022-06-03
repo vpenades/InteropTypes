@@ -11,7 +11,7 @@ using RECTF = System.Drawing.RectangleF;
 
 namespace InteropTypes.Vision
 {
-    [Obsolete]
+    [Obsolete("obsolete because obsolete")]
     public static partial class _ObsoleteExtensions
     {
         public static XY SelectXY(this XYZ v) { return new XY(v.X, v.Y); }

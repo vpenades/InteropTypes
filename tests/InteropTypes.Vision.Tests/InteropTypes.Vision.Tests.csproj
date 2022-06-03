@@ -35,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Remove="ErrorProne.NET.Structs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.FFmpeg.AutoGen\InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />

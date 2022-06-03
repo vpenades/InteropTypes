@@ -7,14 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="nunit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+    <PackageReference Remove="ErrorProne.NET.Structs" />
+  </ItemGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />

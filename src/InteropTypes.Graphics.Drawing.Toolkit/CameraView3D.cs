@@ -65,13 +65,13 @@ namespace InteropTypes.Graphics.Drawing
         /// <remarks>
         /// The camera looks into the negative Z
         /// </remarks>
-        public Matrix4x4 WorldMatrix => Camera.WorldMatrix;        
+        public readonly Matrix4x4 WorldMatrix => Camera.WorldMatrix;        
 
         #endregion        
 
         #region API
 
-        public void DrawTo(IScene3D dc, float cameraSize)
+        public readonly void DrawTo(IScene3D dc, float cameraSize)
         {
             Camera.DrawCameraTo(dc, cameraSize);
             Camera.DrawFustrumTo(dc, cameraSize * 0.05f, COLOR.BlueViolet);

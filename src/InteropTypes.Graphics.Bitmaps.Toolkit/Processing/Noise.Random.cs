@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps.Processing
 {
-    public struct RandomNoise : SpanBitmap.IEffect
+    public readonly struct RandomNoise : SpanBitmap.IEffect
     {
         private static Random _Rnd;
 

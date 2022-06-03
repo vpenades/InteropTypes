@@ -327,13 +327,13 @@ namespace InteropTypes.Graphics.Collections
             #endregion
         }
 
-        struct _IndexCollection : IEnumerable<int>
+        readonly struct _IndexCollection : IEnumerable<int>
         {
             public _IndexCollection(ValueListSet<T> source) { _Source = source; }
 
             private readonly ValueListSet<T> _Source;
-            public IEnumerator<int> GetEnumerator() { return new _IndexEnumerator(_Source); }
-            IEnumerator IEnumerable.GetEnumerator() { return new _IndexEnumerator(_Source); }
+            public readonly IEnumerator<int> GetEnumerator() { return new _IndexEnumerator(_Source); }
+            readonly IEnumerator IEnumerable.GetEnumerator() { return new _IndexEnumerator(_Source); }
         }
 
         struct _IndexEnumerator : IEnumerator<int>
@@ -363,8 +363,8 @@ namespace InteropTypes.Graphics.Collections
 
             #region properties
 
-            public int Current => _Current;
-            object IEnumerator.Current => _Current;
+            public readonly int Current => _Current;
+            readonly object IEnumerator.Current => _Current;
 
             #endregion
 

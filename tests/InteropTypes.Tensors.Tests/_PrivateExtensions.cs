@@ -18,7 +18,7 @@ namespace InteropTypes.Tensors
 
     internal static class _PrivateExtensions
     {
-        public static bool TryGetAsSpanTensor<TPixel>(this SpanBitmap<TPixel> src, out SpanTensor2<TPixel> result)
+        public static bool TryGetAsSpanTensor<TPixel>(this in SpanBitmap<TPixel> src, out SpanTensor2<TPixel> result)
             where TPixel : unmanaged
         {
             if (!src.Info.IsContinuous) { result = default; return false; }

@@ -19,6 +19,10 @@
     </PackageReference>    
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Remove="ErrorProne.NET.Structs" />
+  </ItemGroup>
+
   <ItemGroup>    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.PixelFormats\InteropTypes.Graphics.Bitmaps.PixelFormats.csproj" />

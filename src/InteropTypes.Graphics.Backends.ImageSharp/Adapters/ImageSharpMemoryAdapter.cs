@@ -42,7 +42,7 @@ namespace InteropTypes.Graphics.Adapters
 
         #region properties
 
-        public SixLabors.ImageSharp.Image Image => _ProxyImage;
+        public readonly SixLabors.ImageSharp.Image Image => _ProxyImage;
 
         #endregion
     }

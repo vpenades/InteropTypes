@@ -86,7 +86,7 @@ namespace InteropTypes.Tensors.Imaging
             return false;
         }
 
-        public unsafe void FillPixels<TSrcPixel, TDstPixel>(TensorBitmap<TDstPixel> target, BitmapSampler<TSrcPixel> source)
+        public readonly unsafe void FillPixels<TSrcPixel, TDstPixel>(TensorBitmap<TDstPixel> target, BitmapSampler<TSrcPixel> source)
             where TSrcPixel : unmanaged
             where TDstPixel : unmanaged
         {
@@ -210,7 +210,7 @@ namespace InteropTypes.Tensors.Imaging
 
         #region API - Core
 
-        void _TransferPixels(SAMPLERXYZ24 srcSampler, TENSORXYZ24 dst)
+        readonly void _TransferPixels(SAMPLERXYZ24 srcSampler, TENSORXYZ24 dst)
         {
             SAMPLERITERATOR iter;
 
@@ -224,9 +224,9 @@ namespace InteropTypes.Tensors.Imaging
 
                 _rowProcessor(context, iter);
             }
-        }          
+        }
 
-        void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSOR32F dst)
+        readonly void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSOR32F dst)
             where TSrcPixel : unmanaged
         {
             SAMPLERITERATOR iter;
@@ -242,9 +242,9 @@ namespace InteropTypes.Tensors.Imaging
 
                 _rowProcessor(context, iter);
             }
-        }        
+        }
 
-        void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSORXYZ96F dst, bool reverse)
+        readonly void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSORXYZ96F dst, bool reverse)
             where TSrcPixel : unmanaged
         {
             SAMPLERITERATOR iter;
@@ -262,7 +262,7 @@ namespace InteropTypes.Tensors.Imaging
             }
         }
 
-        void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSORXYZ128F dst)
+        readonly void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSORXYZ128F dst)
             where TSrcPixel : unmanaged
         {
             SAMPLERITERATOR iter;
@@ -277,9 +277,9 @@ namespace InteropTypes.Tensors.Imaging
 
                 _rowProcessor(context, iter);
             }
-        }        
+        }
 
-        void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSOR32F dstX, TENSOR32F dstY, TENSOR32F dstZ, bool reverse)
+        readonly void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSOR32F dstX, TENSOR32F dstY, TENSOR32F dstZ, bool reverse)
             where TSrcPixel:unmanaged
         {
             SAMPLERITERATOR iter;

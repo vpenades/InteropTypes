@@ -45,7 +45,7 @@ namespace InteropTypes.Graphics.Adapters
 
         #region properties
 
-        public SixLabors.ImageSharp.Image<TPixel> Image => _ProxyImage;
+        public readonly SixLabors.ImageSharp.Image<TPixel> Image => _ProxyImage;
 
         #endregion
     }

@@ -6,7 +6,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Adapters
 {
-    public struct OpenCvSharp4Factory
+    public readonly struct OpenCvSharp4Factory
     {
         internal OpenCvSharp4Factory(BitmapInfo binfo)
         {
@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Adapters
 
         private readonly BitmapInfo _Info;
 
-        public OpenCvSharp.Mat CreateMat()
+        public readonly OpenCvSharp.Mat CreateMat()
         {
             var mtype = OpenCvSharp.MatType.CV_8UC(_Info.PixelByteSize);
 

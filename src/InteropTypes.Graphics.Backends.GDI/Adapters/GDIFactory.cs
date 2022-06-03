@@ -11,7 +11,7 @@ namespace InteropTypes.Graphics.Adapters
     {
         #region lifecycle
 
-        internal GDIFactory(BitmapInfo binfo)
+        internal GDIFactory(in BitmapInfo binfo)
         {
             _Info = binfo;
             _Exact = _Implementation.TryGetExactPixelFormat(_Info.PixelFormat, out var exact) ? exact : default;
