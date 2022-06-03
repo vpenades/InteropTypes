@@ -15,13 +15,13 @@ namespace InteropTypes.Graphics.Backends
 
     public static class InteropDrawing
     {
-        public static Drawing.Fonts.IBitmapFont ToBitmapFont<TPixel>(this in MemoryBitmap<TPixel> bmp)
+        public static Drawing.Fonts.IFont ToBitmapFont<TPixel>(this in MemoryBitmap<TPixel> bmp)
             where TPixel : unmanaged
         {
             return bmp.AsTypeless().ToBitmapFont();
         }
 
-        public static Drawing.Fonts.IBitmapFont ToBitmapFont(this in MemoryBitmap bmp)
+        public static Drawing.Fonts.IFont ToBitmapFont(this in MemoryBitmap bmp)
         {
             MemoryBitmap<Pixel.BGRP32> bmpx = default;
 

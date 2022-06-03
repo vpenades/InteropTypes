@@ -39,15 +39,17 @@ namespace InteropTypes.Graphics.Drawing
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, style);
         }
 
-        public static void DrawText(this ICoreCanvas2D dc, XFORM2 xform, string text, FontStyle style)
+        public static void DrawTextLine(this ICoreCanvas2D dc, XFORM2 xform, string text, float size, FontStyle style)
         {
-            if (style.Font is Fonts.IBitmapFont bmpFont)
+            if (!(style.Font is Fonts.IFont xfont)) xfont = Fonts.HersheyFont.Simplex;
+
+            if (size > 0)
             {
-                bmpFont.DrawTextTo(dc, xform, text, style.Style.FillColor);
-                return;
+                var scale = size / (float)xfont.Height;
+                xform = XFORM2.CreateScale(scale) * xform;
             }
 
-            throw new NotImplementedException();            
+            xfont.DrawTextLineTo(dc, xform, text, style.Style.FillColor);
         }
     }
 }

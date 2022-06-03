@@ -249,8 +249,6 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawPolygon(points, style);
         }        
 
-        
-
         public static void DrawPath(this CANVAS2DEX dc, XFORM2 xform, string path, OutlineFillStyle style)
         {
             Parametric.PathParser.DrawPath(dc, xform, path, style);

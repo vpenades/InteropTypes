@@ -1,19 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace InteropTypes.Graphics.Drawing.Fonts
 {
-    static partial class VectorFonts
+    /// <summary>
+    /// <see href="https://github.com/LingDong-/p5-hershey-js/blob/master/p5.hershey.data.js"/>
+    /// </summary>
+    sealed class HersheyFont0 : HersheyFont
     {
-        public static string GetSimplexCode(char character)
+        public static HersheyFont Instance { get; } = new HersheyFont0();
+
+        protected override IEnumerable<char> GetValidChars()
         {
-            var idx = character - 32;
-
-            idx = _Simplex[idx];
-
-            return _HersheyFont0[idx];
+            return Enumerable.Range(0, _Simplex.Length).Select(idx => (Char)(idx + 32));
         }
 
-        // https://github.com/LingDong-/p5-hershey-js/blob/master/p5.hershey.data.js
+        protected override string GetSimplexCode(char character)
+        {
+            var idx = character - 32;
+            if (idx < 0 || idx >= _Simplex.Length) return null;
+
+            idx = _Simplex[idx];
+            if (idx < 0 || idx >= _HersheyFont0.Length) return null;
+
+            return _HersheyFont0[idx];
+        }        
+
         private static readonly int[] _Simplex =
         {
             699, 714, 717, 733, 719, 2271, 734, 731, 721, 722,

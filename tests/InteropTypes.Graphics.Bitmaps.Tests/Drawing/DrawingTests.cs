@@ -53,8 +53,13 @@ namespace InteropTypes.Graphics.Drawing
             var dst = new MemoryBitmap<Pixel.BGR24>(512, 512);
 
             var xform = Matrix3x2.CreateScale(2) * Matrix3x2.CreateRotation(0.2f) * Matrix3x2.CreateTranslation(5, 5);
+            dst.CreateDrawingContext().DrawTextLine(xform, "Hello world!", -1, (font, System.Drawing.Color.White));
 
-            dst.CreateDrawingContext().DrawText(xform, "Hello world!", (font, System.Drawing.Color.White));
+            xform *= Matrix3x2.CreateTranslation(0, 40);
+            dst.CreateDrawingContext().DrawTextLine(xform, "Hello world!", 20, (font, System.Drawing.Color.White));
+
+            xform *= Matrix3x2.CreateTranslation(0, 40);
+            dst.CreateDrawingContext().DrawTextLine(xform, "Hello world!", 20, (Fonts.HersheyFont.Simplex, System.Drawing.Color.White));
 
             dst.Save(new AttachmentInfo("text.png"));
         }

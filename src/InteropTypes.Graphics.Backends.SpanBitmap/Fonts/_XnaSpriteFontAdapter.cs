@@ -13,7 +13,7 @@ namespace InteropTypes.Graphics.Backends
     /// <summary>
     /// Adapter for <see cref="Bitmaps.Fonts.XnaSpriteFont"/>
     /// </summary>
-    class _XnaSpriteFontAdapter : Drawing.Fonts.IBitmapFont
+    class _XnaSpriteFontAdapter : Drawing.Fonts.IFont
     {
         #region lifecycle
 
@@ -41,9 +41,9 @@ namespace InteropTypes.Graphics.Backends
 
         public int Height => _Font.Height;
 
-        public Size Measure(string text) { return _Font.Measure(text); }
+        public Size MeasureTextLine(string text) { return _Font.Measure(text); }
 
-        public void DrawTextTo(ICoreCanvas2D target, Matrix3x2 origin, string text, ColorStyle tintColor)
+        public void DrawTextLineTo(ICoreCanvas2D target, Matrix3x2 origin, string text, ColorStyle tintColor)
         {
             foreach(var (idx,xform) in _Font.GetGlyphLocations(origin,text))
             {

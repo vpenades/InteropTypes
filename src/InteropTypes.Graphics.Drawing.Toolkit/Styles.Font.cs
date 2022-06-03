@@ -42,7 +42,9 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region implicit
 
-        public static implicit operator FontStyle(COLOR fillColor) { return new FontStyle(fillColor); }        
+        public static implicit operator FontStyle(COLOR fillColor) { return new FontStyle(fillColor); }
+
+        public static implicit operator FontStyle(ColorStyle fillColor) { return new FontStyle(fillColor); }
 
         public static implicit operator FontStyle((Fonts.IFont, COLOR) style) { return new FontStyle(style.Item1, style.Item2, 0.1f, FontAlignStyle.FlipAuto); }
 

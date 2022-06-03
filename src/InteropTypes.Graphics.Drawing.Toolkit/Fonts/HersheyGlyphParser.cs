@@ -48,12 +48,12 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
         #region properties
 
-        public int Left => _Glyph[_CoordStart + 0] - 'R';
-        public int Right => _Glyph[_CoordStart + 1] - 'R';
+        public readonly int Left => _Glyph[_CoordStart + 0] - 'R';
+        public readonly int Right => _Glyph[_CoordStart + 1] - 'R';
 
-        public int Count => _CoordCount - 1;
+        public readonly int Count => _CoordCount - 1;
 
-        public (int, int)? this[int index]
+        public readonly (int, int)? this[int index]
         {
             get
             {
@@ -71,27 +71,51 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
         #region API
 
-        public IEnumerable<((int, int), (int, int))> GetSegments()
+        public (int Min, int Max) GetHeight()
+        {
+            int min = int.MaxValue;
+            int max = int.MinValue;
+
+            if (_CoordCount <= 1) return (0, 0);
+
+            for(int i=0; i < _CoordCount -1; ++i)
+            {
+                var p = this[i];
+                if (p.HasValue)
+                {
+                    var y = p.Value.Item2;
+                    min = Math.Min(min, y);
+                    max = Math.Max(max, y);
+                }
+            }            
+
+            return (min,max);
+        }
+
+        public readonly IEnumerable<((int, int), (int, int))> GetSegments(int offsetV = 0)
         {
             bool moveTo = true;
 
-            var prev = (0, 0);
+            var prev = (0, offsetV);
 
             for (int i = 0; i < Count; ++i)
             {
-                var p = this[i];
+                var p = this[i];                
 
                 if (!p.HasValue) { moveTo = true; continue; }
 
-                if (!moveTo) yield return (prev, p.Value);
+                var pp = (p.Value.Item1, p.Value.Item2 + offsetV);
+
+                if (!moveTo) yield return (prev, pp);
 
                 moveTo = false;
-                prev = p.Value;
+                prev = pp;
             }
         }
 
         public delegate void DrawFontPathCallback(ReadOnlySpan<Point2> points);
-        public void DrawPaths(Matrix3x2 xform, DrawFontPathCallback callback)
+
+        public readonly void DrawPaths(Matrix3x2 xform, DrawFontPathCallback callback, int offsetV = 0)
         {
             Span<Point2> points = stackalloc Point2[256];
 
@@ -108,7 +132,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
                     continue;
                 }
 
-                points[idx++] = Vector2.Transform(new Vector2(p.Value.Item1, p.Value.Item2), xform);
+                points[idx++] = Vector2.Transform(new Vector2(p.Value.Item1, p.Value.Item2 + offsetV), xform);
             }
 
             if (idx >= 2) callback(points.Slice(0, idx));
