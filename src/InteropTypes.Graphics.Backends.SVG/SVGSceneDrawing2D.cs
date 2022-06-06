@@ -255,7 +255,12 @@ namespace InteropTypes.Graphics.Backends
 
                 System.IO.File.WriteAllText(filePath, document);
             }
-        }        
+        }
+
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            font.DrawDecomposedTo(this, transform, text, size);
+        }
 
         #endregion
     }

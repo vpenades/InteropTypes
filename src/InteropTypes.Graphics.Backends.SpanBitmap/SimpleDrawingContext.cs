@@ -154,6 +154,13 @@ namespace InteropTypes.Graphics.Backends
 
         bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
         {
+            if (_GlobalStyle == null)
+            {
+                // initialize
+                new FontStyle(Drawing.Fonts.HersheyFont.Default, ColorStyle.White)
+                    .TrySetDefaultFontTo(ref _GlobalStyle);
+            }
+
             return GlobalStyle.TryGetGlobalProperty(_GlobalStyle, name, out value);
         }
 

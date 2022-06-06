@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Drawing.Fonts;
+
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
@@ -11,7 +13,8 @@ namespace InteropTypes.Graphics.Drawing
         GlobalStyle._ISource<String>,
         GlobalStyle._ISource<Int32>,
         GlobalStyle._ISource<Single>,
-        GlobalStyle._ISource<ColorStyle>
+        GlobalStyle._ISource<ColorStyle>,
+        GlobalStyle._ISource<Fonts.IFont>
     {
         #region lifecycle
 
@@ -37,6 +40,8 @@ namespace InteropTypes.Graphics.Drawing
         #region current styles
 
         public const string COLOR = "Color";
+
+        public const string FONT = "Font";
 
         public const string NAME = "Name";
 
@@ -153,7 +158,18 @@ namespace InteropTypes.Graphics.Drawing
         {
             _SetPropertyValue(name, value);
             return true;
-        }        
+        }
+
+        bool _ISource<Fonts.IFont>.TryGetGlobalProperty(string name, out IFont value)
+        {
+            return _TryGetPropertyValue(name, out value);
+        }
+
+        bool _ISource<Fonts.IFont>.TrySetGlobalProperty(string name, IFont value)
+        {
+            _SetPropertyValue(name, value);
+            return true;
+        }
 
         #endregion
 

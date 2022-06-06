@@ -150,6 +150,13 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            _ImmutableKey = null;
+            _Commands.DrawTextLine(transform, text, size, font);
+        }
+
+        /// <inheritdoc/>
         public void DrawTo(ICanvas2D dc)
         {
             foreach (var offset in _Commands.GetCommands())

@@ -119,7 +119,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             {
                 _FillLineAsPolygon(dc, points, diameter, style.FillColor, style.StartCap, style.EndCap);
             }
-        }
+        }        
 
         #endregion
 

@@ -170,6 +170,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region 3D Drawing API        

@@ -7,10 +7,22 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 {
     public abstract class HersheyFont : IFont
     {
+        #region fonts
+
+        public static HersheyFont Default => Simplex;
+
         public static HersheyFont Simplex => HersheyFont0.Instance;
+
+        #endregion
+
+        #region data
 
         private int _OffsetV = 0;
         private int _Height = -1;
+
+        #endregion
+
+        #region properties
         public int Height
         {
             get
@@ -23,6 +35,10 @@ namespace InteropTypes.Graphics.Drawing.Fonts
                 return _Height;
             }
         }
+
+        #endregion
+
+        #region API
 
         private (int offset,int height) _CalcFontHeight()
         {
@@ -128,10 +144,12 @@ namespace InteropTypes.Graphics.Drawing.Fonts
                 a = Vector3.TransformNormal(a, xform) + offset;
                 b = Vector3.TransformNormal(b, xform) + offset;
 
-                dc.DrawSegment(a, b, color.Strength, color.Style.FillColor);
+                dc.DrawSegment(a, b, color.Strength, color.Color);
             }
 
             offset += Vector3.TransformNormal(new Vector3(glyph.Right, 0, 0), xform);
         }
+
+        #endregion
     }
 }

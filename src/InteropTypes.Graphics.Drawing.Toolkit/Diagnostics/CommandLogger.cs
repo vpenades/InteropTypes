@@ -62,6 +62,11 @@ namespace InteropTypes.Graphics.Drawing.Diagnostics
             Write($"Sprite {transform} {style}");
         }
 
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            Write($"Text {transform} {text}");
+        }
+
         #endregion
 
         #region API 3D

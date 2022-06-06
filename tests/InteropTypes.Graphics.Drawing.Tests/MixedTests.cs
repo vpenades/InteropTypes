@@ -263,18 +263,16 @@ namespace InteropTypes.Graphics.Drawing
         private static void DrawDirectVsPolygon(ICanvas2D dc)
         {
             var l1style = (COLOR.White, LineCapStyle.Flat, LineCapStyle.Round);
-            var l2style = ((COLOR.White, COLOR.Red, 5), LineCapStyle.Flat, LineCapStyle.Round);
+            var l2style = ((COLOR.White, COLOR.Red, 5), LineCapStyle.Flat, LineCapStyle.Round);            
 
-            var texts = 0.25f;
-
-            var x = 50; dc.DrawFont((x, 30), texts, "Native", FontStyle.VFlip_Gray.With(COLOR.White));
+            var x = 50; dc.DrawTextLine((x, 30), "Native", 15, FontStyle.VFlip_Gray.With(COLOR.White));
 
             dc.DrawCircle((x, 50), 10, COLOR.White);
             dc.DrawCircle((x, 100), 10, (COLOR.White, COLOR.Red, 5));
             dc.DrawLine((x, 150), (50, 200), 10, l1style);
             dc.DrawLine((x, 250), (50, 300), 10, l2style);
 
-            x = 100; dc.DrawFont((x, 30), texts, "Polygonized", FontStyle.VFlip_Gray.With(COLOR.White));
+            x = 100; dc.DrawTextLine((x, 30), "Polygonized", 15, FontStyle.VFlip_Gray.With(COLOR.White));
 
             var dc2x = new Decompose2D(dc);
 
@@ -285,14 +283,14 @@ namespace InteropTypes.Graphics.Drawing
 
             var dc3d = Canvas2DTransform.Create(dc, Matrix3x2.Identity);
 
-            x = 150; dc.DrawFont((x, 30), texts, "3D", FontStyle.VFlip_Gray.With(COLOR.White));
+            x = 150; dc.DrawTextLine((x, 30), "3D", 15, FontStyle.VFlip_Gray.With(COLOR.White));
 
             dc3d.DrawSphere((x, 50, 0), 10, COLOR.White);
             dc3d.DrawSphere((x, 100, 0), 10, (COLOR.White, COLOR.Red, 5));
             dc3d.DrawSegment((x, 150, 0), (x, 200, 0), 10, l1style);
             dc3d.DrawSegment((x, 250, 0), (x, 300, 0), 10, l2style);
 
-            x = 200; dc.DrawFont((x, 30), texts, "3D Polygonized", FontStyle.VFlip_Gray.With(COLOR.White));
+            x = 200; dc.DrawTextLine((x, 30), "3D Polygonized", 15, FontStyle.VFlip_Gray.With(COLOR.White));
 
             var dc3x = new Decompose3D(dc3d, 5, 3);
             dc3x.DrawSphere(new Vector3(x, 50, 0), 10, COLOR.Yellow);

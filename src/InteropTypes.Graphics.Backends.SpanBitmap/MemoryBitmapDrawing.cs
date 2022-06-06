@@ -144,7 +144,7 @@ namespace InteropTypes.Graphics.Backends
 
         public static void DrawConsoleFont(this ICanvas2D dc, POINT origin, string text, System.Drawing.Color color)
         {
-            dc.DrawFont(origin, 0.4f, text, FontStyle.Gray.With(color, 1));
+            dc.DrawTextLine(origin, text, 15, System.Drawing.Color.Gray);
         }
 
         public static void DrawPixelLine<TPixel>(this in MemoryBitmap<TPixel> bitmap, POINT a, POINT b, TPixel color)

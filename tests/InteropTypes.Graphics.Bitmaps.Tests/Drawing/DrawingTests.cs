@@ -61,6 +61,9 @@ namespace InteropTypes.Graphics.Drawing
             xform *= Matrix3x2.CreateTranslation(0, 40);
             dst.CreateDrawingContext().DrawTextLine(xform, "Hello world!", 20, (Fonts.HersheyFont.Simplex, System.Drawing.Color.White));
 
+            xform *= Matrix3x2.CreateTranslation(0, 40);
+            dst.CreateDrawingContext().DrawTextLine(xform, "Hello world!", 20, System.Drawing.Color.Red);
+
             dst.Save(new AttachmentInfo("text.png"));
         }
 
@@ -78,9 +81,9 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawConsoleFont((10, 40), "abcdefghijklmnopqrstuvwxyz", System.Drawing.Color.White);
             dc.DrawConsoleFont((10, 70), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", System.Drawing.Color.White);
 
-            dc.DrawFont((10, 200), 1, "Abc123", FontStyle.White.With(3));
+            dc.DrawTextLine((10, 200), "Abc123", 15, FontStyle.White);
 
-            dc.DrawFont(Matrix3x2.CreateRotation(1,new Vector2(10,350)), "Abc123", FontStyle.White.With(3));
+            dc.DrawTextLine(Matrix3x2.CreateRotation(1,new Vector2(10,350)), "Abc123", 15, FontStyle.White.With(3));
 
             dc.DrawEllipse((200, 200), 50, 50, (System.Drawing.Color.Red, System.Drawing.Color.Blue,3));
 

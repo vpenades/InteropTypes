@@ -276,6 +276,19 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             _Target.DrawImage(transform * _Transform.Forward, style);
         }
 
+        /// <inheritdoc/>
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            if (_TargetEx != null)
+            {
+                _TargetEx.DrawTextLine(transform * _Transform.Forward, text, size, font);
+            }
+            else
+            {
+                font.DrawDecomposedTo(_Target, transform, text, size);
+            }            
+        }
+
         #endregion
 
         #region 3D Drawing API

@@ -23,7 +23,7 @@ namespace InteropTypes
 
             // DrawFlower(_Drawing2D, new XY(450, 450), 4);
 
-            dc.DrawFont((100, 100), 0.75f, "Hello World!", (COLOR.White, 2));
+            dc.DrawTextLine((100, 100), "Hello World!", 15, COLOR.White);
 
             // var bee = _CreateBeeModel2D(COLOR.Yellow);
             // _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.CreateRotation(t) * System.Numerics.Matrix3x2.CreateTranslation(600, 350), bee, Color.White);

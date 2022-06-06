@@ -103,7 +103,12 @@ namespace InteropTypes.Graphics.Backends
                     _Traces.Add(Plotly.TracesFactory.Polygon(points, style.FillColor.ToGDI()));
                 }
             }
-        }        
+        }
+
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            font.DrawDecomposedTo(this, transform, text, size);
+        }
 
         #endregion
     }

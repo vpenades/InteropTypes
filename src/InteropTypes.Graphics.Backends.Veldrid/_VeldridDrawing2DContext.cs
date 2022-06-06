@@ -137,29 +137,34 @@ namespace InteropTypes.Graphics.Backends
             _FillColor = color;
         }
 
+        /// <inheritdoc/>
         public void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
         {            
             this.AddConvexPolygon(points, color);
         }
 
+        /// <inheritdoc/>
         public void DrawAsset(in Matrix3x2 transform, object asset)
         {            
             if (asset is IDrawingBrush<ICanvas2D> drawable) { drawable.DrawTo(this); return; }
             _Collapsed2D.DrawAsset(transform, asset);
         }
 
+        /// <inheritdoc/>
         public void DrawEllipse(Point2 center, float width, float height, OutlineFillStyle style)
         {
             if (!style.IsVisible) return;
             _Collapsed2D.DrawEllipse(center, width, height, style);
         }
 
+        /// <inheritdoc/>
         public void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle style)
         {
             if (!style.IsVisible) return;
             _Collapsed2D.DrawLines(points, diameter, style);
         }
 
+        /// <inheritdoc/>
         public void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle style)
         {
             if (!style.IsVisible) return;
@@ -167,6 +172,7 @@ namespace InteropTypes.Graphics.Backends
             if (style.HasFill) this.AddConvexPolygon(points, style.FillColor);
         }
 
+        /// <inheritdoc/>
         public void DrawImage(in Matrix3x2 transform, ImageStyle style)
         {
             var tex = GetTextureInfoFromSource(style.Image.Source);
@@ -181,7 +187,13 @@ namespace InteropTypes.Graphics.Backends
             AddQuad(abcd[0], abcd[1], abcd[2], abcd[3], tex.Item1);
         }
 
-        
+        /// <inheritdoc/>
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            font.DrawDecomposedTo(this, transform, text, size);
+        }
+
+
 
         #endregion
     }

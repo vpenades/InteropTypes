@@ -20,7 +20,8 @@ namespace InteropTypes.Graphics.Backends
     partial class MeshBuilder :
         ICoreScene3D,
         IBackendCanvas2D,
-        IMeshCanvas2D
+        IMeshCanvas2D,
+        GlobalStyle.ISource
     {
         #region lifecycle
 
@@ -49,6 +50,8 @@ namespace InteropTypes.Graphics.Backends
         private readonly TrianglesBuffer _Triangles = new TrianglesBuffer();
 
         private float _2DLineSize = 1f;
+
+        private GlobalStyle _GlobalStyle;
 
         #endregion
 
@@ -90,6 +93,23 @@ namespace InteropTypes.Graphics.Backends
             _SpriteCoordInvScale = XY.One / new XY(width, height);
         }
 
+        public bool TryGetGlobalProperty<T>(string name, out T value)
+        {
+            if (_GlobalStyle == null)
+            {
+                // set defaults
+                new FontStyle(Drawing.Fonts.HersheyFont.Default, ColorStyle.White)
+                    .TrySetDefaultFontTo(ref _GlobalStyle);
+            }
+
+            return GlobalStyle.TryGetGlobalProperty<T>(_GlobalStyle, name, out value);
+        }
+
+        public bool TrySetGlobalProperty<T>(string name, T value)
+        {
+            return GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, name, value);
+        }
+
         #endregion
 
         #region API - ICanvas2D        
@@ -107,7 +127,7 @@ namespace InteropTypes.Graphics.Backends
             Span<Point3> vertices = stackalloc Point3[points.Length];
             Point3.Transform(vertices, points, _DepthZ);
 
-            var c = color.ToGDI().ToXna();
+            var c = color.ToXna();
 
             for (int i = 1; i < vertices.Length; ++i)
             {
@@ -127,8 +147,8 @@ namespace InteropTypes.Graphics.Backends
             {
                 case 0: return;
                 case 1: return;
-                case 2: _DrawThinLine(vertices[0], vertices[1], color.ToGDI().ToXna()); return;
-                default: _DrawConvexSurface(vertices, color.ToGDI().ToXna(), false); return;
+                case 2: _DrawThinLine(vertices[0], vertices[1], color.ToXna()); return;
+                default: _DrawConvexSurface(vertices, color.ToXna(), false); return;
             }
         }
 
@@ -174,7 +194,7 @@ namespace InteropTypes.Graphics.Backends
 
         public void DrawConvexSurface(ReadOnlySpan<Point3> vertices, ColorStyle style)
         {
-            var c = style.ToGDI().ToXna();
+            var c = style.ToXna();
 
             _DrawConvexSurface(vertices, c, false);
         }

@@ -53,6 +53,11 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 else Decompose2D.DrawPolygon(this, points, style);
             }
 
+            public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+            {
+                font.DrawDecomposedTo(this, transform, text, size);
+            }
+
             #endregion
         }
     }

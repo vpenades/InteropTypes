@@ -143,6 +143,12 @@ namespace InteropTypes.Graphics.Backends
             _Shapes.Add(shape);
         }
 
+        /// <inheritdoc/>
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            font.DrawDecomposedTo(this, transform, text, size);
+        }
+
         #endregion
     }
 }

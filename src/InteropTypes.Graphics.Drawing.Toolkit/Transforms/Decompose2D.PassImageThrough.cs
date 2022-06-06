@@ -24,11 +24,13 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             #region API
             
+            /// <inheritdoc/>
             bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
             {
                 return GlobalStyle.TryGetGlobalProperty(_Target, name, out value);
             }
-            
+
+            /// <inheritdoc/>
             bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
             {
                 return GlobalStyle.TrySetGlobalProperty(_Target, name, value);
@@ -107,7 +109,14 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
                 if (_Backend != null) Decompose2D.DrawPolygon(_Backend, points, style);
                 else Decompose2D.DrawPolygon(_Target, points, style);
-            }            
+            }
+
+            public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+            {
+                _Check(); SetImage(null);
+
+                font.DrawDecomposedTo(_Target, transform, text, size);
+            }
 
             #endregion
         }

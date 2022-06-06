@@ -127,6 +127,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             DrawPolygon(_RenderTarget, points,style);
         }
 
-        #endregion                
+        /// <inheritdoc />
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+        {
+            font.DrawDecomposedTo(this, transform, text, size);            
+        }
+
+        #endregion
     }
 }

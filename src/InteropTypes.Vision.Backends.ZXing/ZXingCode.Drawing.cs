@@ -40,7 +40,7 @@ namespace InteropTypes.Vision.Backends
 
             var center = Point2.Centroid(points);
 
-            dc.DrawFont(center, 0.4f, result?.Text ?? string.Empty, Color.Red);
+            dc.DrawTextLine(center, result.Text, 20, Color.Red);
         }        
 
         #endregion

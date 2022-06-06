@@ -107,7 +107,7 @@ namespace VeldridDemo
             using (var dc2 = factory.CreateDrawing2DContext(buffer))
             {
                 dc2.DrawEllipse((40, 40), 50, 50, System.Drawing.Color.Blue);
-                dc2.DrawFont((150, 30), 2, "Hello World", (System.Drawing.Color.White, 2));
+                dc2.DrawTextLine((150, 30), "Hello World", 20, System.Drawing.Color.White);
                 dc2.DrawImage(Matrix3x2.CreateTranslation(100, 20), _Sprite1);
                 dc2.DrawRectangle((150, 350), (200, 100), (System.Drawing.Color.Yellow, 3), 20, 5);
 

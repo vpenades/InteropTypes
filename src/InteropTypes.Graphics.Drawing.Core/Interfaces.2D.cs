@@ -85,6 +85,15 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="height">The height of the ellipse.</param>
         /// <param name="style">The fill and outline of the ellipse.</param>
         void DrawEllipse(POINT2 center, SCALAR width, SCALAR height, OutlineFillStyle style);
+
+        /// <summary>
+        /// Draws a text line using the given font
+        /// </summary>        
+        /// <param name="transform">the location of the top-left corner of the text line</param>
+        /// <param name="text">the text to draw</param>
+        /// <param name="size">the vertical size of the text</param>
+        /// <param name="font">the font</param>
+        void DrawTextLine(in XFORM2 transform, string text, float size, FontStyle font);
     }    
 
     /// <summary>

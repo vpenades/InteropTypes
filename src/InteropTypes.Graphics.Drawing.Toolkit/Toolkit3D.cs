@@ -383,12 +383,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawSegment(c, d, diameter, brush);
             dc.DrawSegment(d, a, diameter, brush);
         }
-
-        public static void DrawFont(this IScene3D dc, XFORM4 xform, String text, COLOR color)
-        {
-            Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
-        }
-
+        
         public static void DrawFloorXZ(this IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)
         {
             _DrawFloor(dc, origin, size, divisions, oddStyle, evenStyle, (x, z) => new VECTOR3(x, 0, z));

@@ -91,6 +91,11 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 _Check(); Decompose2D.DrawPolygon(_Target, points, style);
             }
 
+            public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
+            {
+                _Check(); font.DrawDecomposedTo(_Target, transform, text, size);
+            }
+
             #endregion
         }
     }

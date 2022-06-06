@@ -123,10 +123,10 @@ namespace MonoGameDemo
 
             if (_Drawing2D.TryGetQuadrant(out var quadrant))
             {
-                _Drawing2D.DrawFont((10, 70), 1, $"{quadrant}", new FontStyle(COLOR.White));
+                _Drawing2D.DrawTextLine((10, 70), $"{quadrant}", 15, COLOR.White);
             }            
 
-            _Drawing2D.DrawFont((10, 20), 1, $"{(int)vp.X} {(int)vp.Y}", new FontStyle(COLOR.White));
+            _Drawing2D.DrawTextLine((10, 20), $"{(int)vp.X} {(int)vp.Y}", 15, COLOR.White);
 
             // Draw with IMeshCanvas2D extended API
 

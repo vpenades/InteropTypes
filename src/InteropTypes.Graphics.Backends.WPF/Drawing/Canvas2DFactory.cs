@@ -20,27 +20,30 @@ namespace InteropTypes.Graphics.Backends
 
         private static readonly Canvas2DFactory _Default = new Canvas2DFactory();
 
-        public static Canvas2DFactory Default => _Default;
+        public static Canvas2DFactory Default => _Default;        
 
-        public Canvas2DFactory() { }
-
-        public Canvas2DFactory(System.Windows.Media.DrawingContext context)
+        public Canvas2DFactory(System.Windows.Media.DrawingContext context) : this()
         {
             SetContext(context);
-        }        
+        }
+
+        public Canvas2DFactory()
+        {
+            GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, GlobalStyle.FONT, InteropTypes.Graphics.Drawing.Fonts.HersheyFont.Default);
+        }
 
         #endregion
 
         #region data
-        
+
         private System.Windows.Media.DrawingContext _Context;
 
         private readonly _WPFResourcesCache _ResourcesCache = new _WPFResourcesCache();
 
         private readonly List<System.Windows.Media.MatrixTransform> _TransformCache = new List<System.Windows.Media.MatrixTransform>();
-        private int _TransformDepth = 0;
+        private int _TransformDepth;
 
-        private GlobalStyle _GlobalStyle;
+        private GlobalStyle _GlobalStyle = new GlobalStyle();
 
         #endregion        
 
@@ -493,7 +496,13 @@ namespace InteropTypes.Graphics.Backends
             _Context.DrawImage(cropped, dstRect);
 
             // PopMatrix();
-        }        
+        }
+
+        /// <inheritdoc/>
+        public void DrawTextLine(in Matrix3x2 transform, string text, float size, Drawing.FontStyle font)
+        {
+            font.DrawDecomposedTo(this, transform, text, size);
+        }
 
         #endregion
     }

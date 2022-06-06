@@ -66,13 +66,27 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public void DrawImage(in XFORM2 xform, ImageStyle style)
+        public void DrawImage(in XFORM2 transform, ImageStyle style)
         {
             ref var xref = ref AddHeaderAndStruct<_PrimitiveImage>((int)_PrimitiveType.Image)[0];
-            xref.Transform = xform;
+            xref.Transform = transform;
             xref.ImageRef = AddReference(style.Image);
             xref.Flags = style.Flags;
             xref.Color = style.Color;
+        }
+
+        public void DrawTextLine(in XFORM2 transform, string text, float size, FontStyle font)
+        {
+            ref var xref = ref AddHeaderAndStruct<_PrimitiveTextLine>((int)_PrimitiveType.TextLine)[0];
+
+            xref.Transform = transform;
+            xref.TextRef = AddReference(text);
+            xref.Size = size;
+
+            xref.FontRef = AddReference(font.Font);            
+            xref.FontColor = font.Color;
+            xref.FontStrength = font.Strength;
+            xref.FontAlignment = font.Alignment;
         }
 
         #endregion
@@ -105,6 +119,7 @@ namespace InteropTypes.Graphics.Drawing
                     case _PrimitiveType.Convex: { _PrimitiveConvex.GetBounds(ref bounds, span); break; }
                     case _PrimitiveType.Image: _PrimitiveImage.GetBounds(ref bounds, span, References); break;
                     case _PrimitiveType.Asset: _PrimitiveAsset.GetBounds(ref bounds, span, References); break;
+                    case _PrimitiveType.TextLine: _PrimitiveTextLine.GetBounds(ref bounds, span, References); break;
                 }
             }
 
@@ -123,8 +138,9 @@ namespace InteropTypes.Graphics.Drawing
                 case _PrimitiveType.Convex: { _PrimitiveConvex.DrawTo(dc, span); break; }
                 case _PrimitiveType.Image: { _PrimitiveImage.DrawTo(dc, span, References); break; }                
                 case _PrimitiveType.Asset: { _PrimitiveAsset.DrawTo(dc, span, References, collapseAssets); break; }
+                case _PrimitiveType.TextLine: _PrimitiveTextLine.DrawTo(dc, span, References); break;
             }
-        }
+        }        
 
         #endregion
 
@@ -311,6 +327,49 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
+        struct _PrimitiveTextLine
+        {
+            public XFORM2 Transform;
+            public int TextRef;
+            public float Size;
+
+            public int FontRef;
+            public ColorStyle FontColor;
+            public float FontStrength;
+            public Fonts.FontAlignStyle FontAlignment;            
+
+            public static void GetBounds(ref _BoundsContext bounds, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
+            {
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveTextLine>(command)[0];
+
+                var tref = (string)references[src.TextRef];
+                var fref = (Fonts.IFont)references[src.FontRef];
+                var style = new FontStyle(fref, src.FontColor, src.FontStrength, src.FontAlignment);
+
+                Span<XY> vertices = stackalloc XY[4];
+
+                // style.TransformVertices(vertices, src.Transform);
+
+                throw new NotImplementedException();
+
+                bounds.AddVertex(vertices[0], 0);
+                bounds.AddVertex(vertices[1], 0);
+                bounds.AddVertex(vertices[2], 0);
+                bounds.AddVertex(vertices[3], 0);
+            }
+
+            public static void DrawTo(ICanvas2D dst, ReadOnlySpan<byte> command, IReadOnlyList<object> references)
+            {
+                var src = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, _PrimitiveTextLine>(command)[0];
+
+                var tref = (string)references[src.TextRef];
+                var fref = (Fonts.IFont)references[src.FontRef];
+                var style = new FontStyle(fref, src.FontColor, src.FontStrength, src.FontAlignment);
+
+                dst.DrawTextLine(src.Transform, tref, src.Size, style);
+            }
+        }
+
         struct _PrimitiveAsset
         {
             public XFORM2 Transform;
@@ -367,7 +426,8 @@ namespace InteropTypes.Graphics.Drawing
             Asset,
             PolyLine,
             Ellipse,
-            Polygon
+            Polygon,
+            TextLine
         }
 
         #endregion

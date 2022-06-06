@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
+using Microsoft.Xna.Framework.Graphics;
+
 using InteropTypes.Graphics.Drawing;
 
 using DRWCOLOR = System.Drawing.Color;
 using XNACOLOR = Microsoft.Xna.Framework.Color;
 using POINT3 = InteropTypes.Graphics.Drawing.Point3;
-using Microsoft.Xna.Framework.Graphics;
+
 
 namespace InteropTypes.Graphics.Backends
 {
     static class _PrivateExtensions
     {
+        public static XNACOLOR ToXna(this ColorStyle c) { return new XNACOLOR(c.R, c.G, c.B, c.A); }
+
         public static XNACOLOR ToXna(this DRWCOLOR c) { return new XNACOLOR(c.R, c.G, c.B, c.A); }
 
         public static XNACOLOR ToXnaPremul(this DRWCOLOR c) { return XNACOLOR.FromNonPremultiplied(c.R, c.G, c.B, c.A); }
