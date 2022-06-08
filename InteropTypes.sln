@@ -100,9 +100,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Toolkit", "src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj", "{C7BB50FF-B8FB-4383-AA06-4ADF2DAF5785}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Core.Tests", "src\InteropTypes.Graphics.Drawing.Core.Tests\InteropTypes.Graphics.Drawing.Core.Tests.csproj", "{7036A00F-83F7-4022-AAEC-A0B93AE82F90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Drawing.Core.Tests", "tests\InteropTypes.Graphics.Drawing.Core.Tests\InteropTypes.Graphics.Drawing.Core.Tests.csproj", "{7036A00F-83F7-4022-AAEC-A0B93AE82F90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.WPF.Demo.App", "src\InteropTypes.Graphics.WPF.Demo.App\InteropTypes.Graphics.WPF.Demo.App.csproj", "{CA316A21-B1D5-48ED-9297-35CA4972BA60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.WPF.Demo.App", "tests\InteropTypes.Graphics.WPF.Demo.App\InteropTypes.Graphics.WPF.Demo.App.csproj", "{CA316A21-B1D5-48ED-9297-35CA4972BA60}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.MJPEG", "src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj", "{FEF78B0C-600C-4697-BFEF-BC272105B391}"
 EndProject
@@ -110,7 +110,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{B682D47D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Backends.ZXing", "src\InteropTypes.Vision.Backends.ZXing\InteropTypes.Vision.Backends.ZXing.csproj", "{FE5DEF62-98EC-4711-BCD9-DAB3E0E307E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Demos.Common", "src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj", "{C6C47C85-CC36-4BEE-AFED-CBB51760F994}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Demos.Common", "tests\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj", "{C6C47C85-CC36-4BEE-AFED-CBB51760F994}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Codecs", "Codecs", "{554325E7-82B1-4A1F-8F6F-0E63E82537EC}"
 EndProject

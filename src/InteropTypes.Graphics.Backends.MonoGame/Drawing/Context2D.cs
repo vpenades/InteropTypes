@@ -95,8 +95,7 @@ namespace InteropTypes.Graphics.Backends
             Flush();
             _CurrTexture = texture;
             _VectorsBatch.SetSpriteTextureSize(_CurrTexture.Width, _CurrTexture.Height);
-
-            _VectorsBatch.SpriteCoordsBleed = attr.TextureBleed;
+            
             _Device.SamplerStates[0] = attr.Sampler ?? SamplerState.LinearClamp;
         }
 
@@ -104,12 +103,13 @@ namespace InteropTypes.Graphics.Backends
         public void Begin(int virtualWidth, int virtualHeight, bool keepAspect)
         {
             _Screen = _Device.CreateVirtualToPhysical((virtualWidth, virtualHeight), keepAspect);
+
+            _VectorsBatch.SetRenderTargetInfo(this, _Screen);
+
             _UpdateMatrices();
 
             _PrevState = GlobalState.GetCurrent(_Device);
-            GlobalState.CreateSpriteState().ApplyTo(_Device);
-
-            _VectorsBatch.SpriteCoordsBleed = 0;
+            GlobalState.CreateSpriteState().ApplyTo(_Device);            
         }
 
         /// <inheritdoc />
@@ -133,13 +133,6 @@ namespace InteropTypes.Graphics.Backends
 
             _VectorsBatch.SetThinLinesPixelSize(scalars[0] * 1.25f);
         }
-
-        /// <inheritdoc />
-        public void SetSpriteMirror(bool hflip, bool vflip)
-        {
-            _VectorsBatch.SetSpriteGlobalMirror(hflip, vflip);
-        }        
-
 
         public void Flush()
         {

@@ -34,7 +34,7 @@ namespace WPFDemo
 
             var fontXform = System.Numerics.Matrix4x4.CreateScale(0.1f, -0.1f, 1) * System.Numerics.Matrix4x4.CreateTranslation(((Point3)pos).XYZ);
 
-            scene.DrawFont(fontXform, $"Height:{tmp}", System.Drawing.Color.Black);
+            scene.DrawTextLine(fontXform, $"Height:{tmp}", System.Drawing.Color.Black);
         }
     }
 }

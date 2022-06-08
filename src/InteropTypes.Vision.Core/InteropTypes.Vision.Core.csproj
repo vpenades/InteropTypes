@@ -4,8 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <RootNamespace>InteropTypes.Vision</RootNamespace>
-    <IsPackable>true</IsPackable>
+    <RootNamespace>InteropTypes.Vision</RootNamespace>    
   </PropertyGroup>
 
   <ItemGroup>

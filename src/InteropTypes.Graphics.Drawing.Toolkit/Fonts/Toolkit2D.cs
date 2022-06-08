@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawTextLine(xform, text, size, style);
         }
 
-        public static void DrawFont(this IScene3D dc, System.Numerics.Matrix4x4 xform, String text, ColorStyle color)
+        public static void DrawTextLine(this IScene3D dc, System.Numerics.Matrix4x4 xform, String text, ColorStyle color)
         {
             Fonts.FontDrawing.DrawFontAsLines(dc, xform, text, color);
         }   

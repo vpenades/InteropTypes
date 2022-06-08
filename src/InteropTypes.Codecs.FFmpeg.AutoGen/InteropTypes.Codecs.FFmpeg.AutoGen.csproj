@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <LangVersion>7.3</LangVersion>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
   </PropertyGroup>  

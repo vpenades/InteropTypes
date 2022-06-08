@@ -3,8 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <LangVersion>10</LangVersion>
-    <IsPackable>true</IsPackable>
+    <LangVersion>10</LangVersion>    
   </PropertyGroup>
 
   <PropertyGroup>

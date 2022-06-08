@@ -20,8 +20,7 @@ namespace InteropTypes.Graphics.Backends
     partial class MeshBuilder :
         ICoreScene3D,
         IBackendCanvas2D,
-        IMeshCanvas2D,
-        GlobalStyle.ISource
+        IMeshCanvas2D        
     {
         #region lifecycle
 
@@ -34,24 +33,15 @@ namespace InteropTypes.Graphics.Backends
 
         #region data
 
-        private readonly bool _FaceFlip = false;
-        private readonly float _DepthZ = 0;
+        private readonly bool _FaceFlip;
+        private readonly float _DepthZ;
 
-        private float _SpriteBleed = 0;
-        private XY _SpriteUv0Bleed = XY.Zero;
-        private XY _SpriteUv1Bleed = XY.Zero;
-        private XY _SpriteUv2Bleed = XY.Zero;
-        private XY _SpriteUv3Bleed = XY.Zero;
-        private XY _SpriteCoordInvScale;
-        private bool _SpriteMirrorX;
-        private bool _SpriteMirrorY;
-
-        private readonly LinesBuffer _Lines = new LinesBuffer();
         private readonly TrianglesBuffer _Triangles = new TrianglesBuffer();
+        private readonly LinesBuffer _Lines = new LinesBuffer();        
 
-        private float _2DLineSize = 1f;
+        private XY _SpriteCoordInvScale;
 
-        private GlobalStyle _GlobalStyle;
+        private float _2DLineSize = 1f;        
 
         #endregion
 
@@ -63,51 +53,14 @@ namespace InteropTypes.Graphics.Backends
 
         public int SphereLOD { get; set; } = 1;
 
-        public bool IsEmpty => _Lines.IsEmpty && _Triangles.IsEmpty;
-
-        public float SpriteCoordsBleed
-        {
-            get => _SpriteBleed;
-            set
-            {
-                _SpriteBleed = value;
-                _SpriteUv0Bleed = new XY(value, value);
-                _SpriteUv1Bleed = new XY(-value, value);
-                _SpriteUv2Bleed = new XY(-value, -value);
-                _SpriteUv3Bleed = new XY(value, -value);
-            }
-        }
+        public bool IsEmpty => _Lines.IsEmpty && _Triangles.IsEmpty;        
 
         #endregion
 
-        #region API
-
-        public void SetSpriteGlobalMirror(bool mirrorX, bool mirrorY)
-        {
-            _SpriteMirrorX = mirrorX;
-            _SpriteMirrorY = mirrorY;
-        }
-
+        #region API       
         public void SetSpriteTextureSize(int width, int height)
         {
             _SpriteCoordInvScale = XY.One / new XY(width, height);
-        }
-
-        public bool TryGetGlobalProperty<T>(string name, out T value)
-        {
-            if (_GlobalStyle == null)
-            {
-                // set defaults
-                new FontStyle(Drawing.Fonts.HersheyFont.Default, ColorStyle.White)
-                    .TrySetDefaultFontTo(ref _GlobalStyle);
-            }
-
-            return GlobalStyle.TryGetGlobalProperty<T>(_GlobalStyle, name, out value);
-        }
-
-        public bool TrySetGlobalProperty<T>(string name, T value)
-        {
-            return GlobalStyle.TrySetGlobalProperty(ref _GlobalStyle, name, value);
         }
 
         #endregion

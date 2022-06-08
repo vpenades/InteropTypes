@@ -3,8 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <IsPackable>true</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>  
   
   <Import Project="..\ApiChangeAnalyzer.props" />

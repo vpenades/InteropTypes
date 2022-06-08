@@ -157,7 +157,7 @@ namespace InteropTypes.Graphics.Backends
             if (_GlobalStyle == null)
             {
                 // initialize
-                new FontStyle(Drawing.Fonts.HersheyFont.Default, ColorStyle.White)
+                new FontStyle(Drawing.Fonts.HersheyFont.Default, ColorStyle.White, 0.1f, Drawing.Fonts.FontAlignStyle.FlipAuto)
                     .TrySetDefaultFontTo(ref _GlobalStyle);
             }
 

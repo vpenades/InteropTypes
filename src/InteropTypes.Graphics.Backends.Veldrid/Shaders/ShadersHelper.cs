@@ -23,14 +23,14 @@ namespace InteropTypes.Graphics.Backends
 
         public static byte[] ReadEmbeddedAssetBytes(string name)
         {
-            var path = System.IO.Path.Combine("ShadersGen", name);
+            var path = System.IO.Path.Combine("ShaderGen", name);
             path = path.Substring(0, path.Length - ".bytes".Length);
             
             if (System.IO.File.Exists(path)) return System.IO.File.ReadAllBytes(path);
 
             var names = typeof(VeldridHelper).Assembly.GetManifestResourceNames();
 
-            name = "InteropTypes.Graphics.Backends.Veldrid.ShadersGen." + name;
+            name = "InteropTypes.Graphics.Backends.Veldrid.ShaderGen." + name;
 
             if (names.All(item => item != name)) throw new InvalidOperationException($"{name} not found.");
 

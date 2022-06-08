@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Text;
 
 using COLOR = System.Drawing.Color;
+using XY = System.Numerics.Vector2;
 using XFORM = System.Numerics.Matrix3x2;
 
 namespace InteropTypes.Graphics.Drawing
@@ -108,31 +109,14 @@ namespace InteropTypes.Graphics.Drawing
         public void DrawDecomposedTo(ICoreCanvas2D dc, in XFORM transform, string text, float size)
         {
             if (size == 0) return;
-
             if (string.IsNullOrWhiteSpace(text)) return;
 
-            var font = this.Font ?? TryGetDefaultFontFrom(dc);
-
-            if (font == null) return;
-
-            var xform = transform;
+            var font = this.Font ?? TryGetDefaultFontFrom(dc).Font;
+            if (font == null) return;            
 
             // alignment transform
 
-            float xflip = 1;
-            float yflip = 1;
-
-            if (Alignment.HasFlag(Fonts.FontAlignStyle.FlipHorizontal)) { xflip = -1; }
-            if (Alignment.HasFlag(Fonts.FontAlignStyle.FlipVertical)) { yflip = -1; }
-
-            if (Alignment.HasFlag(Fonts.FontAlignStyle.FlipAuto))
-            {
-                var axes = _GetCanvasAxes(xform);
-                if (axes.X < 0) xflip *= -1;
-                if (axes.Y < 0) yflip *= -1;
-            }
-
-            xform = XFORM.CreateScale(xflip, yflip) * xform;
+            var xform = _GetAlignmentTransform(transform, this.Alignment, dc);
 
             // size transform
 
@@ -145,48 +129,74 @@ namespace InteropTypes.Graphics.Drawing
             font.DrawTextLineTo(dc, xform, text, this.Color);
         }
 
-        private static System.Numerics.Vector2 _GetCanvasAxes(ICoreCanvas2D dc)
+        private static XFORM _GetAlignmentTransform(XFORM xform, Fonts.FontAlignStyle align, ICoreCanvas2D dc)
         {
-            if (!(dc is IServiceProvider sprov)) return System.Numerics.Vector2.One;
+            float xflip = 1;
+            float yflip = 1;            
 
-            if (!(sprov.GetService(typeof(XFORM)) is XFORM canvasXform)) return System.Numerics.Vector2.One;
+            // if alignment is Auto, let's try to take it from the global style
+            if (align.HasFlag(Fonts.FontAlignStyle.FlipAuto))
+            {
+                align = TryGetDefaultFontFrom(dc).Alignment;
+            }
+
+            if (align.HasFlag(Fonts.FontAlignStyle.FlipHorizontal)) { xflip = -1; }
+            if (align.HasFlag(Fonts.FontAlignStyle.FlipVertical)) { yflip = -1; }
+
+            // we're still in Auto, let's analyze the backend to check the screen axis alignment
+            if (align.HasFlag(Fonts.FontAlignStyle.FlipAuto))
+            {
+                var axes = _GetCanvasAxes(dc);
+                if (axes.X < 0) xflip *= -1;
+                if (axes.Y < 0) yflip *= -1;
+            }
+
+            xform = XFORM.CreateScale(xflip, yflip) * xform;
+            return xform;
+        }
+
+        private static XY _GetCanvasAxes(ICoreCanvas2D dc)
+        {
+            if (!(dc is IServiceProvider sprov)) return XY.One;
+
+            if (!(sprov.GetService(typeof(XFORM)) is XFORM canvasXform)) return XY.One;
             return _GetCanvasAxes(canvasXform);
         }
 
-        private static Vector2 _GetCanvasAxes(Matrix3x2 canvasXform)
+        private static XY _GetCanvasAxes(XFORM canvasXform)
         {
-            var o = System.Numerics.Vector2.Transform(System.Numerics.Vector2.Zero, canvasXform);
-            var v = System.Numerics.Vector2.Transform(System.Numerics.Vector2.One, canvasXform);
+            var o = XY.Transform(XY.Zero, canvasXform);
+            var v = XY.Transform(XY.One, canvasXform);
 
             return v - o;
         }
 
         #endregion
 
-        #region default values
+        #region default values        
 
-        public static Fonts.IFont TryGetDefaultFontFrom(Object source)
+        public static FontStyle TryGetDefaultFontFrom(Object source)
         {
-            return GlobalStyle.TryGetGlobalProperty<Fonts.IFont>(source, GlobalStyle.FONT, out var font)
+            return GlobalStyle.TryGetGlobalProperty<FontStyle>(source, GlobalStyle.FONT, out var font)
                 ? font
                 : default;
         }
 
-        public static Fonts.IFont GetDefaultFontFrom(Object source, Fonts.IFont defval)
+        public static FontStyle GetDefaultFontFrom(Object source, FontStyle defval)
         {
-            return GlobalStyle.TryGetGlobalProperty<Fonts.IFont>(source, GlobalStyle.FONT, out var font)
+            return GlobalStyle.TryGetGlobalProperty<FontStyle>(source, GlobalStyle.FONT, out var font)
                 ? font
                 : defval;
         }
 
         public bool TrySetDefaultFontTo(Object target)
         {
-            return GlobalStyle.TrySetGlobalProperty(target, GlobalStyle.FONT, this.Font);
+            return GlobalStyle.TrySetGlobalProperty(target, GlobalStyle.FONT, this);
         }
 
         public bool TrySetDefaultFontTo(ref GlobalStyle target)
         {
-            return GlobalStyle.TrySetGlobalProperty(ref target, GlobalStyle.FONT, this.Font);
+            return GlobalStyle.TrySetGlobalProperty(ref target, GlobalStyle.FONT, this);
         }
 
         #endregion

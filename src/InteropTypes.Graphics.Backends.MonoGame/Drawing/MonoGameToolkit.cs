@@ -19,8 +19,7 @@ namespace InteropTypes.Graphics.Backends
         IServiceProvider
     {
         void Begin(int virtualWidth, int virtualHeight, bool keepAspect);
-        void SetCamera(System.Numerics.Matrix3x2 camera);
-        void SetSpriteMirror(bool mirrorX, bool mirrorY);
+        void SetCamera(System.Numerics.Matrix3x2 camera);        
         void End();
     }
 

@@ -10,10 +10,14 @@ using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
-    /// Represents the most fundamental drawing canvas for drawing simple poligons and images. 
+    /// Represents the most fundamental drawing canvas for drawing simple polygons and images. 
     /// </summary>
     /// <remarks>
-    /// Inherited by <see cref="ICanvas2D"/>
+    /// Inherited by <see cref="ICanvas2D"/><br/>
+    /// Derived classes can optionally implement:<br/>
+    /// - <see cref="GlobalStyle.ISource"/><br/>
+    /// - <see cref="IRenderTargetInfo"/><br/>
+    /// - <see cref="IMeshCanvas2D"/><br/>
     /// </remarks>
     public interface ICoreCanvas2D
     {

@@ -4,7 +4,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-android31.0</TargetFramework>
-    <SupportedOSPlatformVersion>31</SupportedOSPlatformVersion>    
+    <SupportedOSPlatformVersion>31</SupportedOSPlatformVersion>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

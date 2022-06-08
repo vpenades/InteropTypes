@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
-    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <IsPackable>true</IsPackable>
+    <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
   </PropertyGroup>    
 
   <ItemGroup>

@@ -49,13 +49,13 @@
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj" />
 
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />    
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
-
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />    
 
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.FFmpeg.AutoGen\InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />    
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
+
+    <ProjectReference Include="..\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
 
   </ItemGroup>
 

@@ -115,7 +115,8 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             {
                 _Check(); SetImage(null);
 
-                font.DrawDecomposedTo(_Target, transform, text, size);
+                if (_Backend != null) font.DrawDecomposedTo(_Backend, transform, text, size);
+                else font.DrawDecomposedTo(_Target, transform, text, size);
             }
 
             #endregion

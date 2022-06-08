@@ -104,8 +104,7 @@ namespace MonoGameDemo
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;            
 
-            _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);
-            _Drawing2D.SetSpriteMirror(false, _FlipSprites);            
+            _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);                     
 
             var vp = _Drawing2D.TransformInverse(new Point2(mouseState.Position.X, mouseState.Position.Y));
 

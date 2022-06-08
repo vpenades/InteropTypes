@@ -14,7 +14,7 @@ namespace InteropTypes.Graphics.Drawing
         GlobalStyle._ISource<Int32>,
         GlobalStyle._ISource<Single>,
         GlobalStyle._ISource<ColorStyle>,
-        GlobalStyle._ISource<Fonts.IFont>
+        GlobalStyle._ISource<FontStyle>
     {
         #region lifecycle
 
@@ -160,12 +160,12 @@ namespace InteropTypes.Graphics.Drawing
             return true;
         }
 
-        bool _ISource<Fonts.IFont>.TryGetGlobalProperty(string name, out IFont value)
+        bool _ISource<FontStyle>.TryGetGlobalProperty(string name, out FontStyle value)
         {
             return _TryGetPropertyValue(name, out value);
         }
 
-        bool _ISource<Fonts.IFont>.TrySetGlobalProperty(string name, IFont value)
+        bool _ISource<FontStyle>.TrySetGlobalProperty(string name, FontStyle value)
         {
             _SetPropertyValue(name, value);
             return true;
@@ -175,6 +175,12 @@ namespace InteropTypes.Graphics.Drawing
 
         #region nested types
 
+        /// <summary>
+        /// Exposes global properties.
+        /// </summary>
+        /// <remarks>
+        /// Optionally implemented by classes also implementing <see cref="ICoreCanvas2D"/> or <see cref="ICoreScene3D"/>
+        /// </remarks>
         public interface ISource
         {
             bool TryGetGlobalProperty<T>(string name, out T value);
