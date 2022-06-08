@@ -14,7 +14,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Style used by <see cref="ICoreCanvas2D.DrawImage(in System.Numerics.Matrix3x2, ImageStyle)"/>.
     /// </remarks>
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
-    public struct ImageStyle : IEquatable<ImageStyle>
+    public readonly struct ImageStyle : IEquatable<ImageStyle>
     {
         #region implicit
 
@@ -55,20 +55,20 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// The image source.
         /// </summary>
-        public ImageSource Image;
+        public readonly ImageSource Image;
 
         /// <summary>
         /// The color tint to apply to the bitmap.
         /// </summary>
-        public ColorStyle Color;
+        public readonly ColorStyle Color;
 
         /// <summary>
         /// The orientation of the bitmap.
         /// </summary>
-        internal _ImageFlags _Orientation;
+        internal readonly _ImageFlags _Orientation;
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             var h = Image?.GetHashCode() ?? 0;
             h ^= Color.GetHashCode();
@@ -77,10 +77,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is ImageStyle other && Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is ImageStyle other && Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(ImageStyle other)
+        public readonly bool Equals(ImageStyle other)
         {
             return
                 this.Image == other.Image &&
@@ -98,33 +98,34 @@ namespace InteropTypes.Graphics.Drawing
 
         #region properties
 
-        public bool IsEmpty => !IsVisible;
+        public readonly bool IsEmpty => !IsVisible;
 
-        public bool IsVisible => Image.IsVisible && Color.IsVisible;
+        public readonly bool IsVisible => Image.IsVisible && Color.IsVisible;
 
-        public bool FlipHorizontal
-        {
-            get => _Orientation.HasFlag(_ImageFlags.FlipHorizontal);
-            set => _Orientation = _Orientation & ~_ImageFlags.FlipHorizontal | (value ? _ImageFlags.FlipHorizontal : _ImageFlags.None);
-        }
+        public readonly bool FlipHorizontal => _Orientation.HasFlag(_ImageFlags.FlipHorizontal);
 
-        public bool FlipVertical
-        {
-            get => _Orientation.HasFlag(_ImageFlags.FlipVertical);
-            set => _Orientation = _Orientation & ~_ImageFlags.FlipVertical | (value ? _ImageFlags.FlipVertical : _ImageFlags.None);
-        }
+        public readonly bool FlipVertical => _Orientation.HasFlag(_ImageFlags.FlipVertical);
 
-        public int Flags => (int)_Orientation;
+        public readonly int Flags => (int)_Orientation;
 
         #endregion
 
         #region API
+
+        public ImageStyle WithMirror(bool horizontal, bool vertical)
+        {
+            var flags = _Orientation & ~(_ImageFlags.FlipHorizontal | _ImageFlags.FlipVertical);
+            if (horizontal) flags |= _ImageFlags.FlipHorizontal;
+            if (vertical) flags |= _ImageFlags.FlipVertical;
+
+            return new ImageStyle(this.Image, this.Color, (int)flags);
+        }
         
         /// <summary>
         /// Gets the local transform associated to this image (Pivot, scale, mirroring).
         /// </summary>
         /// <returns>A transform matrix.</returns>
-        public System.Numerics.Matrix3x2 GetTransform() { return Image.UseTransforms().GetImageMatrix(_Orientation); }
+        public readonly System.Numerics.Matrix3x2 GetTransform() { return Image.UseTransforms().GetImageMatrix(_Orientation); }
 
         /// <summary>
         /// Gets the local transform associated to this image (Pivot, scale, mirroring).
@@ -132,7 +133,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="mirrorX">True to mirror horizontally.</param>
         /// <param name="mirrorY">True to mirror vertically.</param>
         /// <returns>A transform matrix.</returns>
-        public System.Numerics.Matrix3x2 GetTransform(bool mirrorX, bool mirrorY)
+        public readonly System.Numerics.Matrix3x2 GetTransform(bool mirrorX, bool mirrorY)
         {
             var o = _Orientation;
             o ^= mirrorX ? _ImageFlags.FlipHorizontal : _ImageFlags.None;
@@ -147,7 +148,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
         /// <param name="xform">the transform to apply</param>        
         /// <param name="depthZ">the depth to set in the Position.Z of the vertices</param>
-        public void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, float depthZ = 1)
+        public readonly void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, float depthZ = 1)
         {
             Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed, depthZ);
         }
@@ -157,7 +158,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
         /// <param name="xform">the transform to apply</param>        
-        public void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform)
+        public readonly void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform)
         {
             Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed);
         }
@@ -167,7 +168,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
         /// <param name="xform">the transform to apply</param>        
-        public void TransformVertices(Span<XY> vertices, System.Numerics.Matrix3x2 xform)
+        public readonly void TransformVertices(Span<XY> vertices, System.Numerics.Matrix3x2 xform)
         {
             Image.UseTransforms().TransformVertices(vertices, xform, _Orientation);
         }

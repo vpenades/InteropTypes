@@ -1,4 +1,5 @@
 const InteropTypes.Graphics.Drawing.GlobalStyle.COLOR = "Color" -> string
+const InteropTypes.Graphics.Drawing.GlobalStyle.FONT = "Font" -> string
 const InteropTypes.Graphics.Drawing.GlobalStyle.NAME = "Name" -> string
 InteropTypes.Graphics.Drawing.BoundingSphere
 InteropTypes.Graphics.Drawing.BoundingSphere.BoundingSphere() -> void
@@ -67,9 +68,40 @@ InteropTypes.Graphics.Drawing.ColorStyle.IsEmpty.get -> bool
 InteropTypes.Graphics.Drawing.ColorStyle.IsVisible.get -> bool
 InteropTypes.Graphics.Drawing.ColorStyle.Opaque.get -> InteropTypes.Graphics.Drawing.ColorStyle
 InteropTypes.Graphics.Drawing.ColorStyle.ToGDI() -> System.Drawing.Color
+InteropTypes.Graphics.Drawing.ColorStyle.ToPremul() -> InteropTypes.Graphics.Drawing.ColorStyle
 InteropTypes.Graphics.Drawing.ColorStyle.ToString(string format, System.IFormatProvider formatProvider) -> string
+InteropTypes.Graphics.Drawing.ColorStyle.ToUnpremul() -> InteropTypes.Graphics.Drawing.ColorStyle
 InteropTypes.Graphics.Drawing.ColorStyle.TrySetDefaultTo(object target) -> bool
 InteropTypes.Graphics.Drawing.ColorStyle.WithOpacity(float opacity) -> InteropTypes.Graphics.Drawing.ColorStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.Center = InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockLeft | InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockRight | InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockTop | InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockBottom -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockBottom = 64 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockLeft = 8 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockRight = 16 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.DockTop = 32 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.FlipAuto = 1 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.FlipHorizontal = 2 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.FlipVertical = 4 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle.None = 0 -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+InteropTypes.Graphics.Drawing.Fonts.IFont
+InteropTypes.Graphics.Drawing.Fonts.IFont.DrawTextLineTo(InteropTypes.Graphics.Drawing.ICoreCanvas2D target, System.Numerics.Matrix3x2 transform, string text, InteropTypes.Graphics.Drawing.ColorStyle tintColor) -> void
+InteropTypes.Graphics.Drawing.Fonts.IFont.Height.get -> int
+InteropTypes.Graphics.Drawing.Fonts.IFont.MeasureTextLine(string text) -> System.Drawing.Size
+InteropTypes.Graphics.Drawing.FontStyle
+InteropTypes.Graphics.Drawing.FontStyle.DrawDecomposedTo(InteropTypes.Graphics.Drawing.ICoreCanvas2D dc, in System.Numerics.Matrix3x2 transform, string text, float size) -> void
+InteropTypes.Graphics.Drawing.FontStyle.Equals(InteropTypes.Graphics.Drawing.FontStyle other) -> bool
+InteropTypes.Graphics.Drawing.FontStyle.FontStyle() -> void
+InteropTypes.Graphics.Drawing.FontStyle.FontStyle(InteropTypes.Graphics.Drawing.Fonts.IFont font, InteropTypes.Graphics.Drawing.ColorStyle color) -> void
+InteropTypes.Graphics.Drawing.FontStyle.FontStyle(InteropTypes.Graphics.Drawing.Fonts.IFont font, InteropTypes.Graphics.Drawing.ColorStyle color, float strength) -> void
+InteropTypes.Graphics.Drawing.FontStyle.FontStyle(InteropTypes.Graphics.Drawing.Fonts.IFont font, InteropTypes.Graphics.Drawing.ColorStyle color, float strength, InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle align) -> void
+InteropTypes.Graphics.Drawing.FontStyle.IsVisible.get -> bool
+InteropTypes.Graphics.Drawing.FontStyle.TrySetDefaultFontTo(object target) -> bool
+InteropTypes.Graphics.Drawing.FontStyle.TrySetDefaultFontTo(ref InteropTypes.Graphics.Drawing.GlobalStyle target) -> bool
+InteropTypes.Graphics.Drawing.FontStyle.With(float strength) -> InteropTypes.Graphics.Drawing.FontStyle
+InteropTypes.Graphics.Drawing.FontStyle.With(InteropTypes.Graphics.Drawing.ColorStyle color) -> InteropTypes.Graphics.Drawing.FontStyle
+InteropTypes.Graphics.Drawing.FontStyle.With(InteropTypes.Graphics.Drawing.ColorStyle color, float strength) -> InteropTypes.Graphics.Drawing.FontStyle
+InteropTypes.Graphics.Drawing.FontStyle.With(InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle align) -> InteropTypes.Graphics.Drawing.FontStyle
+InteropTypes.Graphics.Drawing.FontStyle.With(InteropTypes.Graphics.Drawing.Fonts.IFont font) -> InteropTypes.Graphics.Drawing.FontStyle
 InteropTypes.Graphics.Drawing.GlobalStyle
 InteropTypes.Graphics.Drawing.GlobalStyle.Clone() -> InteropTypes.Graphics.Drawing.GlobalStyle
 InteropTypes.Graphics.Drawing.GlobalStyle.GlobalStyle() -> void
@@ -81,6 +113,7 @@ InteropTypes.Graphics.Drawing.ICanvas2D.DrawAsset(in System.Numerics.Matrix3x2 t
 InteropTypes.Graphics.Drawing.ICanvas2D.DrawEllipse(InteropTypes.Graphics.Drawing.Point2 center, float width, float height, InteropTypes.Graphics.Drawing.OutlineFillStyle style) -> void
 InteropTypes.Graphics.Drawing.ICanvas2D.DrawLines(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points, float diameter, InteropTypes.Graphics.Drawing.LineStyle style) -> void
 InteropTypes.Graphics.Drawing.ICanvas2D.DrawPolygon(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points, InteropTypes.Graphics.Drawing.PolygonStyle style) -> void
+InteropTypes.Graphics.Drawing.ICanvas2D.DrawTextLine(in System.Numerics.Matrix3x2 transform, string text, float size, InteropTypes.Graphics.Drawing.FontStyle font) -> void
 InteropTypes.Graphics.Drawing.ICoreCanvas2D
 InteropTypes.Graphics.Drawing.ICoreCanvas2D.DrawConvexPolygon(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points, InteropTypes.Graphics.Drawing.ColorStyle fillColor) -> void
 InteropTypes.Graphics.Drawing.ICoreCanvas2D.DrawImage(in System.Numerics.Matrix3x2 transform, InteropTypes.Graphics.Drawing.ImageStyle style) -> void
@@ -107,16 +140,12 @@ InteropTypes.Graphics.Drawing.ImageSource.WithScale(float scale) -> InteropTypes
 InteropTypes.Graphics.Drawing.ImageSource.WithSource(object source, int width, int height) -> InteropTypes.Graphics.Drawing.ImageSource
 InteropTypes.Graphics.Drawing.ImageSource.WithSourceSize(int width, int height) -> InteropTypes.Graphics.Drawing.ImageSource
 InteropTypes.Graphics.Drawing.ImageStyle
-InteropTypes.Graphics.Drawing.ImageStyle.Color -> InteropTypes.Graphics.Drawing.ColorStyle
 InteropTypes.Graphics.Drawing.ImageStyle.Equals(InteropTypes.Graphics.Drawing.ImageStyle other) -> bool
 InteropTypes.Graphics.Drawing.ImageStyle.Flags.get -> int
 InteropTypes.Graphics.Drawing.ImageStyle.FlipHorizontal.get -> bool
-InteropTypes.Graphics.Drawing.ImageStyle.FlipHorizontal.set -> void
 InteropTypes.Graphics.Drawing.ImageStyle.FlipVertical.get -> bool
-InteropTypes.Graphics.Drawing.ImageStyle.FlipVertical.set -> void
 InteropTypes.Graphics.Drawing.ImageStyle.GetTransform() -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.ImageStyle.GetTransform(bool mirrorX, bool mirrorY) -> System.Numerics.Matrix3x2
-InteropTypes.Graphics.Drawing.ImageStyle.Image -> InteropTypes.Graphics.Drawing.ImageSource
 InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle() -> void
 InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle(InteropTypes.Graphics.Drawing.ImageSource bitmap, InteropTypes.Graphics.Drawing.ColorStyle color, bool flipHorizontal, bool flipVertical) -> void
 InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle(InteropTypes.Graphics.Drawing.ImageSource bitmap, InteropTypes.Graphics.Drawing.ColorStyle color, int flags) -> void
@@ -125,6 +154,7 @@ InteropTypes.Graphics.Drawing.ImageStyle.IsVisible.get -> bool
 InteropTypes.Graphics.Drawing.ImageStyle.TransformVertices(System.Span<InteropTypes.Graphics.Drawing.Vertex2> vertices, System.Numerics.Matrix3x2 xform) -> void
 InteropTypes.Graphics.Drawing.ImageStyle.TransformVertices(System.Span<InteropTypes.Graphics.Drawing.Vertex3> vertices, System.Numerics.Matrix3x2 xform, float depthZ = 1) -> void
 InteropTypes.Graphics.Drawing.ImageStyle.TransformVertices(System.Span<System.Numerics.Vector2> vertices, System.Numerics.Matrix3x2 xform) -> void
+InteropTypes.Graphics.Drawing.ImageStyle.WithMirror(bool horizontal, bool vertical) -> InteropTypes.Graphics.Drawing.ImageStyle
 InteropTypes.Graphics.Drawing.IMeshCanvas2D
 InteropTypes.Graphics.Drawing.IMeshCanvas2D.DrawMeshPrimitive(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Vertex2> vertices, System.ReadOnlySpan<int> triangleIndices, object texture) -> void
 InteropTypes.Graphics.Drawing.IMeshScene3D
@@ -340,6 +370,8 @@ override InteropTypes.Graphics.Drawing.CameraTransform3D.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.ColorStyle.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.ColorStyle.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.ColorStyle.ToString() -> string
+override InteropTypes.Graphics.Drawing.FontStyle.Equals(object obj) -> bool
+override InteropTypes.Graphics.Drawing.FontStyle.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.ImageStyle.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.ImageStyle.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.LineStyle.Equals(object obj) -> bool
@@ -369,6 +401,12 @@ readonly InteropTypes.Graphics.Drawing.ColorStyle.B -> byte
 readonly InteropTypes.Graphics.Drawing.ColorStyle.G -> byte
 readonly InteropTypes.Graphics.Drawing.ColorStyle.Packed -> uint
 readonly InteropTypes.Graphics.Drawing.ColorStyle.R -> byte
+readonly InteropTypes.Graphics.Drawing.FontStyle.Alignment -> InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle
+readonly InteropTypes.Graphics.Drawing.FontStyle.Color -> InteropTypes.Graphics.Drawing.ColorStyle
+readonly InteropTypes.Graphics.Drawing.FontStyle.Font -> InteropTypes.Graphics.Drawing.Fonts.IFont
+readonly InteropTypes.Graphics.Drawing.FontStyle.Strength -> float
+readonly InteropTypes.Graphics.Drawing.ImageStyle.Color -> InteropTypes.Graphics.Drawing.ColorStyle
+readonly InteropTypes.Graphics.Drawing.ImageStyle.Image -> InteropTypes.Graphics.Drawing.ImageSource
 readonly InteropTypes.Graphics.Drawing.LineStyle.Style -> InteropTypes.Graphics.Drawing.OutlineFillStyle
 readonly InteropTypes.Graphics.Drawing.OutlineFillStyle.FillColor -> InteropTypes.Graphics.Drawing.ColorStyle
 readonly InteropTypes.Graphics.Drawing.OutlineFillStyle.OutlineColor -> InteropTypes.Graphics.Drawing.ColorStyle
@@ -425,6 +463,14 @@ static InteropTypes.Graphics.Drawing.ColorStyle.implicit operator InteropTypes.G
 static InteropTypes.Graphics.Drawing.ColorStyle.operator !=(InteropTypes.Graphics.Drawing.ColorStyle a, InteropTypes.Graphics.Drawing.ColorStyle b) -> bool
 static InteropTypes.Graphics.Drawing.ColorStyle.operator ==(InteropTypes.Graphics.Drawing.ColorStyle a, InteropTypes.Graphics.Drawing.ColorStyle b) -> bool
 static InteropTypes.Graphics.Drawing.ColorStyle.TryGetDefaultFrom(object source) -> InteropTypes.Graphics.Drawing.ColorStyle
+static InteropTypes.Graphics.Drawing.FontStyle.GetDefaultFontFrom(object source, InteropTypes.Graphics.Drawing.FontStyle defval) -> InteropTypes.Graphics.Drawing.FontStyle
+static InteropTypes.Graphics.Drawing.FontStyle.implicit operator InteropTypes.Graphics.Drawing.FontStyle((InteropTypes.Graphics.Drawing.Fonts.IFont, InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle) style) -> InteropTypes.Graphics.Drawing.FontStyle
+static InteropTypes.Graphics.Drawing.FontStyle.implicit operator InteropTypes.Graphics.Drawing.FontStyle((InteropTypes.Graphics.Drawing.Fonts.IFont, System.Drawing.Color) style) -> InteropTypes.Graphics.Drawing.FontStyle
+static InteropTypes.Graphics.Drawing.FontStyle.implicit operator InteropTypes.Graphics.Drawing.FontStyle(InteropTypes.Graphics.Drawing.ColorStyle color) -> InteropTypes.Graphics.Drawing.FontStyle
+static InteropTypes.Graphics.Drawing.FontStyle.implicit operator InteropTypes.Graphics.Drawing.FontStyle(System.Drawing.Color color) -> InteropTypes.Graphics.Drawing.FontStyle
+static InteropTypes.Graphics.Drawing.FontStyle.operator !=(in InteropTypes.Graphics.Drawing.FontStyle a, in InteropTypes.Graphics.Drawing.FontStyle b) -> bool
+static InteropTypes.Graphics.Drawing.FontStyle.operator ==(in InteropTypes.Graphics.Drawing.FontStyle a, in InteropTypes.Graphics.Drawing.FontStyle b) -> bool
+static InteropTypes.Graphics.Drawing.FontStyle.TryGetDefaultFontFrom(object source) -> InteropTypes.Graphics.Drawing.FontStyle
 static InteropTypes.Graphics.Drawing.GlobalStyle.TryGetGlobalProperty<T>(object obj, string name, out T value) -> bool
 static InteropTypes.Graphics.Drawing.GlobalStyle.TrySetGlobalProperty<T>(object obj, string name, T value) -> bool
 static InteropTypes.Graphics.Drawing.GlobalStyle.TrySetGlobalProperty<T>(ref InteropTypes.Graphics.Drawing.GlobalStyle style, string name, T value) -> bool
@@ -626,6 +672,18 @@ static readonly InteropTypes.Graphics.Drawing.ColorStyle.Red -> InteropTypes.Gra
 static readonly InteropTypes.Graphics.Drawing.ColorStyle.Transparent -> InteropTypes.Graphics.Drawing.ColorStyle
 static readonly InteropTypes.Graphics.Drawing.ColorStyle.White -> InteropTypes.Graphics.Drawing.ColorStyle
 static readonly InteropTypes.Graphics.Drawing.ColorStyle.Yellow -> InteropTypes.Graphics.Drawing.ColorStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.Black -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.Blue -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.Gray -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.Green -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.Red -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.VFlip_Black -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.VFlip_Blue -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.VFlip_Gray -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.VFlip_Green -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.VFlip_Red -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.VFlip_White -> InteropTypes.Graphics.Drawing.FontStyle
+static readonly InteropTypes.Graphics.Drawing.FontStyle.White -> InteropTypes.Graphics.Drawing.FontStyle
 static readonly InteropTypes.Graphics.Drawing.LineStyle.Black -> InteropTypes.Graphics.Drawing.LineStyle
 static readonly InteropTypes.Graphics.Drawing.LineStyle.Blue -> InteropTypes.Graphics.Drawing.LineStyle
 static readonly InteropTypes.Graphics.Drawing.LineStyle.Gray -> InteropTypes.Graphics.Drawing.LineStyle

@@ -6,6 +6,7 @@ using System.Text;
 using COLOR = System.Drawing.Color;
 using XY = System.Numerics.Vector2;
 using XFORM = System.Numerics.Matrix3x2;
+using System.Diagnostics.CodeAnalysis;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -17,7 +18,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Use Fonts.HersheyFont.Simplex as default font
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {Strength} {Alignment}")]
-    public readonly struct FontStyle
+    public readonly struct FontStyle : IEquatable<FontStyle>
     {
         #region implicit        
 
@@ -33,7 +34,15 @@ namespace InteropTypes.Graphics.Drawing
 
         #region constructors
 
-        public FontStyle(Fonts.IFont font, ColorStyle color, float strength = 0.1f)
+        public FontStyle(Fonts.IFont font, ColorStyle color)
+        {
+            Font = font;
+            Color = color;
+            Strength = 0.1f;
+            Alignment = Fonts.FontAlignStyle.FlipAuto;
+        }
+
+        public FontStyle(Fonts.IFont font, ColorStyle color, float strength)
         {
             Font = font;
             Color = color;
@@ -56,7 +65,40 @@ namespace InteropTypes.Graphics.Drawing
         public readonly Fonts.IFont Font;
         public readonly Fonts.FontAlignStyle Alignment;
         public readonly ColorStyle Color;
-        public readonly float Strength;        
+        public readonly float Strength;
+
+        /// <inheritdoc/>
+        public readonly override int GetHashCode()
+        {
+            var h = Font?.GetHashCode() ?? 0;
+            h |= Alignment.GetHashCode();
+            h |= Color.GetHashCode();
+            h |= Strength.GetHashCode();
+            return h;
+        }
+
+        /// <inheritdoc/>
+        public readonly override bool Equals(object obj)
+        {
+            return obj is FontStyle other && this.Equals(other);
+        }
+
+        /// <inheritdoc/>
+        public readonly bool Equals(FontStyle other)
+        {
+            if (this.Font != other.Font) return false;
+            if (this.Alignment != other.Alignment) return false;
+            if (this.Color != other.Color) return false;
+            if (this.Strength != other.Strength) return false;
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public static bool operator ==(in FontStyle a, in FontStyle b) => a.Equals(b);
+
+        /// <inheritdoc/>
+        public static bool operator !=(in FontStyle a, in FontStyle b) => !a.Equals(b);
+
 
         #endregion
 

@@ -11,6 +11,11 @@
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Core\InteropTypes.Graphics.Drawing.Core.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <!-- remove warnings related to this Drawing.Common available only on Windows -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>

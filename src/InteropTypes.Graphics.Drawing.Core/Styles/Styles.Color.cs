@@ -103,13 +103,13 @@ namespace InteropTypes.Graphics.Drawing
         public readonly Byte A;
 
         /// <inheritdoc/>
-        public override int GetHashCode() { return A== 0 ? 0 : this.Packed.GetHashCode(); }
+        public readonly override int GetHashCode() { return A== 0 ? 0 : this.Packed.GetHashCode(); }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { return obj is ColorStyle other && this.Equals(other); }
+        public readonly override bool Equals(object obj) { return obj is ColorStyle other && this.Equals(other); }
 
         /// <inheritdoc/>
-        public bool Equals(ColorStyle other)
+        public readonly bool Equals(ColorStyle other)
         {
             return (this.A | other.A) == 0 ? true : this.Packed == other.Packed;
         }

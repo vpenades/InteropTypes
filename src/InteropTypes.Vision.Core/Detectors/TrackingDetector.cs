@@ -31,22 +31,34 @@ namespace InteropTypes.Vision
             return this;
         }
 
+        /// <inheritdoc/>
         public void Dispose()
+        {            
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~TrackingDetector() { Dispose(false); }
+
+        protected virtual void Dispose(bool disposing)
         {
-            System.Threading.Interlocked.Exchange(ref _BroadDetector, null)?.Dispose();
-            System.Threading.Interlocked.Exchange(ref _NarrowDetector, null)?.Dispose();
+            if (disposing)
+            {
+                System.Threading.Interlocked.Exchange(ref _BroadDetector, null)?.Dispose();
+                System.Threading.Interlocked.Exchange(ref _NarrowDetector, null)?.Dispose();
+            }
         }
 
         #endregion
 
         #region data
 
-        private string _ObjectFilter;
+        private readonly string _ObjectFilter;
 
         private IInferenceContext<PointerBitmap, DetectedObject.Collection> _BroadDetector;
         private INarrowInference<PointerBitmap, DetectedObject.Collection> _NarrowDetector;
 
-        private float _BroadOutputScale;
+        private readonly float _BroadOutputScale;
 
         private readonly List<_TrackedObject> _BroadTracked = new List<_TrackedObject>();        
         private readonly DetectedObject.Collection _NarrowTracked = new DetectedObject.Collection();

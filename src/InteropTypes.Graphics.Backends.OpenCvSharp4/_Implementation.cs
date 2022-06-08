@@ -178,8 +178,8 @@ namespace InteropTypes.Graphics
         public static void CopyTo(this in System.Numerics.Matrix3x2 src, CVMATRIX dst)
         {
             if (dst == null) throw new ArgumentNullException(nameof(dst));
-            if (dst.Rows != 2) throw new ArgumentOutOfRangeException("Rows", nameof(dst));
-            if (dst.Cols != 3) throw new ArgumentOutOfRangeException("Cols", nameof(dst));
+            if (dst.Rows != 2) throw new ArgumentOutOfRangeException(nameof(dst), "Rows");
+            if (dst.Cols != 3) throw new ArgumentOutOfRangeException(nameof(dst), "Cols");
 
             dst.Set(0, 0, src.M11);
             dst.Set(0, 1, src.M21);
@@ -194,9 +194,9 @@ namespace InteropTypes.Graphics
             if (dst == null) dst = new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F, 1);
             else
             {
-                if (dst.Type() != CVDEPTHTYPE.CV_32F) throw new ArgumentOutOfRangeException("Type", nameof(dst));
-                if (dst.Rows != 2) throw new ArgumentOutOfRangeException("Rows", nameof(dst));
-                if (dst.Cols != 3) throw new ArgumentOutOfRangeException("Cols", nameof(dst));                
+                if (dst.Type() != CVDEPTHTYPE.CV_32F) throw new ArgumentOutOfRangeException(nameof(dst), "Type");
+                if (dst.Rows != 2) throw new ArgumentOutOfRangeException(nameof(dst), "Rows");
+                if (dst.Cols != 3) throw new ArgumentOutOfRangeException(nameof(dst), "Cols");
             }            
 
             dst.Set(0, 0, src.M11);
@@ -211,44 +211,44 @@ namespace InteropTypes.Graphics
             where T : unmanaged
         {
             if (src == null) throw new ArgumentNullException(nameof(src));
-            if (src.Empty()) throw new ArgumentNullException(nameof(src.Empty));
-            if (!src.IsContinuous()) throw new ArgumentNullException(nameof(src.IsContinuous));
+            if (src.Empty()) throw new ArgumentNullException(nameof(src), "Empty");
+            if (!src.IsContinuous()) throw new ArgumentNullException(nameof(src), "IsContinuous");
             // if (OPENCV.GetDepthType(src.Depth) != typeof(T)) throw new ArgumentNullException(nameof(T));            
 
             if (src.Dims == 1)
             {
-                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
+                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src), "Channels");
                 return new Tensors.SpanTensor2<T>(src.Data, src.Size(0), src.Channels());
             }
 
             if (src.Dims == 2)
             {
-                if (src.Channels() != 1) throw new ArgumentNullException(nameof(src.Channels));
+                if (src.Channels() != 1) throw new ArgumentNullException(nameof(src), "Channels");
                 return new Tensors.SpanTensor2<T>(src.Data, src.Size(0), src.Size(1));
             }
 
-            throw new ArgumentNullException(nameof(src.Dims));
+            throw new ArgumentNullException(nameof(src), "Dims");
         }
 
         public static Tensors.SpanTensor3<T> AsSpanTensor3<T>(this CVMATRIX src)
             where T : unmanaged
         {
             if (src == null) throw new ArgumentNullException(nameof(src));
-            if (src.Empty()) throw new ArgumentNullException(nameof(src.Empty));
-            if (!src.IsContinuous()) throw new ArgumentNullException(nameof(src.IsContinuous));
+            if (src.Empty()) throw new ArgumentNullException(nameof(src), "Empty");
+            if (!src.IsContinuous()) throw new ArgumentNullException(nameof(src), "IsContinuous");
             // if (OPENCV.GetDepthType(src.Depth) != typeof(T)) throw new ArgumentNullException(nameof(T));
 
 
 
             if (src.Dims == 2)
             {
-                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
+                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src), "Channels");
                 return new Tensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Channels());
             }
 
             if (src.Dims == 3)
             {
-                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src.Channels));
+                if (src.Channels() == 1) throw new ArgumentNullException(nameof(src), "Channels");
                 return new Tensors.SpanTensor3<T>(src.Data, src.Size(0), src.Size(1), src.Size(2));
             }
 
