@@ -99,7 +99,12 @@
 
     <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md -->
     
+    <!-- better alternative than source link -->
     <EmbedAllSources>true</EmbedAllSources>
+    
+    <!-- conceal source code full paths -->
+    <PathMap>$(MSBuildProjectDirectory)=X:\sources</PathMap>
+    
     <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
     <!--<EmbedUntrackedSources>true</EmbedUntrackedSources>-->
     

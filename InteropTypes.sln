@@ -123,6 +123,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen", "src\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen.csproj", "{8276108B-C765-4D9B-A18E-DEDCD7FFD0B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Backends.Win10", "src\InteropTypes.Graphics.Backends.Win10\InteropTypes.Graphics.Backends.Win10.csproj", "{3070190B-9B32-4972-B4B4-5181704AB543}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -483,6 +485,14 @@ Global
 		{8276108B-C765-4D9B-A18E-DEDCD7FFD0B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8276108B-C765-4D9B-A18E-DEDCD7FFD0B4}.Release|x64.ActiveCfg = Release|Any CPU
 		{8276108B-C765-4D9B-A18E-DEDCD7FFD0B4}.Release|x64.Build.0 = Release|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Debug|x64.Build.0 = Debug|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Release|x64.ActiveCfg = Release|Any CPU
+		{3070190B-9B32-4972-B4B4-5181704AB543}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -532,6 +542,7 @@ Global
 		{C6C47C85-CC36-4BEE-AFED-CBB51760F994} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
 		{4608565E-1185-4492-84C2-BEE08C16B3EB} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
 		{8276108B-C765-4D9B-A18E-DEDCD7FFD0B4} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
+		{3070190B-9B32-4972-B4B4-5181704AB543} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}
