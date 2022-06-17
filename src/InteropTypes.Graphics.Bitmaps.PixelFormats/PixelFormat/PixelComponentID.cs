@@ -242,8 +242,8 @@ namespace InteropTypes.Graphics.Bitmaps
                 {
                     case PCID.Green4: return true;
                     case PCID.Green5: return true;
-                    case PCID.Green8: return true;
                     case PCID.Green6: return true;
+                    case PCID.Green8: return true;                    
                     case PCID.Green16: return true;
                     case PCID.Green32F: return true;
                     default: return false;

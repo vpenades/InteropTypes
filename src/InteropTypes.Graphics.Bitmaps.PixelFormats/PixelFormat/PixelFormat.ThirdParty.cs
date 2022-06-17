@@ -6,7 +6,7 @@ namespace InteropTypes.Graphics.Bitmaps
 {
     partial struct PixelFormat
     {
-        private static unsafe bool _TryIdentifyThirdPartyFormat<TPixel>(out PixelFormat fmt)
+        private static unsafe bool _TryIdentifyThirdPartyPixelFormat<TPixel>(out PixelFormat fmt)
             where TPixel:unmanaged
         {
             var name = typeof(TPixel).FullName;

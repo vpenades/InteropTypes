@@ -76,6 +76,13 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region constructors
 
+        public static BitmapInfo Create<TPixel>(int width, int height, int stepByteSize = 0)
+            where TPixel : unmanaged
+        {
+            var fmt = PixelFormat.TryIdentifyFormat<TPixel>();
+            return Create<TPixel>(width, height, fmt, stepByteSize);
+        }
+
         /// <summary>
         /// Creates a new BitmapInfo instance.
         /// </summary>
@@ -85,13 +92,13 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <param name="pixelFormat">The pixel format. It must match <typeparamref name="TPixel"/>.</param>
         /// <param name="stepByteSize">The optional row width, in pixels.</param>
         /// <returns>A new BitmapInfo instance.</returns>
-        public static BitmapInfo Create<TPixel>(int width, int height, PixelFormat pixelFormat, int stepByteSize)
+        public static BitmapInfo Create<TPixel>(int width, int height, PixelFormat pixelFormat, int stepByteSize = 0)
             where TPixel: unmanaged
         {
             var bmp = new BitmapInfo(width,height,pixelFormat,stepByteSize);
             bmp.ArgumentIsCompatiblePixelFormat<TPixel>();
             return bmp;
-        }
+        }        
 
         public BitmapInfo(SIZE size, PixelFormat pixelFormat, int stepByteSize = 0)
             : this(size.Width,size.Height,pixelFormat,stepByteSize) { }
