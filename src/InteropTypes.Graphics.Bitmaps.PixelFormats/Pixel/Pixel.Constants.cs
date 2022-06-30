@@ -137,6 +137,18 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             public const uint Code = _PackedPixelCodes.RGBP128F;
             public static readonly PixelFormat Format = new PixelFormat(Code);
-        }        
+        }
+
+        public partial struct YUY2
+        {
+            public const uint Code = _PackedPixelCodes.YUY2;
+            public static readonly PixelFormat Format = new PixelFormat(Code);
+        }
+
+        public partial struct YUV24
+        {
+            public const uint Code = _PackedPixelCodes.YUV24;
+            public static readonly PixelFormat Format = new PixelFormat(Code);
+        }
     }
 }

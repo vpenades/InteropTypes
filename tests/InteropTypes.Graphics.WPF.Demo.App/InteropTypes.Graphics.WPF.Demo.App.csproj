@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Remove="Prism.MVVM" />
     <PackageReference Remove="ErrorProne.NET.Structs" />
   </ItemGroup>
 

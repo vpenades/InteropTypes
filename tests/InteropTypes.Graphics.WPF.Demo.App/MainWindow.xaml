@@ -5,10 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFDemo"
         xmlns:itypes="urn:InteropTypes"
+        xmlns:ibitmaps="clr-namespace:InteropTypes.Graphics.Bitmaps;assembly=InteropTypes.Graphics.Bitmaps.Core"
         d:DataContext="{d:DesignInstance Type=local:AppMVVM}"
         mc:Ignorable="d"
         x:Name="mySelf"
-        Title="MainWindow" Height="450" Width="800">    
+        Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <!--
+        <DataTemplate DataType="{x:Type ibitmaps:MemoryBitmap}">
+
+            <DataTemplate.Resources>
+                <itypes:MemoryBitmapConverter x:Key="_bmpCnv" />
+            </DataTemplate.Resources>
+            
+            <Image Source="{Binding Converter={StaticResource _bmpCnv}}" />
+        </DataTemplate>
+        -->
+    </Window.Resources>
     
     <TabControl>
 
@@ -42,7 +56,7 @@
         <TabItem Header="video bitmap updater">
 
             <Image Source="{Binding ClientBitmap.FrontBuffer}" />
-            
+
         </TabItem>
 
         <TabItem Header="tests">
@@ -50,6 +64,22 @@
                 <Button Content="button" />
                 <TextBlock Text="testblock" />
             </Grid>
+        </TabItem>
+
+        <TabItem Header="Bitmap as content" >            
+            <Border Background="AliceBlue">
+
+                <WrapPanel>
+                    <ContentControl Content="{Binding MemoryBitmapTypeless}" Margin="4" />
+                    <Grid>
+                        <ContentControl Content="{Binding BindableBitmap}" Margin="4" />
+                        <Button Content="Paint!" Command="{Binding OnPaintMemoryBitmapCmd}" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+                    </Grid>
+                    
+                </WrapPanel>
+                
+                
+            </Border>            
         </TabItem>
 
     </TabControl>

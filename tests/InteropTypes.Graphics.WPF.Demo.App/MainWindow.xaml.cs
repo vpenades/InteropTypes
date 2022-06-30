@@ -41,6 +41,6 @@ namespace WPFDemo
             }            
 
             gltfScene.Save("result.glb", new InteropTypes.Graphics.Backends.GLTFWriteSettings { CameraSize=2 });            
-        }        
+        }
     }
 }

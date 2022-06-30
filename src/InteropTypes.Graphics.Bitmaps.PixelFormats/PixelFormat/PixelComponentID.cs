@@ -44,7 +44,7 @@ namespace InteropTypes.Graphics.Bitmaps
         Undefined7,
 
         // 8 bits
-        Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Premul8, Luminance8,
+        Undefined8, Index8, Red8, Green8, Blue8, Alpha8, Premul8, Luminance8, UVMacro8,
 
         // 16 bits
         Undefined16, Index16, Red16, Green16, Blue16, Alpha16, Premul16, Luminance16, Millimeter16,

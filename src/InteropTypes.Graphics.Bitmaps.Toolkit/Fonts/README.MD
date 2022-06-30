@@ -7,3 +7,7 @@
   - [C# (kaitai generated)](http://formats.kaitai.io/pcf_font/csharp.html)
 - [AngelCode format](https://www.codeproject.com/Articles/317694/AngelCode-bitmap-Font-Parsing-Using-Csharp)
 - [SharpFNT](https://github.com/AuroraBertaOldham/SharpFNT)
+
+Tools to create bitmap fonts
+- [FontStashSharp](https://github.com/FontStashSharp/FontStashSharp)
+- [XNA's Bitmap Font Maker](https://github.com/nkast/XNAGameStudio/wiki/Bitmap-Font-Maker)

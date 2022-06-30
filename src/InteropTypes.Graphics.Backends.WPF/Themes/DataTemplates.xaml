@@ -1,0 +1,79 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:theme="clr-namespace:InteropTypes.Graphics.Backends.Themes"
+                    xmlns:local="clr-namespace:InteropTypes.Graphics.Backends.WPF"
+                    xmlns:idraw="clr-namespace:InteropTypes.Graphics.Drawing;assembly=InteropTypes.Graphics.Drawing.Core"
+                    xmlns:bitmaps="clr-namespace:InteropTypes.Graphics.Bitmaps;assembly=InteropTypes.Graphics.Bitmaps.Core"
+                    xmlns:pixfmts="clr-namespace:InteropTypes.Graphics.Bitmaps;assembly=InteropTypes.Graphics.Bitmaps.PixelFormats"
+                    xmlns:bitmapstk="clr-namespace:InteropTypes.Graphics.Bitmaps;assembly=InteropTypes.Graphics.Bitmaps.Toolkit">
+
+    <local:MemoryBitmapConverter x:Key="_localBitmapConverter" />
+
+    <DataTemplate DataType="{x:Type bitmaps:MemoryBitmap}">        
+        <Image Source="{Binding Converter={StaticResource _localBitmapConverter}}" />
+    </DataTemplate>    
+
+    <DataTemplate DataType="{x:Type bitmapstk:InterlockedBitmap}">        
+        <Image Source="{Binding Converter={StaticResource _localBitmapConverter}}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type bitmapstk:BindableBitmap}">
+        <local:ImageEx BitmapSource="{Binding Bitmap}" />        
+    </DataTemplate>
+
+    <!--
+    <DataTemplate>            
+        
+        <DataTemplate.DataType>
+            <theme:GenericMemoryBitmapType Type="{x:Type pixfmts:Pixel+BGRA32}" />            
+        </DataTemplate.DataType>
+        
+        <Image Source="{Binding Converter={StaticResource _localBitmapConverter}}" />
+    </DataTemplate>
+    -->
+    
+
+    
+
+
+
+
+
+    <!--
+    The problem of defining a DataTemplate for IDrawingBrush<IScene3D> is that
+    xaml doesn't like interfaces nor generic types.    
+    
+    -->
+
+    <!--
+    <x:Array x:Key="scene3DGenericArg" Type="{x:Type System:Type}" >
+        <x:Type TypeName="idraw:IScene3D" />        
+    </x:Array>
+    
+    <local:GenericType  x:Key="drawingBrushScene3D"
+                        BaseType="{x:Type TypeName=idraw:IDrawingBrush`1}"
+                        InnerTypes="{StaticResource scene3DGenericArg}" />
+
+
+    <DataTemplate DataType="{local:Scene3DDrawingBrushTypeExtension}">
+        <TextBlock />
+    </DataTemplate>
+    
+
+    <DataTemplate DataType="{StaticResource drawingBrushScene3D_2}">        
+        <local:Scene3DView Scene="{Binding}" >
+            <local:Scene3DView.ViewportTemplate>
+                <local:Scene3DViewportTemplate>
+                    <local:AutoCamera3DViewport FrameRate="30" UpDirectionIsZ="true" />
+                </local:Scene3DViewportTemplate>
+            </local:Scene3DView.ViewportTemplate>
+        </local:Scene3DView>
+    </DataTemplate>
+    -->
+
+
+
+
+
+</ResourceDictionary>

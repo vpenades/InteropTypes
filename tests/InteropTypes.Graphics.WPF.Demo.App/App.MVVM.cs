@@ -18,13 +18,23 @@ namespace WPFDemo
     {
         public AppMVVM()
         {
-            System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);            
-        }
+            System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
+
+            MemoryBitmapTypeless.AsSpanBitmap().SetPixels(System.Drawing.Color.Green);
+            MemoryBitmapBGRA32.AsSpanBitmap().AsTypeless().SetPixels(System.Drawing.Color.Red);
+
+            OnPaintMemoryBitmapCmd = new Prism.Commands.DelegateCommand(_PaintOnBitmap);
+
+            BindableBitmap.Bitmap = MemoryBitmapBGRA32;
+
+       }
         
         public void DrawTo(IScene3D context)
         {
             context.DrawSphere((0,0,0), 2, ColorStyle.Red);            
         }       
+
+        public ICommand OnPaintMemoryBitmapCmd { get; }
 
         public Sphere Item1 => new Sphere();
 
@@ -45,6 +55,17 @@ namespace WPFDemo
 
         public WPFClientBitmap ClientBitmap { get; } = new WPFClientBitmap();
 
+        public MemoryBitmap MemoryBitmapTypeless { get; } = new MemoryBitmap(512, 512, Pixel.BGRA32.Format);
+
+        public MemoryBitmap<Pixel.BGRA32> MemoryBitmapBGRA32 { get; } = new MemoryBitmap<Pixel.BGRA32>(512, 512, Pixel.BGRA32.Format);
+
+        public BindableBitmap BindableBitmap { get; } = new BindableBitmap();
+
+        private void _PaintOnBitmap()
+        {
+            BindableBitmap.Bitmap.AsSpanBitmap().SetPixels(System.Drawing.Color.White);
+            BindableBitmap.Invalidate();
+        }
 
         private void _AsyncUpdateBitmap()
         {

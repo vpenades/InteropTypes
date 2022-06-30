@@ -40,36 +40,54 @@ namespace InteropTypes.Graphics.Bitmaps
 
             Pixel.BGRA128F.Format,
             Pixel.BGRP128F.Format,
+
+            Pixel.YUY2.Format,
+            Pixel.YUV24.Format,
         };
 
         public static unsafe PixelFormat TryIdentifyFormat<TPixel>() where TPixel : unmanaged
         {
             if (typeof(TPixel) == typeof(Pixel.Alpha8)) return Pixel.Alpha8.Format;
+
+            // Luminance
+
             if (typeof(TPixel) == typeof(Pixel.Luminance8)) return Pixel.Luminance8.Format;
+            if (typeof(TPixel) == typeof(Pixel.Luminance16)) return Pixel.Luminance16.Format;
+            if (typeof(TPixel) == typeof(Pixel.Luminance32F)) return Pixel.Luminance32F.Format;
+
+            // RGB
 
             if (typeof(TPixel) == typeof(Pixel.BGR565)) return Pixel.BGR565.Format;
-            if (typeof(TPixel) == typeof(Pixel.BGRA4444)) return Pixel.BGRA4444.Format;
-            if (typeof(TPixel) == typeof(Pixel.BGRA5551)) return Pixel.BGRA5551.Format;
-            if (typeof(TPixel) == typeof(Pixel.Luminance16)) return Pixel.Luminance16.Format;
-
             if (typeof(TPixel) == typeof(Pixel.BGR24)) return Pixel.BGR24.Format;
             if (typeof(TPixel) == typeof(Pixel.RGB24)) return Pixel.RGB24.Format;
 
+            // RGB + Alpha
+
+            if (typeof(TPixel) == typeof(Pixel.BGRA4444)) return Pixel.BGRA4444.Format;
+            if (typeof(TPixel) == typeof(Pixel.BGRA5551)) return Pixel.BGRA5551.Format;
             if (typeof(TPixel) == typeof(Pixel.BGRA32)) return Pixel.BGRA32.Format;
-            if (typeof(TPixel) == typeof(Pixel.BGRP32)) return Pixel.BGRP32.Format;
             if (typeof(TPixel) == typeof(Pixel.RGBA32)) return Pixel.RGBA32.Format;
-            if (typeof(TPixel) == typeof(Pixel.RGBP32)) return Pixel.RGBP32.Format;
-            if (typeof(TPixel) == typeof(Pixel.ARGB32)) return Pixel.ARGB32.Format;
-            if (typeof(TPixel) == typeof(Pixel.PRGB32)) return Pixel.PRGB32.Format;
-            if (typeof(TPixel) == typeof(Pixel.Luminance32F)) return Pixel.Luminance32F.Format;
+            if (typeof(TPixel) == typeof(Pixel.ARGB32)) return Pixel.ARGB32.Format;                        
 
             if (typeof(TPixel) == typeof(Pixel.RGB96F)) return Pixel.RGB96F.Format;
             if (typeof(TPixel) == typeof(Pixel.BGR96F)) return Pixel.BGR96F.Format;
 
-            if (typeof(TPixel) == typeof(Pixel.BGRA128F)) return Pixel.BGRA128F.Format;
-            if (typeof(TPixel) == typeof(Pixel.BGRP128F)) return Pixel.BGRP128F.Format;
+            if (typeof(TPixel) == typeof(Pixel.BGRA128F)) return Pixel.BGRA128F.Format;            
             if (typeof(TPixel) == typeof(Pixel.RGBA128F)) return Pixel.RGBA128F.Format;
+
+            // RGB + Premul
+
+            if (typeof(TPixel) == typeof(Pixel.BGRP32)) return Pixel.BGRP32.Format;
+            if (typeof(TPixel) == typeof(Pixel.RGBP32)) return Pixel.RGBP32.Format;
+            if (typeof(TPixel) == typeof(Pixel.PRGB32)) return Pixel.PRGB32.Format;
+
+            if (typeof(TPixel) == typeof(Pixel.BGRP128F)) return Pixel.BGRP128F.Format;
             if (typeof(TPixel) == typeof(Pixel.RGBP128F)) return Pixel.RGBP128F.Format;
+
+            // YUV
+
+            if (typeof(TPixel) == typeof(Pixel.YUY2)) return Pixel.YUY2.Format;
+            if (typeof(TPixel) == typeof(Pixel.YUV24)) return Pixel.YUV24.Format;
 
             if (_TryIdentifyThirdPartyPixelFormat<TPixel>(out var fmt)) return fmt;
 

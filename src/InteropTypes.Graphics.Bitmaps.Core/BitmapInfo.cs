@@ -27,7 +27,6 @@ namespace InteropTypes.Graphics.Bitmaps
         // Todo: Maybe a better name for this struct is BitmapDesc or BitmapLayout
 
         #region debug
-
         public string ToDebuggerDisplayString() { return $"{PixelFormat}×{Width}×{Height}"; }
 
         #endregion
