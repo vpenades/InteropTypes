@@ -22,10 +22,10 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Graphics.Skia" />
+    <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="6.0.403" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" />    
     <PackageReference Include="TestAttachments.NUnit" />
   </ItemGroup>
