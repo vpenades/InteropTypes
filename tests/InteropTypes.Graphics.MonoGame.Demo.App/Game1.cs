@@ -144,11 +144,13 @@ namespace MonoGameDemo
             // draw tiles with half pixel
 
             var tile1 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4);
-            var tile2 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);
+            var tile2 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);            
 
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600, 500), tile1);
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600 + 65, 500), tile2);
 
+            var qrhead = ImageSource.Create((typeof(Game1).Assembly, "MonoGameDemo.Assets.qrhead.jpg"),(0,0),(255,255),(128,128));
+            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateScale(0.25f)*System.Numerics.Matrix3x2.CreateTranslation(125, 50), qrhead);
 
             _Drawing2D.DrawCircle((600, 100), 50, (COLOR.Yellow,2));
 

@@ -55,7 +55,7 @@ namespace InteropTypes.Graphics.Backends
                 return mgsa;
             }
 
-            // at this point, source must be: String or System.IO.FileInfo or Func<System.IO.Stream>
+            // at this point, source must be: String or System.IO.FileInfo or Func<System.IO.Stream> or (Assembly,string)
 
             return new MonoGameSpriteTexture(source, sampler ?? SamplerState.LinearClamp, textureBleed);
         }
@@ -73,6 +73,28 @@ namespace InteropTypes.Graphics.Backends
             if (imageSource is FileInfo finfo)
             {
                 imageSource = finfo.FullName;
+            }
+
+            if (imageSource is ValueTuple<System.Reflection.Assembly,string> resourceInfo) // load from assembly resources
+            {
+                System.IO.Stream _openResourceStream()
+                {
+                    var s = resourceInfo.Item1.GetManifestResourceStream(resourceInfo.Item2);
+                    if (s == null)
+                    {
+                        var otherNames = resourceInfo.Item1
+                            .GetManifestResourceNames()                            
+                            .Aggregate((a,b) => a +"\r\n" + b);
+
+                        throw new System.IO.FileNotFoundException($"{resourceInfo.Item2} not found, it must be one of:\r\n{otherNames}");
+                    }
+
+                    return s;
+                    
+                }
+                
+                var tex = _loadTexture(gd, _openResourceStream);
+                return (tex, attr);
             }
 
             if (imageSource is System.Drawing.Color gdicolor)

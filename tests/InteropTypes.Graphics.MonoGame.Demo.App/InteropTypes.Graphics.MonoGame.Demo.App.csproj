@@ -20,11 +20,13 @@
 
 
   <ItemGroup>    
+    <None Remove="Assets\qrhead.jpg" />    
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\qrhead.jpg" />
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>

@@ -106,10 +106,13 @@ namespace InteropTypes.Graphics.Backends
 
             _VectorsBatch.SetRenderTargetInfo(this, _Screen);
 
-            _UpdateMatrices();
+            _UpdateMatrices();            
 
             _PrevState = GlobalState.GetCurrent(_Device);
-            GlobalState.CreateSpriteState().ApplyTo(_Device);            
+            GlobalState.CreateSpriteState().ApplyTo(_Device);
+
+            System.Diagnostics.Debug.Assert(_Device.DepthStencilState == DepthStencilState.Default || _Device.DepthStencilState == DepthStencilState.None);
+            System.Diagnostics.Debug.Assert(_Device.BlendState == BlendState.AlphaBlend);
         }
 
         /// <inheritdoc />
