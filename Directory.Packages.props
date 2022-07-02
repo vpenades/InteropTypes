@@ -51,7 +51,7 @@
 
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
-    <PackageVersion Include="StbImageWriteSharp" Version="1.13.5" />
+    <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
     <PackageVersion Include="SkiaSharp" Version="2.88.0" />
 

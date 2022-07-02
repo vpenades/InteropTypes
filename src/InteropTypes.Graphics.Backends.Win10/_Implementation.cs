@@ -3,6 +3,7 @@
 using Windows.Graphics.Imaging;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.InteropServices;
+using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Backends
 {
@@ -16,7 +17,7 @@ namespace InteropTypes.Graphics.Backends
         void GetBuffer(out byte* buffer, out uint capacity);
     }
 
-    class _Implementation
+    static class _Implementation
     {
         public static (BitmapPixelFormat, BitmapAlphaMode) ToWinSdkFormat<TPixel>()
             where TPixel:unmanaged
@@ -29,21 +30,13 @@ namespace InteropTypes.Graphics.Backends
             return (BitmapPixelFormat.Unknown, BitmapAlphaMode.Ignore);
         }
 
-        public static SoftwareBitmap CreateSoftwareBitmap(this SpanBitmap src, BitmapPixelFormat fmt, BitmapAlphaMode alpha)
+        public static SoftwareBitmap CreateSoftwareBitmap(this SpanBitmap src, BitmapPixelFormat colorFmt, BitmapAlphaMode alphaFmt)
         {
-            if (src == null || src.Width * src.Height == 0) return null;
+            if (src.IsEmpty || src.Width * src.Height == 0) return null;
 
-            //--------------------------------------- Hack to prevent locking
-            var tmpBmp = new _Bitmap8Ex(); tmpBmp.Update(src); return CreateSoftwareBitmap(tmpBmp, fmt, alpha);
-            //--------------------------------------- Hack to prevent locking
+            var dst = new SoftwareBitmap(colorFmt, src.Width, src.Height, alphaFmt);
 
-
-            var width = 4 * src.Width / fmt.GetBytesPerPixel();
-            var height = src.Height;
-
-            var dst = new SoftwareBitmap(fmt, width, height, alpha);
-
-            _Transfer(src, dst);
+            dst.SetPixels(src);
 
             return dst;
         }
@@ -64,9 +57,11 @@ namespace InteropTypes.Graphics.Backends
 
                     var bufferLayout = buffer.GetPlaneDescription(0);
 
+                    throw new NotImplementedException();
+
                     if (bufferLayout.Stride == bufferLayout.Width * 2)
                     {
-                        src.CopyTo(dataInBytes, (int)capacity, bufferLayout.Width * bufferLayout.Height * 2);
+                        // src.CopyTo(dataInBytes, (int)capacity, bufferLayout.Width * bufferLayout.Height * 2);
 
                         return;
                     }
@@ -75,12 +70,12 @@ namespace InteropTypes.Graphics.Backends
                     {
                         for (int x = 0; x < bufferLayout.Width; x++)
                         {
-                            var value = src[x, y];
+                            // var value = src[x, y];
 
-                            var didx = bufferLayout.StartIndex + bufferLayout.Stride * y + 2 * x;
+                            // var didx = bufferLayout.StartIndex + bufferLayout.Stride * y + 2 * x;
 
-                            dataInBytes[didx + 0] = (Byte)(value & 255);
-                            dataInBytes[didx + 1] = (Byte)(value >> 8);
+                            // dataInBytes[didx + 0] = (Byte)(value & 255);
+                            // dataInBytes[didx + 1] = (Byte)(value >> 8);
                         }
                     }
                 }
