@@ -57,8 +57,6 @@ namespace InteropTypes.Graphics.Drawing
         [TestCase("Thunderbird1")]
         public void TestClipScene3D(string sceneName)
         {
-            TestContext.CurrentContext.AttachShowDirLink();
-
             var srcScene = SceneFactory.CreateRecord3D(sceneName);
 
             var bounds = srcScene.BoundingMatrix;                                  

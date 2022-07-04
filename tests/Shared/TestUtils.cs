@@ -16,7 +16,7 @@ using SixLabors.ImageSharp.Processing;
 
 using POINTF = SixLabors.ImageSharp.PointF;
 
-[assembly: AttachmentPathFormat("?")]
+[assembly: AttachmentPathFormat("?", true)]
 
 namespace InteropTypes
 {
@@ -24,12 +24,12 @@ namespace InteropTypes
     {
         public static void AttachToCurrentTest(this Image image, string filePath)
         {
-            new AttachmentInfo(filePath).WriteFile(finfo => image.Save(finfo.FullName));
+            new AttachmentInfo(filePath).WriteObject(finfo => image.Save(finfo.FullName));
         }
 
         public static void AttachToCurrentTest(this System.Drawing.Bitmap image, string filePath)
         {
-            new AttachmentInfo(filePath).WriteFile(finfo => image.Save(finfo.FullName));
+            new AttachmentInfo(filePath).WriteObject(finfo => image.Save(finfo.FullName));
         }        
 
         public static void AttachToCurrentTestAll(this SpanBitmap bmp, string filePath)
@@ -83,7 +83,7 @@ namespace InteropTypes
         {
             return AttachmentInfo
                 .From(videoPath)
-                .WriteFile(finfo => FFmpegAutoGenCodec.EncodeFrames(finfo.FullName, frames))
+                .WriteObject(finfo => FFmpegAutoGenCodec.EncodeFrames(finfo.FullName, frames))
                 .FullName;
         }        
 
@@ -96,7 +96,7 @@ namespace InteropTypes
 
             return AttachmentInfo
                 .From(videoPath)
-                .WriteFile(_saveVideo)
+                .WriteObject(_saveVideo)
                 .FullName;
         }
     }

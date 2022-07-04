@@ -21,7 +21,7 @@ namespace InteropTypes.Graphics.Drawing
 
             var doc = new PlotlyDocumentBuilder().Draw(scene);
 
-            TestContext.CurrentContext.Attach("Drawing.html", doc, (key, val) => val.SaveHtml(key));
+            AttachmentInfo.From("Drawing.html").WriteAllText(doc.ToHtml());
         }
     }
 }

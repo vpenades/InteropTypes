@@ -23,12 +23,7 @@ namespace InteropTypes.Graphics.Drawing
                 svg.DrawRectangle((10, 10), (80, 80), (COLOR.Blue, 4));
                 svg.DrawEllipse(new Vector2(50, 50), 70, 70, (COLOR.Red, 2));
 
-                var document = svg.ToSVGContent();
-
-                var path = TestContext.CurrentContext.UseFilePath("document.svg");
-
-                System.IO.File.WriteAllText(path, document);
-                TestContext.AddTestAttachment(path);
+                AttachmentInfo.From("document.svg").WriteAllText(svg.ToSVGContent());
             }
         }
 
@@ -41,12 +36,7 @@ namespace InteropTypes.Graphics.Drawing
 
             scene.DrawTo(svg, 1024, 1024, new Vector3(7, 5, 20));
 
-            var document = svg.ToSVGContent();
-
-            var path = TestContext.CurrentContext.UseFilePath("document.svg");
-
-            System.IO.File.WriteAllText(path, document);
-            TestContext.AddTestAttachment(path);
+            AttachmentInfo.From("document.svg").WriteAllText(svg.ToSVGContent());
         }
     }
 }

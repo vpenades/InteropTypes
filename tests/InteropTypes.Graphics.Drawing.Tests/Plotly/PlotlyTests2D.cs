@@ -28,7 +28,7 @@ namespace InteropTypes.Graphics.Drawing
                 dc.DrawPolygon(System.Drawing.Color.Yellow, (1.1f, 10), (2, 10), (1.5f, 30), (1.1f, 20));
             }
 
-            TestContext.CurrentContext.Attach("Drawing.html", doc, (key, val) => val.SaveHtml(key));
+            AttachmentInfo.From("Drawing.html").WriteAllText(doc.ToHtml());
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace InteropTypes.Graphics.Drawing
                 dc.DrawCircle((2, 2), 7, System.Drawing.Color.Red);
             }
 
-            TestContext.CurrentContext.Attach("Drawing.html", doc, (key, val) => val.SaveHtml(key));
+            AttachmentInfo.From("Drawing.html").WriteAllText(doc.ToHtml());
         }
     }
 }

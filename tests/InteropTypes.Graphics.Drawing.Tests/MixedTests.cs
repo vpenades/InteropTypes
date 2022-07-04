@@ -38,8 +38,6 @@ namespace InteropTypes.Graphics.Drawing
         [TestCase("Thunderbird1")]
         public void TestSaveScene3D(string sceneName)
         {
-            TestContext.CurrentContext.AttachShowDirLink();
-
             var srcScene = SceneFactory.CreateRecord3D(sceneName);
 
             srcScene.AttachToCurrentTest($"{sceneName}.glb");
@@ -126,10 +124,9 @@ namespace InteropTypes.Graphics.Drawing
                 dc.DrawImage(Matrix3x2.Identity, tiles);
             });
 
-            var path = TestContext.CurrentContext.UseFilePath("testrender1.png");
-
-            renderTarget.SaveToPNG(path);
-            TestContext.AddTestAttachment(path);
+            AttachmentInfo
+                .From("testrender1.png")
+                .WriteObject(f => renderTarget.SaveToPNG(f.FullName));
         }
 
         [TestCase("Scene1")]
@@ -140,11 +137,9 @@ namespace InteropTypes.Graphics.Drawing
 
             scene.DrawCube(Matrix4x4.Identity, COLOR.Red, COLOR.Green, COLOR.Blue);
 
-            var path = TestContext.CurrentContext.UseFilePath($"{sceneName}.png");
-
-            Canvas2DFactory.SaveToBitmap(path, 1024, 1024, null, scene);
-
-            TestContext.AddTestAttachment(path);
+            AttachmentInfo
+                .From($"{sceneName}.png")
+                .WriteObject(f => Canvas2DFactory.SaveToBitmap(f.FullName, 1024, 1024, null, scene));
         }
 
         [TestCase("Scene1")]
@@ -169,9 +164,9 @@ namespace InteropTypes.Graphics.Drawing
                     .DrawScene(scene);
             });
 
-            var path = TestContext.CurrentContext.UseFilePath($"WPF_{sceneName}.png");
-
-            renderTarget.SaveToPNG(path);
+            AttachmentInfo
+                .From($"WPF_{sceneName}.png")
+                .WriteObject(f => renderTarget.SaveToPNG(f.FullName));
 
             // render with MemoryBitmap
 
@@ -182,10 +177,7 @@ namespace InteropTypes.Graphics.Drawing
                     .CreateLookingAtCenter((mdc, 1024, 1024), (10, 5, 30))
                     .DrawScene(scene);
 
-            mem.Save(new AttachmentInfo($"Span_{sceneName}.png"));
-
-
-            TestContext.AddTestAttachment(path);
+            mem.Save(new AttachmentInfo($"Span_{sceneName}.png"));            
         }
 
         /*
@@ -219,12 +211,9 @@ namespace InteropTypes.Graphics.Drawing
 
                 svg.DrawEllipse(new Vector2(50, 50), 70, 70, (COLOR.Red, 2));
 
-                var document = svg.ToSVGContent();
-
-                var path = TestContext.CurrentContext.UseFilePath("document.svg");
-
-                System.IO.File.WriteAllText(path, document);
-                TestContext.AddTestAttachment(path);
+                AttachmentInfo
+                    .From("document.svg")
+                    .WriteAllText(svg.ToSVGContent());
             }
         }
 
@@ -237,13 +226,9 @@ namespace InteropTypes.Graphics.Drawing
 
                 scene.DrawTo(svg, 1024, 1024, new Vector3(7, 5, 20));
 
-
-                var document = svg.ToSVGContent();
-
-                var path = TestContext.CurrentContext.UseFilePath("document.svg");
-
-                System.IO.File.WriteAllText(path, document);
-                TestContext.AddTestAttachment(path);
+                AttachmentInfo
+                    .From("document.svg")
+                    .WriteAllText(svg.ToSVGContent());
             }
         }
 
@@ -255,9 +240,9 @@ namespace InteropTypes.Graphics.Drawing
 
             renderTarget.Draw(DrawDirectVsPolygon);
 
-            var path = TestContext.CurrentContext.UseFilePath("referenceWPF.png");
-            renderTarget.SaveToPNG(path);
-            TestContext.AddTestAttachment(path);
+            AttachmentInfo
+                    .From("referenceWPF.png")
+                    .WriteObject(f => renderTarget.SaveToPNG(f.FullName));            
         }
 
         private static void DrawDirectVsPolygon(ICanvas2D dc)
@@ -315,9 +300,9 @@ namespace InteropTypes.Graphics.Drawing
                 Decompose3D.DrawSegment(dc, Point3.Array((0, 0, 40), (0, 15, 40)), 3, style);
             }
 
-            var path = TestContext.CurrentContext.UseFilePath("extrude1.glb");
-            scene.Save(path);
-            TestContext.AddTestAttachment(path);
+            AttachmentInfo
+                    .From("extrude1.glb")
+                    .WriteObject(f => scene.Save(f.FullName));
         }
     }
 }

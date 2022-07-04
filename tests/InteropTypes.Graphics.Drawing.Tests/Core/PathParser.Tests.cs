@@ -32,10 +32,8 @@ namespace InteropTypes.Graphics.Drawing
                 svg.DrawPath(System.Numerics.Matrix3x2.Identity, path, (System.Drawing.Color.Red, System.Drawing.Color.Blue, 2));
 
                 var document = svg.ToSVGContent();
-                var docPath = TestContext.CurrentContext.UseFilePath("document.svg");
 
-                System.IO.File.WriteAllText(docPath, document);
-                TestContext.AddTestAttachment(docPath);
+                AttachmentInfo.From("document.svg").WriteAllText(document);
             }
         }
     }
