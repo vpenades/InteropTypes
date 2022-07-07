@@ -113,13 +113,17 @@ namespace InteropTypes.Graphics.Bitmaps
 
             using var bitmap = image.ReadAsSpanBitmap(self => self.WithGDI().ToBitmap());
 
-            bitmap.AttachToCurrentTest("result.jpg");
+            AttachmentInfo
+                .From("result.jpg")
+                .WriteObject(f => bitmap.Save(f.FullName));
 
             // resized conversion.
 
-            using var resized = image.ReadAsSpanBitmap(self => self.WithGDI().ToResizedBitmap(32, 32));            
+            using var resized = image.ReadAsSpanBitmap(self => self.WithGDI().ToResizedBitmap(32, 32));
 
-            resized.AttachToCurrentTest("resized.jpg");
+            AttachmentInfo
+                .From("resized.jpg")
+                .WriteObject(f => resized.Save(f.FullName));
 
             // using MemoryBitmap facade.
 
@@ -129,7 +133,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 gdi.Canvas.DrawLine(System.Drawing.Pens.Red, new System.Drawing.Point(2, 2), new System.Drawing.Point(500, 500));
 
-                gdi.Bitmap.AttachToCurrentTest("drawn.jpg");
+                AttachmentInfo
+                    .From("drawn.jpg")
+                    .WriteObject(f => gdi.Bitmap.Save(f.FullName));
             }
 
             image.WriteAsSpanBitmap(_gdiDraw);

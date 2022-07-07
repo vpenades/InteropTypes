@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using SixLabors.ImageSharp.Drawing.Processing;
 using InteropTypes.Graphics.Backends;
+using SixLabors.ImageSharp;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
@@ -113,15 +114,17 @@ namespace InteropTypes.Graphics.Bitmaps
             }            
 
             // load an image with Sixlabors Imagesharp, notice we use BGRA32 because RGBA32 is NOT supported by GDI.
-            var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(TestResources.ShannonJpg);
+            var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(ResourceInfo.From("shannon.jpg"));
 
             // render using multiple devices
 
-            img.WriteAsSpanBitmap(self => _drawUsingMultipleDevices(self));            
+            img.WriteAsSpanBitmap(self => _drawUsingMultipleDevices(self));
 
             // save the result back with ImageSharp
 
-            img.AttachToCurrentTest("result.jpg");
+            AttachmentInfo
+                .From("result.jpg")
+                .WriteObject(f => img.Save(f.FullName));
 
             img.Dispose();
         }
@@ -130,24 +133,24 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void DrawMemoryAsImageSharp()
         {
-            var mem = MemoryBitmap.Load(TestResources.ShannonJpg, Codecs.GDICodec.Default);            
+            var mem = MemoryBitmap.Load(ResourceInfo.From("shannon.jpg"), Codecs.GDICodec.Default);            
 
             mem.OfType<Pixel.BGRA32>()
                 .AsSpanBitmap()
-                .ReadAsImageSharp(img => { img.AttachToCurrentTest("result.png"); return 0; } );
+                .ReadAsImageSharp(img => {  AttachmentInfo.From("result.png").WriteImage(img); return 0; } );
         }
 
         [Test]
         public void DrawGDIAsImageSharp()
         {
-            using var gdi = System.Drawing.Image.FromFile(TestResources.ShannonJpg);
+            using var gdi = System.Drawing.Image.FromFile(ResourceInfo.From("shannon.jpg"));
             using var bmp = new System.Drawing.Bitmap(gdi);
 
             using var ptr = bmp.UsingPointerBitmap();
 
             ptr.AsPointerBitmap()
                 .AsSpanBitmapOfType<Pixel.BGRA32>()
-                .ReadAsImageSharp(img => img.AttachToCurrentTest("result.png"));
+                .ReadAsImageSharp(img => AttachmentInfo.From("result.png").WriteImage(img));
         }
     }
 }

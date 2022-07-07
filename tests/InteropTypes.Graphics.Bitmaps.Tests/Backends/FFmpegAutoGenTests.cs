@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Bitmaps;
+
 using NUnit.Framework;
 
 namespace InteropTypes.Graphics.Backends
@@ -35,7 +37,9 @@ namespace InteropTypes.Graphics.Backends
 
             var inputFrames = Codecs.FFmpegAutoGenCodec.DecodeFrames(filePath);
 
-            filePath = inputFrames.Select(item => item.bitmap).AttachToCurrentTest("output.h264");
+            AttachmentInfo
+                .From("output.h264")
+                .WriteVideo(inputFrames.Select(item => item.bitmap));
 
             foreach (var (bitmap, state) in Codecs.FFmpegAutoGenCodec.DecodeFrames(filePath))
             {

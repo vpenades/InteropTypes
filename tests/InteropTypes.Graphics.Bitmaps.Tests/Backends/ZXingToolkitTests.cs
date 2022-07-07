@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Vision;
 
 using NUnit.Framework;
@@ -53,7 +54,7 @@ namespace InteropTypes.Graphics.Backends
             image.Mutate(dc => dc.DrawPolygon(SixLabors.ImageSharp.Color.Red, 3, points));
             image.Mutate(dc => dc.DrawText(code.Text.Replace("/",":"), font, SixLabors.ImageSharp.Color.Red, new POINT(5, 5)));
 
-            image.AttachToCurrentTest("result.png");
+            AttachmentInfo.From("result.png").WriteImage(image);
         }
     }
 }

@@ -4,66 +4,15 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps.Processing
 {
-    using TRANSFORM = System.Numerics.Matrix3x2;    
+    using TRANSFORM = System.Numerics.Matrix3x2;
 
     using TOPREMULQ = Pixel.IConvertTo;
     using FROMPREMULQ = Pixel.IValueSetter<Pixel.BGRP32>;
 
     using TOVECTORF = Pixel.IConvertTo;
-    using FROMVECTORF = Pixel.IValueSetter<Pixel.RGBP128F>;    
+    using FROMVECTORF = Pixel.IValueSetter<Pixel.RGBP128F>;
 
-    public partial struct BitmapTransform : SpanBitmap.ITransfer
-    {
-        public BitmapTransform(in TRANSFORM xform, float opacity = 1)
-        {
-            Transform = xform;
-            Opacity = opacity;
-            UseBilinear = false;
-        }
-
-        public BitmapTransform(in TRANSFORM xform, bool useBilinear, float opacity)
-        {
-            Transform = xform;
-            Opacity = opacity;
-            UseBilinear = useBilinear;
-        }
-
-        public TRANSFORM Transform { get; set; }
-        public float Opacity { get; set; }
-
-        public bool UseBilinear { get; set; }
-
-
-        bool SpanBitmap.ITransfer.TryTransfer<TsrcPixel, TDstPixel>(SpanBitmap<TsrcPixel> source, SpanBitmap<TDstPixel> target)
-        {
-            if (this is SpanBitmap.ITransfer<TsrcPixel, TDstPixel> transferX)
-            {
-                return transferX.TryTransfer(source, target);
-            }
-
-            return false;
-        }
-
-        bool SpanBitmap.ITransfer.TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target)
-        {
-            if (this is SpanBitmap.ITransfer<TPixel, TPixel> transferX)
-            {
-                return transferX.TryTransfer(source, target);
-            }
-
-            return false;
-        }
-
-        bool SpanBitmap.ITransfer.TryTransfer(SpanBitmap source, SpanBitmap target)
-        {
-            // TODO: try to infer the pixel size for basic overwrite transform
-
-
-            return false;
-        }
-    }
-
-    static class _BitmapTransformImplementation
+    static class _PixelsTransformImplementation
     {
         #region API
         
@@ -100,7 +49,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 for (int i = 0; i < dst.Length; ++i)
                 {
                     srcIterator.MoveNext(out int sx, out int sy, out int rx, out int ry);
-                    var sample = src.GetSampleOrClamp(sx, sy, rx, ry);
+                    var sample = src.GetSampleOrDefault(sx, sy, rx, ry);
                     dst[i].SetValue(sample);
                 }
             }
@@ -149,7 +98,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 {
                     srcIterator.MoveNext(out int sx, out int sy, out int rx, out int ry);
 
-                    srcPixel = src.GetSampleOrClamp(sx, sy, rx, ry);
+                    srcPixel = src.GetSampleOrDefault(sx, sy, rx, ry);
 
                     if (srcPixel.A == 0) continue;                    
 
@@ -166,6 +115,56 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 : (_ProcessRowCallback8<TSrcPixel, Pixel.BGRP32, TDstPixel>)_rowProcessorNearest;
 
             _ProcessRows(dst, src, srcXform, p);
+        }
+
+        public static void PixelsConvert<TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanPlanesXYZ<float> dst, TRANSFORM srcXform, bool useBilinear, System.Numerics.Vector3 mul, System.Numerics.Vector3 add)
+           where TSrcPixel : unmanaged, TOVECTORF
+        {
+            _ProcessPlanesCallback8<TSrcPixel, TSrcPixel, float> p = null;
+
+            void _rowProcessorNearest(Span<float> dstX, Span<float> dstY, Span<float> dstZ, SpanQuantized8Sampler<TSrcPixel, TSrcPixel> src, _RowTransformIterator srcIterator)
+            {
+                Pixel.RGB96F rgb = default;
+
+                for (int i = 0; i < dstX.Length; ++i)
+                {
+                    srcIterator.MoveNext(out int sx, out int sy);
+
+                    src.GetPixelOrDefault(sx, sy).CopyTo(ref rgb);
+
+                    rgb.RGB *= mul;
+                    rgb.RGB += add;
+
+                    dstX[i] = rgb.R;
+                    dstY[i] = rgb.G;
+                    dstZ[i] = rgb.B;
+                }
+            }
+
+            void _rowProcessorBilinear(Span<float> dstX, Span<float> dstY, Span<float> dstZ, SpanQuantized8Sampler<TSrcPixel, TSrcPixel> src, _RowTransformIterator srcIterator)
+            {
+                Pixel.RGB96F rgb = default;
+
+                for (int i = 0; i < dstX.Length; ++i)
+                {
+                    srcIterator.MoveNext(out int sx, out int sy, out int rx, out int ry);
+
+                    src.GetSampleOrDefault(sx, sy, rx, ry).CopyTo(ref rgb);
+
+                    rgb.RGB *= mul;
+                    rgb.RGB += add;
+
+                    dstX[i] = rgb.R;
+                    dstY[i] = rgb.G;
+                    dstZ[i] = rgb.B;
+                }
+            }
+
+            p = useBilinear
+                ? (_ProcessPlanesCallback8<TSrcPixel, TSrcPixel, float>)_rowProcessorBilinear
+                : (_ProcessPlanesCallback8<TSrcPixel, TSrcPixel, float>)_rowProcessorNearest;
+
+            _ProcessPlanes(dst, src, srcXform, p);
         }
 
         #endregion
@@ -195,6 +194,38 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 var dstRow = dst.UseScanlinePixels(dy).Slice(destBounds.Left, destBounds.Width);
 
                 rowProcessor(dstRow, srcSampler, iter);
+            }
+        }
+
+        #endregion
+
+        #region planes processor
+
+        delegate void _ProcessPlanesCallback8<TSrcPixel, TTmpPixel, TDstComponent>(Span<TDstComponent> dstX, Span<TDstComponent> dstY, Span<TDstComponent> dstZ, SpanQuantized8Sampler<TSrcPixel, TTmpPixel> src, _RowTransformIterator srcIterator)
+            where TSrcPixel : unmanaged
+            where TTmpPixel : unmanaged
+            where TDstComponent : unmanaged;            
+
+        static void _ProcessPlanes<TSrcPixel, TTmpPixel, TDstComponent>(SpanPlanesXYZ<TDstComponent> dst, SpanBitmap<TSrcPixel> src, TRANSFORM srcXform, _ProcessPlanesCallback8<TSrcPixel, TTmpPixel, TDstComponent> rowProcessor)
+            where TSrcPixel : unmanaged
+            where TTmpPixel : unmanaged
+            where TDstComponent : unmanaged
+        {
+            _RowTransformIterator iter;
+            var iterFactory = new _RowTransformIterator.Factory(srcXform);
+            var destBounds = new BitmapBounds(srcXform, src.Width, src.Height).Clipped(dst.Bounds);
+
+            var srcSampler = new SpanQuantized8Sampler<TSrcPixel, TTmpPixel>(src);
+
+            for (int dy = destBounds.Top; dy < destBounds.Bottom; ++dy)
+            {
+                iterFactory.UpdateIterator(destBounds.Left, dy, out iter);
+
+                var dstRowX = dst.X.UseScanlinePixels(dy).Slice(destBounds.Left, destBounds.Width);
+                var dstRowY = dst.Y.UseScanlinePixels(dy).Slice(destBounds.Left, destBounds.Width);
+                var dstRowZ = dst.Z.UseScanlinePixels(dy).Slice(destBounds.Left, destBounds.Width);
+
+                rowProcessor(dstRowX, dstRowY, dstRowZ, srcSampler, iter);
             }
         }
 
@@ -238,7 +269,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             }
 
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            public readonly TDstPixel GetSampleOrClamp(int x, int y, int rx, int ry)
+            public readonly TDstPixel GetSampleOrDefault(int x, int y, int rx, int ry)
             {
                 var a = GetPixelOrDefault(x, y);
                 var b = GetPixelOrDefault(x + 1, y);

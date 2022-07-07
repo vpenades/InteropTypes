@@ -9,6 +9,8 @@ using InteropTypes.Graphics.Bitmaps;
 
 using NUnit.Framework;
 
+using SixLabors.ImageSharp;
+
 namespace InteropTypes.Codecs
 {
     [Category("Codecs")]
@@ -121,7 +123,9 @@ namespace InteropTypes.Codecs
 
             using(var proxy = mem.UsingImageSharp())
             {
-                proxy.Image.AttachToCurrentTest("ImageSharp.png");
+                AttachmentInfo
+                    .From("ImageSharp.png")
+                    .WriteObject(f => proxy.Image.Save(f.FullName));
             }            
         }
 
@@ -150,7 +154,9 @@ namespace InteropTypes.Codecs
                 }
             }
 
-            _getFrames().AttachAviToCurrentTest("video.avi");
+            AttachmentInfo
+                .From("video.avi")
+                .WriteAVI(_getFrames());
         }
 
 

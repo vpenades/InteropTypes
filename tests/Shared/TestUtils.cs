@@ -16,22 +16,10 @@ using SixLabors.ImageSharp.Processing;
 
 using POINTF = SixLabors.ImageSharp.PointF;
 
-[assembly: AttachmentPathFormat("?", true)]
-
-namespace InteropTypes
+namespace InteropTypes.Graphics.Bitmaps
 {
     static class TestUtils
     {
-        public static void AttachToCurrentTest(this Image image, string filePath)
-        {
-            new AttachmentInfo(filePath).WriteObject(finfo => image.Save(finfo.FullName));
-        }
-
-        public static void AttachToCurrentTest(this System.Drawing.Bitmap image, string filePath)
-        {
-            new AttachmentInfo(filePath).WriteObject(finfo => image.Save(finfo.FullName));
-        }        
-
         public static void AttachToCurrentTestAll(this SpanBitmap bmp, string filePath)
         {
             var mem = bmp.ToMemoryBitmap();
@@ -42,9 +30,9 @@ namespace InteropTypes
             if (bmp.PixelFormat == Pixel.BGR96F.Format || bmp.PixelFormat == Pixel.RGB96F.Format)
             {
                 var tmp = new MemoryBitmap(bmp.Width, bmp.Height, Pixel.BGR24.Format);
-                SpanBitmap.CopyPixels(bmp.OfType<System.Numerics.Vector3>(), tmp, (0, 1), (0,255));
+                SpanBitmap.CopyPixels(bmp.OfType<System.Numerics.Vector3>(), tmp, (0, 1), (0, 255));
                 bmp = tmp;
-            }            
+            }
 
             AttachmentInfo _injectExt(string fp, string extPrefix)
             {
@@ -74,30 +62,29 @@ namespace InteropTypes
             // TODO: it should compare saved files against bmp
         }
 
-        public static void AttachToCurrentTest(this SpanBitmap bmp, string filePath)
+        public static System.IO.FileInfo WriteImage(this AttachmentInfo ainfo, MemoryBitmap image)
         {
-            bmp.ToMemoryBitmap().Save(new AttachmentInfo(filePath));
+            return ainfo.WriteObject(f => image.Save(f.FullName));
         }
 
-        public static string AttachToCurrentTest(this IEnumerable<PointerBitmap> frames, string videoPath)
+        public static System.IO.FileInfo WriteImage(this AttachmentInfo ainfo, Image image)
         {
-            return AttachmentInfo
-                .From(videoPath)
-                .WriteObject(finfo => FFmpegAutoGenCodec.EncodeFrames(finfo.FullName, frames))
-                .FullName;
-        }        
+            return ainfo.WriteObject(f => image.Save(f.FullName));
+        }
 
-        public static string AttachAviToCurrentTest(this IEnumerable<MemoryBitmap> frames, string videoPath, float frameRate = 25)
+        public static System.IO.FileInfo WriteVideo(this AttachmentInfo ainfo, IEnumerable<PointerBitmap> frames)
+        {
+            return ainfo.WriteObject(finfo => FFmpegAutoGenCodec.EncodeFrames(finfo.FullName, frames));
+        }
+
+        public static System.IO.FileInfo WriteAVI(this AttachmentInfo ainfo, IEnumerable<MemoryBitmap> frames, float frameRate = 25)
         {
             void _saveVideo(System.IO.FileInfo finfo)
             {
                 MJpegAviFrameWriter.SaveToAVI(finfo.FullName, frames, (decimal)frameRate, new GDICodec(50));
             }
 
-            return AttachmentInfo
-                .From(videoPath)
-                .WriteObject(_saveVideo)
-                .FullName;
+            return ainfo.WriteObject(_saveVideo);
         }
     }
 
@@ -122,10 +109,7 @@ namespace InteropTypes
         }        
     }    
 
-    public static class TestResources
-    {
-        public static string ShannonJpg => System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
-    }
+    
 
     readonly struct PerformanceBenchmark : IDisposable
     {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
-    <RootNamespace>InteropBitmaps</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>8.0</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>

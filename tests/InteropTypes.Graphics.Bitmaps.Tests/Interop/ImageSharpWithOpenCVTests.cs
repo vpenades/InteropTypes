@@ -24,12 +24,6 @@ namespace InteropTypes.Graphics.Bitmaps
             var membmp = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
 
             membmp.Save(AttachmentInfo.From("Result.png"));
-
-
-            // var imgsharp = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(filePath);
-            // imgsharp.AttachToCurrentTest("original.png");
-            // imgsharp.AsSpanBitmap().AsOpenCVSharp().Blur((5,1));
-            // imgsharp.AttachToCurrentTest("result.png");
         }
 
 
@@ -41,7 +35,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var img = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(filePath);
 
-            img.AttachToCurrentTest("original.png");
+            AttachmentInfo
+                .From("original.png")
+                .WriteObject(f => img.Save(f.FullName));
 
             OpenCvSharp.Mat _Process(OpenCvSharp.Mat src)
             {
@@ -55,10 +51,12 @@ namespace InteropTypes.Graphics.Bitmaps
 
             img.WriteAsSpanBitmap(self => self.WithOpenCv().Apply(_Process));
 
-            img.AttachToCurrentTest("result.png");
+            AttachmentInfo
+                .From("result.png")
+                .WriteObject(f => img.Save(f.FullName));
 
             // var img2 = img.AsSpanBitmap().AsOpenCVSharp().CloneMutated(_Process);
-            // img2.AttachToCurrentTest("result.png");
+            // AttachmentInfo.From("result2.png").WriteObject(f => img2.Save(f.FullName));
         }
     }
 }
