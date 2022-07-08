@@ -15,6 +15,8 @@ namespace InteropTypes.Codecs
 
         public static CodecFormat ParseFormat(string extension)
         {
+            if (extension.EndsWith("interopbmp", StringComparison.OrdinalIgnoreCase)) return CodecFormat.InteropBitmap;
+
             if (extension.EndsWith("png", StringComparison.OrdinalIgnoreCase)) return CodecFormat.Png;
             if (extension.EndsWith("jpg", StringComparison.OrdinalIgnoreCase)) return CodecFormat.Jpeg;
 
@@ -34,7 +36,7 @@ namespace InteropTypes.Codecs
 
             if (extension.EndsWith("tif", StringComparison.OrdinalIgnoreCase)) return CodecFormat.Tiff;
 
-            throw new BitmapCodecException();
+            throw new BitmapCodecException($"Unrecognized format extension: '{System.IO.Path.GetExtension(extension)}'");
         }
 
         internal static void Write(Lazy<System.IO.Stream> stream, CodecFormat format, IBitmapEncoder[] encoders, SpanBitmap bmp)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using System.Linq;
 
 using SIZE = System.Drawing.Size;
 
@@ -598,8 +599,8 @@ namespace InteropTypes.Graphics.Bitmaps
         public void Write(Lazy<System.IO.Stream> stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
         {
             Codecs.BitmapCodecFactory.Write(stream, format, factory, this);
-        }
+        }        
 
-        #endregion        
+        #endregion
     }
 }

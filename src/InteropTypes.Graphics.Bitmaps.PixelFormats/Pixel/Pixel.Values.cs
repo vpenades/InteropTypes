@@ -1018,72 +1018,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [System.Runtime.InteropServices.FieldOffset(2)]
             public Byte V;
 
-            #endregion
-
-            #region API
-
-            private void _FromRGB(int r, int g, int b, ref YUV24 yuv)
-            {
-                var y = ((66 * r + 129 * g + 25 * b + 128) >> 8) + 16;
-                var u = ((-38 * r - 74 * g + 112 * b + 128) >> 8) + 128;                
-                var v = ((112 * r - 94 * g - 18 * b + 128) >> 8) + 128;
-
-                yuv.Y = (Byte)y;
-                yuv.U = (Byte)u;
-                yuv.V = (Byte)v;
-            }
-
-            internal static BGR24 _ToBGR(Byte y, Byte u, Byte v)
-            {
-                int yy = y - 16;
-                int uu = u - 128;
-                int vv = v - 128;
-
-                yy *= 298;
-
-                var b = (yy + 516 * uu + 128) >> 8; // blue
-                var g = (yy - 100 * uu - 208 * vv + 128) >> 8; // green
-                var r = (yy + 409 * vv + 128) >> 8; // red
-
-                #if NETSTANDARD2_0
-                if (r < 0) r = 0; else if (r > 255) r = 255;
-                if (g < 0) g = 0; else if (g > 255) g = 255;
-                if (b < 0) b = 0; else if (b > 255) b = 255;
-                #else
-                r = Math.Clamp(r, 0, 255);
-                g = Math.Clamp(g, 0, 255);
-                b = Math.Clamp(b, 0, 255);
-                #endif
-
-                return new BGR24(r, g, b);
-            }
-
-            internal static BGRA32 _ToBGRA(Byte y, Byte u, Byte v)
-            {
-                int yy = y - 16;
-                int uu = u - 128;
-                int vv = v - 128;
-
-                yy *= 298;
-
-                var b = (yy + 516 * uu + 128) >> 8; // blue
-                var g = (yy - 100 * uu - 208 * vv + 128) >> 8; // green
-                var r = (yy + 409 * vv + 128) >> 8; // red
-
-                #if NETSTANDARD2_0
-                if (r < 0) r = 0; else if (r > 255) r = 255;
-                if (g < 0) g = 0; else if (g > 255) g = 255;
-                if (b < 0) b = 0; else if (b > 255) b = 255;
-                #else
-                r = Math.Clamp(r, 0, 255);
-                g = Math.Clamp(g, 0, 255);
-                b = Math.Clamp(b, 0, 255);
-                #endif
-
-                return new BGRA32(r, g, b, 255);
-            }
-
-            #endregion
+            #endregion     
         }
 
         /// <summary>

@@ -224,16 +224,35 @@ namespace InteropTypes.Graphics.Bitmaps
                 : new SpanBitmap(other._Writable, other._Info);
         }
 
-        
+        /// <summary>
+        /// Casts the current object to use <typeparamref name="TDstPixel"/>
+        /// </summary>
+        /// <typeparam name="TDstPixel">The pixel type to cast to.</typeparam>
+        /// <returns>A casted bitmap</returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <remarks>
+        /// This method is usually used in generic methods where we need to cast the generic pixel type to the explicit pixel type.
+        /// </remarks>
+        public SpanBitmap<TDstPixel> AsExplicit<TDstPixel>()
+            where TDstPixel : unmanaged
+        {
+            if (typeof(TPixel) != typeof(TDstPixel)) throw new ArgumentException("Pixel type mismatch.");
+
+            return _Writable.IsEmpty
+                ? new SpanBitmap<TDstPixel>(_Readable, _Info)
+                : new SpanBitmap<TDstPixel>(_Writable, _Info);
+        }
 
         public unsafe SpanBitmap<TDstPixel> ReinterpretAs<TDstPixel>()
             where TDstPixel : unmanaged
         {
-            if (sizeof(TPixel) != sizeof(TDstPixel)) throw new ArgumentException("pixels size mismatch.");
+            if (sizeof(TPixel) != sizeof(TDstPixel)) throw new ArgumentException("Pixel size mismatch.");
+
+            var info = _Info.WithPixelFormat(PixelFormat.TryIdentifyFormat<TDstPixel>());
 
             return _Writable.IsEmpty
-                ? new SpanBitmap<TDstPixel>(_Readable, _Info.Width, _Info.Height, _Info.StepByteSize)
-                : new SpanBitmap<TDstPixel>(_Writable, _Info.Width, _Info.Height, _Info.StepByteSize);
+                ? new SpanBitmap<TDstPixel>(_Readable, info)
+                : new SpanBitmap<TDstPixel>(_Writable, info);
         }
         
         public MemoryBitmap<TPixel> ToMemoryBitmap(PixelFormat? fmtOverride = null)
@@ -383,7 +402,7 @@ namespace InteropTypes.Graphics.Bitmaps
             // 3rd try with generic exact and matching types:
             if (typeof(TPixel) == typeof(TSrcPixel))
             {
-                var srcx = src.ReinterpretAs<TPixel>();
+                var srcx = src.AsExplicit<TPixel>();
                 if (transfer.TryTransfer<TPixel>(srcx, this)) return;
             }
 
@@ -392,6 +411,163 @@ namespace InteropTypes.Graphics.Bitmaps
 
             // 5th unable to transfer.
             throw new NotSupportedException($"Transfers from {typeof(TSrcPixel).Name} to {typeof(TPixel).Name} with {transfer.GetType().Name} are not supported.");
+        }
+
+        public void ApplyAddMultiply(float addition, float multiply)
+        {
+            ApplyMultiplyAdd(multiply, addition * multiply);
+        }
+
+        public void ApplyMultiplyAdd(float multiply, float addition)
+        {
+            if (typeof(TPixel) == typeof(Single)
+                || typeof(TPixel) == typeof(Vector2)
+                || typeof(TPixel) == typeof(Vector3)
+                || typeof(TPixel) == typeof(Vector4)                
+                || typeof(TPixel) == typeof(Pixel.Luminance32F)
+                || typeof(TPixel) == typeof(Pixel.RGB96F)
+                || typeof(TPixel) == typeof(Pixel.BGR96F)
+                || typeof(TPixel) == typeof(Pixel.RGBP128F)
+                || typeof(TPixel) == typeof(Pixel.BGRP128F)
+                )
+            {
+                for (int y = 0; y < this.Height; ++y)
+                {
+                    var row = this.UseScanlinePixels(y);
+                    var rowf = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, float>(row);
+                    Vector4Streaming.MultiplyAdd(rowf, multiply, addition);
+                }
+
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public void ApplyAddMultiply(Vector3 addition, Vector3 multiply)
+        {
+            ApplyMultiplyAdd(multiply, addition * multiply);
+        }
+
+        public void ApplyMultiplyAdd(Vector3 multiply, Vector3 addition)
+        {
+            if (typeof(TPixel) == typeof(Vector3)
+                || typeof(TPixel) == typeof(Pixel.RGB96F)
+                || typeof(TPixel) == typeof(Pixel.BGR96F)
+                )
+            {
+                for (int y = 0; y < this.Height; ++y)
+                {
+                    var row = this.UseScanlinePixels(y);
+                    var rowf = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Vector3>(row);
+                    
+                    for(int x=0; x < rowf.Length; ++x)
+                    {
+                        rowf[x] *= multiply;
+                        rowf[x] += addition;
+                    }
+                }
+
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public void ApplyClamp(float min, float max)
+        {
+            if (typeof(TPixel) == typeof(Single)
+                || typeof(TPixel) == typeof(Vector2)
+                || typeof(TPixel) == typeof(Vector3)
+                || typeof(TPixel) == typeof(Vector4)
+                || typeof(TPixel) == typeof(Pixel.Luminance32F)
+                || typeof(TPixel) == typeof(Pixel.RGB96F)
+                || typeof(TPixel) == typeof(Pixel.BGR96F)
+                || typeof(TPixel) == typeof(Pixel.RGBP128F)
+                || typeof(TPixel) == typeof(Pixel.BGRP128F)
+                )
+            {
+                for (int y = 0; y < this.Height; ++y)
+                {
+                    var row = this.UseScanlinePixels(y);
+                    var rowf = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, float>(row);
+
+                    for (int x = 0; x < rowf.Length; ++x)
+                    {                        
+                        var v = rowf[x];
+                        if (v < min) rowf[x] = min;
+                        else if (v > max) rowf[x] = max;
+                    }
+                }
+
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public void ApplyClamp(Vector3 min, Vector3 max)
+        {
+            if (typeof(TPixel) == typeof(Vector3)
+                || typeof(TPixel) == typeof(Pixel.RGB96F)
+                || typeof(TPixel) == typeof(Pixel.BGR96F)
+                )
+            {
+                for (int y = 0; y < this.Height; ++y)
+                {
+                    var row = this.UseScanlinePixels(y);
+                    var rowf = System.Runtime.InteropServices.MemoryMarshal.Cast<TPixel, Vector3>(row);
+
+                    for (int x = 0; x < rowf.Length; ++x)
+                    {
+                        rowf[x] = Vector3.Clamp(rowf[x], min, max);
+                    }
+                }
+
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+
+        
+        private void SetPixelsFromYUV420(SpanBitmap<Byte> srcY, SpanBitmap<Byte> srcU, SpanBitmap<Byte> srcV)
+        {
+            var h = Math.Min(this.Height, srcY.Height) -1;
+
+            for (int y = 0; y < h; y += 2)
+            {
+                var dstRow0 = this.UseScanlinePixels(y + 0);
+                var dstRow1 = this.UseScanlinePixels(y + 1);
+
+                var srcRowY0 = srcY.GetScanlinePixels(y + 0);
+                var srcRowY1 = srcY.GetScanlinePixels(y + 1);
+
+                var srcRowU = srcU.GetScanlinePixels(Math.Min(y / 2, srcU.Height - 1));
+                var srcRowV = srcV.GetScanlinePixels(Math.Min(y / 2, srcV.Height - 1));
+
+                Pixel.YUV24.KernelRGB.TransferYUV420(dstRow0, dstRow1, srcRowY0, srcRowY1, srcRowU, srcRowV);
+            }
+        }
+
+        private void SetPixelsFromYUV420(SpanBitmap<Byte> srcY, SpanBitmap<ushort> srcU, SpanBitmap<ushort> srcV)
+        {
+            var h = Math.Min(this.Height, srcY.Height) - 1;
+
+            for (int y = 0; y < h; y += 2)
+            {
+                var dstRow0 = this.UseScanlinePixels(y + 0);
+                var dstRow1 = this.UseScanlinePixels(y + 1);
+
+                var srcRowY0 = srcY.GetScanlinePixels(y + 0);
+                var srcRowY1 = srcY.GetScanlinePixels(y + 1);
+
+                var srcRowU = srcU.GetScanlinePixels(Math.Min(y / 2, srcU.Height - 1));
+                var srcRowV = srcV.GetScanlinePixels(Math.Min(y / 2, srcV.Height - 1));
+
+                Pixel.YUV24.KernelRGB.TransferYUV420(dstRow0, dstRow1, srcRowY0, srcRowY1, srcRowU, srcRowV);
+            }
         }
 
         #endregion

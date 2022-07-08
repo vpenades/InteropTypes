@@ -42,6 +42,8 @@ namespace InteropTypes.Codecs
                 {
                     using (var skc = SkiaSharp.SKCodec.Create(data))
                     {
+                        if (skc == null) { bitmap = default; return false; }
+
                         var binfo = _Implementation.GetBitmapInfo(skc.Info);
                         bitmap = new MemoryBitmap(skc.Pixels, binfo);
                         return true;
@@ -51,6 +53,8 @@ namespace InteropTypes.Codecs
             
             using (var skc = SkiaSharp.SKCodec.Create(context.Stream))
             {
+                if (skc == null) { bitmap = default; return false; }
+
                 var binfo = _Implementation.GetBitmapInfo(skc.Info);
                 bitmap = new MemoryBitmap(skc.Pixels, binfo);
                 return true;

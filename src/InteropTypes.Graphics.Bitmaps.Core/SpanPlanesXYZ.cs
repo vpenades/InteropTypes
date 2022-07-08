@@ -35,7 +35,7 @@ namespace InteropTypes.Graphics.Bitmaps
             X = new SpanBitmap<TComponent>(dataX, width, height);
             Y = new SpanBitmap<TComponent>(dataY, width, height);
             Z = new SpanBitmap<TComponent>(dataZ, width, height);
-        }
+        }        
 
         #endregion
 
@@ -66,7 +66,99 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #endregion
 
+        #region API - Cast
+
+        public SpanPlanesXYZ<TOtherComponent> AsExplicit<TOtherComponent>()
+            where TOtherComponent : unmanaged
+        {
+            var xx = X.AsExplicit<TOtherComponent>();
+            var yy = Y.AsExplicit<TOtherComponent>();
+            var zz = Z.AsExplicit<TOtherComponent>();
+
+            return new SpanPlanesXYZ<TOtherComponent>(xx, yy, zz);
+        }
+
+        public SpanPlanesXYZ<TOtherComponent> ReinterpretAs<TOtherComponent>()
+            where TOtherComponent : unmanaged
+        {
+            var xx = X.ReinterpretAs<TOtherComponent>();
+            var yy = Y.ReinterpretAs<TOtherComponent>();
+            var zz = Z.ReinterpretAs<TOtherComponent>();
+
+            return new SpanPlanesXYZ<TOtherComponent>(xx, yy, zz);
+        }
+
+        #endregion
+
         #region API        
+
+        public SpanPlanesXYZ<TComponent> Slice(in BitmapBounds rect)
+        {
+            var xx = X.Slice(rect);
+            var yy = Y.Slice(rect);
+            var zz = Z.Slice(rect);
+
+            return new SpanPlanesXYZ<TComponent>(xx, yy, zz);
+        }
+
+        public void SetPixels<TSrcPixel>(SpanBitmap<TSrcPixel> src)
+            where TSrcPixel:unmanaged, Pixel.IConvertTo
+        {
+            if (typeof(TComponent) == typeof(Byte)) { _SetPixels(src, AsExplicit<Byte>()); return; }
+            if (typeof(TComponent) == typeof(float)) { _SetPixels(src, AsExplicit<float>()); return; }
+        }
+
+        private static void _SetPixels<TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanPlanesXYZ<Byte> dst)
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
+        {
+            var w = Math.Min(src.Width, dst.Width);
+            var h = Math.Min(src.Height, dst.Height);
+
+            Pixel.BGR24 p = default;
+
+            for (int y = 0; y < h; y++)
+            {
+                var srcRow = src.GetScanlinePixels(y);
+                var dstRowX = dst.X.UseScanlinePixels(y);
+                var dstRowY = dst.Y.UseScanlinePixels(y);
+                var dstRowZ = dst.Z.UseScanlinePixels(y);
+
+                for (int x = 0; x < w; ++x)
+                {
+                    srcRow[x].CopyTo(ref p);
+
+                    dstRowX[x] = p.R;
+                    dstRowY[x] = p.G;
+                    dstRowZ[x] = p.B;
+                }
+            }
+        }
+
+        private static void _SetPixels<TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanPlanesXYZ<Single> dst)
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
+        {
+            var w = Math.Min(src.Width, dst.Width);
+            var h = Math.Min(src.Height, dst.Height);
+
+            Pixel.BGR96F p = default;
+
+            for (int y = 0; y < h; y++)
+            {
+                var srcRow = src.GetScanlinePixels(y);
+                var dstRowX = dst.X.UseScanlinePixels(y);
+                var dstRowY = dst.Y.UseScanlinePixels(y);
+                var dstRowZ = dst.Z.UseScanlinePixels(y);
+
+                for(int x=0; x < w; ++x)
+                {
+                    srcRow[x].CopyTo(ref p);
+
+                    dstRowX[x] = p.R;
+                    dstRowY[x] = p.G;
+                    dstRowZ[x] = p.B;
+                }
+            }
+        }
 
         public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear)
             where TSrcPixel : unmanaged, Pixel.IConvertTo
@@ -81,43 +173,31 @@ namespace InteropTypes.Graphics.Bitmaps
             xform.PixelMultiply = pixelMultiply;
             xform.PixelAddition = pixelAddition;
 
-            if (typeof(TComponent) == typeof(float))
-            {
-                var xx = X.ReinterpretAs<float>();
-                var yy = Y.ReinterpretAs<float>();
-                var zz = Z.ReinterpretAs<float>();
-                var dst = new SpanPlanesXYZ<float>(xx, yy, zz);                
-                    
-                xform.TryTransfer(src, dst);
-                return;
-            }
+            // if (typeof(TComponent) == typeof(Byte)) { xform.TryTransfer(src, _GetExplicit<Byte>()); return; }
+            if (typeof(TComponent) == typeof(float)) { xform.TryTransfer(src, AsExplicit<float>()); return; }
 
             throw new NotImplementedException();
         }
 
-        public void CopyTo(ref MemoryBitmap<Pixel.BGR96F> dst)
+        public void CopyTo<TDstPixel>(ref MemoryBitmap<TDstPixel> dst)
+            where TDstPixel:unmanaged
         {
             if (this.Width != dst.Width || this.Height != dst.Height)
             {
-                dst = new MemoryBitmap<Pixel.BGR96F>(this.Width, this.Height);
+                dst = new MemoryBitmap<TDstPixel>(this.Width, this.Height);
             }
 
-            if (typeof(TComponent) == typeof(float))
-            {
-                var xx = X.ReinterpretAs<float>();
-                var yy = Y.ReinterpretAs<float>();
-                var zz = Z.ReinterpretAs<float>();
-                var src = new SpanPlanesXYZ<float>(xx,yy,zz);
-
-                _CopyTo(src, dst);
-                return;
-            }
+            if (typeof(TComponent) == typeof(Byte)) { _CopyTo<TDstPixel>(AsExplicit<Byte>(), dst); return; }
+            if (typeof(TComponent) == typeof(float)) { _CopyTo<TDstPixel>(AsExplicit<float>(), dst); return; }
 
             throw new NotImplementedException();
         }
 
-        private static void _CopyTo(SpanPlanesXYZ<float> src, SpanBitmap<Pixel.BGR96F> dst)
+        private static void _CopyTo<TDstPixel>(SpanPlanesXYZ<Byte> src, SpanBitmap<TDstPixel> dst)
+            where TDstPixel : unmanaged
         {
+            Pixel.BGR24 pix = default;
+
             for (int y = 0; y < dst.Height; ++y)
             {
                 var dstRow = dst.UseScanlinePixels(y);
@@ -127,14 +207,95 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 for (int x = 0; x < dstRow.Length; ++x)
                 {
-                    ref var dstPix = ref dstRow[x];
+                    pix.R = srcRowX[x];
+                    pix.G = srcRowY[x];
+                    pix.B = srcRowZ[x];
 
-                    dstPix.R = srcRowX[x];
-                    dstPix.G = srcRowY[x];
-                    dstPix.B = srcRowZ[x];
+                    pix.CopyTo(ref dstRow[x]);
                 }
             }
-        }        
+        }
+
+        private static void _CopyTo<TDstPixel>(SpanPlanesXYZ<Single> src, SpanBitmap<TDstPixel> dst)
+            where TDstPixel : unmanaged
+        {
+            Pixel.BGR96F pix = default;
+
+            for (int y = 0; y < dst.Height; ++y)
+            {
+                var dstRow = dst.UseScanlinePixels(y);
+                var srcRowX = src.X.GetScanlinePixels(y);
+                var srcRowY = src.Y.GetScanlinePixels(y);
+                var srcRowZ = src.Z.GetScanlinePixels(y);
+
+                for (int x = 0; x < dstRow.Length; ++x)
+                {
+                    pix.R = srcRowX[x];
+                    pix.G = srcRowY[x];
+                    pix.B = srcRowZ[x];
+
+                    pix.CopyTo(ref dstRow[x]);
+                }
+            }
+        }
+
+        public void ApplyAddMultiply(Single multiply, Single addition)
+        {
+            ApplyAddMultiply(new Vector3(multiply), new Vector3(addition));
+        }
+
+        public void ApplyAddMultiply(Vector3 multiply, Vector3 addition)
+        {
+            ApplyMultiplyAdd(multiply, addition * multiply);
+        }
+
+        public void ApplyMultiplyAdd(Single multiply, Single addition)
+        {
+            ApplyMultiplyAdd(new Vector3(multiply), new Vector3(addition));
+        }
+
+        public void ApplyMultiplyAdd(Vector3 multiply, Vector3 addition)
+        {
+            this.X.ApplyMultiplyAdd(multiply.X, addition.X);
+            this.Y.ApplyMultiplyAdd(multiply.Y, addition.Y);
+            this.Z.ApplyMultiplyAdd(multiply.Z, addition.Z);
+        }
+
+        public void ApplyClamp(Vector3 min, Vector3 max)
+        {
+            this.X.ApplyClamp(min.X, max.X);
+            this.Y.ApplyClamp(min.Y, max.Y);
+            this.Z.ApplyClamp(min.Z, max.Z);
+        }
+
+        #endregion
+
+        #region API - IO
+
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public void Save(Action<Action<System.IO.FileInfo>> saveCallback, params Codecs.IBitmapEncoder[] factory)
+        {
+            MemoryBitmap<Pixel.BGR24> img = default;
+            CopyTo(ref img);
+            
+            saveCallback(finfo => img.Save(finfo.FullName, factory));
+        }
+
+        public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
+        {
+            MemoryBitmap<Pixel.BGR24> img = default;
+            CopyTo(ref img);
+
+            img.AsSpanBitmap().Save(filePath, factory);
+        }
+
+        public void Write(System.IO.Stream stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
+        {
+            MemoryBitmap<Pixel.BGR24> img = default;
+            CopyTo(ref img);
+
+            img.AsSpanBitmap().Write(stream, format, factory);
+        }
 
         #endregion
     }

@@ -19,15 +19,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             var xform = System.Numerics.Matrix3x2.CreateScale(dst.Width / (float)src.Width, dst.Height / (float)src.Height);
 
-            dst.SetPixels<Pixel.BGR24>(xform, src, true);
+            dst.SetPixels<Pixel.BGR24>(xform, src, true);            
 
-            var dst2 = default(MemoryBitmap<Pixel.BGR96F>);
-
-            dst.CopyTo(ref dst2);
-
-            AttachmentInfo
-                .From("result.png")
-                .WriteObject(f => dst2.Save(f.FullName));
+            dst.Save(AttachmentInfo.From("result.png"));
         }
 
     }

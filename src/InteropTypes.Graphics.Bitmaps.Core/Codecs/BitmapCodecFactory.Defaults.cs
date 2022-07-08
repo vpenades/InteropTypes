@@ -42,6 +42,8 @@ namespace InteropTypes.Codecs
                 var instance = Activator.CreateInstance(t, true) as IBitmapEncoder;
                 if (instance != null) yield return instance;
             }
+
+            yield return new _InBuiltCodec();
         }
         
         public static IEnumerable<IBitmapDecoder> GetDefaultDecoders()
@@ -52,6 +54,8 @@ namespace InteropTypes.Codecs
             {
                 if (Activator.CreateInstance(t, true) is IBitmapDecoder instance) yield return instance;
             }
+
+            yield return new _InBuiltCodec();
         }
         
         private static IEnumerable<Type> _GetExternalTypes<T>()

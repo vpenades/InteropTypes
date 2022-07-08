@@ -35,11 +35,19 @@ namespace InteropTypes.Codecs
         /// <inheritdoc/>
         public bool TryRead(BitmapDecoderContext context, out MemoryBitmap bitmap)
         {
-            var frame = System.Windows.Media.Imaging.BitmapFrame.Create(context.Stream, System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat, System.Windows.Media.Imaging.BitmapCacheOption.None);
+            try
+            {
+                var frame = System.Windows.Media.Imaging.BitmapFrame.Create(context.Stream, System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat, System.Windows.Media.Imaging.BitmapCacheOption.None);
 
-            bitmap = _Implementation.ToMemoryBitmap(frame);
+                bitmap = _Implementation.ToMemoryBitmap(frame);
 
-            return true;
+                return true;
+            }
+            catch(System.NotSupportedException)
+            {
+                bitmap = default;
+                return false;
+            }
         }
 
         /// <inheritdoc/>

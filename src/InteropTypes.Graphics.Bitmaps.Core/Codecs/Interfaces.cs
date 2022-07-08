@@ -6,7 +6,12 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Codecs
 {
-    public class BitmapCodecException : System.IO.IOException { }
+    public class BitmapCodecException : System.IO.IOException
+    {
+        public BitmapCodecException() { }
+
+        public BitmapCodecException(string msg) : base(msg) { }
+    }
 
     public struct BitmapDecoderContext
     {
@@ -50,6 +55,9 @@ namespace InteropTypes.Codecs
     public enum CodecFormat
     {
         Undefined,
+
+        InteropBitmap,
+
         Bmp,
         Gif,
         Icon,

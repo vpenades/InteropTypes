@@ -187,51 +187,6 @@ namespace InteropTypes.Graphics.Bitmaps
             throw new NotImplementedException();
         }
 
-        public static void SplitPixels(SpanBitmap<Vector3> src, SpanBitmap<Single> dstB, SpanBitmap<Single> dstG, SpanBitmap<Single> dstR)
-        {
-            src = src.AsReadOnly();
-
-            if (src.PixelFormat.Component0.IsBlue)
-            {
-                for (int y = 0; y < src.Height; ++y)
-                {
-                    var srcRow = src.GetScanlinePixels(y);
-                    var dstRowX = dstB.UseScanlinePixels(y);
-                    var dstRowY = dstG.UseScanlinePixels(y);
-                    var dstRowZ = dstR.UseScanlinePixels(y);
-
-                    for (int x = 0; x < srcRow.Length; ++x)
-                    {
-                        var bgr = srcRow[x];
-                        dstRowX[x] = bgr.X;
-                        dstRowY[x] = bgr.Y;
-                        dstRowZ[x] = bgr.Z;
-                    }
-                }
-            }
-
-            if (src.PixelFormat.Component0.IsRed)
-            {
-                for (int y = 0; y < src.Height; ++y)
-                {
-                    var srcRow = src.GetScanlinePixels(y);
-                    var dstRowX = dstR.UseScanlinePixels(y);
-                    var dstRowY = dstG.UseScanlinePixels(y);
-                    var dstRowZ = dstB.UseScanlinePixels(y);
-
-                    for (int x = 0; x < srcRow.Length; ++x)
-                    {
-                        var bgr = srcRow[x];
-                        dstRowX[x] = bgr.X;
-                        dstRowY[x] = bgr.Y;
-                        dstRowZ[x] = bgr.Z;
-                    }
-                }
-            }
-        }
-
-        
-
         public static bool ArePixelsEqual(SpanBitmap a, SpanBitmap b)
         {
             if (a.Info.Bounds != b.Info.Bounds) return false;
@@ -267,77 +222,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
 
             throw new NotImplementedException();
-        }
-
-        public static void ApplyAddMultiply(SpanBitmap<Single> target, Single add, Single multiply)
-        {
-            for (int y = 0; y < target.Height; ++y)
-            {
-                var row = target.UseScanlinePixels(y);
-                Vector4Streaming.AddMultiply(row, add, multiply);
-            }
-        }
-
-        public static void ApplyMultiplyAndAdd(SpanBitmap<Single> target, Single multiply, Single add)
-        {
-            for (int y = 0; y < target.Height; ++y)
-            {
-                var row = target.UseScanlinePixels(y);
-                Vector4Streaming.MultiplyAdd(row, multiply, add);
-            }
-        }
-
-        public static void ApplyAddMultiply(SpanBitmap<Vector3> target, Single add, Single multiply)
-        {
-            for (int y = 0; y < target.Height; ++y)
-            {
-                var row = target.UseScanlinePixels(y);
-                var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
-                Vector4Streaming.AddMultiply(fRow, add, multiply);
-            }
-        }
-
-        public static void ApplyAddMultiply(SpanBitmap<Vector3> target, Vector3 add, Vector3 multiply)
-        {
-            for (int y = 0; y < target.Height; ++y)
-            {
-                var row = target.UseScanlinePixels(y);                
-                for(int i=0; i < row.Length; ++i)
-                {
-                    row[i] += add;
-                    row[i] *= multiply;
-                }
-            }
-        }
-
-        public static void ApplyMultiplyAndAdd(SpanBitmap<Vector3> target, Single multiply, Single add)
-        {
-            for (int y = 0; y < target.Height; ++y)
-            {
-                var row = target.UseScanlinePixels(y);
-                var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector3, float>(row);
-                Vector4Streaming.MultiplyAdd(fRow, multiply, add);
-            }
-        }
-
-        public static void ApplyAddMultiply(SpanBitmap<Vector4> target, Single add, Single multiply)
-        {
-            for (int y = 0; y < target.Height; ++y)
-            {
-                var row = target.UseScanlinePixels(y);
-                var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, Single>(row);
-                Vector4Streaming.AddMultiply(fRow, add, multiply);
-            }
-        }
-
-        public static void ApplyMultiplyAndAdd(SpanBitmap<Vector4> target, Single multiply, Single add)
-        {
-            for (int y = 0; y < target.Height; ++y)
-            {
-                var row = target.UseScanlinePixels(y);
-                var fRow = System.Runtime.InteropServices.MemoryMarshal.Cast<Vector4, float>(row);
-                Vector4Streaming.MultiplyAdd(fRow, multiply, add);
-            }
-        }        
+        }       
     }
 }

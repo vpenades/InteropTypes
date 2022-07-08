@@ -22,36 +22,32 @@ namespace InteropTypes.Codecs
             Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
         }
 
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\diagram.jpg")]
-        [TestCase("Resources\\white.png")]
+        [TestCase("shannon.jpg")]
+        [TestCase("diagram.jpg")]
+        [TestCase("white.png")]
         public void LoadImageWithDefaultCodec(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
-
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            var bitmap = MemoryBitmap.Load(filePath);
+            var bitmap = MemoryBitmap.Load(ResourceInfo.From(filePath));
             Assert.IsFalse(bitmap.IsEmpty);
             TestContext.WriteLine(bitmap.Info);
             sw.Stop();
         }
 
 
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\diagram.jpg")]
-        [TestCase("Resources\\white.png")]
+        [TestCase("shannon.jpg")]
+        [TestCase("diagram.jpg")]
+        [TestCase("white.png")]
         public void LoadImage(string filePath)
         {
-            TestContext.CurrentContext.AttachFolderBrowserShortcut();
-
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            TestContext.CurrentContext.AttachFolderBrowserShortcut();            
 
             var codecs = new IBitmapDecoder[] { OpenCvCodec.Default, GDICodec.Default, WPFCodec.Default, ImageSharpCodec.Default, STBCodec.Default, SkiaCodec.Default };
 
             foreach (var decoder in codecs.OfType<IBitmapDecoder>())
             {
                 var sw = System.Diagnostics.Stopwatch.StartNew();
-                var bitmap = MemoryBitmap.Load(filePath, decoder);
+                var bitmap = MemoryBitmap.Load(ResourceInfo.From(filePath), decoder);
                 sw.Stop();
 
                 TestContext.WriteLine($"Loading {System.IO.Path.GetFileName(filePath)} with {decoder} tool {sw.ElapsedMilliseconds}");                
@@ -70,43 +66,39 @@ namespace InteropTypes.Codecs
                     bitmap
                         .AsSpanBitmap()
                         .ToMemoryBitmap(Pixel.Luminance8.Format)
-                        .Save(new AttachmentInfo(fname), encoder);
+                        .Save(AttachmentInfo.From(fname), encoder);
                 }
             }
         }
 
 
-        // [TestCase("Resources\\shannon.dds")]
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\shannon.tif")]        
-        [TestCase("Resources\\shannon.psd")]
-        [TestCase("Resources\\shannon.ico")]
-        [TestCase("Resources\\shannon.webp")]
+        // [TestCase("Resshannon.dds")]
+        [TestCase("shannon.jpg")]
+        [TestCase("shannon.tif")]        
+        [TestCase("shannon.psd")]
+        [TestCase("shannon.ico")]
+        [TestCase("shannon.webp")]
         public void LoadWithMultiCodec(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
-            
-            var img = MemoryBitmap.Load(filePath, Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
+            var img = MemoryBitmap.Load(ResourceInfo.From(filePath), Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
 
             Assert.NotNull(img);
             Assert.AreEqual(512, img.Width);
             Assert.AreEqual(512, img.Height);
         }
 
-        // [TestCase("Resources\\shannon.dds")]
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\shannon.tif")]
-        [TestCase("Resources\\shannon.psd")]
-        [TestCase("Resources\\shannon.ico")]
-        [TestCase("Resources\\shannon.webp")]
+        // [TestCase("shannon.dds")]
+        [TestCase("shannon.jpg")]
+        [TestCase("shannon.tif")]
+        [TestCase("shannon.psd")]
+        [TestCase("shannon.ico")]
+        [TestCase("shannon.webp")]
         public void LoadWithConversion(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
-
-            var bgr = MemoryBitmap<Pixel.BGR24>.Load(filePath, STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
+            var bgr = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From(filePath), STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
             Assert.NotNull(bgr);
 
-            var rgb = MemoryBitmap<Pixel.BGR24>.Load(filePath, STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
+            var rgb = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From(filePath), STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
             Assert.NotNull(rgb);
 
             Assert.AreEqual(512, bgr.Width);
@@ -116,16 +108,12 @@ namespace InteropTypes.Codecs
         [Test]
         public void LoadWebpToImageSharp()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.webp");
-
             // load a bitmap with SkiaSharp, which is known to support WEBP.
-            var mem = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
+            var mem = MemoryBitmap.Load(ResourceInfo.From("shannon.webp"), Codecs.SkiaCodec.Default);
 
             using(var proxy = mem.UsingImageSharp())
             {
-                AttachmentInfo
-                    .From("ImageSharp.png")
-                    .WriteObject(f => proxy.Image.Save(f.FullName));
+                mem.Save(AttachmentInfo.From("ImageSharp.png"));
             }            
         }
 
@@ -161,29 +149,23 @@ namespace InteropTypes.Codecs
 
 
         [Explicit("Performance test must run in release mode")]
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\shutterstock_267944357.jpg")]
-        [TestCase("Resources\\ios-11-camera-qr-code-scan.jpg")]
-        [TestCase("Resources\\2awithqr.jpg")]
-        [TestCase("Resources\\dog.jpeg")]
+        [TestCase("shannon.jpg")]
+        [TestCase("shutterstock_267944357.jpg")]
+        [TestCase("ios-11-camera-qr-code-scan.jpg")]
+        [TestCase("2awithqr.jpg")]
+        [TestCase("dog.jpeg")]
         public void LoadJpegPerformanceTest(string filePath)
         {
             TestContext.WriteLine(filePath);
-            TestContext.WriteLine("");
-
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            TestContext.WriteLine("");            
 
             void _writeToTest(string hdr, TimeSpan t)
             {
                 TestContext.WriteLine($"{hdr} {t.TotalMilliseconds}ms");
             }
 
-            void _doNothing(string hdr, TimeSpan t)
-            {
-                
-            }            
-
-
+            void _doNothing(string hdr, TimeSpan t) { }
+            
             Action<string, TimeSpan> _action1 = _writeToTest;
             Action<string, TimeSpan> _action2 = _writeToTest;
 
@@ -197,37 +179,37 @@ namespace InteropTypes.Codecs
 
                 using (var perf = PerformanceBenchmark.Run(result => _action1("OpenCV", result)))
                 {
-                    var bmp = MemoryBitmap.Load(filePath, OpenCvCodec.Default);
+                    var bmp = MemoryBitmap.Load(ResourceInfo.From(filePath), OpenCvCodec.Default);
                     _action2($"OpenCV  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
                 }
 
                 using (var perf = PerformanceBenchmark.Run(result => _action1("Skia", result)))
                 {
-                    var bmp = MemoryBitmap.Load(filePath, SkiaCodec.Default);
+                    var bmp = MemoryBitmap.Load(ResourceInfo.From(filePath), SkiaCodec.Default);
                     _action2($"Skia  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
                 }
 
                 using (var perf = PerformanceBenchmark.Run(result => _action1("WPF", result)))
                 {
-                    var bmp = MemoryBitmap.Load(filePath, WPFCodec.Default);
+                    var bmp = MemoryBitmap.Load(ResourceInfo.From(filePath), WPFCodec.Default);
                     _action2($"WPF  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
                 }
 
                 using (var perf = PerformanceBenchmark.Run(result => _action1("ImageSharp", result)))
                 {
-                    var bmp = MemoryBitmap.Load(filePath, ImageSharpCodec.Default);
+                    var bmp = MemoryBitmap.Load(ResourceInfo.From(filePath), ImageSharpCodec.Default);
                     _action2($"ImageSharp  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
                 }
 
                 using (var perf = PerformanceBenchmark.Run(result => _action1("GDI", result)))
                 {
-                    var bmp = MemoryBitmap.Load(filePath, GDICodec.Default);
+                    var bmp = MemoryBitmap.Load(ResourceInfo.From(filePath), GDICodec.Default);
                     _action2($"GDI  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
                 }
 
                 using (var perf = PerformanceBenchmark.Run(result => _action1("STB", result)))
                 {
-                    var bmp = MemoryBitmap.Load(filePath, STBCodec.Default);
+                    var bmp = MemoryBitmap.Load(ResourceInfo.From(filePath), STBCodec.Default);
                     _action2($"STB  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
                 }
 
@@ -235,6 +217,22 @@ namespace InteropTypes.Codecs
             }
         }
 
+        [Test]
+        public void SaveInteropFormat()
+        {
+            TestContext.CurrentContext.AttachFolderBrowserShortcut();
 
+            var img = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From("shannon.jpg"));
+            img.Save(AttachmentInfo.From("shannon.interopbmp"));
+        }
+
+        [Test]
+        public void LoadInteropFormat()
+        {
+            TestContext.CurrentContext.AttachFolderBrowserShortcut();
+
+            var img = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From("shannon.interopbmp"));
+            img.Save(AttachmentInfo.From("shannon.jpg"));
+        }
     }
 }
