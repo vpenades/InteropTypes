@@ -117,6 +117,11 @@ namespace InteropTypes.Codecs
                 // try to load the file with the current decoder:
                 if (decoder.TryRead(context, out MemoryBitmap bmp)) return bmp;
 
+                #if DEBUG
+                stream.Position = 0;
+                stream.ReadByte();
+                #endif
+
                 // last decoder failed, reset the stream position:
                 stream.Position = startPos;
             }

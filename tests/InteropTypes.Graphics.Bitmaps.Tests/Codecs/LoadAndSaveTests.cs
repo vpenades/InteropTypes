@@ -99,7 +99,7 @@ namespace InteropTypes.Codecs
             Assert.NotNull(bgr);
 
             var rgb = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From(filePath), STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
-            Assert.NotNull(rgb);
+            Assert.NotNull(rgb);            
 
             Assert.AreEqual(512, bgr.Width);
             Assert.AreEqual(512, bgr.Height);

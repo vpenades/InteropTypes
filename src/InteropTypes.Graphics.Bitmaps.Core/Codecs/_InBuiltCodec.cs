@@ -68,7 +68,7 @@ namespace InteropTypes.Codecs
         {
             using (var ss = new System.IO.BinaryReader(stream, Encoding.UTF8, true))
             {
-                return ReadRaw(ss);
+                return ReadRaw(ss).ToList();
             }
         }
 
@@ -172,7 +172,7 @@ namespace InteropTypes.Codecs
         {
             if (compression == 1)
             {
-                using (var ss = new System.IO.Compression.DeflateStream(s, System.IO.Compression.CompressionMode.Decompress))
+                using (var ss = new System.IO.Compression.DeflateStream(s, System.IO.Compression.CompressionMode.Decompress, true))
                 {
                     return _ReadFromStream(ss, byteLen, 0);
                 }                
