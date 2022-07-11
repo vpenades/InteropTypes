@@ -532,7 +532,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
 
         
-        private void SetPixelsFromYUV420(SpanBitmap<Byte> srcY, SpanBitmap<Byte> srcU, SpanBitmap<Byte> srcV)
+        public void SetPixelsFromYUV420(SpanBitmap<Byte> srcY, SpanBitmap<Byte> srcU, SpanBitmap<Byte> srcV)
         {
             var h = Math.Min(this.Height, srcY.Height) -1;
 
@@ -551,7 +551,7 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
 
-        private void SetPixelsFromYUV420(SpanBitmap<Byte> srcY, SpanBitmap<ushort> srcU, SpanBitmap<ushort> srcV)
+        public void SetPixelsFromYUV420(SpanBitmap<Byte> srcY, SpanBitmap<ushort> srcU, SpanBitmap<ushort> srcV)
         {
             var h = Math.Min(this.Height, srcY.Height) - 1;
 
@@ -567,6 +567,19 @@ namespace InteropTypes.Graphics.Bitmaps
                 var srcRowV = srcV.GetScanlinePixels(Math.Min(y / 2, srcV.Height - 1));
 
                 Pixel.YUV24.KernelRGB.TransferYUV420(dstRow0, dstRow1, srcRowY0, srcRowY1, srcRowU, srcRowV);
+            }
+        }
+
+        public void SetPixelsFromYUY2(SpanBitmap<ushort> src)
+        {
+            var h = Math.Min(this.Height, src.Height);
+
+            for (int y = 0; y < h; ++y)
+            {
+                var srcRow = src.GetScanlinePixels(y);
+                var dstRow = this.UseScanlinePixels(y);                              
+
+                Pixel.YUV24.KernelRGB.TransferYUY2(dstRow, srcRow);
             }
         }
 

@@ -74,9 +74,9 @@ namespace InteropTypes.Graphics.Bitmaps
             {
                 #region data
 
-                private int _PartialR;
-                private int _PartialG;
-                private int _PartialB;
+                private int _U;
+                private int _V;                
+                private int _UV;
 
                 private static readonly System.Numerics.Vector3 _Rcp255 = new System.Numerics.Vector3(1f / 255f);
 
@@ -87,7 +87,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public Byte GetRed(int y)
                 {
-                    y += _PartialR;
+                    y += _V;
                     if (y < 0) y = 0;
                     else if (y > 255) y = 255;
                     return (Byte)y;
@@ -96,7 +96,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public Byte GetGreen(int y)
                 {
-                    y += _PartialG;
+                    y += _UV;
                     if (y < 0) y = 0;
                     else if (y > 255) y = 255;
                     return (Byte)y;
@@ -105,7 +105,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public Byte GetBlue(int y)
                 {
-                    y += _PartialB;
+                    y += _U;
                     if (y < 0) y = 0;
                     else if (y > 255) y = 255;
                     return (Byte)y;
@@ -114,9 +114,9 @@ namespace InteropTypes.Graphics.Bitmaps
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public void SetUV(int u, int v)
                 {
-                    _PartialR = ((v * 1436) >> 10) - 179;
-                    _PartialG = -((u * 46549) >> 17) + 44 - ((v * 93604) >> 17) + 91;
-                    _PartialB = ((u * 1814) >> 10) - 227;
+                    _U = ((u * 1814) >> 10) - 227;
+                    _V = ((v * 1436) >> 10) - 179;
+                    _UV = -((u * 46549) >> 17) + 44 - ((v * 93604) >> 17) + 91;                    
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
@@ -127,9 +127,9 @@ namespace InteropTypes.Graphics.Bitmaps
                     #else
                     return new BGR24
                         (
-                        Math.Clamp(y + _PartialR, 0, 255),
-                        Math.Clamp(y + _PartialG, 0, 255),
-                        Math.Clamp(y + _PartialB, 0, 255)
+                        Math.Clamp(y + _V, 0, 255),
+                        Math.Clamp(y + _UV, 0, 255),
+                        Math.Clamp(y + _U, 0, 255)
                         );
                     #endif
                 }
@@ -142,9 +142,9 @@ namespace InteropTypes.Graphics.Bitmaps
                     pixel.G = GetGreen(y);
                     pixel.B = GetBlue(y);
                     #else
-                    pixel.R = (Byte)Math.Clamp(y + _PartialR, 0, 255);
-                    pixel.G = (Byte)Math.Clamp(y + _PartialG, 0, 255);
-                    pixel.B = (Byte)Math.Clamp(y + _PartialB, 0, 255);
+                    pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
+                    pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
+                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
                     #endif
                 }
 
@@ -156,9 +156,9 @@ namespace InteropTypes.Graphics.Bitmaps
                     pixel.G = GetGreen(y);
                     pixel.B = GetBlue(y);
                     #else
-                    pixel.R = (Byte)Math.Clamp(y + _PartialR, 0, 255);
-                    pixel.G = (Byte)Math.Clamp(y + _PartialG, 0, 255);
-                    pixel.B = (Byte)Math.Clamp(y + _PartialB, 0, 255);
+                    pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
+                    pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
+                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
                     #endif
                 }
 
@@ -170,9 +170,9 @@ namespace InteropTypes.Graphics.Bitmaps
                     pixel.G = GetGreen(y);
                     pixel.B = GetBlue(y);
                     #else
-                    pixel.R = (Byte)Math.Clamp(y + _PartialR, 0, 255);
-                    pixel.G = (Byte)Math.Clamp(y + _PartialG, 0, 255);
-                    pixel.B = (Byte)Math.Clamp(y + _PartialB, 0, 255);
+                    pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
+                    pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
+                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
                     #endif
 
                     pixel.A = 255;
@@ -186,9 +186,9 @@ namespace InteropTypes.Graphics.Bitmaps
                     pixel.G = GetGreen(y);
                     pixel.B = GetBlue(y);
                     #else
-                    pixel.R = (Byte)Math.Clamp(y + _PartialR, 0, 255);
-                    pixel.G = (Byte)Math.Clamp(y + _PartialG, 0, 255);
-                    pixel.B = (Byte)Math.Clamp(y + _PartialB, 0, 255);
+                    pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
+                    pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
+                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
                     #endif
 
                     pixel.A = 255;
@@ -197,9 +197,9 @@ namespace InteropTypes.Graphics.Bitmaps
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public readonly void CopyTo(ref BGR96F pixel, int y)
                 {
-                    pixel.R = _PartialR + y;
-                    pixel.G = _PartialG + y;
-                    pixel.B = _PartialB + y;
+                    pixel.R = _V + y;
+                    pixel.G = _UV + y;
+                    pixel.B = _U + y;
 
                     pixel.BGR *= _Rcp255;
                     pixel.BGR = System.Numerics.Vector3.Clamp(pixel.BGR, System.Numerics.Vector3.Zero, System.Numerics.Vector3.One);                    
@@ -286,6 +286,48 @@ namespace InteropTypes.Graphics.Bitmaps
                             yuv.CopyTo(ref dst00[x + 1], srcY0[x + 1]);
                             yuv.CopyTo(ref dst11[x + 0], srcY1[x + 0]);
                             yuv.CopyTo(ref dst11[x + 1], srcY1[x + 1]);
+                        }
+
+                        return;
+                    }
+
+                    throw new NotImplementedException();
+                }
+
+                public static void TransferYUY2<TDstPixel>(Span<TDstPixel> dst, ReadOnlySpan<ushort> src)
+                    where TDstPixel : unmanaged
+                {
+                    KernelRGB yuv = default;
+
+                    var len = Math.Min(dst.Length, src.Length) - 1;
+                    
+                    var srcb = System.Runtime.InteropServices.MemoryMarshal.Cast<ushort, byte>(src);
+
+                    if (typeof(TDstPixel) == typeof(BGR24))
+                    {
+                        var dstb = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, BGR24>(dst);
+
+                        for (int x = 0; x < len; x += 2)
+                        {
+                            var xx = x * 2;
+                            yuv.SetUV(srcb[xx+1] , srcb[xx + 3]);
+                            yuv.CopyTo(ref dstb[x + 0], srcb[xx + 0]);
+                            yuv.CopyTo(ref dstb[x + 1], srcb[xx + 2]);
+                        }
+
+                        return;
+                    }
+
+                    if (typeof(TDstPixel) == typeof(RGB24))
+                    {
+                        var dstb = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, RGB24>(dst);
+
+                        for (int x = 0; x < len; x += 2)
+                        {
+                            var xx = x * 2;
+                            yuv.SetUV(srcb[xx + 1], srcb[xx + 3]);
+                            yuv.CopyTo(ref dstb[x + 0], srcb[xx + 0]);
+                            yuv.CopyTo(ref dstb[x + 1], srcb[xx + 2]);
                         }
 
                         return;

@@ -1020,46 +1020,5 @@ namespace InteropTypes.Graphics.Bitmaps
 
             #endregion     
         }
-
-        /// <summary>
-        /// Subpixel YUV2 Macro in values between 0-255
-        /// </summary>
-        /// <remarks>
-        /// This is a Macro pixel, which means that it cannot be converted to other pixel formats on its
-        /// own, and only bulk operations are allowed.<br/>
-        /// The macro pixel pattern is this: YU,YV,YU,YV...
-        /// so you need at least a pair of pixel to decode it to or from RGB.
-        /// </remarks>        
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-        [System.Diagnostics.DebuggerDisplay("{Y} {U} {V}")]
-        public partial struct YUY2
-        {
-            #region data           
-
-            [System.Runtime.InteropServices.FieldOffset(0)]
-            public Byte Y;
-
-            [System.Runtime.InteropServices.FieldOffset(1)]
-            public Byte UV;
-
-            #endregion
-
-            #region API
-
-            public static void Copy<TPixel>(ReadOnlySpan<YUY2> yuy2, Span<TPixel> bgra32)
-                where TPixel: unmanaged
-            {
-                for (int x = 0; x < bgra32.Length; x += 2)
-                {
-                    var p0 = yuy2[x + 0];
-                    var p1 = yuy2[x + 1];
-
-                    YUV24._ToBGRA(p0.Y, p0.UV, p1.UV).CopyTo(ref bgra32[x + 0]);
-                    YUV24._ToBGRA(p1.Y, p0.UV, p1.UV).CopyTo(ref bgra32[x + 1]);
-                }
-            }
-
-            #endregion
-        }
     }
 }

@@ -52,12 +52,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public const uint BGRA128F = SHIFT0 * (uint)PFCID.Blue32F | SHIFT1 * (uint)PFCID.Green32F | SHIFT2 * (uint)PFCID.Red32F | SHIFT3 * (uint)PFCID.Alpha32F;
         public const uint BGRP128F = SHIFT0 * (uint)PFCID.Blue32F | SHIFT1 * (uint)PFCID.Green32F | SHIFT2 * (uint)PFCID.Red32F | SHIFT3 * (uint)PFCID.Premul32F;
-
-        /// <summary>
-        /// <see href="https://en.wikipedia.org/wiki/YUV"/>
-        /// </summary>
-        public const uint YUY2 = SHIFT0 * (uint)PFCID.Luminance8 | SHIFT1 * (uint)PFCID.UVMacro8;
-
+        
         /// <summary>
         /// <see href="https://en.wikipedia.org/wiki/YUV"/>
         /// </summary>

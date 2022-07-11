@@ -40,8 +40,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             Pixel.BGRA128F.Format,
             Pixel.BGRP128F.Format,
-
-            Pixel.YUY2.Format,
+            
             Pixel.YUV24.Format,
         };
 
@@ -85,8 +84,7 @@ namespace InteropTypes.Graphics.Bitmaps
             if (typeof(TPixel) == typeof(Pixel.RGBP128F)) return Pixel.RGBP128F.Format;
 
             // YUV
-
-            if (typeof(TPixel) == typeof(Pixel.YUY2)) return Pixel.YUY2.Format;
+            
             if (typeof(TPixel) == typeof(Pixel.YUV24)) return Pixel.YUV24.Format;
 
             if (_TryIdentifyThirdPartyPixelFormat<TPixel>(out var fmt)) return fmt;
