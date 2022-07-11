@@ -69,11 +69,15 @@ namespace InteropTypes
                 var destinationSize = sourceSize;
                 var destinationPixelFormat = AVPixelFormat.AV_PIX_FMT_BGR24;
 
+                long index = 0;
+
                 using (var vfc = new VideoFrameConverter(sourceSize, sourcePixelFormat, destinationSize, destinationPixelFormat))
                 {
                     while (vsd.TryDecodeNextFrame(out var frame))
                     {
                         var convertedFrame = vfc.Convert(frame);
+
+                        state["index"] = index;
 
                         state["pts"] = frame.pts;
                         // state["pkt_pts"] = frame.pkt_pts;
@@ -85,6 +89,8 @@ namespace InteropTypes
                         state["decode_error_flags"] = frame.decode_error_flags;                        
 
                         yield return (AsPointerBitmap(convertedFrame), context);
+
+                        ++index;
                     }
                 }
             }

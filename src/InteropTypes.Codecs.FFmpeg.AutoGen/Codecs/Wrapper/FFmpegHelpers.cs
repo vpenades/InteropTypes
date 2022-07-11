@@ -20,7 +20,7 @@ namespace InteropTypes.Codecs
 
             path = Path.Combine(path, "ffmpeg5", Environment.Is64BitProcess ? "win-x64" : "win-x86");
 
-            if (!Directory.Exists(path)) return;
+            if (!Directory.Exists(path)) throw new System.IO.DirectoryNotFoundException(path);
 
             ffmpeg.RootPath = path;
         }

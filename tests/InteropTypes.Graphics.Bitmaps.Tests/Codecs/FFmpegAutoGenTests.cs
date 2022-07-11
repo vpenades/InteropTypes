@@ -9,7 +9,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 using NUnit.Framework;
 
-namespace InteropTypes.Graphics.Backends
+namespace InteropTypes.Codecs
 {
     [Category("Backends")]
     public class FFmpegAutoGenTests
@@ -17,32 +17,30 @@ namespace InteropTypes.Graphics.Backends
         [Test]
         public void DecodeMp4Frames()
         {
-            int idx = 0;
-
-            foreach (var (bitmap, state) in Codecs.FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4")))
+            foreach (var (bitmap, state) in FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4")))
             {
                 var data = string.Join(" ", state.State);
                 TestContext.WriteLine(data);
+
+                var idx = state.State["index"];
 
                 bitmap
                     .AsSpanBitmap()
                     .ToMemoryBitmap()
                     .Save(AttachmentInfo.From($"frame{idx:D3}.jpg"));
-
-                ++idx;
             }
         }
 
         [Test]
         public void EncodeH264Frames()
         {
-            var inputFrames = Codecs.FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4"));
+            var inputFrames = FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4"));
 
             var finfo = AttachmentInfo
                 .From("output.h264")
                 .WriteVideo(inputFrames.Select(item => item.bitmap));
 
-            foreach (var (bitmap, state) in Codecs.FFmpegAutoGen.DecodeFrames(finfo.FullName))
+            foreach (var (bitmap, state) in FFmpegAutoGen.DecodeFrames(finfo.FullName))
             {
                 var data = string.Join(" ", state.State);
                 TestContext.WriteLine(data);

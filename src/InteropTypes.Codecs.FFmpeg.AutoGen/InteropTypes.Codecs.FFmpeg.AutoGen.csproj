@@ -14,7 +14,7 @@
   <!-- https://github.com/NuGet/Home/issues/8623 -->
 
   <ItemGroup>
-    <Content CopyToOutputDirectory="PreserveNewest" Include="ffmpeg/win-x64/*" Pack="true" />
+    <Content CopyToOutputDirectory="PreserveNewest" Include="ffmpeg5/win-x64/*" Pack="true" />
   </ItemGroup>
 
   <ItemGroup>        

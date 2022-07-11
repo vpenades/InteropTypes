@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace InteropTypes.Graphics.Backends
+namespace InteropTypes.Codecs
 {
     [Category("Backends")]
     public class VideoLANTests
@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Backends
 
             var uri = new Uri(filePath, UriKind.Absolute);
 
-            var codec = new Codecs.VideoLanCodecAsync(uri);
+            var codec = new VideoLanCodecAsync(uri);
 
 
             await codec.DecodeAsync(bmp => TestContext.WriteLine("Frame received"));
