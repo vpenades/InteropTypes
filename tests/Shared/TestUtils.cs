@@ -74,7 +74,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static System.IO.FileInfo WriteVideo(this AttachmentInfo ainfo, IEnumerable<PointerBitmap> frames)
         {
-            return ainfo.WriteObject(finfo => FFmpegAutoGenCodec.EncodeFrames(finfo.FullName, frames));
+            return ainfo.WriteObject(finfo => FFmpegAutoGen.EncodeFrames(finfo.FullName, frames));
         }
 
         public static System.IO.FileInfo WriteAVI(this AttachmentInfo ainfo, IEnumerable<MemoryBitmap> frames, float frameRate = 25)

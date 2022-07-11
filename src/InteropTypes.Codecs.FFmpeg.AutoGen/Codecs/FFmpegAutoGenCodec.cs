@@ -7,7 +7,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Codecs
 {
-    public class FFmpegAutoGenCodec
+    public static class FFmpegAutoGen
     {
         public static IEnumerable<(PointerBitmap bitmap, VideoFrameState state)> DecodeFrames(string url)
         {

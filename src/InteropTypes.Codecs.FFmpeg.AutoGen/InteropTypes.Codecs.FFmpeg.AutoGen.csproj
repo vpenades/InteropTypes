@@ -11,15 +11,14 @@
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>        
-    <PackageReference Include="FFmpeg.AutoGen" Version="4.4.1.1" />
-    <PackageReference Include="FFmpeg.Nightly" Version="20200831.1.0" GeneratePathProperty="true" PrivateAssets="all" />
+  <!-- https://github.com/NuGet/Home/issues/8623 -->
+
+  <ItemGroup>
+    <Content CopyToOutputDirectory="PreserveNewest" Include="ffmpeg/win-x64/*" Pack="true" />
   </ItemGroup>
 
-  
-  <ItemGroup>
-    <Content Include="$(PkgFFmpeg_Nightly)\build\native\bin\Win32\**" LinkBase="FFmpegAutoGen\win-x86" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="$(PkgFFmpeg_Nightly)\build\native\bin\x64\**" LinkBase="FFmpegAutoGen\win-x64" CopyToOutputDirectory="PreserveNewest" />
+  <ItemGroup>        
+    <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />    
   </ItemGroup>    
 
 </Project>
