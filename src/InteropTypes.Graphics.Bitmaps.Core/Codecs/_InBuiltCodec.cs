@@ -10,20 +10,27 @@ namespace InteropTypes.Codecs
 {
     internal class _InBuiltCodec : IBitmapDecoder, IBitmapEncoder
     {
-        public bool EnableCompression { get; set; } = true;
+        #region constants
 
         private static readonly Byte[] _SpanBitmapHeader = { 0xAB, 0x49, 0x6E, 0x74, 0x65, 0x72, 0x6F, 0x70, 0x42, 0x69, 0x74, 0x6D, 0x61, 0x70, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A };
+
+        #endregion
+
+        #region properties
+
+        public bool EnableCompression { get; set; } = true;
+
+        #endregion
+
+        #region API - Codec
 
         /// <inheritdoc/>
         public bool TryRead(BitmapDecoderContext readContext, out MemoryBitmap bitmap)
         {
             try
             {
-                using(var r = new System.IO.BinaryReader(readContext.Stream, Encoding.UTF8, true))
-                {
-                    bitmap = ReadRaw(r).First();
-                    return true;
-                }
+                bitmap = ReadRaw(readContext.Stream).First();
+                return true;
             }
             catch(System.IO.IOException)
             {
@@ -39,40 +46,71 @@ namespace InteropTypes.Codecs
             
             using(var w = new System.IO.BinaryWriter(stream.Value, Encoding.UTF8, true))
             {
-                WriteRaw(w,bmp, EnableCompression ? 1:0);
+                WriteRaw(w,bmp, this);
             }
 
             return true;            
         }
 
-        public static void WriteRaw(System.IO.BinaryWriter writer, SpanBitmap src, int dataCompression)
+        #endregion
+
+        #region API - Static
+
+        public static void WriteRaw(System.IO.Stream stream, MemoryBitmap[] src, _InBuiltCodec settings)
+        {
+            using(var ss = new System.IO.BinaryWriter(stream, Encoding.UTF8, true))
+            {
+                WriteRaw(ss, src, settings);
+            }
+        }
+
+        public static IEnumerable<MemoryBitmap> ReadRaw(System.IO.Stream stream)
+        {
+            using (var ss = new System.IO.BinaryReader(stream, Encoding.UTF8, true))
+            {
+                return ReadRaw(ss);
+            }
+        }
+
+        public static void WriteRaw(System.IO.BinaryWriter writer, MemoryBitmap[] src, _InBuiltCodec settings)
+        {
+            _WriteHeader(writer);
+
+            writer.Write(src.Length); // planes count            
+
+            foreach(var bmp in src)
+            {
+                _WritePlane(writer, bmp, settings);
+            }            
+        }
+
+        public static void WriteRaw(System.IO.BinaryWriter writer, SpanBitmap src, _InBuiltCodec settings)
+        {
+            _WriteHeader(writer);
+
+            writer.Write((int)1); // planes count            
+
+            _WritePlane(writer, src, settings);
+        }
+
+        private static void _WriteHeader(BinaryWriter writer)
         {
             writer.Write(_SpanBitmapHeader);
             writer.Write((int)0); // version
             writer.Write(BitConverter.IsLittleEndian);
+        }
 
-            writer.Write((int)1); // planes count
-
+        private static void _WritePlane(BinaryWriter writer, SpanBitmap src, _InBuiltCodec settings)
+        {
             src.Info.Write(writer);
+
+            var cmp = settings.EnableCompression ? 1 : 0;
 
             var data = src.ReadableBytes;
 
-            writer.Write(data.Length);            
-
-            writer.Write((int)dataCompression); // deflate
-
-            if (dataCompression == 0)
-            {
-                _WriteToStream(writer.BaseStream, data);
-            }
-
-            if (dataCompression == 1)
-            {
-                using (var ss = new System.IO.Compression.DeflateStream(writer.BaseStream, System.IO.Compression.CompressionLevel.Fastest, true))
-                {
-                    _WriteToStream(ss, data);
-                }
-            }
+            writer.Write(data.Length);
+            writer.Write((int)cmp);
+            _WriteToStream(writer.BaseStream, data, cmp);
         }
 
         public static IEnumerable<MemoryBitmap> ReadRaw(System.IO.BinaryReader reader)
@@ -95,50 +133,80 @@ namespace InteropTypes.Codecs
 
                 var dataLen = reader.ReadInt32();
                 var dataCmp = reader.ReadInt32();
-
-                var data = new Byte[dataLen];
-
-                if (dataCmp == 0)
-                {
-                    _ReadFromStream(data, reader.BaseStream);
-                }
-                else if (dataCmp == 1)
-                {
-                    using (var ss = new System.IO.Compression.DeflateStream(reader.BaseStream, System.IO.Compression.CompressionMode.Decompress, true))
-                    {
-                        _ReadFromStream(data, ss);
-                    }
-                }
+                var data = _ReadFromStream(reader.BaseStream, dataLen, dataCmp);
 
                 yield return new MemoryBitmap(data, info);
             }
-        }
+        }        
 
-
-        private static void _WriteToStream(System.IO.Stream s, ReadOnlySpan<Byte> data)
+        private static void _WriteToStream(System.IO.Stream s, ReadOnlySpan<Byte> data, int compression)
         {
-            #if NETSTANDARD2_0
-            for(int i=0; i < data.Length; ++i)
+            if (compression == 1)
             {
-                s.WriteByte(data[i]);
+                using (var ss = new System.IO.Compression.DeflateStream(s, System.IO.Compression.CompressionLevel.Fastest, true))
+                {
+                    _WriteToStream(ss, data, 0);
+                }
+
+                return;
+            }            
+
+            if (compression == 0)
+            {
+                #if NETSTANDARD2_0
+                for (int i = 0; i < data.Length; ++i)
+                {
+                    s.WriteByte(data[i]);
+                }
+                #else
+                s.Write(data);
+                #endif
+
+                return;
             }
-            #else
-            s.Write(data);
-            #endif
+
+            throw new ArgumentException("invalid compression", nameof(compression));
         }
 
-        private static void _ReadFromStream(Span<Byte> data, System.IO.Stream s)
+        private static Byte[] _ReadFromStream(System.IO.Stream s, int byteLen, int compression)
         {
-            #if NETSTANDARD2_0
-            for (int i = 0; i < data.Length; ++i)
+            if (compression == 1)
             {
-                var value = s.ReadByte();
-                if (value < 0) throw new System.IO.EndOfStreamException();
-                data[i] = (byte)value;
+                using (var ss = new System.IO.Compression.DeflateStream(s, System.IO.Compression.CompressionMode.Decompress))
+                {
+                    return _ReadFromStream(ss, byteLen, 0);
+                }                
             }
-            #else
-            s.Read(data);
-            #endif
+
+            if (compression == 0)
+            {
+                var data = new Byte[byteLen];
+
+                #if NETSTANDARD2_0
+                for (int i = 0; i < data.Length; ++i)
+                {
+                    var value = s.ReadByte();
+                    if (value < 0) throw new System.IO.EndOfStreamException();
+                    data[i] = (byte)value;
+                }
+                #else
+
+                var span = data.AsSpan();
+                while(span.Length > 0)
+                {
+                    var r = s.Read(span);
+                    if (r == 0) throw new System.IO.EndOfStreamException();
+                    span = span.Slice(r);
+                }
+                
+                #endif
+
+                return data;
+            }
+
+            throw new ArgumentException("invalid compression", nameof(compression));
         }
+
+        #endregion
     }
 }

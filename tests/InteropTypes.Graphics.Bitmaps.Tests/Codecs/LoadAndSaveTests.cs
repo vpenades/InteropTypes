@@ -218,21 +218,17 @@ namespace InteropTypes.Codecs
         }
 
         [Test]
-        public void SaveInteropFormat()
+        public void LoadAndSaveInteropFormat()
         {
             TestContext.CurrentContext.AttachFolderBrowserShortcut();
 
-            var img = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From("shannon.jpg"));
-            img.Save(AttachmentInfo.From("shannon.interopbmp"));
-        }
+            var img1 = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From("shannon.jpg"));
 
-        [Test]
-        public void LoadInteropFormat()
-        {
-            TestContext.CurrentContext.AttachFolderBrowserShortcut();
+            var tmpPath = AttachmentInfo.From("shannon.interopbmp").WriteObject(f => img1.Save(f.FullName));
 
-            var img = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From("shannon.interopbmp"));
-            img.Save(AttachmentInfo.From("shannon.jpg"));
+            var img2 = MemoryBitmap<Pixel.BGR24>.Load(tmpPath.FullName);
+
+            img2.Save(AttachmentInfo.From("shannon.png"));
         }
     }
 }

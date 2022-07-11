@@ -306,6 +306,19 @@ namespace InteropTypes.Graphics.Bitmaps
             this.AsSpanBitmap().Write(stream, format, factory);
         }
 
+        public static void WritePlanes(System.IO.Stream stream, MemoryBitmap[] planes)
+        {
+            var settings = new Codecs._InBuiltCodec();
+            settings.EnableCompression = true;
+
+            Codecs._InBuiltCodec.WriteRaw(stream, planes, settings);
+        }
+
+        public static IEnumerable<MemoryBitmap> ReadPlanes(System.IO.Stream stream)
+        {
+            return Codecs._InBuiltCodec.ReadRaw(stream);
+        }
+
         #endregion
     }
 }
