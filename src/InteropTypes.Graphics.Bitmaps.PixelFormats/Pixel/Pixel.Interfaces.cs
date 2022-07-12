@@ -46,7 +46,13 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             TPIxel To<TPIxel>() where TPIxel : unmanaged;
             void CopyTo<TPIxel>(ref TPIxel target) where TPIxel : unmanaged;            
-        }        
+        }
+        
+        public interface IApplyTo<TPixel>
+            where TPixel: unmanaged
+        {
+            void ApplyTo(ref TPixel pixel);
+        }
 
         interface IDelegateProvider<TDelegate>
         {

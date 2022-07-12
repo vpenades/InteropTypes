@@ -91,7 +91,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var sampler = new Processing._PixelsTransformImplementation.SpanQuantized8Sampler<Pixel.BGRA32, Pixel.BGRA32>(map);
 
-            var pix = sampler.GetPixelOrDefault(8, 8);
+            var pix = sampler.GetSourcePixelOrDefault(8, 8);
         }
 
         [TestCase(false)]

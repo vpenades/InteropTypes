@@ -361,20 +361,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - Effects & Transfers
 
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src,float opacity = 1)
-            where TSrcPixel : unmanaged
-        {
-            var xform = new Processing.BitmapTransform(location, true, opacity);
-            this.TransferFrom(src, xform);
-        }
-
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, float opacity = 1)
-            where TSrcPixel : unmanaged
-        {
-            var xform = new Processing.BitmapTransform(location, useBilinear, opacity);
-            this.TransferFrom(src, xform);
-        }
-
         public void ApplyEffect(SpanBitmap.IEffect effect)
         {
             // try applying the effect with a known pixel type:
@@ -386,7 +372,30 @@ namespace InteropTypes.Graphics.Bitmaps
             throw new NotSupportedException();
         }
 
-        public void TransferFrom<TSrcPixel>(in SpanBitmap<TSrcPixel> src, SpanBitmap.ITransfer transfer)
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src,float opacity = 1)
+            where TSrcPixel : unmanaged
+        {
+            var xform = new Processing.BitmapTransform(location, true, opacity);
+            this.SetPixels(src, xform);
+        }
+
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, float opacity = 1)
+            where TSrcPixel : unmanaged
+        {
+            var xform = new Processing.BitmapTransform(location, useBilinear, opacity);
+            this.SetPixels(src, xform);
+        }
+
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, Pixel.RGB96F.MulAdd pixelOp)
+            where TSrcPixel : unmanaged
+        {
+            var xform = new Processing.PlanesTransform(location, useBilinear);
+            xform.PixelOp = pixelOp;
+
+            this.SetPixels(src, xform);
+        }
+
+        public void SetPixels<TSrcPixel>(in SpanBitmap<TSrcPixel> src, SpanBitmap.ITransfer transfer)
             where TSrcPixel : unmanaged
         {
             // 1st try with explicit exact types:

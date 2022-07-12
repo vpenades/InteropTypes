@@ -223,32 +223,32 @@ namespace InteropTypes.Graphics.Backends
                     case Pixel.BGRP32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.BGRP32>();
-                            dstBmp.TransferFrom(src, bmpXform); return;
+                            dstBmp.SetPixels(src, bmpXform); return;
                         }
                     case Pixel.RGBP32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.RGBP32>();
-                            dstBmp.TransferFrom(src, bmpXform); return;
+                            dstBmp.SetPixels(src, bmpXform); return;
                         }
                     case Pixel.BGRA32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.BGRA32>();
-                            dstBmp.TransferFrom(src, bmpXform); return;
+                            dstBmp.SetPixels(src, bmpXform); return;
                         }
                     case Pixel.RGBA32.Code:
                         {
                             var src = srcBmp.OfType<Pixel.RGBA32>();
-                            dstBmp.TransferFrom(src, bmpXform); return;
+                            dstBmp.SetPixels(src, bmpXform); return;
                         }
                     case Pixel.BGR24.Code:
                         {
                             var src = srcBmp.OfType<Pixel.BGR24>();
-                            dstBmp.TransferFrom(src, bmpXform); return;
+                            dstBmp.SetPixels(src, bmpXform); return;
                         }
                     case Pixel.RGB24.Code:
                         {
                             var src = srcBmp.OfType<Pixel.RGB24>();
-                            dstBmp.TransferFrom(src, bmpXform); return;
+                            dstBmp.SetPixels(src, bmpXform); return;
                         }
                 }
             }            

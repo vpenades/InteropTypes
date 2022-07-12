@@ -22,7 +22,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void TestReinterpretBitmaps()
         {
-            var src = new MemoryBitmap<Pixel.BGRA32>(16, 16, Pixel.BGRA32.Format);
+            var src = new MemoryBitmap<Pixel.BGRA32>(16, 16);
 
             src.SetPixel(0, 0, (255, 0, 0, 255));
 
@@ -34,6 +34,12 @@ namespace InteropTypes.Graphics.Bitmaps
             Assert.AreEqual(0, p.G);
             Assert.AreEqual(255, p.B); // formerly R
             Assert.AreEqual(255, p.A);
+
+            // float RGB to Vector3
+
+            var bgr = new MemoryBitmap<Pixel.BGR96F>(16, 16);
+
+            var xyz = bgr.AsSpanBitmap().ReinterpretAs<System.Numerics.Vector3>();
         }
 
     }

@@ -163,15 +163,14 @@ namespace InteropTypes.Graphics.Bitmaps
         public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear)
             where TSrcPixel : unmanaged, Pixel.IConvertTo
         {
-            SetPixels(location, src, useBilinear, Vector3.One, Vector3.Zero);
+            SetPixels(location, src, useBilinear, (1,0));
         }
 
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, Vector3 pixelMultiply, Vector3 pixelAddition)
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, Pixel.RGB96F.MulAdd pixelOp)
             where TSrcPixel : unmanaged, Pixel.IConvertTo
         {
             var xform = new Processing.PlanesTransform(location, useBilinear);
-            xform.PixelMultiply = pixelMultiply;
-            xform.PixelAddition = pixelAddition;
+            xform.PixelOp = pixelOp;
 
             // if (typeof(TComponent) == typeof(Byte)) { xform.TryTransfer(src, _GetExplicit<Byte>()); return; }
             if (typeof(TComponent) == typeof(float)) { xform.TryTransfer(src, AsExplicit<float>()); return; }
@@ -297,7 +296,7 @@ namespace InteropTypes.Graphics.Bitmaps
             img.AsSpanBitmap().Write(stream, format, factory);
         }
 
-        #endregion
+        #endregion        
     }
 
 }

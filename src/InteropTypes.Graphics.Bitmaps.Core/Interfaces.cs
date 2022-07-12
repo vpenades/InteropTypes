@@ -100,8 +100,13 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public interface ITransfer
         {
-            bool TryTransfer<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> source, SpanBitmap<TDstPixel> target) where TSrcPixel : unmanaged where TDstPixel : unmanaged;
-            bool TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target) where TPixel : unmanaged;
+            bool TryTransfer<TSrcPixel, TDstPixel>(SpanBitmap<TSrcPixel> source, SpanBitmap<TDstPixel> target)
+                where TSrcPixel : unmanaged
+                where TDstPixel : unmanaged;
+
+            bool TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target)
+                where TPixel : unmanaged;
+
             bool TryTransfer(SpanBitmap source, SpanBitmap target);
         }
 
