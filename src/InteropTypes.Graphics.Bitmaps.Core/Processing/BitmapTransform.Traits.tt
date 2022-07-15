@@ -14,7 +14,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 var interfaces = new List<string>();
 
 var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32" };
-var dstPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32" };
+var dstPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32", "BGR96F", "RGB96F" };
 
 var pixelPairs = dstPixels
                     .SelectMany( dstp => srcPixels.Select(srcp => (dstp,srcp) ) )
@@ -52,20 +52,20 @@ foreach(var (dstPixel,srcPixel) in pixelPairs)
                 {
                     WriteLine("switch(UseBilinear)");
                     _writeOpenBlock();
-                    WriteLine(" case true: _BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, true); break;");                    
-                    WriteLine(" case false: _BitmapTransformImplementation.OpaquePixelsDirect(source, target, Transform); break;");                
+                    WriteLine(" case true: _PixelsTransformImplementation.OpaquePixelsConvert(source, target, Transform, true); break;");                    
+                    WriteLine(" case false: _PixelsTransformImplementation.OpaquePixelsDirect(source, target, Transform); break;");                
                     _writeCloseBlock();
                 }
                 else
                 {
-                    WriteLine("_BitmapTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);");
+                    WriteLine("_PixelsTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);");
                 }
                 
                 WriteLine("return true;");
                 _writeCloseBlock();
             }
 
-            WriteLine("_BitmapTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);");
+            WriteLine("_PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);");
             WriteLine("return true;");
         _writeCloseBlock();
     }

@@ -149,6 +149,19 @@ namespace InteropTypes.Graphics.Bitmaps
             dst.Save(new AttachmentInfo("transformed.png"));
         }
 
+        [Test]
+        public void TestTransformWithConversion()
+        {
+            var src = LoadShannonImage().OfType<Pixel.BGR24>();
+            src.Save(new AttachmentInfo("input.png"));
+
+            var dst = new MemoryBitmap<Pixel.RGB96F>(512,512);
+
+            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(0.7f), src.AsSpanBitmap(), true, 1);
+
+            dst.Save(new AttachmentInfo("transformed.png"));
+        }
+
 
         public static void DrawBounds<TPixel>(MemoryBitmap<TPixel> target, in BitmapBounds bounds, in Matrix3x2 xform, TPixel color)
             where TPixel : unmanaged

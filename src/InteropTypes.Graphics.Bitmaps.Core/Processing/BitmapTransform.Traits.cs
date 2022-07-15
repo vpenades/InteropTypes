@@ -30,6 +30,16 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             , SpanBitmap.ITransfer<Pixel.RGBA32, Pixel.BGRP32>
             , SpanBitmap.ITransfer<Pixel.BGRA32, Pixel.BGRP32>
             , SpanBitmap.ITransfer<Pixel.BGRP32, Pixel.BGRP32>
+            , SpanBitmap.ITransfer<Pixel.BGR24, Pixel.BGR96F>
+            , SpanBitmap.ITransfer<Pixel.RGB24, Pixel.BGR96F>
+            , SpanBitmap.ITransfer<Pixel.RGBA32, Pixel.BGR96F>
+            , SpanBitmap.ITransfer<Pixel.BGRA32, Pixel.BGR96F>
+            , SpanBitmap.ITransfer<Pixel.BGRP32, Pixel.BGR96F>
+            , SpanBitmap.ITransfer<Pixel.BGR24, Pixel.RGB96F>
+            , SpanBitmap.ITransfer<Pixel.RGB24, Pixel.RGB96F>
+            , SpanBitmap.ITransfer<Pixel.RGBA32, Pixel.RGB96F>
+            , SpanBitmap.ITransfer<Pixel.BGRA32, Pixel.RGB96F>
+            , SpanBitmap.ITransfer<Pixel.BGRP32, Pixel.RGB96F>
         {
 
             /// <inheritdoc/>
@@ -260,6 +270,96 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             /// <inheritdoc/>
             public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.BGRP32> target)
+            {
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.BGR24> source, SpanBitmap<Pixel.BGR96F> target)
+            {
+                if (Opacity >= 1)
+                {
+                    _PixelsTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
+                    return true;
+                }
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.RGB24> source, SpanBitmap<Pixel.BGR96F> target)
+            {
+                if (Opacity >= 1)
+                {
+                    _PixelsTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
+                    return true;
+                }
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.BGR96F> target)
+            {
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.BGR96F> target)
+            {
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.BGR96F> target)
+            {
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.BGR24> source, SpanBitmap<Pixel.RGB96F> target)
+            {
+                if (Opacity >= 1)
+                {
+                    _PixelsTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
+                    return true;
+                }
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.RGB24> source, SpanBitmap<Pixel.RGB96F> target)
+            {
+                if (Opacity >= 1)
+                {
+                    _PixelsTransformImplementation.OpaquePixelsConvert(source, target, Transform, UseBilinear);
+                    return true;
+                }
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.RGBA32> source, SpanBitmap<Pixel.RGB96F> target)
+            {
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.BGRA32> source, SpanBitmap<Pixel.RGB96F> target)
+            {
+                _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
+                return true;
+            }
+
+            /// <inheritdoc/>
+            public bool TryTransfer(SpanBitmap<Pixel.BGRP32> source, SpanBitmap<Pixel.RGB96F> target)
             {
                 _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);
                 return true;

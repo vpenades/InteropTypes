@@ -311,17 +311,18 @@ namespace InteropTypes.Graphics.Bitmaps
             _Implementation.CopyPixels(this, dstX, dstY, src);
         }
 
-        public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel,TSrcPixel,TPixel> pixelFunc)
+        public void SetPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src)
             where TSrcPixel: unmanaged
         {
-            _Implementation.ApplyPixels(this, dstX, dstY, src, pixelFunc);
+            _Implementation.ConvertPixels(this, dstX, dstY, src);
         }
 
-        public MemoryBitmap<TDstPixel> ToMemoryBitmap<TDstPixel>(PixelFormat fmt, Converter<TPixel, TDstPixel> pixelConverter)
+        public MemoryBitmap<TDstPixel> ToMemoryBitmap<TDstPixel>(PixelFormat? fmt = null)
             where TDstPixel:unmanaged
         {
-            var dst = new MemoryBitmap<TDstPixel>(this.Width, this.Height, fmt);
-            dst.ApplyPixels(0, 0, this, (a, b) => pixelConverter(b));
+            if (!fmt.HasValue) fmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
+            var dst = new MemoryBitmap<TDstPixel>(this.Width, this.Height, fmt.Value);
+            dst.SetPixels(0, 0, this);
             return dst;
         }
 
@@ -359,18 +360,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #endregion
 
-        #region API - Effects & Transfers
-
-        public void ApplyEffect(SpanBitmap.IEffect effect)
-        {
-            // try applying the effect with a known pixel type:
-            if (effect.TryApplyTo<TPixel>(this)) return;
-
-            // try applying the effect as bytes:
-            if (effect.TryApplyTo(this.AsTypeless())) return;
-
-            throw new NotSupportedException();
-        }
+        #region API - Effects & Transfers        
 
         public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src,float opacity = 1)
             where TSrcPixel : unmanaged
@@ -422,11 +412,37 @@ namespace InteropTypes.Graphics.Bitmaps
             throw new NotSupportedException($"Transfers from {typeof(TSrcPixel).Name} to {typeof(TPixel).Name} with {transfer.GetType().Name} are not supported.");
         }
 
+        public void ApplyEffect(SpanBitmap.IEffect effect)
+        {
+            // try applying the effect with a known pixel type:
+            if (effect.TryApplyTo<TPixel>(this)) return;
+
+            // try applying the effect as bytes:
+            if (effect.TryApplyTo(this.AsTypeless())) return;
+
+            throw new NotSupportedException();
+        }
+
+        public void Apply(Pixel.IApplyTo<TPixel> pixelEffect)
+        {
+            for (int y = 0; y < this.Height; ++y)
+            {
+                var row = this.UseScanlinePixels(y);
+                
+                for(int i=0; i < row.Length; ++i)
+                {
+                    pixelEffect.ApplyTo(ref row[i]);
+                }
+            }
+        }
+
+        [Obsolete("Use Apply(Pixel.XXXX.MulAdd)")]
         public void ApplyAddMultiply(float addition, float multiply)
         {
             ApplyMultiplyAdd(multiply, addition * multiply);
         }
 
+        [Obsolete("Use Apply(Pixel.XXXX.MulAdd)")]
         public void ApplyMultiplyAdd(float multiply, float addition)
         {
             if (typeof(TPixel) == typeof(Single)
@@ -453,11 +469,13 @@ namespace InteropTypes.Graphics.Bitmaps
             throw new NotImplementedException();
         }
 
+        [Obsolete("Use Apply(Pixel.XXXX.MulAdd)")]
         public void ApplyAddMultiply(Vector3 addition, Vector3 multiply)
         {
             ApplyMultiplyAdd(multiply, addition * multiply);
         }
 
+        [Obsolete("Use Apply(Pixel.XXXX.MulAdd)")]
         public void ApplyMultiplyAdd(Vector3 multiply, Vector3 addition)
         {
             if (typeof(TPixel) == typeof(Vector3)

@@ -202,10 +202,10 @@ namespace InteropTypes.Graphics.Bitmaps
         
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }
 
-        public void ApplyPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TPixel, TSrcPixel, TPixel> pixelFunc)
+        public void SetPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src)
             where TSrcPixel:unmanaged
         {
-            AsSpanBitmap().ApplyPixels(dstX, dstY, src, pixelFunc);
+            AsSpanBitmap().SetPixels(dstX, dstY, src);
         }
 
         public MemoryBitmap<TPixel> Slice(in BitmapBounds rect)

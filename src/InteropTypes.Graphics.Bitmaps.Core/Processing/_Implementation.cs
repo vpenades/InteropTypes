@@ -37,8 +37,8 @@ namespace InteropTypes.Graphics
             System.Diagnostics.Debug.Assert(dstCrop.StepByteSize == dst.StepByteSize);
             
             if (dstCrop.PixelFormat == srcCrop.PixelFormat)
-            // no conversion required
-            {
+            {   // no conversion required
+
                 for (int y = 0; y < dstCrop.Height; ++y)
                 {
                     var srcRow = srcCrop.GetScanlineBytes(y);
@@ -51,8 +51,8 @@ namespace InteropTypes.Graphics
             }            
             
             else
-            // conversion required
-            {
+            {   // conversion required
+
                 var converter = Pixel.GetByteCopyConverter(srcCrop.PixelFormat, dstCrop.PixelFormat);
 
                 for (int y = 0; y < dstCrop.Height; ++y)
@@ -64,8 +64,36 @@ namespace InteropTypes.Graphics
             }
         }
 
-        public static void ApplyPixels<TSrcPixel, TDstPixel>(SpanBitmap<TDstPixel> dst, int dstX, int dstY, SpanBitmap<TSrcPixel> src, Func<TDstPixel, TSrcPixel, TDstPixel> pixelFunc)
+        public static void ConvertPixels<TSrcPixel, TDstPixel>(SpanBitmap<TDstPixel> dst, int dstX, int dstY, SpanBitmap<TSrcPixel> src)
             where TSrcPixel : unmanaged
+            where TDstPixel : unmanaged
+        {
+            if (typeof(TSrcPixel) == typeof(Pixel.Alpha8)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.Alpha8>());
+            if (typeof(TSrcPixel) == typeof(Pixel.Luminance8)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.Luminance8>());
+            if (typeof(TSrcPixel) == typeof(Pixel.Luminance16)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.Luminance16>());
+            if (typeof(TSrcPixel) == typeof(Pixel.Luminance32F)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.Luminance32F>());
+
+            if (typeof(TSrcPixel) == typeof(Pixel.ARGB32)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.ARGB32>());
+
+            if (typeof(TSrcPixel) == typeof(Pixel.BGR565)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGR565>());
+            if (typeof(TSrcPixel) == typeof(Pixel.BGRA5551)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGRA5551>());
+            if (typeof(TSrcPixel) == typeof(Pixel.BGRA4444)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGRA4444>());
+            if (typeof(TSrcPixel) == typeof(Pixel.BGR24)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGR24>());
+            if (typeof(TSrcPixel) == typeof(Pixel.BGRA32)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGRA32>());
+            if (typeof(TSrcPixel) == typeof(Pixel.BGRP32)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGRP32>());
+            if (typeof(TSrcPixel) == typeof(Pixel.BGR96F)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGR96F>());
+            if (typeof(TSrcPixel) == typeof(Pixel.BGRA128F)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.BGRA128F>());
+
+            if (typeof(TSrcPixel) == typeof(Pixel.RGB24)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.RGB24>());
+            if (typeof(TSrcPixel) == typeof(Pixel.RGBA32)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.RGBA32>());
+            if (typeof(TSrcPixel) == typeof(Pixel.RGBP32)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.RGBP32>());
+            if (typeof(TSrcPixel) == typeof(Pixel.RGB96F)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.RGB96F>());
+            if (typeof(TSrcPixel) == typeof(Pixel.RGBA128F)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.RGBA128F>());
+            if (typeof(TSrcPixel) == typeof(Pixel.RGBP128F)) _ConvertPixels(dst, dstX, dstY, src.AsExplicit<Pixel.RGBP128F>());
+        }
+
+        internal static void _ConvertPixels<TSrcPixel, TDstPixel>(SpanBitmap<TDstPixel> dst, int dstX, int dstY, SpanBitmap<TSrcPixel> src)
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
             where TDstPixel : unmanaged
         {
             var dstCrop = Crop(dst, (+dstX, +dstY, src.Width, src.Height));
@@ -78,17 +106,23 @@ namespace InteropTypes.Graphics
 
             for (int y = 0; y < dstCrop.Height; ++y)
             {
-                var srcRow = srcCrop.UseScanlinePixels(y);
+                var srcRow = srcCrop.GetScanlinePixels(y);
                 var dstRow = dstCrop.UseScanlinePixels(y);
 
                 System.Diagnostics.Debug.Assert(srcRow.Length == srcRow.Length);
 
-                for (int x=0; x < dstRow.Length; ++x)
+                if (typeof(TSrcPixel) == typeof(TDstPixel))
                 {
-                    var d = dstRow[x];
-                    dstRow[x] = pixelFunc(d, srcRow[x]);
-                }                
+                    srcRow.CopyTo(System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, TSrcPixel>(dstRow));
+                }
+                else
+                {
+                    for (int x = 0; x < dstRow.Length; ++x)
+                    {
+                        srcRow[x].CopyTo(ref dstRow[x]);
+                    }
+                }
             }
-        }        
+        }
     }
 }
