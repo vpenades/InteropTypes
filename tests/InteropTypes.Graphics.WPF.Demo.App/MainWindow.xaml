@@ -70,6 +70,7 @@
             <Border Background="AliceBlue">
 
                 <WrapPanel>
+                    <ContentControl Content="{Binding BindableBitmapUndefined}" Margin="4" />
                     <ContentControl Content="{Binding MemoryBitmapTypeless}" Margin="4" />
                     <Grid>
                         <ContentControl Content="{Binding BindableBitmap}" Margin="4" />

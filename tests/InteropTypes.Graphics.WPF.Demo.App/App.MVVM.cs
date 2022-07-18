@@ -61,6 +61,8 @@ namespace WPFDemo
 
         public BindableBitmap BindableBitmap { get; } = new BindableBitmap();
 
+        public BindableBitmap BindableBitmapUndefined { get; } = new BindableBitmap();
+
         private void _PaintOnBitmap()
         {
             BindableBitmap.Bitmap.AsSpanBitmap().SetPixels(System.Drawing.Color.White);

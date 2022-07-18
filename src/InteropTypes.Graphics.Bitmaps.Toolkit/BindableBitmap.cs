@@ -5,6 +5,14 @@ using System.Text;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
+    /// <summary>
+    /// Bitmap that can be bound to a UI
+    /// </summary>
+    /// <remarks>
+    /// Under WPF, using InteropTypes.Graphics.Backends.WPF:<br/>
+    /// InteropTypes.Graphics.Backends.WPF.ImageEx can bind this object using BitmapSource property.<br/>
+    /// Alternatively, it's possible to use DataTemplates to bind this object directly into a ContentControl's Content.
+    /// </remarks>
     [DefaultProperty(nameof(Bitmap))]
     [System.Diagnostics.DebuggerDisplay("{Info.ToDebuggerDisplayString(),nq}")]
     public class BindableBitmap : INotifyPropertyChanged, SpanBitmap.ISource

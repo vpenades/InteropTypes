@@ -27,10 +27,10 @@ namespace InteropTypes.Graphics.Backends.WPF
             {
                 var dst = image.Source as TARGETBITMAP;
 
-                image.BitmapSource                    
-                    .AsSpanBitmap()
-                    .WithWPF()
-                    .CopyTo(ref dst);
+                var src = image.BitmapSource.AsSpanBitmap();
+
+                if (!src.IsEmpty) src.WithWPF().CopyTo(ref dst);
+                else dst = null;
 
                 image.Source = dst;
             }
