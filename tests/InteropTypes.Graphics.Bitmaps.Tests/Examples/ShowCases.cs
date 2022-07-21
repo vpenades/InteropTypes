@@ -115,7 +115,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             AttachmentInfo
                 .From("result.jpg")
-                .WriteObject(f => bitmap.Save(f.FullName));
+                .WriteObject(f => bitmap.Save(f));
 
             // resized conversion.
 
@@ -123,7 +123,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             AttachmentInfo
                 .From("resized.jpg")
-                .WriteObject(f => resized.Save(f.FullName));
+                .WriteObject(f => resized.Save(f));
 
             // using MemoryBitmap facade.
 
@@ -135,7 +135,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 AttachmentInfo
                     .From("drawn.jpg")
-                    .WriteObject(f => gdi.Bitmap.Save(f.FullName));
+                    .WriteObject(f => gdi.Bitmap.Save(f));
             }
 
             image.WriteAsSpanBitmap(_gdiDraw);

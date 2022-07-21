@@ -126,7 +126,7 @@ namespace InteropTypes.Graphics.Drawing
 
             AttachmentInfo
                 .From("testrender1.png")
-                .WriteObject(f => renderTarget.SaveToPNG(f.FullName));
+                .WriteObject(f => renderTarget.SaveToPNG(f));
         }
 
         [TestCase("Scene1")]
@@ -139,7 +139,7 @@ namespace InteropTypes.Graphics.Drawing
 
             AttachmentInfo
                 .From($"{sceneName}.png")
-                .WriteObject(f => Canvas2DFactory.SaveToBitmap(f.FullName, 1024, 1024, null, scene));
+                .WriteObject(f => Canvas2DFactory.SaveToBitmap(f, 1024, 1024, null, scene));
         }
 
         [TestCase("Scene1")]
@@ -166,7 +166,7 @@ namespace InteropTypes.Graphics.Drawing
 
             AttachmentInfo
                 .From($"WPF_{sceneName}.png")
-                .WriteObject(f => renderTarget.SaveToPNG(f.FullName));
+                .WriteObject(f => renderTarget.SaveToPNG(f));
 
             // render with MemoryBitmap
 
@@ -242,7 +242,7 @@ namespace InteropTypes.Graphics.Drawing
 
             AttachmentInfo
                     .From("referenceWPF.png")
-                    .WriteObject(f => renderTarget.SaveToPNG(f.FullName));            
+                    .WriteObject(f => renderTarget.SaveToPNG(f));            
         }
 
         private static void DrawDirectVsPolygon(ICanvas2D dc)
@@ -302,7 +302,7 @@ namespace InteropTypes.Graphics.Drawing
 
             AttachmentInfo
                     .From("extrude1.glb")
-                    .WriteObject(f => scene.Save(f.FullName));
+                    .WriteObject(f => scene.Save(f));
         }
     }
 }

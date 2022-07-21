@@ -224,7 +224,7 @@ namespace InteropTypes.Codecs
 
             var img1 = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From("shannon.jpg"));
 
-            var tmpPath = AttachmentInfo.From("shannon.interopbmp").WriteObject(f => img1.Save(f.FullName));
+            var tmpPath = AttachmentInfo.From("shannon.interopbmp").WriteObject(f => img1.Save(f));
 
             var img2 = MemoryBitmap<Pixel.BGR24>.Load(tmpPath.FullName);
 

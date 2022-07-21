@@ -14,13 +14,13 @@ namespace InteropTypes.Graphics.Drawing
 
             if (filePath.ToLower().EndsWith(".svg"))
             {
-                ainfo.WriteObject(f => SVGSceneDrawing2D.SaveToSVG(f.FullName, batch) );
+                ainfo.WriteObject(f => SVGSceneDrawing2D.SaveToSVG(f, batch) );
                 return;
             }
 
             if (filePath.ToLower().EndsWith(".png") || filePath.ToLower().EndsWith(".jpg") || filePath.ToLower().EndsWith(".gif"))
             {
-                ainfo.WriteObject(f => Canvas2DFactory.SaveToBitmap(f.FullName, 1024, 1024, null, batch) );
+                ainfo.WriteObject(f => Canvas2DFactory.SaveToBitmap(f, 1024, 1024, null, batch) );
                 return;
             }
         }       
@@ -61,7 +61,7 @@ namespace InteropTypes.Graphics.Drawing
                     .Convert(batch)
                     .ToGltf2();
 
-                ainfo.WriteObject(f => model.Save(f.FullName));
+                ainfo.WriteObject(f => model.Save(f));
             }
 
             return filePath;

@@ -78,8 +78,8 @@
     
     <!-- unit Testing -->
 
-    <PackageVersion Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220704-1041" />
-    <PackageVersion Include="TestImages.ImageSharp" Version="3.0.0-Preview-20220704-1041" />
+    <PackageVersion Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220721-1621" />
+    <PackageVersion Include="TestImages.ImageSharp" Version="3.0.0-Preview-20220721-1621" />
 
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.4.0-beta.1" />
     

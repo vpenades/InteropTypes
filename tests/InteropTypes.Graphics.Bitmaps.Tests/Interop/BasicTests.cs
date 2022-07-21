@@ -124,7 +124,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             AttachmentInfo
                 .From("result.jpg")
-                .WriteObject(f => img.Save(f.FullName));
+                .WriteObject(f => img.Save(f));
 
             img.Dispose();
         }

@@ -37,7 +37,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             AttachmentInfo
                 .From("original.png")
-                .WriteObject(f => img.Save(f.FullName));
+                .WriteObject(f => img.Save(f));
 
             OpenCvSharp.Mat _Process(OpenCvSharp.Mat src)
             {
@@ -53,7 +53,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             AttachmentInfo
                 .From("result.png")
-                .WriteObject(f => img.Save(f.FullName));
+                .WriteObject(f => img.Save(f));
 
             // var img2 = img.AsSpanBitmap().AsOpenCVSharp().CloneMutated(_Process);
             // AttachmentInfo.From("result2.png").WriteObject(f => img2.Save(f.FullName));
