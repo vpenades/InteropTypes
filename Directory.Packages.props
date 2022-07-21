@@ -19,7 +19,7 @@
 
     <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="7.0.0-preview.4.22229.4" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="7.0.0-preview.6.22324.4" />
     <PackageVersion Include="System.Drawing.Common" Version="6.0.0" />    
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
@@ -46,11 +46,11 @@
     <PackageVersion Include="Microsoft.Maui.Graphics" Version="6.0.403" />
     <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="6.0.403" />
 
+    <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.3" />
     <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.3" />    
 
-    <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
+    <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
     <PackageVersion Include="SkiaSharp" Version="2.88.0" />
