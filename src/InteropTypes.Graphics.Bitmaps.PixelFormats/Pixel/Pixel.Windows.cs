@@ -7,10 +7,10 @@ namespace InteropTypes.Graphics.Bitmaps
     partial class Pixel
     {
         public static TPixel GetColor<TPixel>(System.Drawing.Color color)
-            where TPixel : unmanaged, IValueSetter<BGRA32>
+            where TPixel : unmanaged
         {
             var t = default(TPixel);
-            t.SetValue(new BGRA32(color));
+            new BGRA32(color).CopyTo(ref t);
             return t;
         }
     }

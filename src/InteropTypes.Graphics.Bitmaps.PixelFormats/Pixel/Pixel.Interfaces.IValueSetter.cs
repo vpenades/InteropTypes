@@ -481,14 +481,20 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                value.L >>= 8; // shift down
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance32F value)
             {
-                throw new NotImplementedException("Setting Luminance32F not implemented.");
+                value.L *= 255f; // shift up
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
             }
 
             /// <inheritdoc/>
@@ -651,14 +657,20 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                value.L >>= 8; // shift down
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance32F value)
             {
-                throw new NotImplementedException("Setting Luminance32F not implemented.");
+                value.L *= 255f; // shift up
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
             }
 
             /// <inheritdoc/>
@@ -823,14 +835,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                value.L >>= 8; // shift down
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance32F value)
             {
-                throw new NotImplementedException("Setting Luminance32F not implemented.");
+                value.L *= 255f; // shift up
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
@@ -1010,14 +1030,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                value.L >>= 8; // shift down
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance32F value)
             {
-                throw new NotImplementedException("Setting Luminance32F not implemented.");
+                value.L *= 255f; // shift up
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
@@ -1197,14 +1225,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                value.L >>= 8; // shift down
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance32F value)
             {
-                throw new NotImplementedException("Setting Luminance32F not implemented.");
+                value.L *= 255f; // shift up
+                this.B = (Byte)value.L;
+                this.G = (Byte)value.L;
+                this.R = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
@@ -1384,14 +1420,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                value.L >>= 8; // shift down
+                this.PreB = (Byte)value.L;
+                this.PreG = (Byte)value.L;
+                this.PreR = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance32F value)
             {
-                throw new NotImplementedException("Setting Luminance32F not implemented.");
+                value.L *= 255f; // shift up
+                this.PreB = (Byte)value.L;
+                this.PreG = (Byte)value.L;
+                this.PreR = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
@@ -1578,14 +1622,22 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                value.L >>= 8; // shift down
+                this.PreB = (Byte)value.L;
+                this.PreG = (Byte)value.L;
+                this.PreR = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance32F value)
             {
-                throw new NotImplementedException("Setting Luminance32F not implemented.");
+                value.L *= 255f; // shift up
+                this.PreB = (Byte)value.L;
+                this.PreG = (Byte)value.L;
+                this.PreR = (Byte)value.L;
+                this.A = 255;
             }
 
             /// <inheritdoc/>
@@ -2121,7 +2173,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = 255;
                 this.R = 255;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2132,14 +2184,18 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.L;
                 this.R = value.L;
                 this.A = 255;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                this.B = value.L;
+                this.G = value.L;
+                this.R = value.L;
+                this.A = 65535;
+                this.BGRA /= 65535;
             }
 
             /// <inheritdoc/>
@@ -2160,7 +2216,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = 255;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2171,7 +2227,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2182,7 +2238,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2193,7 +2249,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = 255;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2204,7 +2260,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = 255;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2215,7 +2271,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2226,7 +2282,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2237,7 +2293,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2279,7 +2335,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.PreG;
                 this.R = value.PreR;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
                 BGR = Vector3.Min(Vector3.One, BGR / this.A);
             }
 
@@ -2292,7 +2348,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.PreG;
                 this.R = value.PreR;
                 this.A = value.A;
-                BGRA *= __RCP255;
+                this.BGRA *= __RCP255;
                 BGR = Vector3.Min(Vector3.One, BGR / this.A);
             }
 
@@ -2327,7 +2383,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = 255;
                 this.R = 255;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2338,14 +2394,18 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.L;
                 this.R = value.L;
                 this.A = 255;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                this.B = value.L;
+                this.G = value.L;
+                this.R = value.L;
+                this.A = 65535;
+                this.RGBA /= 65535;
             }
 
             /// <inheritdoc/>
@@ -2366,7 +2426,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = 255;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2377,7 +2437,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2388,7 +2448,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2399,7 +2459,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = 255;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2410,7 +2470,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = 255;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2421,7 +2481,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2432,7 +2492,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2443,7 +2503,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.G;
                 this.R = value.R;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
             }
 
             /// <inheritdoc/>
@@ -2485,7 +2545,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.PreG;
                 this.R = value.PreR;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
                 RGB = Vector3.Min(Vector3.One, RGB / this.A);
             }
 
@@ -2498,7 +2558,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 this.G = value.PreG;
                 this.R = value.PreR;
                 this.A = value.A;
-                RGBA *= __RCP255;
+                this.RGBA *= __RCP255;
                 RGB = Vector3.Min(Vector3.One, RGB / this.A);
             }
 

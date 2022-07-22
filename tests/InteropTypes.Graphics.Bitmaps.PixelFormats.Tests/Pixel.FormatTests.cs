@@ -19,21 +19,34 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void TestAllFormats()
         {
-            foreach(var fmt in PixelFormat.AllFormats)
-            {
-                TestContext.WriteLine($"{fmt}");
+            default(Pixel.Luminance32F).To<Pixel.RGBA32>();
 
+            bool fail = false;
+
+            foreach (var fmt in PixelFormat.AllFormats)
+            {
                 var pixelType = fmt.GetPixelTypeOrNull();
                 Assert.NotNull(pixelType);
 
-                var pixel = Activator.CreateInstance(pixelType);
+                var pixel = Activator.CreateInstance(pixelType);                
 
                 if (pixel is Pixel.IConvertTo pixelTo)
                 {
-                    var dstp1 = pixelTo.To<Pixel.RGBA32>();
-                    var dstp2 = pixelTo.To<Pixel.RGBA128F>();
+                    try { var dstp1 = pixelTo.To<Pixel.RGB24>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to RGB24"); }
+                    try { var dstp1 = pixelTo.To<Pixel.RGB96F>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to RGB96F"); }
+
+                    try { var dstp1 = pixelTo.To<Pixel.RGBA32>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to RGBA32"); }
+                    try { var dstp1 = pixelTo.To<Pixel.RGBA128F>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to RGBA128F"); }
+
+                    try { var dstp1 = pixelTo.To<Pixel.RGBP32>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to RGBP32"); }
+                    try { var dstp1 = pixelTo.To<Pixel.RGBP128F>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to RGBP128F"); }
+
+                    try { var dstp1 = pixelTo.To<Pixel.Luminance8>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to Luminance8"); }
+                    try { var dstp1 = pixelTo.To<Pixel.Luminance32F>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to Luminance32F"); }
                 }
-            }            
+            }
+
+            Assert.IsFalse(fail);
         }
     }
 }

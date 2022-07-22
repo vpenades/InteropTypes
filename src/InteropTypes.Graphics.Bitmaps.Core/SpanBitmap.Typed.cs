@@ -105,7 +105,12 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) { throw new NotSupportedException(); }
+        public override bool Equals(object obj)
+        {
+            #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
+            throw new NotSupportedException("Spans don't support Equality");
+            #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
+        }
 
         /// <inheritdoc/>
         public static bool operator ==(in SpanBitmap<TPixel> a, in SpanBitmap<TPixel> b) { return AreEqual(a, b); }
@@ -190,10 +195,63 @@ namespace InteropTypes.Graphics.Bitmaps
 
         [System.Diagnostics.DebuggerStepThrough]
         public SpanBitmap<TPixel> AsReadOnly() { return new SpanBitmap<TPixel>(this, true); }
-        public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }        
-        public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Readable, y); }        
-        public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }        
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Readable, y); }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Writable, y); }
+
+        public bool TryUseAllPixels(out Span<TPixel> pixels)
+        {
+            if (!_Info.IsContinuous) { pixels = default; return false; }
+
+            var bytes = _Writable.Slice(0, _Info.BitmapByteSize);
+
+            pixels = System.Runtime.InteropServices.MemoryMarshal
+                .Cast<Byte, TPixel>(bytes);
+
+            System.Diagnostics.Debug.Assert(this.Width * this.Height == pixels.Length);
+
+            return true;
+        }
+
+        public bool TryGetAllPixels(out ReadOnlySpan<TPixel> pixels)
+        {
+            if (!_Info.IsContinuous) { pixels = default; return false; }
+
+            var bytes = _Readable.Slice(0, _Info.BitmapByteSize);
+
+            pixels = System.Runtime.InteropServices.MemoryMarshal
+                .Cast<Byte, TPixel>(bytes);
+
+            System.Diagnostics.Debug.Assert(this.Width * this.Height == pixels.Length);
+
+            return true;
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public SpanBitmap<TPixel> Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = _Info.Slice(rect);
+
+            if (_Writable.IsEmpty)
+            {
+                var span = _Readable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap<TPixel>(span, info);
+            }
+            else
+            {
+                var span = _Writable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap<TPixel>(span, info);
+            }
+        }
 
         #endregion
 
@@ -270,46 +328,29 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - Pixel Ops
 
-        public SpanBitmap<TPixel> Slice(in BitmapBounds rect)
-        {
-            var (offset, info) = _Info.Slice(rect);
-
-            if (_Writable.IsEmpty)
-            {
-                var span = _Readable.Slice(offset, info.BitmapByteSize);
-                return new SpanBitmap<TPixel>(span, info);
-            }
-            else
-            {
-                var span = _Writable.Slice(offset, info.BitmapByteSize);
-                return new SpanBitmap<TPixel>(span, info);
-            }
-        }                    
+        public void SetPixels(System.Drawing.Color color) { SetPixels(Pixel.GetColor<TPixel>(color)); }
 
         public void SetPixels(TPixel value)
         {            
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
-            if (_Info.IsContinuous)
+            if (TryUseAllPixels(out var allPixels))
             {
-                var dst = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, TPixel>(_Writable);
-                dst.Fill(value);
+                allPixels.Fill(value);
                 return;
             }
 
             for (int y = 0; y < _Info.Height; ++y)
             {
-                var dst = UseScanlinePixels(y);
-                dst.Fill(value);
+                UseScanlinePixels(y).Fill(value);
             }
-        }
+        }        
 
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src)
         {
             Guard.IsTrue("this", !_Writable.IsEmpty);
-
             _Implementation.CopyPixels(this, dstX, dstY, src);
-        }
+        }        
 
         public void SetPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src)
             where TSrcPixel: unmanaged
@@ -317,52 +358,7 @@ namespace InteropTypes.Graphics.Bitmaps
             _Implementation.ConvertPixels(this, dstX, dstY, src);
         }
 
-        public MemoryBitmap<TDstPixel> ToMemoryBitmap<TDstPixel>(PixelFormat? fmt = null)
-            where TDstPixel:unmanaged
-        {
-            if (!fmt.HasValue) fmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
-            var dst = new MemoryBitmap<TDstPixel>(this.Width, this.Height, fmt.Value);
-            dst.SetPixels(0, 0, this);
-            return dst;
-        }
-
-        public bool CopyTo(ref MemoryBitmap<TPixel> other)
-        {
-            var refreshed = false;
-
-            if (!this.Info.Equals(other.Info))
-            {
-                other = new MemoryBitmap<TPixel>(this.Info);
-                refreshed = true;
-            }
-
-            other.SetPixels(0, 0, this);
-
-            return refreshed;
-        }
-
-        public bool CopyTo(ref BitmapInfo otherInfo, ref Byte[] otherData)
-        {
-            if (!this.Info.Equals(otherInfo)) otherInfo = this.Info;
-
-            var refreshed = false;
-
-            if (otherData == null || otherData.Length < otherInfo.BitmapByteSize)
-            {
-                otherData = new byte[this.Info.BitmapByteSize];
-                refreshed = true;
-            }
-
-            new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
-
-            return refreshed;
-        }
-
-        #endregion
-
-        #region API - Effects & Transfers        
-
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src,float opacity = 1)
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, float opacity = 1)
             where TSrcPixel : unmanaged
         {
             var xform = new Processing.BitmapTransform(location, true, opacity);
@@ -395,8 +391,8 @@ namespace InteropTypes.Graphics.Bitmaps
             }
 
             // 2nd try with generic exact types:
-            if (transfer.TryTransfer<TSrcPixel,TPixel>(src.AsReadOnly(), this)) return;
-            
+            if (transfer.TryTransfer(src, this)) return;
+
 
             // 3rd try with generic exact and matching types:
             if (typeof(TPixel) == typeof(TSrcPixel))
@@ -410,6 +406,49 @@ namespace InteropTypes.Graphics.Bitmaps
 
             // 5th unable to transfer.
             throw new NotSupportedException($"Transfers from {typeof(TSrcPixel).Name} to {typeof(TPixel).Name} with {transfer.GetType().Name} are not supported.");
+        }
+
+        #endregion
+
+        #region API - Effects & Transfers        
+
+        public bool CopyTo(ref MemoryBitmap<TPixel> other, Func<int, Byte[]> memFactory = null)
+        {
+            var refreshed = false;
+
+            if (!this.Info.Equals(other.Info))
+            {
+                if (memFactory == null)
+                {
+                    other = new MemoryBitmap<TPixel>(this.Info);
+                }
+                else
+                {
+                    var blen = this.Info.BitmapByteSize;
+
+                    var buff = memFactory(blen);
+                    if (buff == null || buff.Length < blen) throw new ArgumentException("invalid buffer", nameof(memFactory));
+
+                    other = new MemoryBitmap<TPixel>(buff, this.Info);
+                }
+
+                refreshed = true;
+            }
+
+            other.AsSpanBitmap().SetPixels(0, 0, this);
+
+            return refreshed;
+        }
+
+        public MemoryBitmap<TDstPixel> ToMemoryBitmap<TDstPixel>(PixelFormat? fmt = null)
+            where TDstPixel : unmanaged
+        {
+            if (!fmt.HasValue) fmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
+            var dst = new MemoryBitmap<TDstPixel>(this.Width, this.Height, fmt.Value);
+
+            dst.AsSpanBitmap().SetPixels(0, 0, this);
+
+            return dst;
         }
 
         public void ApplyEffect(SpanBitmap.IEffect effect)
@@ -556,9 +595,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             throw new NotImplementedException();
         }
-
-
-        
+                
         public void SetPixelsFromYUV420(SpanBitmap<Byte> srcY, SpanBitmap<Byte> srcU, SpanBitmap<Byte> srcV)
         {
             var h = Math.Min(this.Height, srcY.Height) -1;

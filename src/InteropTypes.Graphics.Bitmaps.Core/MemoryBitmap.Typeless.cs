@@ -131,7 +131,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - Buffers
 
+        [System.Diagnostics.DebuggerStepThrough]
         public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
 
         /// <summary>
@@ -154,13 +157,22 @@ namespace InteropTypes.Graphics.Bitmaps
         public bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);
-        }        
+        }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public Byte[] ToByteArray()
         {
             if (TryGetBuffer(out ArraySegment<Byte> array) && array.Offset == 0 && array.Array.Length == _Info.BitmapByteSize) return array.Array;
 
             return _Data.ToArray();
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public MemoryBitmap Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = _Info.Slice(rect);
+            var memory = this._Data.Slice(offset, info.BitmapByteSize);
+            return new MemoryBitmap(memory, info);
         }
 
         #endregion
@@ -180,12 +192,7 @@ namespace InteropTypes.Graphics.Bitmaps
         
         public void SetPixels(int dstX, int dstY, SpanBitmap src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }        
 
-        public MemoryBitmap Slice(in BitmapBounds rect)
-        {
-            var (offset, info) = _Info.Slice(rect);
-            var memory = this._Data.Slice(offset, info.BitmapByteSize);
-            return new MemoryBitmap(memory, info);
-        }
+        
 
         /// <summary>
         /// Reshapes <paramref name="bmp"/> if it doesn't match <paramref name="fmt"/>.

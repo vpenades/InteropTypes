@@ -187,8 +187,34 @@ namespace InteropTypes.Graphics.Bitmaps
 
         [System.Diagnostics.DebuggerStepThrough]
         public SpanBitmap AsReadOnly() { return new SpanBitmap(this, true); }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public ReadOnlySpan<Byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Readable, y); }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public Span<Byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Writable, y); }
+
+        /// <summary>
+        /// Crops the current <see cref="SpanBitmap"/> sharing the original source memory.
+        /// </summary>
+        /// <param name="rect">The region to crop.</param>
+        /// <returns>A <see cref="SpanBitmap"/> representing the cropped region.</returns>        
+        [System.Diagnostics.DebuggerStepThrough]
+        public SpanBitmap Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = _Info.Slice(rect);
+
+            if (_Writable.IsEmpty)
+            {
+                var span = _Readable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap(span, info);
+            }
+            else
+            {
+                var span = _Writable.Slice(offset, info.BitmapByteSize);
+                return new SpanBitmap(span, info);
+            }
+        }
 
         #endregion
 
@@ -219,7 +245,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return this.Info.IsEmpty
                 ? new SpanBitmap<TPixel>()
                 : this.OfType<TPixel>();
-        }
+        }        
 
         /// <summary>
         /// Returns a pixel specific <see cref="SpanBitmap{TPixel}"/>.
@@ -261,27 +287,6 @@ namespace InteropTypes.Graphics.Bitmaps
         #region API - Pixel Ops
 
         /// <summary>
-        /// Crops the current <see cref="SpanBitmap"/> sharing the original source memory.
-        /// </summary>
-        /// <param name="rect">The region to crop.</param>
-        /// <returns>A <see cref="SpanBitmap"/> representing the cropped region.</returns>
-        public SpanBitmap Slice(in BitmapBounds rect)
-        {
-            var (offset, info) = _Info.Slice(rect);
-
-            if (_Writable.IsEmpty)
-            {
-                var span = _Readable.Slice(offset, info.BitmapByteSize);
-                return new SpanBitmap(span, info);
-            }
-            else
-            {
-                var span = _Writable.Slice(offset, info.BitmapByteSize);
-                return new SpanBitmap(span, info);
-            }
-        }       
-
-        /// <summary>
         /// Fills all the pixels of this bitmap with <paramref name="value"/>.
         /// </summary>
         /// <typeparam name="TPixel">The pixel type. Must be compatible with <see cref="SpanBitmap.PixelFormat"/>.</typeparam>
@@ -296,24 +301,36 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             switch(Info.PixelFormat.Code)
             {
-                case Pixel.Alpha8.Code: SetPixels(Pixel.GetColor<Pixel.Alpha8>(color));break;
-                case Pixel.Luminance8.Code: SetPixels(Pixel.GetColor<Pixel.Luminance8>(color)); break;
-                case Pixel.Luminance16.Code: SetPixels(Pixel.GetColor<Pixel.Luminance16>(color)); break;
+                case Pixel.Alpha8.Code: OfType<Pixel.Alpha8>().SetPixels(color);break;
 
-                case Pixel.BGR565.Code: SetPixels(Pixel.GetColor<Pixel.BGR565>(color)); break;
-                case Pixel.BGRA4444.Code: SetPixels(Pixel.GetColor<Pixel.BGRA4444>(color)); break;
-                case Pixel.BGRA5551.Code: SetPixels(Pixel.GetColor<Pixel.BGRA5551>(color)); break;
+                case Pixel.Luminance8.Code: OfType<Pixel.Luminance8>().SetPixels(color); break;
+                case Pixel.Luminance16.Code: OfType<Pixel.Luminance16>().SetPixels(color); break;
+                case Pixel.Luminance32F.Code: OfType<Pixel.Luminance32F>().SetPixels(color); break;
 
-                case Pixel.RGB24.Code: SetPixels(Pixel.GetColor<Pixel.RGB24>(color)); break;
-                case Pixel.BGR24.Code: SetPixels(Pixel.GetColor<Pixel.BGR24>(color)); break;
+                case Pixel.BGR565.Code: OfType< Pixel.BGR565>().SetPixels(color); break;
+                case Pixel.BGRA4444.Code: OfType<Pixel.BGRA4444>().SetPixels(color); break;
+                case Pixel.BGRA5551.Code: OfType<Pixel.BGRA5551>().SetPixels(color); break;
 
-                case Pixel.RGBA32.Code: SetPixels(Pixel.GetColor<Pixel.RGBA32>(color)); break;
-                case Pixel.BGRA32.Code: SetPixels(Pixel.GetColor<Pixel.BGRA32>(color)); break;
-                case Pixel.ARGB32.Code: SetPixels(Pixel.GetColor<Pixel.ARGB32>(color)); break;
+                case Pixel.RGB24.Code: OfType<Pixel.RGB24>().SetPixels(color); break;
+                case Pixel.BGR24.Code: OfType<Pixel.BGR24>().SetPixels(color); break;
 
-                case Pixel.BGR96F.Code: SetPixels(Pixel.GetColor<Pixel.BGR96F>(color)); break;
-                case Pixel.BGRA128F.Code: SetPixels(Pixel.GetColor<Pixel.BGRA128F>(color)); break;
-                case Pixel.RGBA128F.Code: SetPixels(Pixel.GetColor<Pixel.RGBA128F>(color)); break;
+                case Pixel.RGBA32.Code: OfType<Pixel.RGBA32>().SetPixels(color); break;
+                case Pixel.BGRA32.Code: OfType<Pixel.BGRA32>().SetPixels(color); break;
+                case Pixel.ARGB32.Code: OfType<Pixel.ARGB32>().SetPixels(color); break;
+
+                case Pixel.RGBP32.Code: OfType<Pixel.RGBP32>().SetPixels(color); break;
+                case Pixel.BGRP32.Code: OfType<Pixel.BGRP32>().SetPixels(color); break;
+                case Pixel.PRGB32.Code: OfType<Pixel.PRGB32>().SetPixels(color); break;
+
+                case Pixel.RGB96F.Code: OfType<Pixel.RGB96F>().SetPixels(color); break;
+                case Pixel.BGR96F.Code: OfType<Pixel.BGR96F>().SetPixels(color); break;
+
+                case Pixel.BGRA128F.Code: OfType<Pixel.BGRA128F>().SetPixels(color); break;
+                case Pixel.RGBA128F.Code: OfType<Pixel.RGBA128F>().SetPixels(color); break;
+
+                case Pixel.BGRP128F.Code: OfType<Pixel.BGRP128F>().SetPixels(color); break;
+                case Pixel.RGBP128F.Code: OfType<Pixel.RGBP128F>().SetPixels(color); break;
+
                 default:throw new NotImplementedException();
             }
         }
@@ -368,8 +385,13 @@ namespace InteropTypes.Graphics.Bitmaps
                 case Pixel.RGBA32.Code: this.OfType<Pixel.RGBA32>().SetPixels(src.OfType<Pixel.RGBA32>(), xform); break;
                 case Pixel.ARGB32.Code: this.OfType<Pixel.ARGB32>().SetPixels(src.OfType<Pixel.ARGB32>(), xform); break;
 
+                case Pixel.BGRP32.Code: this.OfType<Pixel.BGRP32>().SetPixels(src.OfType<Pixel.BGRP32>(), xform); break;
+                case Pixel.RGBP32.Code: this.OfType<Pixel.RGBP32>().SetPixels(src.OfType<Pixel.RGBP32>(), xform); break;
+                case Pixel.PRGB32.Code: this.OfType<Pixel.PRGB32>().SetPixels(src.OfType<Pixel.PRGB32>(), xform); break;
+
                 case Pixel.RGB96F.Code: this.OfType<Pixel.RGB96F>().SetPixels(src.OfType<Pixel.RGB96F>(), xform); break;
                 case Pixel.BGR96F.Code: this.OfType<Pixel.BGR96F>().SetPixels(src.OfType<Pixel.BGR96F>(), xform); break;
+
                 case Pixel.BGRA128F.Code: this.OfType<Pixel.BGRA128F>().SetPixels(src.OfType<Pixel.BGRA128F>(), xform); break;
                 case Pixel.RGBA128F.Code: this.OfType<Pixel.RGBA128F>().SetPixels(src.OfType<Pixel.RGBA128F>(), xform); break;                
 
@@ -409,7 +431,11 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }
 
-        public MemoryBitmap<TPixel> CloneAs<TPixel>()
+
+        [Obsolete("Use ToMemoryBitmap", true)]
+        public MemoryBitmap<TPixel> CloneAs<TPixel>() where TPixel : unmanaged { return default; }
+
+        public MemoryBitmap<TPixel> ToMemoryBitmap<TPixel>()
             where TPixel : unmanaged
         {
             MemoryBitmap<TPixel> newBitmap = default;

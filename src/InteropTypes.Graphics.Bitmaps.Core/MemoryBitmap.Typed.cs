@@ -162,18 +162,25 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - Buffers
 
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Data.Span, y); }
 
-
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly Memory<TPixel> GetPixelMemory()
         {
             return new MemoryManagers.CastMemoryManager<Byte, TPixel>(_Data).Memory;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly unsafe Memory<TOtherPixel> GetPixelMemory<TOtherPixel>()
             where TOtherPixel:unmanaged
         {
@@ -182,11 +189,13 @@ namespace InteropTypes.Graphics.Bitmaps
             return new MemoryManagers.CastMemoryManager<Byte, TOtherPixel>(_Data).Memory;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly bool TryGetBuffer(out ArraySegment<Byte> segment)
         {
             return System.Runtime.InteropServices.MemoryMarshal.TryGetArray(_Data, out segment);
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public readonly Byte[] ToByteArray()
         {
             if (TryGetBuffer(out ArraySegment<Byte> array) && array.Offset == 0 && array.Array.Length == _Info.BitmapByteSize) return array.Array;
@@ -194,10 +203,20 @@ namespace InteropTypes.Graphics.Bitmaps
             return _Data.ToArray();
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        public MemoryBitmap<TPixel> Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = _Info.Slice(rect);
+            var memory = this._Data.Slice(offset, info.BitmapByteSize);
+            return new MemoryBitmap<TPixel>(memory, info);
+        }
+
         #endregion
 
         #region API - Pixel Ops
-        
+
+        public void SetPixels(System.Drawing.Color color) { SetPixels(Pixel.GetColor<TPixel>(color)); }
+
         public void SetPixels(TPixel value) { AsSpanBitmap().SetPixels(value); }
         
         public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }
@@ -207,16 +226,7 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             AsSpanBitmap().SetPixels(dstX, dstY, src);
         }
-
-        public MemoryBitmap<TPixel> Slice(in BitmapBounds rect)
-        {
-            var (offset, info) = _Info.Slice(rect);
-            var memory = this._Data.Slice(offset, info.BitmapByteSize);
-            return new MemoryBitmap<TPixel>(memory, info);
-        }
         
-        
-
         public IEnumerable<(POINT Location, TPixel Pixel)> EnumeratePixels()
         {
             for (int y = 0; y < Height; ++y)

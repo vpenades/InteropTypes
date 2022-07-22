@@ -13,8 +13,8 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
 var interfaces = new List<string>();
 
-var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32" };
-var dstPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32", "BGR96F", "RGB96F" };
+var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32", "Luminance8", "Luminance32F" };
+var dstPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32", "BGR96F", "RGB96F", "Luminance8", "Luminance32F" };
 
 var pixelPairs = dstPixels
                     .SelectMany( dstp => srcPixels.Select(srcp => (dstp,srcp) ) )
@@ -23,8 +23,12 @@ var pixelPairs = dstPixels
 
 bool IsOpaque(string pixelFmt)
 {
+    if (pixelFmt == "Luminance8") return true;
+    if (pixelFmt == "Luminance32F") return true;
     if (pixelFmt == "BGR24") return true;
     if (pixelFmt == "RGB24") return true;
+    if (pixelFmt == "BGR96F") return true;
+    if (pixelFmt == "RGB96F") return true;
     return false;
 }
 

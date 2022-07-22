@@ -257,8 +257,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             _WriteSetterXYZ("Alpha8", dst, ("255","255","255") );
             _WriteSetterXYZ("Luminance8", dst, ("L","L","L") );
-            _WriteSetterNotImpl("Luminance16");
-            _WriteSetterNotImpl("Luminance32F");
+            _WriteSetterXYZ("Luminance16", dst, ("(Byte)@L", "(Byte)@L", "(Byte)@L"), "S=> value.L >>= 8; // shift down");
+            _WriteSetterXYZ("Luminance32F", dst, ("(Byte)@L", "(Byte)@L", "(Byte)@L"), "S=> value.L *= 255f; // shift up");
 
             src = ("(Byte)@B", "(Byte)@G", "(Byte)@R");
             _WriteSetterXYZ("BGR565", dst, src );
@@ -296,8 +296,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             _WriteSetterXYZW("Alpha8", dst, ("255","255","255","A") );
             _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255"));
-            _WriteSetterNotImpl("Luminance16");
-            _WriteSetterNotImpl("Luminance32F");
+            _WriteSetterXYZW("Luminance16", dst, ("(Byte)@L", "(Byte)@L", "(Byte)@L", "255"), "S=> value.L >>= 8; // shift down");
+            _WriteSetterXYZW("Luminance32F", dst, ("(Byte)@L", "(Byte)@L", "(Byte)@L", "255"), "S=> value.L *= 255f; // shift up");
             _WriteSetterXYZW("BGR565", dst, ("(Byte)@B","(Byte)@G","(Byte)@R", "255") );
 
             src = ("(Byte)@B","(Byte)@G","(Byte)@R", "(Byte)@A");
@@ -343,8 +343,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             _WriteSetterXYZW("Alpha8", dst, ("A","A","A","A") );
             _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255"));
-            _WriteSetterNotImpl("Luminance16");
-            _WriteSetterNotImpl("Luminance32F");
+            _WriteSetterXYZW("Luminance16", dst, ("(Byte)@L", "(Byte)@L", "(Byte)@L", "255"), "S=> value.L >>= 8; // shift down");
+            _WriteSetterXYZW("Luminance32F", dst, ("(Byte)@L", "(Byte)@L", "(Byte)@L", "255"), "S=> value.L *= 255f; // shift up");
             _WriteSetterXYZW("BGR565", dst, ("(Byte)@B","(Byte)@G","(Byte)@R", "255") );
 
             src = ("B", "G", "R", "255");
@@ -433,7 +433,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var dst = ("B","G","R","A");
             var src = ("0","0","0","0");
             
-            var suffix = $"E=> {dstType.Substring(0,4)} *= __RCP255;";
+            var suffix = $"E=> this.{dstType.Substring(0,4)} *= __RCP255;";
 
             _writeStructBegin(dstType, commonInterface);
 
@@ -443,7 +443,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             _WriteSetterXYZW("Alpha8", dst, ("255","255","255","A"), suffix);
             _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255") , suffix);
-            _WriteSetterNotImpl("Luminance16");
+            _WriteSetterXYZW("Luminance16", dst, ("L","L","L", "65535") , $"E=> this.{dstType.Substring(0,4)} /= 65535;");
             _WriteSetterXYZW("Luminance32F", dst, ("L","L","L", "1"));
 
             src = ("B", "G", "R", "255");

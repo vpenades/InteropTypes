@@ -117,17 +117,31 @@ namespace InteropTypes.Graphics.Bitmaps
         #endregion        
 
         #region API - Buffers
+
+        [System.Diagnostics.DebuggerStepThrough]
         public unsafe Span<byte> UseScanlineBytes(int y)
         {
             if (_Pointer == IntPtr.Zero) throw new InvalidOperationException();
             var span = new Span<Byte>(_Pointer.ToPointer(), _Info.BitmapByteSize);
             return _Info.UseScanlineBytes(span, y);
         }
+
+        [System.Diagnostics.DebuggerStepThrough]
         public unsafe ReadOnlySpan<byte> GetScanlineBytes(int y)
         {
             if (_Pointer == IntPtr.Zero) throw new InvalidOperationException();
             var span = new Span<Byte>(_Pointer.ToPointer(), _Info.BitmapByteSize);
             return _Info.GetScanlineBytes(span, y);
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public PointerBitmap Slice(in BitmapBounds rect)
+        {
+            var (offset, info) = Info.Slice(rect);
+
+            var ptr = IntPtr.Add(this.Pointer, offset);
+
+            return new PointerBitmap(ptr, info, this.IsReadOnly);
         }
 
         #endregion
@@ -166,14 +180,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - Pixel Ops
 
-        public PointerBitmap Slice(in BitmapBounds rect)
-        {
-            var (offset, info) = Info.Slice(rect);
-
-            var ptr = IntPtr.Add(this.Pointer, offset);
-
-            return new PointerBitmap(ptr, info, this.IsReadOnly);
-        }
+        
 
         public bool CopyTo(ref MemoryBitmap other)
         {
