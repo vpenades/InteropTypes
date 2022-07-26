@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <LangVersion>10</LangVersion>    
+    <LangVersion>10</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -14,9 +15,14 @@
     <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />    
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
     <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" />    
-  </ItemGroup>  
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
+    <!-- this is the last version supporting NetStandard2.0-->
+    <PackageReference Include="MonoGame.Framework.DesktopGL" VersionOverride="3.8.0.1641" PrivateAssets="all" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
