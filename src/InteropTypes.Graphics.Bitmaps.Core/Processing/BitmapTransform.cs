@@ -44,11 +44,17 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             return false;
         }
 
-        bool SpanBitmap.ITransfer.TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target)
+        bool SpanBitmap.ITransfer.TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target)            
         {
             if (this is SpanBitmap.ITransfer<TPixel, TPixel> transferX)
             {
                 return transferX.TryTransfer(source, target);
+            }
+
+            if (Opacity == 1 && UseBilinear == false)
+            {
+                _PixelsTransformImplementation.OpaquePixelsDirect(source, target, Transform);
+                return true;
             }
 
             return false;

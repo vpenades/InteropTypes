@@ -72,6 +72,12 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 return transferX.TryTransfer(source, target);
             }
 
+            if (PixelOp.IsIdentity && UseBilinear == false)
+            {
+                _PixelsTransformImplementation.OpaquePixelsDirect(source, target, Transform);
+                return true;
+            }
+
             return false;
         }
 

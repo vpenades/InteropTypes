@@ -277,7 +277,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 _BInfo = rt.Info;
                 _Bytes = rt.ReadableBytes;
                 _Interpolator = Pixel.GetQuantizedInterpolator<TSrcPixel, TDstPixel>();
-                if (_Interpolator == null) throw new ArgumentException($"{typeof(Pixel.IQuantizedInterpolator<TSrcPixel,TDstPixel>).Name} not implemented.", nameof(rt));
+                // if (_Interpolator == null) throw new ArgumentException($"{typeof(Pixel.IQuantizedInterpolator<TSrcPixel,TDstPixel>).Name} not implemented.", nameof(rt));
             }
 
             #endregion
@@ -311,10 +311,13 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 // _PixelTransformIterator runs at a fraction of 16384
                 // and Pixel.InterpolateBilinear runs at a fraction of 1024
-                // so we need to divide by 4 to convert the fractions.
+                // so we need to divide by 4 to convert the fractions.                
+
+                // TDstPixel r = default;
+                // r.SetInterpolatedValue(a, b, c, d, (uint)rx / 16, (uint)ry / 16);                
 
                 return _Interpolator.InterpolateBilinear(a, b, c, d, (uint)rx / 16 , (uint)ry / 16 );
-            }
+            }            
 
             #endregion
         }        

@@ -163,6 +163,48 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
 
+        [Test]
+        public void TestTransformWithUndefinedPixel()
+        {
+            var pix = new System.Drawing.Size(255, 6);
+
+            void _SaveResult(MemoryBitmap<System.Drawing.Size> src)
+            {
+                var dst = new MemoryBitmap<Pixel.BGR24>(src.Width, src.Height);
+
+                var srcPix = src.GetPixelMemory();
+                var dstPix = dst.GetPixelMemory();
+
+                for(int i=0; i< srcPix.Length; ++i)
+                {
+                    var c = srcPix.Span[i].Width;
+
+                    dstPix.Span[i] = new Pixel.BGR24(c, c, c);
+                }
+
+                dst.Save(AttachmentInfo.From("result.png"));
+            }
+
+            var src = new MemoryBitmap<System.Drawing.Size>(16,16);
+            var dst = new MemoryBitmap<System.Drawing.Size>(512, 512);
+
+            src.SetPixels(pix);
+
+            var xform = Matrix3x2.CreateScale(512f / 16f);
+            xform.Translation = new XY(0,0);
+
+            dst.AsSpanBitmap().SetPixels(xform, src.AsSpanBitmap(), false, 1);
+
+            _SaveResult(dst);
+
+            dst.SetPixels(new System.Drawing.Size(0,0));
+            dst.AsSpanBitmap().SetPixels(xform, src.AsSpanBitmap(), false, (1,0) );
+
+            _SaveResult(dst);
+
+        }
+
+
         public static void DrawBounds<TPixel>(MemoryBitmap<TPixel> target, in BitmapBounds bounds, in Matrix3x2 xform, TPixel color)
             where TPixel : unmanaged
         {
