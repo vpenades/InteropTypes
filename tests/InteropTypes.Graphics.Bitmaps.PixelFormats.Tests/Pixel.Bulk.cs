@@ -58,8 +58,8 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         public void ConversionTest<TSrcPixel,TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
-            where TDstPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
+            where TDstPixel : unmanaged, Pixel.IConvertTo
         {
             var srcFmt = PixelFormat.TryIdentifyFormat<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
@@ -69,7 +69,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             for(int i=0; i < 5; ++i)
             {
-                src[i].SetValue( new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
+                new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30).CopyTo(ref src[i]);
             }
             
             Pixel.GetPixelCopyConverter<TSrcPixel,TDstPixel>().Invoke(src,dst);            
@@ -90,8 +90,8 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         public void ConversionPremulTest<TSrcPixel, TDstPixel>()
-            where TSrcPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
-            where TDstPixel : unmanaged, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRA32>
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
+            where TDstPixel : unmanaged, Pixel.IConvertTo
         {
             var srcFmt = PixelFormat.TryIdentifyFormat<TSrcPixel>();
             var dstFmt = PixelFormat.TryIdentifyFormat<TDstPixel>();
@@ -102,7 +102,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             for (int i = 0; i < 5; ++i)
             {
-                src[i].SetValue(new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30));
+                new Pixel.BGRA32(i * 50, 255 - i * 50, i * 30, 20 + i * 30).CopyTo(ref src[i]);
             }
 
             Pixel.GetPixelCopyConverter<TSrcPixel, TDstPixel>().Invoke(src, dst);

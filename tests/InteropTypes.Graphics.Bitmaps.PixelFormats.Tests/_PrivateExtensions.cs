@@ -292,10 +292,9 @@ namespace InteropTypes.Graphics.Bitmaps
         public static TPixel PremulRoundtrip8<TPixel>(this TPixel pixel)
             where TPixel : unmanaged
             , Pixel.IConvertTo
-            , Pixel.IValueSetter<Pixel.BGRP32>
         {
             var premul = pixel.To<Pixel.BGRP32>();
-            pixel.SetValue(premul);
+            premul.CopyTo(ref pixel);
             return pixel;
         }
 

@@ -150,12 +150,12 @@ namespace InteropTypes.Graphics.Bitmaps
 
 
         private void _CheckLinear<TSrcPixel, TDstPixel>(TSrcPixel srcColor, Action<TDstPixel> resultAction)
-            where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRP32>
+            where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo
             where TDstPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo
         {
             var premulRef = srcColor.To<Pixel.BGRP32>();
             var unpremulRef = default(TSrcPixel);
-            unpremulRef.SetValue(premulRef);
+            premulRef.CopyTo(ref unpremulRef);
 
             var interpolator = Pixel.GetQuantizedInterpolator<TSrcPixel, TDstPixel>();
 
@@ -170,12 +170,12 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         private void _CheckBilinear<TSrcPixel, TDstPixel>(TSrcPixel srcColor, Action<TDstPixel> resultAction, uint granularity = 256)
-            where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo, Pixel.IValueSetter<Pixel.BGRP32>
+            where TSrcPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo
             where TDstPixel : unmanaged, Pixel.IReflection, Pixel.IConvertTo
         {
             var premulRef = srcColor.To<Pixel.BGRP32>();
             var unpremulRef = default(TSrcPixel);
-            unpremulRef.SetValue(premulRef);
+            premulRef.CopyTo(ref unpremulRef);
 
             var interpolator = Pixel.GetQuantizedInterpolator<TSrcPixel, TDstPixel>();            
 
@@ -203,7 +203,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         private TDstPixel _TestLerpFloating<TSrcPixel, TDstPixel>(TSrcPixel a, TSrcPixel b)
             where TSrcPixel : unmanaged, Pixel.IConvertTo
-            where TDstPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP128F>
+            where TDstPixel : unmanaged
         {
             var ap = a.To<Pixel.BGRP128F>();
             var bp = b.To<Pixel.BGRP128F>();

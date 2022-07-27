@@ -191,7 +191,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             [MethodImpl(_PrivateConstants.Fastest)]
             public static TDst Lerp<TDst>(BGR24 left, BGR24 right, int rx)
-                where TDst: unmanaged, IValueSetter<BGRA32>
+                where TDst: unmanaged, IConvertTo
             {
 
                 // calculate quantized weights
@@ -201,7 +201,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var G = (left.G * lx + right.G * rx) / 16384;
                 var B = (left.B * lx + right.B * rx) / 16384;
                 var dst = default(TDst);
-                dst.SetValue( new BGRA32(R, G, B));
+                new BGRA32(R, G, B).CopyTo(ref dst);
                 return dst;
             }
 

@@ -12,10 +12,10 @@ namespace InteropTypes.Graphics.Backends
 {
 
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
-    sealed class _MemoryDrawingContext<TPixel> :
-        _BaseDrawingContext<TPixel>,        
-        IServiceProvider
-        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
+    sealed class _MemoryDrawingContext<TPixel>
+        : _BaseDrawingContext<TPixel>
+        , IServiceProvider
+        where TPixel : unmanaged
     {
         #region constructor
         public _MemoryDrawingContext(MemoryBitmap<TPixel> target, Converter<GDICOLOR, TPixel> converter)
@@ -56,10 +56,10 @@ namespace InteropTypes.Graphics.Backends
     }
 
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
-    sealed class _PointerDrawingContext<TPixel> :
-        _BaseDrawingContext<TPixel>,        
-        IServiceProvider
-        where TPixel : unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
+    sealed class _PointerDrawingContext<TPixel>
+        : _BaseDrawingContext<TPixel>
+        , IServiceProvider
+        where TPixel : unmanaged
     {
         #region constructor
         public _PointerDrawingContext(PointerBitmap target, Converter<GDICOLOR, TPixel> converter)
@@ -99,12 +99,12 @@ namespace InteropTypes.Graphics.Backends
         #endregion
     }
 
-    abstract class _BaseDrawingContext<TPixel> :
-        Decompose2D.PassToSelf,
-        IRenderTargetInfo,
-        IBackendCanvas2D,        
-        GlobalStyle.ISource
-        where TPixel: unmanaged, Pixel.IValueSetter<Pixel.BGRP32>
+    abstract class _BaseDrawingContext<TPixel>
+        : Decompose2D.PassToSelf
+        , IRenderTargetInfo
+        , IBackendCanvas2D
+        , GlobalStyle.ISource
+        where TPixel: unmanaged
     {
         #region constructor
         protected _BaseDrawingContext(int width, int height, Converter<GDICOLOR, TPixel> converter)

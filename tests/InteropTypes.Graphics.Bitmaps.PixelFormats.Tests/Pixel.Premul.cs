@@ -25,8 +25,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static void TestPremultiply<TPixel>()
             where TPixel : unmanaged
-            , Pixel.IValueSetter<Pixel.BGRA32>            
-            , Pixel.IValueSetter<Pixel.BGRP32>
             , Pixel.IConvertTo            
         {
             for(int a=0; a < 256; ++a)
@@ -40,8 +38,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
         private static void TestPremultiply<TPixel>(int a, int r)
             where TPixel : unmanaged
-            , Pixel.IValueSetter<Pixel.BGRA32>
-            , Pixel.IValueSetter<Pixel.BGRP32>
             , Pixel.IConvertTo            
         {
             // color
@@ -49,7 +45,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var src = new Pixel.BGRA32(r, 1, 255, a);
 
             var color = default(TPixel);
-            color.SetValue(src);
+            src.CopyTo(ref color);
 
             // references
 
@@ -72,7 +68,7 @@ namespace InteropTypes.Graphics.Bitmaps
             // unpremul
 
             TPixel color1 = default;
-            color1.SetValue(premul1);
+            premul1.CopyTo(ref color1);
 
             var color2 = premul1.To<TPixel>();
 

@@ -20,17 +20,7 @@ namespace InteropTypes.Graphics.Bitmaps
     {        
 
 <# //-------------------------------------------------------------------------------------------------------------------
-    
-
-    string _WriteCommonInterface()
-    {
-        string iface ="_IAllSetters";
-
-        var all = PixelFormatsAllNames.Select(item => $"IValueSetter<{item}>" ).ToArray();
-        _writeInternalInterfaceBegin(iface, all);        
-        _writeEnd();
-        return iface;        
-    }
+       
 
     string __selfType;
 
@@ -155,18 +145,13 @@ namespace InteropTypes.Graphics.Bitmaps
 
 //-------------------------------------------------------------------------------------------------------------------
 
-        var commonInterface = _WriteCommonInterface();
-
-        WriteLine("");
-        WriteLine("");
-        WriteLine("");
 
         var remainingNotImplemented = PixelFormatsAllNames.ToList();
 
         // --------------------------------------------- Alpha8
 
         remainingNotImplemented.Remove("Alpha8");
-        _writeStructBegin("Alpha8", commonInterface);
+        _writeStructBegin("Alpha8");
         _WriteSetterSelf("Alpha8");
 
         _WriteSetterCmps("Alpha8","A","A");
@@ -193,7 +178,7 @@ namespace InteropTypes.Graphics.Bitmaps
         // --------------------------------------------- Luminance8
 
         remainingNotImplemented.Remove("Luminance8");        
-        _writeStructBegin("Luminance8", commonInterface);
+        _writeStructBegin("Luminance8");
         _WriteSetterSelf("Luminance8");
 
         _WriteSetterCmps("Alpha8","L","A");
@@ -220,7 +205,7 @@ namespace InteropTypes.Graphics.Bitmaps
         // --------------------------------------------- Luminance32F
 
         remainingNotImplemented.Remove("Luminance32F");        
-        _writeStructBegin("Luminance32F", commonInterface);
+        _writeStructBegin("Luminance32F");
         _WriteSetterSelf("Luminance32F");
 
         _WriteSetterCmps("Alpha8","L","A * Reciprocal255");
@@ -252,7 +237,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var dst = ("B","G","R");
             var src = ("0","0","0");
 
-            _writeStructBegin(dstType, commonInterface);
+            _writeStructBegin(dstType);
             _WriteSetterSelf(dstType);
 
             _WriteSetterXYZ("Alpha8", dst, ("255","255","255") );
@@ -291,7 +276,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var dst = ("B","G","R","A");
             var src =("0","0","0","0");
 
-            _writeStructBegin(dstType, commonInterface);
+            _writeStructBegin(dstType);
             _WriteSetterSelf(dstType);
 
             _WriteSetterXYZW("Alpha8", dst, ("255","255","255","A") );
@@ -338,7 +323,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var dst = ("PreB","PreG","PreR","A");
             var src =("0","0","0","0");
 
-            _writeStructBegin(dstType, commonInterface);
+            _writeStructBegin(dstType);
             _WriteSetterSelf(dstType);
 
             _WriteSetterXYZW("Alpha8", dst, ("A","A","A","A") );
@@ -387,7 +372,7 @@ namespace InteropTypes.Graphics.Bitmaps
             
             var suffix = $"E=> {dstType.Substring(0,3)} *= __RCP255;";
 
-            _writeStructBegin(dstType, commonInterface);
+            _writeStructBegin(dstType);
 
             WriteLine("const float __RCP255 = 1f / 255f;");
 
@@ -435,7 +420,7 @@ namespace InteropTypes.Graphics.Bitmaps
             
             var suffix = $"E=> this.{dstType.Substring(0,4)} *= __RCP255;";
 
-            _writeStructBegin(dstType, commonInterface);
+            _writeStructBegin(dstType);
 
             WriteLine("const float __RCP255 = 1f / 255f;");
 
@@ -491,7 +476,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         foreach(var dstType in remainingNotImplemented)        
         {
-            _writeStructBegin(dstType, commonInterface);
+            _writeStructBegin(dstType);
             _WriteSetterSelf(dstType);
             _WriteSetterNotImplAll();
             _writeEnd();

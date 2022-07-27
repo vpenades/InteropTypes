@@ -32,8 +32,6 @@ namespace InteropTypes.Graphics.Backends
 
         public static void UseDrawingContext<TPixel>(this in SpanBitmap<TPixel> bitmap, Action<ICanvas2D> canvas)
             where TPixel : unmanaged
-            , Pixel.IValueSetter<Pixel.BGRA32>
-            , Pixel.IValueSetter<Pixel.BGRP32>
         {
             ICanvas2D onPin(PointerBitmap ptr)
             {
@@ -45,11 +43,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static void UseDrawingContext<TPixel>(this in SpanBitmap<TPixel> bitmap, POINT virtualSize, Action<ICanvas2D> canvas)
             where TPixel : unmanaged
-            , Pixel.IValueSetter<Pixel.BGRA32>
-            , Pixel.IValueSetter<Pixel.BGRP32>
         {
-            if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
-            if (virtualSize.Y == 0) throw new ArgumentException(nameof(virtualSize));
+            if (virtualSize.X == 0 || virtualSize.Y == 0) throw new ArgumentException("Must not be zero", nameof(virtualSize));
 
             ICanvas2D onPin(PointerBitmap ptr)
             {
@@ -63,8 +58,7 @@ namespace InteropTypes.Graphics.Backends
         public static ICanvas2D CreateDrawingContext<TPixel>(this in MemoryBitmap<TPixel> bitmap, POINT virtualSize)
             where TPixel : unmanaged
         {
-            if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
-            if (virtualSize.Y == 0) throw new ArgumentException(nameof(virtualSize));
+            if (virtualSize.X == 0 || virtualSize.Y == 0) throw new ArgumentException("Must not be zero", nameof(virtualSize));
 
             var dc = bitmap.CreateDrawingContext();
             return _UseVirtualViewport(dc, (bitmap.Width,bitmap.Height), virtualSize);
@@ -72,8 +66,7 @@ namespace InteropTypes.Graphics.Backends
 
         public static ICanvas2D CreateDrawingContext(this in MemoryBitmap bitmap, POINT virtualSize)
         {
-            if (virtualSize.X == 0) throw new ArgumentException(nameof(virtualSize));
-            if (virtualSize.Y == 0) throw new ArgumentException(nameof(virtualSize));
+            if (virtualSize.X == 0 || virtualSize.Y == 0) throw new ArgumentException("Must not be zero", nameof(virtualSize));
 
             var dc = bitmap.CreateDrawingContext();
             return _UseVirtualViewport(dc, (bitmap.Width, bitmap.Height), virtualSize);
@@ -102,8 +95,6 @@ namespace InteropTypes.Graphics.Backends
         {
             ICanvas2D _Create<TPixel>()
                 where TPixel : unmanaged
-                , Pixel.IValueSetter<Pixel.BGRA32>
-                , Pixel.IValueSetter<Pixel.BGRP32>
             {                
                 return new _MemoryDrawingContext<TPixel>(bitmap.OfType<TPixel>(), c => Pixel.GetColor<TPixel>(c));
             }
@@ -137,7 +128,6 @@ namespace InteropTypes.Graphics.Backends
 
         public static ICanvas2D CreateDrawingContext<TPixel>(this in MemoryBitmap<TPixel> bitmap, Converter<System.Drawing.Color, TPixel> converter)
             where TPixel : unmanaged
-            , Pixel.IValueSetter<Pixel.BGRP32>
         {
             return new _MemoryDrawingContext<TPixel>(bitmap, converter);
         }

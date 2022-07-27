@@ -42,10 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false"
-                      />
+    <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>  
 
   <ItemGroup>
@@ -57,13 +54,13 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Pixel.Interfaces.Composition.cs</LastGenOutput>
     </None>
-    <None Update="Pixel\Pixel.Interfaces.IAnyValue.tt">
+    <None Update="Pixel\Pixel.Interfaces.IConvertTo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Pixel.Interfaces.IAnyValue.cs</LastGenOutput>
+      <LastGenOutput>Pixel.Interfaces.IConvertTo.cs</LastGenOutput>
     </None>
-    <None Update="Pixel\Pixel.Interfaces.IValueSetter.tt">
+    <None Update="Pixel\Pixel.SetValue.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Pixel.Interfaces.IValueSetter.cs</LastGenOutput>
+      <LastGenOutput>Pixel.SetValue.cs</LastGenOutput>
     </None>
     <None Update="Pixel\Pixel.Interfaces.LerpTo.tt">
       <LastGenOutput>Pixel.Interfaces.LerpTo.cs</LastGenOutput>
@@ -89,20 +86,20 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Interfaces.Composition.tt</DependentUpon>
     </Compile>
-    <Compile Update="Pixel\Pixel.Interfaces.IAnyValue.cs">
+    <Compile Update="Pixel\Pixel.Interfaces.IConvertTo.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IAnyValue.tt</DependentUpon>
+      <DependentUpon>Pixel.Interfaces.IConvertTo.tt</DependentUpon>
     </Compile>
     <Compile Update="Pixel\Pixel.Interfaces.IValueGetter.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Pixel.Interfaces.IValueGetter.tt</DependentUpon>
     </Compile>
-    <Compile Update="Pixel\Pixel.Interfaces.IValueSetter.cs">
+    <Compile Update="Pixel\Pixel.SetValue.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Pixel.Interfaces.IValueSetter.tt</DependentUpon>
+      <DependentUpon>Pixel.SetValue.tt</DependentUpon>
     </Compile>
     <Compile Update="Pixel\Pixel.Interfaces.LerpTo.cs">
       <DependentUpon>Pixel.Interfaces.LerpTo.tt</DependentUpon>
