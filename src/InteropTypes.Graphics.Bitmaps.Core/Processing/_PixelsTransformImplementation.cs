@@ -109,7 +109,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             _ProcessRows(dst, src, srcXform, p);
         }
 
-        public static void PixelsConvert<TSrcPixel, TDstPixel, TDstOp>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, PlanesTransform transform, TDstOp dstOp)
+        public static void ConvertPixels<TSrcPixel, TDstPixel, TDstOp>(SpanBitmap<TSrcPixel> src, SpanBitmap<TDstPixel> dst, TRANSFORM srcXform, bool useBilinear, TDstOp dstOp)
             where TSrcPixel : unmanaged, Pixel.IConvertTo
             where TDstPixel : unmanaged
             where TDstOp: unmanaged, Pixel.IApplyTo<TDstPixel>
@@ -138,11 +138,11 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 }
             }
 
-            var p = transform.UseBilinear
+            var p = useBilinear
                 ? (_ProcessRowCallback8<TSrcPixel, TSrcPixel, TDstPixel>)_rowProcessorBilinear
                 : (_ProcessRowCallback8<TSrcPixel, TSrcPixel, TDstPixel>)_rowProcessorNearest;
 
-            _ProcessRows(dst, src, transform.Transform, p);
+            _ProcessRows(dst, src, srcXform, p);
         }
 
         public static void PixelsConvert<TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanPlanesXYZ<float> dst, PlanesTransform transform)

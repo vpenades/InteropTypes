@@ -49,7 +49,7 @@ foreach(var (dstPixel,srcPixel) in pixelPairs)
 
             if (IsOpaque(srcPixel))
             {
-                WriteLine("if (Opacity >= 1)");
+                WriteLine("if (PixelOp.IsIdentity)");
                 _writeOpenBlock();
 
                 if (srcPixel == dstPixel)
@@ -69,7 +69,25 @@ foreach(var (dstPixel,srcPixel) in pixelPairs)
                 _writeCloseBlock();
             }
 
-            WriteLine("_PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, Opacity);");
+            var hasMulAdd = dstPixel == "RGB24" || dstPixel == "BGR24" || dstPixel == "RGB96F" || dstPixel == "BGR96F";
+
+            if (hasMulAdd)
+            {
+                WriteLine("");
+                WriteLine($"var localPixelOp = new Pixel.{dstPixel}.MulAdd(this.PixelOp);");
+                WriteLine("");
+
+                WriteLine("switch(PixelOp.IsOpacity)");
+                _writeOpenBlock();
+                WriteLine(" case true: _PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, PixelOp.Opacity); break;");                    
+                WriteLine(" case false: _PixelsTransformImplementation.ConvertPixels(source, target, Transform, UseBilinear, localPixelOp); break;");                
+                _writeCloseBlock();
+            }
+            else
+            {
+                WriteLine("_PixelsTransformImplementation.ComposePixels(source, target, Transform, UseBilinear, PixelOp.Opacity);");
+            }
+
             WriteLine("return true;");
         _writeCloseBlock();
     }

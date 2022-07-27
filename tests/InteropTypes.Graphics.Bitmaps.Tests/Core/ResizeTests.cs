@@ -189,8 +189,9 @@ namespace InteropTypes.Graphics.Bitmaps
             var dst = new MemoryBitmap<System.Drawing.Size>(512, 512);
 
             src.SetPixels(pix);
+            src.SetPixel(15, 0, new System.Drawing.Size(10, 6));
 
-            var xform = Matrix3x2.CreateScale(512f / 16f);
+            var xform = Matrix3x2.CreateScale(512f / 15f); // notice we substracted one pixel so the transform fills the image
             xform.Translation = new XY(0,0);
 
             dst.AsSpanBitmap().SetPixels(xform, src.AsSpanBitmap(), false, 1);

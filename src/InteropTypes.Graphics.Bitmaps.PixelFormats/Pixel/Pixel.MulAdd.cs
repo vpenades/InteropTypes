@@ -78,8 +78,18 @@ namespace InteropTypes.Graphics.Bitmaps
 
                     r += AddR;
                     g += AddG;
-                    b += AddB;                    
-                    
+                    b += AddB;
+
+                    #if NETSTANDARD2_0
+                    if (r > 255) r = 255; else if (r < 0) r = 0;
+                    if (g > 255) g = 255; else if (g < 0) g = 0;
+                    if (b > 255) b = 255; else if (b < 0) b = 0;
+                    #else
+                    r = Math.Clamp(r, 0, 255);
+                    g = Math.Clamp(g, 0, 255);
+                    b = Math.Clamp(b, 0, 255);
+                    #endif
+
                     target.R = (Byte)r;
                     target.G = (Byte)g;
                     target.B = (Byte)b;
@@ -162,6 +172,16 @@ namespace InteropTypes.Graphics.Bitmaps
                     g += AddG;
                     b += AddB;
 
+                    #if NETSTANDARD2_0
+                    if (r > 255) r = 255; else if (r < 0) r = 0;
+                    if (g > 255) g = 255; else if (g < 0) g = 0;
+                    if (b > 255) b = 255; else if (b < 0) b = 0;
+                    #else
+                    r = Math.Clamp(r, 0, 255);
+                    g = Math.Clamp(g, 0, 255);
+                    b = Math.Clamp(b, 0, 255);
+                    #endif
+
                     target.R = (Byte)r;
                     target.G = (Byte)g;
                     target.B = (Byte)b;
@@ -179,6 +199,12 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 public static implicit operator MulAdd((RGB96F m, RGB96F a) op) { return new MulAdd(op.m, op.a); }
 
+                public MulAdd(RGB96F.MulAdd other)
+                {
+                    Multiply = other.Multiply;
+                    Addition = other.Addition;
+                }
+
                 public MulAdd(RGB96F mul, RGB96F add)
                 {
                     Multiply = mul.RGB;
@@ -187,6 +213,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 public readonly System.Numerics.Vector3 Multiply;
                 public readonly System.Numerics.Vector3 Addition;
+
+                public bool IsOpacity => Multiply.X == Multiply.Y && Multiply.X == Multiply.Z && Addition == System.Numerics.Vector3.Zero;
+
+                public float Opacity => Multiply.X;
 
                 public bool IsIdentity => Multiply == System.Numerics.Vector3.One && Addition == System.Numerics.Vector3.Zero;
 

@@ -12,13 +12,13 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         public BitmapTransform(in TRANSFORM xform, float opacity = 1)
         {
             Transform = xform;
-            Opacity = opacity;
+            PixelOp = (opacity,0);
             UseBilinear = false;
         }
         public BitmapTransform(in TRANSFORM xform, bool useBilinear, float opacity)
         {
             Transform = xform;
-            Opacity = opacity;
+            PixelOp = (opacity, 0);
             UseBilinear = useBilinear;
         }
 
@@ -26,9 +26,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
         #region data
 
-        public TRANSFORM Transform { get; set; }
-        public float Opacity { get; set; }
+        public TRANSFORM Transform { get; set; }        
         public bool UseBilinear { get; set; }
+        public Pixel.RGB96F.MulAdd PixelOp { get; set; }
 
         #endregion
 
@@ -44,14 +44,14 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             return false;
         }
 
-        bool SpanBitmap.ITransfer.TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target)            
+        bool SpanBitmap.ITransfer.TryTransfer<TPixel>(SpanBitmap<TPixel> source, SpanBitmap<TPixel> target)
         {
             if (this is SpanBitmap.ITransfer<TPixel, TPixel> transferX)
             {
                 return transferX.TryTransfer(source, target);
             }
 
-            if (Opacity == 1 && UseBilinear == false)
+            if (PixelOp.IsIdentity && UseBilinear == false)
             {
                 _PixelsTransformImplementation.OpaquePixelsDirect(source, target, Transform);
                 return true;

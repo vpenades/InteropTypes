@@ -375,7 +375,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, Pixel.RGB96F.MulAdd pixelOp)
             where TSrcPixel : unmanaged
         {
-            var xform = new Processing.PlanesTransform(location, useBilinear);
+            var xform = new Processing.BitmapTransform(location, useBilinear, 1);
             xform.PixelOp = pixelOp;
 
             this.SetPixels(src, xform);
