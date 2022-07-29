@@ -40,6 +40,7 @@ namespace InteropTypes.Codecs
             return message;
         }
 
+        [System.Diagnostics.DebuggerStepThrough]
         public static int ThrowExceptionIfError(this int result)
         {
             if (result >= 0) return result;

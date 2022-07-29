@@ -29,11 +29,10 @@ namespace InteropTypes.Codecs
                 ffmpeg.av_hwdevice_ctx_create(&_pCodecContext->hw_device_ctx, HWDeviceType, null, null, 0).ThrowExceptionIfError();
             }
             ffmpeg.avcodec_parameters_to_context(_pCodecContext, _pFormatContext->streams[_streamIndex]->codecpar).ThrowExceptionIfError();
-            ffmpeg.avcodec_open2(_pCodecContext, codec, null).ThrowExceptionIfError();
+            ffmpeg.avcodec_open2(_pCodecContext, codec, null).ThrowExceptionIfError();            
 
             CodecName = ffmpeg.avcodec_get_name(codec->id);
-            FrameSize = new Size(_pCodecContext->width, _pCodecContext->height);
-            PixelFormat = _pCodecContext->pix_fmt;
+            FrameSize = new Size(_pCodecContext->width, _pCodecContext->height);            
 
             _pPacket = ffmpeg.av_packet_alloc();
             _pFrame = ffmpeg.av_frame_alloc();
@@ -41,6 +40,9 @@ namespace InteropTypes.Codecs
 
         public void Dispose()
         {
+            if (_Disposed) return;
+            _Disposed = true;
+
             ffmpeg.av_frame_unref(_pFrame);
             ffmpeg.av_free(_pFrame);
 
@@ -56,6 +58,8 @@ namespace InteropTypes.Codecs
 
         #region data
 
+        private bool _Disposed;
+
         private readonly AVCodecContext* _pCodecContext;
         private readonly AVFormatContext* _pFormatContext;
         private readonly int _streamIndex;
@@ -65,11 +69,40 @@ namespace InteropTypes.Codecs
 
         public string CodecName { get; }
         public Size FrameSize { get; }
-        public AVPixelFormat PixelFormat { get; }
+        public AVPixelFormat PixelFormat => _pCodecContext->pix_fmt;
 
         #endregion
 
-        #region API
+        #region properties - time
+
+        // https://blog.actorsfit.com/a?ID=01050-e67b0cc6-9e44-4421-a02a-be503e6fe24c
+
+
+        /// <summary>
+        /// This is the fundamental unit of time (in seconds) in terms of which frame timestamps
+        //  are represented. For fixed-fps content, timebase should be 1/framerate and timestamp
+        //  increments should be identically 1. This often, but not always is the inverse
+        //  of the frame rate or field rate for video. 1/time_base is not the average frame
+        //  rate if the frame rate is not constant.
+        /// </summary>
+        public AVRational TimeBase => _pCodecContext->time_base;
+
+        /// <summary>
+        /// - Decoding: For codecs that store a framerate value in the compressed bitstream, the decoder may export it here. { 0, 1} when unknown.<br/>
+        /// - Encoding: May be used to signal the framerate of CFR content to an encoder.
+        /// </summary>
+        public AVRational FrameRate => _pCodecContext->framerate;        
+
+        /// <summary>
+        /// For some codecs, the time base is closer to the field rate than the frame rate.
+        /// Most notably, H.264 and MPEG-2 specify <see cref="TimeBase"/> as half of frame duration if
+        /// no telecine is used ...
+        /// </summary>
+        public int TicksPerFrame => _pCodecContext->ticks_per_frame;
+
+        #endregion
+
+        #region API       
 
         public bool TryDecodeNextFrame(out AVFrame frame)
         {

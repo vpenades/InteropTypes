@@ -15,6 +15,13 @@ namespace InteropTypes
 {
     static class _Implementation
     {
+        public static bool IsValid(this AVRational rational)
+        {
+            if (rational.den == 0) return false; // must not divide by 0
+            if (rational.num == 0) return false; // result must not be 0
+            return true;            
+        }
+
         public static void _EnsureBinariesAreSet()
         {
             FFmpegHelper.Initialize();
@@ -57,12 +64,19 @@ namespace InteropTypes
         {
             _EnsureBinariesAreSet();
 
-            using (var vsd = new VideoStreamDecoder(url, HWDevice))
+            // https://github.com/Ruslan-B/FFmpeg.AutoGen/blob/db7a6cdefb0227283a0e09e76ef10b7feb27a53f/FFmpeg.AutoGen.Example/Program.cs#L95
+
+            using (var vsd = new VideoStreamDecoder(url, HWDevice)) 
             {
                 var info = GetDecoderInfo(vsd);
                 var state = new Dictionary<string, long>();
+                var times = new Dictionary<string, AVRational>();
 
-                var context = new VideoFrameState(info, state);
+                times["time_base"] = vsd.TimeBase;
+                times["frame_rate"] = vsd.FrameRate;
+                state["ticks_per_frame"] = vsd.TicksPerFrame;
+
+                var context = new VideoFrameState(info, state, times);                
 
                 var sourceSize = vsd.FrameSize;
                 var sourcePixelFormat = HWDevice == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE ? vsd.PixelFormat : GetHWPixelFormat(HWDevice);

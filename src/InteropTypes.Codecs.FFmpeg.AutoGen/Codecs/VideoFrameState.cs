@@ -6,13 +6,15 @@ namespace InteropTypes.Codecs
 {
     public readonly struct VideoFrameState
     {
-        internal VideoFrameState(IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, long> b)
+        internal VideoFrameState(IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, long> b, IReadOnlyDictionary<string, FFmpeg.AutoGen.AVRational> c)
         {
             Info = a;
             State = b;
+            Times = c;
         }
 
         public readonly IReadOnlyDictionary<string, string> Info;
         public readonly IReadOnlyDictionary<string, long> State;
+        public readonly IReadOnlyDictionary<string, FFmpeg.AutoGen.AVRational> Times;
     }
 }
