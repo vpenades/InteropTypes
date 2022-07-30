@@ -195,11 +195,13 @@ namespace InteropTypes.Graphics.Bitmaps
         {            
             public readonly struct MulAdd : IApplyTo<RGB96F>
             {
-                public static implicit operator MulAdd((float m, float a) op) { return new MulAdd(new RGB96F(op.m,op.m,op.m), new RGB96F(op.a, op.a, op.a)); }
+                public static implicit operator MulAdd(float mul) { return new MulAdd(mul,0); }
+
+                public static implicit operator MulAdd((float m, float a) op) { return new MulAdd(op.m, op.a); }
 
                 public static implicit operator MulAdd((RGB96F m, RGB96F a) op) { return new MulAdd(op.m, op.a); }
 
-                public MulAdd(RGB96F.MulAdd other)
+                public MulAdd(MulAdd other)
                 {
                     Multiply = other.Multiply;
                     Addition = other.Addition;
@@ -209,6 +211,12 @@ namespace InteropTypes.Graphics.Bitmaps
                 {
                     Multiply = mul.RGB;
                     Addition = add.RGB;
+                }
+
+                public MulAdd(float mul, float add)
+                {
+                    Multiply = new System.Numerics.Vector3(mul);
+                    Addition = new System.Numerics.Vector3(add);
                 }
 
                 public readonly System.Numerics.Vector3 Multiply;

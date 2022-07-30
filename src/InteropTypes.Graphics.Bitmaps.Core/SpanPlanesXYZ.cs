@@ -16,18 +16,24 @@ namespace InteropTypes.Graphics.Bitmaps
 
         private const string _Error_AllChannelsEqualSize = "all channels must have the same size";
 
-        public SpanPlanesXYZ(SpanBitmap<TComponent> x, SpanBitmap<TComponent> y, SpanBitmap<TComponent> z)
+        public unsafe SpanPlanesXYZ(SpanBitmap<TComponent> x, SpanBitmap<TComponent> y, SpanBitmap<TComponent> z, PixelFormat format)
         {
+            if (format.ByteCount != sizeof(TComponent) * 3) throw new Diagnostics.PixelFormatNotSupportedException(format);
+
             if (x.Width != y.Width || x.Height != y.Height) throw new ArgumentException(_Error_AllChannelsEqualSize, nameof(y));
             if (x.Width != z.Width || x.Height != z.Height) throw new ArgumentException(_Error_AllChannelsEqualSize, nameof(z));
 
             X = x;
             Y = y;
             Z = z;
+
+            Format = format;
         }
 
-        public unsafe SpanPlanesXYZ(int width, int height)
+        public unsafe SpanPlanesXYZ(int width, int height, PixelFormat format)
         {
+            if (format.ByteCount != sizeof(TComponent) * 3) throw new Diagnostics.PixelFormatNotSupportedException(format);
+
             var dataX = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height]);
             var dataY = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height]);
             var dataZ = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height]);
@@ -35,11 +41,15 @@ namespace InteropTypes.Graphics.Bitmaps
             X = new SpanBitmap<TComponent>(dataX, width, height);
             Y = new SpanBitmap<TComponent>(dataY, width, height);
             Z = new SpanBitmap<TComponent>(dataZ, width, height);
-        }        
+
+            Format = format;
+        }
 
         #endregion
 
         #region data
+
+        public readonly PixelFormat Format;
 
         /// <summary>
         /// The plane X, usually the Red component.
@@ -64,6 +74,16 @@ namespace InteropTypes.Graphics.Bitmaps
         public int Width => X.Width;
         public int Height => X.Height;
 
+        public bool IsBGR
+        {
+            get
+            {
+                if (Format == Pixel.BGR24.Format) return true;
+                if (Format == Pixel.BGR96F.Format) return true;
+                return false;
+            }
+        }
+
         #endregion
 
         #region API - Cast
@@ -75,17 +95,17 @@ namespace InteropTypes.Graphics.Bitmaps
             var yy = Y.AsExplicit<TOtherComponent>();
             var zz = Z.AsExplicit<TOtherComponent>();
 
-            return new SpanPlanesXYZ<TOtherComponent>(xx, yy, zz);
+            return new SpanPlanesXYZ<TOtherComponent>(xx, yy, zz, this.Format);
         }
 
-        public SpanPlanesXYZ<TOtherComponent> ReinterpretAs<TOtherComponent>()
+        public SpanPlanesXYZ<TOtherComponent> ReinterpretAs<TOtherComponent>(PixelFormat? altFormat = null)
             where TOtherComponent : unmanaged
         {
             var xx = X.ReinterpretAs<TOtherComponent>();
             var yy = Y.ReinterpretAs<TOtherComponent>();
             var zz = Z.ReinterpretAs<TOtherComponent>();
 
-            return new SpanPlanesXYZ<TOtherComponent>(xx, yy, zz);
+            return new SpanPlanesXYZ<TOtherComponent>(xx, yy, zz, altFormat ?? this.Format);
         }
 
         #endregion
@@ -98,7 +118,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var yy = Y.Slice(rect);
             var zz = Z.Slice(rect);
 
-            return new SpanPlanesXYZ<TComponent>(xx, yy, zz);
+            return new SpanPlanesXYZ<TComponent>(xx, yy, zz, this.Format);
         }
 
         public void SetPixels<TSrcPixel>(SpanBitmap<TSrcPixel> src)
@@ -114,23 +134,52 @@ namespace InteropTypes.Graphics.Bitmaps
             var w = Math.Min(src.Width, dst.Width);
             var h = Math.Min(src.Height, dst.Height);
 
-            Pixel.BGR24 p = default;
-
-            for (int y = 0; y < h; y++)
+            if (dst.Format == Pixel.RGB24.Format)
             {
-                var srcRow = src.GetScanlinePixels(y);
-                var dstRowX = dst.X.UseScanlinePixels(y);
-                var dstRowY = dst.Y.UseScanlinePixels(y);
-                var dstRowZ = dst.Z.UseScanlinePixels(y);
+                Pixel.RGB24 p = default;
 
-                for (int x = 0; x < w; ++x)
+                for (int y = 0; y < h; y++)
                 {
-                    srcRow[x].CopyTo(ref p);
+                    var srcRow = src.GetScanlinePixels(y);
+                    var dstRowX = dst.X.UseScanlinePixels(y);
+                    var dstRowY = dst.Y.UseScanlinePixels(y);
+                    var dstRowZ = dst.Z.UseScanlinePixels(y);
 
-                    dstRowX[x] = p.R;
-                    dstRowY[x] = p.G;
-                    dstRowZ[x] = p.B;
+                    for (int x = 0; x < w; ++x)
+                    {
+                        srcRow[x].CopyTo(ref p);
+
+                        dstRowX[x] = p.R;
+                        dstRowY[x] = p.G;
+                        dstRowZ[x] = p.B;
+                    }
                 }
+
+                return;
+            }
+
+            if (dst.Format == Pixel.BGR24.Format)
+            {
+                Pixel.BGR24 p = default;
+
+                for (int y = 0; y < h; y++)
+                {
+                    var srcRow = src.GetScanlinePixels(y);
+                    var dstRowX = dst.X.UseScanlinePixels(y);
+                    var dstRowY = dst.Y.UseScanlinePixels(y);
+                    var dstRowZ = dst.Z.UseScanlinePixels(y);
+
+                    for (int x = 0; x < w; ++x)
+                    {
+                        srcRow[x].CopyTo(ref p);
+
+                        dstRowX[x] = p.B;
+                        dstRowY[x] = p.G;
+                        dstRowZ[x] = p.R;
+                    }
+                }
+
+                return;
             }
         }
 
@@ -140,23 +189,52 @@ namespace InteropTypes.Graphics.Bitmaps
             var w = Math.Min(src.Width, dst.Width);
             var h = Math.Min(src.Height, dst.Height);
 
-            Pixel.BGR96F p = default;
-
-            for (int y = 0; y < h; y++)
+            if (dst.Format == Pixel.RGB96F.Format)
             {
-                var srcRow = src.GetScanlinePixels(y);
-                var dstRowX = dst.X.UseScanlinePixels(y);
-                var dstRowY = dst.Y.UseScanlinePixels(y);
-                var dstRowZ = dst.Z.UseScanlinePixels(y);
+                Pixel.RGB96F p = default;
 
-                for(int x=0; x < w; ++x)
+                for (int y = 0; y < h; y++)
                 {
-                    srcRow[x].CopyTo(ref p);
+                    var srcRow = src.GetScanlinePixels(y);
+                    var dstRowX = dst.X.UseScanlinePixels(y);
+                    var dstRowY = dst.Y.UseScanlinePixels(y);
+                    var dstRowZ = dst.Z.UseScanlinePixels(y);
 
-                    dstRowX[x] = p.R;
-                    dstRowY[x] = p.G;
-                    dstRowZ[x] = p.B;
+                    for (int x = 0; x < w; ++x)
+                    {
+                        srcRow[x].CopyTo(ref p);
+
+                        dstRowX[x] = p.R;
+                        dstRowY[x] = p.G;
+                        dstRowZ[x] = p.B;
+                    }
                 }
+
+                return;
+            }
+
+            if (dst.Format == Pixel.BGR96F.Format)
+            {
+                Pixel.BGR96F p = default;
+
+                for (int y = 0; y < h; y++)
+                {
+                    var srcRow = src.GetScanlinePixels(y);
+                    var dstRowX = dst.X.UseScanlinePixels(y);
+                    var dstRowY = dst.Y.UseScanlinePixels(y);
+                    var dstRowZ = dst.Z.UseScanlinePixels(y);
+
+                    for (int x = 0; x < w; ++x)
+                    {
+                        srcRow[x].CopyTo(ref p);
+
+                        dstRowX[x] = p.B;
+                        dstRowY[x] = p.G;
+                        dstRowZ[x] = p.R;
+                    }
+                }
+
+                return;
             }
         }
 
@@ -195,7 +273,7 @@ namespace InteropTypes.Graphics.Bitmaps
         private static void _CopyTo<TDstPixel>(SpanPlanesXYZ<Byte> src, SpanBitmap<TDstPixel> dst)
             where TDstPixel : unmanaged
         {
-            Pixel.BGR24 pix = default;
+            Pixel.RGB24 pix = default;
 
             for (int y = 0; y < dst.Height; ++y)
             {
@@ -204,21 +282,35 @@ namespace InteropTypes.Graphics.Bitmaps
                 var srcRowY = src.Y.GetScanlinePixels(y);
                 var srcRowZ = src.Z.GetScanlinePixels(y);
 
-                for (int x = 0; x < dstRow.Length; ++x)
+                if (src.IsBGR)
                 {
-                    pix.R = srcRowX[x];
-                    pix.G = srcRowY[x];
-                    pix.B = srcRowZ[x];
+                    for (int x = 0; x < dstRow.Length; ++x)
+                    {
+                        pix.R = srcRowZ[x];
+                        pix.G = srcRowY[x];
+                        pix.B = srcRowX[x];
 
-                    pix.CopyTo(ref dstRow[x]);
+                        pix.CopyTo(ref dstRow[x]);
+                    }
                 }
+                else
+                {
+                    for (int x = 0; x < dstRow.Length; ++x)
+                    {
+                        pix.R = srcRowX[x];
+                        pix.G = srcRowY[x];
+                        pix.B = srcRowZ[x];
+
+                        pix.CopyTo(ref dstRow[x]);
+                    }
+                }                
             }
         }
 
         private static void _CopyTo<TDstPixel>(SpanPlanesXYZ<Single> src, SpanBitmap<TDstPixel> dst)
             where TDstPixel : unmanaged
         {
-            Pixel.BGR96F pix = default;
+            Pixel.RGB96F pix = default;
 
             for (int y = 0; y < dst.Height; ++y)
             {
@@ -227,13 +319,27 @@ namespace InteropTypes.Graphics.Bitmaps
                 var srcRowY = src.Y.GetScanlinePixels(y);
                 var srcRowZ = src.Z.GetScanlinePixels(y);
 
-                for (int x = 0; x < dstRow.Length; ++x)
+                if (src.IsBGR)
                 {
-                    pix.R = srcRowX[x];
-                    pix.G = srcRowY[x];
-                    pix.B = srcRowZ[x];
+                    for (int x = 0; x < dstRow.Length; ++x)
+                    {
+                        pix.R = srcRowZ[x];
+                        pix.G = srcRowY[x];
+                        pix.B = srcRowX[x];
 
-                    pix.CopyTo(ref dstRow[x]);
+                        pix.CopyTo(ref dstRow[x]);
+                    }
+                }
+                else
+                {
+                    for (int x = 0; x < dstRow.Length; ++x)
+                    {
+                        pix.R = srcRowX[x];
+                        pix.G = srcRowY[x];
+                        pix.B = srcRowZ[x];
+
+                        pix.CopyTo(ref dstRow[x]);
+                    }
                 }
             }
         }

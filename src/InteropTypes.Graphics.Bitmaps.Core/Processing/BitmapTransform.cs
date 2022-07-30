@@ -9,16 +9,16 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
     public partial struct BitmapTransform : SpanBitmap.ITransfer
     {
         #region constructors
-        public BitmapTransform(in TRANSFORM xform, float opacity = 1)
+        public BitmapTransform(in TRANSFORM xform, in Pixel.RGB96F.MulAdd pixOp)
         {
             Transform = xform;
-            PixelOp = (opacity,0);
+            PixelOp = pixOp;
             UseBilinear = false;
         }
-        public BitmapTransform(in TRANSFORM xform, bool useBilinear, float opacity)
+        public BitmapTransform(in TRANSFORM xform, bool useBilinear, in Pixel.RGB96F.MulAdd pixOp)
         {
             Transform = xform;
-            PixelOp = (opacity, 0);
+            PixelOp = pixOp;
             UseBilinear = useBilinear;
         }
 

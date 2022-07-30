@@ -245,6 +245,8 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             var srcSampler = new SpanQuantized8Sampler<TSrcPixel, TTmpPixel>(src);
 
+            var isBGR = dst.IsBGR;
+
             for (int dy = destBounds.Top; dy < destBounds.Bottom; ++dy)
             {
                 iterFactory.UpdateIterator(destBounds.Left, dy, out iter);
@@ -252,8 +254,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 var dstRowX = dst.X.UseScanlinePixels(dy).Slice(destBounds.Left, destBounds.Width);
                 var dstRowY = dst.Y.UseScanlinePixels(dy).Slice(destBounds.Left, destBounds.Width);
                 var dstRowZ = dst.Z.UseScanlinePixels(dy).Slice(destBounds.Left, destBounds.Width);
-
-                rowProcessor(dstRowX, dstRowY, dstRowZ, srcSampler, iter);
+                
+                if (isBGR) rowProcessor(dstRowZ, dstRowY, dstRowX, srcSampler, iter);
+                else rowProcessor(dstRowX, dstRowY, dstRowZ, srcSampler, iter);
             }
         }
 

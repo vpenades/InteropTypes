@@ -346,60 +346,46 @@ namespace InteropTypes.Graphics.Bitmaps
             }
         }        
 
-        public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src)
-        {
-            Guard.IsTrue("this", !_Writable.IsEmpty);
-            _Implementation.CopyPixels(this, dstX, dstY, src);
-        }        
-
         public void SetPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src)
             where TSrcPixel: unmanaged
         {
-            _Implementation.ConvertPixels(this, dstX, dstY, src);
-        }
+            if (typeof(TPixel) == typeof(TSrcPixel))
+            {
+                _Implementation.CopyPixels(this, dstX, dstY, src);
+            }
+            else
+            {
+                _Implementation.ConvertPixels(this, dstX, dstY, src);
+            }
+        }            
 
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, float opacity = 1)
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, in Pixel.RGB96F.MulAdd pixelOp)
             where TSrcPixel : unmanaged
-        {
-            var xform = new Processing.BitmapTransform(location, true, opacity);
-            this.SetPixels(src, xform);
-        }
-
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, float opacity = 1)
-            where TSrcPixel : unmanaged
-        {
-            var xform = new Processing.BitmapTransform(location, useBilinear, opacity);
-            this.SetPixels(src, xform);
-        }
-
-        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, Pixel.RGB96F.MulAdd pixelOp)
-            where TSrcPixel : unmanaged
-        {
-            var xform = new Processing.BitmapTransform(location, useBilinear, 1);
-            xform.PixelOp = pixelOp;
-
-            this.SetPixels(src, xform);
+        {            
+            this.SetPixels(src, new Processing.BitmapTransform(location, useBilinear, pixelOp));
         }
 
         public void SetPixels<TSrcPixel>(in SpanBitmap<TSrcPixel> src, SpanBitmap.ITransfer transfer)
             where TSrcPixel : unmanaged
         {
-            // 1st try with explicit exact types:
-            if (transfer is SpanBitmap.ITransfer<TSrcPixel, TPixel> xtransfer)
-            {
-                if (xtransfer.TryTransfer(src, this)) return;
-            }
+            Guard.IsTrue("this", !_Writable.IsEmpty);
 
-            // 2nd try with generic exact types:
-            if (transfer.TryTransfer(src, this)) return;
-
-
-            // 3rd try with generic exact and matching types:
+            // 1rd try with generic exact and matching types:
             if (typeof(TPixel) == typeof(TSrcPixel))
             {
                 var srcx = src.AsExplicit<TPixel>();
                 if (transfer.TryTransfer<TPixel>(srcx, this)) return;
             }
+
+            // 2nd try with explicit exact types:
+            if (transfer is SpanBitmap.ITransfer<TSrcPixel, TPixel> xtransfer)
+            {
+                if (xtransfer.TryTransfer(src, this)) return;
+            }
+
+            // 3rd try with generic exact types:
+            if (transfer.TryTransfer(src, this)) return;
+            
 
             // 4th try typeless:
             if (transfer.TryTransfer(src.AsTypeless(), this.AsTypeless())) return;

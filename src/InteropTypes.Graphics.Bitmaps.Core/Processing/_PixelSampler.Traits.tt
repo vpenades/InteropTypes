@@ -1,0 +1,55 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#@ include file="..\\..\\Shared\\CodeGenUtils.t4" #>
+
+namespace InteropTypes.Graphics.Bitmaps.Processing
+{    
+
+<# //-------------------------------------------------------------------------------------------------------------------
+
+var interfaces = new List<string>();
+
+var srcPixels =new string[] { "BGR24","RGB24","RGBA32","BGRA32","BGRP32","RGBP32",  };
+
+//-----------------------------------------
+
+    _writeStructBegin("_PixelSampler<TPixel>");    
+
+    foreach(var srcPixel in srcPixels)
+    {   
+        // [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        
+        WriteLine($"private Pixel.{srcPixel} _GetSample{srcPixel}()");
+        _writeOpenBlock();        
+
+        WriteLine("var x = _X >> BITSHIFT;");
+        WriteLine("var y = _Y >> BITSHIFT;");
+        WriteLine("");
+
+        WriteLine($"var a = _GetPixel<Pixel.{srcPixel}>(x, y);");
+        WriteLine($"var b = _GetPixel<Pixel.{srcPixel}>(x + 1, y);");
+        WriteLine($"var c = _GetPixel<Pixel.{srcPixel}>(x, y + 1);");
+        WriteLine($"var d = _GetPixel<Pixel.{srcPixel}>(x + 1, y + 1);");
+        WriteLine("");
+
+        WriteLine("x = _X & BITMASK;");
+        WriteLine("y = _Y & BITMASK;");
+        WriteLine("");
+
+        WriteLine($"return Pixel.{srcPixel}.Lerp(a, b, c, d, (uint)x / 16, (uint)y / 16);");
+            
+        _writeCloseBlock();
+
+        WriteLine("");
+        WriteLine("");
+    }
+
+_writeEnd();
+
+// --------------------------------------------------------------------------------------------------------------------- #>
+
+}

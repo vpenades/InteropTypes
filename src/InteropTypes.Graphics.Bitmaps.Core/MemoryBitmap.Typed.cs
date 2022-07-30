@@ -4,6 +4,7 @@ using System.Text;
 
 using SIZE = System.Drawing.Size;
 using POINT = System.Drawing.Point;
+using System.Numerics;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
@@ -217,16 +218,26 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public void SetPixels(System.Drawing.Color color) { SetPixels(Pixel.GetColor<TPixel>(color)); }
 
-        public void SetPixels(TPixel value) { AsSpanBitmap().SetPixels(value); }
-        
-        public void SetPixels(int dstX, int dstY, SpanBitmap<TPixel> src) { AsSpanBitmap().SetPixels(dstX, dstY, src); }
+        public void SetPixels(TPixel value) { AsSpanBitmap().SetPixels(value); }        
 
         public void SetPixels<TSrcPixel>(int dstX, int dstY, SpanBitmap<TSrcPixel> src)
             where TSrcPixel:unmanaged
         {
             AsSpanBitmap().SetPixels(dstX, dstY, src);
         }
-        
+
+        public void SetPixels<TSrcPixel>(in Matrix3x2 location, SpanBitmap<TSrcPixel> src, bool useBilinear, in Pixel.RGB96F.MulAdd pixelOp)
+            where TSrcPixel : unmanaged
+        {
+            this.AsSpanBitmap().SetPixels(location, src, useBilinear, pixelOp);
+        }
+
+        public void SetPixels<TSrcPixel>(in SpanBitmap<TSrcPixel> src, SpanBitmap.ITransfer transfer)
+            where TSrcPixel : unmanaged
+        {
+            this.AsSpanBitmap().SetPixels(src, transfer);
+        }
+
         public IEnumerable<(POINT Location, TPixel Pixel)> EnumeratePixels()
         {
             for (int y = 0; y < Height; ++y)

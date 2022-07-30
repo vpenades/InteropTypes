@@ -27,6 +27,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BitmapTransform.Traits.cs</LastGenOutput>
     </None>
+    <None Update="Processing\_PixelSampler.Traits.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>_PixelSampler.Traits.cs</LastGenOutput>
+    </None>
   </ItemGroup>  
 
   <ItemGroup>
@@ -34,6 +38,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>BitmapTransform.Traits.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Processing\_PixelSampler.Traits.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>_PixelSampler.Traits.tt</DependentUpon>
     </Compile>
   </ItemGroup>  
 
