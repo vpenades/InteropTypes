@@ -69,8 +69,8 @@
     
     <!-- Machine Learning -->
 
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.12.0" />
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.12.0" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.11.0" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.11.0" />
     
     <PackageVersion Include="OpenCvSharp4" Version="4.6.0.20220608" />
     <PackageVersion Include="OpenCvSharp4.Windows" Version="4.6.0.20220608" />
