@@ -120,7 +120,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {(int)t.TotalMilliseconds}ms")))
             {
-                dst.AsSpanBitmap().SetPixels(xx, src.AsSpanBitmap(), useBilinear);
+                dst.SetPixels(xx, src.AsSpanBitmap(), useBilinear, 1);
             }            
 
             for(float r=0.1f; r < 1; r+=0.2f)
@@ -131,20 +131,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 xform = Matrix3x2.CreateTranslation(-50, -50) * xform * Matrix3x2.CreateTranslation(50, 50);
                 xform = xform * Matrix3x2.CreateScale(3, 3);
                 
-                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), useBilinear, r);
+                dst.SetPixels(xform, cat00.AsSpanBitmap(), useBilinear, r);
                 DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
 
                 // 2nd API
 
                 xform *= Matrix3x2.CreateTranslation(0, 150);
 
-                dst.AsSpanBitmap().SetPixels(xform, cat00.AsSpanBitmap(), useBilinear, r);
+                dst.SetPixels(xform, cat00.AsSpanBitmap(), useBilinear, r);
                 DrawBounds(dst, cat00.Bounds, xform, Colors.Red);
             }            
 
-            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(3), cat00.AsSpanBitmap(), useBilinear);
-            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(-.6f) * Matrix3x2.CreateTranslation(40,200), cat00.AsSpanBitmap(), useBilinear);
-            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(.3f) * Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(150, 300), qrcode.AsSpanBitmap(), useBilinear);
+            dst.SetPixels(Matrix3x2.CreateScale(3), cat00.AsSpanBitmap(), useBilinear, 1);
+            dst.SetPixels(Matrix3x2.CreateScale(-.6f) * Matrix3x2.CreateTranslation(40,200), cat00.AsSpanBitmap(), useBilinear, 1);
+            dst.SetPixels(Matrix3x2.CreateScale(.3f) * Matrix3x2.CreateRotation(1) * Matrix3x2.CreateTranslation(150, 300), qrcode.AsSpanBitmap(), useBilinear, 1);
 
             dst.Save(new AttachmentInfo("transformed.png"));
         }
@@ -157,9 +157,31 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var dst = new MemoryBitmap<Pixel.RGB96F>(512,512);
 
-            dst.AsSpanBitmap().SetPixels(Matrix3x2.CreateScale(0.7f), src.AsSpanBitmap(), true, 1);
+            dst.SetPixels(Matrix3x2.CreateScale(0.7f), src.AsSpanBitmap(), true, 1);
 
             dst.Save(new AttachmentInfo("transformed.png"));
+        }
+
+        [Test(Description ="Identity transform and plain copy must produce the same result")]
+        public void TestIdentityTransform()
+        {
+            var src = new MemoryBitmap<Pixel.RGB24>(16, 16);
+            src.AsSpanBitmap().TryUseAllPixels(out var srcPixels);
+            for(int i=0; i < 256; ++i)
+            {
+                srcPixels[i] = new Pixel.RGB24(i, i, i);
+            }
+
+            var dst1 = new MemoryBitmap<Pixel.RGB24>(512, 512);
+            dst1.AsSpanBitmap().SetPixels(0, 0, src.AsSpanBitmap());
+
+            var dst2 = new MemoryBitmap<Pixel.RGB24>(512, 512);
+            dst2.AsSpanBitmap().SetPixels(src.AsSpanBitmap(), new Processing.BitmapTransform(Matrix3x2.Identity, false, 1));
+
+            dst1.AsSpanBitmap().TryGetAllPixels(out var dst1pix);
+            dst2.AsSpanBitmap().TryGetAllPixels(out var dst2pix);
+
+            Assert.IsTrue(dst1pix.SequenceEqual(dst2pix));
         }
 
 
@@ -194,12 +216,12 @@ namespace InteropTypes.Graphics.Bitmaps
             var xform = Matrix3x2.CreateScale(512f / 15f); // notice we substracted one pixel so the transform fills the image
             xform.Translation = new XY(0,0);
 
-            dst.AsSpanBitmap().SetPixels(xform, src.AsSpanBitmap(), false, 1);
+            dst.SetPixels(xform, src.AsSpanBitmap(), false, 1);
 
             _SaveResult(dst);
 
             dst.SetPixels(new System.Drawing.Size(0,0));
-            dst.AsSpanBitmap().SetPixels(xform, src.AsSpanBitmap(), false, (1,0) );
+            dst.SetPixels(xform, src.AsSpanBitmap(), false, (1,0) );
 
             _SaveResult(dst);
 

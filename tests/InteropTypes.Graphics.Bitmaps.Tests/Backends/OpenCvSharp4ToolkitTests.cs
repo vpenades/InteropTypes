@@ -27,7 +27,7 @@ namespace InteropTypes.Graphics.Backends
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var bitmap = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
+            var bitmap = MemoryBitmap.Load(filePath, InteropTypes.Codecs.OpenCvCodec.Default);
 
             bitmap.Save(new AttachmentInfo("Result.png"));
         }
@@ -35,9 +35,9 @@ namespace InteropTypes.Graphics.Backends
         [Test]
         public void WarpAffineTransform()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");            
 
-            var src = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
+            var src = MemoryBitmap.Load(filePath, InteropTypes.Codecs.OpenCvCodec.Default);
             var dst = new MemoryBitmap(512, 512, src.Info.PixelFormat);
 
             var xform = System.Numerics.Matrix3x2.CreateScale(1.3f, 1.3f) * System.Numerics.Matrix3x2.CreateRotation(0.25f);
@@ -66,7 +66,7 @@ namespace InteropTypes.Graphics.Backends
         public void TryDetectAruco4x4(string filePath)
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "Aruco", filePath);
-            var bitmap = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);            
+            var bitmap = MemoryBitmap.Load(filePath, InteropTypes.Codecs.OpenCvCodec.Default);            
 
             var arucoContext = new Vision.Backends.MarkersContext();
 

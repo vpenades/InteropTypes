@@ -29,7 +29,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 gray.SetPixel(i & 255, i / 256, (Byte)rnd.Next());
             }
 
-            grayWithStride.SetPixels(0, 0, gray);
+            grayWithStride.SetPixels(0, 0, gray.AsSpanBitmap());
 
             Assert.AreEqual(gray.GetHashCode(), grayWithStride.GetHashCode());
 

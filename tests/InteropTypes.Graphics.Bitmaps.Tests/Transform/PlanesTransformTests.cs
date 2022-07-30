@@ -29,7 +29,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             var xform = System.Numerics.Matrix3x2.CreateScale(dst.Width / (float)src.Width, dst.Height / (float)src.Height);
 
-            dst.AsSpanBitmap().SetPixels<Pixel.BGR24>(xform, src, true, (mul, add));
+            dst.SetPixels<Pixel.BGR24>(xform, src, true, (mul, add));
 
             dst.Save(AttachmentInfo.From($"result-{typeof(TPixel).Name}.jpg"));
         }
@@ -39,7 +39,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         {
             var src = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From("shannon.jpg"));
 
-            var dst = new SpanPlanesXYZ<float>(256, 256);            
+            var dst = new SpanPlanesXYZ<float>(256, 256, Pixel.RGB96F.Format);            
 
             var xform = System.Numerics.Matrix3x2.CreateScale(dst.Width / (float)src.Width, dst.Height / (float)src.Height);
 

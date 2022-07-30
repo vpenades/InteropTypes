@@ -46,5 +46,26 @@ namespace InteropTypes.Codecs
                 TestContext.WriteLine(data);
             }
         }
+
+
+        [Test]
+        public void ProcessMp4Frames()
+        {
+            TestContext.CurrentContext.AttachFolderBrowserShortcut();
+
+            var input = ResourceInfo.From("count-video.mp4");
+            var output = AttachmentInfo.From("result.h264");
+
+            void _drawOver(MemoryBitmap bmp)
+            {
+                var bmpx = bmp.OfType<Pixel.BGR24>();
+
+                var dc = InteropTypes.Graphics.Backends.InteropDrawing.CreateDrawingContext(bmpx);
+                dc.DrawTextLine(System.Numerics.Matrix3x2.CreateTranslation(10, 10), "hello", 100, System.Drawing.Color.Black);
+
+            }
+
+            FFmpegAutoGen.ProcessFrames(input, output, _drawOver, 10);
+        }
     }
 }

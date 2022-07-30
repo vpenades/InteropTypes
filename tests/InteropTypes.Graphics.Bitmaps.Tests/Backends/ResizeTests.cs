@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Backends
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
 
             var bitmap = MemoryBitmap
-                .Load(filePath, Codecs.SkiaCodec.Default)
+                .Load(filePath, InteropTypes.Codecs.SkiaCodec.Default)
                 .AsSpanBitmap();
 
             bitmap

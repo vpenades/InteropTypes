@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Backends
         {
             filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
 
-            var bitmap = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
+            var bitmap = MemoryBitmap.Load(filePath, InteropTypes.Codecs.GDICodec.Default);
 
             bitmap.Save(new AttachmentInfo("Result.png"));
         }        
