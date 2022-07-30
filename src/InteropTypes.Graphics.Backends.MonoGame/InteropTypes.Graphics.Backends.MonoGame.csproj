@@ -10,6 +10,11 @@
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- this is the last version supporting NetStandard2.0-->
+    <MonoGameLastNetStandardVersion>3.8.0.1641</MonoGameLastNetStandardVersion>
+  </PropertyGroup>
  
   <ItemGroup>
     <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />    
@@ -19,9 +24,8 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" />    
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
-    <!-- this is the last version supporting NetStandard2.0-->
-    <PackageReference Include="MonoGame.Framework.DesktopGL" VersionOverride="3.8.0.1641" PrivateAssets="all" />
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">    
+    <PackageReference Include="MonoGame.Framework.DesktopGL" VersionOverride="$(MonoGameLastNetStandardVersion)" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
