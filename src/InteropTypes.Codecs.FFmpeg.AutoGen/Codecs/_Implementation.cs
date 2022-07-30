@@ -11,7 +11,7 @@ using FFmpeg.AutoGen;
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Codecs;
 
-namespace InteropTypes
+namespace InteropTypes.Graphics.Backends.Codecs
 {
     static class _Implementation
     {
@@ -19,7 +19,7 @@ namespace InteropTypes
         {
             if (rational.den == 0) return false; // must not divide by 0
             if (rational.num == 0) return false; // result must not be 0
-            return true;            
+            return true;
         }
 
         public static void _EnsureBinariesAreSet()
@@ -66,7 +66,7 @@ namespace InteropTypes
 
             // https://github.com/Ruslan-B/FFmpeg.AutoGen/blob/db7a6cdefb0227283a0e09e76ef10b7feb27a53f/FFmpeg.AutoGen.Example/Program.cs#L95
 
-            using (var vsd = new VideoStreamDecoder(url, HWDevice)) 
+            using (var vsd = new VideoStreamDecoder(url, HWDevice))
             {
                 var info = GetDecoderInfo(vsd);
                 var state = new Dictionary<string, long>();
@@ -76,7 +76,7 @@ namespace InteropTypes
                 times["frame_rate"] = vsd.FrameRate;
                 state["ticks_per_frame"] = vsd.TicksPerFrame;
 
-                var context = new VideoFrameState(info, state, times);                
+                var context = new VideoFrameState(info, state, times);
 
                 var sourceSize = vsd.FrameSize;
                 var sourcePixelFormat = HWDevice == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE ? vsd.PixelFormat : GetHWPixelFormat(HWDevice);
@@ -93,6 +93,8 @@ namespace InteropTypes
 
                         state["index"] = index;
 
+                        if (frame.time_base.IsValid()) times["time_base"] = frame.time_base;
+
                         state["pts"] = frame.pts;
                         // state["pkt_pts"] = frame.pkt_pts;
                         state["pkt_dts"] = frame.pkt_dts;
@@ -100,7 +102,7 @@ namespace InteropTypes
 
                         state["display_picture_number"] = frame.display_picture_number;
                         state["coded_picture_number"] = frame.coded_picture_number;
-                        state["decode_error_flags"] = frame.decode_error_flags;                        
+                        state["decode_error_flags"] = frame.decode_error_flags;
 
                         yield return (AsPointerBitmap(convertedFrame), context);
 
@@ -108,7 +110,7 @@ namespace InteropTypes
                     }
                 }
             }
-        }        
+        }
 
         private static AVPixelFormat GetHWPixelFormat(AVHWDeviceType hWDevice)
         {

@@ -109,13 +109,16 @@ namespace InteropTypes.Codecs
             ffmpeg.av_frame_unref(_pFrame);
             ffmpeg.av_frame_unref(_receivedFrame);
             int error;
+
             do
             {
                 try
                 {
                     do
                     {
+                        ffmpeg.av_packet_unref(_pPacket);
                         error = ffmpeg.av_read_frame(_pFormatContext, _pPacket);
+
                         if (error == ffmpeg.AVERROR_EOF)
                         {
                             frame = *_pFrame;
@@ -134,16 +137,17 @@ namespace InteropTypes.Codecs
 
                 error = ffmpeg.avcodec_receive_frame(_pCodecContext, _pFrame);
             } while (error == ffmpeg.AVERROR(ffmpeg.EAGAIN));
+
             error.ThrowExceptionIfError();
+
             if (_pCodecContext->hw_device_ctx != null)
             {
                 ffmpeg.av_hwframe_transfer_data(_receivedFrame, _pFrame, 0).ThrowExceptionIfError();
                 frame = *_receivedFrame;
             }
             else
-            {
                 frame = *_pFrame;
-            }
+
             return true;
         }
 

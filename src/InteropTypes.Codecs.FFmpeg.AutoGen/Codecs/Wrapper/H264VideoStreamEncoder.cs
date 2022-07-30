@@ -9,6 +9,7 @@ using FFmpeg.AutoGen;
 namespace InteropTypes.Codecs
 {
     /// <summary>
+    /// copied directly from:
     /// <see href="https://github.com/Ruslan-B/FFmpeg.AutoGen/blob/master/FFmpeg.AutoGen.Example/H264VideoStreamEncoder.cs"/> 
     /// </summary>
     public sealed unsafe class H264VideoStreamEncoder : IDisposable

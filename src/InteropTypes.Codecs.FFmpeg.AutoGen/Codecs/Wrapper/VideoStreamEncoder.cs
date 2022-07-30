@@ -18,21 +18,8 @@ namespace InteropTypes.Codecs
         {
             _FilePath = filePath;            
             _LastPTS = -1;
-
-            var fpsr = new AVRational { num = 1, den = fps };
-
-            _BaseTime = fpsr;
-            _FrameRate = new AVRational { num = 0, den = 1 };
-        }
-
-        public VideoStreamEncoder(string filePath, AVRational baseTime, AVRational frameRate)
-        {
-            _FilePath = filePath;
-            _LastPTS = -1;            
-
-            _BaseTime = baseTime;
-            _FrameRate = frameRate;
-        }
+            _FramesPerSecond = fps;
+        }        
 
         public void Dispose()
         {
@@ -46,8 +33,8 @@ namespace InteropTypes.Codecs
         #region data
 
         private readonly string _FilePath;
-        private readonly AVRational _BaseTime;
-        private readonly AVRational _FrameRate;
+        
+        private readonly int _FramesPerSecond;
 
         private System.IO.Stream _Stream;
         private VideoFrameConverter _Converter;
@@ -73,7 +60,7 @@ namespace InteropTypes.Codecs
 
             _Format = format;
             _Stream = File.OpenWrite(_FilePath);
-            _Encoder = new H264VideoStreamEncoder(_Stream, 30, ss);
+            _Encoder = new H264VideoStreamEncoder(_Stream, _FramesPerSecond, ss);
 
             return (_Converter, _Encoder);
         }
@@ -82,7 +69,7 @@ namespace InteropTypes.Codecs
         {
             if (inputFrame.IsEmpty) return;
 
-            var pts = presentationTimeStamp ?? _FrameCount * 30;
+            var pts = presentationTimeStamp ?? _FrameCount * _FramesPerSecond; // this doesn't make any sense
             if (pts <= _LastPTS) return;
 
             var (converter, encoder) = GetEncoder(inputFrame.Info);
