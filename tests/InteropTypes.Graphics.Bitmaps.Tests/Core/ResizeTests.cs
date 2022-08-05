@@ -228,6 +228,21 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
 
+        [Test(Description ="regression test")]
+        public void TestTransformOutsideFrame()
+        {
+            var src = new MemoryBitmap<Pixel.RGB24>(640, 480);
+            var dst = new MemoryBitmap<Pixel.RGB24>(256, 256);
+
+            var xform = new Matrix3x2
+                ( 0.42450055f, 0.51769495f
+                , -0.51769495f, 0.42450055f
+                , 927.3335f, -75.39742f);
+
+            dst.SetPixels(xform, src.AsSpanBitmap(), true, 1);
+        }
+
+
         public static void DrawBounds<TPixel>(MemoryBitmap<TPixel> target, in BitmapBounds bounds, in Matrix3x2 xform, TPixel color)
             where TPixel : unmanaged
         {

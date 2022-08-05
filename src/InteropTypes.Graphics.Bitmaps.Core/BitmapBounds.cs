@@ -215,8 +215,7 @@ namespace InteropTypes.Graphics.Bitmaps
             if (x + w > clip.X + clip.Width) w -= (x + w) - (clip.X + clip.Width);
             if (y + h > clip.Y + clip.Height) h -= (y + h) - (clip.Y + clip.Height);
 
-            if (w < 0) w = 0;
-            if (h < 0) h = 0;
+            if (w <= 0 || h <= 0) return default;
 
             return new BitmapBounds(x, y, w, h);
         }        
