@@ -646,7 +646,7 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             AsTypeless().Save(filePath, factory);
         }
-
+        
         #endregion
 
         #region nested types

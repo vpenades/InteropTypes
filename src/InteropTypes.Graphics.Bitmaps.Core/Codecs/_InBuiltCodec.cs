@@ -20,6 +20,8 @@ namespace InteropTypes.Codecs
 
         public bool EnableCompression { get; set; } = true;
 
+        public static _InBuiltCodec RawEncoder { get; } = new _InBuiltCodec { EnableCompression = false };
+
         #endregion
 
         #region API - Codec
@@ -43,13 +45,18 @@ namespace InteropTypes.Codecs
         public bool TryWrite(Lazy<Stream> stream, CodecFormat format, SpanBitmap bmp)
         {
             if (format != CodecFormat.InteropBitmap) return false;
-            
-            using(var w = new System.IO.BinaryWriter(stream.Value, Encoding.UTF8, true))
+
+            return TryWrite(stream.Value, bmp);
+        }
+
+        public bool TryWrite(Stream stream, SpanBitmap bmp)
+        {
+            using (var w = new System.IO.BinaryWriter(stream, Encoding.UTF8, true))
             {
-                WriteRaw(w,bmp, this);
+                WriteRaw(w, bmp, this);
             }
 
-            return true;            
+            return true;
         }
 
         #endregion

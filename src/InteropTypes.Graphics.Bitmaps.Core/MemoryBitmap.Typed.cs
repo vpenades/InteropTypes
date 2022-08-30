@@ -260,9 +260,26 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - IO
 
+        public static MemoryBitmap<TPixel> Load(string filePath, params Codecs.IBitmapDecoder[] factory)
+        {
+            var raw = MemoryBitmap.Load(filePath, factory);
+            return _ReadPostprocess(raw);
+        }
+
+        public static MemoryBitmap<TPixel> Load(Func<System.IO.Stream> usingStream, params Codecs.IBitmapDecoder[] factory)
+        {
+            var raw = MemoryBitmap.Load(usingStream, factory);
+            return _ReadPostprocess(raw);
+        }
+
         public static MemoryBitmap<TPixel> Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
         {
             var raw = MemoryBitmap.Read(s, factory);
+            return _ReadPostprocess(raw);
+        }
+
+        private static MemoryBitmap<TPixel> _ReadPostprocess(MemoryBitmap raw)
+        {
             if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
 
             var fmt = raw.Info.WithPixelFormat<TPixel>();
@@ -270,17 +287,7 @@ namespace InteropTypes.Graphics.Bitmaps
             dst.AsTypeless().SetPixels(0, 0, raw);
             return dst;
         }
-
-        public static MemoryBitmap<TPixel> Load(string filePath, params Codecs.IBitmapDecoder[] factory)
-        {
-            var raw = MemoryBitmap.Load(filePath, factory);
-            if (raw.Info.IsCompatiblePixel<TPixel>()) return raw.OfType<TPixel>();
-
-            var nfo = raw.Info.WithPixelFormat<TPixel>().WithStride(0);
-            var dst = new MemoryBitmap<TPixel>(nfo);
-            dst.AsTypeless().SetPixels(0, 0, raw);
-            return dst;
-        }
+        
 
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public readonly void Save(Action<Action<System.IO.FileInfo>> saveCallback, params Codecs.IBitmapEncoder[] factory)

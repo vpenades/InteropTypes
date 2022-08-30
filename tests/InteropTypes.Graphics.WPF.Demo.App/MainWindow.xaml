@@ -9,20 +9,7 @@
         d:DataContext="{d:DesignInstance Type=local:AppMVVM}"
         mc:Ignorable="d"
         x:Name="mySelf"
-        Title="MainWindow" Height="450" Width="800">
-
-    <Window.Resources>
-        <!--
-        <DataTemplate DataType="{x:Type ibitmaps:MemoryBitmap}">
-
-            <DataTemplate.Resources>
-                <itypes:MemoryBitmapConverter x:Key="_bmpCnv" />
-            </DataTemplate.Resources>
-            
-            <Image Source="{Binding Converter={StaticResource _bmpCnv}}" />
-        </DataTemplate>
-        -->
-    </Window.Resources>
+        Title="MainWindow" Height="450" Width="800">    
     
     <TabControl>
 

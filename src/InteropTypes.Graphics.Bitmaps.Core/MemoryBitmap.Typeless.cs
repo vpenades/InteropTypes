@@ -283,18 +283,27 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region API - IO
 
-        public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
-        {
-            return Codecs.BitmapCodecFactory.Read(s, factory);
-        }
-
         public static MemoryBitmap Load(string filePath, params Codecs.IBitmapDecoder[] factory)
-        {            
+        {
             using (var s = System.IO.File.OpenRead(filePath))
             {
                 return Codecs.BitmapCodecFactory.Read(s, factory, (int)s.Length);
             }
         }
+
+        public static MemoryBitmap Load(Func<System.IO.Stream> usingStream, params Codecs.IBitmapDecoder[] factory)
+        {
+            using(var s = usingStream?.Invoke())
+            {
+                return Read(s, factory);
+            }
+        }
+
+        public static MemoryBitmap Read(System.IO.Stream s, params Codecs.IBitmapDecoder[] factory)
+        {
+            return Codecs.BitmapCodecFactory.Read(s, factory);
+        }
+        
 
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void Save(Action<Action<System.IO.FileInfo>> saveCallback, params Codecs.IBitmapEncoder[] factory)

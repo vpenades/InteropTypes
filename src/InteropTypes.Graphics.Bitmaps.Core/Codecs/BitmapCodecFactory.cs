@@ -41,12 +41,8 @@ namespace InteropTypes.Codecs
 
         internal static void Write(Lazy<System.IO.Stream> stream, CodecFormat format, IBitmapEncoder[] encoders, SpanBitmap bmp)
         {
-            if (encoders.Length == 0) encoders = GetDefaultEncoders().ToArray();
-
-            Guard.NotNull(nameof(stream), stream);
-            Guard.NotNull(nameof(encoders), encoders);
-            Guard.IsFalse(nameof(format), format == CodecFormat.Undefined);
-            Guard.GreaterThan(nameof(encoders), encoders.Length, 0);            
+            Guard.NotNull(nameof(stream), stream);            
+            Guard.IsFalse(nameof(format), format == CodecFormat.Undefined);            
 
             long position = 0;
             bool keepOpen = false;
@@ -58,6 +54,24 @@ namespace InteropTypes.Codecs
                 position = stream.Value.Position;
                 keepOpen = true;
             }
+
+            // inbuilt encoder
+
+            switch(format)
+            {
+                case CodecFormat.InteropBitmap:
+                    {
+                        if (!_InBuiltCodec.RawEncoder.TryWrite(stream, format, bmp)) throw new ArgumentException("Can't write bitmap", nameof(bmp));
+                        return;
+                    }
+            }
+
+            // third party encoders
+
+            Guard.NotNull(nameof(encoders), encoders);
+            Guard.GreaterThan(nameof(encoders), encoders.Length, 0);
+
+            if (encoders.Length == 0) encoders = GetDefaultEncoders().ToArray();
 
             // loop over each encoder:
             foreach (var encoder in encoders)

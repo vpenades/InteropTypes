@@ -626,6 +626,11 @@ namespace InteropTypes.Graphics.Bitmaps
         public void Write(Lazy<System.IO.Stream> stream, Codecs.CodecFormat format, params Codecs.IBitmapEncoder[] factory)
         {
             Codecs.BitmapCodecFactory.Write(stream, format, factory, this);
+        }
+        
+        public void Serialize(System.IO.Stream stream)
+        {
+            Codecs._InBuiltCodec.RawEncoder.TryWrite(stream, this);
         }        
 
         #endregion
