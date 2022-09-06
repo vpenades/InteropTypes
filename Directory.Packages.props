@@ -53,9 +53,9 @@
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
-    <PackageVersion Include="SkiaSharp" Version="2.88.0" />
+    <PackageVersion Include="SkiaSharp" Version="2.88.1" />
 
-    <PackageVersion Include="SvgNet" Version="2.2.2" />
+    <PackageVersion Include="SvgNet" Version="3.0.0" />
 
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
 
@@ -63,14 +63,16 @@
     
     <!-- Video Libraries -->
 
+    <PackageVersion Include="FFmpeg.AutoGen" Version="5.1.1" />
     <PackageVersion Include="FFMpegCore" Version="4.8.0" />
+    <PackageVersion Include="LibVLCSharp" Version="3.6.6" />
     <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.17.4" />
-    <PackageVersion Include="SharpAvi" Version="3.0.0" />
+    <PackageVersion Include="SharpAvi" Version="3.0.1" />
     
     <!-- Machine Learning -->
 
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.11.0" />
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.11.0" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.12.1" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.12.1" />
     
     <PackageVersion Include="OpenCvSharp4" Version="4.6.0.20220608" />
     <PackageVersion Include="OpenCvSharp4.Windows" Version="4.6.0.20220608" />
@@ -85,13 +87,13 @@
     
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
     <PackageVersion Include="coverlet.collector" Version="3.1.2" />
     
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
 
-    <PackageVersion Include="BenchmarkDotNet" Version="0.13.1" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.2" />
 
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     

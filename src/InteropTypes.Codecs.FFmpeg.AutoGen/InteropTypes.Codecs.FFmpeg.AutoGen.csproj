@@ -3,8 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>  
 
   <ItemGroup>
@@ -18,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>        
-    <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />    
+    <PackageReference Include="FFmpeg.AutoGen" />    
   </ItemGroup>    
 
 </Project>

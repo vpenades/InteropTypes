@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">    
-    <PackageReference Include="MonoGame.Framework.DesktopGL" VersionOverride="$(MonoGameLastNetStandardVersion)" PrivateAssets="all" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" VersionOverride="$(MonoGameLastNetStandardVersion)" />
   </ItemGroup>
 
   <ItemGroup>

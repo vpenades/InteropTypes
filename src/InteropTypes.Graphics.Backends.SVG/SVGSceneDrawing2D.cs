@@ -15,15 +15,15 @@ namespace InteropTypes.Graphics.Backends
 
         public static SVGSceneDrawing2D CreateGDI(System.Drawing.Graphics gdi)
         {
-            return new SVGSceneDrawing2D(new SvgNet.SvgGdi.GdiGraphics(gdi), true);
+            return new SVGSceneDrawing2D(new SvgNet.GdiGraphics(gdi), true);
         }
 
         public static SVGSceneDrawing2D CreateGraphic()
         {
-            return new SVGSceneDrawing2D(new SvgNet.SvgGdi.SvgGraphics(), false);
+            return new SVGSceneDrawing2D(new SvgNet.SvgGraphics(), false);
         }
 
-        public SVGSceneDrawing2D(SvgNet.SvgGdi.IGraphics ig, bool canRenderBitmaps)
+        public SVGSceneDrawing2D(SvgNet.Interfaces.IGraphics ig, bool canRenderBitmaps)
         {
             _Context = ig;
             _CanRenderBitmaps = canRenderBitmaps;
@@ -44,7 +44,7 @@ namespace InteropTypes.Graphics.Backends
 
         #region data
 
-        private SvgNet.SvgGdi.IGraphics _Context;
+        private SvgNet.Interfaces.IGraphics _Context;
         private bool _CanRenderBitmaps;
 
         private readonly Dictionary<UInt32, BRUSH> _Brushes = new Dictionary<UInt32, BRUSH>();
@@ -237,7 +237,7 @@ namespace InteropTypes.Graphics.Backends
 
         public string ToSVGContent()
         {
-            if (_Context is SvgNet.SvgGdi.SvgGraphics svg) return svg.WriteSVGString();
+            if (_Context is SvgNet.SvgGraphics svg) return svg.WriteSVGString();
             return null;
         }
 
