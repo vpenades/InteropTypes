@@ -56,16 +56,16 @@ namespace InteropTypes.Vision
 
         public static (string Name, Byte[] Data) ReadResourceToEnd(this Assembly assembly, string resourceName)
         {
-            // check in assembly resources manifest
+            // check in assembly resources manifest            
 
             var path = resourceName;
 
             path = path.Replace("/", ".");
-            path = path.Replace("\\", ".");            
+            path = path.Replace("\\", ".");
 
             var allNames = assembly.GetManifestResourceNames();
             path = allNames.FirstOrDefault(item => item.EndsWith(path));
-            
+
             if (path != null)
             {
                 using (var s = assembly.GetManifestResourceStream(path))
@@ -74,41 +74,37 @@ namespace InteropTypes.Vision
                     {
                         s.CopyTo(m);
 
-                        var data = m.ToArray();                        
+                        var data = m.ToArray();
 
                         return (path, data);
                     }
                 }
             }
 
-            // check in file system
-            
-            path = resourceName;                
-
-            var allFiles = System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(assembly.Location), System.IO.Path.GetFileName(path), System.IO.SearchOption.AllDirectories);
-            path = allFiles.FirstOrDefault(item => item.EndsWith(path));
-            if (path != null)
-            {
-                var data = System.IO.File.ReadAllBytes(path);
-                return (path, data);
-            }
-
             // check in entry exe path
 
             path = resourceName;
 
-            var exeDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            path = System.IO.Path.Combine(exeDir, path);
+            var exePath = System.Diagnostics.Process.GetCurrentProcess()?.MainModule?.FileName;
 
-            if (System.IO.File.Exists(path))
+            if (exePath != null)
             {
-                var data = System.IO.File.ReadAllBytes(path);
-                return (path, data);
+                var exeDir = System.IO.Path.GetDirectoryName(exePath);
+
+                path = System.IO.Directory
+                    .GetFiles(exeDir, "*", System.IO.SearchOption.AllDirectories)
+                    .FirstOrDefault(item => item.EndsWith(resourceName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (System.IO.File.Exists(path))
+                {
+                    var data = System.IO.File.ReadAllBytes(path);
+                    return (path, data);
+                }
             }
 
             // failed for all cases
 
-            return default;            
+            throw new System.IO.FileNotFoundException($"{resourceName}");
         }
 
         public static String GetSha256(this Byte[] array)
