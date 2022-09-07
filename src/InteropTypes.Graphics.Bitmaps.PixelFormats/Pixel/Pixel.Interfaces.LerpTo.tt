@@ -238,7 +238,7 @@ namespace InteropTypes.Graphics.Bitmaps
             WriteLine("");
             _writeFastestMethodAttribute();
             WriteLine($"public static TDst Lerp<TDst>({fmt} left, {fmt} right, int rx)");
-            WriteLine($"    where TDst: unmanaged, IValueSetter<BGRA32>");
+            WriteLine($"    where TDst: unmanaged, IConvertTo");
 
             _writeOpenBlock();
             _writeComment("calculate quantized weights");
@@ -251,11 +251,9 @@ namespace InteropTypes.Graphics.Bitmaps
                 WriteLine($"var {c} = (left.{c} * lx + right.{c} * rx) / 16384;");
             }
 
-            var ccc = String.Join(", ", channels);            
-
-            WriteLine($"var dst = default(TDst);");
-            WriteLine($"dst.SetValue( new BGRA32({ccc}));");
-            WriteLine($"return dst;");
+            var ccc = String.Join(", ", channels);
+            
+            WriteLine($"return new BGRA32({ccc}).To<TDst>();");
             
             _writeCloseBlock();
         }

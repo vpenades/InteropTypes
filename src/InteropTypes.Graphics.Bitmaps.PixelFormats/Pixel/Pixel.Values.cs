@@ -151,6 +151,24 @@ namespace InteropTypes.Graphics.Bitmaps
                 L = (UInt16)accum;
             }
 
+            internal static UInt16 _FromRGB(uint r, uint g, uint b)
+            {
+                uint accum = 0;
+
+                accum += RLuminanceWeight16 * r;
+                accum += GLuminanceWeight16 * g;
+                accum += BLuminanceWeight16 * b;
+
+                accum >>= 8; // results in 65280 as max, so TODO: improve precission
+
+                return (Byte)accum;
+            }
+
+            internal static UInt16 _FromRGB(float r, float g, float b)
+            {
+                return (UInt16)(Luminance32F._FromRGB(r, g, b) * 65535f);
+            }
+
             #endregion
 
             #region data

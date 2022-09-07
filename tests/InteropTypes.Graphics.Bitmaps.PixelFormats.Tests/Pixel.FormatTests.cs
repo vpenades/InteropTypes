@@ -33,7 +33,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (pixel is Pixel.IConvertTo pixelTo)
                 {
                     try { var dstp1 = pixelTo.To<Pixel.Luminance8>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to Luminance8"); }
-                    // try { var dstp1 = pixelTo.To<Pixel.Luminance16>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to Luminance16"); }
+                    try { var dstp1 = pixelTo.To<Pixel.Luminance16>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to Luminance16"); }
                     try { var dstp1 = pixelTo.To<Pixel.Luminance32F>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to Luminance32F"); }
 
                     try { var dstp1 = pixelTo.To<Pixel.RGB24>(); } catch { fail = true; TestContext.WriteLine($"{pixelType.Name} to RGB24"); }

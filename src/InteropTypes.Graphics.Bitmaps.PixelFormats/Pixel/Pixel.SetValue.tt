@@ -243,6 +243,33 @@ namespace InteropTypes.Graphics.Bitmaps
         _WriteSetterCmps("RGBP128F","L","_FromRGB(@R,@G,@B)");
         _writeEnd();
 
+        // --------------------------------------------- Luminance16
+
+        remainingNotImplemented.Remove("Luminance16");
+        _writeStructBegin("Luminance16");
+        _WriteSetterSelf("Luminance16");
+
+        _WriteSetterCmps("Alpha8","L","(ushort)(@A * 257)");
+        _WriteSetterCmps("Luminance8","L","(ushort)(@L * 257)");
+        _WriteSetterCmps("Luminance16","L","L");
+        _WriteSetterCmps("Luminance32F","L","(ushort)(@L*65535f)");
+        _WriteSetterCmps("BGR565","L","_FromRGB((uint)@R,(uint)@G,(uint)@B)");
+        _WriteSetterCmps("BGRA5551","L","(ushort)(@A * 257)");
+        _WriteSetterCmps("BGRA4444","L","(ushort)(@A* 257)");
+        _WriteSetterCmps("BGR24","L","_FromRGB((uint)@R,(uint)@G,(uint)@B)");
+        _WriteSetterCmps("RGB24","L","_FromRGB((uint)@R,(uint)@G,(uint)@B)");
+        _WriteSetterCmps("BGRA32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGBA32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("ARGB32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("BGRP32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGBP32","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("BGR96F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGB96F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("BGRA128F","L","_FromRGB(@R,@G,@B)");
+        _WriteSetterCmps("RGBA128F","L","_FromRGB(@R,@G,@B)");        
+        _WriteSetterCmps("RGBP128F","L","_FromRGB(@R,@G,@B)");
+        _writeEnd();
+
         // --------------------------------------------- Luminance32F
 
         remainingNotImplemented.Remove("Luminance32F");        

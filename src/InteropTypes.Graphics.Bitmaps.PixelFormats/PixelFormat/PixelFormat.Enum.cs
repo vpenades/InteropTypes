@@ -111,11 +111,11 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 case Pixel.BGRA32.Code: return typeof(Pixel.BGRA32);
                 case Pixel.RGBA32.Code: return typeof(Pixel.RGBA32);
-                case Pixel.ARGB32.Code: return typeof(Pixel.ARGB32);
-                case Pixel.PRGB32.Code: return typeof(Pixel.PRGB32);
+                case Pixel.ARGB32.Code: return typeof(Pixel.ARGB32);                
 
                 case Pixel.BGRP32.Code: return typeof(Pixel.BGRP32);
                 case Pixel.RGBP32.Code: return typeof(Pixel.RGBP32);
+                case Pixel.PRGB32.Code: return typeof(Pixel.PRGB32);
 
                 case Pixel.RGB96F.Code: return typeof(Pixel.RGB96F);
                 case Pixel.BGR96F.Code: return typeof(Pixel.BGR96F);
@@ -144,14 +144,17 @@ namespace InteropTypes.Graphics.Bitmaps
                 case Pixel.RGBA32.Code: newFmt = Pixel.RGBA32.Format; break;
                 case Pixel.BGRA32.Code: newFmt = Pixel.RGBA32.Format; break;
                 case Pixel.ARGB32.Code: newFmt = Pixel.RGBA32.Format; break;
+
                 case Pixel.RGBP32.Code: newFmt = Pixel.RGBP32.Format; break;
                 case Pixel.BGRP32.Code: newFmt = Pixel.RGBP32.Format; break;
+                case Pixel.PRGB32.Code: newFmt = Pixel.RGBP32.Format; break;
 
                 case Pixel.RGB96F.Code: newFmt = Pixel.RGB96F.Format; break;
                 case Pixel.BGR96F.Code: newFmt = Pixel.RGB96F.Format; break;
 
                 case Pixel.RGBA128F.Code: newFmt = Pixel.RGBA128F.Format; break;
                 case Pixel.BGRA128F.Code: newFmt = Pixel.RGBA128F.Format; break;
+
                 case Pixel.RGBP128F.Code: newFmt = Pixel.RGBP128F.Format; break;
                 case Pixel.BGRP128F.Code: newFmt = Pixel.BGRP128F.Format; break;
             }
@@ -171,8 +174,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 case Pixel.RGBA32.Code: newFmt = Pixel.BGRA32.Format; break;
                 case Pixel.BGRA32.Code: newFmt = Pixel.BGRA32.Format; break;
                 case Pixel.ARGB32.Code: newFmt = Pixel.BGRA32.Format; break;
+
                 case Pixel.RGBP32.Code: newFmt = Pixel.BGRA32.Format; break;
                 case Pixel.BGRP32.Code: newFmt = Pixel.BGRA32.Format; break;
+                case Pixel.PRGB32.Code: newFmt = Pixel.BGRA32.Format; break;
 
                 case Pixel.RGB96F.Code: newFmt = Pixel.BGR96F.Format; break;
                 case Pixel.BGR96F.Code: newFmt = Pixel.BGR96F.Format; break;

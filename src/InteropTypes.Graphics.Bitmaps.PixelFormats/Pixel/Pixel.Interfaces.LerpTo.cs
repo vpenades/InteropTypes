@@ -200,9 +200,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var R = (left.R * lx + right.R * rx) / 16384;
                 var G = (left.G * lx + right.G * rx) / 16384;
                 var B = (left.B * lx + right.B * rx) / 16384;
-                var dst = default(TDst);
-                new BGRA32(R, G, B).CopyTo(ref dst);
-                return dst;
+                return new BGRA32(R, G, B).To<TDst>();
             }
 
             /// <inheritdoc/>
