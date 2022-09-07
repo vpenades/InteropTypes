@@ -3,7 +3,6 @@
 using InteropTypes.Graphics.Bitmaps;
 
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace InteropTypes.Graphics.Backends
@@ -29,13 +28,6 @@ namespace InteropTypes.Graphics.Backends
         #endregion
 
         #region Image => MemoryBitmap
-
-        [Obsolete("Use other alternatives")]
-        public static MemoryBitmap.IDisposableSource UsingMemoryBitmap<TPixel>(this Image<TPixel> src, bool owned = false)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            return new Adapters.ImageSharpMemoryManager<TPixel>(src, owned);
-        }
         
         public static MemoryBitmap ToMemoryBitmap(this Image src)            
         {
