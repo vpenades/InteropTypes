@@ -456,45 +456,7 @@ namespace InteropTypes.Graphics.Bitmaps
             if (len == 32) return (typeof(Single), ch);
 
             return (null, 0);
-        }
-
-        public Type GetPixelTypeOrNull()
-        {
-            switch (Code)
-            {
-                case Pixel.Alpha8.Code: return typeof(Pixel.Alpha8);
-
-                case Pixel.Luminance8.Code: return typeof(Pixel.Luminance8);
-                case Pixel.Luminance16.Code: return typeof(Pixel.Luminance16);
-                case Pixel.Luminance32F.Code: return typeof(Pixel.Luminance32F);
-
-                case Pixel.BGR565.Code: return typeof(Pixel.BGR565);
-                case Pixel.BGRA5551.Code: return typeof(Pixel.BGRA5551);
-                case Pixel.BGRA4444.Code: return typeof(Pixel.BGRA4444);
-
-                case Pixel.BGR24.Code: return typeof(Pixel.BGR24);
-                case Pixel.RGB24.Code: return typeof(Pixel.RGB24);
-
-                case Pixel.BGRA32.Code: return typeof(Pixel.BGRA32);
-                case Pixel.RGBA32.Code: return typeof(Pixel.RGBA32);
-                case Pixel.ARGB32.Code: return typeof(Pixel.ARGB32);
-                case Pixel.PRGB32.Code: return typeof(Pixel.PRGB32);
-
-                case Pixel.BGRP32.Code: return typeof(Pixel.BGRP32);
-                case Pixel.RGBP32.Code: return typeof(Pixel.RGBP32);
-
-                case Pixel.RGB96F.Code: return typeof(Pixel.RGB96F);
-                case Pixel.BGR96F.Code: return typeof(Pixel.BGR96F);
-
-                case Pixel.RGBA128F.Code: return typeof(Pixel.RGBA128F);
-                case Pixel.BGRA128F.Code: return typeof(Pixel.BGRA128F);
-
-                case Pixel.RGBP128F.Code: return typeof(Pixel.RGBP128F);                
-                case Pixel.BGRP128F.Code: return typeof(Pixel.BGRP128F);
-            }
-
-            return null;
-        }        
+        }             
 
         public unsafe bool IsCompatibleFormat<TPixel>()
             where TPixel : unmanaged

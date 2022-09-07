@@ -143,6 +143,47 @@ namespace InteropTypes.Graphics.Bitmaps
         _writeCloseBlock();
     }
 
+    void _WriteSetterUnpremul32from128F(string srcType, params string[] components)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();        
+
+        WriteLine("float rcpA = value.A == 0 ? 0 : 255f / value.A;");
+
+        foreach(var c in components)
+        {
+            if (c == "A") WriteLine("A = (byte)(value.A * 255f);");
+            else WriteLine($"{c} = (Byte)(value.Pre{c} * rcpA);");
+        }
+        
+        _writeCloseBlock();
+    }
+
+
+    void _WriteSetterUnpremul32to128F(string srcType, params string[] components)
+    {
+        if (srcType == __selfType) return;
+
+        _writeDocInherit();
+        _writeFastestMethodAttribute();
+        WriteLine($"public void SetValue({srcType} value)");
+        _writeOpenBlock();        
+
+        WriteLine("float rcpA = value.A == 0 ? 0 : 1f / (float)value.A;");
+
+        foreach(var c in components)
+        {
+            if (c == "A") WriteLine("A = (float)(value.A) / 255f;");
+            else WriteLine($"{c} = (float)(value.Pre{c}) * rcpA;");
+        }
+        
+        _writeCloseBlock();
+    }
+
 //-------------------------------------------------------------------------------------------------------------------
 
 
@@ -308,10 +349,8 @@ namespace InteropTypes.Graphics.Bitmaps
             _WriteSetterXYZW("RGBA128F", dst, src, "S=> value.RGBA *= 255f; // shift up");        
 
             _WriteSetterUnpremul32("BGRP32","B", "G", "R", "A");
-            _WriteSetterUnpremul32("RGBP32","B", "G", "R", "A");
-
-            // _WriteSetterXYZW("RGBP128F", dst, src);
-            _WriteSetterNotImpl("RGBP128F");
+            _WriteSetterUnpremul32("RGBP32","B", "G", "R", "A");            
+            _WriteSetterUnpremul32from128F("RGBP128F", "B", "G", "R", "A");
 
             _writeEnd();
         }
@@ -368,33 +407,35 @@ namespace InteropTypes.Graphics.Bitmaps
             remainingNotImplemented.Remove(dstType);            
 
             var dst = ("B","G","R");
-            var src = ("0","0","0");
-            
-            var suffix = $"E=> {dstType.Substring(0,3)} *= __RCP255;";
+            var src = ("0","0","0");            
 
             _writeStructBegin(dstType);
 
             WriteLine("const float __RCP255 = 1f / 255f;");
+            WriteLine("const float __RCP65535 = 1f / 65535f;");
+
+            var suffix8 = $"E=> {dstType.Substring(0,3)} *= __RCP255;";
+            var suffix16 = $"E=> {dstType.Substring(0,3)} *= __RCP65535;";
 
             _WriteSetterSelf(dstType);
 
             _WriteSetterXYZ("Alpha8", dst, ("1","1","1"));
-            _WriteSetterXYZ("Luminance8", dst, ("L","L","L") , suffix);
-            _WriteSetterNotImpl("Luminance16");
+            _WriteSetterXYZ("Luminance8", dst, ("L","L","L") , suffix8);
+            _WriteSetterXYZ("Luminance16", dst, ("L","L","L") , suffix16);
             _WriteSetterXYZ("Luminance32F", dst, ("L","L","L") );
 
             src = ("B", "G", "R");
-            _WriteSetterXYZ("BGR565", dst, src , suffix);
-            _WriteSetterXYZ("BGRA5551", dst, src ,suffix);
-            _WriteSetterXYZ("BGRA4444", dst, src ,suffix);
+            _WriteSetterXYZ("BGR565", dst, src , suffix8);
+            _WriteSetterXYZ("BGRA5551", dst, src ,suffix8);
+            _WriteSetterXYZ("BGRA4444", dst, src ,suffix8);
 
             src = ("B", "G", "R");
-            _WriteSetterXYZ("BGR24", dst, src, suffix);
-            _WriteSetterXYZ("RGB24", dst, src, suffix);
+            _WriteSetterXYZ("BGR24", dst, src, suffix8);
+            _WriteSetterXYZ("RGB24", dst, src, suffix8);
 
-            _WriteSetterXYZ("BGRA32", dst, src, suffix);
-            _WriteSetterXYZ("RGBA32", dst, src, suffix);
-            _WriteSetterXYZ("ARGB32", dst, src, suffix);            
+            _WriteSetterXYZ("BGRA32", dst, src, suffix8);
+            _WriteSetterXYZ("RGBA32", dst, src, suffix8);
+            _WriteSetterXYZ("ARGB32", dst, src, suffix8);            
 
             src = ("B", "G", "R");
             _WriteSetterXYZ("BGR96F",  dst, src);
@@ -404,8 +445,8 @@ namespace InteropTypes.Graphics.Bitmaps
             
 
             src = ("PreB", "PreG", "PreR");
-            _WriteSetterXYZ("BGRP32", dst, src, suffix);
-            _WriteSetterXYZ("RGBP32", dst, src, suffix);
+            _WriteSetterXYZ("BGRP32", dst, src, suffix8);
+            _WriteSetterXYZ("RGBP32", dst, src, suffix8);
             _WriteSetterXYZ("RGBP128F", dst, src );
 
             _writeEnd();
@@ -418,7 +459,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var dst = ("B","G","R","A");
             var src = ("0","0","0","0");
             
-            var suffix = $"E=> this.{dstType.Substring(0,4)} *= __RCP255;";
+            var suffix8 = $"E=> this.{dstType.Substring(0,4)} *= __RCP255;";
 
             _writeStructBegin(dstType);
 
@@ -426,26 +467,26 @@ namespace InteropTypes.Graphics.Bitmaps
 
             _WriteSetterSelf(dstType);
 
-            _WriteSetterXYZW("Alpha8", dst, ("255","255","255","A"), suffix);
-            _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255") , suffix);
+            _WriteSetterXYZW("Alpha8", dst, ("255","255","255","A"), suffix8);
+            _WriteSetterXYZW("Luminance8", dst, ("L","L","L", "255") , suffix8);
             _WriteSetterXYZW("Luminance16", dst, ("L","L","L", "65535") , $"E=> this.{dstType.Substring(0,4)} /= 65535;");
             _WriteSetterXYZW("Luminance32F", dst, ("L","L","L", "1"));
 
             src = ("B", "G", "R", "255");
-            _WriteSetterXYZW("BGR565", dst, src , suffix);
+            _WriteSetterXYZW("BGR565", dst, src , suffix8);
 
             src = ("B", "G", "R", "A");
-            _WriteSetterXYZW("BGRA5551", dst, src ,suffix);
-            _WriteSetterXYZW("BGRA4444", dst, src ,suffix);
+            _WriteSetterXYZW("BGRA5551", dst, src ,suffix8);
+            _WriteSetterXYZW("BGRA4444", dst, src ,suffix8);
 
             src = ("B", "G", "R", "255");
-            _WriteSetterXYZW("BGR24", dst, src, suffix);
-            _WriteSetterXYZW("RGB24", dst, src, suffix);
+            _WriteSetterXYZW("BGR24", dst, src, suffix8);
+            _WriteSetterXYZW("RGB24", dst, src, suffix8);
 
             src = ("B", "G", "R", "A");
-            _WriteSetterXYZW("BGRA32", dst, src, suffix);
-            _WriteSetterXYZW("RGBA32", dst, src, suffix);
-            _WriteSetterXYZW("ARGB32", dst, src, suffix);            
+            _WriteSetterXYZW("BGRA32", dst, src, suffix8);
+            _WriteSetterXYZW("RGBA32", dst, src, suffix8);
+            _WriteSetterXYZW("ARGB32", dst, src, suffix8);            
 
             src = ("B", "G", "R", "1");
             _WriteSetterXYZW("BGR96F",  dst, src);
@@ -461,8 +502,8 @@ namespace InteropTypes.Graphics.Bitmaps
             src = ("PreB", "PreG", "PreR", "A");
             var prefix = "S=> if (value.A == 0) { this = default; return; }";
             var suffix2 = $"E=> {color} = Vector3.Min(Vector3.One, {color} / this.A);";
-            _WriteSetterXYZW("BGRP32", dst, src, prefix, suffix, suffix2);
-            _WriteSetterXYZW("RGBP32", dst, src, prefix, suffix, suffix2);
+            _WriteSetterXYZW("BGRP32", dst, src, prefix, suffix8, suffix2);
+            _WriteSetterXYZW("RGBP32", dst, src, prefix, suffix8, suffix2);
             _WriteSetterXYZW("RGBP128F", dst, src , prefix, suffix2);
 
             _writeEnd();

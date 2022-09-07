@@ -968,7 +968,11 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP128F value)
             {
-                throw new NotImplementedException("Setting RGBP128F not implemented.");
+                float rcpA = value.A == 0 ? 0 : 255f / value.A;
+                B = (Byte)(value.PreB * rcpA);
+                G = (Byte)(value.PreG * rcpA);
+                R = (Byte)(value.PreR * rcpA);
+                A = (byte)(value.A * 255f);
             }
         }
         partial struct RGBA32
@@ -1163,7 +1167,11 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP128F value)
             {
-                throw new NotImplementedException("Setting RGBP128F not implemented.");
+                float rcpA = value.A == 0 ? 0 : 255f / value.A;
+                B = (Byte)(value.PreB * rcpA);
+                G = (Byte)(value.PreG * rcpA);
+                R = (Byte)(value.PreR * rcpA);
+                A = (byte)(value.A * 255f);
             }
         }
         partial struct ARGB32
@@ -1358,7 +1366,11 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(RGBP128F value)
             {
-                throw new NotImplementedException("Setting RGBP128F not implemented.");
+                float rcpA = value.A == 0 ? 0 : 255f / value.A;
+                B = (Byte)(value.PreB * rcpA);
+                G = (Byte)(value.PreG * rcpA);
+                R = (Byte)(value.PreR * rcpA);
+                A = (byte)(value.A * 255f);
             }
         }
         partial struct BGRP32
@@ -1768,6 +1780,7 @@ namespace InteropTypes.Graphics.Bitmaps
         partial struct BGR96F
         {
             const float __RCP255 = 1f / 255f;
+            const float __RCP65535 = 1f / 65535f;
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1799,7 +1812,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                this.B = value.L;
+                this.G = value.L;
+                this.R = value.L;
+                BGR *= __RCP65535;
             }
 
             /// <inheritdoc/>
@@ -1950,6 +1966,7 @@ namespace InteropTypes.Graphics.Bitmaps
         partial struct RGB96F
         {
             const float __RCP255 = 1f / 255f;
+            const float __RCP65535 = 1f / 65535f;
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
@@ -1981,7 +1998,10 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValue(Luminance16 value)
             {
-                throw new NotImplementedException("Setting Luminance16 not implemented.");
+                this.B = value.L;
+                this.G = value.L;
+                this.R = value.L;
+                RGB *= __RCP65535;
             }
 
             /// <inheritdoc/>
