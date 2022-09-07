@@ -41,6 +41,8 @@ namespace InteropTypes.Codecs
 
         internal static void Write(Lazy<System.IO.Stream> stream, CodecFormat format, IBitmapEncoder[] encoders, SpanBitmap bmp)
         {
+            if (encoders.Length == 0) encoders = GetDefaultEncoders().ToArray();
+
             Guard.NotNull(nameof(stream), stream);            
             Guard.IsFalse(nameof(format), format == CodecFormat.Undefined);            
 
