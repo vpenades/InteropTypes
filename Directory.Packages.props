@@ -43,8 +43,8 @@
 
     <PackageVersion Include="Prism.Wpf" Version="8.1.97" />
 
-    <PackageVersion Include="Microsoft.Maui.Graphics" Version="6.0.403" />
-    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="6.0.403" />
+    <PackageVersion Include="Microsoft.Maui.Graphics" Version="6.0.501" />
+    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="6.0.501" />
 
     <PackageVersion Include="SixLabors.ImageSharp" Version="2.1.3" />
     <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
@@ -53,13 +53,13 @@
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
-    <PackageVersion Include="SkiaSharp" Version="2.88.1" />
+    <PackageVersion Include="SkiaSharp" Version="2.88.2" />
 
-    <PackageVersion Include="SvgNet" Version="3.0.0" />
+    <PackageVersion Include="SvgNet" Version="3.2.0" />
 
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
 
-    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0026" />
+    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0027" />
     
     <!-- Video Libraries -->
 
@@ -87,7 +87,7 @@
     
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageVersion Include="coverlet.collector" Version="3.1.2" />
     
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
