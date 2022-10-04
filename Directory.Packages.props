@@ -53,7 +53,7 @@
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
-    <PackageVersion Include="SkiaSharp" Version="2.88.2" />
+    <PackageVersion Include="SkiaSharp" Version="2.88.3" />
 
     <PackageVersion Include="SvgNet" Version="3.2.0" />
 
@@ -65,7 +65,7 @@
 
     <PackageVersion Include="FFmpeg.AutoGen" Version="5.1.1" />
     <PackageVersion Include="FFMpegCore" Version="4.8.0" />
-    <PackageVersion Include="LibVLCSharp" Version="3.6.6" />
+    <PackageVersion Include="LibVLCSharp" Version="3.6.7" />
     <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.17.4" />
     <PackageVersion Include="SharpAvi" Version="3.0.1" />
     
