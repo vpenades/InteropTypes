@@ -30,9 +30,9 @@
     <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />    
     <PackageVersion Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     
-    <PackageVersion Include="Veldrid" Version="4.9.0-beta1" />
-    <PackageVersion Include="Veldrid.SDL2" Version="4.9.0-beta1" />
-    <PackageVersion Include="Veldrid.StartupUtilities" Version="4.9.0-beta1" />
+    <PackageVersion Include="Veldrid" Version="4.9.0-beta2" />
+    <PackageVersion Include="Veldrid.SDL2" Version="4.9.0-beta2" />
+    <PackageVersion Include="Veldrid.StartupUtilities" Version="4.9.0-beta2" />
     <PackageVersion Include="Veldrid.VirtualReality" Version="1.0.1" />
 
     <PackageVersion Include="ShaderGen" Version="1.2.0-beta3" />
