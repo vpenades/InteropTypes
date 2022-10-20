@@ -43,7 +43,15 @@ namespace InteropTypes.Graphics.Bitmaps
             return new BitmapInfo(binfo.w, binfo.h, binfo.fmt);
         }
 
-        public BitmapInfo WithPixelFormat(PixelFormat format) { return new BitmapInfo(this.Width, this.Height, format, this.StepByteSize); }
+        public BitmapInfo WithPixelFormat(PixelFormat format, bool tryPreserveByteSize = false)
+        {
+            if (this.PixelFormat.ByteCount == format.ByteCount && tryPreserveByteSize)
+            {
+                new BitmapInfo(this.Width, this.Height, format, this.StepByteSize);
+            }
+
+            return new BitmapInfo(this.Width, this.Height, format);
+        }
 
         public BitmapInfo WithPixelFormat<TPixel>() where TPixel:unmanaged
         {
@@ -257,6 +265,8 @@ namespace InteropTypes.Graphics.Bitmaps
         public (int Offset, BitmapInfo Info) Slice(in BitmapBounds rect)
         {
             Guard.IsTrue(nameof(rect), Bounds.Contains(rect));
+
+            if (rect.Width <=0 || rect.Height <=0) return (0, this.WithSize(0, 0));
 
             var offset = this.StepByteSize * rect.Y + this.PixelByteSize * rect.X;
 
