@@ -204,6 +204,8 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             var (offset, info) = _Info.Slice(rect);
 
+            if (info.BitmapByteSize == 0) return new SpanBitmap(Span<byte>.Empty, info);
+
             if (_Writable.IsEmpty)
             {
                 var span = _Readable.Slice(offset, info.BitmapByteSize);
@@ -362,7 +364,8 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </remarks>
         public void SetPixels(in Matrix3x2 dstSRT, SpanBitmap src) { SetPixels(src, new Processing.BitmapTransform(dstSRT, 1)); }
 
-        public void SetPixels(in SpanBitmap src, ITransfer transfer)            
+        public void SetPixels<TTranfer>(in SpanBitmap src, in TTranfer transfer)
+            where TTranfer: ITransfer
         {
             if (src.PixelFormat != this.PixelFormat) throw new PixelFormatNotSupportedException(src.PixelFormat, nameof(src));
 

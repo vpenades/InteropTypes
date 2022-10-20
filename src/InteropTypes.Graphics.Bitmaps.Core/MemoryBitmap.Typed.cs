@@ -44,7 +44,9 @@ namespace InteropTypes.Graphics.Bitmaps
             info.ArgumentIsCompatiblePixelFormat<TPixel>();
 
             _Info = info;
-            _Data = new Byte[info.BitmapByteSize];
+            _Data = info.BitmapByteSize == 0
+                ? Array.Empty<Byte>()
+                : new Byte[info.BitmapByteSize];
         }
 
         public MemoryBitmap(Memory<Byte> data, in BitmapInfo info)
@@ -208,6 +210,9 @@ namespace InteropTypes.Graphics.Bitmaps
         public MemoryBitmap<TPixel> Slice(in BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);
+
+            if (info.BitmapByteSize == 0) return new MemoryBitmap<TPixel>(info);
+
             var memory = this._Data.Slice(offset, info.BitmapByteSize);
             return new MemoryBitmap<TPixel>(memory, info);
         }

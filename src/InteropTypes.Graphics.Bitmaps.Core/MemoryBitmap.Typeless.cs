@@ -16,7 +16,12 @@ namespace InteropTypes.Graphics.Bitmaps
     {
         #region lifecycle        
         public MemoryBitmap(in BitmapInfo info)
-            : this(new byte[info.BitmapByteSize], info) { }
+        {
+            _Info = info;
+            _Data = info.BitmapByteSize == 0
+                ? Array.Empty<Byte>()
+                : new Byte[info.BitmapByteSize];
+        }
 
         public MemoryBitmap(Byte[] array, in BitmapInfo info)
         {
@@ -171,6 +176,9 @@ namespace InteropTypes.Graphics.Bitmaps
         public MemoryBitmap Slice(in BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);
+
+            if (info.BitmapByteSize == 0) return new MemoryBitmap(info);
+
             var memory = this._Data.Slice(offset, info.BitmapByteSize);
             return new MemoryBitmap(memory, info);
         }

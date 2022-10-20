@@ -4,7 +4,6 @@ using System.Numerics;
 using System.Text;
 
 using SIZE = System.Drawing.Size;
-using POINT = System.Drawing.Point;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
@@ -241,6 +240,8 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             var (offset, info) = _Info.Slice(rect);
 
+            if (info.BitmapByteSize == 0) return new SpanBitmap<TPixel>(Span<byte>.Empty, info);
+
             if (_Writable.IsEmpty)
             {
                 var span = _Readable.Slice(offset, info.BitmapByteSize);
@@ -365,8 +366,9 @@ namespace InteropTypes.Graphics.Bitmaps
             this.SetPixels(src, new Processing.BitmapTransform(location, useBilinear, pixelOp));
         }
 
-        public void SetPixels<TSrcPixel>(in SpanBitmap<TSrcPixel> src, SpanBitmap.ITransfer transfer)
+        public void SetPixels<TSrcPixel, TTransfer>(in SpanBitmap<TSrcPixel> src, in TTransfer transfer)
             where TSrcPixel : unmanaged
+            where TTransfer : SpanBitmap.ITransfer
         {
             Guard.IsTrue("this", !_Writable.IsEmpty);
 
