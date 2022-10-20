@@ -20,6 +20,17 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [Test]
+        public void TestCopyTo()
+        {
+            var src = new MemoryBitmap(10,10, Pixel.RGB24.Format);
+
+            MemoryBitmap<Pixel.RGBA32> dst = default;
+
+            src.CopyTo(ref dst);
+        }
+
+
+        [Test]
         public void TestReinterpretBitmaps()
         {
             var src = new MemoryBitmap<Pixel.BGRA32>(16, 16);
