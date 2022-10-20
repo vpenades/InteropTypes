@@ -23,7 +23,7 @@ namespace WPFDemo
             MemoryBitmapTypeless.AsSpanBitmap().SetPixels(System.Drawing.Color.Green);
             MemoryBitmapBGRA32.AsSpanBitmap().AsTypeless().SetPixels(System.Drawing.Color.Red);
 
-            OnPaintMemoryBitmapCmd = new Prism.Commands.DelegateCommand(_PaintOnBitmap);
+            OnPaintMemoryBitmapCmd = new Prism.Commands.DelegateCommand(_PaintOnBitmapAsync);
 
             BindableBitmap.Bitmap = MemoryBitmapBGRA32;
 
@@ -55,18 +55,38 @@ namespace WPFDemo
 
         public WPFClientBitmap ClientBitmap { get; } = new WPFClientBitmap();
 
-        public MemoryBitmap MemoryBitmapTypeless { get; } = new MemoryBitmap(512, 512, Pixel.BGRA32.Format);
-
-        public MemoryBitmap<Pixel.BGRA32> MemoryBitmapBGRA32 { get; } = new MemoryBitmap<Pixel.BGRA32>(512, 512, Pixel.BGRA32.Format);
-
         public BindableBitmap BindableBitmap { get; } = new BindableBitmap();
 
         public BindableBitmap BindableBitmapUndefined { get; } = new BindableBitmap();
 
+        public MemoryBitmap MemoryBitmapTypeless { get; } = new MemoryBitmap(512, 512, Pixel.BGRA32.Format);
+
+        public MemoryBitmap<Pixel.BGRA32> MemoryBitmapBGRA32 { get; } = new MemoryBitmap<Pixel.BGRA32>(512, 512, Pixel.BGRA32.Format);        
+
+        
+
+        private void _PaintOnBitmapAsync()
+        {
+            Task.Run(_PaintOnBitmap);
+        }
+
         private void _PaintOnBitmap()
         {
-            BindableBitmap.Bitmap.AsSpanBitmap().SetPixels(System.Drawing.Color.White);
-            BindableBitmap.Invalidate();
+            var other = new MemoryBitmap<Pixel.BGRA32>(256, 256);
+            other.SetPixels(System.Drawing.Color.Yellow);
+
+            var rnd = new Random();
+            var pix = default(Pixel.BGRA32);
+
+            foreach (var p in other.EnumeratePixels())
+            {               
+                pix.SetRandom(rnd, 255);
+                other.SetPixel(p.Location, pix);
+            }
+
+            var dispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
+
+            dispatcher.Invoke( this.BindableBitmap.Enqueue(other) );            
         }
 
         private void _AsyncUpdateBitmap()
