@@ -34,14 +34,30 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </remarks>        
         public interface IConvertTo
         {
+            void Set<TPixel>(TPixel pixel) where TPixel : unmanaged;
+            void SetFrom<TPixel>(ref TPixel pixel) where TPixel : unmanaged;
+
             TPIxel To<TPIxel>() where TPIxel : unmanaged;
             void CopyTo<TPIxel>(ref TPIxel target) where TPIxel : unmanaged;            
         }
-        
+
+        /// <summary>
+        /// applies an operation over the given pixel
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Implemented by:
+        /// <see cref="RGB24.MulAdd"/> 
+        /// <see cref="BGR24.MulAdd"/> 
+        /// <see cref="RGB96F.MulAdd"/> 
+        /// <see cref="BGR96F.MulAdd"/> 
+        /// </para>
+        /// </remarks>
+        /// <typeparam name="TPixel">the target pixel</typeparam>
         public interface IApplyTo<TPixel>
             where TPixel: unmanaged
         {
-            void ApplyTo(ref TPixel pixel);
+            void ApplyTo(ref TPixel target);
         }
 
         interface IDelegateProvider<TDelegate>
