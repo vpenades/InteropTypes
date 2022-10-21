@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -485,6 +486,8 @@ namespace InteropTypes.Graphics.Backends
         {
             VerifyDisposed();
 
+            if (style.Color.IsEmpty) return;
+
             var bmp = style.Image;
 
             var image = _Resources.UseImage(bmp.Source);
@@ -494,25 +497,27 @@ namespace InteropTypes.Graphics.Backends
             System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
 
             var bmpRect = bmp.GetSourceRectangle();
-            
-            var srcScale = Matrix3x2.CreateScale(1f / bmpRect.Width, 1f / bmpRect.Height);            
-            var srcOffset = Matrix3x2.CreateTranslation(-bmpRect.X, -bmpRect.Y);            
+
+            var srcScale = Matrix3x2.CreateScale(1f / bmpRect.Width, 1f / bmpRect.Height);
+            var srcOffset = Matrix3x2.CreateTranslation(-bmpRect.X, -bmpRect.Y);
 
             var xform = srcOffset * srcScale * style.GetTransform() * transform;
-            _Context.PushTransform(new MatrixTransform(xform.M11, xform.M12,xform.M21,xform.M22,xform.M31,xform.M32));
+            _Context.PushTransform(new MatrixTransform(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32));
 
             // cache this
             var srcRect = new Rect(bmpRect.X, bmpRect.Y, bmpRect.Width, bmpRect.Height);
             _Context.PushClip(new RectangleGeometry(srcRect));
-            
-            var dstRect = new Rect(0, 0, image.PixelWidth, image.PixelHeight);            
-            _Context.DrawImage(image, dstRect);
-            
-            _Context.Pop();
-            _Context.Pop();
-        }
 
-        
+            if (style.Color.A != 255) { _Context.PushOpacity(style.Color.A / 255f); }            
+
+            var dstRect = new Rect(0, 0, image.PixelWidth, image.PixelHeight);
+            _Context.DrawImage(image, dstRect);
+
+            if (style.Color.A != 255) { _Context.Pop(); }
+
+            _Context.Pop();
+            _Context.Pop();
+        }        
 
         /// <inheritdoc/>
         public void DrawTextLine(in Matrix3x2 transform, string text, float size, Drawing.FontStyle font)
