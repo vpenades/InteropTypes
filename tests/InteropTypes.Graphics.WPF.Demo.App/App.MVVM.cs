@@ -61,9 +61,12 @@ namespace WPFDemo
 
         public MemoryBitmap MemoryBitmapTypeless { get; } = new MemoryBitmap(512, 512, Pixel.BGRA32.Format);
 
-        public MemoryBitmap<Pixel.BGRA32> MemoryBitmapBGRA32 { get; } = new MemoryBitmap<Pixel.BGRA32>(512, 512, Pixel.BGRA32.Format);        
+        public MemoryBitmap<Pixel.BGRA32> MemoryBitmapBGRA32 { get; } = new MemoryBitmap<Pixel.BGRA32>(512, 512, Pixel.BGRA32.Format);
 
-        
+
+        public IDrawingBrush<ICanvas2D> Canvas1 { get; } = new BasicScene2D();
+
+        public IDrawingBrush<ICanvas2D> Canvas2 { get; } = new AdvancedScene2D();
 
         private void _PaintOnBitmapAsync()
         {
@@ -125,6 +128,34 @@ namespace WPFDemo
             context.DrawPivot(System.Numerics.Matrix4x4.CreateTranslation(10, 0, 0), 0.1f);
 
             // context.DrawSphere((0, 0, 0), 2, ColorStyle.Red);
+        }
+    }
+
+
+    public class BasicScene2D : IDrawingBrush<ICanvas2D>
+    {
+        // private static readonly ImageSource _Offset0 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), false).WithScale(0.45f);
+
+        private static readonly ImageSource _Offset0 = ImageSource.Create("Assets\\SpriteOffset.png", (17,83), (50, 50), (25, 25));
+
+        public void DrawTo(ICanvas2D context)
+        {
+            context.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(160,160), _Offset0);
+
+            context.DrawCircle((160, 160), 10, System.Drawing.Color.Green);            
+        }
+    }
+
+    public class AdvancedScene2D : IDrawingBrush<ICanvas2D>
+    {
+        private _Sprites2D sprites = new _Sprites2D();
+        private ImageSource _noiseTexture = new BindableNoiseTexture(Pixel.BGRA32.Format).Sprite;
+
+        public void DrawTo(ICanvas2D context)
+        {
+            sprites.DrawTo(context);
+
+            context.DrawImage(System.Numerics.Matrix3x2.Identity, _noiseTexture);
         }
     }
 

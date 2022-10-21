@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 using InteropTypes.Graphics.Drawing;
 
@@ -380,7 +382,7 @@ namespace InteropTypes.Graphics.Backends
 
             if (fill == null) return;
 
-            var g = _Geometries.UseGeometry(points, true, fill != null, false);
+            var g = _Geometries.UseGeometry(points, true, true, false);
             _Context.DrawGeometry(fill, null, g);
         }
 
@@ -484,19 +486,33 @@ namespace InteropTypes.Graphics.Backends
             VerifyDisposed();
 
             var bmp = style.Image;
-            var bmpRect = System.Drawing.Rectangle.Truncate(bmp.GetSourceRectangle());
 
             var image = _Resources.UseImage(bmp.Source);
-            var recti = new Int32Rect(bmpRect.X, bmpRect.Y, bmpRect.Width, bmpRect.Height);
-            var cropped = new System.Windows.Media.Imaging.CroppedBitmap(image, recti);
+            if (image == null) return;
 
-            // PushMatrix(style.GetTransform() * transform);
+            System.Diagnostics.Debug.Assert(!(image is CroppedBitmap), "not renderable");
+            System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
 
-            var dstRect = new Rect(0, 0, bmpRect.Width, bmpRect.Height);
-            _Context.DrawImage(cropped, dstRect);
+            var bmpRect = bmp.GetSourceRectangle();
+            
+            var srcScale = Matrix3x2.CreateScale(1f / bmpRect.Width, 1f / bmpRect.Height);            
+            var srcOffset = Matrix3x2.CreateTranslation(-bmpRect.X, -bmpRect.Y);            
 
-            // PopMatrix();
+            var xform = srcOffset * srcScale * style.GetTransform() * transform;
+            _Context.PushTransform(new MatrixTransform(xform.M11, xform.M12,xform.M21,xform.M22,xform.M31,xform.M32));
+
+            // cache this
+            var srcRect = new Rect(bmpRect.X, bmpRect.Y, bmpRect.Width, bmpRect.Height);
+            _Context.PushClip(new RectangleGeometry(srcRect));
+            
+            var dstRect = new Rect(0, 0, image.PixelWidth, image.PixelHeight);            
+            _Context.DrawImage(image, dstRect);
+            
+            _Context.Pop();
+            _Context.Pop();
         }
+
+        
 
         /// <inheritdoc/>
         public void DrawTextLine(in Matrix3x2 transform, string text, float size, Drawing.FontStyle font)

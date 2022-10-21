@@ -44,6 +44,13 @@ namespace InteropTypes.Graphics.Adapters
 
         public bool CopyTo(ref WriteableBitmap dst, bool allowCompatibleFormats = true)
         {
+            if (_Bitmap.IsEmpty)
+            {
+                var changed = dst != null;
+                dst = null;
+                return changed;
+            }
+
             var dstHdr = dst?.GetBitmapInfo() ?? default;
 
             if (dst != null && _Bitmap.Info != dstHdr)
@@ -56,11 +63,14 @@ namespace InteropTypes.Graphics.Adapters
                 }                
             }
 
-            if (dst == null) { dst = CloneToWritableBitmap(allowCompatibleFormats); return true; }
+            if (dst == null)
+            {
+                dst = CloneToWritableBitmap(allowCompatibleFormats);
+                return true;
+            }
             else
             {
-                dst.SetPixels(0, 0, _Bitmap);                
-
+                dst.SetPixels(0, 0, _Bitmap);
                 return false;
             }
         }        

@@ -13,10 +13,30 @@
     
     <TabControl>
 
+        <TabItem Header="2D (1)">
+            <itypes:Canvas2DView Canvas="{Binding Canvas1}" />
+        </TabItem>
+
+        <TabItem Header="2D (2)">
+
+            
+            <itypes:Canvas2DView Canvas="{Binding Canvas2}" />
+            
+            <!--
+
+            <itypes:Canvas2DView Canvas="{Binding Canvas2}">
+                <itypes:Canvas2DView.Template>
+                    <itypes:Canvas2DViewportTemplate>
+                        <itypes:AutoCanvas2DViewport FrameRate="30" />
+                    </itypes:Canvas2DViewportTemplate>
+                </itypes:Canvas2DView.Template>                
+            </itypes:Canvas2DView> 
+            -->
+            
+        </TabItem>
+
         <TabItem Header="3D">
-
             <itypes:Scene3DView Scene="{Binding Sentinel}" />
-
         </TabItem>
 
         <TabItem Header="3D root">
@@ -69,6 +89,8 @@
                 
             </Border>            
         </TabItem>
+
+        
 
     </TabControl>
 </Window>

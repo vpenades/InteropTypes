@@ -10,9 +10,8 @@ using InteropTypes.Graphics.Drawing;
 
 using CAMERAVIEW = InteropTypes.Graphics.Drawing.CameraTransform3D;
 using DRAWABLE = InteropTypes.Graphics.Drawing.IDrawingBrush<InteropTypes.Graphics.Drawing.IScene3D>;
-
-
 using PROPERTYFLAGS = System.Windows.FrameworkPropertyMetadataOptions;
+
 namespace InteropTypes.Graphics.Backends.WPF.Primitives
 {
     /// <summary>

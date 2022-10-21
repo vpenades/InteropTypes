@@ -10,6 +10,9 @@ using InteropTypes.Graphics.Drawing;
 
 namespace InteropTypes.Graphics.Backends
 {
+    /// <summary>
+    /// Wraps a <see cref="System.Windows.Media.Imaging.RenderTargetBitmap"/>
+    /// </summary>
     public class WPFRenderTarget
     {
         #region lifecycle

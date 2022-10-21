@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
+using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
+
+using WPFBITMAPSOURCE = System.Windows.Media.Imaging.BitmapSource;
+using WPFBITMAPIMAGE = System.Windows.Media.Imaging.BitmapImage;
+using WPFBITMAPFRAME = System.Windows.Media.Imaging.BitmapFrame;
+using WPFCREATEOPTIONS = System.Windows.Media.Imaging.BitmapCreateOptions;
+using WPFCACHEOPTIONS = System.Windows.Media.Imaging.BitmapCacheOption;
 
 namespace InteropTypes.Graphics.Backends
 {
@@ -16,7 +24,7 @@ namespace InteropTypes.Graphics.Backends
 
         private readonly Dictionary<UInt32, System.Windows.Media.SolidColorBrush> _BrushesCache = new Dictionary<UInt32, System.Windows.Media.SolidColorBrush>();
 
-        private readonly Dictionary<Object, System.Windows.Media.Imaging.BitmapSource> _ImagesCache = new Dictionary<Object, System.Windows.Media.Imaging.BitmapSource>();
+        private readonly Dictionary<Object, WPFBITMAPSOURCE> _ImagesCache = new Dictionary<Object, WPFBITMAPSOURCE>();
 
         #endregion
 
@@ -57,35 +65,83 @@ namespace InteropTypes.Graphics.Backends
             return pen;
         }
 
-        public System.Windows.Media.Imaging.BitmapSource UseImage(object imageKey)
+        public WPFBITMAPSOURCE UseImage(object imageKey)
         {
-            if (_ImagesCache.TryGetValue(imageKey, out System.Windows.Media.Imaging.BitmapSource image)) return image;
-
-            var imagePath = imageKey as String;
-
-            using (var s = System.IO.File.OpenRead(imagePath))
+            // check if image is already in the cache
+            if (_ImagesCache.TryGetValue(imageKey, out WPFBITMAPSOURCE oldImage))
             {
-                if (true)
-                {
-                    var img = new System.Windows.Media.Imaging.BitmapImage();
+                // if the source image is dynamic we should update it
+                var newImage = _UpdateDynamicBitmap(imageKey, oldImage);
 
-                    img.BeginInit();
-                    img.StreamSource = s;
-                    img.EndInit();
+                if (oldImage != newImage)
+                {                    
+                    if (newImage == null) _ImagesCache.Remove(imageKey);
+                    else _ImagesCache[imageKey] = newImage;
+                }
 
-                    image = img;
-                }
-                else
-                {
-                    image = System.Windows.Media.Imaging.BitmapFrame.Create(s, System.Windows.Media.Imaging.BitmapCreateOptions.IgnoreImageCache, System.Windows.Media.Imaging.BitmapCacheOption.None);
-                }
+                return newImage;
             }
 
-            image.Freeze();
+            // create the new image, either dynamic or static.
 
-            _ImagesCache[imageKey] = image;
+            var image = _CreateDynamicBitmap(imageKey) ?? _CreateStaticBitmap(imageKey);
+
+            if (image != null) _ImagesCache[imageKey] = image;
 
             return image;
+        }
+
+        private static WPFBITMAPSOURCE _UpdateDynamicBitmap(object imageKey, WPFBITMAPSOURCE image)
+        {
+            if (!(image is WriteableBitmap dstWriteable)) return image;
+
+            if (imageKey is BindableBitmap srcBindable)
+            {
+                srcBindable.UpdateFromQueue();
+                return _CreateFromSource(srcBindable, dstWriteable);
+            }
+
+            return image;
+
+        }
+
+        private static WPFBITMAPSOURCE _CreateDynamicBitmap(object imageKey)
+        {
+            if (imageKey is BindableBitmap srcBindable)
+            {
+                srcBindable.UpdateFromQueue();
+                return _CreateFromSource(srcBindable);
+            }
+
+            return null;
+        }        
+
+        private static WPFBITMAPSOURCE _CreateStaticBitmap(object imageKey)
+        {
+            if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }
+
+            if (imageKey is string imagePath)
+            {
+                Uri.TryCreate(imagePath, UriKind.RelativeOrAbsolute, out var uri);
+
+                return new WPFBITMAPIMAGE(uri);
+            }
+
+            if (imageKey is SpanBitmap.ISource ibmp)
+            {                
+                return _CreateFromSource(ibmp);
+            }
+
+            return null;
+        }
+
+        private static WPFBITMAPSOURCE _CreateFromSource(SpanBitmap.ISource srcBindable, WriteableBitmap dstBmp = null)
+        {            
+            var srcBmp = srcBindable.AsSpanBitmap();
+            if (srcBmp.IsEmpty) return dstBmp;
+
+            srcBmp.WithWPF().CopyTo(ref dstBmp);
+            return dstBmp;
         }
 
         #endregion

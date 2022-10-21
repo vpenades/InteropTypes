@@ -8,8 +8,6 @@ using System.Windows.Input;
 
 using InteropTypes.Graphics.Drawing;
 
-using XYZ = System.Numerics.Vector3;
-
 using PROPERTYFLAGS = System.Windows.FrameworkPropertyMetadataOptions;
 
 namespace InteropTypes.Graphics.Backends.WPF

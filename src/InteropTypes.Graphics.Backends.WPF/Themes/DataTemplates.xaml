@@ -4,6 +4,7 @@
                     xmlns:theme="clr-namespace:InteropTypes.Graphics.Backends.Themes"
                     xmlns:local="clr-namespace:InteropTypes.Graphics.Backends.WPF"
                     xmlns:idraw="clr-namespace:InteropTypes.Graphics.Drawing;assembly=InteropTypes.Graphics.Drawing.Core"
+                    xmlns:idrawtk="clr-namespace:InteropTypes.Graphics.Drawing;assembly=InteropTypes.Graphics.Drawing.Toolkit"
                     xmlns:bitmaps="clr-namespace:InteropTypes.Graphics.Bitmaps;assembly=InteropTypes.Graphics.Bitmaps.Core"
                     xmlns:pixfmts="clr-namespace:InteropTypes.Graphics.Bitmaps;assembly=InteropTypes.Graphics.Bitmaps.PixelFormats"
                     xmlns:bitmapstk="clr-namespace:InteropTypes.Graphics.Bitmaps;assembly=InteropTypes.Graphics.Bitmaps.Toolkit">
@@ -21,6 +22,20 @@
     <DataTemplate DataType="{x:Type bitmapstk:BindableBitmap}">
         <local:ImageEx BitmapSource="{Binding Bitmap}" />        
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type idrawtk:Record2D}">
+        <local:Canvas2DView Canvas="{Binding}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type idrawtk:Record3D}">
+        <local:Scene3DView Scene="{Binding}" />
+    </DataTemplate>
+
+
+
+    <!-- Note: WPF disallows creating DataTemplate objects from interfaces, so it's not possible to create templates from IDrawableBrush<T> -->
+
+
 
     <!--
     <DataTemplate>            
