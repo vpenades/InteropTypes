@@ -49,6 +49,9 @@ namespace InteropTypes.Graphics.Backends
             try
             {
                 tex = null;
+                if (src.IsEmpty) return false;
+
+
                 Copy(src, ref tex, false, device, null, null);
                 return true;
             }
@@ -57,6 +60,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static void Copy(SpanBitmap src, ref XNA.Texture2D dst, bool fit, XNA.GraphicsDevice device, int? width = null, int? height = null, XNA.SurfaceFormat? fmt = null)
         {
+            if (src.IsEmpty) { dst = null; return; }
+
             var fmtx = fmt ?? ToSurfaceFormat(src.PixelFormat);
 
             Copy(src, ref dst,fit ,(w,h)=> new XNA.Texture2D(device, width ?? w, height ?? h, false, fmtx));
@@ -64,6 +69,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static void Copy(SpanBitmap src, ref XNA.Texture2D dst, bool fit, Func<int, int, XNA.Texture2D> texFactory)
         {
+            if (src.IsEmpty) { dst = null; return; }
+
             if (dst == null || dst.Width != src.Width || dst.Height != src.Height)
             {
                 if (dst != null) dst.Dispose();

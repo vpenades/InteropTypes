@@ -10,6 +10,8 @@ using COLOR = System.Drawing.Color;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Backends;
 using InteropTypes;
+using InteropTypes.Graphics.Bitmaps;
+using System.Threading.Tasks;
 
 namespace MonoGameDemo
 {
@@ -44,8 +46,8 @@ namespace MonoGameDemo
         private IMonoGameCanvas2D _Drawing2D;        
 
         private _Sprites2D _Sprites = new _Sprites2D();
-
-        private _DynamicTexture _DynTex;
+        
+        private ImageSource _BindableSprite = new BindableNoiseTexture(Pixel.BGR565.Format).Sprite;
 
         #endregion
 
@@ -54,8 +56,6 @@ namespace MonoGameDemo
         protected override void LoadContent()
         {
             _Drawing2D = MonoGameToolkit.CreateCanvas2D(this.GraphicsDevice);            
-
-            _DynTex = new _DynamicTexture(this.GraphicsDevice);
         }
 
         #endregion
@@ -111,7 +111,7 @@ namespace MonoGameDemo
             _Drawing2D.DrawLine((0, 0), (800, 600), 2, COLOR.Red);
             _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, _Sprites);
             _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, new _Scene2D());
-            _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, _DynTex);
+            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.Identity, _BindableSprite);
             _Drawing2D.DrawLine((800, 0), (0, 600), 2, COLOR.Red);
 
             if (_Drawing2D.TryGetBackendViewportBounds(out var viewportBounds))

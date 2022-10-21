@@ -41,12 +41,12 @@ namespace InteropTypes
 
         public void DrawTo(ICanvas2D target, System.Numerics.Matrix3x2 transform)
         {
-            var tmp = new ImageSource();
-
             for (int y = 0; y < _Height; ++y)
             {
                 for (int x = 0; x < _Width; ++x)
                 {
+                    var tmp = new ImageSource();
+
                     var offset = new XY(x * 16, y * 16);
 
                     var idx = _Tiles[y * _Width + x];

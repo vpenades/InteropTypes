@@ -4,6 +4,8 @@ using System.Text;
 
 using Microsoft.Xna.Framework.Graphics;
 
+using static System.Net.Mime.MediaTypeNames;
+
 namespace InteropTypes.Graphics.Backends
 {
     internal class TextureCache
@@ -41,17 +43,45 @@ namespace InteropTypes.Graphics.Backends
 
             if (_SpriteTextures.TryGetValue(imageSource, out (Texture2D, SpriteTextureAttributes) xtex))
             {
-                return DynamicTextureUpdate(imageSource, xtex);
+                var xtex2 = _DynamicTextureUpdate(imageSource, xtex);
+
+                if (xtex.Item1 != xtex2.Item1) // the texture has changed, update dictionary
+                {
+                    if (xtex2.Item1 == null) _SpriteTextures.Remove(imageSource);
+                    else _SpriteTextures[imageSource] = xtex2;
+                }
+
+                return xtex2;
             }
 
-            xtex = MonoGameToolkit._CreateTexture(_Device, imageSource);
+            if (imageSource is Bitmaps.BindableBitmap || imageSource is Bitmaps.InterlockedBitmap)
+            {
+                xtex = _DynamicTextureUpdate(imageSource, (null, SpriteTextureAttributes.Default));
+            }
+            else
+            {
+                xtex = MonoGameToolkit._CreateStaticTexture(_Device, imageSource);
+            }            
 
-            return _SpriteTextures[imageSource] = xtex;
+            if (xtex.Item1 != null) _SpriteTextures[imageSource] = xtex;
+
+            return xtex;
         }
 
-        private (Texture2D, SpriteTextureAttributes) DynamicTextureUpdate(object imageSource, (Texture2D, SpriteTextureAttributes) xtex)
+        private (Texture2D, SpriteTextureAttributes) _DynamicTextureUpdate(object imageSource, (Texture2D, SpriteTextureAttributes) xtex)
         {
             // if the imageSource is a dinamic texture, update our device texture.
+
+            if (imageSource is Bitmaps.BindableBitmap bindable)
+            {
+                bindable.UpdateFromQueue();
+
+                var tex = xtex.Item1;
+
+                MonoGameToolkit.Copy(bindable.Bitmap, ref tex, false, _Device);
+
+                xtex = (tex, xtex.Item2);
+            }
 
             if (imageSource is Bitmaps.InterlockedBitmap interlocked)
             {
@@ -60,15 +90,10 @@ namespace InteropTypes.Graphics.Backends
                 if (interlocked.TryDequeue(newFrame => MonoGameToolkit.Copy(newFrame, ref tex, false, _Device)))
                 {
                     xtex = (tex, xtex.Item2);
-
-                    if (tex != xtex.Item1)
-                    {
-                        _SpriteTextures[imageSource] = xtex;
-                    }
                 }
-            }
+            }            
 
-            return xtex;
+            return xtex; // not dynamic, return as is
         }
 
         #endregion

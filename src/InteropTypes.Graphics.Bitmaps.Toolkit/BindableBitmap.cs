@@ -107,9 +107,12 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <returns>An action that needs to be executed by a dispatcher in the UI thread in order to complete the update.</returns>
         public Action Enqueue(SpanBitmap bmp)
         {
-            if (_DispatcherBitmaps.Count > 3) return _NoAction; // do nothing
-
             _DispatcherBitmaps.Enqueue(_CopyFromPool(bmp));
+
+            while(_DispatcherBitmaps.Count > 2) // throttle
+            {
+                if (_DispatcherBitmaps.TryDequeue(out var xbmp)) _ReturnToPool(xbmp);
+            }
 
             return _UpdateFromQueue;
         }
@@ -119,24 +122,29 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <summary>
         /// If we have enqueued an image from another thread, we can call this method from the UI thread to dequeue it.
         /// </summary>
-        /// <returns>true if dequeue was successful, false otherwise</returns>
-        public bool UpdateFromQueue()
+        /// <remarks>
+        /// Always call from UI THREAD
+        /// </remarks>
+        /// <returns>true if there's still more frames into queue, false otherwise</returns>
+        public bool UpdateFromQueue(int repeat = int.MaxValue)
         {
-            if (_DispatcherBitmaps.TryDequeue(out var xbmp))
+            while (repeat > 0)
             {
+                if (!_DispatcherBitmaps.TryDequeue(out var xbmp)) break;
+                
                 Update(xbmp);
                 _ReturnToPool(xbmp);
-                return true;
+                --repeat;                
             }
 
-            return false;
+            return !_DispatcherBitmaps.IsEmpty;
         }
 
         /// <summary>
         /// Updates the underlaying image.
         /// </summary>
         /// <remarks>
-        /// Must be called from the UI thread.
+        /// Always call from UI THREAD
         /// </remarks>
         /// <param name="bmp">the input image</param>
         public void Update(MemoryBitmap bmp)
@@ -148,7 +156,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// Updates the underlaying image.
         /// </summary>
         /// <remarks>
-        /// Must be called from the UI thread.
+        /// Always call from UI THREAD
         /// </remarks>
         /// <param name="bmp">the input image</param>
         public void Update(SpanBitmap bmp)
@@ -157,8 +165,11 @@ namespace InteropTypes.Graphics.Bitmaps
             else bmp.CopyTo(ref _Bitmap);
 
             Invalidate();
-        }        
+        }
 
+        /// <remarks>
+        /// Always call from UI THREAD
+        /// </remarks>
         public virtual void Invalidate()
         {
             PropertyChanged?.Invoke(this, _AllProperties);

@@ -28,19 +28,16 @@ namespace InteropTypes
 
         private float _Time => (float)_Timer.Elapsed.TotalSeconds;
 
+        private static readonly ImageSource _Asalga = ImageSource.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
+
         public void DrawTo(ICanvas2D dc)
         {
             var x =
                 System.Numerics.Matrix3x2.CreateScale(0.5f)
                 * System.Numerics.Matrix3x2.CreateRotation(_Time)
-                   * System.Numerics.Matrix3x2.CreateTranslation(400, 300);
+                   * System.Numerics.Matrix3x2.CreateTranslation(400, 300);            
 
-            var image = ImageSource.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
-
-            dc.DrawImage(x, image);
-
-
-            // rect.DrawSprite(kk, image);
+            dc.DrawImage(x, _Asalga);            
 
             var idx = (int)(_Time * 25);
 

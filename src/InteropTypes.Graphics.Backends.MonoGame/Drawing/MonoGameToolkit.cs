@@ -60,7 +60,7 @@ namespace InteropTypes.Graphics.Backends
             return new MonoGameSpriteTexture(source, sampler ?? SamplerState.LinearClamp, textureBleed);
         }
 
-        internal static (Texture2D Texture, SpriteTextureAttributes Attributes) _CreateTexture(GraphicsDevice gd, object imageSource)
+        internal static (Texture2D Texture, SpriteTextureAttributes Attributes) _CreateStaticTexture(GraphicsDevice gd, object imageSource)
         {
             var attr = SpriteTextureAttributes.Default;
 
@@ -68,12 +68,7 @@ namespace InteropTypes.Graphics.Backends
             {
                 attr = mgasset.Attributes;
                 imageSource = mgasset.Source;
-            }
-
-            if (imageSource is FileInfo finfo)
-            {
-                imageSource = finfo.FullName;
-            }
+            }            
 
             if (imageSource is ValueTuple<System.Reflection.Assembly,string> resourceInfo) // load from assembly resources
             {
@@ -109,12 +104,9 @@ namespace InteropTypes.Graphics.Backends
                 return (tex, attr);
             }
 
-            if (imageSource is Bitmaps.SpanBitmap.ISource ibmp)
+            if (imageSource is FileInfo finfo)
             {
-                if (TryCreateTexture(ibmp.AsSpanBitmap(), gd, out var tex))
-                {
-                    return (tex, attr);
-                }
+                imageSource = finfo.FullName;
             }
 
             if (imageSource is string texPath)
@@ -127,6 +119,16 @@ namespace InteropTypes.Graphics.Backends
             {
                 var tex = _loadTexture(gd, document);
                 return (tex, attr);
+            }
+
+            // interfaces must be checked at the very end because they're fallbacks
+
+            if (imageSource is Bitmaps.SpanBitmap.ISource ibmp)
+            {
+                if (TryCreateTexture(ibmp.AsSpanBitmap(), gd, out var tex))
+                {
+                    return (tex, attr);
+                }
             }
 
             throw new NotImplementedException($"Unknown source: {imageSource}");
