@@ -21,8 +21,7 @@ namespace InteropTypes.Graphics.Backends
                 case INTEROP.Pixel.Alpha8.Code: return XNA.SurfaceFormat.Alpha8;
                 case INTEROP.Pixel.BGR565.Code: return XNA.SurfaceFormat.Bgr565;
                 case INTEROP.Pixel.BGRA4444.Code: return XNA.SurfaceFormat.Bgra4444;
-                case INTEROP.Pixel.BGRA5551.Code: return XNA.SurfaceFormat.Bgra5551;
-                case INTEROP.Pixel.BGRA32.Code: return XNA.SurfaceFormat.Bgra32;
+                case INTEROP.Pixel.BGRA5551.Code: return XNA.SurfaceFormat.Bgra5551;                
                 case INTEROP.Pixel.BGRA128F.Code: return XNA.SurfaceFormat.Vector4;
             }
 

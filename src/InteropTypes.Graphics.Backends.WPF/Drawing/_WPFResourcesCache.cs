@@ -29,6 +29,8 @@ namespace InteropTypes.Graphics.Backends
 
         private readonly Dictionary<System.Drawing.RectangleF, System.Windows.Media.RectangleGeometry> _ClipCache = new Dictionary<System.Drawing.RectangleF, System.Windows.Media.RectangleGeometry>();
 
+        private static readonly PixelFormat _BindablePixelFormat = Pixel.BGRA32.Format;
+
         #endregion
 
         #region API
@@ -110,7 +112,7 @@ namespace InteropTypes.Graphics.Backends
 
             if (imageKey is BindableBitmap srcBindable)
             {
-                srcBindable.UpdateFromQueue();
+                srcBindable.UpdateFromQueue(_BindablePixelFormat);
                 return _CreateFromSource(srcBindable, dstWriteable);
             }
 
@@ -122,7 +124,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (imageKey is BindableBitmap srcBindable)
             {
-                srcBindable.UpdateFromQueue();
+                srcBindable.UpdateFromQueue(_BindablePixelFormat);
                 return _CreateFromSource(srcBindable);
             }
 

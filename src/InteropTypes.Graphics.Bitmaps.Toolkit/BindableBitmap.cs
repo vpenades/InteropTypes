@@ -105,7 +105,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </example>
         /// <param name="bmp">The bitmap to set.</param>
         /// <returns>An action that needs to be executed by a dispatcher in the UI thread in order to complete the update.</returns>
-        public Action Enqueue(SpanBitmap bmp)
+        public Action Enqueue(SpanBitmap bmp, PixelFormat? format = null)
         {
             _DispatcherBitmaps.Enqueue(_CopyFromPool(bmp));
 
@@ -114,10 +114,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (_DispatcherBitmaps.TryDequeue(out var xbmp)) _ReturnToPool(xbmp);
             }
 
-            return _UpdateFromQueue;
-        }
+            void _update() { UpdateFromQueue(format); }
 
-        private void _UpdateFromQueue() { UpdateFromQueue(); }
+            return _update;
+        }        
 
         /// <summary>
         /// If we have enqueued an image from another thread, we can call this method from the UI thread to dequeue it.
@@ -126,13 +126,13 @@ namespace InteropTypes.Graphics.Bitmaps
         /// Always call from UI THREAD
         /// </remarks>
         /// <returns>true if there's still more frames into queue, false otherwise</returns>
-        public bool UpdateFromQueue(int repeat = int.MaxValue)
+        public bool UpdateFromQueue(PixelFormat? format = null, int repeat = int.MaxValue)
         {
             while (repeat > 0)
             {
                 if (!_DispatcherBitmaps.TryDequeue(out var xbmp)) break;
                 
-                Update(xbmp);
+                Update(xbmp, format);
                 _ReturnToPool(xbmp);
                 --repeat;                
             }
@@ -147,9 +147,10 @@ namespace InteropTypes.Graphics.Bitmaps
         /// Always call from UI THREAD
         /// </remarks>
         /// <param name="bmp">the input image</param>
-        public void Update(MemoryBitmap bmp)
+        /// <param name="format">overrides the source bitmat format</param>
+        public void Update(MemoryBitmap bmp, PixelFormat? format = null)
         {
-            Update(bmp.AsSpanBitmap());
+            Update(bmp.AsSpanBitmap(), format);
         }
 
         /// <summary>
@@ -159,9 +160,12 @@ namespace InteropTypes.Graphics.Bitmaps
         /// Always call from UI THREAD
         /// </remarks>
         /// <param name="bmp">the input image</param>
-        public void Update(SpanBitmap bmp)
+        /// <param name="format">overrides the source bitmat format</param>
+        public void Update(SpanBitmap bmp, PixelFormat? format = null)
         {
-            if (_Format.HasValue) bmp.CopyTo(ref _Bitmap, _Format.Value);
+            var fmt = format ?? _Format;
+
+            if (fmt.HasValue) bmp.CopyTo(ref _Bitmap, fmt.Value);
             else bmp.CopyTo(ref _Bitmap);
 
             Invalidate();

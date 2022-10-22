@@ -10,9 +10,9 @@ namespace InteropTypes
 {
     public class BindableNoiseTexture
     {
-        public BindableNoiseTexture(PixelFormat fmt)
+        public BindableNoiseTexture()
         {
-            _BindableBitmap = new BindableBitmap(default, fmt);
+            _BindableBitmap = new BindableBitmap();
             _BindableSprite = new ImageSource(_BindableBitmap, (0, 0), (64, 64), (0, 0));
 
             void _UpdateBindableAsync()

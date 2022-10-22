@@ -47,7 +47,7 @@ namespace MonoGameDemo
 
         private _Sprites2D _Sprites = new _Sprites2D();
         
-        private ImageSource _BindableSprite = new BindableNoiseTexture(Pixel.BGR565.Format).Sprite;
+        private ImageSource _BindableSprite = new BindableNoiseTexture().Sprite;
 
         #endregion
 

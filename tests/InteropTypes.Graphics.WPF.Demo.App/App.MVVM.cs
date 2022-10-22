@@ -149,7 +149,7 @@ namespace WPFDemo
     public class AdvancedScene2D : IDrawingBrush<ICanvas2D>
     {
         private _Sprites2D sprites = new _Sprites2D();
-        private ImageSource _noiseTexture = new BindableNoiseTexture(Pixel.BGRA32.Format).Sprite;
+        private ImageSource _noiseTexture = new BindableNoiseTexture().Sprite;
 
         public void DrawTo(ICanvas2D context)
         {

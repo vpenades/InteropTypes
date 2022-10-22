@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Microsoft.Xna.Framework.Graphics;
+using InteropTypes.Graphics.Bitmaps;
 
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace InteropTypes.Graphics.Backends
 {
@@ -74,7 +74,7 @@ namespace InteropTypes.Graphics.Backends
 
             if (imageSource is Bitmaps.BindableBitmap bindable)
             {
-                bindable.UpdateFromQueue();
+                bindable.UpdateFromQueue(Pixel.BGR565.Format);
 
                 var tex = xtex.Item1;
 
