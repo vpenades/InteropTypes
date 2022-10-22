@@ -14,6 +14,7 @@ using WPFBITMAPFRAME = System.Windows.Media.Imaging.BitmapFrame;
 using WPFCREATEOPTIONS = System.Windows.Media.Imaging.BitmapCreateOptions;
 using WPFCACHEOPTIONS = System.Windows.Media.Imaging.BitmapCacheOption;
 
+
 namespace InteropTypes.Graphics.Backends
 {
     internal class _WPFResourcesCache
@@ -26,9 +27,21 @@ namespace InteropTypes.Graphics.Backends
 
         private readonly Dictionary<Object, WPFBITMAPSOURCE> _ImagesCache = new Dictionary<Object, WPFBITMAPSOURCE>();
 
+        private readonly Dictionary<System.Drawing.RectangleF, System.Windows.Media.RectangleGeometry> _ClipCache = new Dictionary<System.Drawing.RectangleF, System.Windows.Media.RectangleGeometry>();
+
         #endregion
 
         #region API
+
+        public System.Windows.Media.RectangleGeometry UseClipRectangle(System.Drawing.RectangleF rect)
+        {
+            if (_ClipCache.TryGetValue(rect, out var dstRect)) return dstRect;
+
+            var srcRect = new System.Windows.Rect(rect.X, rect.Y, rect.Width, rect.Height);
+            dstRect = new System.Windows.Media.RectangleGeometry(srcRect);
+            _ClipCache[rect] = dstRect;
+            return dstRect;
+        }
 
         public System.Windows.Media.Pen UseTransparentPen()
         {
