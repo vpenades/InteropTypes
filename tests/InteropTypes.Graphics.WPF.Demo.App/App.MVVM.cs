@@ -68,6 +68,8 @@ namespace WPFDemo
 
         public IDrawingBrush<ICanvas2D> Canvas2 { get; } = new AdvancedScene2D();
 
+        public BindableCanvas2D Canvas3 { get; } = new AsyncScene2D(System.Windows.Threading.Dispatcher.CurrentDispatcher).Bindable;
+
         private void _PaintOnBitmapAsync()
         {
             Task.Run(_PaintOnBitmap);
@@ -157,6 +159,46 @@ namespace WPFDemo
 
             context.DrawImage(System.Numerics.Matrix3x2.Identity, _noiseTexture);
         }
+    }
+
+    public class AsyncScene2D
+    {
+        public AsyncScene2D(System.Windows.Threading.Dispatcher dispatcher)
+        {
+            var rnd = new Random();
+
+            void _DrawRandomLines(ICanvas2D canvas)
+            {
+                for (int i = 0; i < 100; ++i)
+                {
+                    var p1 = new Point2(rnd) * 200;
+                    var p2 = new Point2(rnd) * 200;
+
+                    canvas.DrawLine(p1, p2, 1f, System.Drawing.Color.Red);
+                }
+            }
+
+            void _UpdateBindableAsync()
+            {
+                while (true)
+                {
+                    var dispacherAction = Bindable.Enqueue(_DrawRandomLines);
+                    if (dispacherAction != null)
+                    {
+                        try { dispatcher.Invoke(dispacherAction); }
+                        catch (TaskCanceledException) { }
+                    }
+
+                    Task.Delay(1000 / 30);
+                }
+            }
+
+            Task.Run(_UpdateBindableAsync);
+        }
+
+        public BindableCanvas2D Bindable { get; } = new BindableCanvas2D();
+
+        
     }
 
     public class Cube : IDrawingBrush<IScene3D>

@@ -35,6 +35,10 @@
             
         </TabItem>
 
+        <TabItem Header="2D (3)">
+            <itypes:Canvas2DView Canvas="{Binding Canvas3.Canvas}" />
+        </TabItem>
+
         <TabItem Header="3D">
             <itypes:Scene3DView Scene="{Binding Sentinel}" />
         </TabItem>

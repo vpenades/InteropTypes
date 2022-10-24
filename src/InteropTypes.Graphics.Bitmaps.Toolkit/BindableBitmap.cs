@@ -107,12 +107,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <returns>An action that needs to be executed by a dispatcher in the UI thread in order to complete the update.</returns>
         public Action Enqueue(SpanBitmap bmp, PixelFormat? format = null)
         {
-            _DispatcherBitmaps.Enqueue(_CopyFromPool(bmp));
-
-            while(_DispatcherBitmaps.Count > 2) // throttle
-            {
-                if (_DispatcherBitmaps.TryDequeue(out var xbmp)) _ReturnToPool(xbmp);
-            }
+            _Queue.Produce(bmp);
 
             void _update() { UpdateFromQueue(format); }
 
@@ -128,16 +123,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <returns>true if there's still more frames into queue, false otherwise</returns>
         public bool UpdateFromQueue(PixelFormat? format = null, int repeat = int.MaxValue)
         {
-            while (repeat > 0)
-            {
-                if (!_DispatcherBitmaps.TryDequeue(out var xbmp)) break;
-                
-                Update(xbmp, format);
-                _ReturnToPool(xbmp);
-                --repeat;                
-            }
-
-            return !_DispatcherBitmaps.IsEmpty;
+            return _Queue.Consume(xbmp => Update(xbmp,format), repeat);
         }
 
         /// <summary>
@@ -195,17 +181,59 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region dispatcher pool
 
-        private readonly ConcurrentBag<MemoryBitmap> _BitmapPool = new ConcurrentBag<MemoryBitmap>();
+        private readonly _ProducerConsumer _Queue = new _ProducerConsumer();
+        private static void _NoAction() { }
 
-        private readonly ConcurrentQueue<MemoryBitmap> _DispatcherBitmaps = new ConcurrentQueue<MemoryBitmap>();
+        #endregion
+    }
 
-        private static void _NoAction() { }        
+    class _ProducerConsumer
+    {
+        #region data
+
+        private readonly ConcurrentBag<MemoryBitmap> _Pool = new ConcurrentBag<MemoryBitmap>();
+
+        private readonly ConcurrentQueue<MemoryBitmap> _Queue = new ConcurrentQueue<MemoryBitmap>();
+
+        #endregion
+
+        #region properties
+
+        public bool IsEmpty => _Queue.IsEmpty;
+
+        #endregion
+
+        #region API
+
+        public void Produce(SpanBitmap bmp)
+        {
+            _Queue.Enqueue(_CopyFromPool(bmp));
+
+            while (_Queue.Count > 2) // throttle
+            {
+                if (_Queue.TryDequeue(out var xbmp)) _ReturnToPool(xbmp);
+            }
+        }
+
+        public bool Consume(SpanBitmap.Action1 updater, int repeat = int.MaxValue)
+        {
+            while (repeat > 0)
+            {
+                if (!_Queue.TryDequeue(out var xbmp)) break;
+
+                updater(xbmp);
+                _ReturnToPool(xbmp);
+                --repeat;
+            }
+
+            return !_Queue.IsEmpty;
+        }
 
         private MemoryBitmap _CopyFromPool(SpanBitmap bmp)
         {
             if (bmp.IsEmpty) return default;
 
-            if (!_BitmapPool.TryTake(out MemoryBitmap poolBmp)) poolBmp = default;
+            if (!_Pool.TryTake(out MemoryBitmap poolBmp)) poolBmp = default;
 
             bmp.CopyTo(ref poolBmp);
             return poolBmp;
@@ -215,7 +243,7 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             if (bmp.IsEmpty) return;
 
-            _BitmapPool.Add(bmp);
+            _Pool.Add(bmp);
         }
 
         #endregion
