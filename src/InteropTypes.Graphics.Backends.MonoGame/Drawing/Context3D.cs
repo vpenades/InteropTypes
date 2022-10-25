@@ -18,6 +18,7 @@ namespace InteropTypes.Graphics.Backends
 
         public MonoGameDrawing3D(GraphicsDevice device, bool flipFaces = false)
         {
+            _Device = device;
             _Batch = new MeshBuilder(flipFaces);
             SetPassThroughTarget(_Batch);
         }
