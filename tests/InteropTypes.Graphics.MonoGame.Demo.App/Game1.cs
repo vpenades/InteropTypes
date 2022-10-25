@@ -43,7 +43,8 @@ namespace MonoGameDemo
 
         private readonly GraphicsDeviceManager _Graphics;
 
-        private IMonoGameCanvas2D _Drawing2D;        
+        private IMonoGameCanvas2D _Drawing2D;
+        private IMonoGameScene3D _Drawing3D;
 
         private _Sprites2D _Sprites = new _Sprites2D();
         
@@ -55,7 +56,8 @@ namespace MonoGameDemo
 
         protected override void LoadContent()
         {
-            _Drawing2D = MonoGameToolkit.CreateCanvas2D(this.GraphicsDevice);            
+            _Drawing2D = MonoGameToolkit.CreateCanvas2D(this.GraphicsDevice);
+            _Drawing3D = MonoGameToolkit.CreateScene3D(this.GraphicsDevice);
         }
 
         #endregion
@@ -96,15 +98,23 @@ namespace MonoGameDemo
         {
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
-            var mouseState = Mouse.GetState(this.Window);
-
-
             base.Draw(gameTime);
             
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.BlendState = BlendState.Opaque;            
 
-            _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);                     
+            _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);
+            _DrawCanvas2D();
+            _Drawing2D.End();
+
+            _Drawing3D.Clear();
+            _DrawScene3D();
+            _Drawing3D.Render();
+        }        
+
+        private void _DrawCanvas2D()
+        {
+            var mouseState = Mouse.GetState(this.Window);
 
             var vp = _Drawing2D.TransformInverse(new Point2(mouseState.Position.X, mouseState.Position.Y));
 
@@ -117,13 +127,13 @@ namespace MonoGameDemo
             if (_Drawing2D.TryGetBackendViewportBounds(out var viewportBounds))
             {
                 viewportBounds.Inflate(-10, -10);
-                _Drawing2D.DrawRectangle(viewportBounds, (COLOR.Yellow,2) );
+                _Drawing2D.DrawRectangle(viewportBounds, (COLOR.Yellow, 2));
             }
 
             if (_Drawing2D.TryGetQuadrant(out var quadrant))
             {
                 _Drawing2D.DrawTextLine((10, 70), $"{quadrant}", 15, COLOR.White);
-            }            
+            }
 
             _Drawing2D.DrawTextLine((10, 20), $"{(int)vp.X} {(int)vp.Y}", 15, COLOR.White);
 
@@ -139,23 +149,32 @@ namespace MonoGameDemo
 
             var xformed = svc.GetService(typeof(IMeshCanvas2D)) as IMeshCanvas2D;
 
-            xformed?.DrawMeshPrimitive(vertices, new int[] { 0, 1, 2, 0, 2, 3 },"Assets\\Tiles.png");
+            xformed?.DrawMeshPrimitive(vertices, new int[] { 0, 1, 2, 0, 2, 3 }, "Assets\\Tiles.png");
 
             // draw tiles with half pixel
 
             var tile1 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4);
-            var tile2 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);            
+            var tile2 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);
 
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600, 500), tile1);
             _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600 + 65, 500), tile2);
 
-            var qrhead = ImageSource.Create((typeof(Game1).Assembly, "MonoGameDemo.Assets.qrhead.jpg"),(0,0),(255,255),(128,128));
-            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateScale(0.25f)*System.Numerics.Matrix3x2.CreateTranslation(125, 50), qrhead);
+            var qrhead = ImageSource.Create((typeof(Game1).Assembly, "MonoGameDemo.Assets.qrhead.jpg"), (0, 0), (255, 255), (128, 128));
+            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateScale(0.25f) * System.Numerics.Matrix3x2.CreateTranslation(125, 50), qrhead);
 
-            _Drawing2D.DrawCircle((600, 100), 50, (COLOR.Yellow,2));
+            _Drawing2D.DrawCircle((600, 100), 50, (COLOR.Yellow, 2));
+        }
 
-            _Drawing2D.End();
-        }        
+        private void _DrawScene3D()
+        {
+            var camera = CameraTransform3D.CreatePerspective(1.1f);
+            camera.SetOrbitWorldMatrix((0, 0, 0), 30, 0, 0, 0);
+            _Drawing3D.SetCamera(camera);
+
+            var yaw = 10f * (float)(DateTime.Now - DateTime.Today).TotalMinutes;
+
+            ThunderbirdRocket.DrawTo(System.Numerics.Matrix4x4.CreateRotationY(yaw), _Drawing3D);
+        }
 
         #endregion
     }    

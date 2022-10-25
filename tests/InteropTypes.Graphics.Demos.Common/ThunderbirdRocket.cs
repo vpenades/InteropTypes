@@ -15,14 +15,12 @@ namespace InteropTypes
 
         public Matrix4x4 Location = Matrix4x4.Identity;
 
-        void IDrawingBrush<IScene3D>.DrawTo(IScene3D context)
-        {
-            context = context.CreateTransformed3D(Location);
-            DrawTo(context);
-        }
+        public void DrawTo(IScene3D context) { DrawTo(Location, context); }
 
-        public static void DrawTo(IScene3D context)
+        public static void DrawTo(in Matrix4x4 location, IScene3D context)
         {
+            context = context.CreateTransformed3D(location);
+
             var color = ColorStyle.GetDefaultFrom(context, COLOR.Red);
             var style = new OutlineFillStyle(color, COLOR.Black, 0.1f);
 
