@@ -403,7 +403,7 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
 
-        public void ApplyEffect(IEffect effect)            
+        public void ApplyEffect(IEffect effect)
         {
             if (effect.TryApplyTo(this)) return;
 
@@ -434,11 +434,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 default: throw new NotSupportedException();
             }
         }
-
-
-        [Obsolete("Use ToMemoryBitmap", true)]
-        public MemoryBitmap<TPixel> CloneAs<TPixel>() where TPixel : unmanaged { return default; }
-
+        
         public MemoryBitmap<TPixel> ToMemoryBitmap<TPixel>()
             where TPixel : unmanaged
         {

@@ -379,15 +379,14 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (transfer.TryTransfer<TPixel>(srcx, this)) return;
             }
 
-            // 2nd try with explicit exact types:
+            // 2nd try with generic exact types:
+            if (transfer.TryTransfer(src, this)) return;
+
+            // 3rd try with explicit exact types:
             if (transfer is SpanBitmap.ITransfer<TSrcPixel, TPixel> xtransfer)
             {
                 if (xtransfer.TryTransfer(src, this)) return;
-            }
-
-            // 3rd try with generic exact types:
-            if (transfer.TryTransfer(src, this)) return;
-            
+            }            
 
             // 4th try typeless:
             if (transfer.TryTransfer(src.AsTypeless(), this.AsTypeless())) return;
