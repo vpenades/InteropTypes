@@ -124,6 +124,24 @@ namespace InteropTypes.Graphics.Bitmaps
         public bool UpdateFromQueue(PixelFormat? format = null, int repeat = int.MaxValue)
         {
             return _Queue.Consume(xbmp => Update(xbmp,format), repeat);
+        }        
+
+        /// <summary>
+        /// Updates the underlaying image.
+        /// </summary>
+        /// <remarks>
+        /// Always call from UI THREAD
+        /// </remarks>
+        /// <param name="srcBmp">the input image</param>
+        /// <param name="dstFormat">overrides the source bitmat format.</param>
+        public void Update(SpanBitmap srcBmp, PixelFormat? dstFormat = null)
+        {
+            var fmt = dstFormat ?? _Format;
+
+            if (fmt.HasValue) srcBmp.CopyTo(ref _Bitmap, fmt.Value);
+            else srcBmp.CopyTo(ref _Bitmap);
+
+            Invalidate();
         }
 
         /// <summary>
@@ -133,26 +151,15 @@ namespace InteropTypes.Graphics.Bitmaps
         /// Always call from UI THREAD
         /// </remarks>
         /// <param name="bmp">the input image</param>
-        /// <param name="format">overrides the source bitmat format</param>
-        public void Update(MemoryBitmap bmp, PixelFormat? format = null)
+        /// <param name="copyConverter">external custom copy conversion.</param>
+        /// <param name="dstFormat">overrides the source bitmat format.</param>
+        public void Update(SpanBitmap srcBmp, SpanBitmap.Action2 copyConverter = null, PixelFormat? dstFormat = null)
         {
-            Update(bmp.AsSpanBitmap(), format);
-        }
+            var fmt = dstFormat ?? _Format ?? srcBmp.PixelFormat;
 
-        /// <summary>
-        /// Updates the underlaying image.
-        /// </summary>
-        /// <remarks>
-        /// Always call from UI THREAD
-        /// </remarks>
-        /// <param name="bmp">the input image</param>
-        /// <param name="format">overrides the source bitmat format</param>
-        public void Update(SpanBitmap bmp, PixelFormat? format = null)
-        {
-            var fmt = format ?? _Format;
+            new BitmapInfo(srcBmp.Size, fmt).CreateBitmap(ref _Bitmap);
 
-            if (fmt.HasValue) bmp.CopyTo(ref _Bitmap, fmt.Value);
-            else bmp.CopyTo(ref _Bitmap);
+            copyConverter(srcBmp, _Bitmap);
 
             Invalidate();
         }
