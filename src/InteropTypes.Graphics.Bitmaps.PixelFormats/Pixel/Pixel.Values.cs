@@ -307,12 +307,13 @@ namespace InteropTypes.Graphics.Bitmaps
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)BGR & 0x1f; return (p * 8) | (p >> 2); }
-            }            
+            }
 
             #endregion
 
             #region API
 
+            [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFromRGB8(uint red, uint green, uint blue)
             {
                 System.Diagnostics.Debug.Assert(red < 256);

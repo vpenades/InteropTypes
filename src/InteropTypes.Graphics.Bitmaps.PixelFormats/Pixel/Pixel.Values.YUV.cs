@@ -85,7 +85,15 @@ namespace InteropTypes.Graphics.Bitmaps
                 #region API
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
-                public Byte GetRed(int y)
+                public void SetUV(int u, int v)
+                {
+                    _U = ((u * 1814) >> 10) - 227;
+                    _V = ((v * 1436) >> 10) - 179;
+                    _UV = -((u * 46549) >> 17) + 44 - ((v * 93604) >> 17) + 91;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
+                public readonly Byte GetRed(int y)
                 {
                     y += _V;
                     if (y < 0) y = 0;
@@ -94,7 +102,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
-                public Byte GetGreen(int y)
+                public readonly Byte GetGreen(int y)
                 {
                     y += _UV;
                     if (y < 0) y = 0;
@@ -103,24 +111,16 @@ namespace InteropTypes.Graphics.Bitmaps
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
-                public Byte GetBlue(int y)
+                public readonly Byte GetBlue(int y)
                 {
                     y += _U;
                     if (y < 0) y = 0;
                     else if (y > 255) y = 255;
                     return (Byte)y;
                 }
-
+                
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
-                public void SetUV(int u, int v)
-                {
-                    _U = ((u * 1814) >> 10) - 227;
-                    _V = ((v * 1436) >> 10) - 179;
-                    _UV = -((u * 46549) >> 17) + 44 - ((v * 93604) >> 17) + 91;                    
-                }
-
-                [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
-                public BGR24 ToBGR24(int y)
+                public readonly BGR24 ToBGR24(int y)
                 {
                     #if NETSTANDARD2_0
                     return new BGR24(GetRed(y), GetGreen(y), GetBlue(y));
@@ -131,6 +131,23 @@ namespace InteropTypes.Graphics.Bitmaps
                         Math.Clamp(y + _UV, 0, 255),
                         Math.Clamp(y + _U, 0, 255)
                         );
+                    #endif
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
+                public readonly void CopyTo(ref BGR565 pixel, int y)
+                {
+                    #if NETSTANDARD2_0
+                    pixel.SetFromRGB8(GetRed(y), GetGreen(y), GetBlue(y));
+                    #else
+
+                    uint bgr = (uint)Math.Clamp(y + _V, 0, 255) << 8;
+                    bgr &= 0b1111100000000000;
+                    bgr |= (uint)Math.Clamp(y + _UV, 0, 255) << 3;
+                    bgr &= 0b1111111111100000;
+                    bgr |= (uint)Math.Clamp(y + _U, 0, 255) >> 3;
+
+                    pixel.BGR = (ushort)bgr;
                     #endif
                 }
 
@@ -303,6 +320,21 @@ namespace InteropTypes.Graphics.Bitmaps
                     
                     var srcb = System.Runtime.InteropServices.MemoryMarshal.Cast<ushort, byte>(src);
 
+                    if (typeof(TDstPixel) == typeof(BGR565))
+                    {
+                        var dstb = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, BGR565>(dst);
+
+                        for (int x = 0; x < len; x += 2)
+                        {
+                            var xx = x * 2;
+                            yuv.SetUV(srcb[xx + 1], srcb[xx + 3]);
+                            yuv.CopyTo(ref dstb[x + 0], srcb[xx + 0]);
+                            yuv.CopyTo(ref dstb[x + 1], srcb[xx + 2]);
+                        }
+
+                        return;
+                    }
+
                     if (typeof(TDstPixel) == typeof(BGR24))
                     {
                         var dstb = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, BGR24>(dst);
@@ -321,6 +353,36 @@ namespace InteropTypes.Graphics.Bitmaps
                     if (typeof(TDstPixel) == typeof(RGB24))
                     {
                         var dstb = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, RGB24>(dst);
+
+                        for (int x = 0; x < len; x += 2)
+                        {
+                            var xx = x * 2;
+                            yuv.SetUV(srcb[xx + 1], srcb[xx + 3]);
+                            yuv.CopyTo(ref dstb[x + 0], srcb[xx + 0]);
+                            yuv.CopyTo(ref dstb[x + 1], srcb[xx + 2]);
+                        }
+
+                        return;
+                    }
+
+                    if (typeof(TDstPixel) == typeof(BGRA32))
+                    {
+                        var dstb = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, BGRA32>(dst);
+
+                        for (int x = 0; x < len; x += 2)
+                        {
+                            var xx = x * 2;
+                            yuv.SetUV(srcb[xx + 1], srcb[xx + 3]);
+                            yuv.CopyTo(ref dstb[x + 0], srcb[xx + 0]);
+                            yuv.CopyTo(ref dstb[x + 1], srcb[xx + 2]);
+                        }
+
+                        return;
+                    }
+
+                    if (typeof(TDstPixel) == typeof(RGBA32))
+                    {
+                        var dstb = System.Runtime.InteropServices.MemoryMarshal.Cast<TDstPixel, RGBA32>(dst);
 
                         for (int x = 0; x < len; x += 2)
                         {
