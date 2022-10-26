@@ -52,7 +52,7 @@ namespace InteropTypes.Graphics.Drawing
         private static Record3D CreateThunderbirdsRocket()
         {
             var context = new Record3D();
-            ThunderbirdRocket.DrawTo(context);
+            ThunderbirdRocket.DrawTo(Matrix4x4.Identity, context);
             return context;
         }
 
