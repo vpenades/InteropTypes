@@ -10,6 +10,11 @@
     <PackageReference Include="StbDxtSharp" />    
     <PackageReference Include="StbImageWriteSharp" />    
   </ItemGroup>
+  
+  <!-- ktx support
+  https://github.com/rds1983/DdsKtxSharp
+  --> 
+  
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />

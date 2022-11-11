@@ -165,6 +165,14 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2(VECTOR2 vector) : this() { XY = vector; }
 
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point2(GDIPOINT point) : this() { X = point.X; Y = point.Y; }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point2(GDIPOINTF point) : this() { X = point.X; Y = point.Y; }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2(ReadOnlySpan<float> span) : this() { X = span[0]; Y = span[1]; }
 
@@ -184,16 +192,18 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the corner points of a rectangle, in a clockwise order.
         /// </summary>
         /// <param name="rect">The source rectangle</param>
-        /// <returns>A collection of 4 points.</returns>        
-        public static Point2[] FromRect(System.Drawing.RectangleF rect)
+        /// <param name="closed">defines whether to return 4 or 5 points</param>
+        /// <returns>A collection of 4 or 5 points.</returns>        
+        public static Point2[] FromRect(System.Drawing.RectangleF rect, bool closed = false)
         {
-            var points = new Point2[4];
+            var points = new Point2[closed ? 5 : 4];
             points[0] = (rect.Left, rect.Top);
             points[1] = (rect.Right, rect.Top);
             points[2] = (rect.Right, rect.Bottom);
             points[3] = (rect.Left, rect.Bottom);
+            if (closed) points[4] = points[0];
             return points;
-        }
+        }        
 
         #endregion
 

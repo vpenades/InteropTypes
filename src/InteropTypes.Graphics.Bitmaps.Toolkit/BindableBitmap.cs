@@ -153,7 +153,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <param name="bmp">the input image</param>
         /// <param name="copyConverter">external custom copy conversion.</param>
         /// <param name="dstFormat">overrides the source bitmat format.</param>
-        public void Update(SpanBitmap srcBmp, SpanBitmap.Action2 copyConverter = null, PixelFormat? dstFormat = null)
+        public void Update(SpanBitmap srcBmp, SpanBitmap.Action2 copyConverter, PixelFormat? dstFormat = null)
         {
             var fmt = dstFormat ?? _Format ?? srcBmp.PixelFormat;
 

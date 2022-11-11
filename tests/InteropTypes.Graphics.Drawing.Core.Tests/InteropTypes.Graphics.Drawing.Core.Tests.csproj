@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net471;net6.0</TargetFrameworks>
+    <TargetFrameworks>net471;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>    
   </PropertyGroup>

@@ -10,8 +10,6 @@ using COLOR = System.Drawing.Color;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Backends;
 using InteropTypes;
-using InteropTypes.Graphics.Bitmaps;
-using System.Threading.Tasks;
 
 namespace MonoGameDemo
 {
