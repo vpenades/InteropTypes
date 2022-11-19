@@ -2,7 +2,7 @@
 
 option optimize_for = SPEED;
 
-package System.Drawing;
+package InteropTypes.Proto;
 
 // shapes proto
 
@@ -18,31 +18,31 @@ package System.Drawing;
 // https://github.com/grpc/grpc-dotnet/issues/183
 
 
-message ProtoPoint
+message Point32S
 {
     int32 x = 1;
     int32 y = 2;
 }
 
-message ProtoPointF
+message Point32F
 {
     float x = 1;
     float y = 2;
 }
 
-message ProtoSize
+message Size32S
 {
     int32 x = 1;
     int32 y = 2;
 }
 
-message ProtoSizeF
+message Size32F
 {
     float x = 1;
     float y = 2;
 }
 
-message ProtoRectangle
+message Rectangle32S
 {
     int32 x = 1;
     int32 y = 2;
@@ -50,7 +50,7 @@ message ProtoRectangle
     int32 height = 4;
 }
 
-message ProtoRectangleF
+message Rectangle32F
 {
     float x = 1;
     float y = 2;
