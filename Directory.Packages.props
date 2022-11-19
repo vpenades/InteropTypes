@@ -24,6 +24,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.21.9" />
     
     <!-- Game Engines -->
 

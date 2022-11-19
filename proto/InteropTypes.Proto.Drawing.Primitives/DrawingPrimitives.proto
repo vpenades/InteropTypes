@@ -1,0 +1,59 @@
+﻿syntax = "proto3";
+
+option optimize_for = SPEED;
+
+package System.Drawing;
+
+// shapes proto
+
+// https://github.com/bklimt/wxKnitplot/blob/master/src/storage/chart.proto
+// https://github.com/packedbread/agnostic-visualization/blob/master/service.proto
+// https://github.com/CommonRoad/commonroad-io/blob/master/commonroad/scenario_definition/protobuf_format/definition_files/util.proto
+// https://github.com/arcman7/jssc2/blob/master/lib/renderer_human/renderer_human.proto
+// https://github.com/FengD/apollo_cyber/blob/master/cyber/sensor_proto/image_marker.proto
+// https://github.com/adlr/PDFSketch/blob/master/document.proto
+
+// TODO: find a way to include the .proto in the nuget package so it can be included in other protos
+
+// https://github.com/grpc/grpc-dotnet/issues/183
+
+
+message ProtoPoint
+{
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message ProtoPointF
+{
+    float x = 1;
+    float y = 2;
+}
+
+message ProtoSize
+{
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message ProtoSizeF
+{
+    float x = 1;
+    float y = 2;
+}
+
+message ProtoRectangle
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 width = 3;
+    int32 height = 4;
+}
+
+message ProtoRectangleF
+{
+    float x = 1;
+    float y = 2;
+    float width = 3;
+    float height = 4;
+}
