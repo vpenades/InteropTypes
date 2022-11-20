@@ -16,6 +16,7 @@ package System.Drawing;
 // TODO: find a way to include the .proto in the nuget package so it can be included in other protos
 
 // https://github.com/grpc/grpc-dotnet/issues/183
+// https://github.com/protocolbuffers/protobuf/issues/2352  >> naming convention would be PointProto, PointFProto...
 
 
 message ProtoPoint
