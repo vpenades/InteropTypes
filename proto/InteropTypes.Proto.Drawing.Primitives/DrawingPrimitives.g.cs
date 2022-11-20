@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace System.Drawing {
+namespace InteropTypes.Proto {
 
   /// <summary>Holder for reflection information generated from DrawingPrimitives.proto</summary>
   public static partial class DrawingPrimitivesReflection {
@@ -24,44 +24,44 @@ namespace System.Drawing {
     static DrawingPrimitivesReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChdEcmF3aW5nUHJpbWl0aXZlcy5wcm90bxIOU3lzdGVtLkRyYXdpbmciIgoK",
-            "UHJvdG9Qb2ludBIJCgF4GAEgASgFEgkKAXkYAiABKAUiIwoLUHJvdG9Qb2lu",
-            "dEYSCQoBeBgBIAEoAhIJCgF5GAIgASgCIiEKCVByb3RvU2l6ZRIJCgF4GAEg",
-            "ASgFEgkKAXkYAiABKAUiIgoKUHJvdG9TaXplRhIJCgF4GAEgASgCEgkKAXkY",
-            "AiABKAIiRQoOUHJvdG9SZWN0YW5nbGUSCQoBeBgBIAEoBRIJCgF5GAIgASgF",
-            "Eg0KBXdpZHRoGAMgASgFEg4KBmhlaWdodBgEIAEoBSJGCg9Qcm90b1JlY3Rh",
-            "bmdsZUYSCQoBeBgBIAEoAhIJCgF5GAIgASgCEg0KBXdpZHRoGAMgASgCEg4K",
-            "BmhlaWdodBgEIAEoAkICSAFiBnByb3RvMw=="));
+            "ChdEcmF3aW5nUHJpbWl0aXZlcy5wcm90bxISSW50ZXJvcFR5cGVzLlByb3Rv",
+            "IiAKCFBvaW50MzJTEgkKAXgYASABKAUSCQoBeRgCIAEoBSIgCghQb2ludDMy",
+            "RhIJCgF4GAEgASgCEgkKAXkYAiABKAIiHwoHU2l6ZTMyUxIJCgF4GAEgASgF",
+            "EgkKAXkYAiABKAUiHwoHU2l6ZTMyRhIJCgF4GAEgASgCEgkKAXkYAiABKAIi",
+            "QwoMUmVjdGFuZ2xlMzJTEgkKAXgYASABKAUSCQoBeRgCIAEoBRINCgV3aWR0",
+            "aBgDIAEoBRIOCgZoZWlnaHQYBCABKAUiQwoMUmVjdGFuZ2xlMzJGEgkKAXgY",
+            "ASABKAISCQoBeRgCIAEoAhINCgV3aWR0aBgDIAEoAhIOCgZoZWlnaHQYBCAB",
+            "KAJCAkgBYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::System.Drawing.ProtoPoint), global::System.Drawing.ProtoPoint.Parser, new[]{ "X", "Y" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::System.Drawing.ProtoPointF), global::System.Drawing.ProtoPointF.Parser, new[]{ "X", "Y" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::System.Drawing.ProtoSize), global::System.Drawing.ProtoSize.Parser, new[]{ "X", "Y" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::System.Drawing.ProtoSizeF), global::System.Drawing.ProtoSizeF.Parser, new[]{ "X", "Y" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::System.Drawing.ProtoRectangle), global::System.Drawing.ProtoRectangle.Parser, new[]{ "X", "Y", "Width", "Height" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::System.Drawing.ProtoRectangleF), global::System.Drawing.ProtoRectangleF.Parser, new[]{ "X", "Y", "Width", "Height" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::InteropTypes.Proto.Point32S), global::InteropTypes.Proto.Point32S.Parser, new[]{ "X", "Y" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::InteropTypes.Proto.Point32F), global::InteropTypes.Proto.Point32F.Parser, new[]{ "X", "Y" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::InteropTypes.Proto.Size32S), global::InteropTypes.Proto.Size32S.Parser, new[]{ "X", "Y" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::InteropTypes.Proto.Size32F), global::InteropTypes.Proto.Size32F.Parser, new[]{ "X", "Y" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::InteropTypes.Proto.Rectangle32S), global::InteropTypes.Proto.Rectangle32S.Parser, new[]{ "X", "Y", "Width", "Height" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::InteropTypes.Proto.Rectangle32F), global::InteropTypes.Proto.Rectangle32F.Parser, new[]{ "X", "Y", "Width", "Height" }, null, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  public sealed partial class ProtoPoint : pb::IMessage<ProtoPoint>
+  public sealed partial class Point32S : pb::IMessage<Point32S>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ProtoPoint> _parser = new pb::MessageParser<ProtoPoint>(() => new ProtoPoint());
+    private static readonly pb::MessageParser<Point32S> _parser = new pb::MessageParser<Point32S>(() => new Point32S());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ProtoPoint> Parser { get { return _parser; } }
+    public static pb::MessageParser<Point32S> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::System.Drawing.DrawingPrimitivesReflection.Descriptor.MessageTypes[0]; }
+      get { return global::InteropTypes.Proto.DrawingPrimitivesReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -72,7 +72,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoPoint() {
+    public Point32S() {
       OnConstruction();
     }
 
@@ -80,7 +80,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoPoint(ProtoPoint other) : this() {
+    public Point32S(Point32S other) : this() {
       x_ = other.x_;
       y_ = other.y_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -88,8 +88,8 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoPoint Clone() {
-      return new ProtoPoint(this);
+    public Point32S Clone() {
+      return new Point32S(this);
     }
 
     /// <summary>Field number for the "x" field.</summary>
@@ -119,12 +119,12 @@ namespace System.Drawing {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ProtoPoint);
+      return Equals(other as Point32S);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ProtoPoint other) {
+    public bool Equals(Point32S other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -210,7 +210,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ProtoPoint other) {
+    public void MergeFrom(Point32S other) {
       if (other == null) {
         return;
       }
@@ -273,21 +273,21 @@ namespace System.Drawing {
 
   }
 
-  public sealed partial class ProtoPointF : pb::IMessage<ProtoPointF>
+  public sealed partial class Point32F : pb::IMessage<Point32F>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ProtoPointF> _parser = new pb::MessageParser<ProtoPointF>(() => new ProtoPointF());
+    private static readonly pb::MessageParser<Point32F> _parser = new pb::MessageParser<Point32F>(() => new Point32F());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ProtoPointF> Parser { get { return _parser; } }
+    public static pb::MessageParser<Point32F> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::System.Drawing.DrawingPrimitivesReflection.Descriptor.MessageTypes[1]; }
+      get { return global::InteropTypes.Proto.DrawingPrimitivesReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -298,7 +298,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoPointF() {
+    public Point32F() {
       OnConstruction();
     }
 
@@ -306,7 +306,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoPointF(ProtoPointF other) : this() {
+    public Point32F(Point32F other) : this() {
       x_ = other.x_;
       y_ = other.y_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -314,8 +314,8 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoPointF Clone() {
-      return new ProtoPointF(this);
+    public Point32F Clone() {
+      return new Point32F(this);
     }
 
     /// <summary>Field number for the "x" field.</summary>
@@ -345,12 +345,12 @@ namespace System.Drawing {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ProtoPointF);
+      return Equals(other as Point32F);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ProtoPointF other) {
+    public bool Equals(Point32F other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -436,7 +436,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ProtoPointF other) {
+    public void MergeFrom(Point32F other) {
       if (other == null) {
         return;
       }
@@ -499,21 +499,21 @@ namespace System.Drawing {
 
   }
 
-  public sealed partial class ProtoSize : pb::IMessage<ProtoSize>
+  public sealed partial class Size32S : pb::IMessage<Size32S>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ProtoSize> _parser = new pb::MessageParser<ProtoSize>(() => new ProtoSize());
+    private static readonly pb::MessageParser<Size32S> _parser = new pb::MessageParser<Size32S>(() => new Size32S());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ProtoSize> Parser { get { return _parser; } }
+    public static pb::MessageParser<Size32S> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::System.Drawing.DrawingPrimitivesReflection.Descriptor.MessageTypes[2]; }
+      get { return global::InteropTypes.Proto.DrawingPrimitivesReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -524,7 +524,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoSize() {
+    public Size32S() {
       OnConstruction();
     }
 
@@ -532,7 +532,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoSize(ProtoSize other) : this() {
+    public Size32S(Size32S other) : this() {
       x_ = other.x_;
       y_ = other.y_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -540,8 +540,8 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoSize Clone() {
-      return new ProtoSize(this);
+    public Size32S Clone() {
+      return new Size32S(this);
     }
 
     /// <summary>Field number for the "x" field.</summary>
@@ -571,12 +571,12 @@ namespace System.Drawing {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ProtoSize);
+      return Equals(other as Size32S);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ProtoSize other) {
+    public bool Equals(Size32S other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -662,7 +662,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ProtoSize other) {
+    public void MergeFrom(Size32S other) {
       if (other == null) {
         return;
       }
@@ -725,21 +725,21 @@ namespace System.Drawing {
 
   }
 
-  public sealed partial class ProtoSizeF : pb::IMessage<ProtoSizeF>
+  public sealed partial class Size32F : pb::IMessage<Size32F>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ProtoSizeF> _parser = new pb::MessageParser<ProtoSizeF>(() => new ProtoSizeF());
+    private static readonly pb::MessageParser<Size32F> _parser = new pb::MessageParser<Size32F>(() => new Size32F());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ProtoSizeF> Parser { get { return _parser; } }
+    public static pb::MessageParser<Size32F> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::System.Drawing.DrawingPrimitivesReflection.Descriptor.MessageTypes[3]; }
+      get { return global::InteropTypes.Proto.DrawingPrimitivesReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -750,7 +750,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoSizeF() {
+    public Size32F() {
       OnConstruction();
     }
 
@@ -758,7 +758,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoSizeF(ProtoSizeF other) : this() {
+    public Size32F(Size32F other) : this() {
       x_ = other.x_;
       y_ = other.y_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -766,8 +766,8 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoSizeF Clone() {
-      return new ProtoSizeF(this);
+    public Size32F Clone() {
+      return new Size32F(this);
     }
 
     /// <summary>Field number for the "x" field.</summary>
@@ -797,12 +797,12 @@ namespace System.Drawing {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ProtoSizeF);
+      return Equals(other as Size32F);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ProtoSizeF other) {
+    public bool Equals(Size32F other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -888,7 +888,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ProtoSizeF other) {
+    public void MergeFrom(Size32F other) {
       if (other == null) {
         return;
       }
@@ -951,21 +951,21 @@ namespace System.Drawing {
 
   }
 
-  public sealed partial class ProtoRectangle : pb::IMessage<ProtoRectangle>
+  public sealed partial class Rectangle32S : pb::IMessage<Rectangle32S>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ProtoRectangle> _parser = new pb::MessageParser<ProtoRectangle>(() => new ProtoRectangle());
+    private static readonly pb::MessageParser<Rectangle32S> _parser = new pb::MessageParser<Rectangle32S>(() => new Rectangle32S());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ProtoRectangle> Parser { get { return _parser; } }
+    public static pb::MessageParser<Rectangle32S> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::System.Drawing.DrawingPrimitivesReflection.Descriptor.MessageTypes[4]; }
+      get { return global::InteropTypes.Proto.DrawingPrimitivesReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -976,7 +976,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoRectangle() {
+    public Rectangle32S() {
       OnConstruction();
     }
 
@@ -984,7 +984,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoRectangle(ProtoRectangle other) : this() {
+    public Rectangle32S(Rectangle32S other) : this() {
       x_ = other.x_;
       y_ = other.y_;
       width_ = other.width_;
@@ -994,8 +994,8 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoRectangle Clone() {
-      return new ProtoRectangle(this);
+    public Rectangle32S Clone() {
+      return new Rectangle32S(this);
     }
 
     /// <summary>Field number for the "x" field.</summary>
@@ -1049,12 +1049,12 @@ namespace System.Drawing {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ProtoRectangle);
+      return Equals(other as Rectangle32S);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ProtoRectangle other) {
+    public bool Equals(Rectangle32S other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1166,7 +1166,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ProtoRectangle other) {
+    public void MergeFrom(Rectangle32S other) {
       if (other == null) {
         return;
       }
@@ -1251,21 +1251,21 @@ namespace System.Drawing {
 
   }
 
-  public sealed partial class ProtoRectangleF : pb::IMessage<ProtoRectangleF>
+  public sealed partial class Rectangle32F : pb::IMessage<Rectangle32F>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ProtoRectangleF> _parser = new pb::MessageParser<ProtoRectangleF>(() => new ProtoRectangleF());
+    private static readonly pb::MessageParser<Rectangle32F> _parser = new pb::MessageParser<Rectangle32F>(() => new Rectangle32F());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ProtoRectangleF> Parser { get { return _parser; } }
+    public static pb::MessageParser<Rectangle32F> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::System.Drawing.DrawingPrimitivesReflection.Descriptor.MessageTypes[5]; }
+      get { return global::InteropTypes.Proto.DrawingPrimitivesReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1276,7 +1276,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoRectangleF() {
+    public Rectangle32F() {
       OnConstruction();
     }
 
@@ -1284,7 +1284,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoRectangleF(ProtoRectangleF other) : this() {
+    public Rectangle32F(Rectangle32F other) : this() {
       x_ = other.x_;
       y_ = other.y_;
       width_ = other.width_;
@@ -1294,8 +1294,8 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ProtoRectangleF Clone() {
-      return new ProtoRectangleF(this);
+    public Rectangle32F Clone() {
+      return new Rectangle32F(this);
     }
 
     /// <summary>Field number for the "x" field.</summary>
@@ -1349,12 +1349,12 @@ namespace System.Drawing {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ProtoRectangleF);
+      return Equals(other as Rectangle32F);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ProtoRectangleF other) {
+    public bool Equals(Rectangle32F other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1466,7 +1466,7 @@ namespace System.Drawing {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ProtoRectangleF other) {
+    public void MergeFrom(Rectangle32F other) {
       if (other == null) {
         return;
       }

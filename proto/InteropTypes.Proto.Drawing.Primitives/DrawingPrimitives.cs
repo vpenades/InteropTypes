@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using System.Text;
 
 using POINT = System.Drawing.Point;
-using POINTPROTO = System.Drawing.ProtoPoint;
+using POINTPROTO = InteropTypes.Proto.Point32S;
 
 using POINTF = System.Drawing.PointF;
-using POINTFPROTO = System.Drawing.ProtoPointF;
+using POINTFPROTO = InteropTypes.Proto.Point32F;
 
 using SIZE = System.Drawing.Size;
-using SIZEPROTO = System.Drawing.ProtoSize;
+using SIZEPROTO = InteropTypes.Proto.Size32S;
 
 using SIZEF = System.Drawing.SizeF;
-using SIZEFPROTO = System.Drawing.ProtoSizeF;
+using SIZEFPROTO = InteropTypes.Proto.Size32F;
 
 using RECTANGLE = System.Drawing.Rectangle;
-using RECTANGLEPROTO = System.Drawing.ProtoRectangle;
+using RECTANGLEPROTO = InteropTypes.Proto.Rectangle32S;
 
 using RECTANGLEF = System.Drawing.RectangleF;
-using RECTANGLEFPROTO = System.Drawing.ProtoRectangleF;
+using RECTANGLEFPROTO = InteropTypes.Proto.Rectangle32F;
 
 
-namespace System.Drawing
+namespace InteropTypes.Proto
 {
-    partial class ProtoPoint
+    partial class Point32S
     {
         public static readonly POINTPROTO Empty = POINT.Empty;
 
@@ -32,7 +32,7 @@ namespace System.Drawing
             return new POINTPROTO(point);
         }
 
-        public ProtoPoint(POINT point)
+        public Point32S(POINT point)
         {
             this.X = point.X;
             this.Y = point.Y;
@@ -43,7 +43,7 @@ namespace System.Drawing
         }
     }
 
-    partial class ProtoPointF
+    partial class Point32F
     {
         public static readonly POINTFPROTO Empty = POINTF.Empty;
 
@@ -57,13 +57,13 @@ namespace System.Drawing
             return new POINTFPROTO(point);
         }
 
-        public ProtoPointF(POINT point)
+        public Point32F(POINT point)
         {
             this.X = point.X;
             this.Y = point.Y;
         }
 
-        public ProtoPointF(POINTF point)
+        public Point32F(POINTF point)
         {
             this.X = point.X;
             this.Y = point.Y;
@@ -75,13 +75,13 @@ namespace System.Drawing
         }
     }
 
-    partial class ProtoRectangle
+    partial class Rectangle32S
     {
         public static implicit operator RECTANGLEPROTO(RECTANGLE rect)
         {
             return new RECTANGLEPROTO(rect);
         }
-        public ProtoRectangle(RECTANGLE rect)
+        public Rectangle32S(RECTANGLE rect)
         {
             this.X = rect.X;
             this.Y = rect.Y;
