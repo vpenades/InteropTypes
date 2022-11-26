@@ -9,6 +9,7 @@ using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
 using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
 using System.Collections;
+using System.Runtime.Versioning;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -145,6 +146,26 @@ namespace InteropTypes.Graphics.Drawing
         /// </remarks>
         [System.Diagnostics.DebuggerStepThrough]
         public static Point3[] Array(params Point3[] points) { return points; }
+
+        /// <summary>
+        /// exposes the elements of a list as a span of points
+        /// </summary>
+        /// <typeparam name="T">Typically Vector3, Point3</typeparam>
+        /// <param name="points">the imputs to get as a span</param>
+        /// <returns>a span of points</returns>
+        /// <exception cref="ArgumentException">when the size of the structure don't match</exception>
+        /// <remarks>
+        /// As long as the span is being in use, the source list must not be modified.
+        /// </remarks>
+        public static unsafe ReadOnlySpan<Point3> FromCollection<T>(List<T> points)
+            where T : unmanaged
+        {
+            if (points == null) return default;
+
+            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
+
+            return MEMMARSHALL.Cast<T, Point3>(points.GetInternalBuffer());
+        }
 
         #endregion
 

@@ -189,6 +189,26 @@ namespace InteropTypes.Graphics.Drawing
         public static Point2[] Array(params Point2[] points) { return points; }
 
         /// <summary>
+        /// exposes the elements of a list as a span of points
+        /// </summary>
+        /// <typeparam name="T">Typically Vector2, Point2 or PointF</typeparam>
+        /// <param name="points">the imputs to get as a span</param>
+        /// <returns>a span of points</returns>
+        /// <exception cref="ArgumentException">when the size of the structure don't match</exception>
+        /// <remarks>
+        /// As long as the span is being in use, the source list must not be modified.
+        /// </remarks>
+        public static unsafe ReadOnlySpan<Point2> FromCollection<T>(List<T> points)
+            where T : unmanaged
+        {
+            if (points == null) return default;
+
+            if (sizeof(T) != sizeof(Point2)) throw new ArgumentException("size mismatch", typeof(T).Name);
+
+            return MEMMARSHALL.Cast<T, Point2>(points.GetInternalBuffer());
+        }
+
+        /// <summary>
         /// Gets the corner points of a rectangle, in a clockwise order.
         /// </summary>
         /// <param name="rect">The source rectangle</param>
@@ -203,7 +223,7 @@ namespace InteropTypes.Graphics.Drawing
             points[3] = (rect.Left, rect.Bottom);
             if (closed) points[4] = points[0];
             return points;
-        }        
+        }
 
         #endregion
 

@@ -135,6 +135,18 @@ namespace InteropTypes.Graphics.Drawing
         public static void GuardIsFiniteOrNull(this string param, float? value)
         {            
             if (value.HasValue && !IsFinite(value.Value)) throw new ArgumentException("not finite.", param);
-        }        
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<T> GetInternalBuffer<T>(this List<T> list)
+            where T:unmanaged
+        {
+            #if NET6_0_OR_GREATER
+            return System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list);
+            #else
+            return list.ToArray();
+            #endif
+        }
     }
 }
