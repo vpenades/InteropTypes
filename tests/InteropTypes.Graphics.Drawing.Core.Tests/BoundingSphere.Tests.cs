@@ -30,7 +30,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         [Test]
-        public void createSphereFromDrawable()
+        public void CreateSphereFromDrawable()
         {
             var spheres = RandomSpheres.CreateRandom(new Random(117));
             var bounds = BoundingSphere.From(spheres);

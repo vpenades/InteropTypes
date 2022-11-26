@@ -1,0 +1,2 @@
+﻿
+[assembly: NUnit.Framework.AttachmentPathFormat("*/?")]
