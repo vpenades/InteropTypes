@@ -37,7 +37,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region data
 
-        private MemoryBitmap _Bitmap;        
+        private MemoryBitmap _Bitmap;
+
+        private int _BitmapVersion;
 
         /// <summary>
         /// If not defined, <see cref="_Bitmap"/> will use the pixel format of the incoming bitmap.
@@ -61,6 +63,9 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [Bindable(BindableSupport.Yes)]
+        public int Version => _BitmapVersion;
+
+        [Bindable(BindableSupport.Yes)]
         public BitmapInfo Info => _Bitmap.Info;
 
         [Bindable(BindableSupport.Yes)]
@@ -73,14 +78,14 @@ namespace InteropTypes.Graphics.Bitmaps
         public int Height => Info.Height;
 
 
-        public event PropertyChangedEventHandler PropertyChanged;        
-
-        private static readonly PropertyChangedEventArgs _AllProperties = new PropertyChangedEventArgs(null);
-        private static readonly PropertyChangedEventArgs _InfoProperty = new PropertyChangedEventArgs(nameof(Info));
-        private static readonly PropertyChangedEventArgs _BitmapProperty = new PropertyChangedEventArgs(nameof(Bitmap));
+        public event PropertyChangedEventHandler PropertyChanged;
+        
+        private static readonly PropertyChangedEventArgs _VersionProperties = new PropertyChangedEventArgs(nameof(Version));
+        private static readonly PropertyChangedEventArgs _InfoProperty = new PropertyChangedEventArgs(nameof(Info));        
         private static readonly PropertyChangedEventArgs _SizeProperty = new PropertyChangedEventArgs(nameof(Size));
         private static readonly PropertyChangedEventArgs _WidthProperty = new PropertyChangedEventArgs(nameof(Width));
         private static readonly PropertyChangedEventArgs _HeightProperty = new PropertyChangedEventArgs(nameof(Height));
+        private static readonly PropertyChangedEventArgs _BitmapProperty = new PropertyChangedEventArgs(nameof(Bitmap));
 
         #endregion
 
@@ -169,7 +174,9 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </remarks>
         public virtual void Invalidate()
         {
-            PropertyChanged?.Invoke(this, _AllProperties);
+            ++_BitmapVersion;            
+
+            PropertyChanged?.Invoke(this, _VersionProperties);
             PropertyChanged?.Invoke(this, _InfoProperty);
             PropertyChanged?.Invoke(this, _SizeProperty);
             PropertyChanged?.Invoke(this, _WidthProperty);
