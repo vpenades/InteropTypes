@@ -10,10 +10,10 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropTypes
 {
-    
-
     public class _Sprites2D : IDrawingBrush<ICanvas2D>
     {
+        #region data
+
         private static readonly ImageSource[] _Punk = ImageSource.CreateGrid("Assets\\PunkRun.png", 8, 8, (256, 256), (128, 128)).ToArray();
         private static readonly ImageSource[] _Tiles = ImageSource.CreateGrid("Assets\\Tiles.png", 63, 9, (16, 16), XY.Zero).ToArray();
 
@@ -29,6 +29,12 @@ namespace InteropTypes
         private float _Time => (float)_Timer.Elapsed.TotalSeconds;
 
         private static readonly ImageSource _Asalga = ImageSource.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
+
+        private static readonly ImageSource _TinyCat = ImageSource.CreateFromBitmap("Assets\\Tiny\\cat.png", (32, 35), (16, 20)).WithScale(3);
+
+        #endregion
+
+        #region API
 
         public void DrawTo(ICanvas2D dc)
         {
@@ -48,6 +54,8 @@ namespace InteropTypes
 
             dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(10, 20), _Tiles[1]);
             dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(10 + 16, 20), _Tiles[2]);
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(10, 250), (_TinyCat, true, false));
 
             x =
                 System.Numerics.Matrix3x2.CreateScale(1.4224f)
@@ -76,7 +84,12 @@ namespace InteropTypes
 
             dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(700, 260), (_Offset1, false, true));
 
+
+
+
             // rect.Bounds.DrawTo(_Drawing2D, (Color.Red, 1));
         }
+
+        #endregion
     }
 }
