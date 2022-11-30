@@ -145,27 +145,7 @@ namespace InteropTypes.Graphics.Drawing
         /// pass a Point2.Params(...) instead.
         /// </remarks>
         [System.Diagnostics.DebuggerStepThrough]
-        public static Point3[] Array(params Point3[] points) { return points; }
-
-        /// <summary>
-        /// exposes the elements of a list as a span of points
-        /// </summary>
-        /// <typeparam name="T">Typically Vector3, Point3</typeparam>
-        /// <param name="points">the imputs to get as a span</param>
-        /// <returns>a span of points</returns>
-        /// <exception cref="ArgumentException">when the size of the structure don't match</exception>
-        /// <remarks>
-        /// As long as the span is being in use, the source list must not be modified.
-        /// </remarks>
-        public static unsafe ReadOnlySpan<Point3> FromCollection<T>(List<T> points)
-            where T : unmanaged
-        {
-            if (points == null) return default;
-
-            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
-
-            return MEMMARSHALL.Cast<T, Point3>(points.GetInternalBuffer());
-        }
+        public static Point3[] Array(params Point3[] points) { return points; }        
 
         #endregion
 
@@ -431,7 +411,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #endregion
 
-        #region API - Bulk
+        #region API - Bulk        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void CopyTo(Span<float> dst) { dst[0] = X; dst[1] = Y; dst[2] = Z; }
@@ -442,12 +422,44 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void CopyTo(Span<VECTOR3> dst) { dst[0] = this.XYZ; }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<Point3> AsPoints(Span<VECTOR3> points) { return MEMMARSHALL.Cast<VECTOR3, Point3>(points); }
+        /// <summary>
+        /// exposes the elements of a list as a span of points
+        /// </summary>
+        /// <typeparam name="T">Typically Vector3, Point3</typeparam>
+        /// <param name="points">the imputs to get as a span</param>
+        /// <returns>a span of points</returns>
+        /// <exception cref="ArgumentException">when the size of the structure don't match</exception>
+        /// <remarks>
+        /// As long as the span is being in use, the source list must not be modified.
+        /// </remarks>
+        public static unsafe ReadOnlySpan<Point3> AsPoints<T>(List<T> points)
+            where T : unmanaged
+        {
+            if (points == null) return default;
+
+            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
+
+            return MEMMARSHALL.Cast<T, Point3>(points.GetInternalBuffer());
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<Point3> AsPoints(ReadOnlySpan<VECTOR3> points) { return MEMMARSHALL.Cast<VECTOR3, Point3>(points); }
+        public static unsafe Span<Point3> AsPoints<T>(Span<T> points)
+            where T : unmanaged
+        {
+            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
 
+            return MEMMARSHALL.Cast<T, Point3>(points);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe ReadOnlySpan<Point3> AsPoints<T>(ReadOnlySpan<T> points)
+            where T : unmanaged
+        {
+            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
+
+            return MEMMARSHALL.Cast<T, Point3>(points);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<VECTOR3> AsNumerics(Span<Point3> points) { return MEMMARSHALL.Cast<Point3, VECTOR3>(points); }
 
