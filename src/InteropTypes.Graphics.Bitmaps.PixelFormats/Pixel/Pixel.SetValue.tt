@@ -294,6 +294,39 @@ namespace InteropTypes.Graphics.Bitmaps
         _WriteSetterCmps("BGRA128F","L","_FromRGBA(@R,@G,@B,@A)");
         _WriteSetterCmps("RGBA128F","L","_FromRGBA(@R,@G,@B,@A)");        
         _WriteSetterCmps("RGBP128F","L","_FromRGB(@PreR,@PreG,@PreB)");
+        _writeEnd();               
+
+        // --------------------------------------------- BGR565
+
+        remainingNotImplemented.Remove("BGR565");
+
+        _writeStructBegin("BGR565");
+        _WriteSetterSelf("BGR565");
+
+        _WriteSetterCmps("Alpha8", "BGR", "65535" );
+        _WriteSetterCmps("Luminance8", "BGR", "_PackRGB(@L,@L,@L)" );
+        _WriteSetterCmps("Luminance16", "BGR", "_PackRGB((uint)(@L>>8),(uint)(@L>>8),(uint)(@L>>8))" );
+        _WriteSetterCmps("Luminance32F", "BGR", "_PackRGB((uint)(@L*255f),(uint)(@L*255f),(uint)(@L*255f))" );
+
+        _WriteSetterCmps("BGRA5551", "BGR", "_PackRGB(@R,@G,@B)" );
+        _WriteSetterCmps("BGRA4444", "BGR", "_PackRGB(@R,@G,@B)" );
+
+        _WriteSetterCmps("BGR24", "BGR", "_PackRGB(@R,@G,@B)" );
+        _WriteSetterCmps("RGB24", "BGR", "_PackRGB(@R,@G,@B)" );
+        _WriteSetterCmps("BGRA32", "BGR", "_PackRGB(@R,@G,@B)" );
+        _WriteSetterCmps("RGBA32", "BGR", "_PackRGB(@R,@G,@B)" );
+        _WriteSetterCmps("ARGB32", "BGR", "_PackRGB(@R,@G,@B)" );
+
+        _WriteSetterNotImpl("BGRP32");
+        _WriteSetterNotImpl("RGBP32");
+
+        _WriteSetterNotImpl("BGR96F");
+        _WriteSetterNotImpl("RGB96F");
+
+        _WriteSetterNotImpl("BGRA128F");
+        _WriteSetterNotImpl("RGBA128F");
+        _WriteSetterNotImpl("RGBP128F");
+
         _writeEnd();
 
         // --------------------------------------------- BGR24 & RGB24
@@ -303,7 +336,7 @@ namespace InteropTypes.Graphics.Bitmaps
             remainingNotImplemented.Remove(dstType);            
 
             var dst = ("B","G","R");
-            var src = ("0","0","0");
+            var src = ("0","0","0");            
 
             _writeStructBegin(dstType);
             _WriteSetterSelf(dstType);

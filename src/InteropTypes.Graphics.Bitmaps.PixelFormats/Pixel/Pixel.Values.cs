@@ -262,24 +262,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public BGR565(in RGBA128F color) : this(_PackRGB(color.RGBA)) { }
 
-            public BGR565(int red, int green, int blue) : this(_PackRGB((uint)red, (uint)green, (uint)blue)) { }
-
-            private static UInt16 _PackRGB(XYZA rgba)
-            {
-                rgba *= 255f;
-                return _PackRGB((uint)rgba.X, (uint)rgba.Y, (uint)rgba.Z);
-            }
-
-            private static UInt16 _PackRGB(uint red, uint green, uint blue)
-            {
-                uint bgr = red << 8;
-                bgr &= 0b1111100000000000;
-                bgr |= green << 3;
-                bgr &= 0b1111111111100000;
-                bgr |= blue >> 3;
-
-                return (UInt16)bgr;
-            }
+            public BGR565(int red, int green, int blue) : this(_PackRGB((uint)red, (uint)green, (uint)blue)) { }              
 
             private BGR565(UInt16 packed) { BGR = packed; }
 
@@ -288,16 +271,28 @@ namespace InteropTypes.Graphics.Bitmaps
             #region data
 
             public UInt16 BGR;
-            public readonly Byte R => (Byte)Ru;
-            public readonly Byte G => (Byte)Gu;
-            public readonly Byte B => (Byte)Bu;
+
+            public readonly Byte R
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Ru;
+            }
+            public readonly Byte G
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Gu;
+            }
+            public readonly Byte B
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Bu;
+            }
 
             public readonly uint Ru
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
                 get { var p = (uint)(BGR >> 11) & 0x1f; return (p * 8) | (p >> 2); }
             }
-
             public readonly uint Gu
             {
                 [MethodImpl(_PrivateConstants.Fastest)]
@@ -316,6 +311,19 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFromRGB8(uint red, uint green, uint blue)
             {
+                BGR = _PackRGB(red,green,blue);
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            private static UInt16 _PackRGB(XYZA rgba)
+            {
+                rgba *= 255f;
+                return _PackRGB((uint)rgba.X, (uint)rgba.Y, (uint)rgba.Z);
+            }
+
+            [MethodImpl(_PrivateConstants.Fastest)]
+            private static UInt16 _PackRGB(uint red, uint green, uint blue)
+            {
                 System.Diagnostics.Debug.Assert(red < 256);
                 System.Diagnostics.Debug.Assert(green < 256);
                 System.Diagnostics.Debug.Assert(blue < 256);
@@ -326,7 +334,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 bgr &= 0b1111111111100000;
                 bgr |= blue >> 3;
 
-                BGR = (UInt16)bgr;
+                return (UInt16)bgr;
             }
 
             #endregion
@@ -378,10 +386,26 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public UInt16 BGRA;
 
-            public readonly Byte R => (Byte)Ru;
-            public readonly Byte G => (Byte)Gu;
-            public readonly Byte B => (Byte)Bu;
-            public readonly Byte A => (Byte)Au;
+            public readonly Byte R
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Ru;
+            }
+            public readonly Byte G
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Gu;
+            }
+            public readonly Byte B
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Bu;
+            }
+            public readonly Byte A
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Au;
+            }
 
             public readonly uint Ru
             {
@@ -473,10 +497,53 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public UInt16 BGRA;
 
-            public readonly int A => ((BGRA >> 12) & 0xf) * 17;
-            public readonly int R => ((BGRA >> 8) & 0xf) * 17;
-            public readonly int G => ((BGRA >> 4) & 0xf) * 17;
-            public readonly int B => (BGRA & 0xf) * 17;
+            public readonly Byte R
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Ru;
+            }
+
+            public readonly Byte G
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Gu;
+            }
+
+            public readonly Byte B
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Bu;
+            }
+
+            public readonly Byte A
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (Byte)Au;
+            }
+
+            public readonly uint Au
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (uint)((BGRA >> 12) & 0xf) * 17u;
+            }
+
+            public readonly uint Ru
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (uint)((BGRA >> 8) & 0xf) * 17u;
+            }
+
+            public readonly uint Gu
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (uint)((BGRA >> 4) & 0xf) * 17u;
+            }
+
+            public readonly uint Bu
+            {
+                [MethodImpl(_PrivateConstants.Fastest)]
+                get => (uint)(BGRA & 0xf) * 17u;
+            }
 
             #endregion
 
