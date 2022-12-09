@@ -48,7 +48,17 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #endregion
 
-        #region properties
+        #region data - dispatcher pool
+
+        private readonly _ProducerConsumer _Queue = new _ProducerConsumer();
+        private static void _NoAction() { }
+
+        [Bindable(BindableSupport.Yes)]
+        public BitmapInfo QueuedInfo => _Queue.Peek();
+
+        #endregion
+
+        #region properties        
 
         [Bindable(BindableSupport.Yes)]
         public MemoryBitmap Bitmap
@@ -66,7 +76,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public int Version => _BitmapVersion;
 
         [Bindable(BindableSupport.Yes)]
-        public BitmapInfo Info => _Bitmap.Info;
+        public BitmapInfo Info => _Bitmap.Info;        
 
         [Bindable(BindableSupport.Yes)]
         public System.Drawing.Size Size => Info.Size;
@@ -169,8 +179,12 @@ namespace InteropTypes.Graphics.Bitmaps
             Invalidate();
         }
 
+        /// <summary>
+        /// Raises propertychanged on all properties
+        /// </summary>
         /// <remarks>
-        /// Always call from UI THREAD
+        /// Always call from UI THREAD<br/>
+        /// Automatically called by Update methods.
         /// </remarks>
         public virtual void Invalidate()
         {
@@ -191,14 +205,7 @@ namespace InteropTypes.Graphics.Bitmaps
             return Bitmap.AsSpanBitmap();
         }
 
-        #endregion
-
-        #region dispatcher pool
-
-        private readonly _ProducerConsumer _Queue = new _ProducerConsumer();
-        private static void _NoAction() { }
-
-        #endregion
+        #endregion        
     }
 
     class _ProducerConsumer
@@ -227,6 +234,11 @@ namespace InteropTypes.Graphics.Bitmaps
             {
                 if (_Queue.TryDequeue(out var xbmp)) _ReturnToPool(xbmp);
             }
+        }
+
+        public BitmapInfo Peek()
+        {
+            return _Queue.TryPeek(out var result) ? result.Info : default;
         }
 
         public bool Consume(SpanBitmap.Action1 updater, int repeat = int.MaxValue)
