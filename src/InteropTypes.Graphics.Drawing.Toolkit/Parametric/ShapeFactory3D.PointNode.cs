@@ -27,7 +27,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             public readonly float GetScale(float maxScale)
             {
-                #if NETSTANDARD2_1_OR_GREATER
+                #if !NETSTANDARD2_0
                 var nt = MathF.Tan(this.Angle * 0.5f);
                 nt = MathF.Sqrt(1 + nt * nt);
                 #else
@@ -136,7 +136,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 {
                     var angle = -PI * 2 * i / divisions;
 
-                    #if NETSTANDARD2_1_OR_GREATER
+                    #if !NETSTANDARD2_0
                     var p = nx * MathF.Cos(angle) + ny * MathF.Sin(angle) * nt;
                     #else
                     var p = nx * (float)Math.Cos(angle) + ny * (float)Math.Sin(angle) * nt;
@@ -238,7 +238,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
                 var circleArea = PI * circleRadius * circleRadius;
 
-                #if NETSTANDARD2_1_OR_GREATER
+                #if !NETSTANDARD2_0
                 var k = MathF.Sin(PI * 2.0f / divisions);
                 return MathF.Sqrt(circleArea * 2 / divisions * k);
                 #else

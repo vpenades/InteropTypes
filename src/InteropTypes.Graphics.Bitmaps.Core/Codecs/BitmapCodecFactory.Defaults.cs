@@ -65,7 +65,7 @@ namespace InteropTypes.Codecs
             #pragma warning restore IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
         }
 
-        #if NET5_0_OR_GREATER
+        #if NET6_0_OR_GREATER
         [RequiresUnreferencedCode("Calls System.Reflection.Assembly.GetTypes()")]
         #endif
         private static IEnumerable<Type> _FindInterfaceInstances(string assemblyName, string interfaceName)

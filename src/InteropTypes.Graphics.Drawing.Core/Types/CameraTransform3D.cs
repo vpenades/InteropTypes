@@ -312,7 +312,7 @@ namespace InteropTypes.Graphics.Drawing
 
             if (_VerticalFieldOfView.HasValue)
             {
-                #if NETSTANDARD2_1_OR_GREATER                
+                #if !NETSTANDARD2_0
                 return Matrix4x4.CreatePerspectiveFieldOfView(_VerticalFieldOfView.Value, aspectRatio, near, far);
                 #else
                 return _CreatePerspectiveFieldOfView(_VerticalFieldOfView.Value, aspectRatio, near, far);
@@ -337,7 +337,7 @@ namespace InteropTypes.Graphics.Drawing
                 , 0.5f * width, 0.5f * height);
         }
 
-        #if !NETSTANDARD2_1_OR_GREATER
+        #if NETSTANDARD2_0
         /// <summary>
         /// <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Numerics/Matrix4x4.cs">CreatePerspectiveFieldOfView</see>        
         /// </summary>

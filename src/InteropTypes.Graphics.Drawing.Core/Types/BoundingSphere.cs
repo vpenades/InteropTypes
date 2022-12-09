@@ -171,8 +171,8 @@ namespace InteropTypes.Graphics.Drawing
             if (Math.Abs(volume - 1) < SCALEDECOMPOSITIONEPSILON) return 1;
 
             // scale is the cubic root of volume:
-            #if NETSTANDARD2_1_OR_GREATER
-            return MathF.Pow(volume, (float)1 / 3);
+            #if !NETSTANDARD2_0
+            return MathF.Pow(volume, 1f / 3f);
             #else
             return (float)Math.Pow(volume, (double)1 / 3);
             #endif

@@ -12,7 +12,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
     {
         #region constants
 
-        #if NETSTANDARD2_1_OR_GREATER
+        #if !NETSTANDARD2_0
         private const float PI = MathF.PI;
         #else
         private const float PI = (float)Math.PI;
@@ -31,7 +31,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             {
                 var angle = i / (float)dstVertices.Length;
 
-                #if NETSTANDARD2_1_OR_GREATER
+                #if !NETSTANDARD2_0
 
                 angle *= MathF.PI * 2;
                 var x = MathF.Cos(angle) * width;
@@ -189,7 +189,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 var factor = i / (float)count;
                 var radians = rad0 * (1 - factor) + rad1 * factor;
 
-                #if NETSTANDARD2_1_OR_GREATER
+                #if !NETSTANDARD2_0
                 var x = MathF.Cos(radians);
                 var y = -MathF.Sin(radians);
                 #else

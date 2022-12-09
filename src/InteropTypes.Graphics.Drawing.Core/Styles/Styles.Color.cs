@@ -45,7 +45,7 @@ namespace InteropTypes.Graphics.Drawing
         [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int red, int green, int blue) : this()
         {
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             B = (Byte)Math.Clamp(blue,0,255);
             G = (Byte)Math.Clamp(green,0,255);
             R = (Byte)Math.Clamp(red,0,255);
@@ -61,7 +61,7 @@ namespace InteropTypes.Graphics.Drawing
         [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int red, int green, int blue, int alpha) : this()
         {
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             B = (Byte)Math.Clamp(blue, 0, 255);
             G = (Byte)Math.Clamp(green, 0, 255);
             R = (Byte)Math.Clamp(red, 0, 255);

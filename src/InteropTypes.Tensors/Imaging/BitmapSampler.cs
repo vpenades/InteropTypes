@@ -85,7 +85,7 @@ namespace InteropTypes.Tensors.Imaging
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly unsafe ref readonly TPixel GetPixel(int x, int y)
         {
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             x = Math.Clamp(x, 0, _LastX);
             y = Math.Clamp(y, 0, _LastY);
             #else
@@ -108,7 +108,7 @@ namespace InteropTypes.Tensors.Imaging
         {
             if (sizeof(TPixel) < sizeof(TDstPixel)) throw new InvalidOperationException();
 
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             x = Math.Clamp(x, 0, _LastX);
             y = Math.Clamp(y, 0, _LastY);
             #else

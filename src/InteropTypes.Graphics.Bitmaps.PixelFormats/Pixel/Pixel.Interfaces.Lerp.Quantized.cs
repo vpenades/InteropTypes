@@ -50,7 +50,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<RGBP32>(out var result);
                 #else
                 var result = default(RGBP32);
@@ -79,7 +79,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<RGBP32>(out var result);
                 #else
                 var result = default(RGBP32);
@@ -126,7 +126,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -155,7 +155,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -202,7 +202,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -231,7 +231,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -292,7 +292,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<RGB24>(out var result);
                 #else
                 var result = default(RGB24);
@@ -320,7 +320,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<RGB24>(out var result);
                 #else
                 var result = default(RGB24);
@@ -341,7 +341,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -370,7 +370,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -431,7 +431,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGR24>(out var result);
                 #else
                 var result = default(BGR24);
@@ -459,7 +459,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGR24>(out var result);
                 #else
                 var result = default(BGR24);
@@ -480,7 +480,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 var lx = _QLERPVALUE - rx;
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -509,7 +509,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(wtl + wtr + wbl + wbr == _QLERPVALUESQUARED);
 
                 // lerp
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -589,7 +589,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<RGBA32>(out var result);
                 #else
                 var result = default(RGBA32);
@@ -643,7 +643,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<RGBA32>(out var result);
                 #else
                 var result = default(RGBA32);
@@ -684,7 +684,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(((left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -733,7 +733,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -814,7 +814,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRA32>(out var result);
                 #else
                 var result = default(BGRA32);
@@ -868,7 +868,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRA32>(out var result);
                 #else
                 var result = default(BGRA32);
@@ -909,7 +909,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(((left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -958,7 +958,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -1039,7 +1039,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<ARGB32>(out var result);
                 #else
                 var result = default(ARGB32);
@@ -1093,7 +1093,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(preB < 256);
 
                 // unpremultiply RGB
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<ARGB32>(out var result);
                 #else
                 var result = default(ARGB32);
@@ -1134,7 +1134,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(((left.B * lx + right.B * rx + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -1183,7 +1183,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 System.Diagnostics.Debug.Assert(((tl.B * wtl + tr.B * wtr + bl.B * wbl + br.B * wbr + offset) >> _QLERPSHIFTSQUARED) < 256);
 
                 // set values
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);

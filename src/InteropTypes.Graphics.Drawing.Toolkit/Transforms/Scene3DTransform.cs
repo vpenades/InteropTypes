@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             var det = matrix.GetDeterminant();
             var volume = Math.Abs(det);
 
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             return MathF.Pow(volume, (float)1 / 3);
             #else
             return (float)Math.Pow(volume, (double)1 / 3);

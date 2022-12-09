@@ -11,9 +11,13 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Clamp(this int value, int min, int max)
         {
+            #if !NETSTANDARD2_0
+            return Math.Clamp(value, min, max);
+            #else
             if (value < min) return min;
             else if (value > max) return max;
             return value;
+            #endif
         }
 
         /// <summary>
@@ -26,7 +30,7 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFinite(this float val)
         {
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             return float.IsFinite(val);
             #else
             return !float.IsNaN(val) && !float.IsInfinity(val);
@@ -37,7 +41,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             if (!val.HasValue) return true;
 
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             return float.IsFinite(val.Value);
             #else
             return !float.IsNaN(val.Value) && !float.IsInfinity(val.Value);

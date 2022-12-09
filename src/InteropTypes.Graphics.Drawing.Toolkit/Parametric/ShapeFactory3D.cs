@@ -9,7 +9,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
     {
         #region constants
 
-        #if NETSTANDARD2_1_OR_GREATER
+        #if !NETSTANDARD2_0
         private const float PI = MathF.PI;
         #else
         private const float PI = (float)Math.PI;

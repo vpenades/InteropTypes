@@ -22,7 +22,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public static BGRP32 operator *(BGRP32 a, BGRP32 b)
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);
@@ -38,7 +38,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             public static BGRP32 operator +(BGRP32 a, BGRP32 b)
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<BGRP32>(out var result);
                 #else
                 var result = default(BGRP32);

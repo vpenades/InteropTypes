@@ -73,7 +73,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -185,7 +185,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -297,7 +297,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -409,7 +409,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -521,7 +521,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -633,7 +633,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -745,7 +745,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -857,7 +857,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -969,7 +969,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1081,7 +1081,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1193,7 +1193,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1305,7 +1305,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1417,7 +1417,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1529,7 +1529,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1641,7 +1641,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1753,7 +1753,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1865,7 +1865,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -1977,7 +1977,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);
@@ -2089,7 +2089,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
-                #if NET5_0_OR_GREATER
+                #if NET6_0_OR_GREATER
                 Unsafe.SkipInit<TPixel>(out var result);
                 #else
                 var result = default(TPixel);

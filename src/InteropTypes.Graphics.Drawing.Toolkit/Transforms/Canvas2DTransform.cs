@@ -364,7 +364,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             var det = xform.GetDeterminant();
             var area = Math.Abs(det);
 
-            #if NETSTANDARD2_1_OR_GREATER
+            #if !NETSTANDARD2_0
             return MathF.Sqrt(area);
             #else
             return (float)Math.Sqrt(area);

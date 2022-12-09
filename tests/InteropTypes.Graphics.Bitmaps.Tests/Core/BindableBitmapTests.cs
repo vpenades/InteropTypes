@@ -19,6 +19,12 @@ namespace InteropTypes.Graphics.Bitmaps
             bindable.Enqueue(default);
             bindable.UpdateFromQueue();
 
+            bindable.Enqueue(new MemoryBitmap<Pixel.RGB24>(16,16));
+            bindable.UpdateFromQueue();
+
+            bindable.Enqueue(default);
+            bindable.UpdateFromQueue();
+
         }
 
     }
