@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 using System.Runtime.CompilerServices;
-
-using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
 
 using VECTOR2 = System.Numerics.Vector2;
 using VECTOR3 = System.Numerics.Vector3;
-using System.Collections;
-using System.Runtime.Versioning;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -135,17 +129,7 @@ namespace InteropTypes.Graphics.Drawing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3(ReadOnlySpan<float> span) : this() { X = span[0]; Y = span[1]; Z = span[2]; }
 
-        /// <summary>
-        /// Helper method used to convert point params to an array.
-        /// </summary>
-        /// <param name="points">a sequence of points</param>
-        /// <returns>An array of points</returns>
-        /// <remarks>
-        /// When a function has a <see cref="ReadOnlySpan{Point2}"/> we can
-        /// pass a Point2.Params(...) instead.
-        /// </remarks>
-        [System.Diagnostics.DebuggerStepThrough]
-        public static Point3[] Array(params Point3[] points) { return points; }        
+         
 
         #endregion
 
@@ -313,10 +297,10 @@ namespace InteropTypes.Graphics.Drawing
             if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
-            #if NETSTANDARD2_1_OR_GREATER
-            return MathF.Acos(dot);
-            #else
+            #if NETSTANDARD2_0
             return (float)Math.Acos(dot);
+            #else
+            return MathF.Acos(dot);
             #endif
         }
 
@@ -341,55 +325,9 @@ namespace InteropTypes.Graphics.Drawing
         {
             len /= XYZ.Length();
             return XYZ * len;
-        }
+        }        
 
-        public static bool IsClosedLoop(ReadOnlySpan<Point3> points) { return points[0] == points[points.Length - 1]; }
-
-        #endregion
-
-        #region API - Centroid
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Centroid(Point3[] points) { return Centroid(points.AsSpan()); }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Centroid(VECTOR3[] points) { return Centroid(points.AsSpan()); }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Centroid(ReadOnlySpan<Point3> points)
-        {
-            if (points.Length == 0) return VECTOR3.Zero;
-
-            var r = VECTOR3.Zero;
-            foreach (var p in points) { r += p.XYZ; }
-            return r / points.Length;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Centroid(ReadOnlySpan<VECTOR3> points)
-        {
-            if (points.Length == 0) return VECTOR3.Zero;
-
-            var r = VECTOR3.Zero;
-            foreach (var p in points) { r += p; }
-            return r / points.Length;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Centroid(IEnumerable<Point3> points)
-        {
-            var weight = 1;
-            return points.Aggregate(VECTOR3.Zero, (i, j) => { ++weight; return i + j.XYZ; }) / weight;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Centroid(IEnumerable<VECTOR3> points)
-        {
-            var weight = 1;
-            return points.Aggregate((i, j) => { ++weight; return i + j; }) / weight;
-        }
-
-        #endregion
+        #endregion        
 
         #region boundings
 
@@ -420,72 +358,19 @@ namespace InteropTypes.Graphics.Drawing
         public readonly void CopyTo(Span<Point3> dst) { dst[0] = this; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void CopyTo(Span<VECTOR3> dst) { dst[0] = this.XYZ; }
-
-        /// <summary>
-        /// exposes the elements of a list as a span of points
-        /// </summary>
-        /// <typeparam name="T">Typically Vector3, Point3</typeparam>
-        /// <param name="points">the imputs to get as a span</param>
-        /// <returns>a span of points</returns>
-        /// <exception cref="ArgumentException">when the size of the structure don't match</exception>
-        /// <remarks>
-        /// As long as the span is being in use, the source list must not be modified.
-        /// </remarks>
-        public static unsafe ReadOnlySpan<Point3> AsPoints<T>(List<T> points)
-            where T : unmanaged
-        {
-            if (points == null) return default;
-
-            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
-
-            return MEMMARSHALL.Cast<T, Point3>(points.GetInternalBuffer());
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Span<Point3> AsPoints<T>(Span<T> points)
-            where T : unmanaged
-        {
-            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
-
-            return MEMMARSHALL.Cast<T, Point3>(points);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ReadOnlySpan<Point3> AsPoints<T>(ReadOnlySpan<T> points)
-            where T : unmanaged
-        {
-            if (sizeof(T) != sizeof(Point3)) throw new ArgumentException("size mismatch", typeof(T).Name);
-
-            return MEMMARSHALL.Cast<T, Point3>(points);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<VECTOR3> AsNumerics(Span<Point3> points) { return MEMMARSHALL.Cast<Point3, VECTOR3>(points); }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<VECTOR3> AsNumerics(ReadOnlySpan<Point3> points) { return MEMMARSHALL.Cast<Point3, VECTOR3>(points); }
+        public readonly void CopyTo(Span<VECTOR3> dst) { dst[0] = this.XYZ; }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point3 Transform(Point3 p, in System.Numerics.Matrix4x4 xform)
         {
             return VECTOR3.Transform(p.XYZ, xform);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Transform(Span<Point3> dst, ReadOnlySpan<Point2> src, float z)
-        {
-            for (int i = 0; i < dst.Length; ++i)
-            {
-                dst[i] = new Point3(src[i], z);
-            }
-        }
+        }        
 
         #endregion
 
         #region conversions
 
-        #if NET5_0_OR_GREATER
+        #if NET6_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref VECTOR3 AsNumerics(ref Point3 point)
         {
@@ -497,31 +382,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             return ref Unsafe.As<VECTOR3, Point3>(ref point);
         }
-        #endif        
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly float[] ToArray() { return new float[] { X, Y, Z}; }
-
-        /// <inheritdoc/>  
-        public readonly override string ToString() { return XYZ.ToString(); }
-
-        /// <inheritdoc/>
-        public readonly string ToString(string format, IFormatProvider formatProvider) { return XYZ.ToString(format, formatProvider); }
-
-        /// <inheritdoc/>
-        public readonly IEnumerator<float> GetEnumerator()
-        {
-            yield return X;
-            yield return Y;
-            yield return Z;
-        }
-
-        readonly IEnumerator IEnumerable.GetEnumerator()
-        {
-            yield return X;
-            yield return Y;
-            yield return Z;
-        }
+        #endif
 
         #endregion
     }

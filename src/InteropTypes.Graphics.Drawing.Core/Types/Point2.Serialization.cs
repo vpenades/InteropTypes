@@ -8,5 +8,10 @@ namespace InteropTypes.Graphics.Drawing
 {
     partial struct Point2
     {
+        /// <inheritdoc/>
+        public override string ToString() { return XY.ToString(); }
+
+        /// <inheritdoc/>
+        public string ToString(string format, IFormatProvider formatProvider) { return XY.ToString(format, formatProvider); }
     }
 }

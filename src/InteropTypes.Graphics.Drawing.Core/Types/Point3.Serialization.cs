@@ -8,6 +8,14 @@ namespace InteropTypes.Graphics.Drawing
 {
     partial struct Point3
     {
+        /// <inheritdoc/>  
+        public readonly override string ToString() { return XYZ.ToString(); }
+
+        /// <inheritdoc/>
+        public readonly string ToString(string format, IFormatProvider formatProvider) { return XYZ.ToString(format, formatProvider); }
+
+
+
         /*
         private static readonly System.Numerics.Vector3 XYZ_127 =new System.Numerics.Vector3(127);
                
