@@ -24,7 +24,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.21.9" />
+    <PackageVersion Include="Google.Protobuf" Version="3.21.11" />
     
     <!-- Game Engines -->
 
@@ -67,7 +67,7 @@
     <PackageVersion Include="FFmpeg.AutoGen" Version="5.1.1" />
     <PackageVersion Include="FFMpegCore" Version="4.8.0" />
     <PackageVersion Include="LibVLCSharp" Version="3.6.7" />
-    <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.17.4" />
+    <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.18" />
     <PackageVersion Include="SharpAvi" Version="3.0.1" />
     
     <!-- Machine Learning -->
@@ -91,7 +91,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
     <PackageVersion Include="coverlet.collector" Version="3.2.0" />
     
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
 
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.2" />
