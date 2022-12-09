@@ -79,10 +79,35 @@ namespace InteropTypes
             finally
             {
                 dstBmp.Unlock();
-            }
-
-            
+            }            
         }
+
+        public static void ModifyAsPointerBitmap(WIC_WRITABLE dstBmp, Action<PointerBitmap> modifyAction)
+        {
+            if (!TryGetExactPixelFormat(dstBmp.Format, out var dstFmt))
+            {
+                throw new Diagnostics.PixelFormatNotSupportedException(dstBmp.Format, nameof(dstBmp));
+            }           
+
+            try
+            {
+                dstBmp.Lock();
+
+                var nfo = new BitmapInfo(dstBmp.PixelWidth, dstBmp.PixelHeight, dstFmt, dstBmp.BackBufferStride);
+                var dstPtr = new PointerBitmap(dstBmp.BackBuffer, nfo);
+
+                modifyAction(dstPtr);
+                
+                var drect = new System.Windows.Int32Rect(0, 0, dstBmp.PixelWidth, dstBmp.PixelHeight);
+
+                dstBmp.AddDirtyRect(drect);
+            }
+            finally
+            {
+                dstBmp.Unlock();
+            }
+        }
+
 
         public static MemoryBitmap ToMemoryBitmap(WIC_READABLE src)
         {

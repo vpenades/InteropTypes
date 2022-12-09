@@ -35,6 +35,11 @@ namespace InteropTypes.Graphics.Backends
             _Implementation.SetPixels(bmp, dstX, dstY, spanSrc);
         }
 
+        public static void ModifyAsPointerBitmap(this WIC_WRITABLE bmp, Action<PointerBitmap> ptrAction)
+        {
+            _Implementation.ModifyAsPointerBitmap(bmp, ptrAction);
+        }
+
         public static MemoryBitmap ToMemoryBitmap(this WIC_READABLE src) { return _Implementation.ToMemoryBitmap(src); }
 
         

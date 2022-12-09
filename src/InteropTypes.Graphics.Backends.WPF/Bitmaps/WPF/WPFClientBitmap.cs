@@ -105,7 +105,7 @@ namespace InteropTypes.Graphics.Backends.WPF
         {
             VerifyAccess();
 
-            if (src.WithWPF().CopyTo(ref _FrontBuffer))
+            if (_Copy(src, ref _FrontBuffer))
             {
                 OnPropertyChanged(_FrontBufferChanged);
             }
@@ -119,11 +119,22 @@ namespace InteropTypes.Graphics.Backends.WPF
             {
                 OnPrepareFrameForDisplay(bmp);
                 var src = bmp.AsSpanBitmap();
-                var frontBufferChanged = src.WithWPF().CopyTo(ref _FrontBuffer);
+                var frontBufferChanged = _Copy(src, ref _FrontBuffer);
                 if (frontBufferChanged) RaiseFrontBufferChanged();
             }
 
             BackBuffer.TryDropAndDequeueLast(_OnBmpRead);
+        }
+
+        private static bool _Copy(SpanBitmap src, ref WriteableBitmap dst)
+        {
+            if (src.IsEmpty && dst != null)
+            {
+                dst.ModifyAsPointerBitmap(ptr => ptr.AsSpanBitmap().SetPixels(System.Drawing.Color.Transparent));
+                return false;
+            }
+
+            return src.WithWPF().CopyTo(ref dst);
         }
 
         protected virtual void OnPrepareFrameForDisplay(MemoryBitmap bmp)

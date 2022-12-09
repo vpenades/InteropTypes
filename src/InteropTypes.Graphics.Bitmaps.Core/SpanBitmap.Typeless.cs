@@ -349,8 +349,6 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </remarks>
         public void SetPixels(int dstX, int dstY, SpanBitmap src)
         {
-            Guard.IsTrue("this", !_Writable.IsEmpty);
-
             _Implementation.CopyPixels(this, dstX, dstY, src);
         }
 

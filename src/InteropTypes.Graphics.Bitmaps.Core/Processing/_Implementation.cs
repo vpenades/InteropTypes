@@ -25,6 +25,8 @@ namespace InteropTypes.Graphics
 
         public static void CopyPixels(SpanBitmap dst, int dstX, int dstY, SpanBitmap src)
         {
+            if (src.IsEmpty || dst.IsEmpty) return;
+
             var dstCrop = Crop(dst, (+dstX, +dstY, src.Width, src.Height));
             var srcCrop = Crop(src, (-dstX, -dstY, dst.Width, dst.Height));            
 

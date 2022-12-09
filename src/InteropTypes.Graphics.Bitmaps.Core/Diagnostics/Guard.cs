@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using InteropTypes.Graphics.Bitmaps;
-
 using static System.FormattableString;
 
 namespace InteropTypes.Diagnostics
 {
+	[System.Diagnostics.DebuggerStepThrough]
 	internal static class Guard
 	{
 		public static void IsNull(string paramName, object param)
