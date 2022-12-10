@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>InteropDrawing</RootNamespace>
+    <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>  
 

@@ -11,7 +11,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         /// </summary>
         /// <param name="text">the text to measure</param>
         /// <returns>the size of the rendered area.</returns>
-        System.Drawing.Size MeasureTextLine(string text);
+        System.Drawing.RectangleF MeasureTextLine(string text);
 
         /// <summary>
         /// Interline height separation

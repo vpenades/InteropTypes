@@ -17,7 +17,7 @@ namespace InteropTypes.Graphics.Drawing
     /// Style used by <see cref="ICanvas2D.DrawTextLine(in XFORM, string, float, FontStyle)"/>.
     /// Use Fonts.HersheyFont.Simplex as default font
     /// </remarks>
-    [System.Diagnostics.DebuggerDisplay("{Style.FillColor} {Style.OutlineColor} {Style.OutlineWidth} {Strength} {Alignment}")]
+    [System.Diagnostics.DebuggerDisplay("{Font} {Color} {Strength} {Alignment}")]
     public readonly struct FontStyle : IEquatable<FontStyle>
     {
         #region implicit        
@@ -148,6 +148,22 @@ namespace InteropTypes.Graphics.Drawing
 
         #region drawing support
 
+        public System.Drawing.RectangleF MeasureTextLine(string text, float size)
+        {
+            var rect = Font?.MeasureTextLine(text) ?? System.Drawing.RectangleF.Empty;
+
+            if (size <= 0) size = Font?.Height ?? 1;
+
+            var scale = size / (Font?.Height ?? 1);
+
+            rect.X *= scale;
+            rect.Y *= scale;
+            rect.Width *= scale;
+            rect.Height *= scale;
+
+            return rect;
+        }
+
         public void DrawDecomposedTo(ICoreCanvas2D dc, in XFORM transform, string text, float size)
         {
             if (size == 0) return;
@@ -193,8 +209,7 @@ namespace InteropTypes.Graphics.Drawing
                 if (axes.Y < 0) yflip *= -1;
             }
 
-            xform = XFORM.CreateScale(xflip, yflip) * xform;
-            return xform;
+            return XFORM.CreateScale(xflip, yflip) * xform;
         }
 
         private static XY _GetCanvasAxes(ICoreCanvas2D dc)

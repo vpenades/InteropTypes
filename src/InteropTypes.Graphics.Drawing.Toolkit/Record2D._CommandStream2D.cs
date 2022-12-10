@@ -346,11 +346,18 @@ namespace InteropTypes.Graphics.Drawing
                 var fref = (Fonts.IFont)references[src.FontRef];
                 var style = new FontStyle(fref, src.FontColor, src.FontStrength, src.FontAlignment);
 
+                var font = style.Font;
+
+                font ??= Fonts.HersheyFont.Default; // this might differ from the one being used by default in a ICanvas2D
+
+                var rect = font.MeasureTextLine(tref);
+
                 Span<XY> vertices = stackalloc XY[4];
 
-                // style.TransformVertices(vertices, src.Transform);
-
-                throw new NotImplementedException();
+                vertices[0] = new XY(rect.X, rect.Y);
+                vertices[1] = new XY(rect.X + rect.Width, rect.Y);
+                vertices[2] = new XY(rect.X + rect.Width, rect.Y + rect.Height);
+                vertices[3] = new XY(rect.X, rect.Y + rect.Height);
 
                 bounds.AddVertex(vertices[0], 0);
                 bounds.AddVertex(vertices[1], 0);

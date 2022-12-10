@@ -17,23 +17,25 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
         #region data
 
-        private int _OffsetV = 0;
-        private int _Height = -1;
+        private int? _OffsetV;
+        private int? _Height;
 
         #endregion
 
         #region properties
-        public int Height
+
+        public int Height => _UseSettings().height;
+        private (int offset,int height) _UseSettings()
         {
-            get
+            if (!_OffsetV.HasValue || !_Height.HasValue)
             {
-                if (_Height < 0)
-                {
-                    (_OffsetV, _Height) = _CalcFontHeight();
-                }
-                
-                return _Height;
-            }
+                var (o, h) = _CalcFontHeight();
+
+                _OffsetV = o;
+                _Height = h;
+            }            
+
+            return (_OffsetV.Value, _Height.Value);
         }
 
         #endregion
@@ -70,9 +72,30 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
         protected abstract string GetSimplexCode(char character);
 
-        public Size MeasureTextLine(string text)
+        public RectangleF MeasureTextLine(string text)
         {
-            throw new NotImplementedException();
+            var min = new Vector2(float.MaxValue);
+            var max = new Vector2(float.MinValue);
+
+            void _drawPath(ReadOnlySpan<Point2> points)
+            {
+                foreach(var p in points)
+                {
+                    min = Vector2.Min(min, p.XY);
+                    max = Vector2.Max(max, p.XY);
+                }                
+            }
+
+            var offset = Vector2.Zero;
+
+            foreach (var c in text)
+            {
+                _DrawGlyphAsLines(_drawPath, Matrix3x2.Identity, ref offset, c);
+            }
+
+            var size = max - min;
+
+            return new RectangleF(min.X, min.Y, size.X, size.Y);
         }
 
         public void DrawTextLineTo(ICoreCanvas2D target, Matrix3x2 transform, string text, ColorStyle tintColor)
@@ -122,7 +145,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             var xformFinal = xform;
             xformFinal.Translation = offset;            
 
-            glyph.DrawPaths(xformFinal, dc, _OffsetV);
+            glyph.DrawPaths(xformFinal, dc, _UseSettings().offset);
 
             offset += Vector2.TransformNormal(new Vector2(glyph.Right, 0), xformFinal);
         }
@@ -137,7 +160,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
             offset += Vector3.TransformNormal(new Vector3(-glyph.Left, 0, 0), xform);
 
-            foreach (var s in glyph.GetSegments(_OffsetV))
+            foreach (var s in glyph.GetSegments(_UseSettings().offset))
             {
                 var a = new Vector3(s.Item1.Item1, s.Item1.Item2, 0);
                 var b = new Vector3(s.Item2.Item1, s.Item2.Item2, 0);

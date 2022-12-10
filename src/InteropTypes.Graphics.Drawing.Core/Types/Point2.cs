@@ -177,15 +177,13 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="rect">The source rectangle</param>
         /// <param name="closed">defines whether to return 4 or 5 points</param>
         /// <returns>A collection of 4 or 5 points.</returns>        
-        public static Point2[] FromRect(System.Drawing.RectangleF rect, bool closed = false)
-        {
-            var points = new Point2[closed ? 5 : 4];
+        public static void FromRect(Span<Point2> points, System.Drawing.RectangleF rect, bool closed = false)
+        {            
             points[0] = (rect.Left, rect.Top);
             points[1] = (rect.Right, rect.Top);
             points[2] = (rect.Right, rect.Bottom);
             points[3] = (rect.Left, rect.Bottom);
-            if (closed) points[4] = points[0];
-            return points;
+            if (closed && points.Length > 4) points[4] = points[0];           
         }
 
         #endregion

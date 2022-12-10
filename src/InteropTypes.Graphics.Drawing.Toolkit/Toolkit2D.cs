@@ -219,6 +219,14 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawPolygon(vertices, style);
         }
 
+        public static void DrawRectangle(this CANVAS2DEX dc, XFORM2 xform, BRECT rect, in OutlineFillStyle style)
+        {
+            Span<POINT2> vertices = stackalloc POINT2[4];
+            POINT2.FromRect(vertices, rect, false);
+            POINT2.Transform(vertices, xform);
+            dc.DrawPolygon(vertices, style);
+        }
+
         public static void DrawRectangle(this CANVAS2DEX dc, POINT2 origin, POINT2 size, in OutlineFillStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];

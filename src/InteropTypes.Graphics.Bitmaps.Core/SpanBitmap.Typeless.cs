@@ -602,6 +602,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public void Save(string filePath, params Codecs.IBitmapEncoder[] factory)
         {
             if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentNullException(nameof(filePath));
+            if (this.IsEmpty) throw new InvalidOperationException("bitmap is empty");
 
             var fmt = Codecs.BitmapCodecFactory.ParseFormat(filePath);
             var lzs = new Lazy<System.IO.Stream>(() => System.IO.File.Create(filePath));

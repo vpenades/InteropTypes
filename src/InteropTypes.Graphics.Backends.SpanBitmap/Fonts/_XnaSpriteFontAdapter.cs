@@ -41,7 +41,7 @@ namespace InteropTypes.Graphics.Backends
 
         public int Height => _Font.Height;
 
-        public Size MeasureTextLine(string text) { return _Font.Measure(text); }
+        public RectangleF MeasureTextLine(string text) { return _Font.Measure(text); }
 
         public void DrawTextLineTo(ICoreCanvas2D target, Matrix3x2 origin, string text, ColorStyle tintColor)
         {
