@@ -7,10 +7,16 @@ using System.Threading.Tasks;
 
 using BenchmarkDotNet.Attributes;
 
+using BENCHSTRATEGY = BenchmarkDotNet.Engines.RunStrategy;
+using MONIKER = BenchmarkDotNet.Jobs.RuntimeMoniker;
+
 namespace InteropTypes.Graphics.Bitmaps
 {
     [MonoJob("Mono x64", @"C:\Program Files\Mono\bin\mono.exe")]
-    [SimpleJob(BenchmarkDotNet.Jobs.RuntimeMoniker.Net472), SimpleJob(BenchmarkDotNet.Jobs.RuntimeMoniker.Net60)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net472)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net60)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net70)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.NativeAot70)]
     public class CopyBytesToUnits
     {
         #region init

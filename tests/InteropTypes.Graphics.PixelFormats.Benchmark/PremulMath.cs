@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 using BenchmarkDotNet.Attributes;
 
+using BENCHSTRATEGY = BenchmarkDotNet.Engines.RunStrategy;
+using MONIKER = BenchmarkDotNet.Jobs.RuntimeMoniker;
+
 namespace InteropTypes.Graphics.Bitmaps
 {
     // https://github.com/dotnet/BenchmarkDotNet/issues/257
     // [ClrJob, CoreJob, MonoJob]
     // [MonoJob("Mono x64", @"C:\Program Files\Mono\bin\mono.exe")]    
-    [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.Throughput, BenchmarkDotNet.Jobs.RuntimeMoniker.Net472)]
-    [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.Throughput, BenchmarkDotNet.Jobs.RuntimeMoniker.Net60)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net472)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net60)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net70)]
+    [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.NativeAot70)]
     [DisassemblyDiagnoser]
     public class PremulMath
     {

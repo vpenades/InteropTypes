@@ -19,60 +19,45 @@ namespace InteropTypes.Graphics.Bitmaps
     [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net60)]
     [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.Net70)]
     [SimpleJob(BENCHSTRATEGY.Throughput, MONIKER.NativeAot70)]
-    public class FixedMath
+    public class LabMath
     {
         [Benchmark]
-        public uint TestReferenceAPI1()
+        public int TestReferenceAPI1()
         {
-            uint x = 0;
-            for(byte i=0; i < 255; ++i)
+            int x = 0;
+            for (float i = -255; i < 255; i += 0.3f)
             {
-                x |= Convert255To16384_ref1(i);
+                x |= _ref1(i);
             }
             return x;
         }
 
         [Benchmark]
-        public uint TestReferenceAPI2()
+        public int TestReferenceAPI2()
         {
-            uint x = 0;
-            for (byte i = 0; i < 255; ++i)
+            int x = 0;
+            for (float i = -255; i < 255; i += 0.3f)
             {
-                x |= Convert255To16384_ref2(i);
+                x |= _ref2(i);
             }
             return x;
         }
 
-        [Benchmark]
-        public uint TestReferenceFast1()
-        {
-            uint x = 0;
-            for (byte i = 0; i < 255; ++i)
-            {
-                x |= Convert255To16384_Fast1(i);
-            }
-            return x;
-        }
-
-
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static uint Convert255To16384_ref1(uint value)
+        public static int _ref1(float value)
         {
-            return (value * 16384) / 255;
+            #if NET472
+            return (int)Math.Floor(value);
+            #else
+            return (int)MathF.Floor(value);
+            #endif
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static uint Convert255To16384_ref2(uint value)
+        public static int _ref2(float value)
         {
-            return (value << 14) / 255;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static uint Convert255To16384_Fast1(uint value)
-        {
-            const int s = 32 - 8 - 6 - 1;
-
-            return (value * (uint)8454913) >> s;
+            int i = (int)value;
+            return (i > value) ? i - 1 : i;
         }
     }
 }
