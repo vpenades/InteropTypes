@@ -3,10 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>InteropTypes.Proto.Drawing</RootNamespace>
-  </PropertyGroup>  
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DrawingPrimitives.proto" Pack="true" PackageCopyToOutput="true" />
+  </ItemGroup>  
 
 </Project>
