@@ -127,7 +127,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proto", "Proto", "{7FD522CE-D765-4F8A-811A-E5D87E91B06A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Proto.Drawing.Primitives", "proto\InteropTypes.Proto.Drawing.Primitives\InteropTypes.Proto.Drawing.Primitives.csproj", "{ED35BA5B-1793-49FE-BBA2-7997E95E68CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Proto.Drawing.Primitives", "proto\InteropTypes.Proto.Drawing.Primitives\InteropTypes.Proto.Drawing.Primitives.csproj", "{ED35BA5B-1793-49FE-BBA2-7997E95E68CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Backends.SilkOpenGL", "src\InteropTypes.Graphics.Backends.SilkOpenGL\InteropTypes.Graphics.Backends.SilkOpenGL.csproj", "{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.SilkOpenGL.Demo.App", "tests\InteropTypes.Graphics.SilkOpenGL.Demo.App\InteropTypes.Graphics.SilkOpenGL.Demo.App.csproj", "{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -505,6 +509,22 @@ Global
 		{ED35BA5B-1793-49FE-BBA2-7997E95E68CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED35BA5B-1793-49FE-BBA2-7997E95E68CA}.Release|x64.ActiveCfg = Release|Any CPU
 		{ED35BA5B-1793-49FE-BBA2-7997E95E68CA}.Release|x64.Build.0 = Release|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Debug|x64.Build.0 = Debug|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Release|x64.ActiveCfg = Release|Any CPU
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}.Release|x64.Build.0 = Release|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -556,6 +576,8 @@ Global
 		{8276108B-C765-4D9B-A18E-DEDCD7FFD0B4} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
 		{3070190B-9B32-4972-B4B4-5181704AB543} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{ED35BA5B-1793-49FE-BBA2-7997E95E68CA} = {7FD522CE-D765-4F8A-811A-E5D87E91B06A}
+		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
+		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}
