@@ -1,10 +1,13 @@
-﻿using Silk.NET.Input;
+﻿using System;
+using System.Collections.Generic;
+
+using Silk.NET.Maths;
+using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using System;
-using Silk.NET.Maths;
+
 using InteropTypes.Graphics.Backends.SilkGL;
-using System.Collections.Generic;
+
 
 namespace Tutorial
 {
@@ -15,31 +18,10 @@ namespace Tutorial
         private static IWindow window;
         private static GL Gl;
 
-        private static VertexBuffer Vao;
-        private static IndexBuffer Ebo;        
-        private static ShaderProgram Shader;
-
-        //Vertex shaders are run on each vertex.
-        private static readonly string VertexShaderSource = @"
-        #version 330 core //Using version GLSL version 3.3
-        layout (location = 0) in vec4 vPos;
-        
-        void main()
-        {
-            gl_Position = vec4(vPos.x, vPos.y, vPos.z, 1.0);
-        }
-        ";
-
-        //Fragment shaders are run on each fragment/pixel of the geometry.
-        private static readonly string FragmentShaderSource = @"
-        #version 330 core
-        out vec4 FragColor;
-
-        void main()
-        {
-            FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-        }
-        ";
+        private static VertexBuffer Vbo;
+        private static IndexBuffer Ebo;
+        private static PrimitiveBuffer Vao;
+        private static Effect0 Shader;        
 
         struct Vertex : VertexElement.ISource
         {
@@ -98,14 +80,16 @@ namespace Tutorial
             Gl = GL.GetApi(window);
 
             //Creating a vertex array.
-            Vao = new VertexBuffer(Gl, BufferUsageARB.StaticDraw);
-            Vao.SetData(Vertices.AsSpan());
+            Vbo = new VertexBuffer(Gl, BufferUsageARB.StaticDraw);
+            Vbo.SetData(Vertices.AsSpan());
 
             //Initializing a element buffer that holds the index data.
             Ebo = new IndexBuffer(Gl, BufferUsageARB.StaticDraw);
             Ebo.SetData(Indices.AsSpan(), PrimitiveType.Triangles);
 
-            Shader = ShaderProgram.CreateFromVertexAndFragmentShaders(Gl, VertexShaderSource, FragmentShaderSource);
+            Vao = new PrimitiveBuffer(Vbo, Ebo);
+
+            Shader = new Effect0(Gl);
         }
 
         private static unsafe void OnRender(double obj) //Method needs to be unsafe due to draw elements.
@@ -113,7 +97,7 @@ namespace Tutorial
             //Clear the color channel.
             Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
-            Shader.DrawTriangles(Vao, Ebo);
+            Shader.DrawTriangles(Vao);
         }
 
         private static void OnUpdate(double obj)
@@ -125,7 +109,7 @@ namespace Tutorial
         {
             //Remember to delete the buffers.
 
-            Vao.Dispose();
+            Vbo.Dispose();
             Ebo.Dispose();
             Shader.Dispose();
         }

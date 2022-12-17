@@ -69,16 +69,22 @@ namespace InteropTypes.Graphics.Backends.SilkGL
     {
         #region lifecycle
 
-        public static ShaderProgram CreateFromVertexAndFragmentShaders(OPENGL gl, string vertexShader, string fragmentShader)
+        public ShaderProgram(OPENGL gl, string vertexShader, string fragmentShader)
+            : base(gl)
         {
             using var vs = Shader.CreateVertexShader(gl, vertexShader);
             using var fs = Shader.CreateFragmentShader(gl, fragmentShader);
 
-            return new ShaderProgram(vs, fs);
+            _Initialize(vs, fs);
         }
 
         public ShaderProgram(Shader vertexShader, Shader fragmentShader)
             : base(vertexShader.Context)
+        {
+            _Initialize(vertexShader, fragmentShader);
+        }
+
+        private void _Initialize(Shader vertexShader, Shader fragmentShader)
         {
             _ProgramId = Context.CreateProgram();
             Context.AttachShader(_ProgramId, vertexShader._ShaderId);
@@ -113,46 +119,32 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #endregion
 
-        #region API
+        #region properties
 
-        protected int GetUniformLocation(string name)
-        {
-            //Setting a uniform on a shader using a name.
-            int location = Context.GetUniformLocation(_ProgramId, name);
-
-            if (location == -1) //If GetUniformLocation returns -1 the uniform is not found.
-            {
-                throw new ArgumentException($"{name} uniform not found on shader.", nameof(name));
-            }
-
-            return location;
-        }
-
-        private static ReadOnlySpan<float> _ToFloats<T>(ref T value)
-            where T:unmanaged
-        {
-            var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref value, 1);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(span);
-        }
-        
-        public void SetUniform(string name, int value) { Context.Uniform1(GetUniformLocation(name), value); }
-        public void SetUniform(string name, float value) { Context.Uniform1(GetUniformLocation(name), value); }
-        public void SetUniform(string name, System.Numerics.Vector2 value) { Context.Uniform1(GetUniformLocation(name), _ToFloats(ref value)); }
-        public void SetUniform(string name, System.Numerics.Vector3 value) { Context.Uniform1(GetUniformLocation(name), _ToFloats(ref value)); }
-        public void SetUniform(string name, System.Numerics.Vector4 value) { Context.Uniform1(GetUniformLocation(name), _ToFloats(ref value)); }
-        public void SetUniform(string name, System.Numerics.Matrix4x4 value) { Context.Uniform1(GetUniformLocation(name), _ToFloats(ref value)); }
-
-        public unsafe void DrawTriangles(VertexBuffer vertices, IndexBuffer indices)
-        {
-            vertices.Use();
-            indices.Use();
-
-            Context.UseProgram(_ProgramId);
-
-            //Draw the geometry.
-            Context.DrawElements(indices.Mode, (uint)indices.Count, indices.Encoding, null);
-        }
+        public UniformFactory UniformFactory => new UniformFactory(this.Context, _ProgramId);
 
         #endregion
-    }
+
+        #region API
+
+        public unsafe void DrawTriangles(PrimitiveBuffer array)
+        {
+            Context.UseProgram(_ProgramId);
+
+            SetUniforms();
+
+            array.Bind();
+
+            Context.DrawElements(array.Indices.Mode, (uint)array.Indices.Count, array.Indices.Encoding, null);
+
+            array.Unbind();
+
+            Context.UseProgram(0);
+        }
+
+        protected virtual void SetUniforms() { }
+
+        #endregion
+    }    
 }
+        

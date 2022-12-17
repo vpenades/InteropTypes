@@ -46,6 +46,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         public unsafe void Set(OPENGL context)
         {
+            // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
             context.VertexAttribPointer(Index, Dimensions, Encoding, Normalized, ByteSize, null);
             context.EnableVertexAttribArray(Index);
         }
