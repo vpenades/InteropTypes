@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
 
 using Silk.NET.OpenGL;
 
@@ -11,18 +9,16 @@ using VEC2 = System.Numerics.Vector2;
 using VEC3 = System.Numerics.Vector3;
 using VEC4 = System.Numerics.Vector4;
 using MAT4X4 = System.Numerics.Matrix4x4;
-using System.Diagnostics;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
-
     public readonly struct UniformFactory
     {
         #region diagnostics
 
         private static readonly Dictionary<OPENGL, uint> _CurrentProgram = new Dictionary<OPENGL, uint>();
 
-        [Conditional("DEBUG")]
+        [System.Diagnostics.Conditional("DEBUG")]
         internal static void VerifyIsCurrentProgram(OPENGL gl, uint program)
         {
             if (!_CurrentProgram.TryGetValue(gl, out uint currProgId)) throw new InvalidOperationException("Wrong program");
@@ -86,18 +82,16 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         public UniformVector<VEC4> UseVector4(string name)
         {
-            return new UniformVector<VEC4>(this._Context, UseLocation(name));
+            return new UniformVector<VEC4>(this._Context, _ProgramId, UseLocation(name));
         }
 
         public UniformMatrix<MAT4X4> UseMatrix4x4(string name, bool transpose)
         {
-            return new UniformMatrix<MAT4X4>(this._Context, UseLocation(name), transpose);
+            return new UniformMatrix<MAT4X4>(this._Context, _ProgramId, UseLocation(name), transpose);
         }
 
         #endregion
     }
-
-
 
     [System.Diagnostics.DebuggerDisplay("{_Value}")]
     public struct UniformTexture
@@ -260,13 +254,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             if (typeof(T) == typeof(MAT4X4))
             {
-                ref var mat = ref System.Runtime.CompilerServices.Unsafe.As<T, MAT4X4>(ref value);
-
-                var matSpan = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref mat, 1);
-
-                var fltSpan = System.Runtime.InteropServices.MemoryMarshal.Cast<MAT4X4, float>(matSpan);
-
-                _gl.UniformMatrix4(_Index, _Transpose, fltSpan);
+                _gl.UniformMatrix4(_Index, 1, _Transpose, (float*)&value);
             }
         }
 
