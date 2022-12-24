@@ -13,7 +13,7 @@
 
   <PropertyGroup>
     <!-- this is the last version supporting NetStandard2.0-->
-    <MonoGameLastNetStandardVersion>3.8.0.1641</MonoGameLastNetStandardVersion>
+    <MonoGameLastNetStandardVersion>[3.8.0.1641]</MonoGameLastNetStandardVersion>
   </PropertyGroup>
  
   <ItemGroup>

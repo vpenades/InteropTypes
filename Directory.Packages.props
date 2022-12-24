@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   
   <!-- REQUIRES VISUAL STUDIO 2022 v17.2+ -->
@@ -24,7 +25,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.21.11" />
+    <PackageVersion Include="Google.Protobuf" Version="3.21.12" />
     
     <!-- Game Engines -->
 
@@ -85,14 +86,14 @@
     
     <!-- unit Testing -->
 
-    <PackageVersion Include="TestAttachments.NUnit" Version="3.0.0-Preview-20220721-1621" />
-    <PackageVersion Include="TestImages.ImageSharp" Version="3.0.0-Preview-20220721-1621" />
+    <PackageVersion Include="TestAttachments.NUnit" Version="3.0.0-preview-20220721-1621" />
+    <PackageVersion Include="TestImages.ImageSharp" Version="3.0.0-preview-20220721-1621" />
 
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.4.0-beta.1" />
     
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.3.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageVersion Include="coverlet.collector" Version="3.2.0" />
     
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0" />
@@ -104,7 +105,7 @@
     
     <!-- Other -->
 
-    <PackageVersion Include="SharpCompress" Version="0.31.0" />
+    <PackageVersion Include="SharpCompress" Version="0.32.2" />
     
   </ItemGroup>
   
