@@ -25,7 +25,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.21.12" />
+    <PackageVersion Include="Google.Protobuf" Version="3.22.0" />
     
     <!-- Game Engines -->
 
@@ -65,19 +65,19 @@
 
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
 
-    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0027" />
+    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0028" />
     
     <!-- Video Libraries -->
 
     <PackageVersion Include="FFmpeg.AutoGen" Version="5.1.1" />
-    <PackageVersion Include="FFMpegCore" Version="5.0.0" />
+    <PackageVersion Include="FFMpegCore" Version="5.0.2" />
     <PackageVersion Include="LibVLCSharp" Version="3.6.7" />
     <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.18" />
     <PackageVersion Include="SharpAvi" Version="3.0.1" />
     
     <!-- Machine Learning -->
 
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.13.1" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.14.0" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.13.1" />
     
     <PackageVersion Include="OpenCvSharp4" Version="4.7.0.20230115" />
@@ -93,7 +93,7 @@
     
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.3.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageVersion Include="coverlet.collector" Version="3.2.0" />
     
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0" />
@@ -101,7 +101,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
     
 
-    <PackageVersion Include="BenchmarkDotNet" Version="0.13.4" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.5" />
 
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     
