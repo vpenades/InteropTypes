@@ -11,11 +11,15 @@ using FFMpegCore.Pipes;
 using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Bitmaps;
 
+using GDIWRAPPER = FFMpegCore.Extensions.System.Drawing.Common.BitmapVideoFrameWrapper;
+
 namespace InteropTypes
 {
     static class _Implementation
     {
-        public static IEnumerable<BitmapVideoFrameWrapper> WrapFrames(IEnumerable<PointerBitmap> frames)
+        
+
+        public static IEnumerable<GDIWRAPPER> WrapFrames(IEnumerable<PointerBitmap> frames)
         {
             MemoryBitmap tmp = default;
 
@@ -25,7 +29,7 @@ namespace InteropTypes
 
                 var bmp = tmp.ToGDIBitmap();
 
-                yield return new BitmapVideoFrameWrapper(bmp);
+                yield return new GDIWRAPPER(bmp);
             }
         }       
 
@@ -37,9 +41,7 @@ namespace InteropTypes
 
         public static void Encode(string outFile, IEnumerable<IVideoFrame> frames, params IArgument[] inputArguments)
         {
-            using var frameSeq = frames.GetEnumerator();
-
-            var videoFramesSource = new RawVideoPipeSource(frameSeq);
+            var videoFramesSource = new RawVideoPipeSource(frames);
 
             void _addArgs(FFMpegArgumentOptions ops)
             {

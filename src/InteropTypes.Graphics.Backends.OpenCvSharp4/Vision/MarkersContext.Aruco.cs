@@ -49,7 +49,7 @@ namespace InteropTypes.Vision.Backends
             private readonly ARUCO.Dictionary _MarkersDict;
             private int _MarkersLength = 80;
 
-            private ARUCO.DetectorParameters _Parameters = ARUCO.DetectorParameters.Create();
+            private ARUCO.DetectorParameters _Parameters = new ARUCO.DetectorParameters();
 
             private bool _HorizontalMirror;
 

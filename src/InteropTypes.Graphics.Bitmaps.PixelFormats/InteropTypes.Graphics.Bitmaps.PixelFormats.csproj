@@ -41,9 +41,11 @@
     <None Include="..\Shared\CodeGenUtils.t4" Link="CodeGenUtils.t4" />
   </ItemGroup>
 
+  <!--
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen\InteropTypes.Graphics.Bitmaps.PixelFormats.SrcGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>  
+  -->
 
   <ItemGroup>
     <None Update="Pixel.Equality.tt">

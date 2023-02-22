@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="FFMpegCore" />
-    <PackageReference Include="System.Drawing.Common" />    
+    <PackageReference Include="FFMpegCore.Extensions.System.Drawing.Common" />    
   </ItemGroup>  
 
 </Project>
