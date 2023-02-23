@@ -16,6 +16,9 @@ namespace InteropTypes.Graphics.Bitmaps
     using WSPAN = Span<Byte>;
     using RSPAN = ReadOnlySpan<Byte>;
 
+    using WMEM = Memory<Byte>;
+    using RMEM = ReadOnlyMemory<Byte>;
+
     /// <summary>
     /// Represents the width, height and pixel format of a bitmap.
     /// </summary>
@@ -288,6 +291,13 @@ namespace InteropTypes.Graphics.Bitmaps
 
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public WMEM UseScanlineBytes(WMEM bitmap, int y)
+        {
+            return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Span<TPixel> UseScanlinePixels<TPixel>(WSPAN bitmap, int y)
             where TPixel : unmanaged
         {
@@ -298,6 +308,13 @@ namespace InteropTypes.Graphics.Bitmaps
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RSPAN GetScanlineBytes(RSPAN bitmap, int y)
+        {
+            return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public RMEM GetScanlineBytes(RMEM bitmap, int y)
         {
             return bitmap.Slice(y * StepByteSize, Width * PixelByteSize);
         }

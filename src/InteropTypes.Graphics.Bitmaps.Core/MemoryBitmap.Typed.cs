@@ -166,13 +166,13 @@ namespace InteropTypes.Graphics.Bitmaps
         #region API - Buffers
 
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+        public readonly Memory<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data, y); }
 
         [System.Diagnostics.DebuggerStepThrough]
         public readonly Span<TPixel> UseScanlinePixels(int y) { return _Info.UseScanlinePixels<TPixel>(_Data.Span, y); }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
+        public readonly ReadOnlyMemory<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data, y); }
 
         [System.Diagnostics.DebuggerStepThrough]
         public readonly ReadOnlySpan<TPixel> GetScanlinePixels(int y) { return _Info.GetScanlinePixels<TPixel>(_Data.Span, y); }

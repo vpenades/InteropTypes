@@ -137,10 +137,10 @@ namespace InteropTypes.Graphics.Bitmaps
         #region API - Buffers
 
         [System.Diagnostics.DebuggerStepThrough]
-        public Span<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data.Span, y); }
+        public Memory<byte> UseScanlineBytes(int y) { return _Info.UseScanlineBytes(_Data, y); }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public ReadOnlySpan<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data.Span, y); }
+        public ReadOnlyMemory<byte> GetScanlineBytes(int y) { return _Info.GetScanlineBytes(_Data, y); }
 
         /// <summary>
         /// Gets the underlaying buffer as a <typeparamref name="TPixel"/> memory buffer.
