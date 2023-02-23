@@ -129,9 +129,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proto", "Proto", "{7FD522CE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Proto.Drawing.Primitives", "proto\InteropTypes.Proto.Drawing.Primitives\InteropTypes.Proto.Drawing.Primitives.csproj", "{ED35BA5B-1793-49FE-BBA2-7997E95E68CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Backends.SilkOpenGL", "src\InteropTypes.Graphics.Backends.SilkOpenGL\InteropTypes.Graphics.Backends.SilkOpenGL.csproj", "{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.SilkOpenGL", "src\InteropTypes.Graphics.Backends.SilkOpenGL\InteropTypes.Graphics.Backends.SilkOpenGL.csproj", "{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.SilkOpenGL.Demo.App", "tests\InteropTypes.Graphics.SilkOpenGL.Demo.App\InteropTypes.Graphics.SilkOpenGL.Demo.App.csproj", "{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.SilkOpenGL.Demo.App", "tests\InteropTypes.Graphics.SilkOpenGL.Demo.App\InteropTypes.Graphics.SilkOpenGL.Demo.App.csproj", "{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.FFMpegCore.Tests", "tests\InteropTypes.Codecs.FFMpeg.Core.Tests\InteropTypes.Codecs.FFMpegCore.Tests.csproj", "{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -525,6 +527,14 @@ Global
 		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Release|x64.ActiveCfg = Release|Any CPU
 		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD}.Release|x64.Build.0 = Release|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Debug|x64.Build.0 = Debug|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Release|x64.ActiveCfg = Release|Any CPU
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -578,6 +588,7 @@ Global
 		{ED35BA5B-1793-49FE-BBA2-7997E95E68CA} = {7FD522CE-D765-4F8A-811A-E5D87E91B06A}
 		{9E81F7E2-FF57-46BB-B1BA-66BD1061FC4B} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{BF7D5870-50FA-49D0-A17A-A9AE679AD6DD} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
+		{B2C4CA0B-AF15-464A-9AF8-0F8E3BE962A4} = {554325E7-82B1-4A1F-8F6F-0E63E82537EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

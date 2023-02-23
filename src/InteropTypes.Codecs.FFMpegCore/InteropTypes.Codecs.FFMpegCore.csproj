@@ -1,25 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
-  </PropertyGroup>  
+  </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
+    <InternalsVisibleTo Include="InteropTypes.Codecs.FFMpegCore.Tests" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <PackageReference Include="FFMpegCore" />    
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-    <Content Include="..\..\ThirdParty\Win32\**" LinkBase="FFMPEG\bin\Win32\" CopyToOutputDirectory="PreserveNewest" />
-    -->
-    <Content Include="..\..\ThirdParty\Win64\**" LinkBase="FFMPEG\bin\" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FFMpegCore" />
-    <PackageReference Include="FFMpegCore.Extensions.System.Drawing.Common" />    
+    <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
   </ItemGroup>  
 
 </Project>
