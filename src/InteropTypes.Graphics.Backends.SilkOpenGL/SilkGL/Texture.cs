@@ -35,6 +35,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         internal InteropTypes.Graphics.Bitmaps.BitmapInfo _Info;
 
+        private TextureUnit? _Bound;
+
         #endregion
 
         #region API
@@ -49,8 +51,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             _Info = bitmap.Info;
 
-
-            Bind();
+            throw new NotImplementedException();
+            // Bind();
 
             System.Diagnostics.Debug.Assert(bitmap.Info.IsContinuous);
 
@@ -71,7 +73,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             SetParameters();
 
-            Unbind();
+            // Unbind();
         }
 
         private void SetParameters()
@@ -83,19 +85,29 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureBaseLevel, 0);
             Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, 8);
             Context.GenerateMipmap(TextureTarget.Texture2D);
-        }
-
-        public void Bind(TextureUnit textureSlot = TextureUnit.Texture0)
-        {
-            Context.ActiveTexture(textureSlot);
-            Context.BindTexture(TextureTarget.Texture2D, _handle);            
-        }
-
-        public void Unbind()
-        {            
-            Context.BindTexture(TextureTarget.Texture2D, 0);         
-        }
+        }        
 
         #endregion
     }
+
+    public readonly struct TextureSlot
+    {
+        private readonly OPENGL _Context;
+        private readonly TextureUnit _Slot;
+
+        public void SetTexture(Texture texture)
+        {
+            _Context.ActiveTexture(_Slot);
+            var handle = texture?._handle ?? 0;            
+            _Context.BindTexture(TextureTarget.Texture2D, handle);
+
+            if (handle != 0)
+            {
+                // _Context.TexParameter(TextureTarget.Texture2D, GLEnum.TextureWrapS, GLEnum.Repeat);
+            }            
+        }
+
+    }
+
+    
 }

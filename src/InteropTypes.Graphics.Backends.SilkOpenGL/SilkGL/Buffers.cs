@@ -1,26 +1,144 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using InteropTypes.Graphics.Backends.SilkOpenGL.SilkGL;
+
 using Silk.NET.OpenGL;
 
 using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
-    public class Buffer : ContextProvider
+    [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
+    public readonly struct BufferInfo
+    {
+        #region debug
+
+        internal string _ToDebuggerDisplay()
+        {
+            if (Id == 0) return "<DISPOSED>";
+            return $"{Id} => {Target} {Usage}";
+        }
+
+        #endregion
+
+        #region constructor
+
+        public static BufferInfo Create(OPENGL gl, BufferTargetARB target, BufferUsageARB usage)
+        {
+            gl.ThrowOnError();
+            var id = gl.GenBuffer();
+            gl.ThrowOnError();
+            return new BufferInfo(id, target,usage);            
+        }
+
+        public BufferInfo(uint id, BufferTargetARB target, BufferUsageARB usage)
+        {
+            Id = id;
+            Target = target;
+            Usage = usage;
+        }
+
+        #endregion
+
+        #region data
+
+        public readonly uint Id;
+        public readonly BufferTargetARB Target;
+        public readonly BufferUsageARB Usage;
+
+        #endregion
+
+        #region API
+
+        internal BoundAPI _Bind(OPENGL gl) { gl.ThrowOnError(); return new BoundAPI(gl, this); }        
+
+        public readonly struct BoundAPI : IDisposable
+        {
+            #region lifecycle
+
+            internal BoundAPI(OPENGL context, in BufferInfo info)
+            {
+                _Context = context;
+                _Info = info;
+                
+                _Context.BindBuffer(_Info.Target, info.Id);
+                _Context.ThrowOnError();
+
+                _Guard.Bind(_Info.Target, info.Id);
+            }
+
+            public void Dispose()
+            {
+                _Guard.Unbind(_Info.Target);
+
+                _Context.BindBuffer(_Info.Target, 0);
+                _Context.ThrowOnError();                
+            }
+
+            private static _BindingsGuard<BufferTargetARB, uint> _Guard = new _BindingsGuard<BufferTargetARB, uint>();
+
+            #endregion
+
+            #region data
+
+            private readonly OPENGL _Context;
+            private readonly BufferInfo _Info;
+
+            #endregion
+
+            #region API
+
+            public void SetData<T>(List<T> data)
+            where T : unmanaged
+            {
+                #if NETSTANDARD
+                SetData<T>(data.ToArray());
+                #else
+                var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan(data);
+                SetData<T>(span);
+                #endif
+            }
+
+            public void SetData<T>(T[] data)
+                where T : unmanaged
+            {
+                SetData((ReadOnlySpan<T>)data);
+            }
+
+            public void SetData<T>(Span<T> data)
+                where T : unmanaged
+            {
+                SetData((ReadOnlySpan<T>)data);
+            }
+
+            public void SetData<T>(ReadOnlySpan<T> data)
+                where T : unmanaged
+            {
+                _Context.ThrowOnError();
+                _Context.BufferData(_Info.Target, data, _Info.Usage);
+                _Context.ThrowOnError();
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
+
+    public abstract class Buffer : ContextProvider
     {
         #region lifecycle
 
-        public Buffer(OPENGL gl, BufferUsageARB usage) : base(gl)
+        public Buffer(OPENGL gl, BufferTargetARB target, BufferUsageARB usage) : base(gl)
         {
-            _Usage = usage;
+            _Info = BufferInfo.Create(Context, target, usage);
         }
 
         protected override void Dispose(OPENGL gl)
         {
-            gl?.DeleteBuffer(_BufferId);
-            _BufferId = 0;
+            gl?.DeleteBuffer(_Info.Id);
+            _Info = default;
 
             base.Dispose(gl);
         }
@@ -29,127 +147,17 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region data
 
-        private uint _BufferId;
-        private BufferTargetARB _Target;
-        private BufferUsageARB _Usage;
+        protected BufferInfo _Info;
+
+        public int UpdateVersion { get; private set; }
 
         #endregion
 
         #region API
 
-        public virtual void Bind()
-        {            
-            Context.BindBuffer(_Target, _BufferId);
-        }
-
-        public virtual void Unbind()
-        {            
-            Context.BindBuffer(_Target, 0);
-        }
-
-        protected unsafe void SetData<T>(ReadOnlySpan<T> data, BufferTargetARB target)
-            where T : unmanaged
+        public BufferInfo.BoundAPI Using()
         {
-            _Target = target;
-
-            //Creating the buffer.
-            if (_BufferId == 0) _BufferId = Context.GenBuffer();
-
-            Bind();            
-
-            Context.BufferData(target, data, _Usage);
-
-            Unbind();
-        }
-
-        #endregion
-    }
-
-    public class VertexBuffer : Buffer
-    {
-        #region lifecycle
-
-        public VertexBuffer(OPENGL gl, BufferUsageARB usage)
-            : base(gl, usage)
-        { }
-
-        #endregion
-
-        #region data        
-
-        private Type _VertexType;
-        private VertexElement[] _Elements;
-
-        #endregion
-
-        #region API
-
-        public void SetData<T>(List<T> data)
-            where T : unmanaged, VertexElement.ISource
-        {
-            #if NETSTANDARD
-            SetData<T>(data.ToArray());
-            #else
-            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan(data);
-            SetData<T>(span);
-            #endif
-        }
-
-        public void SetData<T>(Span<T> data)
-            where T : unmanaged, VertexElement.ISource
-        {
-            var rdata = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref data[0], data.Length);
-
-            SetData<T>(rdata);
-        }
-
-        public void SetData<T>(ReadOnlySpan<T> data)
-            where T : unmanaged, VertexElement.ISource
-        {
-            
-
-            SetData(data, BufferTargetARB.ArrayBuffer);
-
-            if (_VertexType != typeof(T))
-            {
-                _VertexType = typeof(T);
-                _Elements = default(T).GetElements().ToArray();
-
-                uint offset = 0;
-
-                for (int i = 0; i < _Elements.Length; ++i)
-                {
-                    _Elements[i] = _Elements[i].WithIndex(offset);
-                    offset += _Elements[i].ByteSize;
-                }
-            }
-        }
-
-        public unsafe override void Bind()
-        {
-            base.Bind();
-
-            /*
-
-            Because if you keep that last VAO bound over to next frame, and then do some operations on buffers using glBindBuffer() (but without binding appropriate VAO, because you don't have to) you'll be overwriting your currently bound VAO state, which in most cases may cause nasty and hard to track disasters :)
-
-            Edit: Though now that I think about it, I'm not so sure. I think I had issue with overriding VAO state when I kept VAO bound between frames so I started to reset it. At some point I was convinced that only glVertexAttribPointer() and friends affect VAO state, and these require glBindBuffer to work with. But I _think_ had cases where glBindBuffer (because I was uploading new data) somehow messed my other VAO state. So I can't give you 100 % guarantee that what I say is correct, but I think it may be a good practice to know that VAO is enabled when it's needed and when you're done it's 0.
-
-            Edit2: I did a small mistake, it was ELEMENT_ARRAY_BUFFER binding that was the problem, so if you keep VAO bound and somewhere you manipulate some index buffer by binding it, you may override the one pointed to by currently bound VAO.It isn't affected by just binding GL_ARRAY_BUFFER, as I previously speculated.
-
-            */
-
-            // In other words: is this bound to the vertexbuffer, or to the vertex array
-            // I think to the vertex array!  but then we must rebuild the VAO of the vertex type changes!
-
-            if (_Elements != null)
-            {
-                //Tell opengl how to give the data to the shaders.
-                foreach (var element in _Elements)
-                {
-                    element.Set(Context);
-                }
-            }
+            return _Info._Bind(Context);
         }
 
         #endregion
@@ -160,7 +168,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #region lifecycle
 
         public IndexBuffer(OPENGL gl, BufferUsageARB usage)
-            : base(gl, usage)
+            : base(gl, BufferTargetARB.ElementArrayBuffer, usage)
         { }
 
         #endregion
@@ -173,25 +181,23 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #endregion
 
-        #region API
+        #region API        
 
         public void SetData<T>(List<T> data, PrimitiveType mode)
             where T : unmanaged
         {
             #if NETSTANDARD
-            SetData<T>(data.ToArray(), mode);
+            this.SetData<T>(data.ToArray(), mode);
             #else
             var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan(data);
-            SetData<T>(span, mode);
+            this.SetData<T>(span, mode);
             #endif
         }
 
         public void SetData<T>(Span<T> data, PrimitiveType mode)
             where T : unmanaged
         {
-            var rdata = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref data[0], data.Length);
-
-            SetData<T>(rdata, mode);
+            this.SetData((ReadOnlySpan<T>)data, mode);
         }
 
         public unsafe void SetData<T>(ReadOnlySpan<T> data, PrimitiveType mode)
@@ -208,30 +214,61 @@ namespace InteropTypes.Graphics.Backends.SilkGL
                 default: throw new InvalidOperationException($"{typeof(T).Name} not valid");
             }
 
-            SetData(data, BufferTargetARB.ElementArrayBuffer);
-        }
+            using (var api = Using()) api.SetData(data);
+        }        
 
         #endregion
     }
 
-    public class PrimitiveBuffer : ContextProvider
+    public class VertexBuffer : Buffer
     {
         #region lifecycle
 
-        public PrimitiveBuffer(VertexBuffer vb, IndexBuffer ib)
-            : base(ib.Context)
+        protected VertexBuffer(OPENGL gl, BufferUsageARB usage)
+            : base(gl, BufferTargetARB.ArrayBuffer, usage)
+        { }
+
+        #endregion        
+    }
+
+    public class VertexBuffer<TVertex> : VertexBuffer
+        where TVertex : unmanaged, VertexElement.ISource
+    {
+        #region lifecycle
+
+        public VertexBuffer(OPENGL gl, BufferUsageARB usage)
+            : base(gl, usage)
+        { }        
+
+        #endregion
+
+        #region API        
+
+        public void SetData(List<TVertex> data) { using(var api = Using()) api.SetData(data); }
+
+        public void SetData(TVertex[] data) { using (var api = Using()) api.SetData(data); }
+
+        public void SetData(Span<TVertex> data) { using (var api = Using()) api.SetData(data); }
+
+        public void SetData(ReadOnlySpan<TVertex> data) { using (var api = Using()) api.SetData(data); }        
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Defines the pipeline the shader will use to read vertices from one or multiple <see cref="VertexBuffer"/>
+    /// </summary>
+    public class VertexLayout : ContextProvider
+    {
+        #region lifecycle
+
+        public VertexLayout(OPENGL gl)
+            : base(gl)
         {
-            Vertices = vb;
-            Indices = ib;
-
-            //Creating a vertex array.
+            Context.ThrowOnError();
             _ArrayId = Context.GenVertexArray();
-            System.Diagnostics.Debug.Assert(_ArrayId != 0);
-
-            this.Bind();
-            vb.Bind();
-            ib.Bind();
-            Unbind(); // prevent subsequent vertex/index bind calls to break this object
+            Context.ThrowOnError();
+            System.Diagnostics.Debug.Assert(_ArrayId != 0);            
         }
 
         protected override void Dispose(OPENGL gl)
@@ -244,26 +281,49 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #endregion
 
-        #region data
+        #region data        
 
-        private uint _ArrayId;
-
-        internal VertexBuffer Vertices { get; }
-        internal IndexBuffer Indices { get; }
+        internal uint _ArrayId;
+        internal readonly VertexElement.Collection _Elements = new VertexElement.Collection();
 
         #endregion
 
-        #region API        
+        #region API
+
+        public void SetLayoutFrom<TVertex>(VertexBuffer vertexBuffer)
+            where TVertex : unmanaged, VertexElement.ISource
+        {
+            // https://community.khronos.org/t/binding-orders-to-update-information-in-multiple-vao-vbo/75066/2
+
+            _Elements.SetElements<TVertex>();
+
+            Context.ThrowOnError();
+            Context.BindVertexArray(_ArrayId);
+            Context.ThrowOnError();
+
+            using (var api = vertexBuffer.Using())
+            {
+                _Elements.Set(Context);
+            }
+
+            _Elements.Enable(Context);
+
+            Context.BindVertexArray(0);
+        }
 
         public void Bind()
         {
-            Context.BindVertexArray(_ArrayId);            
+            Context.ThrowOnError();
+            Context.BindVertexArray(_ArrayId);
+            Context.ThrowOnError();
         }
 
         public void Unbind()
         {
+            Context.ThrowOnError();
             Context.BindVertexArray(0);
-        }
+            Context.ThrowOnError();
+        }        
 
         #endregion
     }

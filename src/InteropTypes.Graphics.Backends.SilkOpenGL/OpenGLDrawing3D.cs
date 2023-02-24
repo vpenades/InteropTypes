@@ -11,15 +11,23 @@ namespace InteropTypes.Graphics.Backends
 {
     public class OpenGLDrawing3D : IDisposableScene3D
     {
+        #region lifecycle
+
         public OpenGLDrawing3D(OPENGL glContext)
         {
             _glContext = glContext;
         }
 
+        #endregion
+
+        #region data
+
         private OPENGL _glContext;
 
         private List<IDisposable> _disposables = new List<IDisposable>();
         private Drawing.Transforms.Decompose3D _Collapsed3D => new Drawing.Transforms.Decompose3D(this);
+
+        #endregion
 
         private void _Add(IDisposable disposable)
         {

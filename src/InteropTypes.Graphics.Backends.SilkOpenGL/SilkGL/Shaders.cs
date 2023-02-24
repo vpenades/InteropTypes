@@ -65,18 +65,12 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #endregion
     }
 
-    public class ShaderProgram : ContextProvider
+    public abstract class ShaderProgram : BindableResource<ShaderProgram>
     {
         #region lifecycle
 
-        public ShaderProgram(OPENGL gl, string vertexShader, string fragmentShader)
-            : base(gl)
-        {
-            using var vs = Shader.CreateVertexShader(gl, vertexShader);
-            using var fs = Shader.CreateFragmentShader(gl, fragmentShader);
-
-            _Initialize(vs, fs);
-        }
+        public ShaderProgram(OPENGL gl)
+            : base(gl) { }
 
         public ShaderProgram(Shader vertexShader, Shader fragmentShader)
             : base(vertexShader.Context)
@@ -84,12 +78,46 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             _Initialize(vertexShader, fragmentShader);
         }
 
+        protected void SetShadersFrom(System.Reflection.Assembly resAssembly, string vname, string fname)
+        {
+            var vcode = resAssembly.ReadAllText(vname);
+            if (vcode == null) throw new System.IO.FileNotFoundException(vname);
+
+            var fcode = resAssembly.ReadAllText(fname);
+            if (fcode == null) throw new System.IO.FileNotFoundException(fname);
+
+            SetShadersCode(vcode, fcode);
+        }
+
+        
+
+        protected void SetShadersCode(string vertexCode, string fragmentCode)
+        {
+            using var vs = Shader.CreateVertexShader(this.Context, vertexCode);
+            using var fs = Shader.CreateFragmentShader(this.Context, fragmentCode);
+
+            _Initialize(vs, fs);
+        }        
+
         private void _Initialize(Shader vertexShader, Shader fragmentShader)
         {
+            Context.ThrowOnError();
+
+            if (_ProgramId != 0) Context.DeleteProgram(_ProgramId);
+
             _ProgramId = Context.CreateProgram();
+            Context.ThrowOnError();
+
+            System.Diagnostics.Debug.Assert(_ProgramId != 0);
+
             Context.AttachShader(_ProgramId, vertexShader._ShaderId);
+            Context.ThrowOnError();
+
             Context.AttachShader(_ProgramId, fragmentShader._ShaderId);
+            Context.ThrowOnError();
+
             Context.LinkProgram(_ProgramId);
+            Context.ThrowOnError();
 
             //Checking the linking for errors.
             Context.GetProgram(_ProgramId, GLEnum.LinkStatus, out var status);
@@ -101,7 +129,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             // after detaching the shaders we could delete them;
             Context.DetachShader(_ProgramId, vertexShader._ShaderId);
+            Context.ThrowOnError();
+
             Context.DetachShader(_ProgramId, fragmentShader._ShaderId);
+            Context.ThrowOnError();
         }
 
         protected override void Dispose(OPENGL gl)
@@ -115,7 +146,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region data
 
-        private uint _ProgramId;
+        private uint _ProgramId;        
 
         #endregion
 
@@ -127,22 +158,25 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region API
 
-        public unsafe void DrawTriangles(PrimitiveBuffer array)
+        public override void Bind()
         {
+            base.Bind();
+
+            Context.ThrowOnError();
             Context.UseProgram(_ProgramId);
-
-            SetUniforms();
-
-            array.Bind();
-
-            Context.DrawElements(array.Indices.Mode, (uint)array.Indices.Count, array.Indices.Encoding, null);
-
-            array.Unbind();
-
-            Context.UseProgram(0);
+            Context.ThrowOnError();
         }
 
-        protected virtual void SetUniforms() { }
+        public abstract void CommitUniforms();
+
+        public void Unbind()
+        {
+            Context.ThrowOnError();
+            Context.UseProgram(0);
+            Context.ThrowOnError();
+
+            base.Unbind();
+        }        
 
         #endregion
     }    

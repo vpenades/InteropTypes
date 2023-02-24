@@ -21,6 +21,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         [System.Diagnostics.Conditional("DEBUG")]
         internal static void VerifyIsCurrentProgram(OPENGL gl, uint program)
         {
+            return;
+
             if (!_CurrentProgram.TryGetValue(gl, out uint currProgId)) throw new InvalidOperationException("Wrong program");
 
             if (program != currProgId) throw new InvalidOperationException("Wrong program");            
@@ -137,7 +139,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             if (texture != null)
             {
                 handle = texture._handle;
-                texture.Bind(_Slot);
+                throw new NotImplementedException();
+                // texture.Bind(_Slot);
             }
 
             UniformFactory.VerifyIsCurrentProgram(_gl, _Program);
@@ -255,6 +258,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             if (typeof(T) == typeof(MAT4X4))
             {
                 _gl.UniformMatrix4(_Index, 1, _Transpose, (float*)&value);
+                _gl.ThrowOnError();
             }
         }
 

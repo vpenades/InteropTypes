@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Silk.NET.OpenGL;
 
@@ -47,8 +48,24 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         public unsafe void Set(OPENGL context)
         {
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
+            context.ThrowOnError();
             context.VertexAttribPointer(Index, Dimensions, Encoding, Normalized, ByteSize, null);
+            context.ThrowOnError();
+        }
+
+        public void Enable(OPENGL context)
+        {
+            // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer            
+            context.ThrowOnError();
             context.EnableVertexAttribArray(Index);
+            context.ThrowOnError();
+        }
+
+        public unsafe void Disable(OPENGL context)
+        {
+            context.ThrowOnError();
+            context.DisableVertexAttribArray(Index);
+            context.ThrowOnError();
         }
 
         public static int GetEncodingSize(VertexAttribPointerType encoding)
@@ -77,6 +94,49 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #endregion
 
         #region nested types
+
+        public class Collection
+        {
+            public void SetElements<T>()
+                where T : unmanaged, ISource
+            {
+                if (_VertexType == typeof(T)) return;
+
+                _VertexType = typeof(T);
+                _Elements = default(T).GetElements().ToArray();
+
+                uint offset = 0;
+
+                for (int i = 0; i < _Elements.Length; ++i)
+                {
+                    _Elements[i] = _Elements[i].WithIndex(offset);
+                    offset += _Elements[i].ByteSize;
+                }
+            }
+
+            private Type _VertexType;
+            private VertexElement[] _Elements;
+
+            public int Count => _Elements.Length;
+
+            public void Set(OPENGL context)
+            {
+                if (_Elements == null) return;
+                foreach(var e in _Elements) e.Set(context);
+            }
+
+            public void Enable(OPENGL context)
+            {
+                if (_Elements == null) return;
+                foreach (var e in _Elements) e.Enable(context);
+            }
+
+            public void Disable(OPENGL context)
+            {
+                if (_Elements == null) return;
+                foreach (var e in _Elements) e.Disable(context);
+            }
+        }
 
         public interface ISource
         {

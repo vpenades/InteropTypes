@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,30 +13,19 @@ namespace Tutorial
 {
     internal class Effect0 : ShaderProgram
     {
-        //Vertex shaders are run on each vertex.
-        private static readonly string VertexShaderSource = @"
-        #version 330 core //Using version GLSL version 3.3
-        layout (location = 0) in vec4 vPos;
-        
-        void main()
+        private UniformMatrix<Matrix4x4> _uModel;
+
+        public Effect0(OPENGL gl) : base(gl)
         {
-            gl_Position = vec4(vPos.x, vPos.y, vPos.z, 1.0);
+            SetShadersFrom(System.Reflection.Assembly.GetExecutingAssembly(), "Effect0.Shader.vert", "Effect0.Shader.frag");
+
+            _uModel = this.UniformFactory.UseMatrix4x4("uModel", true);            
         }
-        ";
 
-        //Fragment shaders are run on each fragment/pixel of the geometry.
-        private static readonly string FragmentShaderSource = @"
-        #version 330 core
-        out vec4 FragColor;
-
-        void main()
+        public Matrix4x4 ModelMatrix { get; set; } = Matrix4x4.Identity;
+        public override void CommitUniforms()
         {
-            FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-        }
-        ";
-
-        public Effect0(OPENGL gl) : base(gl, VertexShaderSource, FragmentShaderSource)
-        {
+            _uModel.Set(ModelMatrix);
         }
     }
 }
