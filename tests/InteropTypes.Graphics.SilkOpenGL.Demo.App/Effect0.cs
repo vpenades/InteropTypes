@@ -13,34 +13,49 @@ namespace Tutorial
 {
     internal class Effect0 : Effect
     {
-        public Effect0(OPENGL gl)
-        {
-            var ufactory = CreateProgram(gl, System.Reflection.Assembly.GetExecutingAssembly(), "Effect0.Shader.vert", "Effect0.Shader.frag");
+        #region lifecycle
 
-            _uModel = ufactory.UseMatrix4x4("uModel", true);
+        public Effect0(OPENGL gl) : base(gl)
+        {
+            var ufactory = CreateProgram(System.Reflection.Assembly.GetExecutingAssembly(), "Effect0.Shader.vert", "Effect0.Shader.frag");
+
+            _Uniforms = new _BoundUniforms(ufactory);
         }
 
-        private UniformMatrix<Matrix4x4> _uModel;           
+        #endregion
 
-        protected override void CommitStaticUniforms()
-        {
-            _uModel.Set(Matrix4x4.Identity);
-        }
+        #region data
+
+        private _BoundUniforms _Uniforms;
+
+        #endregion
+
+        #region API
 
         protected override IEffectUniforms UseDynamicUniforms()
         {
-            return new _BoundUniforms(this);
+            return _Uniforms;
         }
 
-        readonly struct _BoundUniforms : IEffectUniforms, IEffectTransforms3D
+        sealed class _BoundUniforms : IEffectUniforms, IEffectTransforms3D
         {
-            public _BoundUniforms(Effect0 effect) { _Effect= effect; }
+            public _BoundUniforms(UniformFactory ufactory)
+            {
+                _uModel = ufactory.UseMatrix4x4("uModel", true);
+            }
 
-            private readonly Effect0 _Effect;
+            private UniformMatrix<Matrix4x4> _uModel;
+
+            public void OnBind(Effect effect)
+            {
+                if (effect is not Effect0) throw new ArgumentException("type mismatch", nameof(effect));
+
+                _uModel.Set(Matrix4x4.Identity);
+            }
 
             public void SetModelMatrix(Matrix4x4 matrix)
             {
-                _Effect._uModel.Set(matrix);
+                _uModel.Set(matrix);
             }
 
             public void SetProjMatrix(Matrix4x4 matrix)
@@ -51,7 +66,9 @@ namespace Tutorial
             public void SetViewMatrix(Matrix4x4 matrix)
             {
                 
-            }
+            }            
         }
+
+        #endregion
     }
 }

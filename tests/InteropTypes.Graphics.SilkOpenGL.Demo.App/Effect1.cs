@@ -13,9 +13,9 @@ namespace Tutorial
 {
     internal class Effect1 : Effect
     {
-        public Effect1(OPENGL gl)
+        public Effect1(OPENGL gl) : base(gl)
         {
-            var ufactory = CreateProgram(gl, System.Reflection.Assembly.GetExecutingAssembly(), "Effect1.Shader.vert", "Effect1.Shader.frag");
+            var ufactory = CreateProgram(System.Reflection.Assembly.GetExecutingAssembly(), "Effect1.Shader.vert", "Effect1.Shader.frag");
 
             
 
@@ -27,10 +27,7 @@ namespace Tutorial
         private UniformTexture _uTexture0;
         private UniformMatrix<Matrix4x4> _uModel;
 
-        protected override void CommitStaticUniforms()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         protected override IEffectUniforms UseDynamicUniforms()
         {

@@ -7,37 +7,32 @@ using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
-    public abstract class Effect : IDisposable
+    public abstract class Effect : ContextProvider
     {
         #region lifecycle
 
-        public Effect() { }
+        public Effect(OPENGL gl) : base(gl) { }
 
-        protected UniformFactory CreateProgram(OPENGL gl, System.Reflection.Assembly resAssembly, string vname, string fname)
+        protected UniformFactory CreateProgram(System.Reflection.Assembly resAssembly, string vname, string fname)
         {
-            _Program = ShaderProgram.CreateFrom(gl,resAssembly,vname,fname);
+            _Program = ShaderProgram.CreateFrom(this.Context, resAssembly,vname,fname);
 
             return _Program.UniformFactory;
         }
 
-        public void Dispose()
+        protected override void Dispose(OPENGL gl)
         {
             _Program?.Dispose();
             _Program = null;
+
+            base.Dispose(gl);
         }
 
         #endregion
 
         #region data
 
-        private ShaderProgram _Program;
-
-        /// <summary>
-        /// This method must set the uniforms that are fixed to the shader program and are,
-        /// to some degree part of the 'material definition' like textures, samplers, colors,
-        /// etc. In other words, properties that don't change over time        
-        /// </summary>
-        protected abstract void CommitStaticUniforms();
+        private ShaderProgram _Program;        
 
         /// <summary>
         /// Exposes an API that can be used to dynamically change the uniforms that change
@@ -73,10 +68,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             internal DrawingAPI(Effect effect)
             {
                 _Program = effect._Program;
-                _Program.Bind();
+                _Program.Bind();                
                 
-                effect.CommitStaticUniforms();                
                 _Uniforms = effect.UseDynamicUniforms();
+                _Uniforms.OnBind(effect);
             }
 
             public void Dispose()
@@ -120,7 +115,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
     /// </summary>
     public interface IEffectUniforms
     {
-
+        void OnBind(Effect effect);
     }
 
     public interface IEffectTransforms3D

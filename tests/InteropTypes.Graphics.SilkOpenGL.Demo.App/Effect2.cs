@@ -53,9 +53,9 @@ namespace Tutorial
         private UniformMatrix<Matrix4x4> _uView;
         private UniformMatrix<Matrix4x4> _uProj;
 
-        public Effect2(OPENGL gl)
+        public Effect2(OPENGL gl) : base(gl)
         {
-            var ufactory = CreateProgram(gl, System.Reflection.Assembly.GetExecutingAssembly(), "Effect1.Shader.vert", "Effect1.Shader.frag");
+            var ufactory = CreateProgram(System.Reflection.Assembly.GetExecutingAssembly(), "Effect1.Shader.vert", "Effect1.Shader.frag");
 
             /*
             _uTexture0 = this.UniformFactory.UseTexture("uTexture0", Silk.NET.OpenGL.TextureUnit.Texture0);
@@ -73,10 +73,7 @@ namespace Tutorial
 
         public void SetProjMatrix(in Matrix4x4 matrix) { _uProj.Set(matrix); }
 
-        protected override void CommitStaticUniforms()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         protected override IEffectUniforms UseDynamicUniforms()
         {

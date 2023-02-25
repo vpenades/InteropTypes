@@ -21,8 +21,9 @@ namespace Tutorial
         private static VertexBuffer<Vertex> Vbo;
         private static VertexBufferArray Vao;
         private static IndexBuffer Ebo;
-        private static Effect0 Shader;        
+        private static Effect0 Shader;
 
+        [System.Diagnostics.DebuggerDisplay("{Position}")]
         struct Vertex : VertexElement.ISource
         {
             public Vertex(float x, float y, float z)
