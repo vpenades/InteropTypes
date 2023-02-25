@@ -16,15 +16,18 @@ namespace InteropTypes.Graphics.Backends
     {
         #region lifecycle
 
-        public BasicDynamicMesh(OPENGL gl) : base(gl)
-        {
-        }
+        public BasicDynamicMesh(OPENGL gl) : base(gl) { }
 
         protected override void Dispose(OPENGL gl)
         {            
             _VBuffer?.Dispose();
+            _VBuffer = null;
+
             _VArray?.Dispose();
+            _VArray = null;
+
             _IBuffer?.Dispose();
+            _IBuffer = null;
 
             base.Dispose(gl);
         }
@@ -45,7 +48,7 @@ namespace InteropTypes.Graphics.Backends
 
         #endregion
 
-        #region API
+        #region API - Build
 
         public void Clear()
         {
@@ -53,7 +56,7 @@ namespace InteropTypes.Graphics.Backends
             _Geometry.Clear();
 
             _GeometryDirty = true;
-            _TopologyDirty= true;
+            _TopologyDirty = true;
         }
 
         void AddVertex(Vertex v)
@@ -83,8 +86,12 @@ namespace InteropTypes.Graphics.Backends
         {
             AddPolygon(points, color);
         }
-        
-        public void Draw(Effect.DrawingAPI edc)
+
+        #endregion
+
+        #region API - Rendering
+
+        public void Flush()
         {
             if (_VBuffer == null)
             {
@@ -93,7 +100,7 @@ namespace InteropTypes.Graphics.Backends
                 _VArray = new VertexBufferArray(this.Context);
                 _VArray.SetLayoutFrom<Vertex>(_VBuffer);
 
-                _IBuffer = new IndexBuffer(this.Context, BufferUsageARB.DynamicDraw);                            
+                _IBuffer = new IndexBuffer(this.Context, BufferUsageARB.DynamicDraw);
             }
 
             if (_GeometryDirty)
@@ -107,6 +114,11 @@ namespace InteropTypes.Graphics.Backends
                 _TopologyDirty = false;
                 _IBuffer.SetData(_Topology, PrimitiveType.Triangles);
             }
+        }
+        
+        public void Draw(Effect.DrawingAPI edc)
+        {
+            Flush();
 
             using (var dc = edc.UseDC(_VArray, _IBuffer))
             {

@@ -70,68 +70,77 @@ namespace InteropTypes.Graphics.Backends.SilkGL
     {
         #region lifecycle
 
-        public ShaderProgram(OPENGL gl)
-            : base(gl) { }
-
-        public ShaderProgram(Shader vertexShader, Shader fragmentShader)
-            : base(vertexShader.Context)
-        {
-            _Initialize(vertexShader, fragmentShader);
-        }
-
-        public void SetShadersFrom(System.Reflection.Assembly resAssembly, string vname, string fname)
+        public static ShaderProgram CreateFrom(OPENGL gl, System.Reflection.Assembly resAssembly, string vname, string fname)
         {
             var vcode = resAssembly.ReadAllText(vname) ?? throw new System.IO.FileNotFoundException(vname);
             var fcode = resAssembly.ReadAllText(fname) ?? throw new System.IO.FileNotFoundException(fname);
 
-            SetShadersCode(vcode, fcode);
+            return CreateFromCode(gl, vcode, fcode);
         }
 
-        public void SetShadersCode(string vertexCode, string fragmentCode)
+        public static ShaderProgram CreateFromCode(OPENGL gl, string vertexCode, string fragmentCode)
         {
-            using var vs = Shader.CreateVertexShader(this.Context, vertexCode);
-            using var fs = Shader.CreateFragmentShader(this.Context, fragmentCode);
+            using var vs = Shader.CreateVertexShader(gl, vertexCode);
+            using var fs = Shader.CreateFragmentShader(gl, fragmentCode);
 
-            _Initialize(vs, fs);            
-        }        
+            return Create(vs, fs);
+        }
 
-        private void _Initialize(Shader vertexShader, Shader fragmentShader)
+        public static ShaderProgram Create(Shader vertexShader, Shader fragmentShader)
         {
-            Context.ThrowOnError();
+            if (vertexShader == null) throw new ArgumentNullException(nameof(vertexShader));
+            if (fragmentShader == null) throw new ArgumentNullException(nameof(fragmentShader));
 
-            if (_ProgramId != 0) Context.DeleteProgram(_ProgramId);
+            if (vertexShader.Context != fragmentShader.Context) throw new ArgumentException("context mismatch");
 
-            _ProgramId = Context.CreateProgram();
-            Context.ThrowOnError();            
+            var ctx = vertexShader.Context;
+            if (ctx == null) throw new ObjectDisposedException(nameof(vertexShader));
 
-            Context.AttachShader(_ProgramId, vertexShader._ShaderId);
-            Context.ThrowOnError();
+            ctx.ThrowOnError();            
 
-            Context.AttachShader(_ProgramId, fragmentShader._ShaderId);
-            Context.ThrowOnError();
+            var programId = ctx.CreateProgram();
+            ctx.ThrowOnError();
 
-            Context.LinkProgram(_ProgramId);
-            Context.ThrowOnError();
+            ctx.AttachShader(programId, vertexShader._ShaderId);
+            ctx.ThrowOnError();
+
+            ctx.AttachShader(programId, fragmentShader._ShaderId);
+            ctx.ThrowOnError();
+
+            ctx.LinkProgram(programId);
+            ctx.ThrowOnError();
 
             //Checking the linking for errors.
-            Context.GetProgram(_ProgramId, GLEnum.LinkStatus, out var status);
+            ctx.GetProgram(programId, GLEnum.LinkStatus, out var status);
             if (status == 0)
             {
-                var log = Context.GetProgramInfoLog(_ProgramId);
+                var log = ctx.GetProgramInfoLog(programId);
                 throw new InvalidOperationException($"Error linking shader {log}");
             }
 
             // after detaching the shaders we could delete them;
-            Context.DetachShader(_ProgramId, vertexShader._ShaderId);
-            Context.ThrowOnError();
+            ctx.DetachShader(programId, vertexShader._ShaderId);
+            ctx.ThrowOnError();
 
-            Context.DetachShader(_ProgramId, fragmentShader._ShaderId);
-            Context.ThrowOnError();
+            ctx.DetachShader(programId, fragmentShader._ShaderId);
+            ctx.ThrowOnError();
+
+            return new ShaderProgram(ctx, programId);
+        }
+
+        private ShaderProgram(OPENGL gl, uint programId)
+            : base(gl)
+        {
+            _ProgramId = programId;
         }
 
         protected override void Dispose(OPENGL gl)
         {
-            gl?.DeleteProgram(_ProgramId);
+            if (_ProgramId != 0)
+            {
+                gl?.DeleteProgram(_ProgramId);
+                _ProgramId = 0;
+            }
 
             base.Dispose(gl);
         }
@@ -157,9 +166,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             Context.ThrowOnError();
             Context.UseProgram(_ProgramId);
             Context.ThrowOnError();
-        }
-
-        
+        }        
 
         public void Unbind()
         {

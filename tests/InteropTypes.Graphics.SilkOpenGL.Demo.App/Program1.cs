@@ -22,6 +22,8 @@ namespace Tutorial
         private static BasicDynamicMesh Mesh;
         private static Effect0 Shader;        
 
+        private static readonly Random Rnd = new Random();
+
         #endregion
 
 
@@ -43,6 +45,7 @@ namespace Tutorial
         private static unsafe void OnLoad()
         {
             using IInputContext input = window.CreateInput();
+
             for (int i = 0; i < input.Keyboards.Count; i++)
             {
                 input.Keyboards[i].KeyDown += KeyDown;
@@ -51,16 +54,9 @@ namespace Tutorial
             //Getting the opengl api for drawing to the screen.
             Gl = GL.GetApi(window);
 
-            Mesh = new BasicDynamicMesh(Gl);
-
-            var a = new Point3(0.5f, 0.5f, 0.0f);
-            var b = new Point3(0.5f, -0.5f, 0.0f);
-            var c = new Point3(-0.5f, -0.5f, 0.0f);
-            var d = new Point3(-0.5f, 0.5f, 0.5f);
-
-            Mesh.AddPolygon(System.Drawing.Color.Red, a, b, c, d);
-
             Shader = new Effect0(Gl);
+
+            Mesh = new BasicDynamicMesh(Gl);             
         }
 
         private static unsafe void OnRender(double obj) //Method needs to be unsafe due to draw elements.
@@ -68,7 +64,15 @@ namespace Tutorial
             //Clear the color channel.
             Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
-            using(var dcx = Shader.Using())
+            Mesh.Clear();
+            var a = new Point3(0.5f + Rnd.NextSingle() * 0.1f, 0.5f + Rnd.NextSingle() * 0.1f, 0.0f);
+            var b = new Point3(0.5f + Rnd.NextSingle() * 0.1f, -0.5f + Rnd.NextSingle() * 0.1f, 0.0f);
+            var c = new Point3(-0.5f + Rnd.NextSingle() * 0.1f, -0.5f + Rnd.NextSingle() * 0.1f, 0.0f);
+            var d = new Point3(-0.5f + Rnd.NextSingle() * 0.1f, 0.5f + Rnd.NextSingle() * 0.1f, 0.5f);
+
+            Mesh.AddPolygon(System.Drawing.Color.Red, a, b, c, d);
+
+            using (var dcx = Shader.Using())
             {
                 Mesh.Draw(dcx);
             }

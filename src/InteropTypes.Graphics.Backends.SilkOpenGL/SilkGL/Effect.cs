@@ -15,9 +15,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         protected UniformFactory CreateProgram(OPENGL gl, System.Reflection.Assembly resAssembly, string vname, string fname)
         {
-            var shader = new ShaderProgram(gl);
-            shader.SetShadersFrom(resAssembly, vname, fname);
-            _Program = shader;
+            _Program = ShaderProgram.CreateFrom(gl,resAssembly,vname,fname);
 
             return _Program.UniformFactory;
         }
@@ -61,6 +59,12 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             return new DrawingAPI(this);
         }
 
+        /// <summary>
+        /// Effects Drawing API
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="Using"/> to initialize.
+        /// </remarks>
         public struct DrawingAPI : IDisposable
         {
             #region lifecycle
