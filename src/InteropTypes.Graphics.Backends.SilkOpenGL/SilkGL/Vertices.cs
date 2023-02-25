@@ -43,30 +43,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         public VertexElement WithIndex(uint index)
         {
             return new VertexElement(Encoding, Dimensions, Normalized, index);
-        }
-
-        public unsafe void Set(OPENGL context)
-        {
-            // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
-            context.ThrowOnError();
-            context.VertexAttribPointer(Index, Dimensions, Encoding, Normalized, ByteSize, null);
-            context.ThrowOnError();
-        }
-
-        public void Enable(OPENGL context)
-        {
-            // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer            
-            context.ThrowOnError();
-            context.EnableVertexAttribArray(Index);
-            context.ThrowOnError();
-        }
-
-        public unsafe void Disable(OPENGL context)
-        {
-            context.ThrowOnError();
-            context.DisableVertexAttribArray(Index);
-            context.ThrowOnError();
-        }
+        }        
 
         public static int GetEncodingSize(VertexAttribPointerType encoding)
         {
@@ -89,6 +66,32 @@ namespace InteropTypes.Graphics.Backends.SilkGL
                 case VertexAttribPointerType.Int2101010Rev: return 4;
                 default: throw new NotImplementedException();
             }
+        }
+
+        #endregion
+
+        #region internal
+
+        internal unsafe void Set(OPENGL context)
+        {
+            // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
+            context.ThrowOnError();
+            context.VertexAttribPointer(Index, Dimensions, Encoding, Normalized, ByteSize, null);
+            context.ThrowOnError();
+        }
+
+        internal void Enable(OPENGL context)
+        {            
+            context.ThrowOnError();
+            context.EnableVertexAttribArray(Index);
+            context.ThrowOnError();
+        }
+
+        internal unsafe void Disable(OPENGL context)
+        {
+            context.ThrowOnError();
+            context.DisableVertexAttribArray(Index);
+            context.ThrowOnError();
         }
 
         #endregion
@@ -138,6 +141,9 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             }
         }
 
+        /// <summary>
+        /// Implented by vertex types so elements can be easily extracted
+        /// </summary>
         public interface ISource
         {
             public IEnumerable<VertexElement> GetElements();
