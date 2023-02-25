@@ -8,9 +8,18 @@ using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
-    public struct DrawingContext : IDisposable
+    public interface IDrawingContext : IDisposable
     {
-        public DrawingContext(VertexLayout vertices, IndexBuffer indices)
+        void DrawTriangles();
+
+        void DrawTriangles(int start, int count);
+    }
+
+    struct DrawingContext : IDrawingContext
+    {
+        #region lifecycle
+
+        internal DrawingContext(VertexBufferArray vertices, IndexBuffer indices)
         {
             _Context = vertices.Context;
             _Vertices = vertices;
@@ -20,16 +29,24 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             _IndicesBind = indices.Using();
         }
 
-        private readonly OPENGL _Context;
-        private readonly VertexLayout _Vertices;
-        private readonly IndexBuffer _Indices;
-        private readonly BufferInfo.BoundAPI _IndicesBind;
-
         public void Dispose()
         {
             _IndicesBind.Dispose();
             _Vertices.Unbind();
         }
+
+        #endregion
+
+        #region data
+
+        private readonly OPENGL _Context;
+        private readonly VertexBufferArray _Vertices;
+        private readonly IndexBuffer _Indices;
+        private readonly BufferInfo.BoundAPI _IndicesBind;
+
+        #endregion
+
+        #region API
 
         public void DrawTriangles()
         {
@@ -49,7 +66,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             _Vertices.Context.ThrowOnError();
             _Vertices.Context.DrawRangeElements(_Indices.Mode, (uint)start, (uint)(start + count - 1), (uint)count, _Indices.Encoding, null);
             _Vertices.Context.ThrowOnError();
-
         }
+
+        #endregion
     }
 }

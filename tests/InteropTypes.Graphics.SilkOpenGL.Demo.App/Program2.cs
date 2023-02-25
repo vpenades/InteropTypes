@@ -94,7 +94,7 @@ namespace Tutorial
             
 
 
-            Mesh.Draw(Shader);
+            // Mesh.Draw(Shader);
         }
 
         

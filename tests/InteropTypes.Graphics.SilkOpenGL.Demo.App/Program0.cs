@@ -19,7 +19,7 @@ namespace Tutorial
         private static GL Gl;
 
         private static VertexBuffer<Vertex> Vbo;
-        private static VertexLayout Vao;
+        private static VertexBufferArray Vao;
         private static IndexBuffer Ebo;
         private static Effect0 Shader;        
 
@@ -52,6 +52,7 @@ namespace Tutorial
 
         #endregion
 
+        #region API
 
         public static void Run(string[] args)
         {
@@ -83,7 +84,7 @@ namespace Tutorial
             //Creating a vertex array.
             Vbo = new VertexBuffer<Vertex>(Gl, BufferUsageARB.StaticDraw);
 
-            Vao = new VertexLayout(Gl);
+            Vao = new VertexBufferArray(Gl);
             Vao.SetLayoutFrom<Vertex>(Vbo);
 
             //Initializing a element buffer that holds the index data.
@@ -100,17 +101,18 @@ namespace Tutorial
             //Clear the color channel.
             Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
-            Shader.ModelMatrix = Matrix4x4.CreateRotationZ(0.1f);
-
-            Shader.Bind();
-            Shader.CommitUniforms();
-
-            using(var dc = new DrawingContext(Vao,Ebo))
+            using (var effect = Shader.Using())
             {
-                dc.DrawTriangles();
-            }            
+                if (effect.Uniforms is IEffectTransforms3D fxXforms)
+                {
+                    fxXforms.SetModelMatrix(Matrix4x4.CreateRotationZ(0.1f));
+                }                
 
-            Shader.Unbind();
+                using (var dc = effect.UseDC(Vao, Ebo))
+                {
+                    dc.DrawTriangles();
+                }
+            }
         }
 
         private static void OnUpdate(double obj)
@@ -134,5 +136,7 @@ namespace Tutorial
                 window.Close();
             }
         }
+
+        #endregion
     }
 }

@@ -11,21 +11,44 @@ using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace Tutorial
 {
-    internal class Effect0 : ShaderProgram
+    internal class Effect0 : Effect
     {
-        private UniformMatrix<Matrix4x4> _uModel;
-
-        public Effect0(OPENGL gl) : base(gl)
+        public Effect0(OPENGL gl)
         {
-            SetShadersFrom(System.Reflection.Assembly.GetExecutingAssembly(), "Effect0.Shader.vert", "Effect0.Shader.frag");
+            var ufactory = CreateProgram(gl, System.Reflection.Assembly.GetExecutingAssembly(), "Effect0.Shader.vert", "Effect0.Shader.frag");
 
-            _uModel = this.UniformFactory.UseMatrix4x4("uModel", true);            
+            _uModel = ufactory.UseMatrix4x4("uModel", true);
         }
 
-        public Matrix4x4 ModelMatrix { get; set; } = Matrix4x4.Identity;
-        public override void CommitUniforms()
+        private UniformMatrix<Matrix4x4> _uModel;           
+
+        protected override void CommitStaticUniforms() { }
+
+        protected override IEffectUniforms UseDynamicUniforms()
         {
-            _uModel.Set(ModelMatrix);
+            return new _BoundUniforms(this);
+        }
+
+        readonly struct _BoundUniforms : IEffectUniforms, IEffectTransforms3D
+        {
+            public _BoundUniforms(Effect0 effect) { _Effect= effect; }
+
+            private readonly Effect0 _Effect;
+
+            public void SetModelMatrix(Matrix4x4 matrix)
+            {
+                _Effect._uModel.Set(matrix);
+            }
+
+            public void SetProjMatrix(Matrix4x4 matrix)
+            {
+                
+            }
+
+            public void SetViewMatrix(Matrix4x4 matrix)
+            {
+                
+            }
         }
     }
 }

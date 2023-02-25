@@ -84,18 +84,10 @@ namespace InteropTypes.Graphics.Backends
 
         
 
-        public void Draw(ShaderProgram shader)
-        {
-            shader.Bind();
-
-            Draw();
-
-            shader.Unbind();
-        }
-
+        
         public void Draw()
         {
-            if (ShaderProgram.GetBound(this) == null) throw new InvalidOperationException("no shader bound");
+            // if (ShaderProgram.GetBound(this) == null) throw new InvalidOperationException("no shader bound");
 
             if (_VBuffer == null)
             {

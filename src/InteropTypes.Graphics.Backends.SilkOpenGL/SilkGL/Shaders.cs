@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using Silk.NET.OpenGL;
 
@@ -7,7 +8,7 @@ using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
-    public class Shader : ContextProvider
+    class Shader : ContextProvider
     {
         #region lifecycle
 
@@ -65,7 +66,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #endregion
     }
 
-    public abstract class ShaderProgram : BindableResource<ShaderProgram>
+    class ShaderProgram : ContextProvider
     {
         #region lifecycle
 
@@ -78,25 +79,20 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             _Initialize(vertexShader, fragmentShader);
         }
 
-        protected void SetShadersFrom(System.Reflection.Assembly resAssembly, string vname, string fname)
+        public void SetShadersFrom(System.Reflection.Assembly resAssembly, string vname, string fname)
         {
-            var vcode = resAssembly.ReadAllText(vname);
-            if (vcode == null) throw new System.IO.FileNotFoundException(vname);
-
-            var fcode = resAssembly.ReadAllText(fname);
-            if (fcode == null) throw new System.IO.FileNotFoundException(fname);
+            var vcode = resAssembly.ReadAllText(vname) ?? throw new System.IO.FileNotFoundException(vname);
+            var fcode = resAssembly.ReadAllText(fname) ?? throw new System.IO.FileNotFoundException(fname);
 
             SetShadersCode(vcode, fcode);
         }
 
-        
-
-        protected void SetShadersCode(string vertexCode, string fragmentCode)
+        public void SetShadersCode(string vertexCode, string fragmentCode)
         {
             using var vs = Shader.CreateVertexShader(this.Context, vertexCode);
             using var fs = Shader.CreateFragmentShader(this.Context, fragmentCode);
 
-            _Initialize(vs, fs);
+            _Initialize(vs, fs);            
         }        
 
         private void _Initialize(Shader vertexShader, Shader fragmentShader)
@@ -106,9 +102,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             if (_ProgramId != 0) Context.DeleteProgram(_ProgramId);
 
             _ProgramId = Context.CreateProgram();
-            Context.ThrowOnError();
-
-            System.Diagnostics.Debug.Assert(_ProgramId != 0);
+            Context.ThrowOnError();            
 
             Context.AttachShader(_ProgramId, vertexShader._ShaderId);
             Context.ThrowOnError();
@@ -152,33 +146,31 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region properties
 
-        public UniformFactory UniformFactory => new UniformFactory(this.Context, _ProgramId);
+        internal UniformFactory UniformFactory => new UniformFactory(this.Context, _ProgramId);
 
         #endregion
 
         #region API
 
-        public override void Bind()
+        public void Bind()
         {
-            base.Bind();
-
             Context.ThrowOnError();
             Context.UseProgram(_ProgramId);
             Context.ThrowOnError();
         }
 
-        public abstract void CommitUniforms();
+        
 
         public void Unbind()
         {
             Context.ThrowOnError();
             Context.UseProgram(0);
-            Context.ThrowOnError();
-
-            base.Unbind();
+            Context.ThrowOnError();            
         }        
 
         #endregion
-    }    
+    }
+
+    
 }
         

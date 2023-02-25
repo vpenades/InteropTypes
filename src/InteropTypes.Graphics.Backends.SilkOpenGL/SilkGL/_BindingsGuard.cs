@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Backends.SilkOpenGL.SilkGL
             if (_Bindings.TryGetValue(key, out var currVal))
             {
                 if (Equals(value, currVal)) return;
-                throw new InvalidOperationException("Already bound");
+                throw new InvalidOperationException("Only one object can be bound at the same time");
             }
 
             _Bindings.Add(key, value);

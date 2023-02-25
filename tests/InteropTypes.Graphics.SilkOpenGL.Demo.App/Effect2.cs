@@ -11,7 +11,7 @@ using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace Tutorial
 {
-    internal class Effect2 : ShaderProgram
+    internal class Effect2 : Effect
     {
         //Vertex shaders are run on each vertex.
         private static readonly string VertexShaderSource = @"
@@ -53,14 +53,16 @@ namespace Tutorial
         private UniformMatrix<Matrix4x4> _uView;
         private UniformMatrix<Matrix4x4> _uProj;
 
-        public Effect2(OPENGL gl) : base(gl)
+        public Effect2(OPENGL gl)
         {
-            SetShadersCode(VertexShaderSource, FragmentShaderSource);
+            var ufactory = CreateProgram(gl, System.Reflection.Assembly.GetExecutingAssembly(), "Effect1.Shader.vert", "Effect1.Shader.frag");
 
+            /*
             _uTexture0 = this.UniformFactory.UseTexture("uTexture0", Silk.NET.OpenGL.TextureUnit.Texture0);
             _uModel = this.UniformFactory.UseMatrix4x4("uModel", true);
             _uView = this.UniformFactory.UseMatrix4x4("uView", true);
             _uProj = this.UniformFactory.UseMatrix4x4("uProjection", true);
+            */
         }
 
         public void SetTexture(Texture texture) { _uTexture0.Set(texture); }
@@ -71,7 +73,12 @@ namespace Tutorial
 
         public void SetProjMatrix(in Matrix4x4 matrix) { _uProj.Set(matrix); }
 
-        public override void CommitUniforms()
+        protected override void CommitStaticUniforms()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override IEffectUniforms UseDynamicUniforms()
         {
             throw new NotImplementedException();
         }

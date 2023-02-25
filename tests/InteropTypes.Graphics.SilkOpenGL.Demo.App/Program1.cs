@@ -68,11 +68,13 @@ namespace Tutorial
             //Clear the color channel.
             Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
+            /*
             Shader.Bind();
 
             Mesh.Draw();
 
             Shader.Unbind();
+            */
         }
 
         private static void OnUpdate(double obj)

@@ -39,6 +39,14 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             Usage = usage;
         }
 
+        public static void Release(OPENGL gl, ref BufferInfo binfo)
+        {
+            if (binfo.Id == 0) return;
+
+            gl?.DeleteBuffer(binfo.Id);
+            binfo = default;
+        }
+
         #endregion
 
         #region data
@@ -51,7 +59,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region API
 
-        internal BoundAPI _Bind(OPENGL gl) { gl.ThrowOnError(); return new BoundAPI(gl, this); }        
+        public BoundAPI Using(OPENGL gl) { gl.ThrowOnError(); return new BoundAPI(gl, this); }        
 
         public readonly struct BoundAPI : IDisposable
         {
@@ -137,8 +145,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         protected override void Dispose(OPENGL gl)
         {
-            gl?.DeleteBuffer(_Info.Id);
-            _Info = default;
+            BufferInfo.Release(gl, ref _Info);
 
             base.Dispose(gl);
         }
@@ -147,9 +154,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region data
 
-        protected BufferInfo _Info;
-
-        public int UpdateVersion { get; private set; }
+        private BufferInfo _Info;        
 
         #endregion
 
@@ -157,7 +162,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         public BufferInfo.BoundAPI Using()
         {
-            return _Info._Bind(Context);
+            return _Info.Using(Context);
         }
 
         #endregion
@@ -186,25 +191,31 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         public void SetData<T>(List<T> data, PrimitiveType mode)
             where T : unmanaged
         {
-            #if NETSTANDARD
-            this.SetData<T>(data.ToArray(), mode);
-            #else
-            var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan(data);
-            this.SetData<T>(span, mode);
-            #endif
+            _SetProperties<T>(data.Count, mode);
+
+            using (var api = Using()) api.SetData(data);
         }
 
         public void SetData<T>(Span<T> data, PrimitiveType mode)
             where T : unmanaged
         {
-            this.SetData((ReadOnlySpan<T>)data, mode);
+            _SetProperties<T>(data.Length, mode);
+
+            using (var api = Using()) api.SetData(data);
         }
 
         public unsafe void SetData<T>(ReadOnlySpan<T> data, PrimitiveType mode)
             where T : unmanaged
         {
+            _SetProperties<T>(data.Length, mode);
+
+            using (var api = Using()) api.SetData(data);
+        }
+
+        private unsafe void _SetProperties<T>(int len, PrimitiveType mode) where T : unmanaged
+        {
             Mode = mode;
-            Count = data.Length;
+            Count = len;
 
             switch (sizeof(T))
             {
@@ -213,9 +224,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
                 case 4: Encoding = DrawElementsType.UnsignedInt; break;
                 default: throw new InvalidOperationException($"{typeof(T).Name} not valid");
             }
-
-            using (var api = Using()) api.SetData(data);
-        }        
+        }
 
         #endregion
     }
@@ -258,11 +267,11 @@ namespace InteropTypes.Graphics.Backends.SilkGL
     /// <summary>
     /// Defines the pipeline the shader will use to read vertices from one or multiple <see cref="VertexBuffer"/>
     /// </summary>
-    public class VertexLayout : ContextProvider
+    public class VertexBufferArray : ContextProvider
     {
         #region lifecycle
 
-        public VertexLayout(OPENGL gl)
+        public VertexBufferArray(OPENGL gl)
             : base(gl)
         {
             Context.ThrowOnError();
