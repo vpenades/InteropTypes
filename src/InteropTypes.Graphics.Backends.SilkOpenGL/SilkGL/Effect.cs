@@ -56,6 +56,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         /// <returns></returns>
         public DrawingAPI Using()
         {
+            if (_Program?.Context == null) throw new ObjectDisposedException("Program");            
+
             return new DrawingAPI(this);
         }
 
@@ -70,17 +72,17 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             #region lifecycle
             internal DrawingAPI(Effect effect)
             {
-                _Effect = effect;
-
-                _Effect._Program.Bind();
-                _Effect.CommitStaticUniforms();
-                _Uniforms = _Effect.UseDynamicUniforms();
+                _Program = effect._Program;
+                _Program.Bind();
+                
+                effect.CommitStaticUniforms();                
+                _Uniforms = effect.UseDynamicUniforms();
             }
 
             public void Dispose()
             {
-                _Effect._Program.Unbind();
-                _Effect = null;
+                _Program.Unbind();
+                _Program = null;
                 _Uniforms = null;
             }
 
@@ -88,7 +90,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             #region data
 
-            private Effect _Effect;
+            private ShaderProgram _Program;
             private IEffectUniforms _Uniforms;
 
             #endregion
@@ -99,6 +101,9 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             public IDrawingContext UseDC(VertexBufferArray vertices, IndexBuffer indices)
             {
+                ContextProvider.GuardCompatible(_Program, vertices);
+                ContextProvider.GuardCompatible(_Program, indices);
+
                 // TODO: compare effect.program vertices with vertices
 
                 return new DrawingContext(vertices, indices);

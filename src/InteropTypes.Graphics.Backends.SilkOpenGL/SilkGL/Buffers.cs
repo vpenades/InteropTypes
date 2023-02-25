@@ -59,13 +59,19 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region API
 
-        public BoundAPI Using(OPENGL gl) { gl.ThrowOnError(); return new BoundAPI(gl, this); }        
+        public UpdateAPI Using(OPENGL gl)
+        {
+            if (Id == 0) throw new ObjectDisposedException(nameof(Id));
 
-        public readonly struct BoundAPI : IDisposable
+            gl.ThrowOnError();
+            return new UpdateAPI(gl, this);
+        }
+
+        public readonly struct UpdateAPI : IDisposable
         {
             #region lifecycle
 
-            internal BoundAPI(OPENGL context, in BufferInfo info)
+            internal UpdateAPI(OPENGL context, in BufferInfo info)
             {
                 _Context = context;
                 _Info = info;
@@ -125,7 +131,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             {
                 _Context.ThrowOnError();
                 _Context.BufferData(_Info.Target, data, _Info.Usage);
-                _Context.ThrowOnError();
+                _Context.ThrowOnError();                
             }
 
             #endregion
@@ -160,7 +166,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region API
 
-        public BufferInfo.BoundAPI Using()
+        public BufferInfo.UpdateAPI Using()
         {
             return _Info.Using(Context);
         }

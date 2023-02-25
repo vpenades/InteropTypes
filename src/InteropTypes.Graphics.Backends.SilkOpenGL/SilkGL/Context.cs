@@ -48,6 +48,24 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         }
 
         #endregion
+
+        #region guards
+
+        public static void GuardValid(ContextProvider a)
+        {
+            if (a == null) throw new ArgumentNullException(nameof(a));
+            if (a.Context == null) throw new ObjectDisposedException(nameof(a));
+        }
+
+        public static void GuardCompatible(ContextProvider a, ContextProvider b)
+        {
+            GuardValid(a);
+            GuardValid(b);
+
+            if (a.Context != b.Context) throw new ArgumentException("context mismatch", nameof(b));
+        }
+
+        #endregion
     }
 
     public abstract class BindableResource<TResource> : ContextProvider  
@@ -79,16 +97,5 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
 
 
-    class GuardedBindContext
-    {
-        private OPENGL _Gl;
-
-        private readonly _BindingsGuard<Silk.NET.OpenGL.BufferTargetARB, uint> _Buffers = new _BindingsGuard<Silk.NET.OpenGL.BufferTargetARB, uint>();
-
-        public void BindBuffer(Silk.NET.OpenGL.BufferTargetARB target, uint id)
-        {
-            _Buffers.Set(target,id);
-            _Gl.BindBuffer(target, id);
-        }        
-    }
+    
 }

@@ -21,6 +21,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         internal DrawingContext(VertexBufferArray vertices, IndexBuffer indices)
         {
+            ContextProvider.GuardCompatible(vertices, indices);
+
             _Context = vertices.Context;
             _Vertices = vertices;
             _Indices = indices;
@@ -42,7 +44,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         private readonly OPENGL _Context;
         private readonly VertexBufferArray _Vertices;
         private readonly IndexBuffer _Indices;
-        private readonly BufferInfo.BoundAPI _IndicesBind;
+        private readonly BufferInfo.UpdateAPI _IndicesBind;
 
         #endregion
 
