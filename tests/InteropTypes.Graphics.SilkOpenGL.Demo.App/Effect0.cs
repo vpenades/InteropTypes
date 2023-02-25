@@ -19,14 +19,14 @@ namespace Tutorial
         {
             var ufactory = CreateProgram(System.Reflection.Assembly.GetExecutingAssembly(), "Effect0.Shader.vert", "Effect0.Shader.frag");
 
-            _VertexUniforms = new _BoundUniforms(ufactory);
+            _Vertex = new _VertexUniforms(ufactory);
         }
 
         #endregion
 
         #region data
 
-        private _BoundUniforms _VertexUniforms;
+        private _VertexUniforms _Vertex;
 
         #endregion
 
@@ -34,12 +34,12 @@ namespace Tutorial
 
         protected override (IEffectUniforms Vertex, IEffectUniforms Fragment) UseDynamicUniforms()
         {
-            return (_VertexUniforms, null);
+            return (_Vertex, null);
         }
 
-        sealed class _BoundUniforms : IEffectUniforms, IEffectTransforms3D
+        sealed class _VertexUniforms : IEffectUniforms, IEffectTransforms3D
         {
-            public _BoundUniforms(UniformFactory ufactory)
+            public _VertexUniforms(UniformFactory ufactory)
             {
                 _uModel = ufactory.UseMatrix4x4("uModel", true);
             }
@@ -50,7 +50,7 @@ namespace Tutorial
             {
                 if (effect is not Effect0) throw new ArgumentException("type mismatch", nameof(effect));
 
-                _uModel.Set(Matrix4x4.Identity);
+                SetModelMatrix(Matrix4x4.Identity);
             }
 
             public void SetModelMatrix(Matrix4x4 matrix)
@@ -58,15 +58,9 @@ namespace Tutorial
                 _uModel.Set(matrix);
             }
 
-            public void SetProjMatrix(Matrix4x4 matrix)
-            {
-                
-            }
+            public void SetProjMatrix(Matrix4x4 matrix) { }
 
-            public void SetViewMatrix(Matrix4x4 matrix)
-            {
-                
-            }            
+            public void SetViewMatrix(Matrix4x4 matrix) { }            
         }
 
         #endregion

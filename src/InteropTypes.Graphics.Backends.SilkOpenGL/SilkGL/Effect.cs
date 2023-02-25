@@ -131,5 +131,11 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         void SetViewMatrix(Matrix4x4 matrix);
 
         void SetProjMatrix(Matrix4x4 matrix);
+
+        void SetCameraMatrix(Matrix4x4 matrix)
+        {
+            if (!Matrix4x4.Invert(matrix, out var inverted)) throw new ArgumentException(nameof(matrix));
+            SetViewMatrix(inverted);
+        }
     }
 }

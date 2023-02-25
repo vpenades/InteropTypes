@@ -80,28 +80,25 @@ namespace Tutorial
             Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
             var cameraPosition = new Vector3(0.0f, 0.0f, 30.0f);
-            var cameraFront = new Vector3(0.0f, 0.0f, -1.0f);
+            var cameraForward = new Vector3(0.0f, 0.0f, -1.0f);
             var cameraUp = Vector3.UnitY;
 
             var model = Matrix4x4.CreateRotationY(rot) * Matrix4x4.CreateRotationX(rot);
-            var view = Matrix4x4.CreateLookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
-            var projection = Matrix4x4.CreatePerspectiveFieldOfView(1.2f, 800f / 600f, 0.1f, 1000.0f);
+            var camera = Matrix4x4.CreateWorld(cameraPosition, cameraForward, cameraUp);
+            var projection = Matrix4x4.CreatePerspectiveFieldOfView(0.7f, 800f / 600f, 0.1f, 1000.0f);
 
             using (var edc = Shader.Using())
             {
                 if (edc.VertexUniforms is IEffectTransforms3D fxXforms)
                 {
-                    fxXforms.SetModelMatrix(model);
-                    fxXforms.SetViewMatrix(view);
                     fxXforms.SetProjMatrix(projection);
+                    fxXforms.SetCameraMatrix(camera);
+                    fxXforms.SetModelMatrix(model);                    
                 }
 
                 Mesh.Draw(edc);
             }
-
-        }
-
-        
+        }        
 
         private static void OnClose()
         {
