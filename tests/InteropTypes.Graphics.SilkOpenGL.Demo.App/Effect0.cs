@@ -19,22 +19,22 @@ namespace Tutorial
         {
             var ufactory = CreateProgram(System.Reflection.Assembly.GetExecutingAssembly(), "Effect0.Shader.vert", "Effect0.Shader.frag");
 
-            _Uniforms = new _BoundUniforms(ufactory);
+            _VertexUniforms = new _BoundUniforms(ufactory);
         }
 
         #endregion
 
         #region data
 
-        private _BoundUniforms _Uniforms;
+        private _BoundUniforms _VertexUniforms;
 
         #endregion
 
         #region API
 
-        protected override IEffectUniforms UseDynamicUniforms()
+        protected override (IEffectUniforms Vertex, IEffectUniforms Fragment) UseDynamicUniforms()
         {
-            return _Uniforms;
+            return (_VertexUniforms, null);
         }
 
         sealed class _BoundUniforms : IEffectUniforms, IEffectTransforms3D

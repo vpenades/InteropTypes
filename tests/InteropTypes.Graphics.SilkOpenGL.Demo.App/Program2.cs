@@ -87,14 +87,18 @@ namespace Tutorial
             var view = Matrix4x4.CreateLookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
             var projection = Matrix4x4.CreatePerspectiveFieldOfView(1.2f, 800f / 600f, 0.1f, 1000.0f);
 
-            
-            Shader.SetModelMatrix(model);
-            Shader.SetViewMatrix(view);
-            Shader.SetProjMatrix(projection);
-            
+            using (var edc = Shader.Using())
+            {
+                if (edc.VertexUniforms is IEffectTransforms3D fxXforms)
+                {
+                    fxXforms.SetModelMatrix(model);
+                    fxXforms.SetViewMatrix(view);
+                    fxXforms.SetProjMatrix(projection);
+                }
 
+                Mesh.Draw(edc);
+            }
 
-            // Mesh.Draw(Shader);
         }
 
         

@@ -39,7 +39,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         /// continuosly, like transform matrices, lights, etc.
         /// </summary>
         /// <returns></returns>
-        protected abstract IEffectUniforms UseDynamicUniforms();
+        protected abstract (IEffectUniforms Vertex, IEffectUniforms Fragment) UseDynamicUniforms();
 
         #endregion
 
@@ -70,15 +70,17 @@ namespace InteropTypes.Graphics.Backends.SilkGL
                 _Program = effect._Program;
                 _Program.Bind();                
                 
-                _Uniforms = effect.UseDynamicUniforms();
-                _Uniforms.OnBind(effect);
+                (_VertexUniforms, _FragmentUniforms) = effect.UseDynamicUniforms();
+                _VertexUniforms?.OnBind(effect);
+                _FragmentUniforms?.OnBind(effect);
             }
 
             public void Dispose()
             {
                 _Program.Unbind();
                 _Program = null;
-                _Uniforms = null;
+                _VertexUniforms = null;
+                _FragmentUniforms = null;
             }
 
             #endregion
@@ -86,18 +88,22 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             #region data
 
             private ShaderProgram _Program;
-            private IEffectUniforms _Uniforms;
+            private IEffectUniforms _VertexUniforms;
+            private IEffectUniforms _FragmentUniforms;
 
             #endregion
 
             #region API
 
-            public IEffectUniforms Uniforms => _Uniforms;
+            // split between VertexUniforms and FragmentUniforms
+
+            public IEffectUniforms VertexUniforms => _VertexUniforms;
+            public IEffectUniforms FragmentUniforms => _FragmentUniforms;
 
             public IDrawingContext UseDC(VertexBufferArray vertices, IndexBuffer indices)
             {
-                ContextProvider.GuardCompatible(_Program, vertices);
-                ContextProvider.GuardCompatible(_Program, indices);
+                GuardCompatible(_Program, vertices);
+                GuardCompatible(_Program, indices);
 
                 // TODO: compare effect.program vertices with vertices
 

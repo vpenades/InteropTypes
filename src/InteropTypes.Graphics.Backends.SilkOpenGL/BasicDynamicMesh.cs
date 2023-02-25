@@ -66,6 +66,11 @@ namespace InteropTypes.Graphics.Backends
 
             _GeometryDirty = true;
             _TopologyDirty = true;
+        }        
+
+        public void AddPolygon(System.Drawing.Color color, params Point3[] points)
+        {
+            AddPolygon(points, color);
         }
 
         public void AddPolygon(ReadOnlySpan<Point3> points, System.Drawing.Color color)
@@ -80,11 +85,6 @@ namespace InteropTypes.Graphics.Backends
                 AddVertex(v1);
                 AddVertex(v2);
             }
-        }
-
-        public void AddPolygon(System.Drawing.Color color, params Point3[] points)
-        {
-            AddPolygon(points, color);
         }
 
         #endregion

@@ -74,6 +74,9 @@ namespace Tutorial
 
             using (var dcx = Shader.Using())
             {
+                
+
+
                 Mesh.Draw(dcx);
             }
         }

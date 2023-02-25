@@ -27,11 +27,11 @@ namespace Tutorial
         private UniformTexture _uTexture0;
         private UniformMatrix<Matrix4x4> _uModel;
 
-        
 
-        protected override IEffectUniforms UseDynamicUniforms()
+
+        protected override (IEffectUniforms Vertex, IEffectUniforms Fragment) UseDynamicUniforms()
         {
-            throw new NotImplementedException();
+            return (null, null);
         }
     }
 }
