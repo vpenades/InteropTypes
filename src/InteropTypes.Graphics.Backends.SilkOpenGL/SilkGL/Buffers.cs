@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using InteropTypes.Graphics.Backends.SilkOpenGL.SilkGL;
 
@@ -9,6 +10,9 @@ using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
+    /// <summary>
+    /// Represents the low level information associated to a OpenGL Data Buffer.
+    /// </summary>
     [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
     public readonly struct BufferInfo
     {
@@ -140,6 +144,13 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #endregion
     }
 
+    /// <summary>
+    /// Represents the base class for any Buffer object
+    /// </summary>
+    /// <remarks>
+    /// Derived classes are:
+    /// <see cref="IndexBuffer"/>, <see cref="VertexBuffer"/>, <see cref="VertexBuffer{TVertex}"/>
+    /// </remarks>
     public abstract class Buffer : ContextProvider
     {
         #region lifecycle
@@ -160,6 +171,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region data
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private BufferInfo _Info;        
 
         #endregion
@@ -189,6 +201,11 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         public PrimitiveType Mode { get; private set; }
         public DrawElementsType Encoding { get; private set; }
         public int Count { get; private set; }
+        
+        #if DEBUG
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Collapsed)]
+        protected Array Indices;
+        #endif
 
         #endregion
 
@@ -197,7 +214,11 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         public void SetData<T>(List<T> data, PrimitiveType mode)
             where T : unmanaged
         {
-            _SetProperties<T>(data.Count, mode);
+            _SetProperties<T>(data.Count, mode);            
+
+            #if DEBUG
+            Indices = data.ToArray();
+            #endif
 
             using (var api = Using()) api.SetData(data);
         }
@@ -207,6 +228,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         {
             _SetProperties<T>(data.Length, mode);
 
+            #if DEBUG
+            Indices = data.ToArray();
+            #endif
+
             using (var api = Using()) api.SetData(data);
         }
 
@@ -214,6 +239,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             where T : unmanaged
         {
             _SetProperties<T>(data.Length, mode);
+
+            #if DEBUG
+            Indices = data.ToArray();
+            #endif
 
             using (var api = Using()) api.SetData(data);
         }
@@ -243,7 +272,16 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             : base(gl, BufferTargetARB.ArrayBuffer, usage)
         { }
 
-        #endregion        
+        #endregion
+
+        #region data
+
+        #if DEBUG
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Collapsed)]
+        protected Array Vertices;
+        #endif
+
+        #endregion
     }
 
     public class VertexBuffer<TVertex> : VertexBuffer
@@ -259,13 +297,41 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region API        
 
-        public void SetData(List<TVertex> data) { using(var api = Using()) api.SetData(data); }
+        public void SetData(List<TVertex> data)
+        {
+            #if DEBUG
+            Vertices = data.ToArray();
+            #endif
 
-        public void SetData(TVertex[] data) { using (var api = Using()) api.SetData(data); }
+            using(var api = Using()) api.SetData(data);
+        }
 
-        public void SetData(Span<TVertex> data) { using (var api = Using()) api.SetData(data); }
+        public void SetData(TVertex[] data)
+        {
+            #if DEBUG
+            Vertices = data.ToList().ToArray();
+            #endif
 
-        public void SetData(ReadOnlySpan<TVertex> data) { using (var api = Using()) api.SetData(data); }        
+            using (var api = Using()) api.SetData(data);
+        }
+
+        public void SetData(Span<TVertex> data)
+        {
+            #if DEBUG
+            Vertices = data.ToArray();
+            #endif
+
+            using (var api = Using()) api.SetData(data);
+        }
+
+        public void SetData(ReadOnlySpan<TVertex> data)
+        {
+            #if DEBUG
+            Vertices = data.ToArray();
+            #endif                    
+
+            using (var api = Using()) api.SetData(data);
+        }
 
         #endregion
     }

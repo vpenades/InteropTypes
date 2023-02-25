@@ -32,6 +32,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region data
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private OPENGL _gl;
 
         #endregion
