@@ -52,6 +52,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region API
 
+        /// <summary>
+        /// Creates a temporary object that can be used for rendering
+        /// </summary>
+        /// <returns></returns>
         public DrawingAPI Using()
         {
             return new DrawingAPI(this);

@@ -15,7 +15,7 @@ namespace Tutorial
     {
         private static void Main(string[] args)
         {
-            Program0.Run(args);
+            Program1.Run(args);
         }
     }
 }

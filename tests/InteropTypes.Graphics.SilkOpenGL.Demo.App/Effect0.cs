@@ -22,7 +22,10 @@ namespace Tutorial
 
         private UniformMatrix<Matrix4x4> _uModel;           
 
-        protected override void CommitStaticUniforms() { }
+        protected override void CommitStaticUniforms()
+        {
+            _uModel.Set(Matrix4x4.Identity);
+        }
 
         protected override IEffectUniforms UseDynamicUniforms()
         {

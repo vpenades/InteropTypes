@@ -20,7 +20,7 @@ namespace Tutorial
         private static GL Gl;
 
         private static BasicDynamicMesh Mesh;
-        private static Effect1 Shader;        
+        private static Effect0 Shader;        
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace Tutorial
 
             Mesh.AddPolygon(System.Drawing.Color.Red, a, b, c, d);
 
-            Shader = new Effect1(Gl);
+            Shader = new Effect0(Gl);
         }
 
         private static unsafe void OnRender(double obj) //Method needs to be unsafe due to draw elements.
@@ -68,13 +68,10 @@ namespace Tutorial
             //Clear the color channel.
             Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
-            /*
-            Shader.Bind();
-
-            Mesh.Draw();
-
-            Shader.Unbind();
-            */
+            using(var dcx = Shader.Using())
+            {
+                Mesh.Draw(dcx);
+            }
         }
 
         private static void OnUpdate(double obj)
