@@ -396,6 +396,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         {
             Context.ThrowOnError();
             Context.BindVertexArray(_ArrayId);
+
+            // _Elements[0].Enable(Context);
+            // _Elements[1].Disable(Context);
+
             Context.ThrowOnError();
         }
 

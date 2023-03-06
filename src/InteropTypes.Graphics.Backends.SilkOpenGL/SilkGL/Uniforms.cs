@@ -128,23 +128,17 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #endregion
 
         #region API
-        public void Set(Texture texture)
+        public void Set(int slot, Texture texture)
         {
             #if DEBUG
             _Value = texture;
-            #endif
+            #endif            
+            
+            texture.SetAsActiveTexture(slot);
 
-            uint handle = 0;
-
-            if (texture != null)
-            {
-                handle = texture._handle;
-                throw new NotImplementedException();
-                // texture.Bind(_Slot);
-            }
-
-            UniformFactory.VerifyIsCurrentProgram(_gl, _Program);
-            _gl.Uniform1(_Index, handle);
+            _gl.ThrowOnError();
+            _gl.Uniform1(_Index, slot);
+            _gl.ThrowOnError();
         }
 
         #endregion
@@ -190,6 +184,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             UniformFactory.VerifyIsCurrentProgram(_gl, _Program);
 
+            _gl.ThrowOnError();
+
             if (typeof(T) == typeof(float))
             {
                 _gl.Uniform1(_Index, System.Runtime.CompilerServices.Unsafe.As<T, float>(ref value));
@@ -209,6 +205,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             {
                 _gl.Uniform4(_Index, System.Runtime.CompilerServices.Unsafe.As<T, VEC4>(ref value));
             }
+
+            _gl.ThrowOnError();
         }
 
         #endregion
@@ -257,6 +255,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             if (typeof(T) == typeof(MAT4X4))
             {
+                _gl.ThrowOnError();
                 _gl.UniformMatrix4(_Index, 1, _Transpose, (float*)&value);
                 _gl.ThrowOnError();
             }

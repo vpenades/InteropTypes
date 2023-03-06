@@ -7,31 +7,50 @@ using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Backends.SilkGL;
 
+using Tutorial.Shaders;
+
 using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace Tutorial
 {
     internal class Effect1 : Effect
     {
+        #region lifecycle
+
         public Effect1(OPENGL gl) : base(gl)
         {
-            var ufactory = CreateProgram(System.Reflection.Assembly.GetExecutingAssembly(), "Effect1.Shader.vert", "Effect1.Shader.frag");
+            _Vertex = new _PTxMVP_T_Uniforms();
+            _Fragment = new _T_Unlit_Uniforms();
 
-            
+            var ufactory = CreateProgram(_Vertex.GetShaderCode(), _Fragment.GetShaderCode());
 
-            // _uTexture0 = this.UniformFactory.UseTexture("uTexture0", Silk.NET.OpenGL.TextureUnit.Texture0);
-            // _uModel = this.UniformFactory.UseMatrix4x4("uModel", true);
-            // _uModel.Set(Matrix4x4.Identity);
+            _Vertex.Initialize(ufactory);
+            _Fragment.Initialize(ufactory);
         }
 
-        private UniformTexture _uTexture0;
-        private UniformMatrix<Matrix4x4> _uModel;
+        #endregion
 
+        #region data
 
+        private IUniforms _Vertex;
+        private IUniforms _Fragment;
 
-        protected override (IEffectUniforms Vertex, IEffectUniforms Fragment) UseDynamicUniforms()
+        #endregion
+
+        #region API
+
+        public Texture SolidTexture { get; set; }
+
+        protected override (IUniforms Vertex, IUniforms Fragment) UseDynamicUniforms()
         {
-            return (null, null);
+            if (_Fragment is IUniformTextures tex)
+            {
+                tex.SetTexture(SolidTexture);
+            }
+
+            return (_Vertex, _Fragment);
         }
+
+        #endregion
     }
 }

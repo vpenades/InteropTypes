@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -12,7 +13,8 @@ using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace InteropTypes.Graphics.Backends
 {
-    public class BasicDynamicMesh : ContextProvider
+    public class BasicDynamicMesh<TVertex> : ContextProvider
+        where TVertex: unmanaged, VertexElement.ISource
     {
         #region lifecycle
 
@@ -37,12 +39,12 @@ namespace InteropTypes.Graphics.Backends
         #region data
 
         private readonly List<int> _Topology = new List<int>();
-        private readonly List<Vertex> _Geometry = new List<Vertex>();
+        private readonly List<TVertex> _Geometry = new List<TVertex>();
 
         private bool _GeometryDirty = false;
         private bool _TopologyDirty = false;        
 
-        private VertexBuffer<Vertex> _VBuffer;
+        private VertexBuffer<TVertex> _VBuffer;
         private VertexBufferArray _VArray;
         private IndexBuffer _IBuffer;        
 
@@ -59,27 +61,27 @@ namespace InteropTypes.Graphics.Backends
             _TopologyDirty = true;
         }
 
-        void AddVertex(Vertex v)
+        void AddVertex(TVertex v)
         {
             _Topology.Add(_Topology.Count);
             _Geometry.Add(v);
 
             _GeometryDirty = true;
             _TopologyDirty = true;
-        }        
-
-        public void AddPolygon(System.Drawing.Color color, params Point3[] points)
-        {
-            AddPolygon(points, color);
         }
 
-        public void AddPolygon(ReadOnlySpan<Point3> points, System.Drawing.Color color)
+        public void AddPolygon(params TVertex[] points)
+        {
+            AddPolygon(points.AsSpan());
+        }
+
+        public void AddPolygon(ReadOnlySpan<TVertex> points)
         {
             for (int i = 2; i < points.Length; i++)
             {
-                var v0 = new Vertex(points[0], color);
-                var v1 = new Vertex(points[i - 1], color);
-                var v2 = new Vertex(points[i], color);
+                var v0 = points[0];
+                var v1 = points[i - 1];
+                var v2 = points[i];
 
                 AddVertex(v0);
                 AddVertex(v1);
@@ -95,7 +97,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (_VBuffer == null)
             {
-                _VBuffer = new VertexBuffer<Vertex>(this.Context, BufferUsageARB.DynamicDraw);
+                _VBuffer = new VertexBuffer<TVertex>(this.Context, BufferUsageARB.DynamicDraw);
 
                 _VArray = new VertexBufferArray(this.Context);
                 _VArray.SetLayoutFrom<Vertex>(_VBuffer);
@@ -129,22 +131,33 @@ namespace InteropTypes.Graphics.Backends
         #endregion
     }
 
-
-    struct Vertex : VertexElement.ISource
+    [System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
+    public struct Vertex : VertexElement.ISource
     {
-        public Vertex(Point3 point, System.Drawing.Color color)
+        public Vertex(float x, float y, float z)
+        {
+            Position = new System.Numerics.Vector3(x,y,z);
+            TexCoord = Vector2.Zero;
+        }
+
+        public Vertex WithUV(float u, float v)
+        {
+            return new Vertex(Position, new Point2(u, v));
+        }
+
+        public Vertex(Point3 point, Point2 uv)
         {
             Position = point.XYZ;
-            // Normal = System.Numerics.Vector3.Normalize(Position);            
+            TexCoord = uv.XY;
         }
         
         public System.Numerics.Vector3 Position;
-        // public System.Numerics.Vector3 Normal;
+        public System.Numerics.Vector2 TexCoord;
 
         public IEnumerable<VertexElement> GetElements()
         {
             yield return new VertexElement(3, false);
-            // yield return new VertexElement(3, true);
+            yield return new VertexElement(2, false);
         }
     }
 }

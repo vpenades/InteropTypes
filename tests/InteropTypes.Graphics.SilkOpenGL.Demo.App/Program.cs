@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Silk.NET.Maths;
-using Silk.NET.Input;
-using Silk.NET.OpenGL;
-using Silk.NET.Windowing;
-
-using InteropTypes.Graphics.Backends.SilkGL;
-
 
 namespace Tutorial
 {
@@ -15,7 +8,7 @@ namespace Tutorial
     {
         private static void Main(string[] args)
         {
-            Program2.Run(args);
+            Program1.Run(args);
         }
     }
 }

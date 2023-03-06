@@ -2,27 +2,230 @@
 using System.Collections.Generic;
 using System.Text;
 
+using InteropTypes.Graphics.Backends.SilkOpenGL.SilkGL;
+
 using Silk.NET.OpenGL;
 
 using OPENGL = Silk.NET.OpenGL.GL;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
+    /// <summary>
+    /// Represents the low level information associated to an OpenGL Texture.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_ToDebuggerDisplay(),nq}")]
+    public readonly struct TextureInfo
+    {
+        // there is a similar Silk.NET.OpenGL.Texture  struct, but looks fairly useless other than making it strong typed.
+
+        #region debug
+
+        internal string _ToDebuggerDisplay()
+        {
+            if (Id == 0) return "<DISPOSED>";
+            return $"{Id} => {Target}";
+        }
+
+        #endregion
+
+        #region constructor
+
+        public static TextureInfo Create(OPENGL gl, TextureTarget target)
+        {
+            gl.ThrowOnError();
+            var id = gl.GenTexture();
+            gl.ThrowOnError();
+            return new TextureInfo(id, target);
+        }
+
+        public TextureInfo(uint id, TextureTarget target)
+        {
+            Id = id;
+            Target = target;         
+        }        
+
+        public static void Release(OPENGL gl, ref TextureInfo binfo)
+        {
+            if (binfo.Id == 0) return;
+
+            gl?.DeleteTexture(binfo.Id);
+            binfo = default;
+        }
+
+        #endregion
+
+        #region data
+
+        public readonly uint Id;
+        public readonly TextureTarget Target;        
+
+        #endregion
+
+        #region API
+
+        private static GetPName _GetTargetBinding(TextureTarget target)
+        {
+            switch(target)
+            {
+                case TextureTarget.Texture1D: return GetPName.TextureBinding1D;
+                case TextureTarget.Texture1DArray: return GetPName.TextureBinding1DArray;
+                case TextureTarget.Texture2D: return GetPName.TextureBinding2D;
+                case TextureTarget.Texture2DArray: return GetPName.TextureBinding2DArray;
+                case TextureTarget.Texture3D: return GetPName.TextureBinding3D;                
+                case TextureTarget.TextureCubeMap: return GetPName.TextureBindingCubeMap;                
+                default: throw new NotImplementedException();
+            }
+        }
+
+        public UpdateAPI Using(OPENGL gl)
+        {
+            if (Id == 0) throw new ObjectDisposedException(nameof(Id));
+
+            gl.ThrowOnError();
+            return new UpdateAPI(gl, this);
+        }
+
+        public readonly struct UpdateAPI : IDisposable
+        {
+            #region lifecycle
+
+            internal UpdateAPI(OPENGL context, in TextureInfo info)
+            {
+                // recover texture currently bound to the target
+                var prevTexture = 0;
+                context.GetInteger(_GetTargetBinding(info.Target), out prevTexture);
+                context.ThrowOnError();
+
+                _Context = context;
+                _Info = info;
+                _PreviousBindiding = (uint)prevTexture;
+
+                if (_PreviousBindiding != info.Id)
+                {
+                    _Context.BindTexture(_Info.Target, info.Id);
+                    _Context.ThrowOnError();
+                }
+
+                _Guard.Bind(_Info.Target, info.Id);
+            }
+
+            public void Dispose()
+            {
+                _Guard.Unbind(_Info.Target);
+
+                if (_PreviousBindiding != _Info.Id)
+                {
+                    _Context.BindTexture(_Info.Target, _PreviousBindiding);
+                    _Context.ThrowOnError();
+                }
+            }
+
+            private static _BindingsGuard<TextureTarget, uint> _Guard = new _BindingsGuard<TextureTarget, uint>();
+
+            #endregion
+
+            #region data
+
+            private readonly OPENGL _Context;
+            private readonly TextureInfo _Info;
+            private readonly uint _PreviousBindiding;
+
+            #endregion
+
+            #region API
+
+            public void SetPixels(Bitmaps.SpanBitmap<Bitmaps.Pixel.RGBA32> bitmap)
+            {
+                if (bitmap.IsEmpty) throw new ArgumentNullException(nameof(bitmap));
+                if (!bitmap.Info.IsContinuous)
+                {
+                    bitmap = bitmap.ToMemoryBitmap();
+                }
+
+                System.Diagnostics.Debug.Assert(bitmap.Info.IsContinuous);
+
+                SetPixels(bitmap.Width, bitmap.Height, bitmap.ReadableBytes);
+            }
+
+            public void SetPixels(int w, int h, ReadOnlySpan<Byte> data)
+            {
+                // // https://github.com/WholesomeIsland/Silk.NET.OpenGL.Abstractions/blob/main/Texture.cs
+
+                _Context.ThrowOnError();
+
+                var dataFmt = PixelFormat.Rgba;
+
+                var internalFmt = (InternalFormat)dataFmt;
+
+                _Context.TexImage2D(
+                    _Info.Target,
+                    0,
+                    (int)internalFmt,
+                    (uint)w,
+                    (uint)h,
+                    0, // value between 0 and 1, to enable glTexParameter(), with the GL_TEXTURE_BORDER_COLOR 
+                    dataFmt,
+                    PixelType.UnsignedByte,
+                    data);
+
+                _Context.ThrowOnError();
+
+                _Context.Finish();
+
+                _Context.ThrowOnError();
+
+                // determine mipmap levels
+                int s = Math.Min(w, h);
+                int l = 0;
+                while (s > 2) { s /= 2; l += 1; }
+
+                GenerateMipmaps(l);
+            }
+
+            private void GenerateMipmaps(int levels)
+            {
+                _Context.ThrowOnError();
+
+                _Context.TexParameter(_Info.Target, TextureParameterName.TextureMinFilter, (int)GLEnum.LinearMipmapLinear);
+                _Context.TexParameter(_Info.Target, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear);
+
+                _Context.TexParameter(_Info.Target, TextureParameterName.TextureBaseLevel, 0);
+                _Context.TexParameter(_Info.Target, TextureParameterName.TextureMaxLevel, levels);
+
+                _Context.ThrowOnError();
+
+                _Context.GenerateMipmap(_Info.Target);
+
+                _Context.ThrowOnError();
+            }
+
+            public void SetWrapping(TextureWrapMode s, TextureWrapMode t)
+            {
+                _Context.TexParameter(_Info.Target, TextureParameterName.TextureWrapS, (int)s);
+                _Context.TexParameter(_Info.Target, TextureParameterName.TextureWrapT, (int)t);
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
+
+
     [System.Diagnostics.DebuggerDisplay("{_Info}")]
     public class Texture : ContextProvider
     {
-        #region lifecycle
+        #region lifecycle        
 
         public unsafe Texture(OPENGL gl)
             : base(gl)
         {
-            _handle = Context.GenTexture();
-            
+            _Handle = TextureInfo.Create(gl, TextureTarget.Texture2D);
         }
 
         protected override void Dispose(OPENGL gl)
         {
-            gl?.DeleteTexture(_handle);
+            TextureInfo.Release(gl, ref _Handle);
 
             base.Dispose(gl);
         }
@@ -31,83 +234,33 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region data
 
-        internal uint _handle;
-
-        internal InteropTypes.Graphics.Bitmaps.BitmapInfo _Info;
+        internal TextureInfo _Handle;        
 
         private TextureUnit? _Bound;
 
         #endregion
 
-        #region API
+        #region API        
 
-        public void SetTexture(Bitmaps.SpanBitmap<Bitmaps.Pixel.RGBA32> bitmap)
+        public TextureInfo.UpdateAPI Using()
         {
-            if (bitmap.IsEmpty) throw new ArgumentNullException(nameof(bitmap));
-            if (!bitmap.Info.IsContinuous)
-            {
-                bitmap = bitmap.ToMemoryBitmap();
-            }
-
-            _Info = bitmap.Info;
-
-            throw new NotImplementedException();
-            // Bind();
-
-            System.Diagnostics.Debug.Assert(bitmap.Info.IsContinuous);
-
-            var d = bitmap.ReadableBytes;
-
-            uint w = (uint)bitmap.Width;
-            uint h = (uint)bitmap.Height;
-
-            Context.TexImage2D(
-                TextureTarget.Texture2D,
-                0,
-                (int)InternalFormat.Rgba,
-                w, h,
-                0, // value between 0 and 1, to enable glTexParameter(), with the GL_TEXTURE_BORDER_COLOR 
-                PixelFormat.Rgba,
-                PixelType.UnsignedByte,
-                d);
-
-            SetParameters();
-
-            // Unbind();
+            return _Handle.Using(this.Context);
         }
 
-        private void SetParameters()
+        public void SetAsActiveTexture(int slotIdx)
         {
-            Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)GLEnum.ClampToEdge);
-            Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)GLEnum.ClampToEdge);
-            Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.LinearMipmapLinear);
-            Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear);
-            Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureBaseLevel, 0);
-            Context.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, 8);
-            Context.GenerateMipmap(TextureTarget.Texture2D);
-        }        
+            // https://stackoverflow.com/questions/8866904/differences-and-relationship-between-glactivetexture-and-glbindtexture
+
+            Context.ThrowOnError();
+            Context.ActiveTexture(TextureUnit.Texture0 + slotIdx);
+            Context.ThrowOnError();
+            Context.BindTexture(_Handle.Target, _Handle.Id);
+            Context.ThrowOnError();
+        }
 
         #endregion
     }
 
-    public readonly struct TextureSlot
-    {
-        private readonly OPENGL _Context;
-        private readonly TextureUnit _Slot;
-
-        public void SetTexture(Texture texture)
-        {
-            _Context.ActiveTexture(_Slot);
-            var handle = texture?._handle ?? 0;            
-            _Context.BindTexture(TextureTarget.Texture2D, handle);
-
-            if (handle != 0)
-            {
-                // _Context.TexParameter(TextureTarget.Texture2D, GLEnum.TextureWrapS, GLEnum.Repeat);
-            }            
-        }
-
-    }
-
+    
     
 }

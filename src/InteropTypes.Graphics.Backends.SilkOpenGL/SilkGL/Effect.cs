@@ -20,6 +20,16 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             return _Program.UniformFactory;
         }
 
+        protected UniformFactory CreateProgram(string vbody, string fbody)
+        {
+            if (string.IsNullOrWhiteSpace(vbody)) throw new ArgumentNullException(nameof(vbody));
+            if (string.IsNullOrWhiteSpace(fbody)) throw new ArgumentNullException(nameof(fbody));
+
+            _Program = ShaderProgram.CreateFromCode(this.Context, vbody, fbody);
+
+            return _Program.UniformFactory;
+        }
+
         protected override void Dispose(OPENGL gl)
         {
             _Program?.Dispose();
@@ -39,7 +49,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         /// continuosly, like transform matrices, lights, etc.
         /// </summary>
         /// <returns></returns>
-        protected abstract (IEffectUniforms Vertex, IEffectUniforms Fragment) UseDynamicUniforms();
+        protected abstract (IUniforms Vertex, IUniforms Fragment) UseDynamicUniforms();
 
         #endregion
 
@@ -70,9 +80,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
                 _Program = effect._Program;
                 _Program.Bind();                
                 
-                (_VertexUniforms, _FragmentUniforms) = effect.UseDynamicUniforms();
-                _VertexUniforms?.OnBind(effect);
-                _FragmentUniforms?.OnBind(effect);
+                (_VertexUniforms, _FragmentUniforms) = effect.UseDynamicUniforms();                
             }
 
             public void Dispose()
@@ -88,8 +96,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             #region data
 
             private ShaderProgram _Program;
-            private IEffectUniforms _VertexUniforms;
-            private IEffectUniforms _FragmentUniforms;
+            private IUniforms _VertexUniforms;
+            private IUniforms _FragmentUniforms;
 
             #endregion
 
@@ -97,8 +105,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             // split between VertexUniforms and FragmentUniforms
 
-            public IEffectUniforms VertexUniforms => _VertexUniforms;
-            public IEffectUniforms FragmentUniforms => _FragmentUniforms;
+            public IUniforms VertexUniforms => _VertexUniforms;
+            public IUniforms FragmentUniforms => _FragmentUniforms;
 
             public IDrawingContext UseDC(VertexBufferArray vertices, IndexBuffer indices)
             {
@@ -117,14 +125,15 @@ namespace InteropTypes.Graphics.Backends.SilkGL
     }
 
     /// <summary>
-    /// Cast to <see cref="IEffectTransforms3D"/>
+    /// Cast to <see cref="IUniformTransforms3D"/>
     /// </summary>
-    public interface IEffectUniforms
+    public interface IUniforms
     {
-        void OnBind(Effect effect);
+        string GetShaderCode();
+        void Initialize(UniformFactory ufactory);
     }
 
-    public interface IEffectTransforms3D
+    public interface IUniformTransforms3D
     {
         void SetModelMatrix(Matrix4x4 matrix);
 
@@ -137,5 +146,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             if (!Matrix4x4.Invert(matrix, out var inverted)) throw new ArgumentException(nameof(matrix));
             SetViewMatrix(inverted);
         }
+    }
+
+    public interface IUniformTextures
+    {
+        void SetTexture(Texture texture);
     }
 }

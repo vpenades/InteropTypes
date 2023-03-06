@@ -104,7 +104,7 @@ namespace Tutorial
 
             using (var effect = Shader.Using())
             {
-                if (effect.VertexUniforms is IEffectTransforms3D fxXforms)
+                if (effect.VertexUniforms is IUniformTransforms3D fxXforms)
                 {
                     fxXforms.SetModelMatrix(Matrix4x4.CreateRotationZ(0.1f));
                 }                

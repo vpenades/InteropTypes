@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 using Silk.NET.Maths;
 using Silk.NET.Input;
@@ -9,8 +10,8 @@ using Silk.NET.Windowing;
 using InteropTypes.Graphics.Backends.SilkGL;
 using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Drawing;
-using SharpGLTF.Schema2;
-using System.Numerics;
+
+
 
 namespace Tutorial
 {
@@ -21,8 +22,8 @@ namespace Tutorial
         private static IWindow window;
         private static GL Gl;
 
-        private static BasicDynamicMesh Mesh;
-        private static Effect2 Shader;        
+        private static BasicDynamicMesh<Vertex> Mesh;
+        private static Effect1 Shader;        
 
         #endregion
 
@@ -53,16 +54,16 @@ namespace Tutorial
             //Getting the opengl api for drawing to the screen.
             Gl = GL.GetApi(window);
 
-            Mesh = new BasicDynamicMesh(Gl);
+            Mesh = new BasicDynamicMesh<Vertex>(Gl);
 
-            var a = new Point3(0.5f, 0.5f, 0.0f);
-            var b = new Point3(0.5f, -0.5f, 0.0f);
-            var c = new Point3(-0.5f, -0.5f, 0.0f);
-            var d = new Point3(-0.5f, 0.5f, 0.5f);
+            var a = new Vertex(0.5f, 0.5f, 0.0f);
+            var b = new Vertex(0.5f, -0.5f, 0.0f);
+            var c = new Vertex(-0.5f, -0.5f, 0.0f);
+            var d = new Vertex(-0.5f, -0.5f, 0.5f);
 
-            Mesh.AddPolygon(System.Drawing.Color.Red, a, b, c, d);
+            Mesh.AddPolygon(a, b, c, d);
 
-            Shader = new Effect2(Gl);
+            Shader = new Effect1(Gl);
         }
 
 
@@ -89,7 +90,7 @@ namespace Tutorial
 
             using (var edc = Shader.Using())
             {
-                if (edc.VertexUniforms is IEffectTransforms3D fxXforms)
+                if (edc.VertexUniforms is IUniformTransforms3D fxXforms)
                 {
                     fxXforms.SetProjMatrix(projection);
                     fxXforms.SetCameraMatrix(camera);

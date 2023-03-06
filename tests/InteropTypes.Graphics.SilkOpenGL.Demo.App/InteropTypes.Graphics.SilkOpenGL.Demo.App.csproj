@@ -5,17 +5,24 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <LangVersion>9</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>Tutorial</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="*.vert" />
-    <None Remove="*.frag" />
+    <None Remove="**\*.vert" />
+    <None Remove="**\*.frag" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="*.vert" />
-    <EmbeddedResource Include="*.frag" />
+    <EmbeddedResource Include="**\*.vert" />
+    <EmbeddedResource Include="**\*.frag" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\InteropTypes.Graphics.MonoGame.Demo.App\Assets\qrhead.jpg" Link="Assets\qrhead.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>  
 
   <ItemGroup>
     <PackageReference Include="Silk.NET.Input" />
@@ -25,6 +32,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SilkOpenGL\InteropTypes.Graphics.Backends.SilkOpenGL.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
 
 </Project>

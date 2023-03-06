@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,13 +18,18 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             : this(VertexAttribPointerType.Float, dims, nrm)
         { }
 
-        public VertexElement(VertexAttribPointerType encoding, int dims, bool nrm, uint index = 0)
+        public VertexElement(VertexAttribPointerType encoding, int dims, bool nrm, uint index = 0, uint stride = 0, uint offset = 0)
         {
+            if (dims < 1 || dims > 4) throw new ArgumentOutOfRangeException(nameof(dims));            
+
             Index = index;
+
             Encoding = encoding;
             Dimensions = dims;
             Normalized = nrm;
-            ByteSize = (uint)(Dimensions * GetEncodingSize(encoding));
+
+            Offset = offset;
+            Stride = stride;
         }
 
         #endregion
@@ -31,19 +37,33 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #region data
 
         public readonly uint Index;
-        public readonly VertexAttribPointerType Encoding;
+
         public readonly int Dimensions;
+        public readonly VertexAttribPointerType Encoding;        
         public readonly bool Normalized;
-        public readonly uint ByteSize;
+
+        public readonly uint Offset;
+        public readonly uint Stride;
+
+        #endregion
+
+        #region properties
+
+        public uint ByteSize => (uint)(Dimensions * GetEncodingSize(Encoding));
 
         #endregion
 
         #region API
 
-        public VertexElement WithIndex(uint index)
+        public VertexElement WithIndex(uint @index)
         {
-            return new VertexElement(Encoding, Dimensions, Normalized, index);
-        }        
+            return new VertexElement(Encoding, Dimensions, Normalized, @index, Stride);
+        }
+
+        public VertexElement WithStrideAndOffset(uint @stride, uint @offset)
+        {
+            return new VertexElement(Encoding, Dimensions, Normalized, Index, @stride, @offset);
+        }
 
         public static int GetEncodingSize(VertexAttribPointerType encoding)
         {
@@ -72,35 +92,41 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region internal
 
-        internal unsafe void Set(OPENGL context)
+        private unsafe void Set(OPENGL context)
         {
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
-            context.ThrowOnError();
-            context.VertexAttribPointer(Index, Dimensions, Encoding, Normalized, ByteSize, null);
-            context.ThrowOnError();
+            // https://registry.khronos.org/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+
+            context.ThrowOnError();            
+            context.VertexAttribPointer(Index, Dimensions, Encoding, Normalized, Stride, new IntPtr(Offset).ToPointer());
+            context.ThrowOnError();            
         }
 
-        internal void Enable(OPENGL context)
+        public void Enable(OPENGL context)
         {            
             context.ThrowOnError();
             context.EnableVertexAttribArray(Index);
             context.ThrowOnError();
         }
 
-        internal unsafe void Disable(OPENGL context)
+        public unsafe void Disable(OPENGL context)
         {
             context.ThrowOnError();
             context.DisableVertexAttribArray(Index);
             context.ThrowOnError();
         }
 
+        // glBindAttribLocation to associate the vertex element with the shader name
+
         #endregion
 
         #region nested types
 
-        public class Collection
+        public class Collection : IReadOnlyList<VertexElement>
         {
-            public void SetElements<T>()
+            #region lifecycle
+
+            public unsafe void SetElements<T>()
                 where T : unmanaged, ISource
             {
                 if (_VertexType == typeof(T)) return;
@@ -112,15 +138,26 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
                 for (int i = 0; i < _Elements.Length; ++i)
                 {
-                    _Elements[i] = _Elements[i].WithIndex(offset);
+                    _Elements[i] = _Elements[i].WithIndex((uint)i).WithStrideAndOffset((uint)sizeof(T), offset);
+
                     offset += _Elements[i].ByteSize;
                 }
             }
 
+            #endregion
+
+            #region data
+
             private Type _VertexType;
             private VertexElement[] _Elements;
 
+            #endregion
+
+            #region API
+
             public int Count => _Elements.Length;
+
+            public VertexElement this[int index] => _Elements[index];
 
             public void Set(OPENGL context)
             {
@@ -139,6 +176,18 @@ namespace InteropTypes.Graphics.Backends.SilkGL
                 if (_Elements == null) return;
                 foreach (var e in _Elements) e.Disable(context);
             }
+
+            public IEnumerator<VertexElement> GetEnumerator()
+            {
+                return _Elements.AsEnumerable().GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _Elements.GetEnumerator();
+            }
+
+            #endregion
         }
 
         /// <summary>
