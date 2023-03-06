@@ -45,7 +45,7 @@ namespace Tutorial
         {
             if (_Fragment is IUniformTextures tex)
             {
-                tex.SetTexture(SolidTexture);
+                tex.BindTexture(SolidTexture);
             }
 
             return (_Vertex, _Fragment);

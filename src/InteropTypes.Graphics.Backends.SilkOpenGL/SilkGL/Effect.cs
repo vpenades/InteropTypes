@@ -85,8 +85,11 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             public void Dispose()
             {
+                if (_FragmentUniforms is IUniformTextures utex) utex.UnbindTextures();
+
                 _Program.Unbind();
-                _Program = null;
+                _Program = null;                
+
                 _VertexUniforms = null;
                 _FragmentUniforms = null;
             }
@@ -150,6 +153,8 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
     public interface IUniformTextures
     {
-        void SetTexture(Texture texture);
+        void BindTexture(Texture texture);
+
+        void UnbindTextures();
     }
 }

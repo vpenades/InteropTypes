@@ -22,9 +22,14 @@ namespace Tutorial.Shaders
             _Sampler0 = ufactory.UseTexture("uTexture0", Silk.NET.OpenGL.TextureUnit.Texture0);
         }
 
-        public void SetTexture(Texture texture)
+        public void BindTexture(Texture texture)
         {
             _Sampler0.Set(0, texture);
+        }
+
+        public void UnbindTextures()
+        {
+            _Sampler0.Set(0, null);
         }
     }
 }
