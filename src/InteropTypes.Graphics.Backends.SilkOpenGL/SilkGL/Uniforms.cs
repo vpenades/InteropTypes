@@ -132,9 +132,20 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         {
             #if DEBUG
             _Value = texture;
-            #endif            
-            
-            texture.SetAsActiveTexture(slot);
+            #endif
+
+            if (texture == null)
+            {
+                _gl.ThrowOnError();
+                _gl.ActiveTexture(TextureUnit.Texture0 + slot);
+                _gl.ThrowOnError();
+                _gl.BindTexture(TextureTarget.Texture2D, 0);
+                _gl.ThrowOnError();
+            }
+            else
+            {
+                texture.SetAsActiveTexture(slot);
+            }            
 
             _gl.ThrowOnError();
             _gl.Uniform1(_Index, slot);

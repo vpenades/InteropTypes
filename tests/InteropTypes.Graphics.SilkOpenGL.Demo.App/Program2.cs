@@ -10,8 +10,7 @@ using Silk.NET.Windowing;
 using InteropTypes.Graphics.Backends.SilkGL;
 using InteropTypes.Graphics.Backends;
 using InteropTypes.Graphics.Drawing;
-
-
+using InteropTypes.Graphics.Bitmaps;
 
 namespace Tutorial
 {
@@ -23,6 +22,7 @@ namespace Tutorial
         private static GL Gl;
 
         private static BasicDynamicMesh<Vertex> Mesh;
+        private static InteropTypes.Graphics.Backends.SilkGL.Texture Tex;
         private static Effect1 Shader;        
 
         #endregion
@@ -56,14 +56,26 @@ namespace Tutorial
 
             Mesh = new BasicDynamicMesh<Vertex>(Gl);
 
-            var a = new Vertex(0.5f, 0.5f, 0.0f);
-            var b = new Vertex(0.5f, -0.5f, 0.0f);
-            var c = new Vertex(-0.5f, -0.5f, 0.0f);
-            var d = new Vertex(-0.5f, -0.5f, 0.5f);
+            var a = new Vertex(0.5f, 0.5f, 0.0f).WithUV(0,0);
+            var b = new Vertex(0.5f, -0.5f, 0.0f).WithUV(0, 1);
+            var c = new Vertex(-0.5f, -0.5f, 0.0f).WithUV(1, 1);
+            var d = new Vertex(-0.5f, 0.5f, 0.5f).WithUV(1, 0);
 
             Mesh.AddPolygon(a, b, c, d);
 
             Shader = new Effect1(Gl);
+
+            // demo load texture
+
+            Tex = new InteropTypes.Graphics.Backends.SilkGL.Texture(Gl);
+
+            var tdata = InteropTypes.Graphics.Bitmaps.MemoryBitmap<Pixel.RGBA32>.Load("Assets\\qrhead.jpg");
+
+            using var writer = Tex.Using();
+
+            writer.SetPixels(tdata);
+
+            Shader.SolidTexture = Tex;
         }
 
 
