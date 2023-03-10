@@ -11,7 +11,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
     {
         #region lifecycle
 
-        public Effect(OPENGL gl) : base(gl) { }
+        public Effect(OPENGL gl) : base(gl)
+        {
+            _TextureSlots = new TextureGroup(gl);
+        }
 
         protected UniformFactory CreateProgram(System.Reflection.Assembly resAssembly, string vname, string fname)
         {
@@ -42,7 +45,19 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         #region data
 
-        private ShaderProgram _Program;        
+        private ShaderProgram _Program;
+
+        private TextureGroup _TextureSlots;
+
+        #endregion
+
+        #region properties
+
+        public TextureGroup Slots => _TextureSlots;
+
+        #endregion
+
+        #region API
 
         /// <summary>
         /// Exposes an API that can be used to dynamically change the uniforms that change
@@ -77,10 +92,18 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             #region lifecycle
             internal DrawingAPI(Effect effect)
             {
+                _Slots = effect._TextureSlots;
+                _Slots.Bind();
+                
                 _Program = effect._Program;
                 _Program.Bind();                
                 
-                (_VertexUniforms, _FragmentUniforms) = effect.UseDynamicUniforms();                
+                (_VertexUniforms, _FragmentUniforms) = effect.UseDynamicUniforms();
+
+                if (_FragmentUniforms is IUniformTextures tex)
+                {
+                    tex.BindTextures(_Slots);
+                }
             }
 
             public void Dispose()
@@ -88,7 +111,10 @@ namespace InteropTypes.Graphics.Backends.SilkGL
                 if (_FragmentUniforms is IUniformTextures utex) utex.UnbindTextures();
 
                 _Program.Unbind();
-                _Program = null;                
+                _Program = null;
+
+                _Slots.Unbind();
+                _Slots = null;
 
                 _VertexUniforms = null;
                 _FragmentUniforms = null;
@@ -98,6 +124,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             #region data
 
+            private TextureGroup _Slots;
             private ShaderProgram _Program;
             private IUniforms _VertexUniforms;
             private IUniforms _FragmentUniforms;
@@ -153,7 +180,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
     public interface IUniformTextures
     {
-        void BindTexture(Texture texture);
+        void BindTextures(TextureGroup slots);
 
         void UnbindTextures();
     }

@@ -19,17 +19,19 @@ namespace Tutorial.Shaders
 
         public void Initialize(UniformFactory ufactory)
         {
-            _Sampler0 = ufactory.UseTexture("uTexture0", Silk.NET.OpenGL.TextureUnit.Texture0);
+            _Sampler0 = ufactory.UseTexture("uTexture0");
         }
 
-        public void BindTexture(Texture texture)
+        public void BindTextures(TextureGroup textures)
         {
-            _Sampler0.Set(0, texture);
+            var slot = textures.GetSlot("uTexture0");
+
+            _Sampler0.Set(slot);
         }
 
         public void UnbindTextures()
         {
-            _Sampler0.Set(0, null);
+            _Sampler0.Set(0);
         }
     }
 }

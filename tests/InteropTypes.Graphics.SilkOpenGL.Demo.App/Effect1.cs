@@ -25,7 +25,7 @@ namespace Tutorial
             var ufactory = CreateProgram(_Vertex.GetShaderCode(), _Fragment.GetShaderCode());
 
             _Vertex.Initialize(ufactory);
-            _Fragment.Initialize(ufactory);
+            _Fragment.Initialize(ufactory);            
         }
 
         #endregion
@@ -33,7 +33,7 @@ namespace Tutorial
         #region data
 
         private IUniforms _Vertex;
-        private IUniforms _Fragment;
+        private IUniforms _Fragment;        
 
         #endregion
 
@@ -43,10 +43,9 @@ namespace Tutorial
 
         protected override (IUniforms Vertex, IUniforms Fragment) UseDynamicUniforms()
         {
-            if (_Fragment is IUniformTextures tex)
-            {
-                tex.BindTexture(SolidTexture);
-            }
+            this.Slots.SetTextures(("uTexture0", SolidTexture));
+
+            // now here, based on the textures being available, we can choose the program and uniforms
 
             return (_Vertex, _Fragment);
         }

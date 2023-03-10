@@ -57,7 +57,9 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         #region data
 
         public readonly uint Id;
-        public readonly TextureTarget Target;        
+        public readonly TextureTarget Target;
+
+        public static readonly TextureInfo EmptyTexture2D = new TextureInfo(0, TextureTarget.Texture2D);
 
         #endregion
 
@@ -98,9 +100,9 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
                 _Context = context;
                 _Info = info;
-                _PreviousBindiding = (uint)prevTexture;
+                _PreviousBinding = (uint)prevTexture;
 
-                if (_PreviousBindiding != info.Id)
+                if (_PreviousBinding != info.Id)
                 {
                     _Context.BindTexture(_Info.Target, info.Id);
                     _Context.ThrowOnError();
@@ -113,9 +115,9 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             {
                 _Guard.Unbind(_Info.Target);
 
-                if (_PreviousBindiding != _Info.Id)
+                if (_PreviousBinding != _Info.Id)
                 {
-                    _Context.BindTexture(_Info.Target, _PreviousBindiding);
+                    _Context.BindTexture(_Info.Target, _PreviousBinding);
                     _Context.ThrowOnError();
                 }
             }
@@ -128,7 +130,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             private readonly OPENGL _Context;
             private readonly TextureInfo _Info;
-            private readonly uint _PreviousBindiding;
+            private readonly uint _PreviousBinding;
 
             #endregion
 
@@ -206,13 +208,13 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             }
 
             #endregion
-        }
+        }        
 
         #endregion
     }
 
 
-    [System.Diagnostics.DebuggerDisplay("{_Info}")]
+    [System.Diagnostics.DebuggerDisplay("{_Handle}")]
     public class Texture : ContextProvider
     {
         #region lifecycle        
@@ -245,22 +247,82 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         public TextureInfo.UpdateAPI Using()
         {
             return _Handle.Using(this.Context);
-        }
-
-        public void SetAsActiveTexture(int slotIdx)
-        {
-            // https://stackoverflow.com/questions/8866904/differences-and-relationship-between-glactivetexture-and-glbindtexture
-
-            Context.ThrowOnError();
-            Context.ActiveTexture(TextureUnit.Texture0 + slotIdx);
-            Context.ThrowOnError();
-            Context.BindTexture(_Handle.Target, _Handle.Id);
-            Context.ThrowOnError();
-        }
+        }        
 
         #endregion
     }
 
-    
-    
+
+    public class TextureGroup : ContextProvider
+    {
+        public TextureGroup(OPENGL gl) : base(gl)
+        {
+            gl.GetInteger(GetPName.MaxTextureImageUnits, out var texture_units);
+
+            _MaxSlots = texture_units;
+        }
+
+        private readonly Dictionary<string, Texture> _Textures = new Dictionary<string, Texture>();
+
+        private readonly int _MaxSlots;
+
+        private readonly List<Texture> _Slots = new List<Texture>();        
+
+        public void SetTextures(params (string,Texture)[] texs)
+        {
+            _Textures.Clear();
+            foreach (var tex in texs)
+            {
+                if (tex.Item2 == null) continue;
+                _Textures[tex.Item1] = tex.Item2;
+            }
+        }
+
+        public void Bind()
+        {
+            if (_Slots.Count != 0) throw new InvalidOperationException("already bound");
+
+            foreach(var t in _Textures.Values)
+            {
+                if (_Slots.Contains(t)) continue;
+
+                int slotIdx = _Slots.Count;
+                _Apply(slotIdx, t._Handle);
+                _Slots.Add(t);
+            }
+
+            for (int i=_Slots.Count; i < _MaxSlots; i++)
+            {
+                _Apply(i, TextureInfo.EmptyTexture2D);
+            }
+        }        
+
+        public int GetSlot(string name)
+        {
+            if (!_Textures.TryGetValue(name, out var texture)) return _Slots.Count;
+            var idx = _Slots.IndexOf(texture);
+            return idx < 0 ? _Slots.Count : idx;
+        }
+
+        public void Unbind()
+        {
+            for(int i=0; i < _Slots.Count; i++)
+            {
+                var tinfo = new TextureInfo(0, _Slots[i]._Handle.Target);
+                _Apply(i, tinfo);
+            }
+
+            _Slots.Clear();
+        }
+
+        private void _Apply(int slotIdx, TextureInfo tinfo)
+        {
+            Context.ThrowOnError();
+            Context.ActiveTexture(TextureUnit.Texture0 + slotIdx);
+            Context.ThrowOnError();
+            Context.BindTexture(tinfo.Target, tinfo.Id);
+            Context.ThrowOnError();
+        }
+
+    }
 }

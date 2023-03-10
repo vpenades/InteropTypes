@@ -59,7 +59,7 @@ namespace Tutorial
             var a = new Vertex(0.5f, 0.5f, 0.0f).WithUV(0,0);
             var b = new Vertex(0.5f, -0.5f, 0.0f).WithUV(0, 1);
             var c = new Vertex(-0.5f, -0.5f, 0.0f).WithUV(1, 1);
-            var d = new Vertex(-0.5f, 0.5f, 0.5f).WithUV(1, 0);
+            var d = new Vertex(-0.5f, 0.5f, 0.0f).WithUV(1, 0);
 
             Mesh.AddPolygon(a, b, c, d);
 
@@ -98,7 +98,7 @@ namespace Tutorial
 
             var model = Matrix4x4.CreateRotationY(rot) * Matrix4x4.CreateRotationX(rot);
             var camera = Matrix4x4.CreateWorld(cameraPosition, cameraForward, cameraUp);
-            var projection = Matrix4x4.CreatePerspectiveFieldOfView(0.7f, 800f / 600f, 0.1f, 1000.0f);
+            var projection = Matrix4x4.CreatePerspectiveFieldOfView(0.3f, 800f / 600f, 0.1f, 1000.0f);
 
             using (var edc = Shader.Using())
             {

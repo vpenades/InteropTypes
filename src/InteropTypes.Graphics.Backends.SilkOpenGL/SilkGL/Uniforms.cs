@@ -9,6 +9,7 @@ using VEC2 = System.Numerics.Vector2;
 using VEC3 = System.Numerics.Vector3;
 using VEC4 = System.Numerics.Vector4;
 using MAT4X4 = System.Numerics.Matrix4x4;
+using System.ComponentModel.Design;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
@@ -62,9 +63,9 @@ namespace InteropTypes.Graphics.Backends.SilkGL
             return location;
         }
 
-        public UniformTexture UseTexture(string name, TextureUnit slot)
+        public UniformTexture UseTexture(string name)
         {
-            return new UniformTexture(this._Context, _ProgramId, UseLocation(name), slot);
+            return new UniformTexture(this._Context, _ProgramId, UseLocation(name));
         }
 
         public UniformVector<float> UseScalar(string name)
@@ -100,12 +101,11 @@ namespace InteropTypes.Graphics.Backends.SilkGL
     {
         #region constructor
 
-        internal UniformTexture(OPENGL gl, uint program, int index, TextureUnit slot)
+        internal UniformTexture(OPENGL gl, uint program, int index)
         {
             _gl = gl;
             _Program = program;
-            _Index = index;
-            _Slot = slot;            
+            _Index = index;            
 
             #if DEBUG            
             _Value = default;            
@@ -118,37 +118,23 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         private readonly OPENGL _gl;
         internal uint _Program;
-        private readonly int _Index;
-        private readonly TextureUnit _Slot;
+        private readonly int _Index;        
 
-        #if DEBUG        
-        private Texture _Value;
+        #if DEBUG
+        private int _Value;
         #endif
 
         #endregion
 
         #region API
-        public void Set(int slot, Texture texture)
+        public void Set(int slotIndex)
         {
             #if DEBUG
-            _Value = texture;
+            _Value = slotIndex;
             #endif
 
-            if (texture == null)
-            {
-                _gl.ThrowOnError();
-                _gl.ActiveTexture(TextureUnit.Texture0 + slot);
-                _gl.ThrowOnError();
-                _gl.BindTexture(TextureTarget.Texture2D, 0);
-                _gl.ThrowOnError();
-            }
-            else
-            {
-                texture.SetAsActiveTexture(slot);
-            }            
-
             _gl.ThrowOnError();
-            _gl.Uniform1(_Index, slot);
+            _gl.Uniform1(_Index, slotIndex);
             _gl.ThrowOnError();
         }
 
