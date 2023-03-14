@@ -88,7 +88,8 @@ namespace InteropTypes.Codecs
         public AVRational TimeBase => _pCodecContext->time_base;
 
         /// <summary>
-        /// - Decoding: For codecs that store a framerate value in the compressed bitstream, the decoder may export it here. { 0, 1} when unknown.<br/>
+        /// - Decoding: For codecs that store a framerate value in the compressed bitstream,
+        ///   the decoder may export it here. { 0, 1} when unknown.<br/>
         /// - Encoding: May be used to signal the framerate of CFR content to an encoder.
         /// </summary>
         public AVRational FrameRate => _pCodecContext->framerate;        
@@ -99,6 +100,24 @@ namespace InteropTypes.Codecs
         /// no telecine is used ...
         /// </summary>
         public int TicksPerFrame => _pCodecContext->ticks_per_frame;
+
+        public double VideoDuration
+        {
+            get
+            {
+                long duration = _pFormatContext->streams[_streamIndex]->duration;
+                AVRational time_base = _pFormatContext->streams[_streamIndex]->time_base;
+
+                if (duration == ffmpeg.AV_NOPTS_VALUE)
+                {
+                    duration = _pFormatContext->duration;
+                    time_base = new AVRational() { num = 1, den = ffmpeg.AV_TIME_BASE };
+                    if (duration == ffmpeg.AV_NOPTS_VALUE) return 0.0;
+                }
+
+                return (double)duration * time_base.num / time_base.den;
+            }
+        }
 
         #endregion
 

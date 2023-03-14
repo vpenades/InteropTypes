@@ -6,37 +6,42 @@ using System.Text;
 using InteropTypes.Graphics.Backends.Codecs;
 using InteropTypes.Graphics.Bitmaps;
 
+using BITMAP = InteropTypes.Graphics.Bitmaps.MemoryBitmap;
+
 namespace InteropTypes.Codecs
 {
     public static class FFmpegAutoGen
     {
-        public static IEnumerable<(PointerBitmap bitmap, VideoFrameState state)> DecodeFrames(string url)
+        public static IEnumerable<(BITMAP bitmap, VideoFrameState state)> DecodeFrames(string url)
         {
             return _Implementation.DecodeFrames(url, FFmpeg.AutoGen.AVHWDeviceType.AV_HWDEVICE_TYPE_NONE);
         }
 
-        public static void EncodeFrames(string url, IEnumerable<PointerBitmap> frames)
+        public static void EncodeFrames(string url, int fps, IEnumerable<BITMAP> bitmaps)
         {
-            using (var encoder = new VideoStreamEncoder(url, 20))
+            using (var encoder = new VideoStreamEncoder(url, fps))
             {
-                foreach (var f in frames) encoder.PushFrame(f);
+                foreach (var bmp in bitmaps)
+                {
+                    bmp.AsSpanBitmap().PinReadablePointer(ptr => encoder.PushFrame(ptr));
+                }
                 encoder.Drain();
             }
         }
         
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public static void EncodeFrames(Action<Action<System.IO.FileInfo>> saveCallback, IEnumerable<(PointerBitmap bitmap, long pts)> frames, int? fps)
+        public static void EncodeFrames(Action<Action<System.IO.FileInfo>> saveCallback, IEnumerable<(BITMAP bitmap, long pts)> frames, int? fps)
         {
             saveCallback(finfo => EncodeFrames(finfo.FullName, frames, fps));
         }
 
-        public static void EncodeFrames(string url, IEnumerable<(PointerBitmap bitmap, long pts)> frames, int? fps = null)
+        public static void EncodeFrames(string url, IEnumerable<(BITMAP bitmap, long pts)> frames, int? fps = null)
         {
-            using(var encoder = new VideoStreamEncoder(url, fps ?? 30))
+            using(var encoder = new VideoStreamEncoder(url, fps ?? -1))
             {
-                foreach (var (bitmap, pts) in frames)
+                foreach (var (bmp, pts) in frames)
                 {
-                    encoder.PushFrame(bitmap, fps.HasValue ? null : (long?)pts);
+                    bmp.AsSpanBitmap().PinReadablePointer(ptr => encoder.PushFrame(ptr));
                 }
 
                 encoder.Drain();
@@ -44,12 +49,12 @@ namespace InteropTypes.Codecs
         }
         
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public static void ProcessFrames(string inputUrl, Action<Action<System.IO.FileInfo>> outputCallback, Action<MemoryBitmap> frameCallback, int? fps = null)
+        public static void ProcessFrames(string inputUrl, Action<Action<System.IO.FileInfo>> outputCallback, Action<BITMAP> frameCallback, int? fps = null)
         {
             outputCallback(finfo => ProcessFrames(inputUrl, finfo.FullName, frameCallback, fps));
         }
 
-        public static void ProcessFrames(string inputUrl, string outputUrl, Action<MemoryBitmap> frameCallback, int? fps = null)
+        public static void ProcessFrames(string inputUrl, string outputUrl, Action<BITMAP> frameCallback, int? fps = null)
         {
             // transcoding
             // https://gist.github.com/Ruslan-B/43d3a4219f39b99f0c9685290dcd23cc
@@ -61,7 +66,7 @@ namespace InteropTypes.Codecs
             // https://github.com/Ruslan-B/FFmpeg.AutoGen.Questions/issues/31
             // https://github.com/Ruslan-B/FFmpeg.AutoGen.Questions/issues/7
 
-            MemoryBitmap current = default;
+            BITMAP current = default;
 
             VideoStreamEncoder encoder = null;
             

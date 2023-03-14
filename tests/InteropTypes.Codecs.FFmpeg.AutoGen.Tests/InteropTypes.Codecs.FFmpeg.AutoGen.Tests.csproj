@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="TestAttachments.NUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.FFmpeg.AutoGen\InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
 using System.Text;
 
 using FFmpeg.AutoGen;
@@ -9,191 +11,163 @@ using FFmpeg.AutoGen;
 namespace InteropTypes.Codecs
 {
     /// <summary>
-    /// copied directly from:
-    /// <see href="https://github.com/Ruslan-B/FFmpeg.AutoGen/blob/master/FFmpeg.AutoGen.Example/H264VideoStreamEncoder.cs"/> 
+    /// Based on https://ffmpeg.org/doxygen/5.0/encode_video_8c-example.html
     /// </summary>
-    public sealed unsafe class H264VideoStreamEncoder : IDisposable
+    public sealed unsafe class H264VideoStreamEncoder : IEncoder
     {
-        private readonly Size _frameSize;
-        private readonly int _linesizeU;
-        private readonly int _linesizeV;
-        private readonly int _linesizeY;
-        private readonly AVCodec* _pCodec;
-        private readonly AVCodecContext* _pCodecContext;
-        private readonly Stream _stream;
-        private readonly int _uSize;
-        private readonly int _ySize;
+        #region lifecycle
 
         public H264VideoStreamEncoder(Stream stream, int fps, Size frameSize)
         {
-            _stream = stream;
-            _frameSize = frameSize;
+            _Stream = stream;
 
-            var codecId = AVCodecID.AV_CODEC_ID_H264;
-            _pCodec = ffmpeg.avcodec_find_encoder(codecId);
-            if (_pCodec == null) throw new InvalidOperationException("Codec not found.");
+            // find the mpeg1video encoder
+            _Codec = ffmpeg.avcodec_find_encoder(AVCodecID.AV_CODEC_ID_H264);
+            if (_Codec == null) throw new InvalidOperationException();
 
-            _pCodecContext = ffmpeg.avcodec_alloc_context3(_pCodec);
-            _pCodecContext->width = frameSize.Width;
-            _pCodecContext->height = frameSize.Height;
-            _pCodecContext->time_base = new AVRational { num = 1, den = fps };
-            _pCodecContext->pix_fmt = AVPixelFormat.AV_PIX_FMT_YUV420P;
-            ffmpeg.av_opt_set(_pCodecContext->priv_data, "preset", "veryslow", 0);
+            _Context = ffmpeg.avcodec_alloc_context3(_Codec);
+            if (_Context == null) throw new InvalidOperationException();
 
-            ffmpeg.avcodec_open2(_pCodecContext, _pCodec, null).ThrowExceptionIfError();
+            _Packet = ffmpeg.av_packet_alloc();
+            if (_Packet == null) throw new InvalidOperationException();
 
-            _linesizeY = frameSize.Width;
-            _linesizeU = frameSize.Width / 2;
-            _linesizeV = frameSize.Width / 2;
+            // put sample parameters
+            _Context->bit_rate = 400000;
 
-            _ySize = _linesizeY * frameSize.Height;
-            _uSize = _linesizeU * frameSize.Height / 2;
+            // resolution must be a multiple of two
+            _Context->width = frameSize.Width;
+            _Context->height = frameSize.Height;
+
+            // frames per second
+            _Context->time_base = new AVRational{ num =1, den =fps};
+            _Context->framerate = new AVRational{ num =fps, den = 1};
+
+            /* emit one intra frame every ten frames
+             * check frame pict_type before passing frame
+             * to encoder, if frame->pict_type is AV_PICTURE_TYPE_I
+             * then gop_size is ignored and the output of encoder
+             * will always be I frame irrespective to gop_size
+             */
+            _Context->gop_size = 10;
+            _Context->max_b_frames = 1;
+            _Context->pix_fmt = AVPixelFormat.AV_PIX_FMT_YUV420P;
+
+            if (_Codec->id == AVCodecID.AV_CODEC_ID_H264)
+                ffmpeg.av_opt_set(_Context->priv_data, "preset", "slow", 0);
+
+            // open it
+            var ret = ffmpeg.avcodec_open2(_Context, _Codec, null);
+            if (ret < 0) throw new InvalidOperationException();        
+            
+            // create working frame
+
+            _Frame = ffmpeg.av_frame_alloc();
+            if (_Frame == null) { return; }
+
+            _Frame->format = (int)_Context->pix_fmt;
+            _Frame->width = _Context->width;
+            _Frame->height = _Context->height;
+            
+            ret = ffmpeg.av_frame_get_buffer(_Frame, 0);
+            if (ret < 0) throw new InvalidOperationException();            
         }
 
         public void Dispose()
         {
-            ffmpeg.avcodec_close(_pCodecContext);
-            ffmpeg.av_free(_pCodecContext);
+            ffmpeg.avcodec_close(_Context);
+            ffmpeg.av_free(_Context);
         }
 
-        public void Encode(AVFrame frame)
+        #endregion
+
+        #region data
+
+        private AVCodec* _Codec;
+        private AVCodecContext* _Context;
+        private AVPacket* _Packet;
+
+        private AVFrame* _Frame;
+
+        private Stream _Stream;
+
+        private byte[] endcode = { 0, 0, 1, 0xb7 };
+
+        #endregion
+
+        #region API
+
+        public void Encode(int idx, Action<AVFrame> frameUpdater)
         {
-            if (frame.format != (int)_pCodecContext->pix_fmt)
-                throw new ArgumentException("Invalid pixel format.", nameof(frame));
-            if (frame.width != _frameSize.Width) throw new ArgumentException("Invalid width.", nameof(frame));
-            if (frame.height != _frameSize.Height) throw new ArgumentException("Invalid height.", nameof(frame));
-            if (frame.linesize[0] < _linesizeY) throw new ArgumentException("Invalid Y linesize.", nameof(frame));
-            if (frame.linesize[1] < _linesizeU) throw new ArgumentException("Invalid U linesize.", nameof(frame));
-            if (frame.linesize[2] < _linesizeV) throw new ArgumentException("Invalid V linesize.", nameof(frame));
-            if (frame.data[1] - frame.data[0] < _ySize)
-                throw new ArgumentException("Invalid Y data size.", nameof(frame));
-            if (frame.data[2] - frame.data[1] < _uSize)
-                throw new ArgumentException("Invalid U data size.", nameof(frame));
+            /*
+            Make sure the frame data is writable.
+            On the first round, the frame is fresh from av_frame_get_buffer()
+            and therefore we know it is writable.
+            But on the next rounds, encode() will have called
+            avcodec_send_frame(), and the codec may have kept a reference to
+            the frame in its internal structures, that makes the frame
+            unwritable.
+            av_frame_make_writable() checks that and allocates a new buffer
+            for the frame only if necessary.
+            */
 
-            var pPacket = ffmpeg.av_packet_alloc();
+            var ret = ffmpeg.av_frame_make_writable(_Frame);
+            if (ret < 0) throw new InvalidOperationException();            
 
-            try
-            {
-                // Basic encoding loop explained: 
-                // https://ffmpeg.org/doxygen/4.1/group__lavc__encdec.html
+            // write the frame pixels
+            frameUpdater.Invoke(*_Frame);
 
-                // Give the encoder a frame to encode
-                ffmpeg.avcodec_send_frame(_pCodecContext, &frame).ThrowExceptionIfError();
+            _Frame->pts = idx;
 
-                // From https://ffmpeg.org/doxygen/4.1/group__lavc__encdec.html:
-                // For encoding, call avcodec_receive_packet().  On success, it will return an AVPacket with a compressed frame.
-                // Repeat this call until it returns AVERROR(EAGAIN) or an error.
-                // The AVERROR(EAGAIN) return value means that new input data is required to return new output.
-                // In this case, continue with sending input.
-                // For each input frame/packet, the codec will typically return 1 output frame/packet, but it can also be 0 or more than 1.
-                bool hasFinishedWithThisFrame;
-
-                do
-                {
-                    // Clear/wipe the receiving packet
-                    // (not sure if this is needed, since docs for avcoded_receive_packet say that it will call that first-thing
-                    ffmpeg.av_packet_unref(pPacket);
-
-                    // Receive back a packet; there might be 0, 1 or many packets to receive for an input frame.
-                    var response = ffmpeg.avcodec_receive_packet(_pCodecContext, pPacket);
-
-                    bool isPacketValid;
-
-                    if (response == 0)
-                    {
-                        // 0 on success; as in, successfully retrieved a packet, and expecting us to retrieve another one.
-                        isPacketValid = true;
-                        hasFinishedWithThisFrame = false;
-                    }
-                    else if (response == ffmpeg.AVERROR(ffmpeg.EAGAIN))
-                    {
-                        // EAGAIN: there's no more output is available in the current state - user must try to send more input
-                        isPacketValid = false;
-                        hasFinishedWithThisFrame = true;
-                    }
-                    else if (response == ffmpeg.AVERROR(ffmpeg.AVERROR_EOF))
-                    {
-                        // EOF: the encoder has been fully flushed, and there will be no more output packets
-                        isPacketValid = false;
-                        hasFinishedWithThisFrame = true;
-                    }
-                    else
-                    {
-                        // AVERROR(EINVAL): codec not opened, or it is a decoder other errors: legitimate encoding errors
-                        // , otherwise negative error code:
-                        throw new InvalidOperationException($"error from avcodec_receive_packet: {response}");
-                    }
-
-                    if (isPacketValid)
-                    {
-                        using var packetStream = new UnmanagedMemoryStream(pPacket->data, pPacket->size);
-                        packetStream.CopyTo(_stream);
-                    }
-                } while (!hasFinishedWithThisFrame);
-            }
-            finally
-            {
-                ffmpeg.av_packet_free(&pPacket);
-            }
+           // encode the image
+           _Encode(_Context, _Frame, _Packet, _Stream);
         }
 
         public void Drain()
         {
-            // From https://ffmpeg.org/doxygen/4.1/group__lavc__encdec.html:
-            // End of stream situations. These require "flushing" (aka draining) the codec, as the codec might buffer multiple frames or packets internally for performance or out of necessity (consider B-frames). This is handled as follows:
-            // Instead of valid input, send NULL to the avcodec_send_packet() (decoding) or avcodec_send_frame() (encoding) functions. This will enter draining mode.
-            // 	Call avcodec_receive_frame() (decoding) or avcodec_receive_packet() (encoding) in a loop until AVERROR_EOF is returned. The functions will not return AVERROR(EAGAIN), unless you forgot to enter draining mode.
+            /* flush the encoder */
+            _Encode(_Context, null, _Packet, _Stream);
 
-            var pPacket = ffmpeg.av_packet_alloc();
+            /* Add sequence end code to have a real MPEG file.
+               It makes only sense because this tiny examples writes packets
+               directly. This is called "elementary stream" and only works for some
+               codecs. To create a valid file, you usually need to write packets
+               into a proper file format or protocol; see muxing.c.
+             */
 
-            try
+            if (_Codec->id == AVCodecID.AV_CODEC_ID_MPEG1VIDEO || _Codec->id == AVCodecID.AV_CODEC_ID_MPEG2VIDEO)
             {
-                // Send a null frame to enter draining mode
-                ffmpeg.avcodec_send_frame(_pCodecContext, null).ThrowExceptionIfError();
-
-                bool hasFinishedDraining;
-
-                do
-                {
-                    // Clear/wipe the receiving packet
-                    // (not sure if this is needed, since docs for avcoded_receive_packet say that it will call that first-thing
-                    ffmpeg.av_packet_unref(pPacket);
-
-                    var response = ffmpeg.avcodec_receive_packet(_pCodecContext, pPacket);
-
-                    bool isPacketValid;
-
-                    if (response == 0)
-                    {
-                        // 0 on success; as in, successfully retrieved a packet, and expecting us to retrieve another one.
-                        isPacketValid = true;
-                        hasFinishedDraining = false;
-                    }
-                    else if (response == ffmpeg.AVERROR(ffmpeg.AVERROR_EOF))
-                    {
-                        // EOF: the encoder has been fully flushed, and there will be no more output packets
-                        isPacketValid = false;
-                        hasFinishedDraining = true;
-                    }
-                    else
-                    {
-                        // Some other error.
-                        // Should probably throw here, but in testing we get error -541478725
-                        isPacketValid = false;
-                        hasFinishedDraining = true;
-                    }
-
-                    if (isPacketValid)
-                    {
-                        using var packetStream = new UnmanagedMemoryStream(pPacket->data, pPacket->size);
-                        packetStream.CopyTo(_stream);
-                    }
-                } while (!hasFinishedDraining);
-            }
-            finally
-            {
-                ffmpeg.av_packet_free(&pPacket);
+                _Stream.Write(endcode, 0, endcode.Length);
             }
         }
+
+        static void _Encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt, Stream outfile)
+        {
+            /* send the frame to the encoder */
+            // if (frame != null)  printf("Send frame %3"PRId64"\n", frame->pts);
+
+            var ret = ffmpeg.avcodec_send_frame(enc_ctx, frame);
+            if (ret < 0)
+            {
+                return;
+            }
+
+            while (ret >= 0)
+            {
+                ret = ffmpeg.avcodec_receive_packet(enc_ctx, pkt);
+
+                if (ret == ffmpeg.AVERROR(ffmpeg.EAGAIN) || ret == ffmpeg.AVERROR_EOF) return;
+
+                else if (ret < 0) return;
+
+                // printf("Write packet %3"PRId64" (size=%5d)\n", pkt->pts, pkt->size);
+
+                using var packetStream = new UnmanagedMemoryStream(pkt->data, pkt->size);
+                packetStream.CopyTo(outfile);
+
+                ffmpeg.av_packet_unref(pkt);
+            }
+        }
+
+        #endregion
     }
 }

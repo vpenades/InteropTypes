@@ -6,6 +6,9 @@ using System.Text;
 
 using FFmpeg.AutoGen;
 
+using InteropTypes.Graphics.Backends.Codecs;
+using InteropTypes.Graphics.Bitmaps;
+
 namespace InteropTypes.Codecs
 {
     /// <summary>
@@ -14,75 +17,115 @@ namespace InteropTypes.Codecs
     /// </summary>
     public sealed unsafe class VideoFrameConverter : IDisposable
     {
-        private readonly IntPtr _convertedFrameBufferPtr;
-        private readonly Size _destinationSize;
-        private readonly byte_ptrArray4 _dstData;
-        private readonly int_array4 _dstLinesize;
-        private readonly SwsContext* _pConvertContext;
+        #region lifecycle
 
-        public VideoFrameConverter(Size sourceSize, AVPixelFormat sourcePixelFormat,
-            Size destinationSize, AVPixelFormat destinationPixelFormat)
+        public VideoFrameConverter(Size srcSize, AVPixelFormat srcPixelFormat, Size dstSize, AVPixelFormat dstPixelFormat)
         {
-            _destinationSize = destinationSize;
+            _SrcSize = srcSize;
 
-            _pConvertContext = ffmpeg.sws_getContext(sourceSize.Width,
-                sourceSize.Height,
-                sourcePixelFormat,
-                destinationSize.Width,
-                destinationSize.Height,
-                destinationPixelFormat,
+            _DstSize = dstSize;
+            _DstFmt = dstPixelFormat;
+
+            _pConvertContext = ffmpeg.sws_getContext(srcSize.Width,
+                srcSize.Height,
+                srcPixelFormat,
+                dstSize.Width,
+                dstSize.Height,
+                dstPixelFormat,
                 ffmpeg.SWS_FAST_BILINEAR,
                 null,
                 null,
                 null);
+
             if (_pConvertContext == null)
-                throw new ApplicationException("Could not initialize the conversion context.");
-
-            var convertedFrameBufferSize = ffmpeg.av_image_get_buffer_size(destinationPixelFormat,
-                destinationSize.Width,
-                destinationSize.Height,
-                1);
-            _convertedFrameBufferPtr = Marshal.AllocHGlobal(convertedFrameBufferSize);
-            _dstData = new byte_ptrArray4();
-            _dstLinesize = new int_array4();
-
-            ffmpeg.av_image_fill_arrays(ref _dstData,
-                ref _dstLinesize,
-                (byte*)_convertedFrameBufferPtr,
-                destinationPixelFormat,
-                destinationSize.Width,
-                destinationSize.Height,
-                1);
+                throw new ApplicationException("Could not initialize the conversion context.");                     
         }
 
         public void Dispose()
-        {
-            Marshal.FreeHGlobal(_convertedFrameBufferPtr);
+        {            
             ffmpeg.sws_freeContext(_pConvertContext);
         }
 
-        public AVFrame Convert(AVFrame sourceFrame)
+        #endregion
+
+        #region data
+
+        private readonly SwsContext* _pConvertContext;
+
+        private Size _SrcSize;
+
+        private Size _DstSize;
+        private AVPixelFormat _DstFmt;
+
+        #endregion
+
+        #region API
+
+        private void _VerifySource(int w, int h)
         {
-            ffmpeg.sws_scale(_pConvertContext,
-                sourceFrame.data,
-                sourceFrame.linesize,
-                0,
-                sourceFrame.height,
-                _dstData,
-                _dstLinesize);
-
-            var data = new byte_ptrArray8();
-            data.UpdateFrom(_dstData);
-            var linesize = new int_array8();
-            linesize.UpdateFrom(_dstLinesize);
-
-            return new AVFrame
-            {
-                data = data,
-                linesize = linesize,
-                width = _destinationSize.Width,
-                height = _destinationSize.Height
-            };
+            if (_SrcSize.Width != w || _SrcSize.Height != h) throw new InvalidOperationException("size mismatch");
         }
+
+        private void _VerifyTarget(int w, int h)
+        {
+            if (_DstSize.Width != w || _DstSize.Height != h) throw new InvalidOperationException("size mismatch");
+        }
+
+        public unsafe void Convert(PointerBitmap src, PointerBitmap dst)
+        {
+            _VerifySource(src.Width, src.Height);
+            _VerifyTarget(dst.Width, dst.Height);
+
+            var srcData = new byte_ptrArray8 { [0] = (Byte*)src.Pointer.ToPointer() };
+            var srcLine = new int_array8 { [0] = src.StepByteSize };
+
+            var dstData = new byte_ptrArray8 { [0] = (Byte*)dst.Pointer.ToPointer() };
+            var dstLine = new int_array8 { [0] = dst.StepByteSize };
+
+            ffmpeg.sws_scale(_pConvertContext, srcData, srcLine, 0, src.Height, dstData, dstLine);
+        }
+
+        public unsafe void Convert(AVFrame src, AVFrame dst)
+        {
+            _VerifySource(src.width, src.height);
+            _VerifyTarget(dst.width, dst.height);
+
+            ffmpeg.sws_scale(_pConvertContext, src.data, src.linesize, 0, src.height, dst.data, dst.linesize);
+        }
+
+        public unsafe void Convert(AVFrame src, PointerBitmap dst)
+        {
+            _VerifySource(src.width, src.height);
+            _VerifyTarget(dst.Width, dst.Height);
+
+            var dstData = new byte_ptrArray8 { [0] = (Byte*)dst.Pointer.ToPointer() };
+            var dstLine = new int_array8 { [0] = dst.StepByteSize };
+
+            ffmpeg.sws_scale(_pConvertContext, src.data, src.linesize, 0, src.height, dstData, dstLine);
+        }
+
+        public unsafe void Convert(PointerBitmap src, AVFrame dst)
+        {
+            _VerifySource(src.Width, src.Height);
+            _VerifyTarget(dst.width, dst.height);
+
+            var srcData = new byte_ptrArray8 { [0] = (Byte*)src.Pointer.ToPointer() };
+            var srcLine = new int_array8 { [0] = src.StepByteSize };            
+
+            ffmpeg.sws_scale(_pConvertContext, srcData, srcLine, 0, src.Height, dst.data, dst.linesize);
+        }
+
+        public MemoryBitmap ConvertToMemoryBitmap(AVFrame src)
+        {
+            var dstFmt = _Implementation.GetFormat(_DstFmt);
+
+            var dst = new MemoryBitmap(_DstSize.Width, _DstSize.Height, dstFmt);
+
+            dst.AsSpanBitmap().PinWritablePointer(ptr => Convert(src, ptr));
+
+            return dst;
+        }
+
+        #endregion
     }
 }

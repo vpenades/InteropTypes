@@ -70,12 +70,7 @@ namespace InteropTypes.Graphics.Bitmaps
         public static System.IO.FileInfo WriteImage(this AttachmentInfo ainfo, Image image)
         {
             return ainfo.WriteObject(f => image.Save(f));
-        }
-
-        public static System.IO.FileInfo WriteVideo(this AttachmentInfo ainfo, IEnumerable<PointerBitmap> frames)
-        {
-            return ainfo.WriteObject(finfo => FFmpegAutoGen.EncodeFrames(finfo, frames));
-        }
+        }        
 
         public static System.IO.FileInfo WriteAVI(this AttachmentInfo ainfo, IEnumerable<MemoryBitmap> frames, float frameRate = 25)
         {

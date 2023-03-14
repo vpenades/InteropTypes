@@ -19,8 +19,8 @@ namespace InteropTypes.Codecs
         {
             foreach (var (bitmap, state) in FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4")))
             {
-                var data = string.Join(" ", state.State);
-                TestContext.WriteLine(data);
+                TestContext.WriteLine(string.Join(" ", state.Times.Select(item => (item.Key, item.Value.den / (float)item.Value.num))));
+                TestContext.WriteLine(string.Join(" ", state.State));
 
                 var idx = state.State["index"];
 
@@ -36,14 +36,23 @@ namespace InteropTypes.Codecs
         {
             var inputFrames = FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4"));
 
+            
             var finfo = AttachmentInfo
                 .From("output.h264")
-                .WriteVideo(inputFrames.Select(item => item.bitmap));
+                .WriteObject(f => FFmpegAutoGen.EncodeFrames(f, 20, inputFrames.Select(item => item.bitmap)));
+            
+
+            /*
+            var xframes = inputFrames.Select(item => (item.bitmap, item.state.State["pts"]));
+
+            var finfo = AttachmentInfo
+                .From("output.h264")
+                .WriteObject(f => FFmpegAutoGen.EncodeFrames(f, xframes));*/
 
             foreach (var (bitmap, state) in FFmpegAutoGen.DecodeFrames(finfo.FullName))
             {
-                var data = string.Join(" ", state.State);
-                TestContext.WriteLine(data);
+                TestContext.WriteLine(string.Join(" ", state.Times.Select(item => (item.Key, item.Value.num / (float)item.Value.den))));
+                TestContext.WriteLine(string.Join(" ", state.State));                
             }
         }
 
@@ -65,7 +74,7 @@ namespace InteropTypes.Codecs
 
             }
 
-            FFmpegAutoGen.ProcessFrames(input, output, _drawOver, 10);
+            FFmpegAutoGen.ProcessFrames(input, output, _drawOver, 3);
         }
     }
 }
