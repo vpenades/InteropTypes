@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Text;
 
 using InteropTypes.Graphics.Backends.Codecs;
-using InteropTypes.Graphics.Bitmaps;
 
 using BITMAP = InteropTypes.Graphics.Bitmaps.MemoryBitmap;
 
@@ -12,7 +11,7 @@ namespace InteropTypes.Codecs
 {
     public static class FFmpegAutoGen
     {
-        public static IEnumerable<(BITMAP bitmap, VideoFrameState state)> DecodeFrames(string url)
+        public static IEnumerable<(BITMAP bitmap, VideoFrameMetadata state)> DecodeFrames(string url)
         {
             return _Implementation.DecodeFrames(url, FFmpeg.AutoGen.AVHWDeviceType.AV_HWDEVICE_TYPE_NONE);
         }
@@ -23,7 +22,7 @@ namespace InteropTypes.Codecs
             {
                 foreach (var bmp in bitmaps)
                 {
-                    bmp.AsSpanBitmap().PinReadablePointer(ptr => encoder.PushFrame(ptr));
+                    encoder.PushFrame(bmp);
                 }
                 encoder.Drain();
             }
@@ -41,7 +40,7 @@ namespace InteropTypes.Codecs
             {
                 foreach (var (bmp, pts) in frames)
                 {
-                    bmp.AsSpanBitmap().PinReadablePointer(ptr => encoder.PushFrame(ptr));
+                    encoder.PushFrame(bmp);
                 }
 
                 encoder.Drain();
@@ -80,7 +79,7 @@ namespace InteropTypes.Codecs
 
                 if (encoder == null) encoder = new VideoStreamEncoder(outputUrl, fps ?? 30);
 
-                current.AsSpanBitmap().PinReadablePointer(ptr => encoder.PushFrame(ptr));
+                encoder.PushFrame(current);
             }
 
             encoder?.Drain();

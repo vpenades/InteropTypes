@@ -27,17 +27,16 @@ namespace InteropTypes.Codecs
 
         private static bool _RegisterInitialized;
 
-        public static bool Initialize() => _RegisterInitialized;
-
-        
+        public static bool Initialize() => _RegisterInitialized;        
 
         public static unsafe string av_strerror(int error)
         {
             var bufferSize = 1024;
             var buffer = stackalloc byte[bufferSize];
-            ffmpeg.av_strerror(error, buffer, (ulong)bufferSize);
-            var message = Marshal.PtrToStringAnsi((IntPtr)buffer);
-            return message;
+            var ret = ffmpeg.av_strerror(error, buffer, (ulong)bufferSize);
+            if (ret < 0) return "Unknown Error";
+
+            return Marshal.PtrToStringAnsi((IntPtr)buffer);
         }
 
         [System.Diagnostics.DebuggerStepThrough]

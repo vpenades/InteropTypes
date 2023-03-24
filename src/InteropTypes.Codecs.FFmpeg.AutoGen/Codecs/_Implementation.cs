@@ -117,7 +117,7 @@ namespace InteropTypes.Graphics.Backends.Codecs
             return dict;
         }
 
-        public static IEnumerable<(MemoryBitmap bitmap, VideoFrameState state)> DecodeFrames(string url, AVHWDeviceType HWDevice)
+        public static IEnumerable<(MemoryBitmap bitmap, VideoFrameMetadata state)> DecodeFrames(string url, AVHWDeviceType HWDevice)
         {
             _EnsureBinariesAreSet();
 
@@ -133,7 +133,7 @@ namespace InteropTypes.Graphics.Backends.Codecs
                 times["frame_rate"] = vsd.FrameRate;
                 state["ticks_per_frame"] = vsd.TicksPerFrame;
 
-                var context = new VideoFrameState(info, state, times);
+                var context = new VideoFrameMetadata(info, state, times);
 
                 var sourceSize = vsd.FrameSize;
                 var sourcePixelFormat = HWDevice == AVHWDeviceType.AV_HWDEVICE_TYPE_NONE ? vsd.PixelFormat : GetHWPixelFormat(HWDevice);

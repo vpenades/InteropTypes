@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.Cryptography;
 using System.Text;
 
 using FFmpeg.AutoGen;

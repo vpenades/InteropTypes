@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace InteropTypes.Codecs
-{
-    public readonly struct VideoFrameState
+{    
+    public readonly struct VideoFrameMetadata
     {
-        internal VideoFrameState(IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, long> b, IReadOnlyDictionary<string, FFmpeg.AutoGen.AVRational> c)
+        internal VideoFrameMetadata(IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, long> b, IReadOnlyDictionary<string, FFmpeg.AutoGen.AVRational> c)
         {
             Info = a;
             State = b;

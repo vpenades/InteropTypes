@@ -67,6 +67,11 @@ namespace InteropTypes.Codecs
             return (_Converter, _Encoder);
         }
 
+        public unsafe void PushFrame(SpanBitmap inputFrame)
+        {
+            inputFrame.PinReadablePointer(ptr => PushFrame(ptr));
+        }
+
         public unsafe void PushFrame(PointerBitmap inputFrame)
         {
             if (inputFrame.IsEmpty) return;            
