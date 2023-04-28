@@ -230,6 +230,10 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             /// <returns>the radius of the n-Gon corner</returns>
             internal static float _AdjustNGonRadius(float circleRadius, int divisions)
             {
+                // from bing: $$r = \sqrt{\frac{A}{\frac{N}{2}\sin\left(\frac{2\pi}{N}\right)}}$$
+                // r = sqrt( Area / ( NumVrt * Sin(2Pi / NumVrt ));
+
+
                 System.Diagnostics.Debug.Assert(circleRadius > 0, nameof(circleRadius));
                 System.Diagnostics.Debug.Assert(divisions >= 3, nameof(divisions));
 
