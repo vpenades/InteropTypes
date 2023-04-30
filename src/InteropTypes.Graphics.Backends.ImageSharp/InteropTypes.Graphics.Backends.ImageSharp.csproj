@@ -12,8 +12,12 @@
 
   <ItemGroup>    
     <PackageReference Include="MathNet.Numerics" />    
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" />
-    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" /> <!-- still stuck and poiting to old version -->
+    
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="SixLabors.ImageSharp" />    
   </ItemGroup>
 
   <ItemGroup>

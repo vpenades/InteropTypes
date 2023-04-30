@@ -51,11 +51,17 @@ namespace InteropTypes.Codecs
         /// <inheritdoc/>
         public bool TryWrite(Lazy<Stream> stream, CodecFormat format, SpanBitmap bmp)
         {
-            var fmt = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.FindFormatByFileExtension(format.ToString().ToLower());
-            if (fmt == null) return false;
+            var ext = format.ToString().ToLower();
 
+            #if NET6_0_OR_GREATER
+            if (!SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.TryFindFormatByFileExtension(ext, out var fmt)) return false;
+            var encoder = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.GetEncoder(fmt);
+            #else
+            var fmt = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.FindFormatByFileExtension(ext);
+            if (fmt == null) return false;
             var encoder = SixLabors.ImageSharp.Configuration.Default.ImageFormatsManager.FindEncoder(fmt);
             if (encoder == null) return false;
+            #endif
 
             using (var img = _Implementation.CloneToImageSharp(bmp))
             {
