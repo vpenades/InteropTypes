@@ -2,19 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net471</TargetFramework>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>    
     <RootNamespace>Interop.MathFSource.Tests</RootNamespace>    
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\src\Interop.MathF.Source\*.cs" LinkBase="MathF" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-  </ItemGroup>
+  </ItemGroup>  
 
 </Project>

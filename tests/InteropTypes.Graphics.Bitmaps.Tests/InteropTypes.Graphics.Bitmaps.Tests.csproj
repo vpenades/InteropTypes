@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>    
     <PlatformTarget>x64</PlatformTarget>
     <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>8.0</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   
   <ItemGroup>
@@ -19,23 +19,12 @@
     <Compile Include="..\Shared\TestUtils.cs" Link="TestUtils.cs" />
   </ItemGroup>
 
-  <ItemGroup>    
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />    
+  <ItemGroup>
     <PackageReference Include="SkiaSharp" />
-    <PackageReference Include="OpenCvSharp4.Windows" />
-    <PackageReference Include="TestAttachments.NUnit" />
+    <PackageReference Include="OpenCvSharp4.Windows" />    
     <PackageReference Include="VideoLAN.LibVLC.Windows" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Remove="ErrorProne.NET.Structs" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />

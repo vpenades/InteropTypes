@@ -9,6 +9,20 @@
     <LangVersion>8.0</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>  
+
+  <!-- Test packages =================================================================================== -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="TestAttachments.NUnit" />
+    <PackageReference Include="TestAttachments.NUnit" />
+  </ItemGroup>
   
   <!-- Analysers =================================================================================== -->
 

@@ -22,17 +22,9 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Graphics.Skia" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" />    
-    <PackageReference Include="TestAttachments.NUnit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Remove="ErrorProne.NET.Structs" />
-  </ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Graphics.Skia" />    
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />        
+  </ItemGroup>  
 
   <ItemGroup>
 
@@ -54,8 +46,6 @@
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.FFmpeg.AutoGen\InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
-
-    <ProjectReference Include="..\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
 
   </ItemGroup>
 

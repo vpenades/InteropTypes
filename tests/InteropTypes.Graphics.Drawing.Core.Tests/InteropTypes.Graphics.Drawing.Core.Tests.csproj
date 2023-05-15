@@ -2,23 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>net471;net7.0</TargetFrameworks>    
-    <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>    
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
-    <PackageReference Include="coverlet.collector">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="TestAttachments.NUnit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Remove="ErrorProne.NET.Structs" />
-  </ItemGroup>
+    <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>  
 
   <ItemGroup>    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
