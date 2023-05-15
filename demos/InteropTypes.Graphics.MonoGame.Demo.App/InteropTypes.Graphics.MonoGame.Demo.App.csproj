@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />    
+    <Content Include="..\..\tests\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />    
   </ItemGroup>  
   
   <!--
@@ -54,12 +54,8 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />    
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />    
     <ProjectReference Include="..\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Remove="ErrorProne.NET.Structs" />
-  </ItemGroup>
+  </ItemGroup>  
   
 </Project>

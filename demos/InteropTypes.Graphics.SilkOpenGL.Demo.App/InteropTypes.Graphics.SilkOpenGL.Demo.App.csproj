@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SilkOpenGL\InteropTypes.Graphics.Backends.SilkOpenGL.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
+    <ProjectReference Include="..\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

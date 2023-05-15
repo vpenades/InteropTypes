@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />    
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj" />    
     <ProjectReference Include="..\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
   </ItemGroup>  
 

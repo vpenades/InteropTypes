@@ -28,6 +28,8 @@
 
   <ItemGroup>
 
+    <ProjectReference Include="..\..\demos\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
+
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
