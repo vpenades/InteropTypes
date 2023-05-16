@@ -1,0 +1,533 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+// GENERATED CODE
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace InteropTypes.Crypto
+{
+<#
+
+var __hashByteSizes = new int[] {12, 16, 28, 32, 48, 64};
+
+foreach(var __ByteSize in __hashByteSizes)
+{
+    var __BitSize=__ByteSize*8;
+    var __WordSize = __ByteSize / 8;
+    var __Words = __GetElements().Select(item => item.Name).ToArray();
+
+    IEnumerable<(string Type, string Name)> __GetElements()
+    {
+        var idx = 0;
+        var count = __ByteSize;
+
+        while(count > 0)
+        {
+            var name = "_" + (char)('A' + idx);
+            ++idx;
+
+            if (count >= 8) { yield return ("ulong", name); count-=8; continue; }
+            if (count >= 4) { yield return ("uint", name); count-=4; continue; }
+            if (count >= 2) { yield return ("ushort", name); count-=2; continue; }
+            if (count >= 1) { yield return ("byte", name); count-=1; continue; }        
+        }    
+    }
+    
+    string __GetWordArguments(Func<string,string,string> arg)
+    {
+        return string.Join(", ", __GetElements().Select(x => arg(x.Type, x.Name)));    
+    }    
+    
+    #>
+
+
+
+    /// <summary>
+    /// Represents a hash value of <#= __BitSize #> bits
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Text.Json.Serialization.JsonConverter(typeof(Hash<#= __BitSize #>.JsonConverter))]
+    public readonly partial struct Hash<#= __BitSize #> : IEquatable<Hash<#= __BitSize #>> , IHashValue
+    {
+        #region constants
+
+        public const int BYTESIZE = <#= __ByteSize #>;
+
+        #endregion
+
+        #region constructors
+
+        /// <summary>
+        /// Creates a random hash.
+        /// </summary>
+        /// <returns>A new hash</returns>
+        public static Hash<#= __BitSize #> FromRandom()
+        {
+            #if NETSTANDARD2_0
+            var bytes = new Byte[BYTESIZE];
+            #else
+            Span<Byte> bytes = stackalloc Byte[BYTESIZE];
+            #endif            
+
+            _HashEngines.Randomizer.GetBytes(bytes);
+
+            System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
+            return new Hash<#= __BitSize #>(bytes);
+        }
+
+        public static bool TryGetFromService(IServiceProvider service, string jsonProperty, out Hash<#= __BitSize #> result)
+        {
+            // direct
+            if (service.GetService(typeof(Hash<#= __BitSize #>)) is Hash<#= __BitSize #> h) { result= h; return true;}
+
+            // indirect
+            if (service.GetService(typeof(ISource)) is ISource hs) { result= hs.GetHash<#= __BitSize #>Code(); return true;}
+
+            // from json document
+            if (!string.IsNullOrWhiteSpace(jsonProperty))
+            {
+                if (service.GetService(typeof(System.Text.Json.JsonDocument)) is System.Text.Json.JsonDocument doc)
+                {
+                    if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
+                }
+            }
+
+            result = default;
+            return false;            
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash<#= __BitSize #> result)
+        {
+            var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        /// <summary>
+        /// Detects if the string is hex or base64 and parses it.
+        /// </summary>
+        public static bool TryParse(string value, out Hash<#= __BitSize #> result)
+        {
+            if (string.IsNullOrWhiteSpace(value)) { result = default; return false; }
+
+            try // try parse hexadecimal
+            {                
+                if (value.Length == BYTESIZE * 2 && !value.Contains('='))
+                {
+                    result = ParseHex(value);
+                    return true;
+                }
+            }
+            catch { }     
+
+            try // try parse base64
+            {
+                result = ParseBase64(value);
+                return true;
+            }
+            catch { }   
+            
+            result = default;
+            return false;
+        }
+
+        public static Hash<#= __BitSize #> ParseHex(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return default;
+
+            var bytes = value.ParseHexBytes();
+            
+            System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
+            return new Hash<#= __BitSize #>(bytes);
+        }
+
+        public static Hash<#= __BitSize #> ParseBase64(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return default;
+
+            var bytes = value.ParseBase64Bytes();
+
+            System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
+            return new Hash<#= __BitSize #>(bytes);
+        }        
+
+        public Hash<#= __BitSize #>(ReadOnlySpan<Byte> bytes)
+        {
+            if (bytes.Length != BYTESIZE) throw new ArgumentException($"Byte len is {bytes.Length}, expected {BYTESIZE}", nameof(bytes));
+            this = System.Runtime.InteropServices.MemoryMarshal.Cast<Byte,Hash<#= __BitSize #>>(bytes)[0];
+        }
+
+        public Hash<#= __BitSize #>(<#= __GetWordArguments((t,w) => $"{t} {w.ToLower().Trim('_')}") #>)
+        {
+        <# foreach(var __Word in __Words) { #>    <#= __Word #> = <#= __Word.ToLower().Trim('_') #>;
+        <# } #>
+}
+
+        #endregion
+
+        #region data
+
+        <# foreach(var (t,w) in __GetElements()) { #>
+[System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly <#= t #> <#= w #>;
+        <# } #>
+
+        /// <Inheritdoc/>
+        public override int GetHashCode()
+        {
+            #if NETSTANDARD2_0
+            return _A.GetHashCode();
+            #else
+            return HashCode.Combine(<#= __GetWordArguments((t,w) => w) #>);
+            #endif
+        }
+
+        /// <Inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj is HashValue href) obj = href._Hash;
+            if (obj is Hash<#= __BitSize #> other) return Equals(other);
+            return false;
+        }
+
+        /// <Inheritdoc/>
+        public bool Equals(IHashValue obj)
+        {
+            if (obj is HashValue href) obj = href._Hash;
+            if (obj is Hash<#= __BitSize #> other) return Equals(other);
+            return false;
+        }
+
+        /// <Inheritdoc/>
+        public bool Equals(Hash<#= __BitSize #> other)
+        {
+            <# foreach(var __Word in __Words) { #>if (this.<#= __Word #> != other.<#= __Word #>) return false;
+            <# } #>
+return true;
+        }
+
+        public static bool operator ==(in Hash<#= __BitSize #> a, in Hash<#= __BitSize #> b) { return a.Equals(b); }
+
+        public static bool operator !=(in Hash<#= __BitSize #> a, in Hash<#= __BitSize #> b) { return !a.Equals(b); }
+
+        #endregion
+
+        #region operator
+
+        public Byte this[int index]
+        {
+            get
+            {
+                #if NETSTANDARD2_0
+                Span<Byte> bytes = stackalloc byte[BYTESIZE];
+                this.CopyTo(bytes);                
+                #else
+                var bytes = AsReadOnlyBytes();
+                #endif
+
+                return bytes[index];
+            }        
+        }
+
+        public static Hash<#= __BitSize #> operator ^(in Hash<#= __BitSize #> left, in Hash<#= __BitSize #> right)
+        {
+            return new Hash<#= __BitSize #>(<#= __GetWordArguments((t,w) => $"left.{w} ^ right.{w}") #>);
+        }
+
+        public static Hash<#= __BitSize #> operator &(in Hash<#= __BitSize #> left, in Hash<#= __BitSize #> right)
+        {
+            return new Hash<#= __BitSize #>(<#= __GetWordArguments((t,w) => $"left.{w} & right.{w}") #>);
+        }
+
+        public static Hash<#= __BitSize #> operator |(in Hash<#= __BitSize #> left, in Hash<#= __BitSize #> right)
+        {
+            return new Hash<#= __BitSize #>(<#= __GetWordArguments((t,w) => $"left.{w} | right.{w}") #>);
+        }
+
+        public static Hash<#= __BitSize #> operator ~(in Hash<#= __BitSize #> value)
+        {
+            return new Hash<#= __BitSize #>(<#= __GetWordArguments((t,w) => $"~value.{w}") #>);
+        }
+
+        #endregion
+
+        #region API        
+
+        public int ByteCount => BYTESIZE;
+
+        public bool IsZero
+        {
+            get
+            {
+                <# foreach(var __Word in __Words) { #>if (this.<#= __Word #> != 0) return false;
+                <# } #>
+return true;            
+            }
+        }
+
+        private ReadOnlySpan<Byte> AsReadOnlyBytes()
+        {
+            #if NETSTANDARD2_0
+            var bytes = new byte[BYTESIZE];
+            this.CopyTo(bytes);    
+            return bytes;
+            #else
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash<#= __BitSize #>, Byte>(span);                
+            #endif
+        }
+
+        public Byte[] ToBytes()
+        {
+            var bytes = new Byte[BYTESIZE];
+            CopyTo(bytes);
+            return bytes;
+        }
+
+        public string ToBase64String()
+        {
+            #if NETSTANDARD2_0
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
+            this.CopyTo(bytes);                
+            #else
+            var bytes = AsReadOnlyBytes();
+            #endif
+            return bytes.ToBase64String();
+        }
+
+        public string ToHexString()
+        {
+            #if NETSTANDARD2_0
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
+            this.CopyTo(bytes);                
+            #else
+            var bytes = AsReadOnlyBytes();
+            #endif
+            return bytes.ToHexString();
+        }
+
+        public void CopyTo(Span<Byte> target)
+        {
+            System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash<#= __BitSize #>>(target)[0] = this;
+        }
+
+        public static Hash<#= __BitSize #> ReadFrom(System.IO.Stream reader)
+        {
+            #if NETSTANDARD2_0            
+            var bytes = new Byte[BYTESIZE];            
+            #else
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];            
+            #endif
+
+            bytes.ReadBytesFrom(reader);
+
+            return new Hash<#= __BitSize #>(bytes);
+        }
+
+        public void WriteTo(System.IO.Stream writer)
+        {            
+            #if NETSTANDARD2_0
+            var bytes = new Byte[BYTESIZE];
+            this.CopyTo(bytes);            
+            #else
+            var bytes = AsReadOnlyBytes();            
+            #endif
+
+            bytes.WriteBytesTo(writer);
+        }
+
+        public static Hash<#= __BitSize #> ReadFrom(System.IO.BinaryReader reader)
+        {
+            #if NETSTANDARD2_0            
+            var bytes = reader.ReadBytes(BYTESIZE);            
+            #else
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
+            bytes.ReadBytesFrom(reader);
+            #endif
+
+            return new Hash<#= __BitSize #>(bytes);
+        }
+
+        public void WriteTo(System.IO.BinaryWriter writer)
+        {            
+            #if NETSTANDARD2_0
+            var bytes = new Byte[BYTESIZE];
+            this.CopyTo(bytes);
+            #else
+            var bytes = AsReadOnlyBytes();
+            #endif
+
+            bytes.WriteBytesTo(writer);
+        }
+
+        /// <summary>
+        /// Gets the number of enabled bits.
+        /// </summary>
+        /// <returns>A count of enabled bits.</returns>
+        public int GetEnabledBitsCount()
+        {
+            #if NETSTANDARD2_0
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
+            this.CopyTo(bytes);                
+            #else
+            var bytes = AsReadOnlyBytes();
+            #endif
+
+            int count = 0;            
+
+            foreach (var e in bytes)
+            {
+                for (int i = 0; i < 8; ++i)
+                {
+                    if (((e >> i) & 1) == 1) ++count;
+                }
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Checks whether the two values are similar, given how many bits match.
+        /// </summary>
+        public static bool AreSimilar(in Hash<#= __BitSize #> left, in Hash<#= __BitSize #> right, int minBits)
+        {
+            System.Diagnostics.Debug.Assert(minBits >= 0);
+            return (left ^ right).GetEnabledBitsCount() <= minBits;
+        }
+
+        public static IEqualityComparer<Hash<#= __BitSize #>> GetComparer(int minBits, int hashIndex = -1)
+        {
+            if (minBits < 0) throw new ArgumentOutOfRangeException(nameof(minBits));
+
+            return new _SimilarityComparer(minBits, hashIndex);
+        }
+
+        /// <remarks>
+        /// <para>
+        /// Gets the list of objects pairs that are considered equal, given their hashes discrepancy bits is lower than minBits.
+        /// </para>
+        /// <para>
+        /// Strategies for faster collision check in dictionaries:        
+        /// we cannot create a full hash from all the bytes because it would
+        /// prevent a collision when there's a few bits that are different.
+        /// </para>
+        /// <para>
+        /// But we can run multiple searches using PARTIAL hashes, that is,
+        /// run the search using the 1st byte as dictionary hash,
+        /// then run the search using the 2nd byte as dictionary hash and so on.        
+        /// </para>
+        /// </remarks>
+        public static IEnumerable<(T, T)> FindCollisions<T>(IEnumerable<(T Item, Hash<#= __BitSize #> Hash)> items, int minBits = 1)
+        {
+            System.Diagnostics.Debug.Assert(minBits >= 0);
+
+            var result = new HashSet<(T, T)>();
+
+            for (int i = 0; i < BYTESIZE; ++i) // run the search for every byte.
+            {
+                // this dictionary stores hashes that are considered "equal" as long as:
+                // - the given byte index is the same (used to calculate the partial hash)
+                // - the number of divergent bits is equal or below minBits
+                var dict = new Dictionary<Hash<#= __BitSize #>, T>(new _SimilarityComparer(minBits, i));
+
+                foreach (var (item, hash) in items)
+                {
+                    if (dict.TryGetValue(hash, out var collision))
+                    {
+                        result.Add((item, collision));
+                    }
+                    else
+                    {
+                        dict[hash] = item;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region nested types
+
+        public interface ISource
+        {
+            Hash<#= __BitSize #> GetHash<#= __BitSize #>Code();
+        }
+
+        /// <summary>
+        /// Helper class used in Json serialization.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="System.Text.Json.Serialization.JsonConverterAttribute"/>
+        /// </remarks>
+        public class JsonConverter : JsonConverter<Hash<#= __BitSize #>>
+        {
+            public override Hash<#= __BitSize #> Read(
+                ref Utf8JsonReader reader,
+                Type typeToConvert,
+                JsonSerializerOptions options)
+            {
+                var bytes = reader.GetBytesFromBase64();
+                return new Hash<#= __BitSize #>(bytes);
+            }
+
+            public override void Write(
+                Utf8JsonWriter writer,
+                Hash<#= __BitSize #> value,
+                JsonSerializerOptions options)
+            {
+                var bytes = value.ToBytes();
+                writer.WriteBase64StringValue(bytes);
+            }
+        }
+
+        /// <summary>
+        /// Compares whether two values are similar, if the number of mismatching bits is lower than the given value.
+        /// </summary>
+        sealed class _SimilarityComparer : IEqualityComparer<Hash<#= __BitSize #>>
+        {
+            /// <summary>
+            /// Creates a new comparer
+            /// </summary>
+            /// <param name="mbc">the minimum number of bits required to consider two instances as equal.</param>
+            /// <param name="hashIndex">The index of the byte to use as a hash, or -1 to use default hash.</param>
+            /// <exception cref="ArgumentOutOfRangeException"></exception>
+            public _SimilarityComparer(int mbc, int hashIndex = -1)
+            {
+                if (hashIndex >= BYTESIZE) throw new ArgumentOutOfRangeException(nameof(hashIndex));
+
+                _MinBitCount = mbc;
+                _HashIndex = hashIndex;
+            }
+
+            private readonly int _MinBitCount;
+            private readonly int _HashIndex;
+
+            public bool Equals(Hash<#= __BitSize #> x, Hash<#= __BitSize #> y)
+            {
+                return AreSimilar(x, y, _MinBitCount);
+            }
+
+            public int GetHashCode(Hash<#= __BitSize #> obj)
+            {
+                return _HashIndex < 0
+                ? obj.GetHashCode()
+                : obj[_HashIndex];
+            }
+        }
+
+        #endregion
+    }
+
+<# } #>
+}

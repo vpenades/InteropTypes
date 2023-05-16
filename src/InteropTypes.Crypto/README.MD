@@ -1,0 +1,1 @@
+[Wiki - List of hash functions](https://en.wikipedia.org/wiki/List_of_hash_functions)
