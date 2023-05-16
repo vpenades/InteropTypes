@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-
+using InteropTypes.IO.FileProviders;
 using Microsoft.Extensions.FileProviders;
 
 namespace InteropTypes.IO
@@ -29,7 +29,7 @@ namespace InteropTypes.IO
 
         #region data
 
-        protected readonly FileInfo File;
+        protected readonly FileInfo File;        
 
         public override int GetHashCode()
         {
@@ -87,7 +87,8 @@ namespace InteropTypes.IO
         object IServiceProvider.GetService(Type serviceType)
         {
             if (serviceType == typeof(FileInfo)) return File;
-            if (serviceType == typeof(ArchiveFileProvider)) return new ArchiveFileProvider(File.FullName);
+            if (serviceType == typeof(FileSystemInfo)) return File;
+            if (serviceType == typeof(ArchiveFileProvider)) return ArchiveFileProvider.Create(File.FullName);
 
             return null;
         }        

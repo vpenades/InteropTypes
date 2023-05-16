@@ -3,9 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>    
     <IsTestProject>true</IsTestProject>
+    <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropTypes.Crypto\InteropTypes.Crypto.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj" />
   </ItemGroup>
 

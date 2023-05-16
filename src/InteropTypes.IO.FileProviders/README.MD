@@ -17,4 +17,4 @@ TODO:
 - If IFileInfo represents an archive file, expose a mechanism to open a disposable ArchiveFileProvider
 - equality support requires handling case sensitiveness, which can be checked at the provider level.
 - file and directory creation should be done at the provider level to allow subclassing.
-- include a mechanism to query for additional information (hashes, metadata, etc)
+

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-
+using InteropTypes.IO.FileProviders;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
@@ -13,7 +13,13 @@ namespace InteropTypes.IO
     /// </summary>    
     public class PhysicalFileProvider : IFileProvider
     {
+        #region constants
+
         private static readonly char[] _pathSeparators = new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+
+        #endregion
+
+        #region lifecycle
 
         /// <summary>
         /// Initializes a new instance of a PhysicalFileProvider at the given root directory.
@@ -40,10 +46,18 @@ namespace InteropTypes.IO
             }            
         }
 
+        #endregion
+
+        #region properties
+
         /// <summary>
         /// The root directory for this instance.
         /// </summary>
         public System.IO.DirectoryInfo Root { get; }
+
+        #endregion
+
+        #region API
 
         private string GetFullPath(string path)
         {
@@ -146,6 +160,10 @@ namespace InteropTypes.IO
             throw new NotSupportedException();
         }
 
+        #endregion
+
+        #region API factory
+
         public virtual IFileInfo CreateFileInfo(FileInfo fileInfo)
         {
             return new PhysicalFileInfo(fileInfo, this);
@@ -155,5 +173,7 @@ namespace InteropTypes.IO
         {
             return new PhysicalDirectoryInfo(dirInfo, this);
         }
+
+        #endregion
     }
 }

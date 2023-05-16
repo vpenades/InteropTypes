@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using InteropTypes.IO.FileProviders;
+
 using Microsoft.Extensions.FileProviders;
 
 using SharpCompress.Archives;
@@ -48,49 +50,78 @@ namespace InteropTypes.IO
 
         private IEnumerable<IFileInfo> GetEntries()
         {
-            try
+            var level = PathUtils.SplitPath(_SubPath).Count();
+
+            var dirs = _GetDirectoriesAtLevel(level);
+
+            if (dirs != null)
             {
-                return _Archive
-                    .Entries
-                    .Where(entry => IsContentPath(entry.Key))
-                    .Select<IArchiveEntry, IFileInfo>(entry =>
-                    {
-                        if (entry.IsDirectory)
-                        {
-                            return new ArchiveDirectoryInfo(_Archive, entry.Key);
-                        }
-                        else
-                        {
-                            return new ArchiveFileInfo(entry);
-                        }
-                    });
+                foreach (var dir in dirs)
+                {
+                    yield return new ArchiveDirectoryInfo(_Archive, dir);
+                }
             }
-            catch (Exception ex) when (ex is DirectoryNotFoundException || ex is IOException)
+
+            foreach (var entry in _Archive.Entries.Where(entry => IsContentPath(entry.Key)))
             {
-                return Enumerable.Empty<IFileInfo>();
+                if (!entry.IsDirectory) yield return new ArchiveFileInfo(entry);
             }
+        }
+
+        private HashSet<string> _GetDirectoriesAtLevel(int levels)
+        {
+            // retrieve directories of a given level
+            HashSet<string> dirs = null;
+
+            foreach (var entry in _Archive.Entries)
+            {
+                if (entry.Key.Count(PathUtils.IsPathSeparator) <= levels) continue;
+
+                var dir = string.Empty;
+                int i = levels + 1;
+
+                foreach(var c in entry.Key)
+                {
+                    if (c.IsPathSeparator()) --i;
+                    if (i == 0) break;
+
+                    dir += c;
+                }
+
+                if (dir.Length > 0)
+                {
+                    dirs ??= new HashSet<string>();
+                    dirs.Add(dir);
+                }
+            }
+
+            return dirs;
         }
 
         private bool IsContentPath(string entryKey)
         {
-            if (!entryKey.StartsWith(_SubPath)) return false;
-
-            entryKey = entryKey.Substring(_SubPath.Length);
-
-#if NETSTANDARD2_0
-            if (entryKey.StartsWith(Path.DirectorySeparatorChar.ToString())) entryKey = entryKey.TrimStart(Path.DirectorySeparatorChar);
-            else if (entryKey.StartsWith(Path.AltDirectorySeparatorChar.ToString())) entryKey = entryKey.TrimStart(Path.AltDirectorySeparatorChar);
-#else
-            if (entryKey.StartsWith(Path.DirectorySeparatorChar)) entryKey = entryKey.TrimStart(Path.DirectorySeparatorChar);
-            else if (entryKey.StartsWith(Path.AltDirectorySeparatorChar)) entryKey = entryKey.TrimStart(Path.AltDirectorySeparatorChar);
-#endif
+            entryKey = GetRelativePath(entryKey);
 
             if (entryKey.Length == 0) return false;
 
-            if (entryKey.Contains(Path.DirectorySeparatorChar)) return false;
-            if (entryKey.Contains(Path.AltDirectorySeparatorChar)) return false;
+            return !PathUtils.ContainsSeparator(entryKey);
+        }
 
-            return true;
+        private string GetRelativePath(string entryKey)
+        {
+            if (!entryKey.StartsWith(_SubPath)) return string.Empty;
+
+            entryKey = entryKey.Substring(_SubPath.Length);
+
+            #if NETSTANDARD2_0
+            if (entryKey.StartsWith(Path.DirectorySeparatorChar.ToString())) entryKey = entryKey.TrimStart(Path.DirectorySeparatorChar);
+            else if (entryKey.StartsWith(Path.AltDirectorySeparatorChar.ToString())) entryKey = entryKey.TrimStart(Path.AltDirectorySeparatorChar);
+            #else
+            if (entryKey.StartsWith(Path.DirectorySeparatorChar)) entryKey = entryKey.TrimStart(Path.DirectorySeparatorChar);
+            else if (entryKey.StartsWith(Path.AltDirectorySeparatorChar)) entryKey = entryKey.TrimStart(Path.AltDirectorySeparatorChar);
+            #endif
+
+            return entryKey;
         }
     }
 }

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
 using Microsoft.Extensions.Primitives;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.FileProviders
 {
     internal static class PathUtils
     {
@@ -34,6 +33,32 @@ namespace InteropTypes.IO
         #endregion
 
         #region functions
+
+        internal static bool IsPathSeparator(this char c)
+        {
+            if (c == Path.DirectorySeparatorChar) return true;
+            if (c == Path.AltDirectorySeparatorChar) return true;
+            return false;
+        }
+
+        internal static IEnumerable<string> SplitPath(string path)
+        {
+            var sb = new StringBuilder();
+
+            foreach(var c in path)
+            {
+                if (c.IsPathSeparator())
+                {
+                    if (sb.Length > 0) yield return sb.ToString();
+                    sb.Clear();
+                    continue;
+                }
+
+                sb.Append(c);
+            }
+
+            if (sb.Length > 0) yield return sb.ToString();
+        }
 
         internal static bool HasInvalidPathChars(string path)
         {
@@ -85,7 +110,12 @@ namespace InteropTypes.IO
             return false;
         }
 
-        internal static bool IsSameResource(System.IO.FileSystemInfo a, System.IO.FileSystemInfo b)
+        internal static bool ContainsSeparator(string path)
+        {
+            return path.Any(IsPathSeparator);
+        }
+
+        internal static bool IsSameResource(FileSystemInfo a, FileSystemInfo b)
         {
             if (a == null && b == null) return true;
             if (a == null) return false;

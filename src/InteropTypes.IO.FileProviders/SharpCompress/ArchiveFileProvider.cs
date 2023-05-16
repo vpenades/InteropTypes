@@ -10,8 +10,9 @@ namespace InteropTypes.IO
     public class ArchiveFileProvider 
         : IFileProvider
         , IDisposable
+        , IServiceProvider
     {
-        #region password management
+        #region password management        
 
         public static Func<ArchiveFileProvider, string> PasswordRetriever { get; set; }
 
@@ -19,9 +20,15 @@ namespace InteropTypes.IO
 
         #region lifecycle
 
-        public ArchiveFileProvider(string archivePath)
+        public static ArchiveFileProvider Create(string archivePath)
         {
-            _Archive = SharpCompress.Archives.ArchiveFactory.Open(archivePath);
+            var arch = SharpCompress.Archives.ArchiveFactory.Open(archivePath);
+            return new ArchiveFileProvider(arch);
+        }
+
+        private ArchiveFileProvider(SharpCompress.Archives.IArchive archive)
+        {
+            _Archive = archive;
         }
 
         public void Dispose()
@@ -61,7 +68,14 @@ namespace InteropTypes.IO
         public IChangeToken Watch(string filter)
         {
             throw new NotSupportedException();
-        }        
+        }
+
+        public object GetService(Type serviceType)
+        {
+            if (serviceType == typeof(SharpCompress.Archives.IArchive)) return _Archive;            
+
+            return null;
+        }
 
         #endregion
     }

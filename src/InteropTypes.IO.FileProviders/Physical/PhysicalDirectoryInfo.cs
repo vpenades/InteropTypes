@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using InteropTypes.IO.FileProviders;
 using Microsoft.Extensions.FileProviders;
 
 namespace InteropTypes.IO
@@ -26,6 +26,7 @@ namespace InteropTypes.IO
         public PhysicalDirectoryInfo(DirectoryInfo info, PhysicalFileProvider parent = null)
         {
             Directory = info;
+            Parent = parent;
         }
 
         #endregion
@@ -114,7 +115,7 @@ namespace InteropTypes.IO
                         }
                         else if (info is DirectoryInfo dir)
                         {
-                            return Parent.CreateDirectoryInfo(dir) ?? new PhysicalDirectoryInfo(dir);
+                            return Parent?.CreateDirectoryInfo(dir) ?? new PhysicalDirectoryInfo(dir);
                         }
                         // shouldn't happen unless BCL introduces new implementation of base type
                         throw new InvalidOperationException("Unsupported: " + info.GetType().FullName);
@@ -129,6 +130,7 @@ namespace InteropTypes.IO
         object IServiceProvider.GetService(Type serviceType)
         {
             if (serviceType == typeof(DirectoryInfo)) return Directory;
+            if (serviceType == typeof(FileSystemInfo)) return Directory;
             return null;
         }
 

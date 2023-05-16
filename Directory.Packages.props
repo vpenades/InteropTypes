@@ -20,8 +20,10 @@
 
     <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="7.0.0-rtm.22518.5" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="8.0.0-preview.3.23174.8" />
     <PackageVersion Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="7.0.2" />
+    
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="7.0.0" />    
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />

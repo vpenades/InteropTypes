@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
-    <PackageReference Include="SharpCompress" />
+    <PackageReference Include="System.Text.Json" />
+    <PackageReference Include="SharpCompress" />    
   </ItemGroup>
 
 </Project>
