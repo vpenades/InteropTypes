@@ -19,6 +19,21 @@ namespace InteropTypes.IO
     {
         #region lifecycle
 
+        public static IEnumerable<PhysicalDirectoryInfo> Enumerate(string path)
+        {
+            return new PhysicalFileProvider(path).EnumerateDirectories();
+        }
+
+        public static IEnumerable<PhysicalDirectoryInfo> Enumerate(string path, string searchPattern)
+        {
+            return new PhysicalFileProvider(path).EnumerateDirectories(searchPattern);
+        }
+
+        public static IEnumerable<PhysicalDirectoryInfo> Enumerate(string path, string searchPattern, SearchOption options)
+        {
+            return new PhysicalFileProvider(path).EnumerateDirectories(searchPattern, options);
+        }
+
         /// <summary>
         /// Initializes an instance of <see cref="PhysicalDirectoryInfo"/> that wraps an instance of <see cref="System.IO.DirectoryInfo"/>
         /// </summary>
@@ -33,9 +48,9 @@ namespace InteropTypes.IO
 
         #region data
 
-        protected readonly DirectoryInfo Directory;
+        internal protected readonly DirectoryInfo Directory;
 
-        private readonly PhysicalFileProvider Parent;
+        internal readonly PhysicalFileProvider Parent;
 
         public override int GetHashCode()
         {
@@ -44,6 +59,8 @@ namespace InteropTypes.IO
 
         public bool Equals(IFileInfo obj)
         {
+            if (object.ReferenceEquals(this, obj)) return true;
+
             return obj is PhysicalDirectoryInfo other && PathUtils.IsSameResource(this.Directory, other.Directory);
         }
 

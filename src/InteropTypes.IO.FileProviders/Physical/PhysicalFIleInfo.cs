@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
 using InteropTypes.IO.FileProviders;
 using Microsoft.Extensions.FileProviders;
 
@@ -15,6 +18,21 @@ namespace InteropTypes.IO
         // IProgress<Stream>, IProgress<ReadOnlySpan<Byte>> for writing
     {
         #region lifecycle
+
+        public static IEnumerable<PhysicalFileInfo> Enumerate(string path)
+        {
+            return new PhysicalFileProvider(path).EnumerateFiles();
+        }
+
+        public static IEnumerable<PhysicalFileInfo> Enumerate(string path, string searchPattern)
+        {
+            return new PhysicalFileProvider(path).EnumerateFiles(searchPattern);
+        }
+
+        public static IEnumerable<PhysicalFileInfo> Enumerate(string path, string searchPattern, SearchOption options)
+        {
+            return new PhysicalFileProvider(path).EnumerateFiles(searchPattern, options);
+        }
 
         /// <summary>
         /// Initializes an instance of <see cref="PhysicalFileInfo"/> that wraps an instance of <see cref="System.IO.FileInfo"/>
@@ -38,6 +56,8 @@ namespace InteropTypes.IO
 
         public bool Equals(IFileInfo obj)
         {
+            if (object.ReferenceEquals(this, obj)) return true;
+
             return obj is PhysicalFileInfo other && PathUtils.IsSameResource(this.File, other.File);
         }
 

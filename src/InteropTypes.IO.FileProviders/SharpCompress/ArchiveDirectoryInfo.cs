@@ -123,5 +123,5 @@ namespace InteropTypes.IO
 
             return entryKey;
         }
-    }
+    }    
 }

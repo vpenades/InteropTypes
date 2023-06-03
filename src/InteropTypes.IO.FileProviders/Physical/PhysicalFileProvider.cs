@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using InteropTypes.IO.FileProviders;
 using Microsoft.Extensions.FileProviders;
@@ -164,14 +166,66 @@ namespace InteropTypes.IO
 
         #region API factory
 
-        public virtual IFileInfo CreateFileInfo(FileInfo fileInfo)
+        public virtual PhysicalFileInfo CreateFileInfo(FileInfo fileInfo)
         {
             return new PhysicalFileInfo(fileInfo, this);
         }
 
-        public virtual IFileInfo CreateDirectoryInfo(DirectoryInfo dirInfo)
+        public virtual PhysicalDirectoryInfo CreateDirectoryInfo(DirectoryInfo dirInfo)
         {
             return new PhysicalDirectoryInfo(dirInfo, this);
+        }
+
+        #endregion
+
+        #region extras
+
+        public IEnumerable<PhysicalFileInfo> EnumerateFiles()
+        {
+            return this
+                .Root
+                .EnumerateFiles()
+                .Select(CreateFileInfo);
+        }
+
+        public IEnumerable<PhysicalFileInfo> EnumerateFiles(string searchPattern)
+        {
+            return this
+                .Root
+                .EnumerateFiles(searchPattern)
+                .Select(CreateFileInfo);
+        }
+
+        public IEnumerable<PhysicalFileInfo> EnumerateFiles(string searchPattern, SearchOption options)
+        {
+            return this
+                .Root
+                .EnumerateFiles(searchPattern, options)
+                .Select(CreateFileInfo);
+        }
+
+        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories()
+        {
+            return this
+                .Root
+                .EnumerateDirectories()
+                .Select(CreateDirectoryInfo);
+        }
+
+        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories(string searchPattern)
+        {
+            return this
+                .Root
+                .EnumerateDirectories(searchPattern)
+                .Select(CreateDirectoryInfo);
+        }
+
+        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories(string searchPattern, SearchOption options)
+        {
+            return this
+                .Root
+                .EnumerateDirectories(searchPattern, options)
+                .Select(CreateDirectoryInfo);
         }
 
         #endregion

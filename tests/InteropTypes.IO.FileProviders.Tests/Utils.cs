@@ -14,21 +14,17 @@ namespace InteropTypes.IO
     {
         public static void _PrintContents(this IDirectoryContents contents, int indent = 0)
         {
-            foreach (var entry in contents.Where(item => item.IsDirectory))
-            {
-                Indent(indent); TestContext.WriteLine($"📁 {entry.Name}");
+            var basePath = (contents as IFileInfo)?.PhysicalPath ?? string.Empty;
 
-                if (entry is IDirectoryContents child)
-                {
-                    _PrintContents(child, indent + 1);
-                }
-            }
+            var offsetPath = basePath.Length;
 
-            foreach (var entry in contents.Where(item => !item.IsDirectory))
+            var entries = AbstractFile.EnumerateFiles(contents, System.IO.SearchOption.AllDirectories);            
+
+            foreach (var entry in entries)
             {
                 var h256 = Crypto.Hash256.Sha256FromFile(entry);
 
-                Indent(indent); TestContext.WriteLine($"🗎 {entry.Name} => {h256.ToHexString()}");
+                Indent(indent); TestContext.WriteLine($"🗎 {entry.PhysicalPath.Substring(offsetPath)} => {h256.ToHexString()}");
 
                 if (entry is IServiceProvider srv)
                 {
