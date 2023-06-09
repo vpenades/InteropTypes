@@ -18,7 +18,7 @@ namespace InteropTypes.IO
 
             var offsetPath = basePath.Length;
 
-            var entries = AbstractFile.EnumerateFiles(contents, System.IO.SearchOption.AllDirectories);            
+            var entries = XFile.EnumerateFiles(contents, System.IO.SearchOption.AllDirectories);            
 
             foreach (var entry in entries)
             {

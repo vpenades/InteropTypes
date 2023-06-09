@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -11,6 +12,11 @@ namespace InteropTypes.IO
     /// <summary>
     /// Represents a file on a physical filesystem
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{PhysicalPath}")]
+    #if !NETSTANDARD
+    // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+    #endif
     public class PhysicalFileInfo
         : IFileInfo
         , IEquatable<IFileInfo>
@@ -65,6 +71,11 @@ namespace InteropTypes.IO
 
         #region properties
 
+        /// <summary>
+        /// Always false.
+        /// </summary>
+        public bool IsDirectory => false;
+
         /// <inheritdoc />
         public bool Exists => File.Exists;
 
@@ -78,12 +89,7 @@ namespace InteropTypes.IO
         public string Name => File.Name;
 
         /// <inheritdoc />
-        public DateTimeOffset LastModified => File.LastWriteTimeUtc;
-
-        /// <summary>
-        /// Always false.
-        /// </summary>
-        public bool IsDirectory => false;
+        public DateTimeOffset LastModified => File.LastWriteTimeUtc;        
 
         #endregion
 
@@ -92,26 +98,53 @@ namespace InteropTypes.IO
         /// <inheritdoc />
         public Stream CreateReadStream()
         {
-            // We are setting buffer size to 1 to prevent FileStream from allocating it's internal buffer
-            // 0 causes constructor to throw
-            int bufferSize = 1;
-            return new FileStream(
-                PhysicalPath,
-                FileMode.Open,
-                FileAccess.Read,
-                FileShare.ReadWrite,
-                bufferSize,
-                FileOptions.Asynchronous | FileOptions.SequentialScan);
+            return File?.OpenRead();
+        }
+        
+        public Stream CreateWriteStream()
+        {
+            File?.Directory?.Create();
+            return File?.Create();
         }
 
-        object IServiceProvider.GetService(Type serviceType)
-        {
+        public virtual object GetService(Type serviceType)
+        {            
+            if (serviceType == typeof(Func<FileMode, Stream>)) return (Func<FileMode, Stream>)_Open1;
+            if (serviceType == typeof(Func<FileMode, FileAccess, Stream>)) return (Func<FileMode, FileAccess, Stream>)_Open2;
+            if (serviceType == typeof(Func<FileMode, FileAccess, FileShare, Stream>)) return (Func<FileMode, FileAccess, FileShare, Stream>)_Open3;
+
             if (serviceType == typeof(FileInfo)) return File;
             if (serviceType == typeof(FileSystemInfo)) return File;
             if (serviceType == typeof(ArchiveFileProvider)) return ArchiveFileProvider.Create(File.FullName);
 
             return null;
         }        
+
+        private Stream _Open1(FileMode mode)
+        {
+            _EnsureDirectory(mode);
+            return File?.Open(mode);
+        }        
+
+        private Stream _Open2(FileMode mode, FileAccess access)
+        {
+            _EnsureDirectory(mode);
+            return File?.Open(mode, access);
+        }
+
+        private Stream _Open3(FileMode mode, FileAccess access, FileShare share)
+        {
+            _EnsureDirectory(mode);
+            return File?.Open(mode, access, share);
+        }
+
+        private void _EnsureDirectory(FileMode mode)
+        {
+            if (mode == FileMode.Create || mode == FileMode.CreateNew || mode == FileMode.OpenOrCreate)
+            {
+                File?.Directory?.Create();
+            }
+        }
 
         #endregion
     }

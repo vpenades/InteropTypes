@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using InteropTypes.IO.FileProviders;
@@ -11,6 +12,11 @@ namespace InteropTypes.IO
     /// <summary>
     /// Represents a directory on a physical filesystem
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{PhysicalPath}")]
+    #if !NETSTANDARD
+    // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+    #endif
     public class PhysicalDirectoryInfo
         : IFileInfo
         , IEquatable<IFileInfo>
@@ -68,6 +74,11 @@ namespace InteropTypes.IO
 
         #region properties
 
+        /// <summary>
+        /// Always true.
+        /// </summary>
+        public bool IsDirectory => true;
+
         /// <inheritdoc />
         public bool Exists => Directory.Exists;
 
@@ -85,12 +96,7 @@ namespace InteropTypes.IO
         /// <summary>
         /// The time when the directory was last written to.
         /// </summary>
-        public DateTimeOffset LastModified => Directory.LastWriteTimeUtc;
-
-        /// <summary>
-        /// Always true.
-        /// </summary>
-        public bool IsDirectory => true;
+        public DateTimeOffset LastModified => Directory.LastWriteTimeUtc;        
 
         #endregion
 
@@ -144,11 +150,79 @@ namespace InteropTypes.IO
             }
         }
 
-        object IServiceProvider.GetService(Type serviceType)
+        public virtual object GetService(Type serviceType)
         {
+            // service used to create files and directories
+            if (serviceType == typeof(Func<string, IFileInfo>)) return (Func<string, IFileInfo>)UseFileInfo;
+
             if (serviceType == typeof(DirectoryInfo)) return Directory;
             if (serviceType == typeof(FileSystemInfo)) return Directory;
+
             return null;
+        }
+
+        /// <summary>
+        /// Uses or creates an existing file or directory
+        /// </summary>
+        /// <param name="name"><br/>
+        /// the name of the file or directory.
+        /// If it ends with '/' or '\' it is considered a directory.
+        /// </param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public IFileInfo UseFileInfo(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+
+            bool isDirectory = false;
+
+            if (_EndsWithSeparator(name))
+            {
+                isDirectory = true;
+                name = name.Substring(0, name.Length - 1);
+            }
+
+            if (Path.GetInvalidFileNameChars().Any(name.Contains))
+            {
+                throw new ArgumentException("invalid name chars", nameof(name));
+            }
+
+            return isDirectory
+                ? UseDirectory(name)
+                : UseFile(name);
+        }
+
+        private static bool _EndsWithSeparator(string path)
+        {
+            #if NETSTANDARD2_0
+            if (path.EndsWith("\\")) return true;
+            if (path.EndsWith("/")) return true;
+            #else
+            if (path.EndsWith(System.IO.Path.DirectorySeparatorChar)) return true;
+            if (path.EndsWith(System.IO.Path.AltDirectorySeparatorChar)) return true;
+            #endif
+            return false;
+        }
+
+        internal IFileInfo UseFile(string name)
+        {
+            name = System.IO.Path.Combine(Directory.FullName, name);
+
+            var file = new System.IO.FileInfo(name);
+            return Parent
+                ?.CreateFileInfo(file)
+                ?? new PhysicalFileInfo(file);
+        }
+
+        internal IFileInfo UseDirectory(string name)
+        {
+            name = System.IO.Path.Combine(Directory.FullName, name);
+
+            var dir = new System.IO.DirectoryInfo(name);
+            return Parent
+                ?.CreateDirectoryInfo(dir)
+                ?? new PhysicalDirectoryInfo(dir);
         }
 
         #endregion
