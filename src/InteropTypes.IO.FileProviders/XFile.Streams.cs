@@ -53,7 +53,6 @@ namespace InteropTypes.IO
             }
         }
 
-
         public static void WriteAllBytes(System.IO.Stream stream, byte[] bytes)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));

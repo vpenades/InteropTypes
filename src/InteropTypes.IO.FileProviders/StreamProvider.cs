@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -92,11 +93,18 @@ namespace InteropTypes.IO
                 return new _MSPhysicalFileProvider();
             }
 
+            if (_SharpCompressEntryProvider.IsMatch())
+            {
+                return new _SharpCompressEntryProvider();
+            }
+
             return new _DefaultProvider();
         }
 
         class _DefaultProvider : StreamProvider<T>
         {
+            // TODO: Support IReadOnlyList<Byte> for both Read & List<Byte> for write
+
             public override Stream CreateReadStreamFrom(T obj)
             {
                 if (obj == null) throw new ArgumentNullException(nameof(obj));
@@ -117,10 +125,38 @@ namespace InteropTypes.IO
 
                 if (typeof(T) == typeof(FileInfo)) return Unsafe.As<T, FileInfo>(ref obj).OpenRead();
 
+                if (typeof(T) == typeof(Byte[]))
+                {
+                    var array = Unsafe.As<T, Byte[]>(ref obj);
+                    return array.Length == 0
+                        ? new System.IO.MemoryStream(Array.Empty<byte>(),false)
+                        : (Stream)new System.IO.MemoryStream(array,0, array.Length, false);
+                }
+
+                if (typeof(T) == typeof(ArraySegment<Byte>))
+                {
+                    var segment = Unsafe.As<T, ArraySegment<Byte>>(ref obj);
+                    return segment.Count == 0
+                        ? new System.IO.MemoryStream(Array.Empty<byte>(), false)
+                        : (Stream)new System.IO.MemoryStream(segment.Array, segment.Offset, segment.Count, false);
+                }
+
+                if (typeof(T) == typeof(IReadOnlyList<Byte>))
+                {
+                    var list = Unsafe.As<T, IReadOnlyList<Byte>>(ref obj);
+                    return _ListWrapperStream<IReadOnlyList<Byte>>.Open(list, FileMode.Open);
+                }                
+
+                if (typeof(T) == typeof(List<Byte>))
+                {
+                    var list = Unsafe.As<T, List<Byte>>(ref obj);
+                    return _ListWrapperStream<List<Byte>>.Open(list, FileMode.Open);
+                }
+
                 if (typeof(T) == typeof(System.IO.Compression.ZipArchiveEntry))
                 {
                     var zentry = Unsafe.As<T, System.IO.Compression.ZipArchiveEntry>(ref obj);
-                    if (zentry.Archive.Mode != System.IO.Compression.ZipArchiveMode.Read) return null;
+                    if (zentry.Archive.Mode == System.IO.Compression.ZipArchiveMode.Create) return null;
                     var stream = zentry.Open();
                     if (!stream.CanRead) { stream.Dispose(); stream = null; }
                     return stream;
@@ -148,6 +184,7 @@ namespace InteropTypes.IO
                 // runtime type evaluation
 
                 if (obj is FileInfo fi) return StreamProvider<FileInfo>.Default.CreateReadStreamFrom(fi);
+                if (obj is IReadOnlyList<Byte> lb) return StreamProvider<IReadOnlyList<Byte>>.Default.CreateReadStreamFrom(lb);
                 if (obj is IFileInfo xfi) return StreamProvider<IFileInfo>.Default.CreateReadStreamFrom(xfi);
                 if (obj is IServiceProvider srv) return StreamProvider<IServiceProvider>.Default.CreateReadStreamFrom(srv);
 
@@ -181,6 +218,12 @@ namespace InteropTypes.IO
                     return finfo.Create();
                 }
 
+                if (typeof(T) == typeof(List<Byte>))
+                {
+                    var list = Unsafe.As<T, List<Byte>>(ref obj);
+                    return _ListWrapperStream<List<Byte>>.Open(list, FileMode.Create);
+                }
+
                 if (typeof(T) == typeof(System.IO.Compression.ZipArchiveEntry))
                 {
                     var zentry = Unsafe.As<T, System.IO.Compression.ZipArchiveEntry>(ref obj);
@@ -205,6 +248,7 @@ namespace InteropTypes.IO
                 // runtime type evaluation
 
                 if (obj is FileInfo fi) return StreamProvider<FileInfo>.Default.CreateWriteStreamFrom(fi);
+                if (obj is List<Byte> lb) return StreamProvider<List<Byte>>.Default.CreateWriteStreamFrom(lb);
                 if (obj is IServiceProvider srv) return StreamProvider<IServiceProvider>.Default.CreateWriteStreamFrom(srv);
 
                 if (_TryGetFromMethod(obj, "CreateWriteStream", out var sx)) return sx;
@@ -256,7 +300,7 @@ namespace InteropTypes.IO
                 return false;
             }
 
-            private static bool _TryGetFromMethod(T obj, string methodName, out Stream stream)
+            protected static bool _TryGetFromMethod(T obj, string methodName, out Stream stream)
             {
                 stream = default;
 
@@ -291,6 +335,27 @@ namespace InteropTypes.IO
             }
         }
 
+        class _SharpCompressEntryProvider : _DefaultProvider
+        {
+            public static bool IsMatch()
+            {
+                if (typeof(T).FullName == "SharpCompress.Archives.IArchiveEntry") return true;
+                return false;
+            }
+
+            public override Stream CreateReadStreamFrom(T obj)
+            {
+                if (_TryGetFromMethod(obj, "OpenEntryStream", out var sx)) return sx;
+
+                return base.CreateReadStreamFrom(obj);
+            }
+
+            public override Stream CreateWriteStreamFrom(T obj)
+            {
+                return base.CreateWriteStreamFrom(obj);
+            }
+        }
+
         #endregion
-    }
+    }    
 }
