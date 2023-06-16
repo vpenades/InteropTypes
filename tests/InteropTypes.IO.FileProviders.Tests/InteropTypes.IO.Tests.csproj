@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Crypto\InteropTypes.Crypto.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.IO.SharpCompress\InteropTypes.IO.SharpCompress.csproj" />
   </ItemGroup>
 
 </Project>

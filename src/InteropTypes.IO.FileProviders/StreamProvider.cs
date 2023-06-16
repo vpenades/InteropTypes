@@ -34,53 +34,66 @@ namespace InteropTypes.IO
         public abstract System.IO.Stream CreateReadStreamFrom(T obj);
         public abstract System.IO.Stream CreateWriteStreamFrom(T obj);
 
-        public Byte[] ReadAllBytesFrom(T obj)
+        public System.IO.BinaryReader CreateBinaryReader(T src, Encoding encoding)
         {
-            using(var s = CreateReadStreamFrom(obj))
+            var s = CreateReadStreamFrom(src);
+            if (s == null) return null;
+            return new System.IO.BinaryReader(s, encoding, false);
+        }
+        public System.IO.BinaryWriter CreateBinaryWriter(T dst, Encoding encoding)
+        {
+            var s = CreateWriteStreamFrom(dst);
+            if (s == null) return null;
+            return new System.IO.BinaryWriter(s, encoding, false);
+        }
+
+        public Byte[] ReadAllBytesFrom(T src)
+        {
+            using(var s = CreateReadStreamFrom(src))
             {
                 return XFile.ReadAllBytes(s);
             }
         }        
 
-        public void WriteAllBytesTo(T obj, byte[] bytes)
+        public void WriteAllBytesTo(T dst, byte[] bytes)
         {
-            using(var s = CreateWriteStreamFrom(obj))
+            using(var s = CreateWriteStreamFrom(dst))
             {
                 XFile.WriteAllBytes(s, bytes);
             }
         }
 
-        public string ReadAllTextFrom(T obj)
+        public string ReadAllTextFrom(T src)
         {
-            using (var s = CreateReadStreamFrom(obj))
+            using (var s = CreateReadStreamFrom(src))
             {
                 return XFile.ReadAllText(s);
             }
         }
 
-        public string ReadAllTextFrom(T obj, Encoding encoding)
+        public string ReadAllTextFrom(T src, Encoding encoding)
         {
-            using (var s = CreateReadStreamFrom(obj))
+            using (var s = CreateReadStreamFrom(src))
             {
                 return XFile.ReadAllText(s, encoding);
             }
         }
 
-        public void WriteAllTextTo(T obj, string contents)
+        public void WriteAllTextTo(T dst, string contents)
         {
-            using (var s = CreateWriteStreamFrom(obj))
+            using (var s = CreateWriteStreamFrom(dst))
             {
                 XFile.WriteAllText(s, contents);
             }
         }
 
-        public void WriteAllTextTo(T obj, string contents, Encoding encoding)
+        public void WriteAllTextTo(T dst, string contents, Encoding encoding)
         {
-            using (var s = CreateWriteStreamFrom(obj))
+            using (var s = CreateWriteStreamFrom(dst))
             {
                 XFile.WriteAllText(s, contents, encoding);
             }
-        }
+        }        
 
         #endregion
 
@@ -300,6 +313,13 @@ namespace InteropTypes.IO
                 return false;
             }
 
+            #if !NETSTANDARD
+            // Prevent these from being trimmed:
+            [DynamicDependency(DynamicallyAccessedMemberTypes.All, "SharpCompress.Archives.IArchiveEntry", "SharpCompress")]
+            [DynamicDependency(DynamicallyAccessedMemberTypes.All, "SharpCompress.Archives.Zip.ZipArchiveEntry", "SharpCompress")]
+            [DynamicDependency(DynamicallyAccessedMemberTypes.All, "SharpCompress.Archives.Rar.RarArchiveEntry", "SharpCompress")]
+            [DynamicDependency(DynamicallyAccessedMemberTypes.All, "SharpCompress.Archives.SevenZip.SevenZipArchiveEntry", "SharpCompress")]
+            #endif
             protected static bool _TryGetFromMethod(T obj, string methodName, out Stream stream)
             {
                 stream = default;
@@ -314,9 +334,10 @@ namespace InteropTypes.IO
                 return stream != null;
             }
         }
-
-        class _MSPhysicalFileProvider : _DefaultProvider
+        
+        class _MSPhysicalFileProvider : _DefaultProvider        
         {
+            
             public static bool IsMatch()
             {
                 return typeof(T).FullName == "Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo";
@@ -334,15 +355,14 @@ namespace InteropTypes.IO
                 return base.CreateWriteStreamFrom(obj);
             }
         }
-
+        
         class _SharpCompressEntryProvider : _DefaultProvider
         {
             public static bool IsMatch()
             {
                 if (typeof(T).FullName == "SharpCompress.Archives.IArchiveEntry") return true;
                 return false;
-            }
-
+            }            
             public override Stream CreateReadStreamFrom(T obj)
             {
                 if (_TryGetFromMethod(obj, "OpenEntryStream", out var sx)) return sx;

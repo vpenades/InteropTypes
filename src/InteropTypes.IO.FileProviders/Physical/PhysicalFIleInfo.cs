@@ -115,8 +115,6 @@ namespace InteropTypes.IO
 
             if (serviceType == typeof(FileInfo)) return File;
             if (serviceType == typeof(FileSystemInfo)) return File;
-            if (serviceType == typeof(ArchiveFileProvider)) return ArchiveFileProvider.Create(File.FullName);
-
             return null;
         }        
 

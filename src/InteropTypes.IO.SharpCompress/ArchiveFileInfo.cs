@@ -9,6 +9,7 @@ using Microsoft.Extensions.FileProviders;
 
 namespace InteropTypes.IO
 {
+    [System.Diagnostics.DebuggerDisplay("{_Entry.Key}")]
     public class ArchiveFileInfo
         : IFileInfo
         , IServiceProvider

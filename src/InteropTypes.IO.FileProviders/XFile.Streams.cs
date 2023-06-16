@@ -68,8 +68,9 @@ namespace InteropTypes.IO
 
             // taken from Net6's ReadAllBytes
 
-            long fileLength = stream.Length;
-            if (stream.CanSeek && fileLength > int.MaxValue)
+            long fileLength = stream.CanSeek ? stream.Length : 0;
+
+            if (fileLength > int.MaxValue)
             {
                 throw new IOException("File too long");
             }

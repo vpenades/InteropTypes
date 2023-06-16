@@ -125,7 +125,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.FFMpegC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.FFmpeg.AutoGen.Tests", "tests\InteropTypes.Codecs.FFmpeg.AutoGen.Tests\InteropTypes.Codecs.FFmpeg.AutoGen.Tests.csproj", "{E941BB08-6F7E-4701-87E5-3C44B76AA596}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.FileProviders.Tests", "tests\InteropTypes.IO.FileProviders.Tests\InteropTypes.IO.FileProviders.Tests.csproj", "{92344537-B732-4C97-8305-CEDBB0E3BB63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.Tests", "tests\InteropTypes.IO.FileProviders.Tests\InteropTypes.IO.Tests.csproj", "{92344537-B732-4C97-8305-CEDBB0E3BB63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.FileProviders", "src\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj", "{9888002E-8D05-48B2-8181-674204EA0FE5}"
 EndProject
@@ -144,6 +144,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{95C56366-7EDC-4DEC-B7A9-E8CA41231E27}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Crypto", "src\InteropTypes.Crypto\InteropTypes.Crypto.csproj", "{9F6FA55C-1C23-42CA-9799-3FAB723A8E8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.IO.SharpCompress", "src\InteropTypes.IO.SharpCompress\InteropTypes.IO.SharpCompress.csproj", "{52BAE85F-52A9-4AF8-814D-A4888E2E2175}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -577,6 +579,14 @@ Global
 		{9F6FA55C-1C23-42CA-9799-3FAB723A8E8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F6FA55C-1C23-42CA-9799-3FAB723A8E8B}.Release|x64.ActiveCfg = Release|Any CPU
 		{9F6FA55C-1C23-42CA-9799-3FAB723A8E8B}.Release|x64.Build.0 = Release|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Debug|x64.Build.0 = Debug|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Release|x64.ActiveCfg = Release|Any CPU
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -635,6 +645,7 @@ Global
 		{37686F4C-12A4-483A-A122-0D617817B208} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
 		{5DE15A06-0BB9-4BB3-9898-D0F687EC7E1F} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
 		{9F6FA55C-1C23-42CA-9799-3FAB723A8E8B} = {95C56366-7EDC-4DEC-B7A9-E8CA41231E27}
+		{52BAE85F-52A9-4AF8-814D-A4888E2E2175} = {95C56366-7EDC-4DEC-B7A9-E8CA41231E27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

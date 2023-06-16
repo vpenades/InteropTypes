@@ -19,13 +19,13 @@ namespace InteropTypes.IO.FileProviders
             .Where(c => c != '*' && c != '|' && c != '?')
             .ToArray();
 
-#if NET8_0_OR_GREATER
+        #if NET8_0_OR_GREATER
         private static readonly SearchValues<char> _invalidFileNameChars = SearchValues.Create(GetInvalidFileNameChars());
         private static readonly SearchValues<char> _invalidFilterChars = SearchValues.Create(GetInvalidFilterChars());
-#else
+        #else
         private static readonly char[] _invalidFileNameChars = GetInvalidFileNameChars();
         private static readonly char[] _invalidFilterChars = GetInvalidFilterChars();
-#endif
+        #endif
 
         private static readonly char[] _pathSeparators = new[]
             {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar};

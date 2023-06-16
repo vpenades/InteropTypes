@@ -13,6 +13,7 @@ using SharpCompress.Archives;
 
 namespace InteropTypes.IO
 {
+    [System.Diagnostics.DebuggerDisplay("📁 {_Entry.Key}")]
     public class ArchiveDirectoryInfo : IFileInfo, IDirectoryContents
     {
         public ArchiveDirectoryInfo(IArchive archive, string subPath)

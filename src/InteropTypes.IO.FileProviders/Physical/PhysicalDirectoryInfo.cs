@@ -12,7 +12,7 @@ namespace InteropTypes.IO
     /// <summary>
     /// Represents a directory on a physical filesystem
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{PhysicalPath}")]
+    [System.Diagnostics.DebuggerDisplay("📁 {PhysicalPath}")]
     #if !NETSTANDARD
     // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
@@ -129,7 +129,10 @@ namespace InteropTypes.IO
             try
             {
                 return Directory
-                    .EnumerateFileSystemInfos()                    
+                    .EnumerateFileSystemInfos()
+                    #if !NETSTANDARD
+                    .Where(item => item.LinkTarget == null) // Skip Links (unless we have a better option)
+                    #endif
                     .Select<FileSystemInfo, IFileInfo>(info =>
                     {
                         if (info is FileInfo file)
@@ -195,13 +198,13 @@ namespace InteropTypes.IO
 
         private static bool _EndsWithSeparator(string path)
         {
-            #if NETSTANDARD2_0
+#if NETSTANDARD2_0
             if (path.EndsWith("\\")) return true;
             if (path.EndsWith("/")) return true;
-            #else
+#else
             if (path.EndsWith(System.IO.Path.DirectorySeparatorChar)) return true;
             if (path.EndsWith(System.IO.Path.AltDirectorySeparatorChar)) return true;
-            #endif
+#endif
             return false;
         }
 
@@ -225,6 +228,6 @@ namespace InteropTypes.IO
                 ?? new PhysicalDirectoryInfo(dir);
         }
 
-        #endregion
+#endregion
     }
 }
