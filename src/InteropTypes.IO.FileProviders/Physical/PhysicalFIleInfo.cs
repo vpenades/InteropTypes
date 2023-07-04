@@ -17,7 +17,7 @@ namespace InteropTypes.IO
     // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     #endif
-    public class PhysicalFileInfo
+    public partial class PhysicalFileInfo
         : IFileInfo
         , IEquatable<IFileInfo>
         , IServiceProvider
@@ -57,14 +57,14 @@ namespace InteropTypes.IO
 
         public override int GetHashCode()
         {
-            return File.FullName.ToLower().GetHashCode();
+            return FileSystemInfoComparer<FileInfo>.Default.GetHashCode(File);
         }
 
         public bool Equals(IFileInfo obj)
         {
             if (object.ReferenceEquals(this, obj)) return true;
 
-            return obj is PhysicalFileInfo other && PathUtils.IsSameResource(this.File, other.File);
+            return obj is PhysicalFileInfo other && FileSystemInfoComparer<FileInfo>.Default.Equals(this.File, other.File);
         }
 
         #endregion

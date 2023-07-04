@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using InteropTypes.IO.FileProviders;
+
 using Microsoft.Extensions.FileProviders;
 
 namespace InteropTypes.IO
@@ -17,7 +17,7 @@ namespace InteropTypes.IO
     // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     #endif
-    public class PhysicalDirectoryInfo
+    public partial class PhysicalDirectoryInfo
         : IFileInfo
         , IEquatable<IFileInfo>
         , IDirectoryContents
@@ -60,14 +60,14 @@ namespace InteropTypes.IO
 
         public override int GetHashCode()
         {
-            return Directory.FullName.ToLower().GetHashCode();
+            return FileSystemInfoComparer<DirectoryInfo>.Default.GetHashCode(Directory);
         }
 
         public bool Equals(IFileInfo obj)
         {
             if (object.ReferenceEquals(this, obj)) return true;
 
-            return obj is PhysicalDirectoryInfo other && PathUtils.IsSameResource(this.Directory, other.Directory);
+            return obj is PhysicalDirectoryInfo other && FileSystemInfoComparer<DirectoryInfo>.Default.Equals(this.Directory, other.Directory);
         }
 
         #endregion
@@ -198,13 +198,13 @@ namespace InteropTypes.IO
 
         private static bool _EndsWithSeparator(string path)
         {
-#if NETSTANDARD2_0
+            #if NETSTANDARD2_0
             if (path.EndsWith("\\")) return true;
             if (path.EndsWith("/")) return true;
-#else
+            #else
             if (path.EndsWith(System.IO.Path.DirectorySeparatorChar)) return true;
             if (path.EndsWith(System.IO.Path.AltDirectorySeparatorChar)) return true;
-#endif
+            #endif
             return false;
         }
 
@@ -228,6 +228,6 @@ namespace InteropTypes.IO
                 ?? new PhysicalDirectoryInfo(dir);
         }
 
-#endregion
+        #endregion
     }
 }

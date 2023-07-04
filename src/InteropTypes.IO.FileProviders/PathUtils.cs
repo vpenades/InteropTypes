@@ -115,29 +115,7 @@ namespace InteropTypes.IO.FileProviders
             return path.Any(IsPathSeparator);
         }
 
-        internal static bool IsSameResource(FileSystemInfo a, FileSystemInfo b)
-        {
-            if (a == null && b == null) return true;
-            if (a == null) return false;
-            if (b == null) return false;
-
-            if (a is FileInfo fa && b is FileInfo fb)
-            {
-                if (fa.Length != fb.Length) return false;
-            }
-
-            var apath = a.FullName;
-            var bpath = b.FullName;
-
-            // https://github.com/dotnet/runtime/issues/34235
-            // https://github.com/dotnet/runtime/issues/54313
-
-            // https://stackoverflow.com/questions/430256/how-do-i-determine-whether-the-filesystem-is-case-sensitive-in-net
-
-            // linux is case insensitive, but external drives can also be.
-
-            return string.Equals(apath, bpath, StringComparison.OrdinalIgnoreCase);
-        }
+        
 
         #endregion
     }

@@ -14,7 +14,7 @@ namespace InteropTypes.IO
     /// Looks up files using the on-disk file system
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Root.FullPath}")]
-    public class PhysicalFileProvider : IFileProvider
+    public partial class PhysicalFileProvider : IFileProvider
     {
         #region constants
 
