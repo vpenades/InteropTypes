@@ -281,6 +281,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash96>(target)[0] = this;
         }
 
+        /// <remarks>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </remarks>
         public static Hash96 ReadFrom(System.IO.Stream reader)
         {
             #if NETSTANDARD2_0            
@@ -294,6 +297,9 @@ namespace InteropTypes.Crypto
             return new Hash96(bytes);
         }
 
+        /// <remarks>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </remarks>
         public void WriteTo(System.IO.Stream writer)
         {            
             #if NETSTANDARD2_0
@@ -763,6 +769,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash128>(target)[0] = this;
         }
 
+        /// <remarks>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </remarks>
         public static Hash128 ReadFrom(System.IO.Stream reader)
         {
             #if NETSTANDARD2_0            
@@ -776,6 +785,9 @@ namespace InteropTypes.Crypto
             return new Hash128(bytes);
         }
 
+        /// <remarks>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </remarks>
         public void WriteTo(System.IO.Stream writer)
         {            
             #if NETSTANDARD2_0
@@ -1255,6 +1267,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash224>(target)[0] = this;
         }
 
+        /// <remarks>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </remarks>
         public static Hash224 ReadFrom(System.IO.Stream reader)
         {
             #if NETSTANDARD2_0            
@@ -1268,6 +1283,9 @@ namespace InteropTypes.Crypto
             return new Hash224(bytes);
         }
 
+        /// <remarks>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </remarks>
         public void WriteTo(System.IO.Stream writer)
         {            
             #if NETSTANDARD2_0
@@ -1747,6 +1765,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash256>(target)[0] = this;
         }
 
+        /// <remarks>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </remarks>
         public static Hash256 ReadFrom(System.IO.Stream reader)
         {
             #if NETSTANDARD2_0            
@@ -1760,6 +1781,9 @@ namespace InteropTypes.Crypto
             return new Hash256(bytes);
         }
 
+        /// <remarks>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </remarks>
         public void WriteTo(System.IO.Stream writer)
         {            
             #if NETSTANDARD2_0
@@ -2249,6 +2273,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash384>(target)[0] = this;
         }
 
+        /// <remarks>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </remarks>
         public static Hash384 ReadFrom(System.IO.Stream reader)
         {
             #if NETSTANDARD2_0            
@@ -2262,6 +2289,9 @@ namespace InteropTypes.Crypto
             return new Hash384(bytes);
         }
 
+        /// <remarks>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </remarks>
         public void WriteTo(System.IO.Stream writer)
         {            
             #if NETSTANDARD2_0
@@ -2761,6 +2791,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash512>(target)[0] = this;
         }
 
+        /// <remarks>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </remarks>
         public static Hash512 ReadFrom(System.IO.Stream reader)
         {
             #if NETSTANDARD2_0            
@@ -2774,6 +2807,9 @@ namespace InteropTypes.Crypto
             return new Hash512(bytes);
         }
 
+        /// <remarks>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </remarks>
         public void WriteTo(System.IO.Stream writer)
         {            
             #if NETSTANDARD2_0

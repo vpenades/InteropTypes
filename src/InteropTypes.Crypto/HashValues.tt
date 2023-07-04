@@ -320,6 +320,9 @@ return true;
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash<#= __BitSize #>>(target)[0] = this;
         }
 
+        /// <remarks>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </remarks>
         public static Hash<#= __BitSize #> ReadFrom(System.IO.Stream reader)
         {
             #if NETSTANDARD2_0            
@@ -333,6 +336,9 @@ return true;
             return new Hash<#= __BitSize #>(bytes);
         }
 
+        /// <remarks>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </remarks>
         public void WriteTo(System.IO.Stream writer)
         {            
             #if NETSTANDARD2_0

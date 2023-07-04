@@ -16,17 +16,20 @@ namespace InteropTypes.Crypto
             }
         }
 
-        public static Hash512 Sha512FromFile(Microsoft.Extensions.FileProviders.IFileInfo finfo)
+        public static Hash512 Sha512FromFile(Microsoft.Extensions.FileProviders.IFileInfo finfo, bool useCachedValues = true)
         {
-            if (finfo is IServiceProvider srv)
+            if (useCachedValues)
             {
-                if (TryGetFromService(srv, "sha512", out var r)) return r;
-            }
+                if (finfo is IServiceProvider srv)
+                {
+                    if (TryGetFromService(srv, "sha512", out var r)) return r;
+                }
 
-            if (finfo is ISource src)
-            {
-                var h = src.GetHash512Code();
-                if (!h.IsZero) return h;
+                if (finfo is ISource src)
+                {
+                    var h = src.GetHash512Code();
+                    if (!h.IsZero) return h;
+                }
             }
 
             using (var s = finfo.CreateReadStream())

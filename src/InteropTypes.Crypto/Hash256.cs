@@ -22,17 +22,20 @@ namespace InteropTypes.Crypto
             }
         } 
         
-        public static Hash256 Sha256FromFile(Microsoft.Extensions.FileProviders.IFileInfo finfo)
+        public static Hash256 Sha256FromFile(Microsoft.Extensions.FileProviders.IFileInfo finfo, bool useCachedValues = true)
         {
-            if (finfo is IServiceProvider srv)
+            if (useCachedValues)
             {
-                if (TryGetFromService(srv, "sha256", out var r)) return r;
-            }
+                if (finfo is IServiceProvider srv)
+                {
+                    if (TryGetFromService(srv, "sha256", out var r)) return r;
+                }
 
-            if (finfo is ISource src)
-            {
-                var h = src.GetHash256Code();
-                if (!h.IsZero) return h;
+                if (finfo is ISource src)
+                {
+                    var h = src.GetHash256Code();
+                    if (!h.IsZero) return h;
+                }
             }
 
             using (var s = finfo.CreateReadStream())
