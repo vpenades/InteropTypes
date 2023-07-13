@@ -112,7 +112,7 @@ namespace InteropTypes.Graphics.Backends
 
             Span<Vertex3> vertices = stackalloc Vertex3[4];
 
-            style.TransformVertices(vertices, transform, _DepthZ);            
+            style.TransformVertices(vertices, transform, true, _DepthZ);            
 
             var xnaVertices = System.Runtime.InteropServices.MemoryMarshal.Cast<Vertex3, VERTEX>(vertices);
             var v1 = _Triangles.UseVertex(xnaVertices[0]);

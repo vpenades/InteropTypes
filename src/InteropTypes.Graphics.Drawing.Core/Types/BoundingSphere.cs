@@ -83,8 +83,10 @@ namespace InteropTypes.Graphics.Drawing
 
         #region data
 
+        #pragma warning disable CA1051 // Do not declare visible instance fields
         public Vector3 Center;
         public Single Radius;
+        #pragma warning restore CA1051 // Do not declare visible instance fields
 
         /// <inheritdoc/>
         public readonly override int GetHashCode() { return Center.GetHashCode() ^ Radius.GetHashCode(); }

@@ -141,13 +141,18 @@ namespace InteropTypes.Graphics.Backends
         {
             if (_VectorsBatch.IsEmpty) return;
 
-            if (_Effect == null || _Effect.IsDisposed) _Effect = new SpriteEffect(_Device);
+            if (_Effect == null || _Effect.IsDisposed)
+            {
+                _Effect = new SpriteEffect(_Device);                
+            }
 
             _Effect.TransformMatrix = _FinalForward.ToXna();
 
             foreach (var pass in _Effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
+
+                System.Diagnostics.Debug.Assert(_Device.BlendState == BlendState.AlphaBlend);
 
                 _Device.Textures[0] = _CurrTexture;
 

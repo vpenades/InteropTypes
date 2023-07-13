@@ -141,6 +141,16 @@ namespace InteropTypes.Graphics.Drawing
             return COLOR.FromArgb(alpha, color.R, color.G, color.B);
         }
 
+        public static COLOR WithOpacity(this COLOR color, float opacity)
+        {
+            var alpha = opacity * (float)color.A;
+
+            if (alpha < 0) alpha = 0;
+            else if (alpha > 255) alpha = 255;
+
+            return COLOR.FromArgb((int)alpha, color.R, color.G, color.B);
+        }
+
         #endregion
 
         #region drawing        

@@ -180,7 +180,7 @@ namespace InteropTypes.Graphics.Backends
 
             Span<Vertex3> vertices = stackalloc Vertex3[4];
 
-            style.TransformVertices(vertices, transform, -1);  
+            style.TransformVertices(vertices, transform, false, -1);  
             
             var abcd = System.Runtime.InteropServices.MemoryMarshal.Cast<Vertex3,Vertex2D>(vertices);
 

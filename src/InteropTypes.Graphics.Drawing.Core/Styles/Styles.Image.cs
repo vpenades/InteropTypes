@@ -18,9 +18,9 @@ namespace InteropTypes.Graphics.Drawing
     {
         #region implicit
 
-        public static implicit operator ImageStyle(ImageSource asset) { return new ImageStyle(asset, ColorStyle.White, false, false); }
+        public static implicit operator ImageStyle(ImageSource asset) { return new ImageStyle(asset); }
 
-        public static implicit operator ImageStyle((ImageSource asset, ColorStyle color) args) { return new ImageStyle(args.asset, args.color, false, false); }
+        public static implicit operator ImageStyle((ImageSource asset, ColorStyle color) args) { return new ImageStyle(args.asset, args.color); }
 
         public static implicit operator ImageStyle((ImageSource asset, ColorStyle color, bool, bool) tuple) { return new ImageStyle(tuple.asset, tuple.color, tuple.Item3, tuple.Item4); }
 
@@ -29,6 +29,20 @@ namespace InteropTypes.Graphics.Drawing
         #endregion
 
         #region constructor
+
+        public ImageStyle(ImageSource bitmap)
+        {
+            Image = bitmap;
+            Color = ColorStyle.White;
+            _Orientation = _ImageFlags.None;            
+        }
+
+        public ImageStyle(ImageSource bitmap, ColorStyle color)
+        {
+            Image = bitmap;
+            Color = color;
+            _Orientation = _ImageFlags.None;
+        }
 
         public ImageStyle(ImageSource bitmap, ColorStyle color, bool flipHorizontal, bool flipVertical)
         {
@@ -112,15 +126,20 @@ namespace InteropTypes.Graphics.Drawing
 
         #region API
 
+        public ImageStyle WithOpacity(float opacity)
+        {
+            return new ImageStyle(this.Image, this.Color.WithOpacity(opacity), this.Flags);
+        }
+
         public ImageStyle WithMirror(bool horizontal, bool vertical)
         {
-            var flags = _Orientation & ~(_ImageFlags.FlipHorizontal | _ImageFlags.FlipVertical);
-            if (horizontal) flags |= _ImageFlags.FlipHorizontal;
-            if (vertical) flags |= _ImageFlags.FlipVertical;
+            var orientation = _Orientation & ~(_ImageFlags.FlipHorizontal | _ImageFlags.FlipVertical);
+            if (horizontal) orientation |= _ImageFlags.FlipHorizontal;
+            if (vertical) orientation |= _ImageFlags.FlipVertical;
 
-            return new ImageStyle(this.Image, this.Color, (int)flags);
-        }
-        
+            return new ImageStyle(this.Image, this.Color, (int)orientation);
+        }        
+
         /// <summary>
         /// Gets the local transform associated to this image (Pivot, scale, mirroring).
         /// </summary>
@@ -146,11 +165,14 @@ namespace InteropTypes.Graphics.Drawing
         /// Fills the vertices to their final values so they can be send to the rastering pipeline.
         /// </summary>
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
-        /// <param name="xform">the transform to apply</param>        
+        /// <param name="xform">the transform to apply</param>
+        /// <param name="premultiplyColor">true to pass the color as premultiplied</param>
         /// <param name="depthZ">the depth to set in the Position.Z of the vertices</param>
-        public readonly void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, float depthZ = 1)
+        public readonly void TransformVertices(Span<Vertex3> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false, float depthZ = 1)
         {
-            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed, depthZ);
+            var c = premultiplyColor ? this.Color.ToPremul() : this.Color;
+
+            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c.Packed, depthZ);
         }
 
         /// <summary>
@@ -158,9 +180,12 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
         /// <param name="xform">the transform to apply</param>        
-        public readonly void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform)
+        /// <param name="premultiplyColor">true to pass the color as premultiplied</param>
+        public readonly void TransformVertices(Span<Vertex2> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false)
         {
-            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, this.Color.Packed);
+            var c = premultiplyColor ? this.Color.ToPremul() : this.Color;
+
+            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c.Packed);
         }
 
         /// <summary>
@@ -168,7 +193,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
         /// <param name="xform">the transform to apply</param>        
-        public readonly void TransformVertices(Span<XY> vertices, System.Numerics.Matrix3x2 xform)
+        public readonly void TransformVertices(Span<XY> vertices, in System.Numerics.Matrix3x2 xform)
         {
             Image.UseTransforms().TransformVertices(vertices, xform, _Orientation);
         }
