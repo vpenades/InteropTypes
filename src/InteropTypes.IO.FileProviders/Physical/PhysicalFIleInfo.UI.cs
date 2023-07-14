@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InteropTypes.IO
 {
-    partial class PhysicalFIleInfo
+    partial struct PhysicalFIleInfo
     {
         public static bool TryOpenFileDialog(out PhysicalFileInfo xinfo, string filter, Guid? clientId)
         {

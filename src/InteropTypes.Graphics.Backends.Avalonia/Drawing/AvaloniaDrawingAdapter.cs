@@ -1,26 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.Text;
+using System.Threading.Tasks;
+
+using Avalonia;
 
 using InteropTypes.Graphics.Drawing;
 
-using GDICOLOR = System.Drawing.Color;
-using WPFCONTEXT = System.Windows.Media.DrawingContext;
-using WPFGEOMETRY = System.Windows.Media.StreamGeometry;
-using WPFVISUAL = System.Windows.Media.DrawingVisual;
-using WPFRENDERTARGET = System.Windows.Media.Imaging.RenderTargetBitmap;
+using VENDOR = Avalonia;
 
-namespace InteropTypes.Graphics.Backends
+using WPFCONTEXT = Avalonia.Media.DrawingContext;
+using WPFGEOMETRY = Avalonia.Media.Geometry;
+
+using GDICOLOR = System.Drawing.Color;
+using FONTSTYLE = InteropTypes.Graphics.Drawing.FontStyle;
+
+using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+
+namespace InteropTypes.Graphics.Backends.Drawing
 {
     /// <summary>
     /// Wraps a <see cref="WPFCONTEXT"/> and
     /// uses it as a factory to create <see cref="IDisposableCanvas2D"/>
     /// </summary>
-    public partial class Canvas2DFactory : System.Windows.Threading.DispatcherObject,
+    public partial class Canvas2DFactory : Avalonia.AvaloniaObject,
         GlobalStyle.ISource
     {
         #region lifecycle              
@@ -39,7 +44,7 @@ namespace InteropTypes.Graphics.Backends
 
         #region data
 
-        private WPFCONTEXT _Context;        
+        private WPFCONTEXT _Context;
 
         private _WPFResourcesCache _ResourcesCache = new _WPFResourcesCache();
         private _WPFGeometryFactory _GeometryFactory = new _WPFGeometryFactory();
@@ -53,7 +58,7 @@ namespace InteropTypes.Graphics.Backends
         private void VerifyContext()
         {
             if (_Context == null) throw new InvalidOperationException($"Context is null, call {nameof(SetContext)} first");
-        }        
+        }
 
         bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
         {
@@ -72,7 +77,7 @@ namespace InteropTypes.Graphics.Backends
         public void SetContext(WPFCONTEXT context)
         {
             this.VerifyAccess();
-            _Context = context;            
+            _Context = context;
         }
 
         public IDisposableCanvas2D UsingCanvas2D(float w, float h)
@@ -80,10 +85,9 @@ namespace InteropTypes.Graphics.Backends
             this.VerifyAccess();
             this.VerifyContext();            
 
-            _GeometryFactory.Clear();
-
             return new _ActualCanvas2DContext(this, w, h, _Context, _GeometryFactory, _ResourcesCache);
         }
+
 
         public void DrawScene(Size? viewport, CameraTransform2D camera, IDrawingBrush<ICanvas2D> scene)
         {
@@ -93,12 +97,13 @@ namespace InteropTypes.Graphics.Backends
             var w = (float)(viewport?.Width ?? 100);
             var h = (float)(viewport?.Height ?? 100);
 
-            _PushClipRect(viewport);
-            using (var dc = UsingCanvas2D(w, h))
+            using (var state = _PushClipRect(viewport))
             {
-                scene.DrawTo(Drawing.Transforms.Canvas2DTransform.Create((dc, w, h), camera));
+                using (var dc = UsingCanvas2D(w, h))
+                {
+                    scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.Canvas2DTransform.Create((dc, w, h), camera));
+                }
             }
-            _PopClipRect(viewport);
         }
 
         public void DrawScene(Size? viewport, in CameraTransform3D camera, IDrawingBrush<IScene3D> scene)
@@ -109,12 +114,13 @@ namespace InteropTypes.Graphics.Backends
             var w = (float)(viewport?.Width ?? 100);
             var h = (float)(viewport?.Height ?? 100);
 
-            _PushClipRect(viewport);
-            using (var dc = UsingCanvas2D(w, h))
+            using (var state = _PushClipRect(viewport))
             {
-                scene.DrawTo(Drawing.Transforms.PerspectiveTransform.Create((dc, w, h), camera));
+                using (var dc = UsingCanvas2D(w, h))
+                {
+                    scene.DrawTo(InteropTypes.Graphics.Drawing.Transforms.PerspectiveTransform.Create((dc, w, h), camera));
+                }
             }
-            _PopClipRect(viewport);
         }
 
         public void DrawScene(Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
@@ -155,173 +161,67 @@ namespace InteropTypes.Graphics.Backends
             SetContext(null);
         }
 
-        public void DrawScene(WPFVISUAL target, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
+
+        // https://github.com/AvaloniaUI/Avalonia/issues/10442
+
+        
+
+        
+
+        public void DrawScene(Avalonia.Media.Imaging.RenderTargetBitmap target, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
         {
+            /*
             if (!this.CheckAccess())
             {
                 this.Dispatcher.Invoke(() => DrawScene(target, viewport, xform, scene));
                 return;
-            }
+            }*/            
 
-            var oldDC = _Context;
-
-            using (var dc = target.RenderOpen())
-            {
-                SetContext(dc);
-                DrawScene(viewport, xform, scene);
-                SetContext(null);
-            }
-
-            _Context = oldDC;
-        }
-
-        public void DrawScene(WPFVISUAL target, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
-        {
-            if (!this.CheckAccess())
-            {
-                this.Dispatcher.Invoke(() => DrawScene(target, viewport, xform, scene));
-                return;
-            }
-
-            var oldDC = _Context;
-
-            using (var dc = target.RenderOpen())
-            {
-                SetContext(dc);
-                DrawScene(viewport, xform, scene);
-                SetContext(null);
-            }
-
-            _Context = oldDC;
-        }
-
-        public void DrawScene(WPFRENDERTARGET target, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
-        {
-            if (!this.CheckAccess())
-            {
-                this.Dispatcher.Invoke(() => DrawScene(target, viewport, xform, scene));
-                return;
-            }
-
-            var visual = new System.Windows.Media.DrawingVisual();
+            /*
+            var visual = new VENDOR.Media.DrawingVisual();
             DrawScene(visual, viewport, xform, scene);
             target.Render(visual);
+            */
         }
 
-        public void DrawScene(WPFRENDERTARGET target, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
+        public void DrawScene(Avalonia.Media.Imaging.RenderTargetBitmap target, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
         {
+            /*
             if (!this.CheckAccess())
             {
                 this.Dispatcher.Invoke(() => DrawScene(target, viewport, xform, scene));
                 return;
-            }
+            }*/
 
-            var visual = new System.Windows.Media.DrawingVisual();
+            /*
+            var visual = new VENDOR.Media.DrawingVisual();
             DrawScene(visual, viewport, xform, scene);
             target.Render(visual);
+            */
         }
 
         #endregion
 
         #region API - ICanvasDrawingContext2D , ICanvasDrawingContext3D
 
-        private void _PushClipRect(Size? viewport)
+        private WPFCONTEXT.PushedState _PushClipRect(Size? viewport)
         {
             if (viewport.HasValue)
             {
                 var rect = new Rect(viewport.Value);
                 
-                _Context.PushClip(new System.Windows.Media.RectangleGeometry(rect));
-                _Context.DrawRectangle(null, _ResourcesCache.UseTransparentPen(), rect); // used to force the whole drawing as hit visible
-            }
-        }
+                var state = _Context.PushClip(rect);
+                _Context.DrawRectangle(_ResourcesCache.UseTransparentPen(), rect); // used to force the whole drawing as hit visible
 
-        private void _PopClipRect(Size? viewport)
-        {
-            if (viewport.HasValue) _Context.Pop();
-        }        
+                return state;
+            }
+
+            return default;
+        }
 
         #endregion
     }
 
-    class _WPFGeometryFactory
-    {
-        // reusing the geometry is not trivial bevause although
-        // it seems we can reuse the geometries just after submiting them,
-        // WPF does a lazy rendering, so it can be uses way after we've completed the update.
-
-        private readonly List<WPFGEOMETRY> _Pool = new List<WPFGEOMETRY>();
-
-        private int _Count = 0;
-
-        public void Clear() { _Count = 0; }
-
-        public WPFGEOMETRY CreateGeometry(ReadOnlySpan<Point2> points, bool isClosed, bool isFilled, bool isStroked, bool isSmoothJoin = false)
-        {
-            while (_Pool.Count <= _Count) _Pool.Add(new WPFGEOMETRY());
-
-            var g = _Pool[_Count++];
-
-            g.Clear();
-
-            using (var gg = g.Open())
-            {
-                gg.BeginFigure(points[0].ToDevicePoint(), isFilled, isClosed);
-
-                for (int i = 0; i < points.Length; ++i)
-                {
-                    gg.LineTo(points[i].ToDevicePoint(), isStroked, isSmoothJoin);
-                }
-
-                gg.Close();
-            }
-
-            return g;
-        }
-    }
-
-    class _TransformStack
-    {
-        /*
-        private readonly List<System.Windows.Media.MatrixTransform> _TransformCache = new List<System.Windows.Media.MatrixTransform>();
-        private int _TransformDepth;
-
-        private void PushMatrix(in Matrix3x2 xform)
-        {
-            while (_TransformCache.Count <= _TransformDepth)
-            {
-                _TransformCache.Add(new System.Windows.Media.MatrixTransform());
-            }
-
-            var container = _TransformCache[_TransformDepth]; ++_TransformDepth;
-
-            container.Matrix = new System.Windows.Media.Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
-            _Context.PushTransform(container);
-        }
-
-        private void PopMatrix()
-        {
-            --_TransformDepth;
-
-            _Context.Pop(); // only valid if we pushed a matrix.
-        }*/
-
-
-
-        public _TransformStack(WPFCONTEXT context) { _Context = context; }
-        private readonly WPFCONTEXT _Context;        
-
-        public void Push(Matrix3x2 xform)
-        {
-            _Context.PushTransform(new MatrixTransform(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32));            
-        }
-
-        public void Pop()
-        {            
-            _Context.Pop();
-        }
-    }
-    
     struct _ActualCanvas2DContext :
         IDisposableCanvas2D,
         IRenderTargetInfo,
@@ -329,7 +229,7 @@ namespace InteropTypes.Graphics.Backends
     {
         #region lifecycle
 
-        public _ActualCanvas2DContext(Canvas2DFactory owner, float pixelWidth,float pixelHeight, WPFCONTEXT context, _WPFGeometryFactory geo, _WPFResourcesCache resources)
+        public _ActualCanvas2DContext(Canvas2DFactory owner, float pixelWidth, float pixelHeight, WPFCONTEXT context, _WPFGeometryFactory geo, _WPFResourcesCache resources)
         {
             _Owner = owner;
             PixelsWidth = (int)pixelWidth;
@@ -349,7 +249,7 @@ namespace InteropTypes.Graphics.Backends
         {
             _Owner = null;
             _Context = null;
-            _Resources = null;            
+            _Resources = null;
         }
 
         #endregion
@@ -377,7 +277,7 @@ namespace InteropTypes.Graphics.Backends
 
         readonly bool GlobalStyle.ISource.TryGetGlobalProperty<T>(string name, out T value)
         {
-            return GlobalStyle.TryGetGlobalProperty(_Owner,name,out value);
+            return GlobalStyle.TryGetGlobalProperty(_Owner, name, out value);
         }
 
         readonly bool GlobalStyle.ISource.TrySetGlobalProperty<T>(string name, T value)
@@ -397,13 +297,12 @@ namespace InteropTypes.Graphics.Backends
         /// <inheritdoc/>
         public readonly void DrawAsset(in Matrix3x2 transform, object asset)
         {
-            VerifyDisposed();
-
-            new Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset);
+            VerifyDisposed();            
+            new Graphics.Drawing.Transforms.Decompose2D(this).DrawAsset(transform, asset);
         }
 
         /// <inheritdoc/>
-        public readonly void DrawConvexPolygon(ReadOnlySpan<Point2> points, ColorStyle color)
+        public readonly void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle color)
         {
             VerifyDisposed();
 
@@ -412,15 +311,15 @@ namespace InteropTypes.Graphics.Backends
             if (fill == null) return;
 
             var g = _Geometries.CreateGeometry(points, true, true, false);
-            _Context.DrawGeometry(fill, null, g);         
+            _Context.DrawGeometry(fill, null, g);            
         }
 
         /// <inheritdoc/>
-        public readonly void DrawLines(ReadOnlySpan<Point2> points, float diameter, LineStyle brush)
+        public readonly void DrawLines(ReadOnlySpan<POINT2> points, float diameter, LineStyle brush)
         {
             VerifyDisposed();
 
-            if (points.Length < 2) return;            
+            if (points.Length < 2) return;
 
             const bool forceOut = false; // true if outline is rendered outside, false if render in between
 
@@ -451,11 +350,11 @@ namespace InteropTypes.Graphics.Backends
                     if (geo == null) _Context.DrawLine(pen, points[0].ToDevicePoint(), points[1].ToDevicePoint());
                     else _Context.DrawGeometry(null, pen, geo);
                 }
-            }            
+            }
         }
 
         /// <inheritdoc/>
-        public readonly void DrawEllipse(Point2 c, Single width, Single height, OutlineFillStyle brush)
+        public readonly void DrawEllipse(POINT2 c, Single width, Single height, OutlineFillStyle brush)
         {
             VerifyDisposed();
 
@@ -473,7 +372,7 @@ namespace InteropTypes.Graphics.Backends
         }
 
         /// <inheritdoc/>
-        public readonly void DrawPolygon(ReadOnlySpan<Point2> points, PolygonStyle brush)
+        public readonly void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle brush)
         {
             VerifyDisposed();
 
@@ -483,30 +382,16 @@ namespace InteropTypes.Graphics.Backends
 
             var g = _Geometries.CreateGeometry(points, true, fill != null, pen != null);
 
-            _Context.DrawGeometry(fill, pen, g);            
+            _Context.DrawGeometry(fill, pen, g);
         }
 
+
         /// <inheritdoc/>
-        public readonly void DrawLabel(Point2 origin, String text, GDICOLOR penColor)
+        public readonly void DrawLabel(POINT2 origin, String text, GDICOLOR penColor)
         {
             VerifyDisposed();
 
-            var culture = System.Globalization.CultureInfo.CurrentUICulture;
-
-            var fmtText = new System.Windows.Media.FormattedText
-                (
-                text,
-                culture,
-                culture.TextInfo.IsRightToLeft ? System.Windows.FlowDirection.RightToLeft : System.Windows.FlowDirection.LeftToRight,
-                new System.Windows.Media.Typeface("Arial"),
-                16,
-                penColor.ToDeviceBrush(),
-                1
-                );
-
-            origin -= new Point2((float)fmtText.Width, (float)fmtText.Height) * 0.5f;
-
-            _Context.DrawText(fmtText, origin.ToDevicePoint());
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
@@ -521,37 +406,67 @@ namespace InteropTypes.Graphics.Backends
             var image = _Resources.UseImage(bmp.Source);
             if (image == null) return;
 
-            System.Diagnostics.Debug.Assert(!(image is CroppedBitmap), "not renderable");
-            System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
+            // System.Diagnostics.Debug.Assert(!(image is CroppedBitmap), "not renderable");
+            // System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
 
             var bmpRect = bmp.GetSourceRectangle();
-            
+
             var srcClipOffset = Matrix3x2.CreateTranslation(-bmpRect.X, -bmpRect.Y); // we need to subtract the clip region offset
             var srcScale = Matrix3x2.CreateScale(1f / bmpRect.Width, 1f / bmpRect.Height);
             var xform = srcClipOffset * srcScale * style.GetTransform() * transform;
 
             _Transforms.Push(xform);
-                
-                _Context.PushClip(_Resources.UseClipRectangle(bmpRect));
 
-                    if (style.Color.A != 255) { _Context.PushOpacity(style.Color.A / 255f); }            
+            var opacity = (float)(style.Color.A) / 255f;
 
-                    var dstRect = new Rect(0, 0, image.PixelWidth, image.PixelHeight);
-                    _Context.DrawImage(image, dstRect);
-
-                    if (style.Color.A != 255) { _Context.Pop(); }
-            
-                _Context.Pop();
+            var dstRect = new Rect(0, 0, image.PixelSize.Width, image.PixelSize.Height);
+            _Context.DrawImage(image, bmpRect.ToDeviceRect(), dstRect);
 
             _Transforms.Pop();
-        }        
+        }
 
         /// <inheritdoc/>
-        public readonly void DrawTextLine(in Matrix3x2 transform, string text, float size, Drawing.FontStyle font)
+        public readonly void DrawTextLine(in Matrix3x2 transform, string text, float size, FONTSTYLE font)
         {
             font.DrawDecomposedTo(this, transform, text, size);
         }
 
         #endregion
+    }
+
+    class _TransformStack
+    {
+        public _TransformStack(WPFCONTEXT context) { _Context = context; }
+        private readonly WPFCONTEXT _Context;
+
+        private readonly Stack<WPFCONTEXT.PushedState> _Stack = new Stack<WPFCONTEXT.PushedState>();
+
+        public void Push(Matrix3x2 xform)
+        {
+            var matrix = new Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);            
+
+            var state = _Context.PushPostTransform(matrix);
+            _Stack.Push(state);
+        }
+
+        public void Pop()
+        {
+            if (_Stack.Count == 0) return;
+            _Stack.Pop().Dispose();
+        }
+    }
+
+    class _WPFGeometryFactory
+    {
+        public WPFGEOMETRY CreateGeometry(ReadOnlySpan<Point2> points, bool isClosed, bool isFilled, bool isStroked, bool isSmoothJoin = false)
+        {
+            var devicePoints = new List<Avalonia.Point>(points.Length);
+
+            foreach (var p in points) devicePoints.Add(p.ToDevicePoint());
+
+            if (isClosed) devicePoints.Add(devicePoints[0]);
+
+            return new Avalonia.Media.PolylineGeometry(devicePoints, isFilled);
+        }
     }
 }

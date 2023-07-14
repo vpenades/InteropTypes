@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
-using VENDOR = System.Windows;
+using VENDOR = Avalonia;
 
 
 namespace InteropTypes.Graphics.Backends
 {
-    using WPFBITMAPSOURCE = VENDOR.Media.Imaging.BitmapSource;
-    using WPFBITMAPIMAGE = VENDOR.Media.Imaging.BitmapImage;
-    using WPFBITMAPFRAME = VENDOR.Media.Imaging.BitmapFrame;
-    using WPFCREATEOPTIONS = VENDOR.Media.Imaging.BitmapCreateOptions;
-    using WPFCACHEOPTIONS = VENDOR.Media.Imaging.BitmapCacheOption;
+    using WPFBITMAPSOURCE = VENDOR.Media.Imaging.Bitmap;
+    using WPFBITMAPIMAGE = VENDOR.Media.Imaging.Bitmap;
 
     internal class _WPFResourcesCache
     {
@@ -72,11 +69,7 @@ namespace InteropTypes.Graphics.Backends
 
             var fill = UseBrush(style.FillColor); if (fill == null) return null;
 
-            var pen = new VENDOR.Media.Pen(fill, thickness)
-            {
-                StartLineCap = style.StartCap.ToDeviceCapStyle(),
-                EndLineCap = style.EndCap.ToDeviceCapStyle()
-            };
+            var pen = new VENDOR.Media.Pen(fill, thickness, null, style.StartCap.ToDeviceCapStyle());
 
             return pen;
         }
@@ -90,7 +83,7 @@ namespace InteropTypes.Graphics.Backends
                 var newImage = _UpdateDynamicBitmap(imageKey, oldImage);
 
                 if (oldImage != newImage)
-                {                    
+                {
                     if (newImage == null) _ImagesCache.Remove(imageKey);
                     else _ImagesCache[imageKey] = newImage;
                 }
@@ -109,7 +102,7 @@ namespace InteropTypes.Graphics.Backends
 
         private static WPFBITMAPSOURCE _UpdateDynamicBitmap(object imageKey, WPFBITMAPSOURCE image)
         {
-            if (!(image is VENDOR.Media.Imaging.WriteableBitmap dstWriteable)) return image;
+            if (!(image is VENDOR.Media.Imaging.Bitmap dstWriteable)) return image;
 
             if (imageKey is BindableBitmap srcBindable)
             {
@@ -125,12 +118,13 @@ namespace InteropTypes.Graphics.Backends
         {
             if (imageKey is BindableBitmap srcBindable)
             {
-                srcBindable.UpdateFromQueue(_BindablePixelFormat);
+                srcBindable.UpdateFromQueue(_BindablePixelFormat);                
                 return _CreateFromSource(srcBindable);
+
             }
 
             return null;
-        }        
+        }
 
         private static WPFBITMAPSOURCE _CreateStaticBitmap(object imageKey)
         {
@@ -138,26 +132,29 @@ namespace InteropTypes.Graphics.Backends
 
             if (imageKey is string imagePath)
             {
-                Uri.TryCreate(imagePath, UriKind.RelativeOrAbsolute, out var uri);
-
-                return new WPFBITMAPIMAGE(uri);
+                return new WPFBITMAPIMAGE(imagePath);
             }
 
             if (imageKey is SpanBitmap.ISource ibmp)
-            {                
+            {
                 return _CreateFromSource(ibmp);
             }
 
             return null;
         }
 
-        private static WPFBITMAPSOURCE _CreateFromSource(SpanBitmap.ISource srcBindable, VENDOR.Media.Imaging.WriteableBitmap dstBmp = null)
-        {            
+        
+        private static WPFBITMAPSOURCE _CreateFromSource(SpanBitmap.ISource srcBindable, WPFBITMAPSOURCE dstBmp = null)
+        {
+            return null;
+
+            /*
             var srcBmp = srcBindable.AsSpanBitmap();
             if (srcBmp.IsEmpty) return dstBmp;
 
-            srcBmp.WithWPF().CopyTo(ref dstBmp);
+            srcBmp.WithAvalon().CopyTo(ref dstBmp);
             return dstBmp;
+            */
         }
 
         #endregion

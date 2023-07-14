@@ -28,9 +28,9 @@ namespace InteropTypes
 
         private float _Time => (float)_Timer.Elapsed.TotalSeconds;
 
-        private static readonly ImageSource _Asalga = ImageSource.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
+        private static readonly ImageSource _Hieroglyph = ImageSource.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
 
-        private static readonly ImageSource _TinyCat = ImageSource.CreateFromBitmap("Assets\\Tiny\\cat.png", (32, 35), (16, 20)).WithScale(3);
+        private static readonly ImageSource _TinyCat = ImageSource.CreateFromBitmap("Assets\\Tiny\\cat.png", (32, 35), (16, 20)).WithScale(3);        
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace InteropTypes
                 * System.Numerics.Matrix3x2.CreateRotation(_Time)
                    * System.Numerics.Matrix3x2.CreateTranslation(400, 300);            
 
-            dc.DrawImage(x, _Asalga);            
+            dc.DrawImage(x, _Hieroglyph);            
 
             var idx = (int)(_Time * 25);
 
@@ -56,6 +56,11 @@ namespace InteropTypes
             dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(10 + 16, 20), _Tiles[2]);
 
             dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(10, 250), (_TinyCat, true, false));
+
+
+            var opacity = (float)Math.Sin((DateTime.Now - DateTime.Today).TotalSeconds);
+
+            dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(50, 250), new ImageStyle(_TinyCat).WithOpacity(opacity));
 
             x =
                 System.Numerics.Matrix3x2.CreateScale(1.4224f)

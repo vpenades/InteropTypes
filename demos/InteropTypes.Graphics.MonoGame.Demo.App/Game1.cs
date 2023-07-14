@@ -103,7 +103,12 @@ namespace MonoGameDemo
 
             _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);
             _DrawCanvas2D();
+
+            System.Diagnostics.Debug.Assert(_Graphics.GraphicsDevice.BlendState ==  BlendState.AlphaBlend);
+
             _Drawing2D.End();
+
+            System.Diagnostics.Debug.Assert(_Graphics.GraphicsDevice.BlendState == BlendState.Opaque);
 
             _Drawing3D.Clear();
             _DrawScene3D();

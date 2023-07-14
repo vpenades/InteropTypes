@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 
-using InteropTypes.IO.FileProviders;
 using Microsoft.Extensions.FileProviders;
 
 namespace InteropTypes.IO
@@ -15,7 +12,7 @@ namespace InteropTypes.IO
     [System.Diagnostics.DebuggerDisplay("{PhysicalPath}")]
     #if !NETSTANDARD
     // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     #endif
     public partial class PhysicalFileInfo
         : IFileInfo
@@ -53,7 +50,7 @@ namespace InteropTypes.IO
 
         #region data
 
-        protected readonly FileInfo File;        
+        internal protected FileInfo File { get; }
 
         public override int GetHashCode()
         {

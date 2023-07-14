@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace InteropTypes.IO
     [System.Diagnostics.DebuggerDisplay("📁 {PhysicalPath}")]
     #if !NETSTANDARD
     // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+    [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     #endif
     public partial class PhysicalDirectoryInfo
         : IFileInfo
@@ -54,7 +53,7 @@ namespace InteropTypes.IO
 
         #region data
 
-        internal protected readonly DirectoryInfo Directory;
+        internal protected DirectoryInfo Directory { get; }
 
         internal readonly PhysicalFileProvider Parent;
 
