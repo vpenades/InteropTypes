@@ -240,9 +240,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
             _Context = context;
             _Resources = resources;
 
-            _Geometries = geo;
-
-            _Transforms = new _TransformStack(context);
+            _Geometries = geo;            
         }
 
         public void Dispose()
@@ -261,7 +259,6 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
         private _WPFResourcesCache _Resources;
         private _WPFGeometryFactory _Geometries;
-        private _TransformStack _Transforms;
 
         public int PixelsWidth { get; }
 
@@ -410,19 +407,23 @@ namespace InteropTypes.Graphics.Backends.Drawing
             // System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
 
             var bmpRect = bmp.GetSourceRectangle();
-
-            var srcClipOffset = Matrix3x2.CreateTranslation(-bmpRect.X, -bmpRect.Y); // we need to subtract the clip region offset
+            
             var srcScale = Matrix3x2.CreateScale(1f / bmpRect.Width, 1f / bmpRect.Height);
-            var xform = srcClipOffset * srcScale * style.GetTransform() * transform;
-
-            _Transforms.Push(xform);
+            var xform = srcScale * style.GetTransform() * transform;
 
             var opacity = (float)(style.Color.A) / 255f;
 
-            var dstRect = new Rect(0, 0, image.PixelSize.Width, image.PixelSize.Height);
-            _Context.DrawImage(image, bmpRect.ToDeviceRect(), dstRect);
+            var dstRect = new Rect(0, 0, bmpRect.Width, bmpRect.Height);
 
-            _Transforms.Pop();
+            var matrix = new Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
+
+            using (var start0 = opacity != 0 ? _Context.PushOpacity(opacity) : (WPFCONTEXT.PushedState?)null)
+            {
+                using (var stat1 = _Context.PushTransform(matrix))
+                {
+                    _Context.DrawImage(image, bmpRect.ToDeviceRect(), dstRect);
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -432,29 +433,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
         }
 
         #endregion
-    }
-
-    class _TransformStack
-    {
-        public _TransformStack(WPFCONTEXT context) { _Context = context; }
-        private readonly WPFCONTEXT _Context;
-
-        private readonly Stack<WPFCONTEXT.PushedState> _Stack = new Stack<WPFCONTEXT.PushedState>();
-
-        public void Push(Matrix3x2 xform)
-        {
-            var matrix = new Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);            
-
-            var state = _Context.PushPostTransform(matrix);
-            _Stack.Push(state);
-        }
-
-        public void Pop()
-        {
-            if (_Stack.Count == 0) return;
-            _Stack.Pop().Dispose();
-        }
-    }
+    }    
 
     class _WPFGeometryFactory
     {

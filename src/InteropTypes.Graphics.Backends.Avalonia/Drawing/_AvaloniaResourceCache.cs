@@ -12,8 +12,7 @@ using VENDOR = Avalonia;
 
 namespace InteropTypes.Graphics.Backends
 {
-    using WPFBITMAPSOURCE = VENDOR.Media.Imaging.Bitmap;
-    using WPFBITMAPIMAGE = VENDOR.Media.Imaging.Bitmap;
+    using AVALONIABITMAP = VENDOR.Media.Imaging.Bitmap;    
 
     internal class _WPFResourcesCache
     {
@@ -23,7 +22,7 @@ namespace InteropTypes.Graphics.Backends
 
         private readonly Dictionary<UInt32, VENDOR.Media.SolidColorBrush> _BrushesCache = new Dictionary<UInt32, VENDOR.Media.SolidColorBrush>();
 
-        private readonly Dictionary<Object, WPFBITMAPSOURCE> _ImagesCache = new Dictionary<Object, WPFBITMAPSOURCE>();
+        private readonly Dictionary<Object, AVALONIABITMAP> _ImagesCache = new Dictionary<Object, AVALONIABITMAP>();
 
         private readonly Dictionary<System.Drawing.RectangleF, VENDOR.Media.RectangleGeometry> _ClipCache = new Dictionary<System.Drawing.RectangleF, VENDOR.Media.RectangleGeometry>();
 
@@ -74,10 +73,10 @@ namespace InteropTypes.Graphics.Backends
             return pen;
         }
 
-        public WPFBITMAPSOURCE UseImage(object imageKey)
+        public AVALONIABITMAP UseImage(object imageKey)
         {
             // check if image is already in the cache
-            if (_ImagesCache.TryGetValue(imageKey, out WPFBITMAPSOURCE oldImage))
+            if (_ImagesCache.TryGetValue(imageKey, out AVALONIABITMAP oldImage))
             {
                 // if the source image is dynamic we should update it
                 var newImage = _UpdateDynamicBitmap(imageKey, oldImage);
@@ -100,7 +99,7 @@ namespace InteropTypes.Graphics.Backends
             return image;
         }
 
-        private static WPFBITMAPSOURCE _UpdateDynamicBitmap(object imageKey, WPFBITMAPSOURCE image)
+        private static AVALONIABITMAP _UpdateDynamicBitmap(object imageKey, AVALONIABITMAP image)
         {
             if (!(image is VENDOR.Media.Imaging.Bitmap dstWriteable)) return image;
 
@@ -114,7 +113,7 @@ namespace InteropTypes.Graphics.Backends
 
         }
 
-        private static WPFBITMAPSOURCE _CreateDynamicBitmap(object imageKey)
+        private static AVALONIABITMAP _CreateDynamicBitmap(object imageKey)
         {
             if (imageKey is BindableBitmap srcBindable)
             {
@@ -126,13 +125,13 @@ namespace InteropTypes.Graphics.Backends
             return null;
         }
 
-        private static WPFBITMAPSOURCE _CreateStaticBitmap(object imageKey)
+        private static AVALONIABITMAP _CreateStaticBitmap(object imageKey)
         {
             if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }
 
             if (imageKey is string imagePath)
             {
-                return new WPFBITMAPIMAGE(imagePath);
+                return new AVALONIABITMAP(imagePath);
             }
 
             if (imageKey is SpanBitmap.ISource ibmp)
@@ -144,7 +143,7 @@ namespace InteropTypes.Graphics.Backends
         }
 
         
-        private static WPFBITMAPSOURCE _CreateFromSource(SpanBitmap.ISource srcBindable, WPFBITMAPSOURCE dstBmp = null)
+        private static AVALONIABITMAP _CreateFromSource(SpanBitmap.ISource srcBindable, AVALONIABITMAP dstBmp = null)
         {
             return null;
 
