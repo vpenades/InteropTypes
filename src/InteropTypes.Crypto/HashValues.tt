@@ -54,7 +54,7 @@ foreach(var __ByteSize in __hashByteSizes)
     /// Represents a hash value of <#= __BitSize #> bits
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack=1)]
     [System.Text.Json.Serialization.JsonConverter(typeof(Hash<#= __BitSize #>.JsonConverter))]
     public readonly partial struct Hash<#= __BitSize #> : IEquatable<Hash<#= __BitSize #>> , IHashValue
     {

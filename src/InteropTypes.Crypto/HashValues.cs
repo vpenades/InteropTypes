@@ -15,7 +15,7 @@ namespace InteropTypes.Crypto
     /// Represents a hash value of 96 bits
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack=1)]
     [System.Text.Json.Serialization.JsonConverter(typeof(Hash96.JsonConverter))]
     public readonly partial struct Hash96 : IEquatable<Hash96> , IHashValue
     {
@@ -503,7 +503,7 @@ namespace InteropTypes.Crypto
     /// Represents a hash value of 128 bits
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack=1)]
     [System.Text.Json.Serialization.JsonConverter(typeof(Hash128.JsonConverter))]
     public readonly partial struct Hash128 : IEquatable<Hash128> , IHashValue
     {
@@ -991,7 +991,7 @@ namespace InteropTypes.Crypto
     /// Represents a hash value of 224 bits
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack=1)]
     [System.Text.Json.Serialization.JsonConverter(typeof(Hash224.JsonConverter))]
     public readonly partial struct Hash224 : IEquatable<Hash224> , IHashValue
     {
@@ -1489,7 +1489,7 @@ namespace InteropTypes.Crypto
     /// Represents a hash value of 256 bits
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack=1)]
     [System.Text.Json.Serialization.JsonConverter(typeof(Hash256.JsonConverter))]
     public readonly partial struct Hash256 : IEquatable<Hash256> , IHashValue
     {
@@ -1987,7 +1987,7 @@ namespace InteropTypes.Crypto
     /// Represents a hash value of 384 bits
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack=1)]
     [System.Text.Json.Serialization.JsonConverter(typeof(Hash384.JsonConverter))]
     public readonly partial struct Hash384 : IEquatable<Hash384> , IHashValue
     {
@@ -2495,7 +2495,7 @@ namespace InteropTypes.Crypto
     /// Represents a hash value of 512 bits
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToHexString()}")]
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack=1)]
     [System.Text.Json.Serialization.JsonConverter(typeof(Hash512.JsonConverter))]
     public readonly partial struct Hash512 : IEquatable<Hash512> , IHashValue
     {
