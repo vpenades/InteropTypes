@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 using XY = System.Numerics.Vector2;
@@ -396,6 +398,46 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         #pragma warning restore CA1024 // Use properties where appropriate
+
+        /// <summary>
+        /// Tries to open the stream of commonly implemented image sources.
+        /// </summary>
+        /// <param name="source">The object source declared at <see cref="_Source"/></param>
+        /// <returns>A valid stream, or null.</returns>
+        public static System.IO.Stream TryOpenRead(Object source)
+        {
+            if (source is System.ValueTuple<System.Reflection.Assembly, string> embeddedFile)
+            {
+                var allNames = embeddedFile.Item1.GetManifestResourceNames();
+
+                var embeddedKey = allNames.FirstOrDefault(item => item.EndsWith(embeddedFile.Item2, StringComparison.OrdinalIgnoreCase));
+
+                return embeddedFile.Item1.GetManifestResourceStream(embeddedKey);
+            }
+
+            if (source is Func<Stream> sfactory)
+            {
+                var s = sfactory.Invoke();
+                if (s != null) return s;
+            }
+
+            if (source is string path)
+            {
+                try
+                {
+                    var f = new System.IO.FileInfo(path);
+                    if (f.Exists) source = f;
+                }
+                catch { }
+            }
+
+            if (source is System.IO.FileInfo finfo)
+            {
+                return finfo.OpenRead();
+            }
+
+            return null;
+        }
 
         #endregion
     }

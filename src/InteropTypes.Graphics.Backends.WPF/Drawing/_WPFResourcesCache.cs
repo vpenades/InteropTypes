@@ -143,6 +143,19 @@ namespace InteropTypes.Graphics.Backends
                 return new WPFBITMAPIMAGE(uri);
             }
 
+            if (imageKey is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
+            {
+                using(var s = xinfo.CreateReadStream())
+                {
+                    if (s != null) return WPFBITMAPFRAME.Create(s);
+                }
+            }
+
+            using (var s = ImageSource.TryOpenRead(imageKey))
+            {
+                if (s != null) return WPFBITMAPFRAME.Create(s);
+            }
+
             if (imageKey is SpanBitmap.ISource ibmp)
             {                
                 return _CreateFromSource(ibmp);

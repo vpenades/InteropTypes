@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,25 +23,13 @@ namespace InteropTypes.Graphics.Backends
 
         private readonly Dictionary<UInt32, VENDOR.Media.SolidColorBrush> _BrushesCache = new Dictionary<UInt32, VENDOR.Media.SolidColorBrush>();
 
-        private readonly Dictionary<Object, AVALONIABITMAP> _ImagesCache = new Dictionary<Object, AVALONIABITMAP>();
-
-        private readonly Dictionary<System.Drawing.RectangleF, VENDOR.Media.RectangleGeometry> _ClipCache = new Dictionary<System.Drawing.RectangleF, VENDOR.Media.RectangleGeometry>();
+        private readonly Dictionary<Object, AVALONIABITMAP> _ImagesCache = new Dictionary<Object, AVALONIABITMAP>();        
 
         private static readonly PixelFormat _BindablePixelFormat = Pixel.BGRA32.Format;
 
         #endregion
 
-        #region API
-
-        public VENDOR.Media.RectangleGeometry UseClipRectangle(System.Drawing.RectangleF rect)
-        {
-            if (_ClipCache.TryGetValue(rect, out var dstRect)) return dstRect;
-
-            var srcRect = new VENDOR.Rect(rect.X, rect.Y, rect.Width, rect.Height);
-            dstRect = new VENDOR.Media.RectangleGeometry(srcRect);
-            _ClipCache[rect] = dstRect;
-            return dstRect;
-        }
+        #region API        
 
         public VENDOR.Media.Pen UseTransparentPen()
         {
@@ -101,7 +90,7 @@ namespace InteropTypes.Graphics.Backends
 
         private static AVALONIABITMAP _UpdateDynamicBitmap(object imageKey, AVALONIABITMAP image)
         {
-            if (!(image is VENDOR.Media.Imaging.Bitmap dstWriteable)) return image;
+            if (!(image is VENDOR.Media.Imaging.WriteableBitmap dstWriteable)) return image;
 
             if (imageKey is BindableBitmap srcBindable)
             {
@@ -127,11 +116,63 @@ namespace InteropTypes.Graphics.Backends
 
         private static AVALONIABITMAP _CreateStaticBitmap(object imageKey)
         {
-            if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }
+            if (imageKey is AVALONIABITMAP abitmap) return abitmap;
+
+            if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }            
 
             if (imageKey is string imagePath)
             {
-                return new AVALONIABITMAP(imagePath);
+                var allFiles = System.IO.Directory.GetFiles(System.AppContext.BaseDirectory, "*", SearchOption.AllDirectories);
+
+                #if ANDROID
+
+                // https://github.com/xamarin/xamarin-android/issues/5052
+
+                imagePath = imagePath.Replace("\\", "/");
+                imagePath = imagePath.Replace("Assets", "assets");
+
+                if (!System.IO.Path.IsPathRooted(imagePath))
+                {
+                    var mgr = 
+
+                    imagePath = System.IO.Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, imagePath);
+
+                    System.Diagnostics.Debug.Assert(System.IO.Path.IsPathRooted(imagePath));
+                }
+
+                #endif
+
+                try
+                {
+                    return new AVALONIABITMAP(imagePath);
+                }
+                catch(Exception ex)
+                {
+                    throw;
+                }
+
+                
+            }
+
+            if (imageKey is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
+            {
+                using(var s = xinfo.CreateReadStream())
+                {
+                    if (s != null)
+                    {
+                        try { return new AVALONIABITMAP(s); }
+                        catch { throw; }
+                    }
+                }                
+            }
+
+            using (var s = ImageSource.TryOpenRead(imageKey))
+            {
+                if (s != null)
+                {
+                    try { return new AVALONIABITMAP(s); }
+                    catch { throw; }
+                }
             }
 
             if (imageKey is SpanBitmap.ISource ibmp)
@@ -143,17 +184,15 @@ namespace InteropTypes.Graphics.Backends
         }
 
         
-        private static AVALONIABITMAP _CreateFromSource(SpanBitmap.ISource srcBindable, AVALONIABITMAP dstBmp = null)
+        private static AVALONIABITMAP _CreateFromSource(SpanBitmap.ISource srcBindable, VENDOR.Media.Imaging.WriteableBitmap dstBmp = null)
         {
-            return null;
-
-            /*
-            var srcBmp = srcBindable.AsSpanBitmap();
-            if (srcBmp.IsEmpty) return dstBmp;
-
-            srcBmp.WithAvalon().CopyTo(ref dstBmp);
-            return dstBmp;
-            */
+            if (dstBmp != null)
+            {
+                _Implementation.CopyPixels(srcBindable.AsSpanBitmap(), dstBmp);
+                return dstBmp;
+            }
+         
+            return _Implementation.CreateAvaloniaBitmap(srcBindable.AsSpanBitmap());         
         }
 
         #endregion

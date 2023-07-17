@@ -14,12 +14,24 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <StackPanel>
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    <Button Content="Hello World" HorizontalAlignment="Center" />
-    <l:CustomCanvas Width="100" Height="200" />    
-  </StackPanel>
+  <TabControl>
+    <TabItem Header="Avalonia Controls">
+      <StackPanel>
+        <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Button Content="Hello World" HorizontalAlignment="Center" />
+      </StackPanel>
+    </TabItem>
+    <TabItem Header="Vectors">
+      <StackPanel>
+        <TextBlock Text="Vectors example" HorizontalAlignment="Center" VerticalAlignment="Center"/>        
+      </StackPanel>
+    </TabItem>
+    <TabItem Header="Sprites2D">
+      <DockPanel>
+        <TextBlock Text="Interop Sprites" DockPanel.Dock="Top" />        
+        <l:CustomCanvas Width="400" Height="300" />        
+      </DockPanel>
+    </TabItem>
+  </TabControl>
 
-  
-  
 </UserControl>

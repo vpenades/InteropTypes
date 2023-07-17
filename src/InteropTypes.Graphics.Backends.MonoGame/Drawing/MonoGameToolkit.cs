@@ -69,29 +69,6 @@ namespace InteropTypes.Graphics.Backends
                 attr = mgasset.Attributes;
                 imageSource = mgasset.Source;
             }            
-
-            if (imageSource is ValueTuple<System.Reflection.Assembly,string> resourceInfo) // load from assembly resources
-            {
-                System.IO.Stream _openResourceStream()
-                {
-                    var s = resourceInfo.Item1.GetManifestResourceStream(resourceInfo.Item2);
-                    if (s == null)
-                    {
-                        var otherNames = resourceInfo.Item1
-                            .GetManifestResourceNames()                            
-                            .Aggregate((a,b) => a +"\r\n" + b);
-
-                        throw new System.IO.FileNotFoundException($"{resourceInfo.Item2} not found, it must be one of:\r\n{otherNames}");
-                    }
-
-                    return s;
-                    
-                }
-                
-                var tex = _loadTexture(gd, _openResourceStream);
-                return (tex, attr);
-            }
-
             if (imageSource is System.Drawing.Color gdicolor)
             {
                 var tex = _CreateSolidTexture(gd, 16, 16, gdicolor.ToXna());
@@ -102,24 +79,18 @@ namespace InteropTypes.Graphics.Backends
             {
                 var tex = _CreateSolidTexture(gd, 16, 16, xnacolor);
                 return (tex, attr);
+            }            
+
+            // default attempt
+
+            if (imageSource is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
+            {
+                var tex = _loadTexture(gd, xinfo.CreateReadStream);
+                if (tex != null) return (tex, attr);
             }
 
-            if (imageSource is FileInfo finfo)
-            {
-                imageSource = finfo.FullName;
-            }
-
-            if (imageSource is string texPath)
-            {
-                var tex = _loadTexture(gd, () => File.OpenRead(texPath));
-                return (tex, attr);
-            }
-
-            if (imageSource is Func<Stream> document)
-            {
-                var tex = _loadTexture(gd, document);
-                return (tex, attr);
-            }
+            var texx = _loadTexture(gd, () => ImageSource.TryOpenRead(imageSource));
+            if (texx != null) return (texx, attr);
 
             // interfaces must be checked at the very end because they're fallbacks
 
@@ -140,6 +111,8 @@ namespace InteropTypes.Graphics.Backends
 
             using (var s = openDocFunc())
             {
+                if (s == null) return null;
+
                 tex = Texture2D.FromStream(gd, s);
             }
 

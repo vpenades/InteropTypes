@@ -1,18 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net6.0-android</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
     <PackageReference Include="Avalonia" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+    <PackageReference Include="Avalonia.Android" />
+    <PackageReference Include="Xamarin.Essentials" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>

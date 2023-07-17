@@ -14,23 +14,36 @@ namespace InteropTypes
     {
         #region data
 
-        private static readonly ImageSource[] _Punk = ImageSource.CreateGrid("Assets\\PunkRun.png", 8, 8, (256, 256), (128, 128)).ToArray();
-        private static readonly ImageSource[] _Tiles = ImageSource.CreateGrid("Assets\\Tiles.png", 63, 9, (16, 16), XY.Zero).ToArray();
+        private static Object _GetImageReference(string name)
+        {
+            name ="Assets\\" + name;
 
-        private static readonly ImageSource _Offset0 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), false).WithScale(0.45f);
-        private static readonly ImageSource _Offset1 = ImageSource.CreateFromBitmap("Assets\\SpriteOffset.png", (192, 192), (40, 108), true).WithScale(0.45f);
+            #if ANDROID
+            name = name.Replace("\\",".");
+            name = name.Replace("/",".");
+            return (typeof(_Scene2D).Assembly, name);
+            #endif
+
+            return name;
+        }
+
+        private static readonly ImageSource[] _Punk = ImageSource.CreateGrid(_GetImageReference("PunkRun.png"), 8, 8, (256, 256), (128, 128)).ToArray();
+        private static readonly ImageSource[] _Tiles = ImageSource.CreateGrid(_GetImageReference("Tiles.png"), 63, 9, (16, 16), XY.Zero).ToArray();
+
+        private static readonly ImageSource _Offset0 = ImageSource.CreateFromBitmap(_GetImageReference("SpriteOffset.png"), (192, 192), (40, 108), false).WithScale(0.45f);
+        private static readonly ImageSource _Offset1 = ImageSource.CreateFromBitmap(_GetImageReference("SpriteOffset.png"), (192, 192), (40, 108), true).WithScale(0.45f);
 
         private static readonly BitmapGrid _Map1 = new BitmapGrid(4, 4, _Tiles);
 
-        private static readonly ImageSource Beam1 = ImageSource.CreateFromBitmap("Assets\\beam1.png", (256, 32), (16, 16));
+        private static readonly ImageSource Beam1 = ImageSource.CreateFromBitmap(_GetImageReference("beam1.png"), (256, 32), (16, 16));
 
         private static readonly System.Diagnostics.Stopwatch _Timer = System.Diagnostics.Stopwatch.StartNew();
 
         private float _Time => (float)_Timer.Elapsed.TotalSeconds;
 
-        private static readonly ImageSource _Hieroglyph = ImageSource.CreateFromBitmap("Assets\\hieroglyph_sprites_by_asalga.png", (192, 192), (96, 96)).WithScale(3);
+        private static readonly ImageSource _Hieroglyph = ImageSource.CreateFromBitmap(_GetImageReference("hieroglyph_sprites_by_asalga.png"), (192, 192), (96, 96)).WithScale(3);
 
-        private static readonly ImageSource _TinyCat = ImageSource.CreateFromBitmap("Assets\\Tiny\\cat.png", (32, 35), (16, 20)).WithScale(3);        
+        private static readonly ImageSource _TinyCat = ImageSource.CreateFromBitmap(_GetImageReference("Tiny\\cat.png"), (32, 35), (16, 20)).WithScale(3);        
 
         #endregion
 

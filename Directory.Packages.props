@@ -34,6 +34,9 @@
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
     <PackageVersion Include="Google.Protobuf" Version="3.23.2" />
+
+    <PackageVersion Include="Xamarin.Essentials" Version="1.7.7" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.1" />
     
     <!-- Game Engines -->
 
@@ -85,8 +88,7 @@
     <PackageVersion Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
 
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.1" />
+    <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersion)" />    
     <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />
     

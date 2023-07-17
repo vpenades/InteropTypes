@@ -1,15 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net6.0-android</TargetFrameworks>
     <RootNamespace>InteropTypes</RootNamespace>
     <IsPackable>false</IsPackable>
-  </PropertyGroup>  
+  </PropertyGroup>
 
+<!--
   <ItemGroup>
-    <None Remove="Assets\**\*" />
     <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  -->  
+  
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0-android' ">    
+    <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+    <EmbeddedResource Include="Assets\**" />
+  </ItemGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />

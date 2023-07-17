@@ -410,12 +410,11 @@ namespace InteropTypes.Graphics.Backends.Drawing
             
             var srcScale = Matrix3x2.CreateScale(1f / bmpRect.Width, 1f / bmpRect.Height);
             var xform = srcScale * style.GetTransform() * transform;
+            var matrix = new Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
 
             var opacity = (float)(style.Color.A) / 255f;
 
-            var dstRect = new Rect(0, 0, bmpRect.Width, bmpRect.Height);
-
-            var matrix = new Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
+            var dstRect = new Rect(0, 0, bmpRect.Width, bmpRect.Height);            
 
             using (var start0 = opacity != 0 ? _Context.PushOpacity(opacity) : (WPFCONTEXT.PushedState?)null)
             {
