@@ -12,6 +12,11 @@ namespace InteropTypes.Graphics.Backends
 {
     static class _PrivateExtensions
     {
+        public static Avalonia.Matrix ToDeviceMatrix(this in System.Numerics.Matrix3x2 xform)
+        {
+            return new Avalonia.Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
+        }
+
         public static Avalonia.Rect ToDeviceRect(this System.Drawing.RectangleF rect)
         {
             return new Avalonia.Rect(rect.X,rect.Y,rect.Width,rect.Height);

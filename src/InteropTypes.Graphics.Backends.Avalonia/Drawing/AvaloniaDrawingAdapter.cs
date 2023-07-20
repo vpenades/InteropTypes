@@ -18,6 +18,7 @@ using GDICOLOR = System.Drawing.Color;
 using FONTSTYLE = InteropTypes.Graphics.Drawing.FontStyle;
 
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+using System.Diagnostics;
 
 namespace InteropTypes.Graphics.Backends.Drawing
 {
@@ -286,6 +287,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
         #region API - ICanvas2D
 
+        [Conditional("DEBUG")]
         private readonly void VerifyDisposed()
         {
             if (_Owner == null) throw new ObjectDisposedException(nameof(_ActualCanvas2DContext));
@@ -406,21 +408,21 @@ namespace InteropTypes.Graphics.Backends.Drawing
             // System.Diagnostics.Debug.Assert(!(image is CroppedBitmap), "not renderable");
             // System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
 
-            var bmpRect = bmp.GetSourceRectangle();
+            var srcRect = bmp.GetSourceRectangle();
             
-            var srcScale = Matrix3x2.CreateScale(1f / bmpRect.Width, 1f / bmpRect.Height);
-            var xform = srcScale * style.GetTransform() * transform;
-            var matrix = new Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
+            var xform = Matrix3x2.CreateScale(1f / srcRect.Width, 1f / srcRect.Height);
+            xform *= style.GetTransform();
+            xform *= transform;
 
             var opacity = (float)(style.Color.A) / 255f;
+            
+            var dstRect = new Rect(0, 0, srcRect.Width, srcRect.Height);            
 
-            var dstRect = new Rect(0, 0, bmpRect.Width, bmpRect.Height);            
-
-            using (var start0 = opacity != 0 ? _Context.PushOpacity(opacity) : (WPFCONTEXT.PushedState?)null)
+            using (var start0 = opacity < 1 ? _Context.PushOpacity(opacity) : (WPFCONTEXT.PushedState?)null)
             {
-                using (var stat1 = _Context.PushTransform(matrix))
+                using (var stat1 = _Context.PushTransform(xform.ToDeviceMatrix()))
                 {
-                    _Context.DrawImage(image, bmpRect.ToDeviceRect(), dstRect);
+                    _Context.DrawImage(image, srcRect.ToDeviceRect(), dstRect);
                 }
             }
         }

@@ -14,6 +14,7 @@
   
   <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0-android' ">    
     <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <AvaloniaContent Include="Assets\**\*" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
@@ -23,6 +24,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
   </ItemGroup>
 
   <ItemGroup>

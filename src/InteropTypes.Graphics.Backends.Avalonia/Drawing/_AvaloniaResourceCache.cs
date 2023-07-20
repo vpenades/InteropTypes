@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Avalonia.Controls;
+
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
@@ -20,6 +22,8 @@ namespace InteropTypes.Graphics.Backends
         #region data        
 
         private VENDOR.Media.Pen _TransparentPen;
+
+        private VENDOR.Media.ISolidColorBrush _SolidWhite = VENDOR.Media.Brushes.White;
 
         private readonly Dictionary<UInt32, VENDOR.Media.SolidColorBrush> _BrushesCache = new Dictionary<UInt32, VENDOR.Media.SolidColorBrush>();
 
@@ -37,8 +41,10 @@ namespace InteropTypes.Graphics.Backends
             return _TransparentPen;
         }
 
-        public VENDOR.Media.SolidColorBrush UseBrush(ColorStyle color)
+        public VENDOR.Media.ISolidColorBrush UseBrush(ColorStyle color)
         {
+            if (color.Packed == uint.MaxValue) return _SolidWhite;
+
             if (!color.IsVisible) return null;
 
             if (_BrushesCache.TryGetValue(color.Packed, out VENDOR.Media.SolidColorBrush brush)) return brush;
@@ -117,14 +123,28 @@ namespace InteropTypes.Graphics.Backends
         private static AVALONIABITMAP _CreateStaticBitmap(object imageKey)
         {
             if (imageKey is AVALONIABITMAP abitmap) return abitmap;
+            
+            if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }                        
 
-            if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }            
+            if (imageKey is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
+            {
+                using(var s = xinfo.CreateReadStream())
+                {
+                    if (s != null)
+                    {
+                        try { return new AVALONIABITMAP(s); }
+                        catch { throw; }
+                    }
+                }                
+            }
+
+            #if ANDROID  
 
             if (imageKey is string imagePath)
             {
                 var allFiles = System.IO.Directory.GetFiles(System.AppContext.BaseDirectory, "*", SearchOption.AllDirectories);
 
-                #if ANDROID
+                             
 
                 // https://github.com/xamarin/xamarin-android/issues/5052
 
@@ -140,30 +160,34 @@ namespace InteropTypes.Graphics.Backends
                     System.Diagnostics.Debug.Assert(System.IO.Path.IsPathRooted(imagePath));
                 }
 
-                #endif
+                
 
                 try
                 {
+                    System.Diagnostics.Debug.Assert(System.IO.File.Exists(imagePath), "path not found");
                     return new AVALONIABITMAP(imagePath);
                 }
                 catch(Exception ex)
                 {
                     throw;
-                }
-
-                
+                }                
             }
 
-            if (imageKey is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
+            #endif
+
+            if (imageKey is string url)
             {
-                using(var s = xinfo.CreateReadStream())
+                // url = System.IO.Path.Combine(AppContext.BaseDirectory, url);
+
+                
+
+                try { return new AVALONIABITMAP(url); }
+                catch(Exception ex)
                 {
-                    if (s != null)
-                    {
-                        try { return new AVALONIABITMAP(s); }
-                        catch { throw; }
-                    }
-                }                
+                    System.Console.WriteLine(ex.Message);
+                    System.Diagnostics.Trace.WriteLine(ex.Message);
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
             }
 
             using (var s = ImageSource.TryOpenRead(imageKey))
