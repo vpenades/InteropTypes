@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:InteropTypes.Graphics.Avalonia.Demo.App.ViewModels"
-             xmlns:l="clr-namespace:InteropTypes.Graphics.Avalonia.Demo.App.Views"
+             xmlns:vm="clr-namespace:InteropTypes.ViewModels"
+             xmlns:l="clr-namespace:InteropTypes.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="InteropTypes.Graphics.Avalonia.Demo.App.Views.MainView"
+             x:Class="InteropTypes.Views.MainView"
              x:DataType="vm:MainViewModel">
   
   <Design.DataContext>
@@ -19,6 +19,7 @@
       <StackPanel>
         <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button Content="Hello World" HorizontalAlignment="Center" />
+        <ProgressBar Width="100" Height="10" />
       </StackPanel>
     </TabItem>
     <TabItem Header="Vectors">

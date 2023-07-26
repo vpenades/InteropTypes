@@ -1,6 +1,6 @@
 ﻿using UIKit;
 
-namespace InteropTypes.Graphics.Avalonia.Demo.App.iOS;
+namespace InteropTypes;
 
 public class Application
 {

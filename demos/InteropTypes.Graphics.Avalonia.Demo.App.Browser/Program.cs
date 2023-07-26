@@ -5,7 +5,7 @@ using Avalonia;
 using Avalonia.Browser;
 using Avalonia.ReactiveUI;
 
-using InteropTypes.Graphics.Avalonia.Demo.App;
+using InteropTypes;
 
 [assembly: SupportedOSPlatform("browser")]
 

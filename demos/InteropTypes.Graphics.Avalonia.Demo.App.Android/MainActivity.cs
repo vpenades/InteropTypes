@@ -5,7 +5,7 @@ using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
 
-namespace InteropTypes.Graphics.Avalonia.Demo.App.Android;
+namespace InteropTypes;
 
 [Activity(
     Label = "InteropTypes.Graphics.Avalonia.Demo.App.Android",

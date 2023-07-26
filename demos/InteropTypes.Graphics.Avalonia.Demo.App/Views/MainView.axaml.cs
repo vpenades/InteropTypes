@@ -1,11 +1,13 @@
 ﻿using Avalonia.Controls;
 
-namespace InteropTypes.Graphics.Avalonia.Demo.App.Views;
+namespace InteropTypes.Views;
 
 public partial class MainView : UserControl
 {
     public MainView()
     {
-        InitializeComponent();        
+        InitializeComponent();
+
+        
     }
 }
