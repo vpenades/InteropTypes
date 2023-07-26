@@ -47,8 +47,8 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
         private WPFCONTEXT _Context;
 
-        private _WPFResourcesCache _ResourcesCache = new _WPFResourcesCache();
-        private _WPFGeometryFactory _GeometryFactory = new _WPFGeometryFactory();
+        private _AvaloniaResourceCache _ResourcesCache = new _AvaloniaResourceCache();
+        private _AvaloniaGeometryFactory _GeometryFactory = new _AvaloniaGeometryFactory();
 
         private GlobalStyle _GlobalStyle = new GlobalStyle();
 
@@ -230,7 +230,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
     {
         #region lifecycle
 
-        public _ActualCanvas2DContext(Canvas2DFactory owner, float pixelWidth, float pixelHeight, WPFCONTEXT context, _WPFGeometryFactory geo, _WPFResourcesCache resources)
+        public _ActualCanvas2DContext(Canvas2DFactory owner, float pixelWidth, float pixelHeight, WPFCONTEXT context, _AvaloniaGeometryFactory geo, _AvaloniaResourceCache resources)
         {
             _Owner = owner;
             PixelsWidth = (int)pixelWidth;
@@ -258,8 +258,8 @@ namespace InteropTypes.Graphics.Backends.Drawing
         private Canvas2DFactory _Owner;
         private WPFCONTEXT _Context;
 
-        private _WPFResourcesCache _Resources;
-        private _WPFGeometryFactory _Geometries;
+        private _AvaloniaResourceCache _Resources;
+        private _AvaloniaGeometryFactory _Geometries;
 
         public int PixelsWidth { get; }
 
@@ -436,7 +436,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
         #endregion
     }    
 
-    class _WPFGeometryFactory
+    class _AvaloniaGeometryFactory
     {
         public WPFGEOMETRY CreateGeometry(ReadOnlySpan<Point2> points, bool isClosed, bool isFilled, bool isStroked, bool isSmoothJoin = false)
         {

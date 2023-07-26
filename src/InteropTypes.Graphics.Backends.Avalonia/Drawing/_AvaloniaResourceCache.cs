@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Avalonia.Controls;
+using Avalonia;
+using Avalonia.Platform;
 
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
@@ -15,9 +16,10 @@ using VENDOR = Avalonia;
 
 namespace InteropTypes.Graphics.Backends
 {
-    using AVALONIABITMAP = VENDOR.Media.Imaging.Bitmap;    
+    
+    
 
-    internal class _WPFResourcesCache
+    internal partial class _AvaloniaResourceCache
     {
         #region data        
 
@@ -26,10 +28,6 @@ namespace InteropTypes.Graphics.Backends
         private VENDOR.Media.ISolidColorBrush _SolidWhite = VENDOR.Media.Brushes.White;
 
         private readonly Dictionary<UInt32, VENDOR.Media.SolidColorBrush> _BrushesCache = new Dictionary<UInt32, VENDOR.Media.SolidColorBrush>();
-
-        private readonly Dictionary<Object, AVALONIABITMAP> _ImagesCache = new Dictionary<Object, AVALONIABITMAP>();        
-
-        private static readonly PixelFormat _BindablePixelFormat = Pixel.BGRA32.Format;
 
         #endregion
 
@@ -68,156 +66,7 @@ namespace InteropTypes.Graphics.Backends
             return pen;
         }
 
-        public AVALONIABITMAP UseImage(object imageKey)
-        {
-            // check if image is already in the cache
-            if (_ImagesCache.TryGetValue(imageKey, out AVALONIABITMAP oldImage))
-            {
-                // if the source image is dynamic we should update it
-                var newImage = _UpdateDynamicBitmap(imageKey, oldImage);
-
-                if (oldImage != newImage)
-                {
-                    if (newImage == null) _ImagesCache.Remove(imageKey);
-                    else _ImagesCache[imageKey] = newImage;
-                }
-
-                return newImage;
-            }
-
-            // create the new image, either dynamic or static.
-
-            var image = _CreateDynamicBitmap(imageKey) ?? _CreateStaticBitmap(imageKey);
-
-            if (image != null) _ImagesCache[imageKey] = image;
-
-            return image;
-        }
-
-        private static AVALONIABITMAP _UpdateDynamicBitmap(object imageKey, AVALONIABITMAP image)
-        {
-            if (!(image is VENDOR.Media.Imaging.WriteableBitmap dstWriteable)) return image;
-
-            if (imageKey is BindableBitmap srcBindable)
-            {
-                srcBindable.UpdateFromQueue(_BindablePixelFormat);
-                return _CreateFromSource(srcBindable, dstWriteable);
-            }
-
-            return image;
-
-        }
-
-        private static AVALONIABITMAP _CreateDynamicBitmap(object imageKey)
-        {
-            if (imageKey is BindableBitmap srcBindable)
-            {
-                srcBindable.UpdateFromQueue(_BindablePixelFormat);                
-                return _CreateFromSource(srcBindable);
-
-            }
-
-            return null;
-        }
-
-        private static AVALONIABITMAP _CreateStaticBitmap(object imageKey)
-        {
-            if (imageKey is AVALONIABITMAP abitmap) return abitmap;
-            
-            if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }                        
-
-            if (imageKey is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
-            {
-                using(var s = xinfo.CreateReadStream())
-                {
-                    if (s != null)
-                    {
-                        try { return new AVALONIABITMAP(s); }
-                        catch { throw; }
-                    }
-                }                
-            }
-
-            #if ANDROID  
-
-            if (imageKey is string imagePath)
-            {
-                var allFiles = System.IO.Directory.GetFiles(System.AppContext.BaseDirectory, "*", SearchOption.AllDirectories);
-
-                             
-
-                // https://github.com/xamarin/xamarin-android/issues/5052
-
-                imagePath = imagePath.Replace("\\", "/");
-                imagePath = imagePath.Replace("Assets", "assets");
-
-                if (!System.IO.Path.IsPathRooted(imagePath))
-                {
-                    var mgr = 
-
-                    imagePath = System.IO.Path.Combine(Xamarin.Essentials.FileSystem.AppDataDirectory, imagePath);
-
-                    System.Diagnostics.Debug.Assert(System.IO.Path.IsPathRooted(imagePath));
-                }
-
-                
-
-                try
-                {
-                    System.Diagnostics.Debug.Assert(System.IO.File.Exists(imagePath), "path not found");
-                    return new AVALONIABITMAP(imagePath);
-                }
-                catch(Exception ex)
-                {
-                    throw;
-                }                
-            }
-
-            #endif
-
-            if (imageKey is string url)
-            {
-                // url = System.IO.Path.Combine(AppContext.BaseDirectory, url);
-
-                
-
-                try { return new AVALONIABITMAP(url); }
-                catch(Exception ex)
-                {
-                    System.Console.WriteLine(ex.Message);
-                    System.Diagnostics.Trace.WriteLine(ex.Message);
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                }
-            }
-
-            using (var s = ImageSource.TryOpenRead(imageKey))
-            {
-                if (s != null)
-                {
-                    try { return new AVALONIABITMAP(s); }
-                    catch { throw; }
-                }
-            }
-
-            if (imageKey is SpanBitmap.ISource ibmp)
-            {
-                return _CreateFromSource(ibmp);
-            }
-
-            return null;
-        }
-
         
-        private static AVALONIABITMAP _CreateFromSource(SpanBitmap.ISource srcBindable, VENDOR.Media.Imaging.WriteableBitmap dstBmp = null)
-        {
-            if (dstBmp != null)
-            {
-                _Implementation.CopyPixels(srcBindable.AsSpanBitmap(), dstBmp);
-                return dstBmp;
-            }
-         
-            return _Implementation.CreateAvaloniaBitmap(srcBindable.AsSpanBitmap());         
-        }
 
         #endregion
     }

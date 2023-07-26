@@ -27,10 +27,12 @@ namespace InteropTypes.Views
             this.InvalidateVisual();
         }
 
+        
+
         private InteropTypes._Scene2D _Scene = new _Scene2D();
         private InteropTypes._Sprites2D _Sprites = new _Sprites2D();
 
-        private InteropTypes.Graphics.Drawing.ImageSource _TinyCat = InteropTypes.Graphics.Drawing.ImageSource.CreateFromBitmap("Assets/tinycat.png", (31,33), (15,15));
+        private InteropTypes.Graphics.Drawing.ImageSource _TinyCat = InteropTypes.Graphics.Drawing.ImageSource.CreateFromBitmap(new Uri("avares://InteropTypes.Graphics.Avalonia.Demo.App/Assets/tinycat.png"), (31,33), (15,15));
 
         private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromSeconds(1f / 30) };
 
@@ -51,7 +53,7 @@ namespace InteropTypes.Views
                         _Scene.DrawTo(dc);
                         // _Sprites.DrawTo(dc);
 
-                        // dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(30, 30), _TinyCat);
+                        dc.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(30, 30), _TinyCat);
                     }
                 }
             }
