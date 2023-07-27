@@ -8,19 +8,24 @@ using Avalonia.Platform;
 
 using InteropTypes.Graphics.Bitmaps;
 
-using AVALONIABMP = Avalonia.Media.Imaging.Bitmap;
+using AVABITMAP = Avalonia.Media.Imaging.Bitmap;
+using AVARWBITMAP = Avalonia.Media.Imaging.WriteableBitmap;
+
+using AVAPIXRECT = Avalonia.PixelRect;
+using AVAPIXSIZE = Avalonia.PixelSize;
+using AVAVECTOR2 = Avalonia.Vector;
 
 namespace InteropTypes.Graphics.Backends
 {
     partial class _Implementation
     {
-        public static BitmapInfo GetBitmapInfo(AVALONIABMP image)
+        public static BitmapInfo GetBitmapInfo(AVABITMAP image)
         {
             if (TryGetBitmapInfo(image, out var binfo)) return binfo;
             throw new Diagnostics.PixelFormatNotSupportedException(image.GetType().Name, nameof(image));
         }
 
-        public static bool TryGetBitmapInfo(AVALONIABMP image, out BitmapInfo binfo)
+        public static bool TryGetBitmapInfo(AVABITMAP image, out BitmapInfo binfo)
         {
             var fmt = ToPixelFormatAlpha(image.Format ?? default, false);
 
@@ -28,11 +33,11 @@ namespace InteropTypes.Graphics.Backends
             return true;
         }
 
-        public static void CopyPixels(AVALONIABMP src,  MemoryBitmap dst)
+        public static void CopyPixels(AVABITMAP src,  MemoryBitmap dst)
         {
             // https://github.com/AvaloniaUI/Avalonia/issues/12169            
 
-            var srcRect = new Avalonia.PixelRect(0, 0, src.PixelSize.Width, src.PixelSize.Height);
+            var srcRect = new AVAPIXRECT(0, 0, src.PixelSize.Width, src.PixelSize.Height);
 
             void _copyPixels(PointerBitmap dstPtr)
             {
@@ -42,7 +47,7 @@ namespace InteropTypes.Graphics.Backends
             dst.AsSpanBitmap().PinWritablePointer(_copyPixels);
         }
 
-        public static void CopyPixels(MemoryBitmap src, Avalonia.Media.Imaging.WriteableBitmap dst)
+        public static void CopyPixels(MemoryBitmap src, AVARWBITMAP dst)
         {
             using (var dstLock = dst.Lock())
             {
@@ -51,7 +56,7 @@ namespace InteropTypes.Graphics.Backends
             }
         }
 
-        public static void CopyPixels(SpanBitmap src, Avalonia.Media.Imaging.WriteableBitmap dst)
+        public static void CopyPixels(SpanBitmap src, AVARWBITMAP dst)
         {
             using (var dstLock = dst.Lock())
             {
@@ -67,16 +72,16 @@ namespace InteropTypes.Graphics.Backends
             return new PointerBitmap(frameBuffer.Address, bmpInfo);
         }
 
-        public static AVALONIABMP CreateAvaloniaBitmap(SpanBitmap src)
+        public static AVABITMAP CreateAvaloniaBitmap(SpanBitmap src)
         {
             return src.PinReadablePointer(CreateAvaloniaBitmap);            
         }
 
-        public static AVALONIABMP CreateAvaloniaBitmap(PointerBitmap src)
+        public static AVABITMAP CreateAvaloniaBitmap(PointerBitmap src)
         {
             var (color, alpha) = ToPixelFormat(src.PixelFormat);
 
-            return new AVALONIABMP(color, alpha, src.Pointer, new Avalonia.PixelSize(src.Width, src.Height), new Avalonia.Vector(96, 96), src.StepByteSize);
+            return new AVABITMAP(color, alpha, src.Pointer, new AVAPIXSIZE(src.Width, src.Height), new AVAVECTOR2(96, 96), src.StepByteSize);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace InteropTypes.Graphics.Backends
 
             if (_BrushesCache.TryGetValue(color.Packed, out VENDOR.Media.SolidColorBrush brush)) return brush;
 
-            brush = color.ToGDI().ToDeviceBrush();
+            brush = color.ToGDI().ToAvaloniaBrush();
 
             _BrushesCache[color.Packed] = brush;
 
@@ -61,7 +61,7 @@ namespace InteropTypes.Graphics.Backends
 
             var fill = UseBrush(style.FillColor); if (fill == null) return null;
 
-            var pen = new VENDOR.Media.Pen(fill, thickness, null, style.StartCap.ToDeviceCapStyle());
+            var pen = new VENDOR.Media.Pen(fill, thickness, null, style.StartCap.ToAvaloniaCapStyle());
 
             return pen;
         }

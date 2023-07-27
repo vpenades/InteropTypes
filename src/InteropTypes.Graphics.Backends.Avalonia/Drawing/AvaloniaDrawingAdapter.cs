@@ -331,7 +331,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
                 var pen = _Resources.UsePen(diameter + outSize, brush.WithFill(brush.OutlineColor));
                 if (pen != null)
                 {
-                    if (geo == null) _Context.DrawLine(pen, points[0].ToDevicePoint(), points[1].ToDevicePoint());
+                    if (geo == null) _Context.DrawLine(pen, points[0].ToAvaloniaPoint(), points[1].ToAvaloniaPoint());
                     else _Context.DrawGeometry(null, pen, geo);
                 }
             }
@@ -346,7 +346,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
                 var pen = _Resources.UsePen(fillSize, brush);
                 if (pen != null)
                 {
-                    if (geo == null) _Context.DrawLine(pen, points[0].ToDevicePoint(), points[1].ToDevicePoint());
+                    if (geo == null) _Context.DrawLine(pen, points[0].ToAvaloniaPoint(), points[1].ToAvaloniaPoint());
                     else _Context.DrawGeometry(null, pen, geo);
                 }
             }
@@ -367,7 +367,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
                 height += brush.OutlineWidth;
             }
 
-            _Context.DrawEllipse(fill, pen, c.ToDevicePoint(), width * 0.5f, height * 0.5f);
+            _Context.DrawEllipse(fill, pen, c.ToAvaloniaPoint(), width * 0.5f, height * 0.5f);
         }
 
         /// <inheritdoc/>
@@ -420,9 +420,9 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
             using (var start0 = opacity < 1 ? _Context.PushOpacity(opacity) : (WPFCONTEXT.PushedState?)null)
             {
-                using (var stat1 = _Context.PushTransform(xform.ToDeviceMatrix()))
+                using (var stat1 = _Context.PushTransform(xform.ToAvaloniaMatrix()))
                 {
-                    _Context.DrawImage(image, srcRect.ToDeviceRect(), dstRect);
+                    _Context.DrawImage(image, srcRect.ToAvaloniaRect(), dstRect);
                 }
             }
         }
@@ -442,7 +442,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
         {
             var devicePoints = new List<Avalonia.Point>(points.Length);
 
-            foreach (var p in points) devicePoints.Add(p.ToDevicePoint());
+            foreach (var p in points) devicePoints.Add(p.ToAvaloniaPoint());
 
             if (isClosed) devicePoints.Add(devicePoints[0]);
 

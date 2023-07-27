@@ -8,21 +8,24 @@ using InteropTypes.Graphics.Drawing;
 
 using COLOR = System.Drawing.Color;
 
+using AVAMATRIX = Avalonia.Matrix;
+using AVARECT = Avalonia.Rect;
+
 namespace InteropTypes.Graphics.Backends
 {
     static class _PrivateExtensions
     {
-        public static Avalonia.Matrix ToDeviceMatrix(this in System.Numerics.Matrix3x2 xform)
+        public static AVAMATRIX ToAvaloniaMatrix(this in System.Numerics.Matrix3x2 xform)
         {
-            return new Avalonia.Matrix(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
+            return new AVAMATRIX(xform.M11, xform.M12, xform.M21, xform.M22, xform.M31, xform.M32);
         }
 
-        public static Avalonia.Rect ToDeviceRect(this System.Drawing.RectangleF rect)
+        public static AVARECT ToAvaloniaRect(this System.Drawing.RectangleF rect)
         {
-            return new Avalonia.Rect(rect.X,rect.Y,rect.Width,rect.Height);
+            return new AVARECT(rect.X,rect.Y,rect.Width,rect.Height);
         }
 
-        public static Avalonia.Media.PenLineCap ToDeviceCapStyle(this LineCapStyle style)
+        public static Avalonia.Media.PenLineCap ToAvaloniaCapStyle(this LineCapStyle style)
         {
             switch(style)
             {
@@ -34,7 +37,7 @@ namespace InteropTypes.Graphics.Backends
             }
         }
 
-        public static Avalonia.Media.Color ToDeviceColor(this UInt32 color)
+        public static Avalonia.Media.Color ToAvaloniaColor(this UInt32 color)
         {
             byte a = (byte)((color >> 24) & 255);
             byte r = (byte)((color >> 16) & 255);
@@ -44,29 +47,32 @@ namespace InteropTypes.Graphics.Backends
             return Avalonia.Media.Color.FromArgb(a, r, g, b);            
         }
 
-        public static Avalonia.Media.SolidColorBrush ToDeviceBrush(this UInt32 color)
+        public static Avalonia.Media.SolidColorBrush ToAvaloniaBrush(this UInt32 color)
         {
-            return new Avalonia.Media.SolidColorBrush(color.ToDeviceColor());
+            return new Avalonia.Media.SolidColorBrush(color.ToAvaloniaColor());
         }
 
-        public static Avalonia.Media.Color ToDeviceColor(this COLOR color)
+        public static Avalonia.Media.Color ToAvaloniaColor(this COLOR color)
         {
             return Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
-        public static Avalonia.Media.SolidColorBrush ToDeviceBrush(this COLOR color)
+        public static Avalonia.Media.SolidColorBrush ToAvaloniaBrush(this COLOR color)
         {
-            return new Avalonia.Media.SolidColorBrush(color.ToDeviceColor());
+            return new Avalonia.Media.SolidColorBrush(color.ToAvaloniaColor());
         }
 
-
-
-        public static Avalonia.Point ToDevicePoint(this System.Numerics.Vector2 p)
+        public static Avalonia.Point ToAvaloniaPoint(this System.Numerics.Vector2 p)
         {
             return new Avalonia.Point(p.X, p.Y);
         }
 
-        public static Avalonia.Point ToDevicePoint(this Point2 p)
+        public static Avalonia.Size ToAvaloniaSize(this System.Numerics.Vector2 p)
+        {
+            return new Avalonia.Size(p.X, p.Y);
+        }
+
+        public static Avalonia.Point ToAvaloniaPoint(this Point2 p)
         {
             return new Avalonia.Point(p.X, p.Y);
         }

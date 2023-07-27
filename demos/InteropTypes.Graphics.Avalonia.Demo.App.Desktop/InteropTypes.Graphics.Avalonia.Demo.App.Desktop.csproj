@@ -17,4 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Avalonia.Demo.App\InteropTypes.Graphics.Avalonia.Demo.App.csproj" />
   </ItemGroup>
+  
 </Project>

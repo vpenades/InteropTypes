@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:InteropTypes.ViewModels"
              xmlns:l="clr-namespace:InteropTypes.Views"
+             xmlns:interop="urn:InteropTypes"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="InteropTypes.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -31,8 +32,8 @@
       <DockPanel>
         <TextBlock Text="Interop Sprites" DockPanel.Dock="Top" />
         <Border BorderBrush="Red" BorderThickness="5" >
-          <Viewbox>
-            <l:CustomCanvas Width="800" Height="600" />
+          <Viewbox>            
+            <interop:Canvas2DView x:Name="myCanvas" Width="800" Height="600" OnRender="OnRender" />            
           </Viewbox>            
         </Border>
       </DockPanel>

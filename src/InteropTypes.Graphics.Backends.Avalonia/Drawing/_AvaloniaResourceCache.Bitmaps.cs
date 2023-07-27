@@ -5,11 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Avalonia.Platform;
-using Avalonia;
 
 using VENDOR = Avalonia;
-
-
 
 namespace InteropTypes.Graphics.Backends
 {
@@ -79,6 +76,18 @@ namespace InteropTypes.Graphics.Backends
         {
             if (imageKey is AVALONIABITMAP abitmap) return abitmap;
 
+            if (imageKey is string preImagePath && preImagePath.StartsWith("avares://"))
+            {
+                imageKey = new Uri(preImagePath);
+            }
+
+            if (imageKey is Uri uri)
+            {
+                if (uri.Scheme == "avares") return new AVALONIABITMAP(AssetLoader.Open(uri));
+                else if (uri.IsFile) imageKey = new System.IO.FileInfo(uri.LocalPath);
+                else throw new NotSupportedException(uri.ToString());
+            }
+
             if (imageKey is System.IO.FileInfo finfo) { imageKey = finfo.FullName; }
 
             if (imageKey is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
@@ -91,12 +100,7 @@ namespace InteropTypes.Graphics.Backends
                         catch { throw; }
                     }
                 }
-            }
-
-            if (imageKey is Uri uri)
-            {
-                return new AVALONIABITMAP(AssetLoader.Open(uri));
-            }
+            }            
 
             #if ANDROID
 
