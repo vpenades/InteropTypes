@@ -66,7 +66,6 @@ namespace InteropTypes.Graphics.Backends
             {
                 srcBindable.UpdateFromQueue(_BindablePixelFormat);
                 return _CreateFromSource(srcBindable);
-
             }
 
             return null;
