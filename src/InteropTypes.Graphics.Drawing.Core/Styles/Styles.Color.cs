@@ -87,6 +87,9 @@ namespace InteropTypes.Graphics.Drawing
 
         #region data
 
+        /// <summary>
+        /// Packed in B,G,R,A order
+        /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
         public readonly UInt32 Packed;        
 
@@ -103,7 +106,7 @@ namespace InteropTypes.Graphics.Drawing
         public readonly Byte A;
 
         /// <inheritdoc/>
-        public readonly override int GetHashCode() { return A== 0 ? 0 : this.Packed.GetHashCode(); }
+        public readonly override int GetHashCode() { return A == 0 ? 0 : this.Packed.GetHashCode(); }
 
         /// <inheritdoc/>
         public readonly override bool Equals(object obj) { return obj is ColorStyle other && this.Equals(other); }
@@ -138,6 +141,22 @@ namespace InteropTypes.Graphics.Drawing
         /// True if this color is not transparent.
         /// </summary>
         public readonly bool IsVisible => A != 0;
+
+        /// <summary>
+        /// Packed in R,G,B,A order
+        /// </summary>
+        public UInt32 PackedRGBA
+        {
+            get
+            {
+                Span<byte> bytes = stackalloc byte[4];
+                bytes[0] = R;
+                bytes[1] = G;
+                bytes[2] = B;
+                bytes[3] = A;
+                return System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, uint>(bytes)[0];
+            }
+        }
 
         #endregion
 

@@ -172,7 +172,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             var c = premultiplyColor ? this.Color.ToPremul() : this.Color;
 
-            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c.Packed, depthZ);
+            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c, depthZ);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             var c = premultiplyColor ? this.Color.ToPremul() : this.Color;
 
-            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c.Packed);
+            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c);
         }
 
         /// <summary>
