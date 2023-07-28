@@ -4,26 +4,25 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 using Avalonia;
 
 using InteropTypes.Graphics.Drawing;
 
-using VENDOR = Avalonia;
-
-using WPFCONTEXT = Avalonia.Media.DrawingContext;
-using WPFGEOMETRY = Avalonia.Media.Geometry;
+using AVACONTEXT = Avalonia.Media.DrawingContext;
+using AVAGEOMETRY = Avalonia.Media.Geometry;
 
 using GDICOLOR = System.Drawing.Color;
-using FONTSTYLE = InteropTypes.Graphics.Drawing.FontStyle;
 
+using FONTSTYLE = InteropTypes.Graphics.Drawing.FontStyle;
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-using System.Diagnostics;
+
 
 namespace InteropTypes.Graphics.Backends.Drawing
 {
     /// <summary>
-    /// Wraps a <see cref="WPFCONTEXT"/> and
+    /// Wraps a <see cref="AVACONTEXT"/> and
     /// uses it as a factory to create <see cref="IDisposableCanvas2D"/>
     /// </summary>
     public partial class Canvas2DFactory : Avalonia.AvaloniaObject,
@@ -31,7 +30,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
     {
         #region lifecycle              
 
-        public Canvas2DFactory(WPFCONTEXT context) : this()
+        public Canvas2DFactory(AVACONTEXT context) : this()
         {
             SetContext(context);
         }
@@ -45,7 +44,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
         #region data
 
-        private WPFCONTEXT _Context;
+        private AVACONTEXT _Context;
 
         private _AvaloniaResourceCache _ResourcesCache = new _AvaloniaResourceCache();
         private _AvaloniaGeometryFactory _GeometryFactory = new _AvaloniaGeometryFactory();
@@ -75,7 +74,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
         #region API
 
-        public void SetContext(WPFCONTEXT context)
+        public void SetContext(AVACONTEXT context)
         {
             this.VerifyAccess();
             _Context = context;
@@ -146,7 +145,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
             DrawScene(viewport, xform.GetCameraTransform3D(), scene);
         }
 
-        public void DrawScene(WPFCONTEXT dc, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
+        public void DrawScene(AVACONTEXT dc, Size? viewport, CameraTransform2D.ISource xform, IDrawingBrush<ICanvas2D> scene)
         {
             this.VerifyAccess();
             SetContext(dc);
@@ -154,7 +153,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
             SetContext(null);
         }
 
-        public void DrawScene(WPFCONTEXT dc, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
+        public void DrawScene(AVACONTEXT dc, Size? viewport, CameraTransform3D.ISource xform, IDrawingBrush<IScene3D> scene)
         {
             this.VerifyAccess();
             SetContext(dc);
@@ -205,7 +204,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
         #region API - ICanvasDrawingContext2D , ICanvasDrawingContext3D
 
-        private WPFCONTEXT.PushedState _PushClipRect(Size? viewport)
+        private AVACONTEXT.PushedState _PushClipRect(Size? viewport)
         {
             if (viewport.HasValue)
             {
@@ -230,7 +229,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
     {
         #region lifecycle
 
-        public _ActualCanvas2DContext(Canvas2DFactory owner, float pixelWidth, float pixelHeight, WPFCONTEXT context, _AvaloniaGeometryFactory geo, _AvaloniaResourceCache resources)
+        public _ActualCanvas2DContext(Canvas2DFactory owner, float pixelWidth, float pixelHeight, AVACONTEXT context, _AvaloniaGeometryFactory geo, _AvaloniaResourceCache resources)
         {
             _Owner = owner;
             PixelsWidth = (int)pixelWidth;
@@ -239,7 +238,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
             DotsPerInchX = DotsPerInchY = 96;
 
             _Context = context;
-            _Resources = resources;
+            _Resources = resources;            
 
             _Geometries = geo;            
         }
@@ -256,7 +255,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
         #region data
 
         private Canvas2DFactory _Owner;
-        private WPFCONTEXT _Context;
+        private AVACONTEXT _Context;
 
         private _AvaloniaResourceCache _Resources;
         private _AvaloniaGeometryFactory _Geometries;
@@ -416,9 +415,12 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
             var opacity = (float)(style.Color.A) / 255f;
             
-            var dstRect = new Rect(0, 0, srcRect.Width, srcRect.Height);            
+            var dstRect = new Rect(0, 0, srcRect.Width, srcRect.Height);
 
-            using (var start0 = opacity < 1 ? _Context.PushOpacity(opacity) : (WPFCONTEXT.PushedState?)null)
+            // we could use a _Context.Custom draw operation here?
+            // https://github.com/AvaloniaUI/Avalonia/blob/master/samples/RenderDemo/Pages/CustomSkiaPage.cs
+
+            using (var start0 = opacity < 1 ? _Context.PushOpacity(opacity) : (AVACONTEXT.PushedState?)null)
             {
                 using (var stat1 = _Context.PushTransform(xform.ToAvaloniaMatrix()))
                 {
@@ -438,7 +440,7 @@ namespace InteropTypes.Graphics.Backends.Drawing
 
     class _AvaloniaGeometryFactory
     {
-        public WPFGEOMETRY CreateGeometry(ReadOnlySpan<Point2> points, bool isClosed, bool isFilled, bool isStroked, bool isSmoothJoin = false)
+        public AVAGEOMETRY CreateGeometry(ReadOnlySpan<Point2> points, bool isClosed, bool isFilled, bool isStroked, bool isSmoothJoin = false)
         {
             var devicePoints = new List<Avalonia.Point>(points.Length);
 

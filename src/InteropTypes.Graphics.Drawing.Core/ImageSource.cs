@@ -369,8 +369,7 @@ namespace InteropTypes.Graphics.Drawing
 
         internal _ImageSourceTransforms UseTransforms()
         {
-            if (_Transforms != null) return _Transforms;
-            _Transforms = new _ImageSourceTransforms(this, _SourceWidth, _SourceHeight);
+            _Transforms ??= new _ImageSourceTransforms(this, _SourceWidth, _SourceHeight);
             return _Transforms;
         }
 
@@ -514,49 +513,53 @@ namespace InteropTypes.Graphics.Drawing
             return _Transforms[(int)orientation];
         }        
         
-        public void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, _ImageFlags o, uint color, float depthZ = 1)
+        public void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, _ImageFlags o, ColorStyle color, float depthZ = 1)
         {
+            var packed = color.PackedRGBA;
+
             xform = _Transforms[(int)o] * xform;
             var r0 = new XY(xform.M11, xform.M12);
             var r1 = new XY(xform.M21, xform.M22);
 
             vertices[0].Position = new XYZ(xform.Translation, depthZ);
-            vertices[0].Color = color;
+            vertices[0].Color = packed;
             vertices[0].TextureCoord = _UV0;
 
             vertices[1].Position = new XYZ(xform.Translation + r0, depthZ);
-            vertices[1].Color = color;
+            vertices[1].Color = packed;
             vertices[1].TextureCoord = _UV1;
 
             vertices[2].Position = new XYZ(xform.Translation + r0 + r1, depthZ);
-            vertices[2].Color = color;
+            vertices[2].Color = packed;
             vertices[2].TextureCoord = _UV2;
 
             vertices[3].Position = new XYZ(xform.Translation + r1, depthZ);
-            vertices[3].Color = color;
+            vertices[3].Color = packed;
             vertices[3].TextureCoord = _UV3;
         }
         
-        public void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform, _ImageFlags o, uint color)
+        public void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform, _ImageFlags o, ColorStyle color)
         {
+            var packed = color.PackedRGBA;
+
             xform = _Transforms[(int)o] * xform;
             var r0 = new XY(xform.M11, xform.M12);
             var r1 = new XY(xform.M21, xform.M22);
 
             vertices[0].Position = xform.Translation;
-            vertices[0].Color = color;
+            vertices[0].Color = packed;
             vertices[0].TextureCoord = _UV0;
 
             vertices[1].Position = xform.Translation + r0;
-            vertices[1].Color = color;
+            vertices[1].Color = packed;
             vertices[1].TextureCoord = _UV1;
 
             vertices[2].Position = xform.Translation + r0 + r1;
-            vertices[2].Color = color;
+            vertices[2].Color = packed;
             vertices[2].TextureCoord = _UV2;
 
             vertices[3].Position = xform.Translation + r1;
-            vertices[3].Color = color;
+            vertices[3].Color = packed;
             vertices[3].TextureCoord = _UV3;
         }
         
