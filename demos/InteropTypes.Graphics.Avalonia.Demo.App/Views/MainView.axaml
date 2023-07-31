@@ -16,6 +16,7 @@
   </Design.DataContext>  
 
   <TabControl>
+    
     <TabItem Header="Avalonia Controls">
       <StackPanel>
         <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -23,11 +24,18 @@
         <ProgressBar Width="100" Height="10" />
       </StackPanel>
     </TabItem>
-    <TabItem Header="Vectors">
+    
+    <TabItem Header="File System">
       <StackPanel>
-        <TextBlock Text="Vectors example" HorizontalAlignment="Center" VerticalAlignment="Center"/>        
+        <WrapPanel>
+          <Button Content="../" Click="_OnClick_FolderUp" />
+          <Button Content="Browse..." Click="_OnClick_BrowseDirectory"/>
+        </WrapPanel>
+
+        <interop:FileSystemTree x:Name="myFoldersTree" />
       </StackPanel>
     </TabItem>
+    
     <TabItem Header="Sprites2D">
       <DockPanel>
         <TextBlock Text="Interop Sprites" DockPanel.Dock="Top" />
@@ -38,6 +46,7 @@
         </Border>
       </DockPanel>
     </TabItem>
+    
   </TabControl>
 
 </UserControl>

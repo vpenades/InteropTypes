@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>InteropTypes.IO</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />  
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
+  </ItemGroup>
+
+</Project>

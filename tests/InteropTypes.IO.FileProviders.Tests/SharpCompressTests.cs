@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using InteropTypes.IO.Archives;
 using Microsoft.Extensions.FileProviders;
 
 using NUnit.Framework;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.Archives
 {
     internal class SharpCompressTests
     {
@@ -31,7 +31,7 @@ namespace InteropTypes.IO
         {
             var path = ResourceInfo.From("test.cbz");
 
-            using var provider = ArchiveFileProvider.Create(path);            
+            using var provider = SharpCompressFileProvider.Open(path);            
 
             var contents = provider.GetDirectoryContents(string.Empty);
             contents._PrintContents();

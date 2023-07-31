@@ -5,13 +5,21 @@ using Avalonia.Threading;
 
 namespace InteropTypes.Views;
 
+using PDIRECTORYINFO = InteropTypes.IO.PhysicalDirectoryInfo;
+
 public partial class MainView : UserControl
 {
     public MainView()
     {
-        InitializeComponent();        
+        InitializeComponent();
+
+        this.Loaded += MainView_Loaded;
     }
-    
+
+    private void MainView_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        myFoldersTree.DataContext = InteropTypes.IO.PhysicalDirectoryInfo.CurrentDirectory;
+    }
 
     private InteropTypes._Scene2D _Scene = new _Scene2D();
     private InteropTypes._Sprites2D _Sprites = new _Sprites2D();
@@ -28,5 +36,24 @@ public partial class MainView : UserControl
         args.Canvas.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(30, 30), _TinyCat);
 
         args.Canvas.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(100, 30), _NoiseBitmap.Sprite);
+    }
+
+    public void _OnClick_BrowseDirectory(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (PDIRECTORYINFO.TryBrowseFolderDialog(out var dinfo, null, null, null))
+        {
+            myFoldersTree.DataContext = dinfo;
+        }
+    }
+
+    public void _OnClick_FolderUp(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (myFoldersTree.DataContext is PDIRECTORYINFO pdinfo)
+        {
+            var dinfo = new System.IO.DirectoryInfo(pdinfo.PhysicalPath).Parent;
+            if (dinfo == null) return;
+
+            myFoldersTree.DataContext = new PDIRECTORYINFO(dinfo);
+        }
     }
 }

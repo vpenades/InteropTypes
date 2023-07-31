@@ -40,8 +40,6 @@ namespace InteropTypes.IO
             var result = provider.ReadAllBytesFrom(list);
 
             CollectionAssert.AreEqual(result, new byte[] { 1, 2, 4 });
-
-
         }
 
         [Test]

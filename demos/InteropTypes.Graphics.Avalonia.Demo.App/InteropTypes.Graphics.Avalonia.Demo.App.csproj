@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Avalonia\InteropTypes.Graphics.Backends.Avalonia.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders.Avalonia\InteropTypes.IO.FileProviders.Avalonia.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Demos.Common\InteropTypes.Graphics.Demos.Common.csproj" />
   </ItemGroup>
 </Project>

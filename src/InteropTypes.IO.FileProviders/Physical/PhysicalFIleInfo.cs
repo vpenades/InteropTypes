@@ -41,15 +41,17 @@ namespace InteropTypes.IO
         /// Initializes an instance of <see cref="PhysicalFileInfo"/> that wraps an instance of <see cref="System.IO.FileInfo"/>
         /// </summary>
         /// <param name="info">The <see cref="System.IO.FileInfo"/></param>
-        public PhysicalFileInfo(FileInfo info, PhysicalFileProvider parent = null)
+        public PhysicalFileInfo(FileInfo info)
         {
             File = info;
+
+            // if we need to create PhysicalFileProviders, we can have one static provider per DRIVE, which is very few!!!
         }
 
         #endregion
 
         #region data
-
+        
         internal protected FileInfo File { get; }
 
         public override int GetHashCode()
@@ -57,11 +59,11 @@ namespace InteropTypes.IO
             return FileSystemInfoComparer<FileInfo>.Default.GetHashCode(File);
         }
 
-        public bool Equals(IFileInfo obj)
+        public bool Equals(IFileInfo other)
         {
-            if (object.ReferenceEquals(this, obj)) return true;
+            if (object.ReferenceEquals(this, other)) return true;
 
-            return obj is PhysicalFileInfo other && FileSystemInfoComparer<FileInfo>.Default.Equals(this.File, other.File);
+            return other is PhysicalFileInfo pfinfo && FileSystemInfoComparer<FileInfo>.Default.Equals(this.File, pfinfo.File);
         }
 
         #endregion

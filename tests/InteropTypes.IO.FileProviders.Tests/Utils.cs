@@ -24,7 +24,7 @@ namespace InteropTypes.IO
             {
                 var h256 = Crypto.Hash256.Sha256FromFile(entry);
 
-                Indent(indent); TestContext.WriteLine($"🗎 {entry.PhysicalPath.Substring(offsetPath)} => {h256.ToHexString()}");
+                Indent(indent); TestContext.WriteLine($"🗎 {entry.Name} => {h256.ToHexString()}");
 
                 if (entry is IServiceProvider srv)
                 {

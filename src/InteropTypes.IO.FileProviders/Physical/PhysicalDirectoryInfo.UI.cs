@@ -8,53 +8,28 @@ namespace InteropTypes.IO
     {
         public static bool TryBrowseFolderDialog(out PhysicalDirectoryInfo xinfo, Environment.SpecialFolder? rootFolder, string initialDir, Guid? clientId)
         {
-            xinfo = null;
-
-            #if !WINDOWS            
-
-            return false;
-
-            #else
-
-            void configure(System.Windows.Forms.FolderBrowserDialog dlg)
+            if (_SystemDialogs.TryBrowseFolderDialog(out var dinfo, rootFolder, initialDir, clientId))
             {
-                dlg.ShowNewFolderButton = true;
-
-                if (rootFolder.HasValue) dlg.RootFolder = rootFolder.Value;
-                dlg.InitialDirectory = initialDir;
-                if (clientId.HasValue) dlg.ClientGuid = clientId.Value;
+                xinfo = new PhysicalDirectoryInfo(dinfo);
+                return true;
             }
 
-            return TryBrowseFolderDialog(out xinfo, configure);
-
-            #endif
+            xinfo = null;
+            return false;
         }
 
         #if WINDOWS
-
         public static bool TryBrowseFolderDialog(out PhysicalDirectoryInfo xinfo, Action<System.Windows.Forms.FolderBrowserDialog> configureDialog, System.Windows.Forms.IWin32Window parent = null)
         {
-            xinfo = null;            
-
-            using(var dlg = new System.Windows.Forms.FolderBrowserDialog())
+            if (_SystemDialogs.TryBrowseFolderDialog(out var dinfo, configureDialog, parent))
             {
-                configureDialog(dlg);
-
-                var r = parent == null
-                    ? dlg.ShowDialog()
-                    : dlg.ShowDialog(parent);
-
-                if (r != System.Windows.Forms.DialogResult.OK) return false;
-
-                var dinfo = new System.IO.DirectoryInfo(dlg.SelectedPath);
-
                 xinfo = new PhysicalDirectoryInfo(dinfo);
-
                 return true;
-            }            
+            }
+            
+            xinfo = null;
+            return false;
         }
-
         #endif
-
     }
 }

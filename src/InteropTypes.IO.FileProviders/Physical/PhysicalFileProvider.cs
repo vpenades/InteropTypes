@@ -24,6 +24,8 @@ namespace InteropTypes.IO
 
         #region lifecycle
 
+        // TODO: do the same as the registry with HKLM, HKCU, etc.... that is: create one static readonly provider PER DRIVE/Volume and reuse them
+
         /// <summary>
         /// Initializes a new instance of a PhysicalFileProvider at the given root directory.
         /// </summary>
@@ -169,7 +171,7 @@ namespace InteropTypes.IO
 
         public virtual PhysicalFileInfo CreateFileInfo(FileInfo fileInfo)
         {
-            return new PhysicalFileInfo(fileInfo, this);
+            return new PhysicalFileInfo(fileInfo);
         }
 
         public virtual PhysicalDirectoryInfo CreateDirectoryInfo(DirectoryInfo dirInfo)

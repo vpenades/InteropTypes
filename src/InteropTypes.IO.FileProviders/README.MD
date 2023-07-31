@@ -32,6 +32,9 @@ TODO:
 - [NTFS Alternate Data Streams](https://es.wikipedia.org/wiki/Alternate_Data_Streams)
   - [How to ADS IO](https://stackoverflow.com/questions/604960/how-to-read-and-modify-ntfs-alternate-data-streams-using-net)
 - [ReFS](https://en.wikipedia.org/wiki/ReFS)
+- 
+- [DiscUtils for ISO and other image file formats](https://github.com/DiscUtils/DiscUtils)
+- [System.IO.IsolatedStorage](https://www.nuget.org/packages/System.IO.IsolatedStorage)
 
 ### Issues
 

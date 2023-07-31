@@ -42,11 +42,11 @@ namespace InteropTypes.IO
         /// <summary>
         /// Initializes an instance of <see cref="PhysicalDirectoryInfo"/> that wraps an instance of <see cref="System.IO.DirectoryInfo"/>
         /// </summary>
-        /// <param name="info">The directory</param>
-        public PhysicalDirectoryInfo(DirectoryInfo info, PhysicalFileProvider parent = null)
+        /// <param name="dinfo">The directory</param>
+        public PhysicalDirectoryInfo(DirectoryInfo dinfo, PhysicalFileProvider parent = null)
         {
-            Directory = info;
-            Parent = parent;
+            Directory = dinfo;
+            Parent = parent ?? new PhysicalFileProvider(dinfo.Root.FullName);
         }
 
         #endregion
@@ -146,7 +146,8 @@ namespace InteropTypes.IO
                         throw new InvalidOperationException("Unsupported: " + info.GetType().FullName);
                     });
             }
-            catch (Exception ex) when (ex is DirectoryNotFoundException || ex is IOException)
+            catch (Exception ex)
+            when (ex is DirectoryNotFoundException || ex is IOException || ex is UnauthorizedAccessException)
             {
                 return Enumerable.Empty<IFileInfo>();
             }

@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace InteropTypes.IO
 {
     partial struct PhysicalFIleInfo
     {
-        public static bool TryOpenFileDialog(out PhysicalFileInfo xinfo, string filter, Guid? clientId)
+        public static async Task<PhysicalFileInfo> TryOpenFileDialogAsync(string filter, Guid? clientId)
         {
-            xinfo = null;
-
-            #if !WINDOWS            
-
-            return false;
-
-            #else
+            #if WINDOWS
 
             void configure(System.Windows.Forms.OpenFileDialog dlg)
             {
@@ -24,9 +19,28 @@ namespace InteropTypes.IO
                 if (clientId.HasValue) dlg.ClientGuid = clientId.Value;
             }
 
-            return TryOpenFileDialog(out xinfo, configure);
+            if (TryOpenFileDialog(out var xinfo, configure)) return xinfo;
 
             #endif
+
+            #if ANDROID
+
+            var options = Xamarin.Essentials.PickOptions.Default;
+
+            var result = await Xamarin.Essentials.FilePicker.PickAsync(options).ConfigureAwait(false);
+
+            if (result != null)
+            {
+                // actually it should wrap Xamarin.Essentials.FileBase
+
+                var finfo = new System.IO.FileInfo(result.FullPath);
+
+                return new PhysicalFileInfo(finfo);
+            }
+
+            #endif
+
+            return null;
         }
 
         #if WINDOWS
