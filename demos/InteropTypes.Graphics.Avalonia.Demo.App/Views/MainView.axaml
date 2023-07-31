@@ -33,7 +33,7 @@
         <TextBlock Text="Interop Sprites" DockPanel.Dock="Top" />
         <Border BorderBrush="Red" BorderThickness="5" >
           <Viewbox>            
-            <interop:Canvas2DView x:Name="myCanvas" Width="800" Height="600" OnRender="OnRender" />            
+            <interop:Canvas2DView x:Name="myCanvas" Width="800" Height="600" OnRender="OnRender" RenderFrameRate="30" />            
           </Viewbox>            
         </Border>
       </DockPanel>
