@@ -143,6 +143,7 @@ namespace InteropTypes.IO.Reflection
                 case ".flv":
                 case ".mpg":
                 case ".mp4":
+                case ".mov":
                 case ".wmv":
                 case ".m4v":
                 case ".mkv":
@@ -225,9 +226,11 @@ namespace InteropTypes.IO.Reflection
                 case ".7z":
                 case ".tar":
                 case ".gz":
+                case ".tar.gz":
                 case ".lz4":
                 case ".lzh":
                 case ".cab":
+                case ".iso":
                     return FileContentType.Archive;
 
 
