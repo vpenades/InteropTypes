@@ -159,15 +159,8 @@ namespace InteropTypes.Codecs
             }            
 
             if (compression == 0)
-            {
-                #if NETSTANDARD2_0
-                for (int i = 0; i < data.Length; ++i)
-                {
-                    s.WriteByte(data[i]);
-                }
-                #else
-                s.Write(data);
-                #endif
+            {                
+                s.Write(data);             
 
                 return;
             }
@@ -187,16 +180,7 @@ namespace InteropTypes.Codecs
 
             if (compression == 0)
             {
-                var data = new Byte[byteLen];
-
-                #if NETSTANDARD2_0
-                for (int i = 0; i < data.Length; ++i)
-                {
-                    var value = s.ReadByte();
-                    if (value < 0) throw new System.IO.EndOfStreamException();
-                    data[i] = (byte)value;
-                }
-                #else
+                var data = new Byte[byteLen];                
 
                 var span = data.AsSpan();
                 while(span.Length > 0)
@@ -204,9 +188,7 @@ namespace InteropTypes.Codecs
                     var r = s.Read(span);
                     if (r == 0) throw new System.IO.EndOfStreamException();
                     span = span.Slice(r);
-                }
-                
-                #endif
+                }                
 
                 return data;
             }

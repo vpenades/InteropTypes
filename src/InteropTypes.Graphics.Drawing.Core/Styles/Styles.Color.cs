@@ -44,34 +44,20 @@ namespace InteropTypes.Graphics.Drawing
 
         [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int red, int green, int blue) : this()
-        {
-            #if !NETSTANDARD2_0
+        {            
             B = (Byte)Math.Clamp(blue,0,255);
             G = (Byte)Math.Clamp(green,0,255);
             R = (Byte)Math.Clamp(red,0,255);
-            A = 255;
-            #else
-            B = (Byte)blue.Clamp(0,255);
-            G = (Byte)green.Clamp(0,255);
-            R = (Byte)red.Clamp(0,255);
-            A = 255;
-            #endif
+            A = 255;            
         }
 
         [System.Diagnostics.DebuggerStepThrough]
         public ColorStyle(int red, int green, int blue, int alpha) : this()
-        {
-            #if !NETSTANDARD2_0
+        {            
             B = (Byte)Math.Clamp(blue, 0, 255);
             G = (Byte)Math.Clamp(green, 0, 255);
             R = (Byte)Math.Clamp(red, 0, 255);
-            A = (Byte)Math.Clamp(alpha, 0, 255);
-            #else
-            B = (Byte)blue.Clamp(0,255);
-            G = (Byte)green.Clamp(0,255);
-            R = (Byte)red.Clamp(0,255);
-            A = (Byte)alpha.Clamp(0,255);
-            #endif
+            A = (Byte)Math.Clamp(alpha, 0, 255);            
         }
 
         [System.Diagnostics.DebuggerStepThrough]

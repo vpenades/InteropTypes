@@ -26,14 +26,9 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             #region API
 
             public readonly float GetScale(float maxScale)
-            {
-                #if !NETSTANDARD2_0
+            {                
                 var nt = MathF.Tan(this.Angle * 0.5f);
-                nt = MathF.Sqrt(1 + nt * nt);
-                #else
-                var nt = (float)Math.Tan(this.Angle * 0.5f);
-                nt = (float)Math.Sqrt(1 + nt * nt);
-                #endif
+                nt = MathF.Sqrt(1 + nt * nt);                
 
                 return Math.Min(nt, maxScale);
             }
@@ -135,12 +130,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 for (int i = 0; i < divisions; ++i)
                 {
                     var angle = -PI * 2 * i / divisions;
-
-                    #if !NETSTANDARD2_0
-                    var p = nx * MathF.Cos(angle) + ny * MathF.Sin(angle) * nt;
-                    #else
-                    var p = nx * (float)Math.Cos(angle) + ny * (float)Math.Sin(angle) * nt;
-                    #endif
+                    
+                    var p = nx * MathF.Cos(angle) + ny * MathF.Sin(angle) * nt;                    
 
                     points[i] = Point + p * r;
                 }
@@ -241,14 +232,9 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 // and resolving 'r' gives this formula:
 
                 var circleArea = PI * circleRadius * circleRadius;
-
-                #if !NETSTANDARD2_0
+                
                 var k = MathF.Sin(PI * 2.0f / divisions);
                 return MathF.Sqrt(circleArea * 2 / divisions * k);
-                #else
-                var k = Math.Sin(PI * 2.0f / divisions);
-                return (float)Math.Sqrt(circleArea * 2 / divisions * k);
-                #endif
             }
 
             #endregion

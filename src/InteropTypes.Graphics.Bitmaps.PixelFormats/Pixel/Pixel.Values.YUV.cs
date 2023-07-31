@@ -31,16 +31,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 var b = (yy + 516 * uu + 128) >> 8; // blue
                 var g = (yy - 100 * uu - 208 * vv + 128) >> 8; // green
                 var r = (yy + 409 * vv + 128) >> 8; // red
-
-                #if NETSTANDARD2_0
-                if (r < 0) r = 0; else if (r > 255) r = 255;
-                if (g < 0) g = 0; else if (g > 255) g = 255;
-                if (b < 0) b = 0; else if (b > 255) b = 255;
-                #else
+                
                 r = Math.Clamp(r, 0, 255);
                 g = Math.Clamp(g, 0, 255);
-                b = Math.Clamp(b, 0, 255);
-                #endif
+                b = Math.Clamp(b, 0, 255);                
 
                 return new BGR24(r, g, b);
             }
@@ -56,16 +50,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 var b = (yy + 516 * uu + 128) >> 8; // blue
                 var g = (yy - 100 * uu - 208 * vv + 128) >> 8; // green
                 var r = (yy + 409 * vv + 128) >> 8; // red
-
-                #if NETSTANDARD2_0
-                if (r < 0) r = 0; else if (r > 255) r = 255;
-                if (g < 0) g = 0; else if (g > 255) g = 255;
-                if (b < 0) b = 0; else if (b > 255) b = 255;
-                #else
+                
                 r = Math.Clamp(r, 0, 255);
                 g = Math.Clamp(g, 0, 255);
-                b = Math.Clamp(b, 0, 255);
-                #endif
+                b = Math.Clamp(b, 0, 255);                
 
                 return new BGRA32(r, g, b, 255);
             }
@@ -121,93 +109,58 @@ namespace InteropTypes.Graphics.Bitmaps
                 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public readonly BGR24 ToBGR24(int y)
-                {
-                    #if NETSTANDARD2_0
-                    return new BGR24(GetRed(y), GetGreen(y), GetBlue(y));
-                    #else
+                {                    
                     return new BGR24
                         (
                         Math.Clamp(y + _V, 0, 255),
                         Math.Clamp(y + _UV, 0, 255),
                         Math.Clamp(y + _U, 0, 255)
-                        );
-                    #endif
+                        );                 
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public readonly void CopyTo(ref BGR565 pixel, int y)
                 {
-                    #if NETSTANDARD2_0
-                    pixel.SetFromRGB8(GetRed(y), GetGreen(y), GetBlue(y));
-                    #else
-
                     uint bgr = (uint)Math.Clamp(y + _V, 0, 255) << 8;
                     bgr &= 0b1111100000000000;
                     bgr |= (uint)Math.Clamp(y + _UV, 0, 255) << 3;
                     bgr &= 0b1111111111100000;
                     bgr |= (uint)Math.Clamp(y + _U, 0, 255) >> 3;
 
-                    pixel.BGR = (ushort)bgr;
-                    #endif
+                    pixel.BGR = (ushort)bgr;                    
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public readonly void CopyTo(ref BGR24 pixel, int y)
-                {
-                    #if NETSTANDARD2_0
-                    pixel.R = GetRed(y);
-                    pixel.G = GetGreen(y);
-                    pixel.B = GetBlue(y);
-                    #else
+                {                    
                     pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
                     pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
-                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
-                    #endif
+                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);                 
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public readonly void CopyTo(ref RGB24 pixel, int y)
-                {
-                    #if NETSTANDARD2_0
-                    pixel.R = GetRed(y);
-                    pixel.G = GetGreen(y);
-                    pixel.B = GetBlue(y);
-                    #else
+                {                    
                     pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
                     pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
-                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
-                    #endif
+                    pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);                 
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public readonly void CopyTo(ref RGBA32 pixel, int y)
-                {
-                    #if NETSTANDARD2_0
-                    pixel.R = GetRed(y);
-                    pixel.G = GetGreen(y);
-                    pixel.B = GetBlue(y);
-                    #else
+                {                    
                     pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
                     pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
                     pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
-                    #endif
-
                     pixel.A = 255;
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(_PrivateConstants.Fastest)]
                 public readonly void CopyTo(ref BGRA32 pixel, int y)
-                {
-                    #if NETSTANDARD2_0
-                    pixel.R = GetRed(y);
-                    pixel.G = GetGreen(y);
-                    pixel.B = GetBlue(y);
-                    #else
+                {                    
                     pixel.R = (Byte)Math.Clamp(y + _V, 0, 255);
                     pixel.G = (Byte)Math.Clamp(y + _UV, 0, 255);
                     pixel.B = (Byte)Math.Clamp(y + _U, 0, 255);
-                    #endif
-
                     pixel.A = 255;
                 }
 

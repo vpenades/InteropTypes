@@ -381,16 +381,9 @@ namespace InteropTypes.Graphics.Bitmaps
             where TPixel : unmanaged
         {
             System.Diagnostics.Debug.Assert(sizeof(TPixel) == PixelByteSize, $"pixel type size mismatch, expected {PixelByteSize}, but found {sizeof(TPixel)}");
-
-            #if !NETSTANDARD2_0
+            
             x = Math.Clamp(x, 0, Width - 1);
-            y = Math.Clamp(y, 0, Height - 1);
-            #else
-            if (x < 0) x = 0;
-            else if (x >= Width) x = Width - 1;
-            if (y < 0) y = 0;
-            else if (y >= Height) y = Height - 1;
-            #endif
+            y = Math.Clamp(y, 0, Height - 1);            
 
             return ref MEMMARSHAL.Cast<Byte, TPixel>(data.Slice(y*StepByteSize))[x];
         }        

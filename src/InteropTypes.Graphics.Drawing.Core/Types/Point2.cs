@@ -341,11 +341,8 @@ namespace InteropTypes.Graphics.Drawing
             if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
-            #if NETSTANDARD2_0
-            return  (float)Math.Acos(dot);
-            #else
-            return MathF.Acos(dot);            
-            #endif
+
+            return MathF.Acos(dot);
         }
 
         /// <summary>
@@ -407,13 +404,8 @@ namespace InteropTypes.Graphics.Drawing
         {
             var v = b - a;
             var u = VECTOR2.Dot(this.XY - a, v) / v.LengthSquared();
-
-            #if NETSTANDARD2_0            
-            u = Math.Max(0, u);
-            u = Math.Min(1, u);
-            #else
-            u = Math.Clamp(u, 0, 1);
-            #endif                        
+            
+            u = Math.Clamp(u, 0, 1);            
 
             var linePoint = a + u * v;
 

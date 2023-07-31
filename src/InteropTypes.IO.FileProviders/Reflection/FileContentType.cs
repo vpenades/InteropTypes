@@ -106,12 +106,8 @@ namespace InteropTypes.IO.Reflection
 
             // any executable or script containing the "mirror character" must be considered dangerous
             // https://stackoverflow.com/questions/3115204/unicode-mirror-character
-
-            #if NETSTANDARD2_0
-            if (ft == FileContentType.Runtime && name.Contains("\u202e")) ft = FileContentType.Dangerous;
-            #else
-            if (ft == FileContentType.Runtime && name.Contains('\u202e')) ft = FileContentType.Dangerous;
-            #endif
+            
+            if (ft == FileContentType.Runtime && name.Contains('\u202e')) ft = FileContentType.Dangerous;            
 
             return ft;
         }

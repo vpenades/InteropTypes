@@ -45,15 +45,9 @@ namespace InteropTypes.IO
 
         public int GetHashCode(T obj)
         {
-            if (obj == null) return 0;            
-
-            #if NETSTANDARD2_0
-            var path = obj.FullName;
-            if (PathComparisonMode != StringComparison.Ordinal) path = path.ToLower();
-            return path.GetHashCode();            
-            #else
-            return obj.FullName.GetHashCode(PathComparisonMode);
-            #endif
+            return obj == null
+                ? 0
+                : obj.FullName.GetHashCode(PathComparisonMode);
         }
 
         private static readonly StringComparison PathComparisonMode = _GetIsCaseSensitive()

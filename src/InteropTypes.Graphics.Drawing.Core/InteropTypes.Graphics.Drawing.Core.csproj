@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>  
@@ -15,11 +15,6 @@
       - 3D: IScene3D      
     </Description>
   </PropertyGroup>  
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">    
-    <PackageReference Include="System.Numerics.Vectors" />
-    <PackageReference Include="System.Memory" />
-  </ItemGroup>  
 
   <ItemGroup>    
     <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Core.Tests" />

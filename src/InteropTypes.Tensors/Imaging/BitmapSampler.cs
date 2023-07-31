@@ -84,16 +84,9 @@ namespace InteropTypes.Tensors.Imaging
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly unsafe ref readonly TPixel GetPixel(int x, int y)
-        {
-            #if !NETSTANDARD2_0
+        {            
             x = Math.Clamp(x, 0, _LastX);
-            y = Math.Clamp(y, 0, _LastY);
-            #else
-            if (x < 0) x = 0;
-            else if (x > _LastX) x = _LastX;
-            if (y < 0) y = 0;
-            else if (y > _LastY) y = _LastY;
-            #endif
+            y = Math.Clamp(y, 0, _LastY);            
 
             return ref MMARSHALL.Cast<Byte, TPixel>(_Bytes.Slice(y * _ByteStride))[x];
 
@@ -107,16 +100,9 @@ namespace InteropTypes.Tensors.Imaging
             where TDstPixel : unmanaged
         {
             if (sizeof(TPixel) < sizeof(TDstPixel)) throw new InvalidOperationException();
-
-            #if !NETSTANDARD2_0
+            
             x = Math.Clamp(x, 0, _LastX);
-            y = Math.Clamp(y, 0, _LastY);
-            #else
-            if (x < 0) x = 0;
-            else if (x > _LastX) x = _LastX;
-            if (y < 0) y = 0;
-            else if (y > _LastY) y = _LastY;
-            #endif
+            y = Math.Clamp(y, 0, _LastY);            
 
             // return ref MMARSHALL.Cast<Byte, TDstPixel>(_Bytes.Slice(y * _ByteStride))[x];
 

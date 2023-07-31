@@ -196,14 +196,10 @@ namespace InteropTypes.IO
         }
 
         private static bool _EndsWithSeparator(string path)
-        {
-            #if NETSTANDARD2_0
-            if (path.EndsWith("\\")) return true;
-            if (path.EndsWith("/")) return true;
-            #else
+        {            
             if (path.EndsWith(System.IO.Path.DirectorySeparatorChar)) return true;
             if (path.EndsWith(System.IO.Path.AltDirectorySeparatorChar)) return true;
-            #endif
+            
             return false;
         }
 

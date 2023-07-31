@@ -77,13 +77,9 @@ namespace InteropTypes.Crypto
         public static Hash384 Sha384FromBytes(ReadOnlySpan<Byte> bytes)
         {
             if (bytes.IsEmpty) return default;
-
-            #if NETSTANDARD2_0
-            var hash = _HashEngines.Sha384Engine.ComputeHash(bytes.ToArray());
-            #else
+            
             Span<Byte> hash = stackalloc byte[BYTESIZE];
-            if (!_HashEngines.Sha384Engine.TryComputeHash(bytes, hash, out _)) throw new InvalidOperationException();
-            #endif
+            if (!_HashEngines.Sha384Engine.TryComputeHash(bytes, hash, out _)) throw new InvalidOperationException();            
 
             System.Diagnostics.Debug.Assert(hash.Length == BYTESIZE);
             return new Hash384(hash);

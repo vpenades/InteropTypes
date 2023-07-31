@@ -311,12 +311,8 @@ namespace InteropTypes.Graphics.Drawing
             float far = _FarPlane ?? 1000f;
 
             if (_VerticalFieldOfView.HasValue)
-            {
-                #if !NETSTANDARD2_0
+            {                
                 return Matrix4x4.CreatePerspectiveFieldOfView(_VerticalFieldOfView.Value, aspectRatio, near, far);
-                #else
-                return _CreatePerspectiveFieldOfView(_VerticalFieldOfView.Value, aspectRatio, near, far);
-                #endif
             }
             
             var scale = _OrthographicScale ?? 1;

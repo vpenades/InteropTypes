@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Drawing</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>  
@@ -10,11 +10,7 @@
     <Description>
       Extends ICanvas2D and IScene3D with wrappers and extensions.
     </Description>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <Compile Include="..\Interop.MathF.Source\*.cs" LinkBase="MathF" />
-  </ItemGroup>  
+  </PropertyGroup>  
 
   <ItemGroup>    
     <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Toolkit.Tests" />

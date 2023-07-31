@@ -7,19 +7,6 @@ namespace InteropTypes.Graphics.Drawing
 {
     static class _PrivateExtensions
     {
-        [System.Diagnostics.DebuggerStepThrough]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Clamp(this int value, int min, int max)
-        {
-            #if !NETSTANDARD2_0
-            return Math.Clamp(value, min, max);
-            #else
-            if (value < min) return min;
-            else if (value > max) return max;
-            return value;
-            #endif
-        }
-
         /// <summary>
         /// Tells if the value is finite and not NaN
         /// </summary>
@@ -29,23 +16,13 @@ namespace InteropTypes.Graphics.Drawing
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFinite(this float val)
-        {
-            #if !NETSTANDARD2_0
-            return float.IsFinite(val);
-            #else
-            return !float.IsNaN(val) && !float.IsInfinity(val);
-            #endif
+        {            
+            return float.IsFinite(val);            
         }
 
         public static bool IsFiniteOrNull(this float? val)
         {
-            if (!val.HasValue) return true;
-
-            #if !NETSTANDARD2_0
-            return float.IsFinite(val.Value);
-            #else
-            return !float.IsNaN(val.Value) && !float.IsInfinity(val.Value);
-            #endif
+            return !val.HasValue || float.IsFinite(val.Value);
         }
 
         [System.Diagnostics.DebuggerStepThrough]

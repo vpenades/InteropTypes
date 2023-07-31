@@ -84,13 +84,9 @@ namespace InteropTypes.Crypto
         public static Hash256 Sha256FromBytes(ReadOnlySpan<Byte> bytes)
         {
             if (bytes.IsEmpty) return default;
-
-            #if NETSTANDARD2_0
-            var hash = _HashEngines.Sha256Engine.ComputeHash(bytes.ToArray());
-            #else
+            
             Span<Byte> hash = stackalloc byte[BYTESIZE];
-            if (!_HashEngines.Sha256Engine.TryComputeHash(bytes, hash, out _)) throw new InvalidOperationException();
-            #endif
+            if (!_HashEngines.Sha256Engine.TryComputeHash(bytes, hash, out _)) throw new InvalidOperationException();            
 
             System.Diagnostics.Debug.Assert(hash.Length == BYTESIZE);
             return new Hash256(hash);

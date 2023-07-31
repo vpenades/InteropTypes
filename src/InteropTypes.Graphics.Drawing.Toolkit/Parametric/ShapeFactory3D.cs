@@ -8,12 +8,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
     static partial class ShapeFactory3D
     {
         #region constants
-
-        #if !NETSTANDARD2_0
-        private const float PI = MathF.PI;
-        #else
-        private const float PI = (float)Math.PI;
-        #endif
+        
+        private const float PI = MathF.PI;        
 
         #endregion
     }

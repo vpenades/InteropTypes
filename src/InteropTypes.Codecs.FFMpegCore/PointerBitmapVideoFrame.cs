@@ -54,12 +54,7 @@ namespace InteropTypes.Graphics.Bitmaps
             for(int i=0; i < Source.Height; ++i)
             {
                 var row = Source.GetScanlineBytes(i);
-
-                #if NETSTANDARD2_0
-                stream.Write(row.ToArray(), 0, row.Length);
-                #else
                 stream.Write(row);
-                #endif
             }
         }
 
@@ -68,12 +63,7 @@ namespace InteropTypes.Graphics.Bitmaps
             for (int i = 0; i < Source.Height; ++i)
             {
                 var xrow = Source.GetScanlineBytes(i).ToArray();
-
-                #if NETSTANDARD2_0                
-                await stream.WriteAsync(xrow, 0, xrow.Length, token).ConfigureAwait(continueOnCapturedContext: false);
-                #else
                 await stream.WriteAsync(xrow, token).ConfigureAwait(continueOnCapturedContext: false);
-                #endif         
             }
         }       
 

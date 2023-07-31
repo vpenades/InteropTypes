@@ -32,12 +32,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A new hash</returns>
         public static Hash96 FromRandom()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            #else
-            Span<Byte> bytes = stackalloc Byte[BYTESIZE];
-            #endif            
+        {            
+            Span<Byte> bytes = stackalloc Byte[BYTESIZE];            
 
             _HashEngines.Randomizer.GetBytes(bytes);
 
@@ -143,12 +139,8 @@ namespace InteropTypes.Crypto
         
         /// <Inheritdoc/>
         public override int GetHashCode()
-        {
-            #if NETSTANDARD2_0
-            return _A.GetHashCode();
-            #else
-            return HashCode.Combine(_A, _B);
-            #endif
+        {            
+            return HashCode.Combine(_A, _B);         
         }
 
         /// <Inheritdoc/>
@@ -186,14 +178,8 @@ namespace InteropTypes.Crypto
         public Byte this[int index]
         {
             get
-            {
-                #if NETSTANDARD2_0
-                Span<Byte> bytes = stackalloc byte[BYTESIZE];
-                this.CopyTo(bytes);                
-                #else
+            {                
                 var bytes = AsReadOnlyBytes();
-                #endif
-
                 return bytes[index];
             }        
         }
@@ -235,16 +221,10 @@ namespace InteropTypes.Crypto
         }
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new byte[BYTESIZE];
-            this.CopyTo(bytes);    
-            return bytes;
-            #else
+        {            
             ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash96, Byte>(span);                
-            #endif
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash96, Byte>(span);
         }
 
         public Byte[] ToBytes()
@@ -255,24 +235,14 @@ namespace InteropTypes.Crypto
         }
 
         public string ToBase64String()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
         public string ToHexString()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToHexString();
         }
 
@@ -285,12 +255,8 @@ namespace InteropTypes.Crypto
         /// Reads a hash value from the stream <paramref name="reader"/>
         /// </remarks>
         public static Hash96 ReadFrom(System.IO.Stream reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = new Byte[BYTESIZE];            
-            #else
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];            
-            #endif
+        {            
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
 
             bytes.ReadBytesFrom(reader);
 
@@ -301,37 +267,22 @@ namespace InteropTypes.Crypto
         /// Writes this hash value to the stream <paramref name="writer"/>
         /// </remarks>
         public void WriteTo(System.IO.Stream writer)
-        {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);            
-            #else
-            var bytes = AsReadOnlyBytes();            
-            #endif
-
+        {
+            var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
         public static Hash96 ReadFrom(System.IO.BinaryReader reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = reader.ReadBytes(BYTESIZE);            
-            #else
+        {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            bytes.ReadBytesFrom(reader);
-            #endif
+            bytes.ReadBytesFrom(reader);         
 
             return new Hash96(bytes);
         }
 
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+            var bytes = AsReadOnlyBytes();         
 
             bytes.WriteBytesTo(writer);
         }
@@ -341,13 +292,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
         public int GetEnabledBitsCount()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
 
             int count = 0;            
 
@@ -520,12 +466,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A new hash</returns>
         public static Hash128 FromRandom()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            #else
-            Span<Byte> bytes = stackalloc Byte[BYTESIZE];
-            #endif            
+        {            
+            Span<Byte> bytes = stackalloc Byte[BYTESIZE];            
 
             _HashEngines.Randomizer.GetBytes(bytes);
 
@@ -631,12 +573,8 @@ namespace InteropTypes.Crypto
         
         /// <Inheritdoc/>
         public override int GetHashCode()
-        {
-            #if NETSTANDARD2_0
-            return _A.GetHashCode();
-            #else
-            return HashCode.Combine(_A, _B);
-            #endif
+        {            
+            return HashCode.Combine(_A, _B);         
         }
 
         /// <Inheritdoc/>
@@ -674,14 +612,8 @@ namespace InteropTypes.Crypto
         public Byte this[int index]
         {
             get
-            {
-                #if NETSTANDARD2_0
-                Span<Byte> bytes = stackalloc byte[BYTESIZE];
-                this.CopyTo(bytes);                
-                #else
+            {                
                 var bytes = AsReadOnlyBytes();
-                #endif
-
                 return bytes[index];
             }        
         }
@@ -723,16 +655,10 @@ namespace InteropTypes.Crypto
         }
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new byte[BYTESIZE];
-            this.CopyTo(bytes);    
-            return bytes;
-            #else
+        {            
             ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash128, Byte>(span);                
-            #endif
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash128, Byte>(span);
         }
 
         public Byte[] ToBytes()
@@ -743,24 +669,14 @@ namespace InteropTypes.Crypto
         }
 
         public string ToBase64String()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
         public string ToHexString()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToHexString();
         }
 
@@ -773,12 +689,8 @@ namespace InteropTypes.Crypto
         /// Reads a hash value from the stream <paramref name="reader"/>
         /// </remarks>
         public static Hash128 ReadFrom(System.IO.Stream reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = new Byte[BYTESIZE];            
-            #else
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];            
-            #endif
+        {            
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
 
             bytes.ReadBytesFrom(reader);
 
@@ -789,37 +701,22 @@ namespace InteropTypes.Crypto
         /// Writes this hash value to the stream <paramref name="writer"/>
         /// </remarks>
         public void WriteTo(System.IO.Stream writer)
-        {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);            
-            #else
-            var bytes = AsReadOnlyBytes();            
-            #endif
-
+        {
+            var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
         public static Hash128 ReadFrom(System.IO.BinaryReader reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = reader.ReadBytes(BYTESIZE);            
-            #else
+        {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            bytes.ReadBytesFrom(reader);
-            #endif
+            bytes.ReadBytesFrom(reader);         
 
             return new Hash128(bytes);
         }
 
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+            var bytes = AsReadOnlyBytes();         
 
             bytes.WriteBytesTo(writer);
         }
@@ -829,13 +726,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
         public int GetEnabledBitsCount()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
 
             int count = 0;            
 
@@ -1008,12 +900,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A new hash</returns>
         public static Hash224 FromRandom()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            #else
-            Span<Byte> bytes = stackalloc Byte[BYTESIZE];
-            #endif            
+        {            
+            Span<Byte> bytes = stackalloc Byte[BYTESIZE];            
 
             _HashEngines.Randomizer.GetBytes(bytes);
 
@@ -1125,12 +1013,8 @@ namespace InteropTypes.Crypto
         
         /// <Inheritdoc/>
         public override int GetHashCode()
-        {
-            #if NETSTANDARD2_0
-            return _A.GetHashCode();
-            #else
-            return HashCode.Combine(_A, _B, _C, _D);
-            #endif
+        {            
+            return HashCode.Combine(_A, _B, _C, _D);         
         }
 
         /// <Inheritdoc/>
@@ -1170,14 +1054,8 @@ namespace InteropTypes.Crypto
         public Byte this[int index]
         {
             get
-            {
-                #if NETSTANDARD2_0
-                Span<Byte> bytes = stackalloc byte[BYTESIZE];
-                this.CopyTo(bytes);                
-                #else
+            {                
                 var bytes = AsReadOnlyBytes();
-                #endif
-
                 return bytes[index];
             }        
         }
@@ -1221,16 +1099,10 @@ namespace InteropTypes.Crypto
         }
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new byte[BYTESIZE];
-            this.CopyTo(bytes);    
-            return bytes;
-            #else
+        {            
             ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash224, Byte>(span);                
-            #endif
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash224, Byte>(span);
         }
 
         public Byte[] ToBytes()
@@ -1241,24 +1113,14 @@ namespace InteropTypes.Crypto
         }
 
         public string ToBase64String()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
         public string ToHexString()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToHexString();
         }
 
@@ -1271,12 +1133,8 @@ namespace InteropTypes.Crypto
         /// Reads a hash value from the stream <paramref name="reader"/>
         /// </remarks>
         public static Hash224 ReadFrom(System.IO.Stream reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = new Byte[BYTESIZE];            
-            #else
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];            
-            #endif
+        {            
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
 
             bytes.ReadBytesFrom(reader);
 
@@ -1287,37 +1145,22 @@ namespace InteropTypes.Crypto
         /// Writes this hash value to the stream <paramref name="writer"/>
         /// </remarks>
         public void WriteTo(System.IO.Stream writer)
-        {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);            
-            #else
-            var bytes = AsReadOnlyBytes();            
-            #endif
-
+        {
+            var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
         public static Hash224 ReadFrom(System.IO.BinaryReader reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = reader.ReadBytes(BYTESIZE);            
-            #else
+        {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            bytes.ReadBytesFrom(reader);
-            #endif
+            bytes.ReadBytesFrom(reader);         
 
             return new Hash224(bytes);
         }
 
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+            var bytes = AsReadOnlyBytes();         
 
             bytes.WriteBytesTo(writer);
         }
@@ -1327,13 +1170,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
         public int GetEnabledBitsCount()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
 
             int count = 0;            
 
@@ -1506,12 +1344,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A new hash</returns>
         public static Hash256 FromRandom()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            #else
-            Span<Byte> bytes = stackalloc Byte[BYTESIZE];
-            #endif            
+        {            
+            Span<Byte> bytes = stackalloc Byte[BYTESIZE];            
 
             _HashEngines.Randomizer.GetBytes(bytes);
 
@@ -1623,12 +1457,8 @@ namespace InteropTypes.Crypto
         
         /// <Inheritdoc/>
         public override int GetHashCode()
-        {
-            #if NETSTANDARD2_0
-            return _A.GetHashCode();
-            #else
-            return HashCode.Combine(_A, _B, _C, _D);
-            #endif
+        {            
+            return HashCode.Combine(_A, _B, _C, _D);         
         }
 
         /// <Inheritdoc/>
@@ -1668,14 +1498,8 @@ namespace InteropTypes.Crypto
         public Byte this[int index]
         {
             get
-            {
-                #if NETSTANDARD2_0
-                Span<Byte> bytes = stackalloc byte[BYTESIZE];
-                this.CopyTo(bytes);                
-                #else
+            {                
                 var bytes = AsReadOnlyBytes();
-                #endif
-
                 return bytes[index];
             }        
         }
@@ -1719,16 +1543,10 @@ namespace InteropTypes.Crypto
         }
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new byte[BYTESIZE];
-            this.CopyTo(bytes);    
-            return bytes;
-            #else
+        {            
             ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash256, Byte>(span);                
-            #endif
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash256, Byte>(span);
         }
 
         public Byte[] ToBytes()
@@ -1739,24 +1557,14 @@ namespace InteropTypes.Crypto
         }
 
         public string ToBase64String()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
         public string ToHexString()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToHexString();
         }
 
@@ -1769,12 +1577,8 @@ namespace InteropTypes.Crypto
         /// Reads a hash value from the stream <paramref name="reader"/>
         /// </remarks>
         public static Hash256 ReadFrom(System.IO.Stream reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = new Byte[BYTESIZE];            
-            #else
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];            
-            #endif
+        {            
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
 
             bytes.ReadBytesFrom(reader);
 
@@ -1785,37 +1589,22 @@ namespace InteropTypes.Crypto
         /// Writes this hash value to the stream <paramref name="writer"/>
         /// </remarks>
         public void WriteTo(System.IO.Stream writer)
-        {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);            
-            #else
-            var bytes = AsReadOnlyBytes();            
-            #endif
-
+        {
+            var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
         public static Hash256 ReadFrom(System.IO.BinaryReader reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = reader.ReadBytes(BYTESIZE);            
-            #else
+        {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            bytes.ReadBytesFrom(reader);
-            #endif
+            bytes.ReadBytesFrom(reader);         
 
             return new Hash256(bytes);
         }
 
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+            var bytes = AsReadOnlyBytes();         
 
             bytes.WriteBytesTo(writer);
         }
@@ -1825,13 +1614,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
         public int GetEnabledBitsCount()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
 
             int count = 0;            
 
@@ -2004,12 +1788,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A new hash</returns>
         public static Hash384 FromRandom()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            #else
-            Span<Byte> bytes = stackalloc Byte[BYTESIZE];
-            #endif            
+        {            
+            Span<Byte> bytes = stackalloc Byte[BYTESIZE];            
 
             _HashEngines.Randomizer.GetBytes(bytes);
 
@@ -2127,12 +1907,8 @@ namespace InteropTypes.Crypto
         
         /// <Inheritdoc/>
         public override int GetHashCode()
-        {
-            #if NETSTANDARD2_0
-            return _A.GetHashCode();
-            #else
-            return HashCode.Combine(_A, _B, _C, _D, _E, _F);
-            #endif
+        {            
+            return HashCode.Combine(_A, _B, _C, _D, _E, _F);         
         }
 
         /// <Inheritdoc/>
@@ -2174,14 +1950,8 @@ namespace InteropTypes.Crypto
         public Byte this[int index]
         {
             get
-            {
-                #if NETSTANDARD2_0
-                Span<Byte> bytes = stackalloc byte[BYTESIZE];
-                this.CopyTo(bytes);                
-                #else
+            {                
                 var bytes = AsReadOnlyBytes();
-                #endif
-
                 return bytes[index];
             }        
         }
@@ -2227,16 +1997,10 @@ namespace InteropTypes.Crypto
         }
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new byte[BYTESIZE];
-            this.CopyTo(bytes);    
-            return bytes;
-            #else
+        {            
             ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash384, Byte>(span);                
-            #endif
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash384, Byte>(span);
         }
 
         public Byte[] ToBytes()
@@ -2247,24 +2011,14 @@ namespace InteropTypes.Crypto
         }
 
         public string ToBase64String()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
         public string ToHexString()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToHexString();
         }
 
@@ -2277,12 +2031,8 @@ namespace InteropTypes.Crypto
         /// Reads a hash value from the stream <paramref name="reader"/>
         /// </remarks>
         public static Hash384 ReadFrom(System.IO.Stream reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = new Byte[BYTESIZE];            
-            #else
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];            
-            #endif
+        {            
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
 
             bytes.ReadBytesFrom(reader);
 
@@ -2293,37 +2043,22 @@ namespace InteropTypes.Crypto
         /// Writes this hash value to the stream <paramref name="writer"/>
         /// </remarks>
         public void WriteTo(System.IO.Stream writer)
-        {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);            
-            #else
-            var bytes = AsReadOnlyBytes();            
-            #endif
-
+        {
+            var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
         public static Hash384 ReadFrom(System.IO.BinaryReader reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = reader.ReadBytes(BYTESIZE);            
-            #else
+        {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            bytes.ReadBytesFrom(reader);
-            #endif
+            bytes.ReadBytesFrom(reader);         
 
             return new Hash384(bytes);
         }
 
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+            var bytes = AsReadOnlyBytes();         
 
             bytes.WriteBytesTo(writer);
         }
@@ -2333,13 +2068,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
         public int GetEnabledBitsCount()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
 
             int count = 0;            
 
@@ -2512,12 +2242,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A new hash</returns>
         public static Hash512 FromRandom()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            #else
-            Span<Byte> bytes = stackalloc Byte[BYTESIZE];
-            #endif            
+        {            
+            Span<Byte> bytes = stackalloc Byte[BYTESIZE];            
 
             _HashEngines.Randomizer.GetBytes(bytes);
 
@@ -2641,12 +2367,8 @@ namespace InteropTypes.Crypto
         
         /// <Inheritdoc/>
         public override int GetHashCode()
-        {
-            #if NETSTANDARD2_0
-            return _A.GetHashCode();
-            #else
-            return HashCode.Combine(_A, _B, _C, _D, _E, _F, _G, _H);
-            #endif
+        {            
+            return HashCode.Combine(_A, _B, _C, _D, _E, _F, _G, _H);         
         }
 
         /// <Inheritdoc/>
@@ -2690,14 +2412,8 @@ namespace InteropTypes.Crypto
         public Byte this[int index]
         {
             get
-            {
-                #if NETSTANDARD2_0
-                Span<Byte> bytes = stackalloc byte[BYTESIZE];
-                this.CopyTo(bytes);                
-                #else
+            {                
                 var bytes = AsReadOnlyBytes();
-                #endif
-
                 return bytes[index];
             }        
         }
@@ -2745,16 +2461,10 @@ namespace InteropTypes.Crypto
         }
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
-        {
-            #if NETSTANDARD2_0
-            var bytes = new byte[BYTESIZE];
-            this.CopyTo(bytes);    
-            return bytes;
-            #else
+        {            
             ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
-            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash512, Byte>(span);                
-            #endif
+            return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash512, Byte>(span);
         }
 
         public Byte[] ToBytes()
@@ -2765,24 +2475,14 @@ namespace InteropTypes.Crypto
         }
 
         public string ToBase64String()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
         public string ToHexString()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
             return bytes.ToHexString();
         }
 
@@ -2795,12 +2495,8 @@ namespace InteropTypes.Crypto
         /// Reads a hash value from the stream <paramref name="reader"/>
         /// </remarks>
         public static Hash512 ReadFrom(System.IO.Stream reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = new Byte[BYTESIZE];            
-            #else
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];            
-            #endif
+        {            
+            Span<Byte> bytes = stackalloc byte[BYTESIZE];
 
             bytes.ReadBytesFrom(reader);
 
@@ -2811,37 +2507,22 @@ namespace InteropTypes.Crypto
         /// Writes this hash value to the stream <paramref name="writer"/>
         /// </remarks>
         public void WriteTo(System.IO.Stream writer)
-        {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);            
-            #else
-            var bytes = AsReadOnlyBytes();            
-            #endif
-
+        {
+            var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
         public static Hash512 ReadFrom(System.IO.BinaryReader reader)
-        {
-            #if NETSTANDARD2_0            
-            var bytes = reader.ReadBytes(BYTESIZE);            
-            #else
+        {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            bytes.ReadBytesFrom(reader);
-            #endif
+            bytes.ReadBytesFrom(reader);         
 
             return new Hash512(bytes);
         }
 
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
-            #if NETSTANDARD2_0
-            var bytes = new Byte[BYTESIZE];
-            this.CopyTo(bytes);
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+            var bytes = AsReadOnlyBytes();         
 
             bytes.WriteBytesTo(writer);
         }
@@ -2851,13 +2532,8 @@ namespace InteropTypes.Crypto
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
         public int GetEnabledBitsCount()
-        {
-            #if NETSTANDARD2_0
-            Span<Byte> bytes = stackalloc byte[BYTESIZE];
-            this.CopyTo(bytes);                
-            #else
-            var bytes = AsReadOnlyBytes();
-            #endif
+        {            
+            var bytes = AsReadOnlyBytes();         
 
             int count = 0;            
 

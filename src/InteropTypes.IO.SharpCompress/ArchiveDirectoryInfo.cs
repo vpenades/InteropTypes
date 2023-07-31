@@ -113,14 +113,9 @@ namespace InteropTypes.IO
             if (!entryKey.StartsWith(_SubPath)) return string.Empty;
 
             entryKey = entryKey.Substring(_SubPath.Length);
-
-            #if NETSTANDARD2_0
-            if (entryKey.StartsWith(Path.DirectorySeparatorChar.ToString())) entryKey = entryKey.TrimStart(Path.DirectorySeparatorChar);
-            else if (entryKey.StartsWith(Path.AltDirectorySeparatorChar.ToString())) entryKey = entryKey.TrimStart(Path.AltDirectorySeparatorChar);
-            #else
+            
             if (entryKey.StartsWith(Path.DirectorySeparatorChar)) entryKey = entryKey.TrimStart(Path.DirectorySeparatorChar);
-            else if (entryKey.StartsWith(Path.AltDirectorySeparatorChar)) entryKey = entryKey.TrimStart(Path.AltDirectorySeparatorChar);
-            #endif
+            else if (entryKey.StartsWith(Path.AltDirectorySeparatorChar)) entryKey = entryKey.TrimStart(Path.AltDirectorySeparatorChar);            
 
             return entryKey;
         }

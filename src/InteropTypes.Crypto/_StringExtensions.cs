@@ -30,12 +30,8 @@ namespace InteropTypes
         }
 
         public static string ToBase64String(this ReadOnlySpan<Byte> bytes)
-        {
-            #if NETSTANDARD2_0
-            return System.Convert.ToBase64String(bytes.ToArray());
-            #else
-            return System.Convert.ToBase64String(bytes);
-            #endif
+        {            
+            return System.Convert.ToBase64String(bytes);         
         }
 
         public static Byte[] ParseHexBytes(this string value)

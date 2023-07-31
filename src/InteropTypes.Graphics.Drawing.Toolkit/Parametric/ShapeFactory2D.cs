@@ -11,12 +11,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
     static class ShapeFactory2D
     {
         #region constants
-
-        #if !NETSTANDARD2_0
-        private const float PI = MathF.PI;
-        #else
-        private const float PI = (float)Math.PI;
-        #endif
+        
+        private const float PI = MathF.PI;        
 
         #endregion
 
@@ -29,21 +25,11 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             for (int i = 0; i < dstVertices.Length; ++i)
             {
-                var angle = i / (float)dstVertices.Length;
-
-                #if !NETSTANDARD2_0
+                var angle = i / (float)dstVertices.Length;                
 
                 angle *= MathF.PI * 2;
                 var x = MathF.Cos(angle) * width;
                 var y = MathF.Sin(angle) * height;
-
-                #else
-
-                angle *= (float)Math.PI * 2;
-                var x = (float)Math.Cos(angle) * width;
-                var y = (float)Math.Sin(angle) * height;
-
-                #endif
 
                 dstVertices[i] = center + new POINT2(x, y);
             }
@@ -188,14 +174,9 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             {
                 var factor = i / (float)count;
                 var radians = rad0 * (1 - factor) + rad1 * factor;
-
-                #if !NETSTANDARD2_0
+                
                 var x = MathF.Cos(radians);
-                var y = -MathF.Sin(radians);
-                #else
-                var x = (float)Math.Cos(radians);
-                var y = -(float)Math.Sin(radians);
-                #endif
+                var y = -MathF.Sin(radians);                
 
                 yield return new VECTOR2(x, y);
             }

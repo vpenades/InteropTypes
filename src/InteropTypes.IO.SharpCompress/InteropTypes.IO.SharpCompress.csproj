@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\InteropTypes.IO.FileProviders\PathUtils.cs" Link="PathUtils.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">    
-    <PackageReference Include="System.Text.Json" />    
-  </ItemGroup>
+  </ItemGroup>  
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="System.Text.Json" />

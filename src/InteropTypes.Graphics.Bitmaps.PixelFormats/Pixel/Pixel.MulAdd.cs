@@ -79,16 +79,10 @@ namespace InteropTypes.Graphics.Bitmaps
                     r += AddR;
                     g += AddG;
                     b += AddB;
-
-                    #if NETSTANDARD2_0
-                    if (r > 255) r = 255; else if (r < 0) r = 0;
-                    if (g > 255) g = 255; else if (g < 0) g = 0;
-                    if (b > 255) b = 255; else if (b < 0) b = 0;
-                    #else
+                   
                     r = Math.Clamp(r, 0, 255);
                     g = Math.Clamp(g, 0, 255);
-                    b = Math.Clamp(b, 0, 255);
-                    #endif
+                    b = Math.Clamp(b, 0, 255);                    
 
                     target.R = (Byte)r;
                     target.G = (Byte)g;
@@ -171,16 +165,10 @@ namespace InteropTypes.Graphics.Bitmaps
                     r += AddR;
                     g += AddG;
                     b += AddB;
-
-                    #if NETSTANDARD2_0
-                    if (r > 255) r = 255; else if (r < 0) r = 0;
-                    if (g > 255) g = 255; else if (g < 0) g = 0;
-                    if (b > 255) b = 255; else if (b < 0) b = 0;
-                    #else
+                    
                     r = Math.Clamp(r, 0, 255);
                     g = Math.Clamp(g, 0, 255);
-                    b = Math.Clamp(b, 0, 255);
-                    #endif
+                    b = Math.Clamp(b, 0, 255);                    
 
                     target.R = (Byte)r;
                     target.G = (Byte)g;

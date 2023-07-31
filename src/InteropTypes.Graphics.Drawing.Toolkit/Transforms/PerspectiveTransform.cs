@@ -77,24 +77,16 @@ namespace InteropTypes.Graphics.Drawing.Transforms
         {
             var det = xform.GetDeterminant();
             var area = Math.Abs(det);
-
-            #if !NETSTANDARD2_0
-            return MathF.Sqrt(area);
-            #else
-            return (float)Math.Sqrt(area);
-            #endif
+            
+            return MathF.Sqrt(area);            
         }
 
         private static Single _DecomposeScale(in Matrix4x4 matrix)
         {
             var det = matrix.GetDeterminant();
             var volume = Math.Abs(det);
-
-            #if !NETSTANDARD2_0
-            return MathF.Pow(volume, (float)1 / 3);
-            #else
-            return (float)Math.Pow(volume, (double)1 / 3);
-            #endif
+            
+            return MathF.Pow(volume, (float)1 / 3);            
         }
 
         #endregion

@@ -297,11 +297,8 @@ namespace InteropTypes.Graphics.Drawing
             if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
-            #if NETSTANDARD2_0
-            return (float)Math.Acos(dot);
-            #else
-            return MathF.Acos(dot);
-            #endif
+            
+            return MathF.Acos(dot);            
         }
 
         public readonly VECTOR3 Normalized()
