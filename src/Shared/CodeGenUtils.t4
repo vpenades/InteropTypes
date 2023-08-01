@@ -45,6 +45,7 @@ void _writeStructBegin(string name, params string [] interfaces)
     PushIndent("    ");
     PushIndent("    ");
 
+    // WriteLine("[global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.VisualStudio.TextTemplating\", \"17.0.0.0\")]");
     if (interfaces.Length == 1) WriteLine($"partial struct {name} : {interfaces[0]}");
     else
     {
@@ -70,6 +71,7 @@ void _writeInternalInterfaceBegin(string name, params string [] interfaces)
     PushIndent("    ");
     PushIndent("    ");
 
+    // WriteLine("[global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.VisualStudio.TextTemplating\", \"17.0.0.0\")]");
     if (interfaces.Length == 1) WriteLine($"internal interface {name} : {interfaces[0]}");
     else
     {
