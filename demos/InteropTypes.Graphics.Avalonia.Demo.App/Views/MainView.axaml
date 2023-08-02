@@ -27,12 +27,8 @@
     
     <TabItem Header="File System">
       <StackPanel>
-        <WrapPanel>
-          <Button Content="../" Click="_OnClick_FolderUp" />
-          <Button Content="Browse..." Click="_OnClick_BrowseDirectory"/>
-        </WrapPanel>
-
-        <interop:FileSystemTree x:Name="myFoldersTree" />
+        <interop:FolderNavBar x:Name="myNavBar" />
+        <interop:FileSystemTree DataContext="{Binding #myNavBar.CurrentDirectory}" />
       </StackPanel>
     </TabItem>
     

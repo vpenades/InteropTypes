@@ -10,4 +10,12 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="FolderNavBar.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj" />
+  </ItemGroup>
+
 </Project>
