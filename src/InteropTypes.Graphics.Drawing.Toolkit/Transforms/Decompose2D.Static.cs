@@ -170,7 +170,12 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             var delta = bb - aa;
 
-            delta = delta.LengthSquared() <= 1 ? VECTOR2.UnitX : VECTOR2.Normalize(delta);
+            if (delta.LengthSquared() <= 0.0000001f)
+            {
+                delta = delta == VECTOR2.Zero ? VECTOR2.UnitX : delta * 100000f;
+            }
+
+            delta = VECTOR2.Normalize(delta);
 
             Parametric.ShapeFactory2D.FillLineCapVertices(vertices, 0, aa, delta, diameter, startCapStyle);
             Parametric.ShapeFactory2D.FillLineCapVertices(vertices, startCapCount, bb, -delta, diameter, endCapStyle);
