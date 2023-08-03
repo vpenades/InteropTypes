@@ -28,7 +28,7 @@
     <TabItem Header="File System">
       <StackPanel>
         <interop:FolderNavBar x:Name="myNavBar" />
-        <interop:FileSystemTree DataContext="{Binding #myNavBar.CurrentDirectory}" />
+        <interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
       </StackPanel>
     </TabItem>
     
