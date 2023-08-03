@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using InteropTypes.IO.FileProviders;
+
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
@@ -14,7 +15,7 @@ namespace InteropTypes.IO
     /// Looks up files using the on-disk file system
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Root.FullPath}")]
-    public partial class PhysicalFileProvider : IFileProvider
+    public partial class PhysicalFileProvider : IFileProvider , IPhysicalFileFactory
     {
         #region constants
 
@@ -23,32 +24,10 @@ namespace InteropTypes.IO
         #endregion
 
         #region lifecycle
-
-        // TODO: do the same as the registry with HKLM, HKCU, etc.... that is: create one static readonly provider PER DRIVE/Volume and reuse them
-
-        /// <summary>
-        /// Initializes a new instance of a PhysicalFileProvider at the given root directory.
-        /// </summary>
-        /// <param name="root">The root directory. This should be an absolute path.</param>
-        /// <param name="filters">Specifies which files or directories are excluded.</param>
-        public PhysicalFileProvider(string root)
+        
+        private PhysicalFileProvider(System.IO.DirectoryInfo root)
         {
-            if (!Path.IsPathRooted(root))
-            {
-                throw new ArgumentException("The path must be absolute.", nameof(root));
-            }
-
-            string fullRoot = Path.GetFullPath(root);
-
-            // When we do matches in GetFullPath, we want to only match full directory names.
-            fullRoot = PathUtils.EnsureTrailingSlash(fullRoot);
-
-            Root = new System.IO.DirectoryInfo(fullRoot);
-
-            if (!Root.Exists)
-            {
-                throw new DirectoryNotFoundException(fullRoot);
-            }            
+            Root = root;
         }
 
         #endregion
@@ -151,23 +130,34 @@ namespace InteropTypes.IO
                     as IDirectoryContents
                     ?? NotFoundDirectoryContents.Singleton;
             }
-            catch (DirectoryNotFoundException)
+            catch (Exception ex)
+            when (ex is DirectoryNotFoundException || ex is IOException || ex is UnauthorizedAccessException)
             {
-            }
-            catch (IOException)
-            {
-            }
-            return NotFoundDirectoryContents.Singleton;
+                return NotFoundDirectoryContents.Singleton;
+            }            
         }
 
         public IChangeToken Watch(string filter)
         {
-            throw new NotSupportedException();
+            return NullChangeToken.Singleton;
         }
 
         #endregion
 
         #region API factory
+
+        public virtual PhysicalSystemInfo CreateInfo(FileSystemInfo xinfo)
+        {
+            #if !NETSTANDARD
+            if (xinfo.LinkTarget != null) return null; // Skip Links (unless we have a better option)
+            #endif
+
+            if (xinfo is FileInfo file) return CreateFileInfo(file);
+            if (xinfo is DirectoryInfo dir) return CreateDirectoryInfo(dir);
+
+            // shouldn't happen unless BCL introduces new implementation of base type
+            throw new InvalidOperationException("Unsupported: " + xinfo.GetType().FullName);
+        }
 
         public virtual PhysicalFileInfo CreateFileInfo(FileInfo fileInfo)
         {
@@ -179,58 +169,6 @@ namespace InteropTypes.IO
             return new PhysicalDirectoryInfo(dirInfo, this);
         }
 
-        #endregion
-
-        #region extras
-
-        public IEnumerable<PhysicalFileInfo> EnumerateFiles()
-        {
-            return this
-                .Root
-                .EnumerateFiles()
-                .Select(CreateFileInfo);
-        }
-
-        public IEnumerable<PhysicalFileInfo> EnumerateFiles(string searchPattern)
-        {
-            return this
-                .Root
-                .EnumerateFiles(searchPattern)
-                .Select(CreateFileInfo);
-        }
-
-        public IEnumerable<PhysicalFileInfo> EnumerateFiles(string searchPattern, SearchOption options)
-        {
-            return this
-                .Root
-                .EnumerateFiles(searchPattern, options)
-                .Select(CreateFileInfo);
-        }
-
-        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories()
-        {
-            return this
-                .Root
-                .EnumerateDirectories()
-                .Select(CreateDirectoryInfo);
-        }
-
-        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories(string searchPattern)
-        {
-            return this
-                .Root
-                .EnumerateDirectories(searchPattern)
-                .Select(CreateDirectoryInfo);
-        }
-
-        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories(string searchPattern, SearchOption options)
-        {
-            return this
-                .Root
-                .EnumerateDirectories(searchPattern, options)
-                .Select(CreateDirectoryInfo);
-        }
-
-        #endregion
+        #endregion        
     }
 }

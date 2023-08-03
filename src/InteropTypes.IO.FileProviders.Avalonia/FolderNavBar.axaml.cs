@@ -38,23 +38,22 @@ namespace InteropTypes.IO
             }
         }
 
-        public void _OnClick_FolderUp(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnClick_FolderUp(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var pdinfo = CurrentDirectory;
             
             var dinfo = new System.IO.DirectoryInfo(pdinfo.PhysicalPath).Parent;
             if (dinfo == null) return;
 
-            CurrentDirectory = new DIRECTORYINFO(dinfo);
-            
+            CurrentDirectory = new DIRECTORYINFO(dinfo);            
         }
 
-        public void _OnClick_GoToAppDir(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnClick_GoToAppDir(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             CurrentDirectory = DIRECTORYINFO.ApplicationDirectory;
         }
 
-        public void _OnClick_FolderBrowse(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnClick_FolderBrowse(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             if (DIRECTORYINFO.TryBrowseFolderDialog(out var dinfo, null, null, null))
             {

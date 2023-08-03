@@ -6,9 +6,9 @@
              x:Class="InteropTypes.IO.FolderNavBar" x:Name="mySelf">
   
   <DockPanel>
-    <Button Content="🏠" Click="_OnClick_GoToAppDir" />
-    <Button Content="↑" Click="_OnClick_FolderUp" />
-    <Button DockPanel.Dock="Right" Content="📁" Click="_OnClick_FolderBrowse" />
+    <Button Content="🏠" Click="OnClick_GoToAppDir" />
+    <Button Content="↑" Click="OnClick_FolderUp" />
+    <Button DockPanel.Dock="Right" Content="📁" Click="OnClick_FolderBrowse" />
     
     <TextBox x:Name="myCurrentPath" IsReadOnly="true" />
     

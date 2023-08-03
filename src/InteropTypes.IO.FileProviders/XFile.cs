@@ -139,11 +139,13 @@ namespace InteropTypes.IO
 
             // hack for Microsoft PhysicalDirectoryInfo not implementing IDirectoryContents
             if (contents == null && XFile._IsMSPhysicalDirectory(entry))
-            {                
+            {
                 // https://github.com/dotnet/runtime/issues/86354
 
-                var zprovider = new PhysicalFileProvider(entry.PhysicalPath);
-                contents = zprovider.GetDirectoryContents(string.Empty);                
+                var dinfo = new System.IO.DirectoryInfo(entry.PhysicalPath);
+
+                var zprovider = new PhysicalDirectoryInfo(dinfo);
+                contents = zprovider;
             }
 
             return _EnumerateFiles(contents, allDirectories);            

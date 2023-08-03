@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace InteropTypes.IO
 {
-    partial struct PhysicalFIleInfo
+    partial class PhysicalFIleInfo
     {
         public static async Task<PhysicalFileInfo> TryOpenFileDialogAsync(string filter, Guid? clientId)
         {
@@ -40,14 +40,14 @@ namespace InteropTypes.IO
 
             #endif
 
-            return null;
+            return default;
         }
 
         #if WINDOWS
 
         public static bool TryOpenFileDialog(out PhysicalFileInfo xinfo, Action<System.Windows.Forms.OpenFileDialog> configureDialog, System.Windows.Forms.IWin32Window parent = null)
         {
-            xinfo = null;
+            xinfo = default;
 
             using(var dlg = new System.Windows.Forms.OpenFileDialog())
             {
@@ -69,7 +69,7 @@ namespace InteropTypes.IO
 
         public static bool TrySaveFileDialog(out PhysicalFileInfo xinfo, Action<System.Windows.Forms.SaveFileDialog> configureDialog, System.Windows.Forms.IWin32Window parent = null)
         {
-            xinfo = null;
+            xinfo = default;
 
             using (var dlg = new System.Windows.Forms.SaveFileDialog())
             {

@@ -15,26 +15,31 @@ namespace InteropTypes.IO
     [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     #endif
     public partial class PhysicalFileInfo
-        : IFileInfo
+        : PhysicalSystemInfo        
         , IEquatable<IFileInfo>
-        , IServiceProvider
         // IProgress<Stream>, IProgress<ReadOnlySpan<Byte>> for writing
     {
         #region lifecycle
 
         public static IEnumerable<PhysicalFileInfo> Enumerate(string path)
         {
-            return new PhysicalFileProvider(path).EnumerateFiles();
+            var dinfo = new System.IO.DirectoryInfo(path);
+
+            return new PhysicalDirectoryInfo(dinfo).EnumerateFiles();
         }
 
         public static IEnumerable<PhysicalFileInfo> Enumerate(string path, string searchPattern)
         {
-            return new PhysicalFileProvider(path).EnumerateFiles(searchPattern);
+            var dinfo = new System.IO.DirectoryInfo(path);
+
+            return new PhysicalDirectoryInfo(dinfo).EnumerateFiles(searchPattern);
         }
 
         public static IEnumerable<PhysicalFileInfo> Enumerate(string path, string searchPattern, SearchOption options)
         {
-            return new PhysicalFileProvider(path).EnumerateFiles(searchPattern, options);
+            var dinfo = new System.IO.DirectoryInfo(path);
+
+            return new PhysicalDirectoryInfo(dinfo).EnumerateFiles(searchPattern, options);
         }
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace InteropTypes.IO
 
         #region data
         
-        internal protected FileInfo File { get; }
+        internal FileInfo File { get; }
 
         public override int GetHashCode()
         {
@@ -66,36 +71,25 @@ namespace InteropTypes.IO
             return other is PhysicalFileInfo pfinfo && FileSystemInfoComparer<FileInfo>.Default.Equals(this.File, pfinfo.File);
         }
 
+        protected sealed override FileSystemInfo GetSystemInfo() { return File; }
+
         #endregion
 
-        #region properties
+        #region properties        
 
         /// <summary>
         /// Always false.
         /// </summary>
-        public bool IsDirectory => false;
-
-        /// <inheritdoc />
-        public bool Exists => File.Exists;
-
-        /// <inheritdoc />
-        public long Length => File.Length;
-
-        /// <inheritdoc />
-        public string PhysicalPath => File.FullName;
-
-        /// <inheritdoc />
-        public string Name => File.Name;
-
-        /// <inheritdoc />
-        public DateTimeOffset LastModified => File.LastWriteTimeUtc;        
+        public sealed override bool IsDirectory => false;
+        
+        public sealed override long Length => File.Exists? File.Length : -1;        
 
         #endregion
 
         #region API
 
         /// <inheritdoc />
-        public Stream CreateReadStream()
+        public sealed override Stream CreateReadStream()
         {
             return File?.OpenRead();
         }
@@ -106,15 +100,15 @@ namespace InteropTypes.IO
             return File?.Create();
         }
 
-        public virtual object GetService(Type serviceType)
+        public override object GetService(Type serviceType)
         {            
             if (serviceType == typeof(Func<FileMode, Stream>)) return (Func<FileMode, Stream>)_Open1;
             if (serviceType == typeof(Func<FileMode, FileAccess, Stream>)) return (Func<FileMode, FileAccess, Stream>)_Open2;
             if (serviceType == typeof(Func<FileMode, FileAccess, FileShare, Stream>)) return (Func<FileMode, FileAccess, FileShare, Stream>)_Open3;
 
             if (serviceType == typeof(FileInfo)) return File;
-            if (serviceType == typeof(FileSystemInfo)) return File;
-            return null;
+
+            return base.GetService(serviceType);
         }        
 
         private Stream _Open1(FileMode mode)

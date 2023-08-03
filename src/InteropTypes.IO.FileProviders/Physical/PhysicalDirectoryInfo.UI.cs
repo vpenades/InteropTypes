@@ -14,7 +14,7 @@ namespace InteropTypes.IO
                 return true;
             }
 
-            xinfo = null;
+            xinfo = default;
             return false;
         }
 
@@ -27,7 +27,7 @@ namespace InteropTypes.IO
                 return true;
             }
             
-            xinfo = null;
+            xinfo = default;
             return false;
         }
         #endif

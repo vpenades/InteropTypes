@@ -17,7 +17,7 @@ namespace InteropTypes.IO
     [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     #endif
     public partial class PhysicalDirectoryInfo
-        : IFileInfo
+        : PhysicalSystemInfo        
         , IEquatable<IFileInfo>
         , IDirectoryContents
         , IServiceProvider
@@ -26,36 +26,42 @@ namespace InteropTypes.IO
 
         public static IEnumerable<PhysicalDirectoryInfo> Enumerate(string path)
         {
-            return new PhysicalFileProvider(path).EnumerateDirectories();
+            var dinfo = new System.IO.DirectoryInfo(path);
+
+            return new PhysicalDirectoryInfo(dinfo).EnumerateDirectories();
         }
 
         public static IEnumerable<PhysicalDirectoryInfo> Enumerate(string path, string searchPattern)
         {
-            return new PhysicalFileProvider(path).EnumerateDirectories(searchPattern);
+            var dinfo = new System.IO.DirectoryInfo(path);
+
+            return new PhysicalDirectoryInfo(dinfo).EnumerateDirectories(searchPattern);
         }
 
         public static IEnumerable<PhysicalDirectoryInfo> Enumerate(string path, string searchPattern, SearchOption options)
         {
-            return new PhysicalFileProvider(path).EnumerateDirectories(searchPattern, options);
+            var dinfo = new System.IO.DirectoryInfo(path);
+
+            return new PhysicalDirectoryInfo(dinfo).EnumerateDirectories(searchPattern, options);
         }
 
         /// <summary>
         /// Initializes an instance of <see cref="PhysicalDirectoryInfo"/> that wraps an instance of <see cref="System.IO.DirectoryInfo"/>
         /// </summary>
         /// <param name="dinfo">The directory</param>
-        public PhysicalDirectoryInfo(DirectoryInfo dinfo, PhysicalFileProvider parent = null)
+        public PhysicalDirectoryInfo(DirectoryInfo dinfo, IPhysicalFileFactory parent = null)
         {
             Directory = dinfo;
-            Parent = parent ?? new PhysicalFileProvider(dinfo.Root.FullName);
+            _Factory = parent ?? PhysicalFileProvider.UseRootProvider(dinfo);
         }
 
         #endregion
 
         #region data
 
-        internal protected DirectoryInfo Directory { get; }
+        internal DirectoryInfo Directory { get; }
 
-        internal readonly PhysicalFileProvider Parent;
+        private readonly IPhysicalFileFactory _Factory;
 
         public override int GetHashCode()
         {
@@ -69,33 +75,21 @@ namespace InteropTypes.IO
             return obj is PhysicalDirectoryInfo other && FileSystemInfoComparer<DirectoryInfo>.Default.Equals(this.Directory, other.Directory);
         }
 
+        protected sealed override FileSystemInfo GetSystemInfo() { return Directory; }
+
         #endregion
 
-        #region properties
+        #region properties        
 
         /// <summary>
         /// Always true.
         /// </summary>
-        public bool IsDirectory => true;
-
-        /// <inheritdoc />
-        public bool Exists => Directory.Exists;
+        public sealed override bool IsDirectory => true;
 
         /// <summary>
-        /// Always equals -1.
+        /// Always -1
         /// </summary>
-        long IFileInfo.Length => -1;
-
-        /// <inheritdoc />
-        public string PhysicalPath => Directory.FullName;
-
-        /// <inheritdoc />
-        public string Name => Directory.Name;
-
-        /// <summary>
-        /// The time when the directory was last written to.
-        /// </summary>
-        public DateTimeOffset LastModified => Directory.LastWriteTimeUtc;        
+        public sealed override long Length => -1;        
 
         #endregion
 
@@ -106,7 +100,7 @@ namespace InteropTypes.IO
         /// </summary>
         /// <exception cref="NotSupportedException">Always thrown</exception>
         /// <returns>Never returns</returns>
-        Stream IFileInfo.CreateReadStream()
+        public sealed override Stream CreateReadStream()
         {
             throw new NotSupportedException();
         }
@@ -129,22 +123,8 @@ namespace InteropTypes.IO
             {
                 return Directory
                     .EnumerateFileSystemInfos()
-                    #if !NETSTANDARD
-                    .Where(item => item.LinkTarget == null) // Skip Links (unless we have a better option)
-                    #endif
-                    .Select<FileSystemInfo, IFileInfo>(info =>
-                    {
-                        if (info is FileInfo file)
-                        {
-                            return Parent?.CreateFileInfo(file) ?? new PhysicalFileInfo(file);
-                        }
-                        else if (info is DirectoryInfo dir)
-                        {
-                            return Parent?.CreateDirectoryInfo(dir) ?? new PhysicalDirectoryInfo(dir);
-                        }
-                        // shouldn't happen unless BCL introduces new implementation of base type
-                        throw new InvalidOperationException("Unsupported: " + info.GetType().FullName);
-                    });
+                    .Select(_Factory.CreateInfo)
+                    .Where(item => item != null);
             }
             catch (Exception ex)
             when (ex is DirectoryNotFoundException || ex is IOException || ex is UnauthorizedAccessException)
@@ -159,9 +139,8 @@ namespace InteropTypes.IO
             if (serviceType == typeof(Func<string, IFileInfo>)) return (Func<string, IFileInfo>)UseFileInfo;
 
             if (serviceType == typeof(DirectoryInfo)) return Directory;
-            if (serviceType == typeof(FileSystemInfo)) return Directory;
 
-            return null;
+            return base.GetService(serviceType);
         }
 
         /// <summary>
@@ -209,7 +188,7 @@ namespace InteropTypes.IO
             name = System.IO.Path.Combine(Directory.FullName, name);
 
             var file = new System.IO.FileInfo(name);
-            return Parent
+            return _Factory
                 ?.CreateFileInfo(file)
                 ?? new PhysicalFileInfo(file);
         }
@@ -219,9 +198,61 @@ namespace InteropTypes.IO
             name = System.IO.Path.Combine(Directory.FullName, name);
 
             var dir = new System.IO.DirectoryInfo(name);
-            return Parent
+            return _Factory
                 ?.CreateDirectoryInfo(dir)
                 ?? new PhysicalDirectoryInfo(dir);
+        }
+
+        #endregion
+
+        #region extras
+
+        public IEnumerable<PhysicalFileInfo> EnumerateFiles()
+        {
+            return this
+                .Directory
+                .EnumerateFiles()
+                .Select(_Factory.CreateFileInfo);
+        }
+
+        public IEnumerable<PhysicalFileInfo> EnumerateFiles(string searchPattern)
+        {
+            return this
+                .Directory
+                .EnumerateFiles(searchPattern)
+                .Select(_Factory.CreateFileInfo);
+        }
+
+        public IEnumerable<PhysicalFileInfo> EnumerateFiles(string searchPattern, SearchOption options)
+        {
+            return this
+                .Directory
+                .EnumerateFiles(searchPattern, options)
+                .Select(_Factory.CreateFileInfo);
+        }
+
+        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories()
+        {
+            return this
+                .Directory
+                .EnumerateDirectories()
+                .Select(_Factory.CreateDirectoryInfo);
+        }
+
+        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories(string searchPattern)
+        {
+            return this
+                .Directory
+                .EnumerateDirectories(searchPattern)
+                .Select(_Factory.CreateDirectoryInfo);
+        }
+
+        public IEnumerable<PhysicalDirectoryInfo> EnumerateDirectories(string searchPattern, SearchOption options)
+        {
+            return this
+                .Directory
+                .EnumerateDirectories(searchPattern, options)
+                .Select(_Factory.CreateDirectoryInfo);
         }
 
         #endregion
