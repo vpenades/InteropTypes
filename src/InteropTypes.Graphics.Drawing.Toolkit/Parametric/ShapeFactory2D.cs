@@ -190,6 +190,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
         public static void FillLinesSegments(this Span<POINT2> segments, ReadOnlySpan<POINT2> points, float diameter, bool closed)
         {
+            System.Diagnostics.Debug.Assert(segments.Length == points.Length * 4);
+            // System.Diagnostics.Debug.Assert(!closed || points[0] == points[points.Length-1]); // if closed, first and last points must be the same.
 
             // create segments
 
@@ -202,7 +204,11 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 segment = segment.Slice(4);
             }
 
-            if (closed) _FillSegmentVertices(segment, points[points.Length - 1], points[0], diameter);
+            if (closed)
+            {
+                if (points[0] == points[points.Length - 1]) _FillSegmentVertices(segment, points[0], points[1], diameter);
+                else _FillSegmentVertices(segment, points[points.Length-1], points[0], diameter);
+            }
 
             // weld segments vertices
 
