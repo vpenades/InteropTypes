@@ -150,14 +150,20 @@ namespace WPFDemo
 
     public class AdvancedScene2D : IDrawingBrush<ICanvas2D>
     {
-        private _Sprites2D sprites = new _Sprites2D();
-        private ImageSource _noiseTexture = new BindableNoiseTexture().Sprite;
+        public AdvancedScene2D()
+        {
+            sprites.RunDynamicsThread();
+
+            GroupBox.ArrangeAtlas(800, vectors, sprites);
+        }
+
+        private readonly _Scene2D vectors = new _Scene2D();
+        private readonly _Sprites2D sprites = new _Sprites2D();
 
         public void DrawTo(ICanvas2D context)
         {
             sprites.DrawTo(context);
-
-            context.DrawImage(System.Numerics.Matrix3x2.Identity, _noiseTexture);
+            vectors.DrawTo(context);
         }
     }
 

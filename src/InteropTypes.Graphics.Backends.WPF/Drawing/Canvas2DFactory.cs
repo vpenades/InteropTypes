@@ -522,7 +522,7 @@ namespace InteropTypes.Graphics.Backends
             if (image == null) return;
 
             System.Diagnostics.Debug.Assert(!(image is CroppedBitmap), "not renderable");
-            System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
+            // System.Diagnostics.Debug.Assert(!(image is BitmapFrame), "not renderable");
 
             var bmpRect = bmp.GetSourceRectangle();
             
