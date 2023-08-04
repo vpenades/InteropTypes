@@ -5,7 +5,6 @@ using System.Text;
 using InteropTypes.Graphics.Drawing;
 
 using XY = System.Numerics.Vector2;
-using COLOR = System.Drawing.Color;
 
 namespace InteropTypes
 {
