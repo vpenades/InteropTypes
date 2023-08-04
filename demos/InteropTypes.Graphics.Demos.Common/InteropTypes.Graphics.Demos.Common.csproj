@@ -19,7 +19,15 @@
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
     <EmbeddedResource Include="Assets\**" />
-  </ItemGroup>  
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="Embedded\qrhead.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Embedded\qrhead.jpg" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
@@ -33,5 +41,7 @@
   <ItemGroup>
     <PackageReference Remove="ErrorProne.NET.Structs" />
   </ItemGroup>
+
+  
 
 </Project>

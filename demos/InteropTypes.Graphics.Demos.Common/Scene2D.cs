@@ -9,24 +9,34 @@ using COLOR = System.Drawing.Color;
 
 namespace InteropTypes
 {
-    public struct _Scene2D : IDrawingBrush<ICanvas2D>
+    public class _Scene2D : GroupBox.Collection
     {
-        public void DrawTo(ICanvas2D dc)
+        protected override void Initialize()
+        {        
+            Render(50, 50, dc => dc.DrawCircle((25, 25), 50, COLOR.Red));
+            Render(50, 50, dc => dc.DrawRectangle((0, 0), (50, 50), (COLOR.Transparent, COLOR.Red, 4)));
+            Render(50, 50, dc => dc.DrawRectangle((0, 0), (50, 50), (COLOR.Transparent, COLOR.Red, 4), 12));
+            Render(80, 40, dc => dc.DrawTextLine((5, 5), "Hello World!", 15, COLOR.Violet));
+
+            Render(60, 60, _NonConvexPolygon);         
+        }        
+
+        private void _NonConvexPolygon(ICanvas2D dc)
         {
-            dc.DrawCircle((0, 0), 50, COLOR.Red);
-            dc.DrawCircle((200, 200), 50, COLOR.White);
-            dc.DrawRectangle((175, 175), (50, 50), (COLOR.Transparent, COLOR.Red, 4));
+            var style = ElapsedTime % 4 < 2
+                ? (COLOR.Transparent, COLOR.Black.WithOpacity(0.5f), 5)
+                : (COLOR.Black.WithOpacity(0.5f),COLOR.Transparent, 0);
 
-            dc.DrawRectangle((480, 200), (130, 130), (COLOR.Transparent, COLOR.Red, 4), 12);
-
-            dc.DrawRectangle((10, 10), (200, 200), (COLOR.Yellow, 2));
-
-            // DrawFlower(_Drawing2D, new XY(450, 450), 4);
-
-            dc.DrawTextLine((100, 100), "Hello World!", 15, COLOR.White);
-
-            // var bee = _CreateBeeModel2D(COLOR.Yellow);
-            // _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.CreateRotation(t) * System.Numerics.Matrix3x2.CreateTranslation(600, 350), bee, Color.White);
+            var scr = new System.Drawing.RectangleF(10, 10, 50, 50);
+            var Width = 20f;
+            dc.DrawPolygon(style,
+                (scr.Left, scr.Top),
+                (scr.Right, scr.Top),
+                (scr.Right, scr.Bottom),
+                (scr.Right - Width, scr.Bottom),
+                (scr.Right - Width, scr.Top + Width),
+                (scr.Left, scr.Top + Width),
+                (scr.Left, scr.Top));
         }
     }    
 }

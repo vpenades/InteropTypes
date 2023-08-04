@@ -33,6 +33,8 @@ namespace MonoGameDemo
             this.Window.AllowAltF4 = true;
 
             base.Initialize();
+
+            _Sprites.RunDynamicsThread();
         }
 
         #endregion
@@ -45,8 +47,7 @@ namespace MonoGameDemo
         private IMonoGameScene3D _Drawing3D;
 
         private _Sprites2D _Sprites = new _Sprites2D();
-        
-        private ImageSource _BindableSprite = new BindableNoiseTexture().Sprite;
+        private _Scene2D _Vectors = new _Scene2D();        
 
         #endregion
 
@@ -102,10 +103,8 @@ namespace MonoGameDemo
             GraphicsDevice.BlendState = BlendState.Opaque;            
 
             _Drawing2D.Begin(800, _UseQuadrant1 ? - 600 : 600, true);
-            _DrawCanvas2D();
-
-            System.Diagnostics.Debug.Assert(_Graphics.GraphicsDevice.BlendState ==  BlendState.AlphaBlend);
-
+            System.Diagnostics.Debug.Assert(_Graphics.GraphicsDevice.BlendState == BlendState.AlphaBlend);
+            _DrawCanvas2D();            
             _Drawing2D.End();
 
             System.Diagnostics.Debug.Assert(_Graphics.GraphicsDevice.BlendState == BlendState.Opaque);
@@ -121,10 +120,11 @@ namespace MonoGameDemo
 
             var vp = _Drawing2D.TransformInverse(new Point2(mouseState.Position.X, mouseState.Position.Y));
 
+            GroupBox.ArrangeAtlas(800, _Sprites, _Vectors);
+
             _Drawing2D.DrawLine((0, 0), (800, 600), 2, COLOR.Red);
             _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, _Sprites);
-            _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, new _Scene2D());
-            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.Identity, _BindableSprite);
+            _Drawing2D.DrawAsset(System.Numerics.Matrix3x2.Identity, _Vectors);
             _Drawing2D.DrawLine((800, 0), (0, 600), 2, COLOR.Red);
 
             if (_Drawing2D.TryGetBackendViewportBounds(out var viewportBounds))
@@ -138,34 +138,7 @@ namespace MonoGameDemo
                 _Drawing2D.DrawTextLine((10, 70), $"{quadrant}", 15, COLOR.White);
             }
 
-            _Drawing2D.DrawTextLine((10, 20), $"{(int)vp.X} {(int)vp.Y}", 15, COLOR.White);
-
-            // Draw with IMeshCanvas2D extended API
-
-            var vertices = new Vertex2[4];
-            vertices[0] = new Vertex2((0, 0), (0, 0));
-            vertices[1] = new Vertex2((50, 0), (1, 0));
-            vertices[2] = new Vertex2((50, 50), (1, 1));
-            vertices[3] = new Vertex2((0, 50), (0, 1));
-
-            var svc = _Drawing2D.CreateTransformed2D(System.Numerics.Matrix3x2.CreateTranslation(600, 300)) as IServiceProvider;
-
-            var xformed = svc.GetService(typeof(IMeshCanvas2D)) as IMeshCanvas2D;
-
-            xformed?.DrawMeshPrimitive(vertices, new int[] { 0, 1, 2, 0, 2, 3 }, "Assets\\Tiles.png");
-
-            // draw tiles with half pixel
-
-            var tile1 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4);
-            var tile2 = ImageSource.Create("Assets\\Tiles.png", (16, 64), (16, 16), (5, 5)).WithScale(4).WithExpandedSource(-3.5f);
-
-            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600, 500), tile1);
-            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateTranslation(600 + 65, 500), tile2);
-
-            var qrhead = ImageSource.Create((typeof(Game1).Assembly, "MonoGameDemo.Assets.qrhead.jpg"), (0, 0), (255, 255), (128, 128));
-            _Drawing2D.DrawImage(System.Numerics.Matrix3x2.CreateScale(0.25f) * System.Numerics.Matrix3x2.CreateTranslation(125, 50), qrhead);
-
-            _Drawing2D.DrawCircle((600, 100), 50, (COLOR.Yellow, 2));
+            _Drawing2D.DrawTextLine((10, 20), $"{(int)vp.X} {(int)vp.Y}", 15, COLOR.White);            
         }
 
         private void _DrawScene3D()
@@ -180,5 +153,8 @@ namespace MonoGameDemo
         }
 
         #endregion
-    }    
+    }
+
+
+    
 }

@@ -14,20 +14,16 @@ namespace InteropTypes
         {
             _BindableBitmap = new BindableBitmap();
             _BindableSprite = new ImageSource(_BindableBitmap, (0, 0), (64, 64), (0, 0));
-        }
-
-        public static BindableNoiseTexture CreateInThread()
-        {
-            var instance = new BindableNoiseTexture();
-
-            Task.Run(instance._UpdateBindableAsync);
-
-            return instance;
-        }
+        }        
 
         public async Task RunAsync()
         {
             await _UpdateBindableAsync().ConfigureAwait(false);            
+        }
+
+        public void RunTask()
+        {
+            Task.Run(_UpdateBindableAsync);
         }
 
         private BindableBitmap _BindableBitmap;
