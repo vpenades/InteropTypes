@@ -85,8 +85,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.VideoLA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Veldrid", "src\InteropTypes.Graphics.Backends.Veldrid\InteropTypes.Graphics.Backends.Veldrid.csproj", "{F7B1B478-9F05-497A-A67F-9CAD2AB01E68}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.MAUI", "src\InteropTypes.Graphics.Backends.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj", "{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Veldrid.ShaderGen", "src\InteropTypes.Graphics.Backends.Veldrid.ShaderGen\InteropTypes.Graphics.Backends.Veldrid.ShaderGen.csproj", "{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Backends.OnnxRuntime", "src\InteropTypes.Vision.Backends.OnnxRuntime\InteropTypes.Vision.Backends.OnnxRuntime.csproj", "{4D350D45-1AEA-4398-9A65-D47094A733ED}"
@@ -162,7 +160,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Avalo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Avalonia.Demo.App.Browser", "demos\InteropTypes.Graphics.Avalonia.Demo.App.Browser\InteropTypes.Graphics.Avalonia.Demo.App.Browser.csproj", "{53E8A02D-7330-4256-81D3-498A64ADA27C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.IO.FileProviders.Avalonia", "src\InteropTypes.IO.FileProviders.Avalonia\InteropTypes.IO.FileProviders.Avalonia.csproj", "{6BC96A51-6E9E-4309-94DF-F4C989B2C298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.FileProviders.Avalonia", "src\InteropTypes.IO.FileProviders.Avalonia\InteropTypes.IO.FileProviders.Avalonia.csproj", "{6BC96A51-6E9E-4309-94DF-F4C989B2C298}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -278,10 +276,6 @@ Global
 		{F7B1B478-9F05-497A-A67F-9CAD2AB01E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7B1B478-9F05-497A-A67F-9CAD2AB01E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7B1B478-9F05-497A-A67F-9CAD2AB01E68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -450,7 +444,6 @@ Global
 		{AC53DF1D-7081-4269-947B-4D0150E22609} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 		{20F71865-1AEC-4B69-8C7C-F32086ECD946} = {554325E7-82B1-4A1F-8F6F-0E63E82537EC}
 		{F7B1B478-9F05-497A-A67F-9CAD2AB01E68} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
-		{67B6E0E1-9A29-4EF4-B288-151C794FF9B5} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{17D87DA1-D7CD-41BD-A8B4-49A392BE01D4} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{4D350D45-1AEA-4398-9A65-D47094A733ED} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 		{B97CEF29-BDE8-442F-B182-2C78A63713BB} = {F53F10B1-9FBF-486A-B27C-DDEF789AE0C1}
