@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\InteropTypes.Graphics.MonoGame.Demo.App\Assets\qrhead.jpg" Link="Assets\qrhead.jpg">
+    <Content Include="..\InteropTypes.Graphics.Demos.Common\Embedded\qrhead.jpg" Link="Assets\qrhead.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>  

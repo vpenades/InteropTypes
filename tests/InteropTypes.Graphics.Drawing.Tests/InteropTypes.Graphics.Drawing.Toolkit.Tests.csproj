@@ -48,6 +48,10 @@
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
 
+  </ItemGroup>  
+
+  <ItemGroup>
+    <Folder Include="Backends\" />
   </ItemGroup>
 
 </Project>

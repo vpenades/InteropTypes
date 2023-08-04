@@ -21,10 +21,10 @@ namespace InteropTypes.IO
         [Test]
         public void CreateAndEnumerate()
         {
-            var provider = new PhysicalFileProvider(TestContext.CurrentContext.TestDirectory);
-
-            var contents = provider.GetDirectoryContents(string.Empty);
-            contents._PrintContents();
+            var dinfo = new System.IO.DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+            var provider = new PhysicalDirectoryInfo(dinfo);
+            
+            provider._PrintContents();
         }        
     }
 }
