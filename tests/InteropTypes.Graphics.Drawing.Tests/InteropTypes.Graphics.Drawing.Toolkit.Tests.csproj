@@ -40,7 +40,6 @@
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MonoGame\InteropTypes.Graphics.Backends.MonoGame.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Plotly\InteropTypes.Graphics.Backends.Plotly.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SVG\InteropTypes.Graphics.Backends.SVG.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.MAUI\InteropTypes.Graphics.Backends.MAUI.csproj" />
 
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />    
