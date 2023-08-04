@@ -18,7 +18,7 @@ namespace InteropTypes.IO
 
         private void FolderNavBar_Loaded(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            CurrentDirectory = DIRECTORYINFO.ApplicationDirectory;
+            _GoToHome();
         }
 
         public static readonly DirectProperty<FolderNavBar, DIRECTORYINFO> CurrentDirectoryProperty
@@ -50,7 +50,7 @@ namespace InteropTypes.IO
 
         private void OnClick_GoToAppDir(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            CurrentDirectory = DIRECTORYINFO.ApplicationDirectory;
+            _GoToHome();
         }
 
         private void OnClick_FolderBrowse(object sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -59,6 +59,14 @@ namespace InteropTypes.IO
             {
                 CurrentDirectory = dinfo;
             }
+        }
+
+
+        private void _GoToHome()
+        {
+            // string DownloadsPath = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, Android.OS.Environment.DirectoryDownloads);
+
+            CurrentDirectory = DIRECTORYINFO.ApplicationDirectory;
         }
     }
 }
