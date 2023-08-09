@@ -24,7 +24,7 @@
 
     <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="8.0.0-preview.6.23329.7" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="8.0.0-preview.7.23375.6" />
     <PackageVersion Include="System.Drawing.Common" Version="7.0.0" />
     <PackageVersion Include="System.Text.Json" Version="7.0.3" />
     
@@ -33,7 +33,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.23.4" />
+    <PackageVersion Include="Google.Protobuf" Version="3.24.0" />
 
     <PackageVersion Include="Xamarin.Essentials" Version="1.7.7" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.2" />
@@ -119,7 +119,7 @@
     
     <PackageVersion Include="NUnit" Version="3.13.3" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.3" />
@@ -127,7 +127,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
     
 
-    <PackageVersion Include="BenchmarkDotNet" Version="0.13.6" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.7" />
 
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     
