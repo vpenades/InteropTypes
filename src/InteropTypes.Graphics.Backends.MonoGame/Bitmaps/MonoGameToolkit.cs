@@ -11,18 +11,16 @@ namespace InteropTypes.Graphics.Backends
 {
     public static partial class MonoGameToolkit
     {
-        private static UInt16[] _16BitBuffer;
-        private static UInt32[] _32BitBuffer;
-
         public static XNA.SurfaceFormat ToSurfaceFormat(PixelFormat fmt)
         {
             switch(fmt.Code)
             {
                 case INTEROP.Pixel.Alpha8.Code: return XNA.SurfaceFormat.Alpha8;
                 case INTEROP.Pixel.BGR565.Code: return XNA.SurfaceFormat.Bgr565;
+                case INTEROP.Pixel.BGRA32.Code: return XNA.SurfaceFormat.Bgra32;
                 case INTEROP.Pixel.BGRA4444.Code: return XNA.SurfaceFormat.Bgra4444;
                 case INTEROP.Pixel.BGRA5551.Code: return XNA.SurfaceFormat.Bgra5551;                
-                case INTEROP.Pixel.BGRA128F.Code: return XNA.SurfaceFormat.Vector4;
+                case INTEROP.Pixel.BGRA128F.Code: return XNA.SurfaceFormat.Vector4;                
             }
 
             throw new NotSupportedException($"{fmt}");
@@ -33,10 +31,10 @@ namespace InteropTypes.Graphics.Backends
             switch(fmt)
             {
                 case XNA.SurfaceFormat.Alpha8: return Pixel.Alpha8.Format;
-                case XNA.SurfaceFormat.Bgr565: return Pixel.BGR565.Format;
+                case XNA.SurfaceFormat.Bgr565: return Pixel.BGR565.Format;                
+                case XNA.SurfaceFormat.Bgra32: return Pixel.BGRA32.Format;
                 case XNA.SurfaceFormat.Bgra4444: return Pixel.BGRA4444.Format;
                 case XNA.SurfaceFormat.Bgra5551: return Pixel.BGRA5551.Format;
-                case XNA.SurfaceFormat.Bgra32: return Pixel.BGRA32.Format;
                 case XNA.SurfaceFormat.Vector4: return Pixel.BGRA128F.Format;
             }
 
@@ -72,11 +70,11 @@ namespace InteropTypes.Graphics.Backends
 
             if (dst == null || dst.Width != src.Width || dst.Height != src.Height)
             {
-                if (dst != null) dst.Dispose();
+                dst?.Dispose();
                 dst = null;
-            }
+            }            
 
-            if (dst == null) dst = texFactory(src.Width,src.Height);
+            dst ??= texFactory(src.Width,src.Height);
 
             if (dst.Format == XNA.SurfaceFormat.Bgr565)
             {
@@ -89,7 +87,12 @@ namespace InteropTypes.Graphics.Backends
                 _Copy32(src, dst, fit);
                 return;
             }
+
+            throw new NotSupportedException($"{src.PixelFormat} not supported");
         }
+
+        private static UInt16[] _16BitBuffer;
+        private static UInt32[] _32BitBuffer;
 
         private static void _Copy16(SpanBitmap src, XNA.Texture2D dst, bool fit)
         {
@@ -106,7 +109,7 @@ namespace InteropTypes.Graphics.Backends
             if (fit) dstx.AsTypeless().FitPixels(src);
             else dstx.AsTypeless().SetPixels(0, 0, src);
 
-            dst.SetData(_16BitBuffer);
+            dst.SetData(_16BitBuffer); // MONOGAME_NEEDS a SetData(ReadOnlySpan<>)
             return;
         }
 
@@ -127,7 +130,7 @@ namespace InteropTypes.Graphics.Backends
             if (fit) dstx.AsTypeless().FitPixels(src);
             else dstx.AsTypeless().SetPixels(0, 0, src);
 
-            dst.SetData(_32BitBuffer);
-        }        
+            dst.SetData(_32BitBuffer); // MONOGAME_NEEDS a SetData(ReadOnlySpan<>)
+        }
     }
 }
