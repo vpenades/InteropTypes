@@ -7,24 +7,24 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes
 {
-    public class WhiteNoiseTexture : Graphics.Bitmaps.InterlockedBitmap
+    public class InterlockedNoiseTexture : Graphics.Bitmaps.InterlockedBitmap
     {
-        private WhiteNoiseTexture() { }
+        private InterlockedNoiseTexture() { }
 
         // https://stackoverflow.com/questions/38739403/await-task-run-vs-await/
 
-        public static WhiteNoiseTexture CreateInThread()
+        public static InterlockedNoiseTexture CreateInThread()
         {
-            var instance = new WhiteNoiseTexture();
+            var instance = new InterlockedNoiseTexture();
 
             Task.Run(instance._AsyncUpdateBitmap);
 
             return instance;
         }
 
-        public static async Task<WhiteNoiseTexture> CreateAsync()
+        public static async Task<InterlockedNoiseTexture> CreateAsync()
         {
-            var instance = new WhiteNoiseTexture();
+            var instance = new InterlockedNoiseTexture();
 
             await instance._AsyncUpdateBitmap().ConfigureAwait(false);
 
