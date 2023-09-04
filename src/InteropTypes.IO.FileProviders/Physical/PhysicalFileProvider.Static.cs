@@ -32,5 +32,57 @@ namespace InteropTypes.IO
 
             return provider;
         }
+
+        public static bool TryGetFileInfo(Microsoft.Extensions.FileProviders.IFileInfo src, out System.IO.FileInfo finfo)
+        {
+            if (src == null || src.IsDirectory)
+            {
+                finfo = null;
+                return false;
+            }
+
+            try
+            {
+                if (src is IServiceProvider srv)
+                {
+                    finfo = srv.GetService(typeof(FileInfo)) as FileInfo;
+                    if (finfo != null) return true;
+                }
+
+                finfo = new System.IO.FileInfo(src.PhysicalPath);
+                return true;
+            }
+            catch
+            {
+                finfo = null;
+                return false;
+            }
+        }
+
+        public static bool TryGetDirectoryInfo(Microsoft.Extensions.FileProviders.IFileInfo src, out System.IO.DirectoryInfo finfo)
+        {
+            if (src == null || !src.IsDirectory)
+            {
+                finfo = null;
+                return false;
+            }
+
+            try
+            {
+                if (src is IServiceProvider srv)
+                {
+                    finfo = srv.GetService(typeof(DirectoryInfo)) as DirectoryInfo;
+                    if (finfo != null) return true;
+                }
+
+                finfo = new System.IO.DirectoryInfo(src.PhysicalPath);
+                return true;
+            }
+            catch
+            {
+                finfo = null;
+                return false;
+            }
+        }
     }
 }

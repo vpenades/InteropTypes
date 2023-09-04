@@ -128,6 +128,7 @@ namespace InteropTypes.IO.Reflection
                 case ".png":
                 case ".jpg":
                 case ".jpeg":
+                case ".jfif":
                 case ".tif":
                 case ".tiff":
                 case ".webp":

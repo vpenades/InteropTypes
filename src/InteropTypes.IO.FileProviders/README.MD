@@ -35,6 +35,8 @@ TODO:
 - 
 - [DiscUtils for ISO and other image file formats](https://github.com/DiscUtils/DiscUtils)
 - [System.IO.IsolatedStorage](https://www.nuget.org/packages/System.IO.IsolatedStorage)
+- [Lexical.FileSystem](https://github.com/nasa03/Lexical.FileSystem)
+- [Lexical.FileProvider](https://github.com/ka4ep/Lexical.FileProvider)
 
 ### Issues
 
