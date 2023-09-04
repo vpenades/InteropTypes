@@ -5,6 +5,8 @@ using Avalonia.ReactiveUI;
 
 namespace InteropTypes;
 
+// https://www.theimpostersyndrome.dev/posts/macospackaging/
+
 class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
