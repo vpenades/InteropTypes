@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
+using JSON = System.Text.Json;
+
 namespace InteropTypes.Graphics.Drawing
 {
+    [System.Text.Json.Serialization.JsonConverter(typeof(Point3.JsonConverter))]
     partial struct Point3
     {
         /// <inheritdoc/>  
@@ -13,6 +16,60 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         public readonly string ToString(string format, IFormatProvider formatProvider) { return XYZ.ToString(format, formatProvider); }
+
+
+        public sealed class JsonConverter : Single3Converter<Point3>
+        {
+            protected override Point3 Create(float x, float y, float z) { return new Point3(x, y, z); }
+            protected override (float x, float y, float z) Read(in Point3 value) { return (value.X,value.Y,value.Z); }
+        }
+
+        public abstract class Single3Converter<T> : JSON.Serialization.JsonConverter<T>
+        {            
+            public override T Read(ref JSON.Utf8JsonReader reader, Type typeToConvert, JSON.JsonSerializerOptions options)
+            {
+                _ReadToken(ref reader, JSON.JsonTokenType.StartArray);
+                float x = _ReadSingle(ref reader);
+                float y = _ReadSingle(ref reader);
+                float z = _ReadSingle(ref reader);
+                _ReadToken(ref reader, JSON.JsonTokenType.EndArray);
+
+                return Create(x, y, z);
+            }            
+
+            private static void _ReadToken(ref JSON.Utf8JsonReader reader, JSON.JsonTokenType token)
+            {
+                reader.Read();
+                if (reader.TokenType != token)
+                {
+                    throw new System.Text.Json.JsonException();
+                }
+            }
+
+            private static float _ReadSingle(ref JSON.Utf8JsonReader reader)
+            {
+                // Read the x component
+                reader.Read();
+                if (reader.TokenType != JSON.JsonTokenType.Number) throw new JSON.JsonException();
+                float x = reader.GetSingle();
+                return x;
+            }
+            
+            public override void Write(JSON.Utf8JsonWriter writer, T value, JSON.JsonSerializerOptions options)
+            {
+                var (x, y, z) = Read(value);
+
+                writer.WriteStartArray();
+                writer.WriteNumberValue(x);
+                writer.WriteNumberValue(y);
+                writer.WriteNumberValue(z);
+                writer.WriteEndArray();
+            }
+
+            protected abstract T Create(float x, float y, float z);
+
+            protected abstract (float x, float y, float z) Read(in T value);
+        }
 
 
 

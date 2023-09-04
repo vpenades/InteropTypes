@@ -14,7 +14,11 @@
       - 2D: ICanvas2D
       - 3D: IScene3D      
     </Description>
-  </PropertyGroup>  
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
 
   <ItemGroup>    
     <InternalsVisibleTo Include="InteropTypes.Graphics.Drawing.Core.Tests" />
