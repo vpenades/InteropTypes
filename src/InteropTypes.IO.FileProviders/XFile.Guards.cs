@@ -12,14 +12,14 @@ namespace InteropTypes.IO
         public static void GuardIsValidFile(IFileInfo xinfo)
         {
             if (xinfo == null) throw new ArgumentNullException(nameof(xinfo));
-            if (xinfo.IsDirectory) throw new ArgumentException("not a file", nameof(xinfo));
+            if (xinfo.IsDirectory) throw new ArgumentException("Expected a File, but it's a Directory", nameof(xinfo));
         }
 
         [System.Diagnostics.DebuggerStepThrough]
         public static void GuardIsValidDirectory(IFileInfo xinfo)
         {
             if (xinfo == null) throw new ArgumentNullException(nameof(xinfo));
-            if (!xinfo.IsDirectory) throw new ArgumentException("not a directory", nameof(xinfo));
+            if (!xinfo.IsDirectory) throw new ArgumentException("Expected a Directory, but it's a File", nameof(xinfo));
         }
     }
 }

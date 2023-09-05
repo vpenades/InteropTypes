@@ -818,7 +818,7 @@ namespace InteropTypes.Crypto
 
         public interface ISource
         {
-            Hash128 GetHash128Code();
+            Hash128 GetHash128Code(); // TODO: add a string hashAlgorythm
         }
 
         /// <summary>

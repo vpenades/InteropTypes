@@ -17,11 +17,9 @@ namespace InteropTypes.IO
 
         public bool Equals(T x, T y)
         {
-            if (x == null && y == null) return true;
+            if (Object.ReferenceEquals(x, y)) return true;            
             if (x == null) return false;
-            if (y == null) return false;
-
-            if (Object.ReferenceEquals(x, y)) return true;
+            if (y == null) return false;            
 
             if (x is FileInfo fa && y is FileInfo fb)
             {

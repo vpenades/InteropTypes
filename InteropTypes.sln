@@ -162,6 +162,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Avalo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.FileProviders.Avalonia", "src\InteropTypes.IO.FileProviders.Avalonia\InteropTypes.IO.FileProviders.Avalonia.csproj", "{6BC96A51-6E9E-4309-94DF-F4C989B2C298}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.IO.Streams", "src\InteropTypes.IO.Streams\InteropTypes.IO.Streams.csproj", "{90891643-BEFA-476A-B8C1-A67DC6842184}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -412,6 +414,10 @@ Global
 		{6BC96A51-6E9E-4309-94DF-F4C989B2C298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BC96A51-6E9E-4309-94DF-F4C989B2C298}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BC96A51-6E9E-4309-94DF-F4C989B2C298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90891643-BEFA-476A-B8C1-A67DC6842184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90891643-BEFA-476A-B8C1-A67DC6842184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90891643-BEFA-476A-B8C1-A67DC6842184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90891643-BEFA-476A-B8C1-A67DC6842184}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -477,6 +483,7 @@ Global
 		{4FB90A11-8A2E-4AF1-85F7-F4DDCB8C69DF} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
 		{53E8A02D-7330-4256-81D3-498A64ADA27C} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
 		{6BC96A51-6E9E-4309-94DF-F4C989B2C298} = {95C56366-7EDC-4DEC-B7A9-E8CA41231E27}
+		{90891643-BEFA-476A-B8C1-A67DC6842184} = {95C56366-7EDC-4DEC-B7A9-E8CA41231E27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

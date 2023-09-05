@@ -18,4 +18,8 @@
     <PackageReference Include="SharpCompress" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\InteropTypes.IO.Streams\InteropTypes.IO.Streams.csproj" />
+  </ItemGroup>
+
 </Project>

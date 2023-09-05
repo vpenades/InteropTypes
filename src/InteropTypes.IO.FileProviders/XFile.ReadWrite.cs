@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 
 using Microsoft.Extensions.FileProviders;
-using Microsoft.VisualBasic;
 
 namespace InteropTypes.IO
 {
@@ -62,24 +61,22 @@ namespace InteropTypes.IO
 
             throw new NotSupportedException(xdir.GetType().FullName);
         }
-
-
-
         
         public static System.IO.Stream Create(IFileInfo xfile)
         {
             GuardIsValidFile(xfile);
             return StreamProvider<IFileInfo>.Default.CreateWriteStreamFrom(xfile);
         }
-        public static void WriteAllText(IFileInfo xfile, string contents, Encoding encoding)
-        {
-            GuardIsValidFile(xfile);
-            StreamProvider<IFileInfo>.Default.WriteAllTextTo(xfile, contents, encoding);
-        }
+        
         public static void WriteAllText(IFileInfo xfile, string contents)
         {
             GuardIsValidFile(xfile);
             StreamProvider<IFileInfo>.Default.WriteAllTextTo(xfile, contents);
+        }
+        public static void WriteAllText(IFileInfo xfile, string contents, Encoding encoding)
+        {
+            GuardIsValidFile(xfile);
+            StreamProvider<IFileInfo>.Default.WriteAllTextTo(xfile, contents, encoding);
         }
         public static string ReadAllText(IFileInfo xfile)
         {

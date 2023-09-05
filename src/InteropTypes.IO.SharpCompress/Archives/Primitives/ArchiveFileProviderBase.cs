@@ -11,8 +11,14 @@ using Microsoft.Extensions.Primitives;
 
 namespace InteropTypes.IO.Archives.Primitives
 {
+    /// <summary>
+    /// Represents an archive provider for a flattened list of entries.
+    /// </summary>
+    /// <typeparam name="TEntry"></typeparam>
     public abstract class ArchiveFileProviderBase<TEntry> : IFileProvider, IServiceProvider
     {
+        #region API
+
         public IDirectoryContents GetDirectoryContents(string subpath)
         {
             subpath ??= string.Empty;
@@ -38,6 +44,8 @@ namespace InteropTypes.IO.Archives.Primitives
         {
             return NullChangeToken.Singleton;
         }
+
+        #endregion
 
         #region implementation
 

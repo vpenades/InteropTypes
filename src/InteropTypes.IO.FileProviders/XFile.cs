@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using Microsoft.Extensions.FileProviders;
 
-
+using XFILEINFO = Microsoft.Extensions.FileProviders.IFileInfo;
 
 namespace InteropTypes.IO
 {
@@ -15,29 +16,23 @@ namespace InteropTypes.IO
     /// </summary>
     public static partial class XFile
     {
-        public static IFileInfo UseFile(IFileInfo xdir, string fileName)
+        public static XFILEINFO UseFile(XFILEINFO xdir, string fileName)
         {
             GuardIsValidDirectory(xdir);
 
             if (xdir is PhysicalDirectoryInfo pdir)
             {
                 return pdir.UseFile(fileName);
-            }            
+            }
 
             throw new NotSupportedException();
-        }
+        }        
 
-        public static bool TryGetFileInfo(IFileInfo xinfo, out FileInfo fileInfo)
+        public static bool TryGetFileInfo(XFILEINFO xinfo, out FileInfo fileInfo)
         {
             fileInfo = null;
             if (xinfo == null) return false;
             if (xinfo.IsDirectory) return false;
-
-            if (_IsMSPhysicalFile(xinfo))
-            {
-                fileInfo = new System.IO.FileInfo(xinfo.PhysicalPath);
-                return true;
-            }
 
             if (xinfo is IServiceProvider src)
             {
@@ -45,22 +40,25 @@ namespace InteropTypes.IO
                 {
                     fileInfo = finfo; return true;
                 }
-            }
+            }            
 
-            return false;
+            try
+            {
+                fileInfo = new System.IO.FileInfo(xinfo.PhysicalPath);
+                return true;
+            }
+            catch
+            {
+                fileInfo = null;
+                return false;
+            }            
         }
 
-        public static bool TryGetDirectoryInfo(IFileInfo xinfo, out DirectoryInfo directoryInfo)
+        public static bool TryGetDirectoryInfo(XFILEINFO xinfo, out DirectoryInfo directoryInfo)
         {
             directoryInfo = null;
             if (xinfo == null) return false;
             if (!xinfo.IsDirectory) return false;
-
-            if (_IsMSPhysicalDirectory(xinfo))
-            {
-                directoryInfo = new System.IO.DirectoryInfo(xinfo.PhysicalPath);
-                return true;
-            }
 
             if (xinfo is IServiceProvider src)
             {
@@ -70,17 +68,26 @@ namespace InteropTypes.IO
                 }
             }
 
-            return false;
+            try
+            {
+                directoryInfo = new System.IO.DirectoryInfo(xinfo.PhysicalPath);
+                return true;
+            }
+            catch
+            {
+                directoryInfo = null;
+                return false;
+            }
         }
 
-        internal static bool _IsMSPhysicalFile(IFileInfo xinfo)
+        internal static bool _IsMSPhysicalFile(XFILEINFO xinfo)
         {
             if (xinfo == null) return false;
             if (xinfo.IsDirectory) return false;
             return xinfo.GetType().FullName == "Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo";
         }
 
-        internal static bool _IsMSPhysicalDirectory(IFileInfo xinfo)
+        internal static bool _IsMSPhysicalDirectory(XFILEINFO xinfo)
         {
             if (xinfo == null) return false;
             if (!xinfo.IsDirectory) return false;
@@ -89,28 +96,28 @@ namespace InteropTypes.IO
 
         
 
-        public static IEnumerable<IFileInfo> EnumerateFiles(IFileInfo dinfo, SearchOption searchOption)
+        public static IEnumerable<XFILEINFO> EnumerateFiles(XFILEINFO dinfo, SearchOption searchOption)
         {
             return _XFileEnumerator._EnumerateFiles(dinfo, searchOption == SearchOption.AllDirectories)
-                ?? Array.Empty<IFileInfo>();
+                ?? Array.Empty<XFILEINFO>();
         }
 
-        public static IEnumerable<IFileInfo> EnumerateFiles(IDirectoryContents dinfo, SearchOption searchOption)
+        public static IEnumerable<XFILEINFO> EnumerateFiles(IDirectoryContents dinfo, SearchOption searchOption)
         {
             return _XFileEnumerator._EnumerateFiles(dinfo, searchOption == SearchOption.AllDirectories)
-                ?? Array.Empty<IFileInfo>();
+                ?? Array.Empty<XFILEINFO>();
         }
     }
 
     static class _XFileEnumerator
     {
-        public static IEnumerable<IFileInfo> _EnumerateFiles(IEnumerable<IFileInfo> entries, bool allDirectories)
+        public static IEnumerable<XFILEINFO> _EnumerateFiles(IEnumerable<XFILEINFO> entries, bool allDirectories)
         {
             if (entries == null) return null;
 
             if (entries is IDirectoryContents dc && !dc.Exists) return null;
 
-            IEnumerable<IFileInfo> outEntries = null;
+            IEnumerable<XFILEINFO> outEntries = null;
 
             if (allDirectories)
             {
@@ -123,13 +130,13 @@ namespace InteropTypes.IO
             return _Concat(outEntries, entries.Where(item => !item.IsDirectory));
         }
 
-        public static IEnumerable<IFileInfo> _EnumerateFiles(IFileInfo entry, bool allDirectories)
+        public static IEnumerable<XFILEINFO> _EnumerateFiles(XFILEINFO entry, bool allDirectories)
         {
             if (entry == null) return null;
             if (!entry.IsDirectory) return null;
 
             // this should be enough, but it's not...
-            var contents = entry as IEnumerable<IFileInfo>;
+            var contents = entry as IEnumerable<XFILEINFO>;
 
             // some implementations might use this...
             if (contents == null && entry is IFileProvider fProvider)
@@ -151,7 +158,7 @@ namespace InteropTypes.IO
             return _EnumerateFiles(contents, allDirectories);            
         }        
 
-        private static IEnumerable<IFileInfo> _Concat(IEnumerable<IFileInfo> a, IEnumerable<IFileInfo> b)
+        private static IEnumerable<XFILEINFO> _Concat(IEnumerable<XFILEINFO> a, IEnumerable<XFILEINFO> b)
         {
             if (a == null) return b;
             if (b == null) return a;

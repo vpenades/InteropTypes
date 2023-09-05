@@ -6,9 +6,9 @@ namespace InteropTypes.IO
 {
     partial class PhysicalDirectoryInfo
     {
-        public static bool TryBrowseFolderDialog(out PhysicalDirectoryInfo xinfo, Environment.SpecialFolder? rootFolder, string initialDir, Guid? clientId)
+        public static bool TryBrowseFolderDialog(out PhysicalDirectoryInfo xinfo, Environment.SpecialFolder? rootFolder, string initialDir, Guid? clientId, IntPtr parentHandle = default)
         {
-            if (_SystemDialogs.TryBrowseFolderDialog(out var dinfo, rootFolder, initialDir, clientId))
+            if (XShell.TryBrowseFolderDialog(out var dinfo, rootFolder, initialDir, clientId, parentHandle))
             {
                 xinfo = new PhysicalDirectoryInfo(dinfo);
                 return true;
@@ -21,7 +21,7 @@ namespace InteropTypes.IO
         #if WINDOWS
         public static bool TryBrowseFolderDialog(out PhysicalDirectoryInfo xinfo, Action<System.Windows.Forms.FolderBrowserDialog> configureDialog, System.Windows.Forms.IWin32Window parent = null)
         {
-            if (_SystemDialogs.TryBrowseFolderDialog(out var dinfo, configureDialog, parent))
+            if (XShell.TryBrowseFolderDialog(out var dinfo, configureDialog, parent))
             {
                 xinfo = new PhysicalDirectoryInfo(dinfo);
                 return true;

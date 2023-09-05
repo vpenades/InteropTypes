@@ -9,7 +9,9 @@ using SharpCompress.Archives;
 namespace InteropTypes.IO.Archives
 {
     [System.Diagnostics.DebuggerDisplay("{_Path}")]
-    public class SharpCompressFileProvider : Primitives.ArchiveFileProviderBase<IArchiveEntry>, IDisposable
+    public partial class SharpCompressFileProvider 
+        : Primitives.ArchiveFileProviderBase<IArchiveEntry>
+        , IDisposable
     {
         #region lifecycle
 
@@ -19,7 +21,7 @@ namespace InteropTypes.IO.Archives
             {
                 var f = SharpCompress.Archives.ArchiveFactory.Open(stream);
 
-                return new SharpCompressFileProvider(f, "<stream>");
+                return Create(f, "<stream>");
             }
             catch { return null; }
         }
@@ -30,9 +32,17 @@ namespace InteropTypes.IO.Archives
             {
                 var f = SharpCompress.Archives.ArchiveFactory.Open(path);
 
-                return new SharpCompressFileProvider(f, path);
+                return Create(f, path);
             }
             catch { return null; }
+        }
+
+        public static SharpCompressFileProvider Create(IArchive archive, string path)
+        {
+            if (archive == null) throw new ArgumentNullException(nameof(archive));
+            if (archive.IsSolid) throw new NotImplementedException("Solid archives not supported yet");
+
+            return new SharpCompressFileProvider(archive, path);
         }
 
         protected SharpCompressFileProvider(IArchive archive, string path)
@@ -99,6 +109,6 @@ namespace InteropTypes.IO.Archives
             return base.GetEntryComment(entry);
         }
 
-        #endregion
+        #endregion        
     }
 }

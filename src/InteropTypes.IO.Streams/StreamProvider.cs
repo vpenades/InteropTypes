@@ -11,6 +11,8 @@ using System.Xml;
 
 using Microsoft.Extensions.FileProviders;
 
+using STREAM = System.IO.Stream;
+
 using READWRITESTREAM1 = System.Func<System.IO.FileMode, System.IO.Stream>;
 using READWRITESTREAM2 = System.Func<System.IO.FileMode, System.IO.FileAccess, System.IO.Stream>;
 using READWRITESTREAM3 = System.Func<System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.Stream>;
@@ -31,8 +33,8 @@ namespace InteropTypes.IO
 
         public static StreamProvider<T> Default { get; } = _Initialize();
 
-        public abstract System.IO.Stream CreateReadStreamFrom(T obj);
-        public abstract System.IO.Stream CreateWriteStreamFrom(T obj);
+        public abstract STREAM CreateReadStreamFrom(T obj);
+        public abstract STREAM CreateWriteStreamFrom(T obj);
 
         public System.IO.BinaryReader CreateBinaryReader(T src, Encoding encoding)
         {
@@ -51,7 +53,7 @@ namespace InteropTypes.IO
         {
             using(var s = CreateReadStreamFrom(src))
             {
-                return XFile.ReadAllBytes(s);
+                return XStream.ReadAllBytes(s);
             }
         }        
 
@@ -59,7 +61,7 @@ namespace InteropTypes.IO
         {
             using(var s = CreateWriteStreamFrom(dst))
             {
-                XFile.WriteAllBytes(s, bytes);
+                XStream.WriteAllBytes(s, bytes);
             }
         }
 
@@ -67,7 +69,7 @@ namespace InteropTypes.IO
         {
             using (var s = CreateReadStreamFrom(src))
             {
-                return XFile.ReadAllText(s);
+                return XStream.ReadAllText(s);
             }
         }
 
@@ -75,7 +77,7 @@ namespace InteropTypes.IO
         {
             using (var s = CreateReadStreamFrom(src))
             {
-                return XFile.ReadAllText(s, encoding);
+                return XStream.ReadAllText(s, encoding);
             }
         }
 
@@ -83,7 +85,7 @@ namespace InteropTypes.IO
         {
             using (var s = CreateWriteStreamFrom(dst))
             {
-                XFile.WriteAllText(s, contents);
+                XStream.WriteAllText(s, contents);
             }
         }
 
@@ -91,7 +93,7 @@ namespace InteropTypes.IO
         {
             using (var s = CreateWriteStreamFrom(dst))
             {
-                XFile.WriteAllText(s, contents, encoding);
+                XStream.WriteAllText(s, contents, encoding);
             }
         }        
 
@@ -118,7 +120,7 @@ namespace InteropTypes.IO
         {
             // TODO: Support IReadOnlyList<Byte> for both Read & List<Byte> for write
 
-            public override Stream CreateReadStreamFrom(T obj)
+            public override STREAM CreateReadStreamFrom(T obj)
             {
                 if (obj == null) throw new ArgumentNullException(nameof(obj));
 
@@ -151,7 +153,7 @@ namespace InteropTypes.IO
                     var segment = Unsafe.As<T, ArraySegment<Byte>>(ref obj);
                     return segment.Count == 0
                         ? new System.IO.MemoryStream(Array.Empty<byte>(), false)
-                        : (Stream)new System.IO.MemoryStream(segment.Array, segment.Offset, segment.Count, false);
+                        : (STREAM)new System.IO.MemoryStream(segment.Array, segment.Offset, segment.Count, false);
                 }
 
                 if (typeof(T) == typeof(IReadOnlyList<Byte>))
@@ -206,7 +208,7 @@ namespace InteropTypes.IO
                 throw new NotSupportedException(typeof(T).GetType().FullName);
             }
 
-            public override Stream CreateWriteStreamFrom(T obj)
+            public override STREAM CreateWriteStreamFrom(T obj)
             {
                 if (obj == null) throw new ArgumentNullException(nameof(obj));
 
@@ -275,7 +277,7 @@ namespace InteropTypes.IO
                 #else
                 <[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TSrv>
                 #endif
-                (T obj, out Stream stream)
+                (T obj, out STREAM stream)
             {
                 stream = default;
 
@@ -297,7 +299,7 @@ namespace InteropTypes.IO
                 #else
                 <[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TSrv>
                 #endif
-                (T obj, out Stream stream)
+                (T obj, out STREAM stream)
             {
                 stream = default;
 
@@ -320,7 +322,7 @@ namespace InteropTypes.IO
             [DynamicDependency(DynamicallyAccessedMemberTypes.All, "SharpCompress.Archives.Rar.RarArchiveEntry", "SharpCompress")]
             [DynamicDependency(DynamicallyAccessedMemberTypes.All, "SharpCompress.Archives.SevenZip.SevenZipArchiveEntry", "SharpCompress")]
             #endif
-            protected static bool _TryGetFromMethod(T obj, string methodName, out Stream stream)
+            protected static bool _TryGetFromMethod(T obj, string methodName, out STREAM stream)
             {
                 stream = default;
 
@@ -329,21 +331,20 @@ namespace InteropTypes.IO
                 var method = obj.GetType().GetMethod(methodName);
                 if (method == null) return false;
                 if (method.GetParameters().Length != 0) return false;
-                if (method.ReturnType != typeof(System.IO.Stream)) return false;
-                stream = method.Invoke(obj, Array.Empty<object>()) as Stream;
+                if (method.ReturnType != typeof(STREAM)) return false;
+                stream = method.Invoke(obj, Array.Empty<object>()) as STREAM;
                 return stream != null;
             }
         }
         
         class _MSPhysicalFileProvider : _DefaultProvider        
         {
-            
             public static bool IsMatch()
             {
                 return typeof(T).FullName == "Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo";
             }
 
-            public override Stream CreateWriteStreamFrom(T obj)
+            public override STREAM CreateWriteStreamFrom(T obj)
             {
                 if (obj is IFileInfo xinfo)
                 {
@@ -363,14 +364,14 @@ namespace InteropTypes.IO
                 if (typeof(T).FullName == "SharpCompress.Archives.IArchiveEntry") return true;
                 return false;
             }            
-            public override Stream CreateReadStreamFrom(T obj)
+            public override STREAM CreateReadStreamFrom(T obj)
             {
                 if (_TryGetFromMethod(obj, "OpenEntryStream", out var sx)) return sx;
 
                 return base.CreateReadStreamFrom(obj);
             }
 
-            public override Stream CreateWriteStreamFrom(T obj)
+            public override STREAM CreateWriteStreamFrom(T obj)
             {
                 return base.CreateWriteStreamFrom(obj);
             }

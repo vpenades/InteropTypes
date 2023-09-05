@@ -4,13 +4,11 @@ using System.Text;
 
 namespace InteropTypes.IO
 {
-    internal static class _SystemDialogs
+    partial class XShell
     {
-        public static bool TryBrowseFolderDialog(out System.IO.DirectoryInfo xinfo, Environment.SpecialFolder? rootFolder, string initialDir, Guid? clientId)
+        public static bool TryBrowseFolderDialog(out System.IO.DirectoryInfo xinfo, Environment.SpecialFolder? rootFolder, string initialDir, Guid? clientId, IntPtr parentHandle = default)
         {
             xinfo = null;
-
-
 
             #if !WINDOWS
 
@@ -27,7 +25,11 @@ namespace InteropTypes.IO
                 if (clientId.HasValue) dlg.ClientGuid = clientId.Value;
             }
 
-            return TryBrowseFolderDialog(out xinfo, configure);
+            var parent = parentHandle != IntPtr.Zero
+                ? System.Windows.Forms.Control.FromHandle(parentHandle)
+                : null;
+
+            return TryBrowseFolderDialog(out xinfo, configure, parent);
 
             #endif
         }
