@@ -214,8 +214,8 @@ namespace InteropTypes.Graphics.Drawing
             min = XY.Min(min, vertices[3]);
 
             var max = XY.Max(vertices[0], vertices[1]);
-            max = XY.Max(min, vertices[2]);
-            max = XY.Max(min, vertices[3]);
+            max = XY.Max(max, vertices[2]);
+            max = XY.Max(max, vertices[3]);
 
             var size = max - min;
 
