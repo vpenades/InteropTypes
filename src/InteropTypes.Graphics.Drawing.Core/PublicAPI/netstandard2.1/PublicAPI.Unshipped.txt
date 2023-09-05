@@ -146,6 +146,7 @@ InteropTypes.Graphics.Drawing.ImageStyle.FlipHorizontal.get -> bool
 InteropTypes.Graphics.Drawing.ImageStyle.FlipVertical.get -> bool
 InteropTypes.Graphics.Drawing.ImageStyle.GetTransform() -> System.Numerics.Matrix3x2
 InteropTypes.Graphics.Drawing.ImageStyle.GetTransform(bool mirrorX, bool mirrorY) -> System.Numerics.Matrix3x2
+InteropTypes.Graphics.Drawing.ImageStyle.GetVerticesBounds(in System.Numerics.Matrix3x2 xform) -> System.Drawing.RectangleF
 InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle() -> void
 InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle(InteropTypes.Graphics.Drawing.ImageSource bitmap) -> void
 InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle(InteropTypes.Graphics.Drawing.ImageSource bitmap, InteropTypes.Graphics.Drawing.ColorStyle color) -> void

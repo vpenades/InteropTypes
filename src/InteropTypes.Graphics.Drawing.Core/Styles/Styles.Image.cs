@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 using XY = System.Numerics.Vector2;
@@ -196,6 +197,29 @@ namespace InteropTypes.Graphics.Drawing
         public readonly void TransformVertices(Span<XY> vertices, in System.Numerics.Matrix3x2 xform)
         {
             Image.UseTransforms().TransformVertices(vertices, xform, _Orientation);
+        }
+
+        /// <summary>
+        /// Calculates a destination transformed vertices bounding rectangle
+        /// </summary>
+        /// <param name="xform">transform</param>
+        /// <returns>A bounding rectangle of the destination vertices</returns>
+        public readonly RectangleF GetVerticesBounds(in System.Numerics.Matrix3x2 xform)
+        {
+            Span<XY> vertices = stackalloc XY[4];
+            TransformVertices(vertices, in xform);
+
+            var min = XY.Min(vertices[0], vertices[1]);
+            min = XY.Min(min, vertices[2]);
+            min = XY.Min(min, vertices[3]);
+
+            var max = XY.Max(vertices[0], vertices[1]);
+            max = XY.Max(min, vertices[2]);
+            max = XY.Max(min, vertices[3]);
+
+            var size = max - min;
+
+            return new RectangleF(min.X, min.Y, size.X, size.Y);
         }
 
         #endregion
