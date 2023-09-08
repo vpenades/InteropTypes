@@ -6,12 +6,13 @@ using Microsoft.Extensions.FileProviders;
 
 namespace InteropTypes.IO.Reflection
 {
-    public enum FileContentType
-    {
+    public enum FileContentType // FileCategoryType
+    {        
         Unknown,
 
         Archive,
         Document,
+        EditableImage,
         Image,
         Audio,
         Video,
@@ -50,9 +51,10 @@ namespace InteropTypes.IO.Reflection
             {
                 switch (ft)
                 {
-                    case FileContentType.Archive: return "🗜";
+                    case FileContentType.Archive: return "📦"; // "🗜";
                     case FileContentType.Document: return "💼";
                     case FileContentType.Image: return "🖼";
+                    case FileContentType.EditableImage: return "🖼";
                     case FileContentType.Audio: return "🎵";
                     case FileContentType.Video: return "🎞";
                     case FileContentType.Runtime: return "⚙";
@@ -60,6 +62,7 @@ namespace InteropTypes.IO.Reflection
 
                     case FileContentType.Garbage: return "🗑";
                     case FileContentType.Dangerous: return "☠";
+                    case FileContentType.UserAttention: return "⚠";
                 }
 
                 return "❔";
@@ -90,14 +93,23 @@ namespace InteropTypes.IO.Reflection
             switch (name)
             {
                 // case ArchiveManifest.FILENAMELOWERCASE: return FileContentType.Garbage;                
-                case "rarbg_do_not_mirror.exe": return FileContentType.Dangerous;
                 case "desktop.ini": return FileContentType.Runtime; // it depends on the context (the location)                
             }
 
             // composited extensions
 
-            if (name.EndsWith(".$db$.json")) return FileContentType.MetaData;
-            if (name.EndsWith(".tar.gz")) return FileContentType.Archive;
+            if (FilePathUtils.TryGetCompositedExtension(name, 2, out var cext))
+            {
+                cext = cext.ToLower();
+
+                if (cext == ".$db$.md") return FileContentType.MetaData;
+                if (cext == ".$db$.txt") return FileContentType.MetaData;
+                if (cext == ".$db$.url") return FileContentType.MetaData;
+                if (cext == ".$db$.json") return FileContentType.MetaData;
+
+                if (cext == ".tar.gz") return FileContentType.Archive;
+                if (cext == ".tar.bz2") return FileContentType.Archive;
+            }
 
             // regular extensions
 
@@ -107,15 +119,13 @@ namespace InteropTypes.IO.Reflection
             // any executable or script containing the "mirror character" must be considered dangerous
             // https://stackoverflow.com/questions/3115204/unicode-mirror-character
             
-            if (ft == FileContentType.Runtime && name.Contains('\u202e')) ft = FileContentType.Dangerous;            
+            if (ft == FileContentType.Runtime && name.Contains('\u202e', StringComparison.Ordinal)) ft = FileContentType.Dangerous;            
 
             return ft;
         }
 
         public static FileContentType IdentifyContentTypeFromExtension(this string extension)
         {
-            // https://www.howtogeek.com/137270/50-file-extensions-that-are-potentially-dangerous-on-windows/
-
             extension = extension.ToLower();
 
             switch (extension)
@@ -133,11 +143,12 @@ namespace InteropTypes.IO.Reflection
                 case ".tiff":
                 case ".webp":
                 case ".dds":
-                case ".svg":
-                case ".psd":
-                case ".kra":
+                case ".svg":                
                     return FileContentType.Image;
 
+                case ".psd":
+                case ".kra":
+                    return FileContentType.EditableImage;
 
                 case ".avi":
                 case ".asf":
@@ -154,14 +165,12 @@ namespace InteropTypes.IO.Reflection
                 case ".3gpp":
                     return FileContentType.Video;
 
-
                 case ".wav":
                 case ".wma":
                 case ".mp3":
                 case ".flac":
                 case ".midi":
                     return FileContentType.Audio;
-
 
                 case ".exe":
                 case ".dll":
@@ -248,6 +257,9 @@ namespace InteropTypes.IO.Reflection
                     return FileContentType.SourceCode;
 
 
+                // https://github.com/michalzobec/Security-Blocked-File-Extensions-Attachments
+                // https://www.howtogeek.com/137270/50-file-extensions-that-are-potentially-dangerous-on-windows/
+                // https://community.mimecast.com/s/article/email-security-cloud-gateway-dangerous-file-types
 
                 case ".vbs": // visual basic script
                 case ".vbe": // .VBE – An encrypted VBScript file. Similar to a VBScript file, but it’s not easy to tell what the file will actually do if you run it.

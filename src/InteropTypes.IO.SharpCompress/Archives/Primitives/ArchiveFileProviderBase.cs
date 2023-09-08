@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using InteropTypes.IO.FileProviders;
-
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
@@ -68,7 +66,7 @@ namespace InteropTypes.IO.Archives.Primitives
 
         internal IEnumerable<IFileInfo> GetEntries(string subPath)
         {
-            var level = PathUtils.SplitPath(subPath).Count();
+            var level = FilePathUtils.SplitPath(subPath).Count();
 
             var dirs = _GetDirectoriesAtLevel(level);
 
@@ -95,14 +93,14 @@ namespace InteropTypes.IO.Archives.Primitives
             {
                 var entryKey = GetEntryKey(entry);
 
-                if (entryKey.Count(PathUtils.IsPathSeparator) <= levels) continue;
+                if (entryKey.Count(FilePathUtils.IsDirectorySeparator) <= levels) continue;
 
                 var dir = string.Empty;
                 int i = levels + 1;
 
                 foreach (var c in entryKey)
                 {
-                    if (c.IsPathSeparator()) --i;
+                    if (c.IsDirectorySeparator()) --i;
                     if (i == 0) break;
 
                     dir += c;
@@ -126,7 +124,7 @@ namespace InteropTypes.IO.Archives.Primitives
 
             if (entryKey.Length == 0) return false;
 
-            return !PathUtils.ContainsSeparator(entryKey);
+            return !FilePathUtils.ContainsDirectorySeparator(entryKey);
         }
 
         private static string _GetRelativePath(string entryKey, string subPath)

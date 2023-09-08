@@ -133,7 +133,7 @@ namespace InteropTypes.IO
             }
         }
 
-        public virtual object GetService(Type serviceType)
+        public override object GetService(Type serviceType)
         {
             // service used to create files and directories
             if (serviceType == typeof(Func<string, IFileInfo>)) return (Func<string, IFileInfo>)UseFileInfo;

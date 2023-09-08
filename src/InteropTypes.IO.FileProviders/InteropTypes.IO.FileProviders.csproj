@@ -15,7 +15,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />    
-  </ItemGroup>  
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="InteropTypes.IO.Tests"/>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.IO.Streams\InteropTypes.IO.Streams.csproj" />

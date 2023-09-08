@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace InteropTypes.IO.Reflection
 {
-    internal readonly struct ByteSignature
+    /// <summary>
+    /// Represents a file header's byte signature.
+    /// </summary>
+    internal readonly struct ByteSignature : IEquatable<ByteSignature>
     {
         #region static API
 
@@ -135,6 +136,11 @@ namespace InteropTypes.IO.Reflection
             uint h = 0;
             foreach (var b in _Bytes) { h += b; h *= 2246822519U; }
             return (int)h;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ByteSignature other && this.Equals(other);
         }
 
         public bool Equals(ByteSignature other)

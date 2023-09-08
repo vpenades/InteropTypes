@@ -5,7 +5,7 @@ using System.IO;
 namespace InteropTypes.IO
 {
     /// <summary>
-    /// Used to compare equality between <see cref="FileInfo"/> and <see cref="FileSystemInfo"/>
+    /// Used to compare equality between <see cref="FileInfo"/> and <see cref="DirectoryInfo"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class FileSystemInfoComparer<T> : IEqualityComparer<T>
@@ -38,39 +38,16 @@ namespace InteropTypes.IO
             // 1- check whether both files are located in the SAME DRIVE, if not, return false.
             // 2- check the drive type to identify whether to compare as case sensitive or not.
 
-            return string.Equals(apath, bpath, PathComparisonMode);
+            return string.Equals(apath, bpath, FilePathUtils.PathComparisonMode);
         }
 
         public int GetHashCode(T obj)
         {
             return obj == null
                 ? 0
-                : obj.FullName.GetHashCode(PathComparisonMode);
+                : obj.FullName.GetHashCode(FilePathUtils.PathComparisonMode);
         }
 
-        private static readonly StringComparison PathComparisonMode = _GetIsCaseSensitive()
-            ? StringComparison.Ordinal
-            : StringComparison.OrdinalIgnoreCase;
-
-        private static bool _GetIsCaseSensitive()
-        {
-            // Proposal: Directory.GetCaseSensitivity() -> https://github.com/dotnet/runtime/issues/34235
-            // Issue with System.IO.GetIsCaseSensitive -> https://github.com/dotnet/runtime/issues/54313
-            // Change PathInternal.IsCaseSensitive to a constant -> https://github.com/dotnet/runtime/pull/54340
-
-            // another way to determine case sensitivity is to pick a random file or directory,
-            // then invert the letters capitalization, and check for its existence.
-
-            #if !NETSTANDARD
-            if (OperatingSystem.IsWindows()) return false;
-            if (OperatingSystem.IsMacOS()) return false;
-            if (OperatingSystem.IsMacCatalyst()) return false;
-            if (OperatingSystem.IsIOS()) return false;
-            if (OperatingSystem.IsTvOS()) return false;
-            if (OperatingSystem.IsWatchOS()) return false;
-            #endif
-
-            return false;
-        }        
+        
     }
 }

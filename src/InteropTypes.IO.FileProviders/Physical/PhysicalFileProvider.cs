@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using InteropTypes.IO.FileProviders;
 
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
@@ -45,7 +44,7 @@ namespace InteropTypes.IO
 
         private string GetFullPath(string path)
         {
-            if (PathUtils.PathNavigatesAboveRoot(path)) { return null; }
+            if (FilePathUtils.PathNavigatesAboveRoot(path)) { return null; }
 
             string fullPath;
 
@@ -72,7 +71,7 @@ namespace InteropTypes.IO
         /// <returns>The file information. Caller must check <see cref="IFileInfo.Exists"/> property. </returns>
         public IFileInfo GetFileInfo(string subpath)
         {
-            if (string.IsNullOrEmpty(subpath) || PathUtils.HasInvalidPathChars(subpath))
+            if (string.IsNullOrEmpty(subpath) || FilePathUtils.HasInvalidPathChars(subpath))
             {
                 return new NotFoundFileInfo(subpath);
             }
@@ -105,7 +104,7 @@ namespace InteropTypes.IO
         {
             try
             {
-                if (subpath == null || PathUtils.HasInvalidPathChars(subpath))
+                if (subpath == null || FilePathUtils.HasInvalidPathChars(subpath))
                 {
                     return NotFoundDirectoryContents.Singleton;
                 }

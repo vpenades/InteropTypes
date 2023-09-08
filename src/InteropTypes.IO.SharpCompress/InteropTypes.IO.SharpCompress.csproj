@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\InteropTypes.IO.FileProviders\PathUtils.cs" Link="PathUtils.cs" />
+    <Compile Include="..\InteropTypes.IO.FileProviders\FilePathUtils.cs" Link="Shared\FilePathUtils.cs" />
   </ItemGroup>  
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using InteropTypes.IO.FileProviders;
 
 using Microsoft.Extensions.FileProviders;
 
@@ -46,10 +45,6 @@ namespace InteropTypes.IO.Archives.Primitives
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _Archive.GetEntries(_SubPath).GetEnumerator();
-        }
-
-        
-
-        
+        }        
     }
 }
