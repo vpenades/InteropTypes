@@ -9,7 +9,9 @@ namespace InteropTypes.Graphics.Drawing.Fonts
     /// </summary>
     sealed class HersheyFont0 : HersheyFont
     {
-        public static HersheyFont Instance { get; } = new HersheyFont0();
+        public HersheyFont0(float lineThinckness) : base(lineThinckness) { }
+
+        public static HersheyFont Instance { get; } = new HersheyFont0(0.1f);
 
         protected override IEnumerable<char> GetValidChars()
         {

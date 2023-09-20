@@ -67,7 +67,24 @@ namespace InteropTypes.Graphics.Drawing
             _DrawText(dc, Matrix3x2.CreateScale(1.5f) * Matrix3x2.CreateRotation(0.1f) * Matrix3x2.CreateTranslation(30, 80), style, 20);
 
             renderTarget.Save(AttachmentInfo.From("result.png"));
-        }        
+        }
+
+        [Test]
+        public void DrawThickHersheyFont()
+        {
+            var renderTarget = new Bitmaps.MemoryBitmap<Pixel.RGB24>(256, 128);
+
+            var dc = renderTarget.CreateDrawingContext();
+
+            var font = Fonts.HersheyFont.CreateWithThickness(3);
+            var style = new FontStyle(font, System.Drawing.Color.White);
+
+            _DrawText(dc, Matrix3x2.CreateTranslation(10, 10), style, style.Font.Height);
+            _DrawText(dc, Matrix3x2.CreateTranslation(10, 40), style, 20);
+            _DrawText(dc, Matrix3x2.CreateScale(1.5f) * Matrix3x2.CreateRotation(0.1f) * Matrix3x2.CreateTranslation(30, 80), style, 20);
+
+            renderTarget.Save(AttachmentInfo.From("result.png"));
+        }
 
         [Test]
         public void DrawBitmapFont()

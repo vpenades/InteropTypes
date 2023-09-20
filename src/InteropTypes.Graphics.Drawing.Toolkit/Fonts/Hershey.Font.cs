@@ -13,12 +13,29 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
         public static HersheyFont Simplex => HersheyFont0.Instance;
 
+        public static HersheyFont CreateWithThickness(float lineThickness)
+        {
+            if (lineThickness <=0) throw new ArgumentOutOfRangeException(nameof(lineThickness));
+            return new HersheyFont0(lineThickness);
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        protected HersheyFont(float lineThinckness)
+        {
+            _LineThickness = lineThinckness;
+        }
+
         #endregion
 
         #region data
 
         private int? _OffsetV;
         private int? _Height;
+
+        private readonly float _LineThickness;
 
         #endregion
 
@@ -102,9 +119,9 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         {
             var offset = transform.Translation;
 
-            if (target is Backends.IBackendCanvas2D backendCanvas)
+            if (target is Backends.IBackendCanvas2D backendCanvas && _LineThickness < 1f)
             {
-                void _drawPath(ReadOnlySpan<Point2> points) { backendCanvas.DrawThinLines(points, 0.1f, tintColor); }
+                void _drawPath(ReadOnlySpan<Point2> points) { backendCanvas.DrawThinLines(points, _LineThickness, tintColor); }
 
                 foreach (var c in text)
                 {
@@ -113,7 +130,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             }
             else
             {
-                void _drawPath(ReadOnlySpan<Point2> points) { target.DrawLines(points, 0.1f, tintColor); }
+                void _drawPath(ReadOnlySpan<Point2> points) { target.DrawLines(points, _LineThickness, tintColor); }
 
                 foreach (var c in text)
                 {
