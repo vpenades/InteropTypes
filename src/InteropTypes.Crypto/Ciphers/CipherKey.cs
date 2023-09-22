@@ -4,11 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 using BYTES = System.ArraySegment<byte>;
 
-namespace InteropTypes.Crypto.Cipher
+namespace InteropTypes.Crypto.Ciphers
 {
     public abstract class CipherKey
     {
@@ -109,12 +108,14 @@ namespace InteropTypes.Crypto.Cipher
         {
             using(var m = new System.IO.MemoryStream())
             {
-                using (var w = m.ToBinWriter())
+                using (var w = new System.IO.BinaryWriter(m, System.Text.Encoding.UTF8, true))
                 {
                     EncodeBytesTo(w, plainBytes);
                 }
 
-                return m.ToBytes();
+                return m.TryGetBuffer(out var buffer)
+                    ? buffer
+                    : m.ToArray();
             }
         }
 

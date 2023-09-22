@@ -111,10 +111,12 @@ namespace InteropTypes.Crypto.Ciphers
             {
                 using (var cryptoStream = new CryptoStream(outStream, encryptor, CryptoStreamMode.Write))
                 {
-                    cryptoStream.WriteBytes(plainBytes);
+                    cryptoStream.Write(plainBytes);
                 }
 
-                return outStream.ToBytes();
+                return outStream.TryGetBuffer(out var buffer)
+                    ? buffer
+                    : outStream.ToArray();
             }
         }
 
@@ -124,7 +126,7 @@ namespace InteropTypes.Crypto.Ciphers
 
             using (var outStream = new MemoryStream())
             {
-                using (var inStream = cipherBytes.ToStream())
+                using (var inStream = new MemoryStream(cipherBytes.Array,cipherBytes.Offset,cipherBytes.Count, false))
                 {
                     using (var cryptoStream = new CryptoStream(inStream, decryptor, CryptoStreamMode.Read))
                     {
@@ -132,7 +134,9 @@ namespace InteropTypes.Crypto.Ciphers
                     }
                 }
 
-                return outStream.ToBytes();
+                return outStream.TryGetBuffer(out var buffer)
+                    ? buffer
+                    : outStream.ToArray();
             }
         }        
 
