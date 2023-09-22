@@ -19,7 +19,7 @@ namespace InteropTypes.IO
     public partial class PhysicalDirectoryInfo
         : PhysicalSystemInfo        
         , IEquatable<IFileInfo>
-        , IDirectoryContents
+        , IDirectoryContentsEx
         , IServiceProvider
     {
         #region lifecycle

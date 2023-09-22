@@ -15,7 +15,8 @@ namespace InteropTypes.IO
     [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]
     #endif
     public partial class PhysicalFileInfo
-        : PhysicalSystemInfo        
+        : PhysicalSystemInfo
+        , IFileInfoEx
         , IEquatable<IFileInfo>
         // IProgress<Stream>, IProgress<ReadOnlySpan<Byte>> for writing
     {
@@ -48,7 +49,7 @@ namespace InteropTypes.IO
         /// <param name="info">The <see cref="System.IO.FileInfo"/></param>
         public PhysicalFileInfo(FileInfo info)
         {
-            File = info;
+            _File = info;
 
             // if we need to create PhysicalFileProviders, we can have one static provider per DRIVE, which is very few!!!
         }
@@ -56,8 +57,9 @@ namespace InteropTypes.IO
         #endregion
 
         #region data
-        
-        internal FileInfo File { get; }
+
+        private readonly FileInfo _File;
+        private bool _IsDirty;
 
         public override int GetHashCode()
         {
@@ -75,7 +77,16 @@ namespace InteropTypes.IO
 
         #endregion
 
-        #region properties        
+        #region properties
+
+        internal FileInfo File
+        {
+            get
+            {
+                if (_IsDirty) { _File.Refresh(); _IsDirty = false; }
+                return _File;
+            }
+        }
 
         /// <summary>
         /// Always false.
@@ -95,38 +106,49 @@ namespace InteropTypes.IO
         }
         
         public Stream CreateWriteStream()
-        {
+        {            
             File?.Directory?.Create();
-            return File?.Create();
+            var s = File?.Create();
+            _IsDirty = true;
+            return s;
         }
 
         public override object GetService(Type serviceType)
         {            
             if (serviceType == typeof(Func<FileMode, Stream>)) return (Func<FileMode, Stream>)_Open1;
             if (serviceType == typeof(Func<FileMode, FileAccess, Stream>)) return (Func<FileMode, FileAccess, Stream>)_Open2;
-            if (serviceType == typeof(Func<FileMode, FileAccess, FileShare, Stream>)) return (Func<FileMode, FileAccess, FileShare, Stream>)_Open3;
+            if (serviceType == typeof(Func<FileMode, FileAccess, FileShare, Stream>)) return (Func<FileMode, FileAccess, FileShare, Stream>)CreateStream;
 
             if (serviceType == typeof(FileInfo)) return File;
 
             return base.GetService(serviceType);
         }        
 
+        #if !NETSTANDARD
+        [System.Diagnostics.CodeAnalysis.DynamicDependency(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All, typeof(PhysicalFileInfo))]
+        #endif
         private Stream _Open1(FileMode mode)
         {
-            _EnsureDirectory(mode);
-            return File?.Open(mode);
+            return _Open2(mode, (mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite));
         }        
 
+        #if !NETSTANDARD
+        [System.Diagnostics.CodeAnalysis.DynamicDependency(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All, typeof(PhysicalFileInfo))]
+        #endif
         private Stream _Open2(FileMode mode, FileAccess access)
         {
-            _EnsureDirectory(mode);
-            return File?.Open(mode, access);
+            return CreateStream(mode, access, FileShare.None);
         }
 
-        private Stream _Open3(FileMode mode, FileAccess access, FileShare share)
-        {
+        #if !NETSTANDARD
+        [System.Diagnostics.CodeAnalysis.DynamicDependency(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All, typeof(PhysicalFileInfo))]
+        #endif
+        public Stream CreateStream(FileMode mode, FileAccess access, FileShare share)
+        {            
             _EnsureDirectory(mode);
-            return File?.Open(mode, access, share);
+            var s = File?.Open(mode, access, share);
+            _IsDirty = true;
+            return s;
         }
 
         private void _EnsureDirectory(FileMode mode)
