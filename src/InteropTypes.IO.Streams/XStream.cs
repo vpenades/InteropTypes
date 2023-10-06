@@ -36,6 +36,21 @@ namespace InteropTypes.IO
             return false;
         }
 
+        public static bool TryGetLength(STREAM stream, out long length)
+        {
+            try
+            {
+                length = stream.Length;
+                return true;
+            }
+            catch
+            {
+                length = 0;
+                return false;
+            }
+
+        }
+
         public static void WriteAllText(Func<STREAM> stream, string contents)
         {
             using(var s = stream.Invoke())
@@ -247,7 +262,7 @@ namespace InteropTypes.IO
         /// <param name="x">the 1st stream</param>
         /// <param name="y">the 2nd stream</param>
         /// <returns>true if the content of both streams is equal</returns>
-        public static bool AreStreamsContentEqual(STREAM x, STREAM y, int bufferSize = 0)
+        public static bool AreStreamsContentEqual(STREAM x, STREAM y, int bufferSize = 0, IProgress<int> progress = null)
         {
             if (x == y) return true;
             if (x == null) return false;
@@ -255,6 +270,17 @@ namespace InteropTypes.IO
 
             GuardReadable(x);
             GuardReadable(y);
+
+            long flen = 0;
+
+            if (TryGetLength(x,out var xfilelen) && TryGetLength(y,out var yfilelen))
+            {
+                flen = Math.Max(xfilelen, yfilelen);
+            }
+            else
+            {
+                progress = null;
+            }
 
             if (bufferSize <=0) bufferSize = 1024 * 1024 * 64; // 64 mb
 
