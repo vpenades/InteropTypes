@@ -23,7 +23,7 @@ namespace InteropTypes.IO.Archives
 
             var bytes = StreamProvider<SharpCompress.Archives.IArchiveEntry>.Default.ReadAllBytesFrom(firstEntry);
 
-            Assert.AreEqual(firstEntry.Size, bytes.Length);
+            Assert.AreEqual(firstEntry.Size, bytes.Count);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace InteropTypes.IO.Archives
 
             var bytes = StreamProvider<IFileInfo>.Default.ReadAllBytesFrom(firstEntry);
 
-            Assert.AreEqual(firstEntry.Length, bytes.Length);
+            Assert.AreEqual(firstEntry.Length, bytes.Count);
         }
     }
 }

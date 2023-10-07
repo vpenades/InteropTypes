@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using STREAM = System.IO.Stream;
 
+using BYTESSEGMENT = System.ArraySegment<byte>;
+
 namespace InteropTypes.IO
 {
     public static partial class XStream
@@ -24,10 +26,20 @@ namespace InteropTypes.IO
 
         public static bool TryGetFileInfo(STREAM stream, out FileInfo fileInfo)
         {
+            if (stream is BufferedStream bs) stream = bs.UnderlyingStream;
+
             if (stream is System.IO.FileStream fs)
             {
                 fileInfo = new FileInfo(fs.Name);
                 return true;
+            }
+
+            if (stream is IServiceProvider sp)
+            {
+                if (sp.GetService(typeof(FileInfo)) is FileInfo finfo)
+                {
+                    fileInfo = finfo; return true;
+                }
             }
 
             fileInfo = null;
@@ -36,10 +48,17 @@ namespace InteropTypes.IO
 
         public static bool TryGetLength(STREAM stream, out long length)
         {
+            if (stream == null || !stream.CanSeek) { length = 0; return false; }            
+
             try
-            {
+            {                
                 length = stream.Length;
-                return true;
+
+                // Some file systems (e.g. procfs on Linux) return 0 for length even when there's content;
+                // also there is non-seekable file stream.
+                // Thus we need to assume 0 doesn't mean empty.
+
+                return length != 0;
             }
             catch
             {
@@ -127,7 +146,7 @@ namespace InteropTypes.IO
             }
         }
 
-        public static string WriteAllBytes(Func<STREAM> stream, byte[] bytes)
+        public static string WriteAllBytes(Func<STREAM> stream, BYTESSEGMENT bytes)
         {
             using (var s = stream())
             {
@@ -135,16 +154,16 @@ namespace InteropTypes.IO
             }
         }
 
-        public static void WriteAllBytes(STREAM stream, byte[] bytes)
+        public static void WriteAllBytes(STREAM stream, BYTESSEGMENT bytes)
         {
             GuardWriteable(stream);
 
-            bytes ??= Array.Empty<byte>();
+            if (bytes.Count == 0) return;
 
-            stream.Write(bytes,0,bytes.Length);
+            stream.Write(bytes.Array, bytes.Offset, bytes.Count);
         }
 
-        public static string ReadAllBytes(Func<STREAM> stream)
+        public static BYTESSEGMENT ReadAllBytes(Func<STREAM> stream)
         {
             using (var s = stream())
             {
@@ -152,7 +171,7 @@ namespace InteropTypes.IO
             }
         }
 
-        public static byte[] ReadAllBytes(STREAM stream)
+        public static BYTESSEGMENT ReadAllBytes(STREAM stream)
         {
             GuardReadable(stream);
 
@@ -174,7 +193,9 @@ namespace InteropTypes.IO
                 using (var m = new System.IO.MemoryStream())
                 {
                     stream.CopyTo(m);
-                    return m.ToArray();
+                    return m.TryGetBuffer(out var buffer)
+                        ? buffer
+                        : m.ToArray();
                 }
             }
 
@@ -195,7 +216,7 @@ namespace InteropTypes.IO
             return bytes;
         }
 
-        public static async Task<byte[]> ReadAllBytesAsync(STREAM stream, CancellationToken ctoken)
+        public static async Task<BYTESSEGMENT> ReadAllBytesAsync(STREAM stream, CancellationToken ctoken)
         {
             GuardReadable(stream);
 
@@ -217,7 +238,9 @@ namespace InteropTypes.IO
                 using (var m = new System.IO.MemoryStream())
                 {
                     await stream.CopyToAsync(m, ctoken).ConfigureAwait(false);
-                    return m.ToArray();
+                    return m.TryGetBuffer(out var buffer)
+                        ? buffer
+                        : m.ToArray();
                 }
             }
 
@@ -239,9 +262,6 @@ namespace InteropTypes.IO
             }
             return bytes;
         }
-
-        
-
         
     }
 }

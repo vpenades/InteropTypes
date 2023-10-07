@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
 using System.Text;
-using System.Xml;
 
 using Microsoft.Extensions.FileProviders;
 
 using STREAM = System.IO.Stream;
+using BYTESSEGMENT = System.ArraySegment<byte>;
 
 using READWRITESTREAM1 = System.Func<System.IO.FileMode, System.IO.Stream>;
 using READWRITESTREAM2 = System.Func<System.IO.FileMode, System.IO.FileAccess, System.IO.Stream>;
@@ -49,7 +46,7 @@ namespace InteropTypes.IO
             return new System.IO.BinaryWriter(s, encoding, false);
         }
 
-        public Byte[] ReadAllBytesFrom(T src)
+        public BYTESSEGMENT ReadAllBytesFrom(T src)
         {
             using(var s = CreateReadStreamFrom(src))
             {
@@ -57,7 +54,7 @@ namespace InteropTypes.IO
             }
         }        
 
-        public void WriteAllBytesTo(T dst, byte[] bytes)
+        public void WriteAllBytesTo(T dst, BYTESSEGMENT bytes)
         {
             using(var s = CreateWriteStreamFrom(dst))
             {

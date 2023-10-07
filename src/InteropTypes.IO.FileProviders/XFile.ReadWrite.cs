@@ -5,6 +5,8 @@ using System.Text;
 
 using Microsoft.Extensions.FileProviders;
 
+using BYTESSEGMENT = System.ArraySegment<byte>;
+
 namespace InteropTypes.IO
 {
     partial class XFile
@@ -88,12 +90,12 @@ namespace InteropTypes.IO
             GuardIsValidFile(xfile);
             return StreamProvider<IFileInfo>.Default.ReadAllTextFrom(xfile, encoding);
         }
-        public static Byte[] ReadAllBytes(IFileInfo xfile)
+        public static BYTESSEGMENT ReadAllBytes(IFileInfo xfile)
         {
             GuardIsValidFile(xfile);
             return StreamProvider<IFileInfo>.Default.ReadAllBytesFrom(xfile);
         }        
-        public static void WriteAllBytes(IFileInfo xfile, Byte[] bytes)
+        public static void WriteAllBytes(IFileInfo xfile, BYTESSEGMENT bytes)
         {
             GuardIsValidFile(xfile);
             StreamProvider<IFileInfo>.Default.WriteAllBytesTo(xfile, bytes);

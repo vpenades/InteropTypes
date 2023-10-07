@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
 using STREAM = System.IO.Stream;
+using BYTESSEGMENT = System.ArraySegment<byte>;
 
 namespace InteropTypes.IO
 {
@@ -43,7 +42,7 @@ namespace InteropTypes.IO
         /// <returns>the number of bytes read.</returns>
         public static int TryReadBytes(this STREAM stream, Memory<Byte> bytes)
         {
-            if (MemoryMarshal.TryGetArray(bytes, out ArraySegment<byte> array))
+            if (MemoryMarshal.TryGetArray(bytes, out BYTESSEGMENT array))
             {
                 return TryReadBytes(stream, array);
             }
@@ -69,7 +68,7 @@ namespace InteropTypes.IO
         /// <param name="stream">The source stream.</param>
         /// <param name="bytes">The destination buffer.</param>
         /// <returns>the number of bytes read.</returns>
-        public static int TryReadBytes(this STREAM stream, ArraySegment<Byte> bytes)
+        public static int TryReadBytes(this STREAM stream, BYTESSEGMENT bytes)
         {
             GuardReadable(stream);
 

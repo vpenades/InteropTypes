@@ -11,6 +11,15 @@ namespace InteropTypes.IO
 {
     partial class XStream
     {
+        private static bool TryGetAvailableSystemMemory(out int memory)
+        {
+            // var performance = new System.Diagnostics.PerformanceCounter("Memory", "Available MBytes");
+            // var memory = performance.NextValue();
+
+            memory = 0;
+            return false;
+        }
+
         public static bool AreStreamsContentEqual(this Func<STREAM> a, Func<STREAM> b)
         {
             if (a == null) throw new ArgumentNullException(nameof(a));
@@ -40,17 +49,28 @@ namespace InteropTypes.IO
             GuardReadable(x);
             GuardReadable(y);
 
-            long flen = 0;
+            // the strategy should be: whenever possible, try to read from one stream
+            // as much as possible before reading from the other stream, to avoid the
+            // hard drive head to jump as little as possible.
+
+            long expectedLen = 0;
 
             if (TryGetLength(x, out var xfilelen) && TryGetLength(y, out var yfilelen))
             {
-                flen = Math.Max(xfilelen, yfilelen);
-            }
-            else
-            {
-                progress = null;
+                System.Diagnostics.Debug.Assert(xfilelen > 0);
+                System.Diagnostics.Debug.Assert(yfilelen > 0);
+
+                if (xfilelen != yfilelen) return false;
+                expectedLen = Math.Max(xfilelen, yfilelen);
             }
 
+            if (expectedLen == 0) progress = null;
+
+            return _CompareStreamsDirect(x, y, bufferSize);
+        }
+
+        private static bool _CompareStreamsDirect(STREAM x, STREAM y, int bufferSize = 0)
+        {
             if (bufferSize <= 0) bufferSize = 1024 * 1024 * 64; // 64 mb
 
             Span<Byte> xbuff = new byte[bufferSize];
@@ -78,7 +98,9 @@ namespace InteropTypes.IO
         /// When comparing large files in memory, it is better to load large files
         /// into small array chunks to avoid adding too much pressure to the GC.
         /// </summary>
-        class _LargeArray : IReadOnlyList<Byte>
+        class _LargeArray : IEnumerable<Byte>
+            , IEquatable<_LargeArray>
+            // , IReadOnlyDictionary<long,byte>
         {
             #region lifecycle
             public _LargeArray(STREAM stream)
@@ -101,26 +123,63 @@ namespace InteropTypes.IO
 
             private readonly List<Byte[]> _Chunks = new List<byte[]>();
 
+            public override int GetHashCode()
+            {
+                return this.Count.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is _LargeArray other && Equals(other);
+            }
+
+            public bool Equals(_LargeArray other)
+            {
+                if (other == null) return false;
+
+                if (this.Count != other.Count) return false;
+
+                var thisChunks = this._Chunks.Select(c => c.Length);
+                var otherChunks = other._Chunks.Select(c => c.Length);
+
+                if (thisChunks.SequenceEqual(otherChunks))
+                {
+                    for(int i=0; i < this._Chunks.Count; i++)
+                    {
+                        var thisChunk = this._Chunks[i];
+                        var otherChunk = other._Chunks[i];
+
+                        if (!thisChunk.AsSpan().SequenceEqual(otherChunk)) return false;
+                    }
+
+                    return true;
+                }
+
+                return this.SequenceEqual(other);
+            }
+
             #endregion
 
             #region properties
 
-            public byte this[int index]
+            public byte this[long index]
             {
                 get
                 {
                     var chunkId = 0;
-                    while(index >= _Chunks[chunkId].Length)
+                    while(chunkId < _Chunks.Count && index >= _Chunks[chunkId].Length)
                     {
                         index -= _Chunks[chunkId].Length;
                         ++chunkId;
                     }
 
+                    if (chunkId >= _Chunks.Count) throw new ArgumentOutOfRangeException(nameof(index));
+
                     return _Chunks[chunkId][index];
                 }
-            }
+            }            
 
-            public int Count => _Chunks.Sum(c=>c.Length);
+            public long Count => _Chunks.Sum(c => (long)c.Length);
 
             public IEnumerator<byte> GetEnumerator()
             {
@@ -130,7 +189,7 @@ namespace InteropTypes.IO
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return _Chunks.SelectMany(item => item).GetEnumerator();
-            }
+            }            
 
             #endregion
         }
