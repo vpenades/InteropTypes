@@ -26,7 +26,18 @@ namespace InteropTypes.IO
 
         public static bool TryGetFileInfo(STREAM stream, out FileInfo fileInfo)
         {
-            if (stream is BufferedStream bs) stream = bs.UnderlyingStream;
+            // dig into the streams for the underlaying stream:
+            while(stream != null)
+            {
+                if (stream is BufferedStream bs) { stream = bs.UnderlyingStream; continue; }
+                if (stream is System.IO.Compression.BrotliStream cbs) { stream = cbs.BaseStream; continue; }
+                if (stream is System.IO.Compression.DeflateStream cds) { stream = cds.BaseStream; continue; }
+                if (stream is System.IO.Compression.GZipStream cgs) { stream = cgs.BaseStream; continue; }
+                // if (stream is System.IO.Compression.ZLibStream czs) { stream = czs.BaseStream; continue; }
+
+                break;
+            }
+            
 
             if (stream is System.IO.FileStream fs)
             {

@@ -66,6 +66,9 @@ namespace InteropTypes.IO
 
             if (expectedLen == 0) progress = null;
 
+            // the problem with preloading the streams into memory is that maybe they're not seekable,
+            // so if preloading fails, then we cannot retry with directy streaming.
+
             return _CompareStreamsDirect(x, y, bufferSize);
         }
 
