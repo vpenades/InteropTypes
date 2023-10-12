@@ -19,6 +19,18 @@ namespace InteropTypes.IO
 
         private static readonly ConcurrentDictionary<string, PhysicalFileProvider> _Providers;
 
+        public static IEnumerable<PhysicalFileProvider> GetDriveProviders()
+        {
+            return System.Environment.GetLogicalDrives()
+                .Select(drive => new System.IO.DriveInfo(drive))
+                .Select(UseRootProvider);
+        }
+
+        public static PhysicalFileProvider UseRootProvider(System.IO.DriveInfo dinfo)
+        {
+            return UseRootProvider(dinfo.RootDirectory)
+        }
+
         public static PhysicalFileProvider UseRootProvider(System.IO.DirectoryInfo dinfo)
         {
             if (dinfo == null) return null;

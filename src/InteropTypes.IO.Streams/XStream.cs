@@ -57,6 +57,12 @@ namespace InteropTypes.IO
             return false;
         }
 
+        /// <summary>
+        /// Tries to get the length of an open stream.
+        /// </summary>
+        /// <param name="stream">An open stream</param>
+        /// <param name="length">the length of the stream</param>
+        /// <returns>true if the length was successfully retrieved</returns>
         public static bool TryGetLength(STREAM stream, out long length)
         {
             if (stream == null || !stream.CanSeek) { length = 0; return false; }            
