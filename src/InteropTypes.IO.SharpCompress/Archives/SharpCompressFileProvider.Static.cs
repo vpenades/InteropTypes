@@ -38,7 +38,12 @@ namespace InteropTypes.IO.Archives
                     return extBody.AsSpan().SequenceEqual(xentryBody);
                 }
 
-                else return XStream.AreStreamsContentEqual(xentry.OpenEntryStream, extFile.CreateReadStream);
+                else
+                {                    
+                    return StreamComparisonContext
+                        .Default
+                        .AreStreamsContentEqual(xentry.OpenEntryStream, extFile.CreateReadStream);
+                }
             }
 
             if (archive.IsSolid)

@@ -28,7 +28,7 @@ namespace InteropTypes.IO
 
         public static PhysicalFileProvider UseRootProvider(System.IO.DriveInfo dinfo)
         {
-            return UseRootProvider(dinfo.RootDirectory)
+            return UseRootProvider(dinfo.RootDirectory);
         }
 
         public static PhysicalFileProvider UseRootProvider(System.IO.DirectoryInfo dinfo)
