@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\src\InteropTypes.Crypto\InteropTypes.Crypto.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.SharpCompress\InteropTypes.IO.SharpCompress.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.IO.Streams\InteropTypes.IO.Streams.csproj" />
   </ItemGroup>
 
 </Project>

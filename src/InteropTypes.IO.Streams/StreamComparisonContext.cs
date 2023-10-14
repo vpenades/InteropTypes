@@ -11,11 +11,14 @@ using MEMSTREAM = System.IO.MemoryStream;
 
 namespace InteropTypes.IO
 {
+    /// <summary>
+    /// Context used to compare two streams
+    /// </summary>
     public class StreamComparisonContext
     {
         #region static
 
-        public static StreamComparisonContext Default { get; } = new StreamComparisonContext();
+        public static StreamComparisonContext Default { get; } = new RecyclableContext();
 
         #endregion
 
@@ -96,7 +99,7 @@ namespace InteropTypes.IO
             // if one of the two streams is a MemoryStream,
             // we can run a stream-to-stream comparison straight away:
 
-            if (x is System.IO.MemoryStream || y is System.IO.MemoryStream)
+            if (x is MEMSTREAM || y is MEMSTREAM)
             {
                 return _CompareStreamsDirect(x, y, long.MaxValue, _COMPARE_BUFFERREADSIZE_SMALL);            
             }
@@ -234,7 +237,7 @@ namespace InteropTypes.IO
 
             if (bufferSize <= 0) bufferSize = _COMPARE_BUFFERREADSIZE_LARGE;
 
-            var buff = bufferSize > 8192 ? _TryAllocate(bufferSize) : stackalloc byte[bufferSize];
+            var buff = bufferSize > 8192 ? _TryAllocate(bufferSize * 2) : stackalloc byte[bufferSize * 2];
 
             Span<Byte> xbuff = buff.Slice(0,buff.Length/2); // 1st half
             Span<Byte> ybuff = buff.Slice(buff.Length / 2); // 2nd half
@@ -309,12 +312,24 @@ namespace InteropTypes.IO
 
         public class RecyclableContext : StreamComparisonContext
         {
-            private Microsoft.IO.RecyclableMemoryStreamManager _Manager;
+            private readonly WeakReference<Microsoft.IO.RecyclableMemoryStreamManager> _Manager = new WeakReference<Microsoft.IO.RecyclableMemoryStreamManager>(null);
+
+            private Microsoft.IO.RecyclableMemoryStreamManager GetManager()
+            {
+                if (_Manager.TryGetTarget(out var manager)) return manager;
+
+                manager = new Microsoft.IO.RecyclableMemoryStreamManager();
+
+                _Manager.SetTarget(manager);
+
+                return manager;                
+            }
+
             protected override bool TryCreateMemoryStream(long capacity, out MEMSTREAM memoryStream)
             {
-                _Manager ??= new Microsoft.IO.RecyclableMemoryStreamManager();
+                var manager = GetManager();
 
-                memoryStream = new Microsoft.IO.RecyclableMemoryStream(_Manager, string.Empty, capacity);
+                memoryStream = new Microsoft.IO.RecyclableMemoryStream(manager, string.Empty, capacity);
                 return true;
             }
         }        
