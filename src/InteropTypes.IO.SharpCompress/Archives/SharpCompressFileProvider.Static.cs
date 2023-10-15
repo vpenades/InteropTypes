@@ -40,7 +40,7 @@ namespace InteropTypes.IO.Archives
 
                 else
                 {                    
-                    return StreamComparisonContext
+                    return StreamEqualityComparer
                         .Default
                         .AreStreamsContentEqual(xentry.OpenEntryStream, extFile.CreateReadStream);
                 }

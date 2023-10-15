@@ -15,13 +15,13 @@ namespace InteropTypes.IO
     /// Context used to compare two streams
     /// </summary>
     /// <remarks>
-    /// Use <see cref="StreamComparisonContext.Default"/> as API entry point.
+    /// Use <see cref="StreamEqualityComparer.Default"/> as API entry point.
     /// </remarks>
-    public class StreamComparisonContext
+    public class StreamEqualityComparer
     {
         #region static
 
-        public static StreamComparisonContext Default { get; } = new RecyclableContext();
+        public static StreamEqualityComparer Default { get; } = new RecyclableContext();
 
         #endregion
 
@@ -318,7 +318,7 @@ namespace InteropTypes.IO
         /// <summary>
         /// Represents a context that uses <see cref="Microsoft.IO.RecyclableMemoryStream"/> as stream backing.
         /// </summary>
-        public class RecyclableContext : StreamComparisonContext
+        public class RecyclableContext : StreamEqualityComparer
         {
             private readonly WeakReference<Microsoft.IO.RecyclableMemoryStreamManager> _Manager = new WeakReference<Microsoft.IO.RecyclableMemoryStreamManager>(null);
 

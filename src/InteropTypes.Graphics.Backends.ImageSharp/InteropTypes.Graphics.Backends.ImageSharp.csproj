@@ -11,13 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>    
-    <PackageReference Include="MathNet.Numerics" />    
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" /> <!-- still stuck and poiting to old version -->
-    
+    <PackageReference Include="MathNet.Numerics" />
+    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="SixLabors.ImageSharp" />    
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Update="SixLabors.ImageSharp" VersionOverride="2.1.6" />
+    <PackageReference Update="SixLabors.ImageSharp.Drawing" VersionOverride="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
