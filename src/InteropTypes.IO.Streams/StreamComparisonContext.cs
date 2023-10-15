@@ -14,6 +14,9 @@ namespace InteropTypes.IO
     /// <summary>
     /// Context used to compare two streams
     /// </summary>
+    /// <remarks>
+    /// Use <see cref="StreamComparisonContext.Default"/> as API entry point.
+    /// </remarks>
     public class StreamComparisonContext
     {
         #region static
@@ -310,11 +313,16 @@ namespace InteropTypes.IO
 
         #region nested types
 
+        // TODO: an alternate implementation would be to compare the SHA512 of each stream
+
+        /// <summary>
+        /// Represents a context that uses <see cref="Microsoft.IO.RecyclableMemoryStream"/> as stream backing.
+        /// </summary>
         public class RecyclableContext : StreamComparisonContext
         {
             private readonly WeakReference<Microsoft.IO.RecyclableMemoryStreamManager> _Manager = new WeakReference<Microsoft.IO.RecyclableMemoryStreamManager>(null);
 
-            private Microsoft.IO.RecyclableMemoryStreamManager GetManager()
+            private Microsoft.IO.RecyclableMemoryStreamManager _GetManager()
             {
                 if (_Manager.TryGetTarget(out var manager)) return manager;
 
@@ -327,7 +335,7 @@ namespace InteropTypes.IO
 
             protected override bool TryCreateMemoryStream(long capacity, out MEMSTREAM memoryStream)
             {
-                var manager = GetManager();
+                var manager = _GetManager();
 
                 memoryStream = new Microsoft.IO.RecyclableMemoryStream(manager, string.Empty, capacity);
                 return true;
