@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Reflection;
 
 using STREAM = System.IO.Stream;
 
@@ -10,8 +12,55 @@ using BYTESSEGMENT = System.ArraySegment<byte>;
 
 namespace InteropTypes.IO
 {
-    public static partial class XStream
+    public static partial class XStream    
     {
+        public static STREAM CreateFrom<TList>(TList bytes, FileMode mode = FileMode.Open)
+            where TList: IReadOnlyList<Byte>
+        {
+            return _ListWrapperStream<TList>.Open(bytes, mode);
+        }
+
+        public static STREAM CreateFrom(BYTESSEGMENT bytes, bool writable = false)
+        {
+            return bytes.Count == 0
+                ? new System.IO.MemoryStream(Array.Empty<byte>(), writable)
+                : (STREAM)new System.IO.MemoryStream(bytes.Array, bytes.Offset, bytes.Count, writable);
+        }
+
+        public static STREAM CreateFrom(System.IO.Compression.ZipArchiveEntry zentry, FileMode mode)
+        {
+            if (mode == FileMode.Open)
+            {
+                if (zentry.Archive.Mode == System.IO.Compression.ZipArchiveMode.Create) return null;
+                var stream = zentry.Open();
+                if (!stream.CanRead) { stream.Dispose(); stream = null; }
+                return stream;
+            }
+
+            if (mode == FileMode.CreateNew)
+            {
+                if (zentry.Archive.Mode == System.IO.Compression.ZipArchiveMode.Read) return null;
+                var stream = zentry.Open();
+                if (!stream.CanWrite) { stream.Dispose(); stream = null; }
+                return stream;
+            }
+
+            throw new ArgumentException($"Unsupported mode: {mode}", nameof(mode));
+        }
+
+        public static STREAM WrapWithCloseActions(STREAM stream, Action<long> onClosed, Func<STREAM, bool> onClosing = null)
+        {
+            if (stream == null) return null;
+            if (onClosing == null && onClosed == null) return stream;
+            return new _CloseActionStream(stream, false, onClosing, onClosed);
+        }
+
+        public static bool IsReadable(STREAM stream) { return stream?.CanRead ?? false; }
+
+        public static bool IsWritable(STREAM stream) { return stream?.CanWrite ?? false; }
+
+        public static bool IsSeekable(STREAM stream) { return stream?.CanSeek ?? false; }
+
         public static void GuardReadable(STREAM stream)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -24,33 +73,81 @@ namespace InteropTypes.IO
             if (!stream.CanWrite) throw new ArgumentException("Can't read from strean", nameof(stream));
         }
 
+        public static void GuardSeekable(STREAM stream)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (!stream.CanSeek) throw new ArgumentException("Can't seek strean", nameof(stream));
+        }
+
+        public static bool TryGetBaseStream(STREAM stream, out STREAM baseStream)
+        {
+            baseStream = null;
+
+            if (stream == null) return false;
+
+            try // with known types
+            {
+                switch (stream)
+                {
+                    case BufferedStream derived: baseStream = derived.UnderlyingStream; break;
+
+                    case System.IO.Compression.GZipStream derived: baseStream = derived.BaseStream; break;
+                    case System.IO.Compression.BrotliStream derived: baseStream = derived.BaseStream; break;
+                    case System.IO.Compression.DeflateStream derived: baseStream = derived.BaseStream; break;                    
+
+                    #if !NETSTANDARD
+                    case System.IO.Compression.ZLibStream derived: baseStream = derived.BaseStream; break;
+                    #endif
+
+                    case _CloseActionStream derived: baseStream = derived.BaseStream; break;
+                }
+            }
+            catch(ObjectDisposedException) { return false; }
+
+            try // with unknown types with reflection
+            {
+                baseStream ??= stream
+                    .GetType()
+                    .GetProperty("BaseStream")
+                    ?.GetValue(stream, null) as STREAM;
+
+                baseStream ??= stream
+                    .GetType()
+                    .GetProperty("UnderlyingStream")
+                    ?.GetValue(stream, null) as STREAM;
+            }
+            catch (Exception ex)
+            when (ex is AmbiguousMatchException || ex is MethodAccessException || ex is TargetException || ex is TargetInvocationException)
+            { }
+
+            return baseStream != null;
+        }
+
         public static bool TryGetFileInfo(STREAM stream, out FileInfo fileInfo)
         {
-            // dig into the streams for the underlaying stream:
-            while(stream != null)
+            while(true)            
             {
-                if (stream is BufferedStream bs) { stream = bs.UnderlyingStream; continue; }
-                if (stream is System.IO.Compression.BrotliStream cbs) { stream = cbs.BaseStream; continue; }
-                if (stream is System.IO.Compression.DeflateStream cds) { stream = cds.BaseStream; continue; }
-                if (stream is System.IO.Compression.GZipStream cgs) { stream = cgs.BaseStream; continue; }
-                // if (stream is System.IO.Compression.ZLibStream czs) { stream = czs.BaseStream; continue; }
+                // try to retrieve a FileInfo
 
-                break;
-            }
-            
-
-            if (stream is System.IO.FileStream fs)
-            {
-                fileInfo = new FileInfo(fs.Name);
-                return true;
-            }
-
-            if (stream is IServiceProvider sp)
-            {
-                if (sp.GetService(typeof(FileInfo)) is FileInfo finfo)
+                if (stream is System.IO.FileStream fs)
                 {
-                    fileInfo = finfo; return true;
+                    fileInfo = new FileInfo(fs.Name);
+                    return true;
                 }
+
+                if (stream is IServiceProvider sp)
+                {
+                    if (sp.GetService(typeof(FileInfo)) is FileInfo finfo)
+                    {
+                        fileInfo = finfo; return true;
+                    }
+                }
+
+                // dig into the stream for the underlaying stream:
+
+                if (!TryGetBaseStream(stream, out var baseStream)) break;
+                
+                stream = baseStream;
             }
 
             fileInfo = null;
@@ -65,7 +162,7 @@ namespace InteropTypes.IO
         /// <returns>true if the length was successfully retrieved</returns>
         public static bool TryGetLength(STREAM stream, out long length)
         {
-            if (stream == null || !stream.CanSeek) { length = 0; return false; }            
+            if (stream == null) { length = 0; return false; }            
 
             try
             {                
@@ -77,12 +174,12 @@ namespace InteropTypes.IO
 
                 return length != 0;
             }
-            catch
+            catch(Exception ex)
+            when (ex is NotSupportedException || ex is ObjectDisposedException)
             {
                 length = 0;
                 return false;
             }
-
         }
 
         public static void WriteAllText(Func<STREAM> stream, string contents)

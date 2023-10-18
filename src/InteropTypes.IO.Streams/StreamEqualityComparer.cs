@@ -247,8 +247,8 @@ namespace InteropTypes.IO
 
             while (maxLen > 0)
             {
-                var xlen = x.TryReadBytes(xbuff);
-                var ylen = y.TryReadBytes(ybuff);
+                var xlen = x.TryReadBytesToEnd(xbuff);
+                var ylen = y.TryReadBytesToEnd(ybuff);
 
                 if (xlen != ylen) return false; // length mismatch
                 if (xlen == 0) break; // EOF on both files
@@ -278,8 +278,8 @@ namespace InteropTypes.IO
 
             while (maxLen > 0)
             {
-                var xlen = await x.TryReadBytesAsync(xbuff, System.Threading.CancellationToken.None).ConfigureAwait(false);
-                var ylen = await y.TryReadBytesAsync(ybuff, System.Threading.CancellationToken.None).ConfigureAwait(false);
+                var xlen = await x.TryReadBytesToEndAsync(xbuff, System.Threading.CancellationToken.None).ConfigureAwait(false);
+                var ylen = await y.TryReadBytesToEndAsync(ybuff, System.Threading.CancellationToken.None).ConfigureAwait(false);
 
                 if (xlen != ylen) return false; // length mismatch
                 if (xlen == 0) break; // EOF on both files

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace InteropTypes.IO
@@ -9,40 +10,50 @@ namespace InteropTypes.IO
     /// Retrieves information about a file system path
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Path}")]
-    public readonly partial struct FilePathInfo : IEquatable<FilePathInfo>
+    public readonly partial struct PathInfo : IEquatable<PathInfo>
     {
         #region lifecycle
 
-        public static FilePathInfo CreateRandom()
+        public static PathInfo GetRandomName()
         {
             var path = System.IO.Path.GetRandomFileName();
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }
 
-        public static FilePathInfo CreateTempFile()
+        public static PathInfo CreateTempFile()
         {
             var path = System.IO.Path.GetTempFileName();
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }
 
-        public FilePathInfo(string path)
+        public static IEnumerable<PathInfo> GetLogicalDrives()
+        {
+            return Environment.GetLogicalDrives().Select(item => new PathInfo(item));
+        }
+
+        public PathInfo(string path)
         {
             Path = path;
         }
 
-        public FilePathInfo(System.IO.DriveInfo dinfo)
+        public PathInfo(System.IO.DriveInfo dinfo)
         {
-            Path = dinfo.RootDirectory.FullName;
+            Path = dinfo?.RootDirectory?.FullName;
         }
 
-        public FilePathInfo(System.IO.FileSystemInfo fsinfo)
+        public PathInfo(System.IO.FileSystemInfo fsinfo)
         {
-            Path = fsinfo != null ? fsinfo.FullName : null;
+            Path = fsinfo?.FullName;
         }
 
-        public FilePathInfo(Uri uri)
+        public PathInfo(Uri uri)
         {
             Path = uri.LocalPath;
+        }
+
+        public PathInfo(Environment.SpecialFolder special)
+        {
+            Path = System.Environment.GetFolderPath(special);
         }
 
         #endregion
@@ -58,16 +69,16 @@ namespace InteropTypes.IO
 
         public override bool Equals(object obj)
         {
-            return obj is FilePathInfo other && Equals(other);
+            return obj is PathInfo other && Equals(other);
         }
 
-        public bool Equals(FilePathInfo other)
+        public bool Equals(PathInfo other)
         {
-            return string.Equals(this.Path,other.Path,FilePathUtils.PathComparisonMode);
+            return string.Equals(this.Path, other.Path, FilePathUtils.PathComparisonMode);
         }
 
-        public static bool operator ==(FilePathInfo left, FilePathInfo right) => left.Equals(right);
-        public static bool operator !=(FilePathInfo left, FilePathInfo right) => !left.Equals(right);
+        public static bool operator ==(PathInfo left, PathInfo right) => left.Equals(right);
+        public static bool operator !=(PathInfo left, PathInfo right) => !left.Equals(right);
 
         #endregion
 
@@ -119,40 +130,40 @@ namespace InteropTypes.IO
 
         #region API
 
-        public static FilePathInfo operator +(FilePathInfo left, string right)
+        public static PathInfo operator +(PathInfo left, string right)
         {
             var path = (left.Path ?? string.Empty) + right;
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }
 
-        public static FilePathInfo operator /(FilePathInfo left, string right)
+        public static PathInfo operator /(PathInfo left, string right)
         {
             var path = System.IO.Path.Combine((left.Path ?? string.Empty), right);
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }
 
-        public static FilePathInfo operator /(FilePathInfo left, FilePathInfo right)
+        public static PathInfo operator /(PathInfo left, PathInfo right)
         {
             var path = System.IO.Path.Combine((left.Path ?? string.Empty), right.Path);
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }
 
-        public FilePathInfo GetPathRelativeTo(FilePathInfo other)
+        public PathInfo GetPathRelativeTo(PathInfo other)
         {
             var path = System.IO.Path.GetRelativePath(other.Path, this.Path);
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }
 
-        public FilePathInfo GetFullPath()
+        public PathInfo GetFullPath()
         {
             var path = System.IO.Path.GetFullPath(Path);
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }
 
-        public FilePathInfo GetDirectoryPath()
+        public PathInfo GetDirectoryPath()
         {
             var path = System.IO.Path.GetDirectoryName(Path);
-            return new FilePathInfo(path);
+            return new PathInfo(path);
         }        
 
         public bool TryGetCompositeExtension(int numDots, out string extension)

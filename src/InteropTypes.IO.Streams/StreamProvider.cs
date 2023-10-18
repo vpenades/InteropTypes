@@ -30,7 +30,10 @@ namespace InteropTypes.IO
 
         public static StreamProvider<T> Default { get; } = _Initialize();
 
+        // [RequiresUnreferencedCode("Calls InteropTypes.IO.StreamProvider<T>._DefaultProvider._TryGetReadStream<TSrv>(T, out Stream)")]
         public abstract STREAM CreateReadStreamFrom(T obj);
+
+        // [RequiresUnreferencedCode("Calls InteropTypes.IO.StreamProvider<T>._DefaultProvider._TryGetReadStream<TSrv>(T, out Stream)")]
         public abstract STREAM CreateWriteStreamFrom(T obj);
 
         public System.IO.BinaryReader CreateBinaryReader(T src, Encoding encoding)
@@ -116,7 +119,7 @@ namespace InteropTypes.IO
         class _DefaultProvider : StreamProvider<T>
         {
             // TODO: Support IReadOnlyList<Byte> for both Read & List<Byte> for write
-
+            
             public override STREAM CreateReadStreamFrom(T obj)
             {
                 if (obj == null) throw new ArgumentNullException(nameof(obj));
@@ -145,33 +148,28 @@ namespace InteropTypes.IO
                         : (Stream)new System.IO.MemoryStream(array,0, array.Length, false);
                 }
 
-                if (typeof(T) == typeof(ArraySegment<Byte>))
+                if (typeof(T) == typeof(BYTESSEGMENT))
                 {
-                    var segment = Unsafe.As<T, ArraySegment<Byte>>(ref obj);
-                    return segment.Count == 0
-                        ? new System.IO.MemoryStream(Array.Empty<byte>(), false)
-                        : (STREAM)new System.IO.MemoryStream(segment.Array, segment.Offset, segment.Count, false);
+                    var segment = Unsafe.As<T, BYTESSEGMENT>(ref obj);
+                    return XStream.CreateFrom(segment, false);
                 }
 
                 if (typeof(T) == typeof(IReadOnlyList<Byte>))
                 {
                     var list = Unsafe.As<T, IReadOnlyList<Byte>>(ref obj);
-                    return _ListWrapperStream<IReadOnlyList<Byte>>.Open(list, FileMode.Open);
+                    return XStream.CreateFrom(list);
                 }                
 
                 if (typeof(T) == typeof(List<Byte>))
                 {
                     var list = Unsafe.As<T, List<Byte>>(ref obj);
-                    return _ListWrapperStream<List<Byte>>.Open(list, FileMode.Open);
+                    return XStream.CreateFrom(list, FileMode.Open);
                 }
 
                 if (typeof(T) == typeof(System.IO.Compression.ZipArchiveEntry))
                 {
                     var zentry = Unsafe.As<T, System.IO.Compression.ZipArchiveEntry>(ref obj);
-                    if (zentry.Archive.Mode == System.IO.Compression.ZipArchiveMode.Create) return null;
-                    var stream = zentry.Open();
-                    if (!stream.CanRead) { stream.Dispose(); stream = null; }
-                    return stream;
+                    return XStream.CreateFrom(zentry, FileMode.Open);
                 }                
 
                 if (typeof(T) == typeof(READWRITESTREAM1)) return Unsafe.As<T, READWRITESTREAM1>(ref obj).Invoke(FileMode.Open);
@@ -233,16 +231,13 @@ namespace InteropTypes.IO
                 if (typeof(T) == typeof(List<Byte>))
                 {
                     var list = Unsafe.As<T, List<Byte>>(ref obj);
-                    return _ListWrapperStream<List<Byte>>.Open(list, FileMode.Create);
+                    return XStream.CreateFrom(list, FileMode.Create);
                 }
 
                 if (typeof(T) == typeof(System.IO.Compression.ZipArchiveEntry))
                 {
                     var zentry = Unsafe.As<T, System.IO.Compression.ZipArchiveEntry>(ref obj);
-                    if (zentry.Archive.Mode == System.IO.Compression.ZipArchiveMode.Read) return null;
-                    var stream = zentry.Open();
-                    if (!stream.CanWrite) { stream.Dispose(); stream = null; }
-                    return stream;
+                    return XStream.CreateFrom(zentry, FileMode.CreateNew);
                 }
 
                 if (typeof(T) == typeof(READWRITESTREAM1)) return Unsafe.As<T, READWRITESTREAM1>(ref obj).Invoke(FileMode.Create);

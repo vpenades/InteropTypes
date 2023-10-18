@@ -9,7 +9,7 @@ using System.Text;
 namespace InteropTypes.IO
 {
     /// <summary>
-    /// Wraps a <see cref="List{T}"/> of bytes (both readable and writeable) and exposes it as a Stream
+    /// Wraps an existing <see cref="List{T}"/> of bytes (both readable and writeable) and exposes it as a Stream
     /// </summary>
     /// <typeparam name="TList">A list of bytes</typeparam>
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplay(),nq}")]
@@ -20,7 +20,21 @@ namespace InteropTypes.IO
 
         internal string ToDebuggerDisplay()
         {
-            return $"[0..[{Position}]..{Length}]";
+            if (_Reader == null || _Writer == null) return "DISPOSED";
+
+            var data = string.Empty;
+
+            for(var i= Math.Max(0, Position -3); i < Math.Min(Length,Position+3); ++i)
+            {
+                if (data.Length > 0) data += " ";
+
+                var c = _Reader[(int)i].ToString("X2");
+                if (i == Position) c= "["+c+"]";
+
+                data += c;                
+            }
+
+            return $"[0..[{Position}]..{Length}] => " + data;
         }
 
         #endregion
@@ -34,16 +48,24 @@ namespace InteropTypes.IO
                 if (list is IList<Byte> wlist) wlist.Clear();
             }
 
+            #pragma warning disable CA2000 // Dispose objects before losing scope
+
+            _ListWrapperStream<TList> listStream = null;
+
             #if !NETSTANDARD
-            if (list is List<Byte> rwlist)
-            {
-                #pragma warning disable CA2000 // Dispose objects before losing scope
-                return new _ListWrapperStreamNet6(rwlist) as _ListWrapperStream<TList>;
-                #pragma warning restore CA2000 // Dispose objects before losing scope
-            }
+            if (list is List<Byte> rwlist) listStream = new _ListWrapperStreamNet6(rwlist) as _ListWrapperStream<TList>;
             #endif
 
-            return new _ListWrapperStream<TList>(list);
+            listStream ??= new _ListWrapperStream<TList>(list);
+            
+            if (mode == FileMode.Append)
+            {
+                listStream.Position = listStream.Length;
+            }
+
+            return listStream;
+
+            #pragma warning restore CA2000 // Dispose objects before losing scope
         }
 
         protected _ListWrapperStream(TList list)
@@ -67,8 +89,16 @@ namespace InteropTypes.IO
 
         #region data
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        protected readonly Object _Mutex = new object();
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         protected int _Position;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         protected TList _Reader;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         protected IList<Byte> _Writer;
 
         #endregion
@@ -88,8 +118,11 @@ namespace InteropTypes.IO
             set
             {
                 if (_Reader == null) throw new ObjectDisposedException("List");
-                if (value < 0 || value >= _Reader.Count) throw new ArgumentOutOfRangeException(nameof(value));
-                _Position = (int)value;
+                lock (_Mutex)
+                {
+                    if (value < 0 || value >= _Reader.Count) throw new ArgumentOutOfRangeException(nameof(value));
+                    _Position = (int)value;
+                }
             }
         }
 
@@ -101,10 +134,17 @@ namespace InteropTypes.IO
 
         #region API
 
-        public override void Flush() { }
+        protected void _GuardDisposed()
+        {
+            if (_Reader == null || _Writer == null) throw new ObjectDisposedException("List");
+        }
+
+        public override void Flush() { _GuardDisposed(); }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
+            _GuardDisposed();            
+
             switch (origin)
             {
                 case SeekOrigin.Begin: Position = offset; break;
@@ -117,60 +157,72 @@ namespace InteropTypes.IO
 
         public override int Read(byte[] buffer, int offset, int count)
         {
+            if (_Reader == null) throw new NotSupportedException();
+
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
 
-            int remaining = _Reader.Count - _Position;
-            if (remaining == 0) return 0;
-            if (remaining < 0) throw new EndOfStreamException();
-
-            count = Math.Min(count, remaining);
-
-            for (int i = 0; i < count; i++)
+            lock (_Mutex)
             {
-                buffer[offset + i] = _Reader[_Position + i];
+                int remaining = _Reader.Count - _Position;
+                if (remaining == 0) return 0;
+                if (remaining < 0) throw new EndOfStreamException();
+
+                count = Math.Min(count, remaining);
+
+                for (int i = 0; i < count; i++)
+                {
+                    buffer[offset + i] = _Reader[_Position + i];
+                }
+
+                _Position += count;
+
+                return count;
             }
-
-            _Position += count;
-
-            return count;
         }
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (_Writer == null) throw new NotSupportedException();
 
-            for (int i = 0; i < count; i++)
+            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+
+            lock (_Mutex)
             {
-                var val = buffer[offset + i];
+                for (int i = 0; i < count; i++)
+                {
+                    var val = buffer[offset + i];
 
-                // insert
-                if (_Position < _Writer.Count) _Writer[i] = val;
-                else _Writer.Add(val);
+                    // insert
+                    if (_Position < _Writer.Count) _Writer[i] = val;
+                    else _Writer.Add(val);
 
-                ++_Position;
+                    ++_Position;
+                }
             }
         }        
 
         public override void SetLength(long value)
         {
-            if (value > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(value));
-
             if (_Writer == null) throw new NotSupportedException();
 
-            var len = (int)value;
+            if (value > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(value));
 
-            while(_Writer.Count < len) _Writer.Add(0);
-            while (_Writer.Count > len) _Writer.RemoveAt(_Writer.Count - 1);
+            lock (_Mutex)
+            {
+                var len = (int)value;
 
-            if (_Position >= _Writer.Count) _Position = _Writer.Count;
+                while (_Writer.Count < len) _Writer.Add(0);
+                while (_Writer.Count > len) _Writer.RemoveAt(_Writer.Count - 1);
+
+                if (_Position >= _Writer.Count) _Position = _Writer.Count;
+            }
         }        
 
         #endregion
     }
 
     /// <summary>
-    /// Specialised <see cref="List{T}"/> wrapper stream using Net6
+    /// Specialised <see cref="List{T}"/> wrapper stream using Net6+ CollectionsMarshal
     /// </summary>
     #if !NETSTANDARD
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplay(),nq}")]
@@ -197,19 +249,24 @@ namespace InteropTypes.IO
 
         public override int Read(Span<byte> target)
         {
-            int remaining = _Reader.Count - _Position;
-            if (remaining == 0) return 0;
-            if (remaining < 0) throw new EndOfStreamException();
+            if (_Reader == null) throw new NotSupportedException();
 
-            var source = System.Runtime.InteropServices.CollectionsMarshal
-                .AsSpan(_Reader)
-                .Slice(_Position, Math.Min(target.Length, remaining));            
+            lock (_Mutex)
+            {
+                int remaining = _Reader.Count - _Position;
+                if (remaining == 0) return 0;
+                if (remaining < 0) throw new EndOfStreamException();
 
-            source.CopyTo(target);
+                var source = System.Runtime.InteropServices.CollectionsMarshal
+                    .AsSpan(_Reader)
+                    .Slice(_Position, Math.Min(target.Length, remaining));
 
-            _Position += source.Length;
+                source.CopyTo(target);
 
-            return source.Length;
+                _Position += source.Length;
+
+                return source.Length;
+            }
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -228,21 +285,27 @@ namespace InteropTypes.IO
 
         public override void Write(ReadOnlySpan<Byte> source)
         {
-            int growth = _Position + source.Length - _Reader.Count;
-            
-            while(growth > 0)
+            // _Reader is a full List<Byte> so we don't need _Writer
+            if (_Reader == null) throw new NotSupportedException();
+
+            lock (_Mutex)
             {
-                _Reader.Add(0);
-                growth--;
+                int growth = _Position + source.Length - _Reader.Count;
+
+                while (growth > 0)
+                {
+                    _Reader.Add(0);
+                    growth--;
+                }
+
+                var target = System.Runtime.InteropServices.CollectionsMarshal
+                    .AsSpan(_Reader)
+                    .Slice(_Position, source.Length);
+
+                source.CopyTo(target);
+
+                _Position += target.Length;
             }
-
-            var target = System.Runtime.InteropServices.CollectionsMarshal
-                .AsSpan(_Reader)
-                .Slice(_Position, source.Length);
-
-            source.CopyTo(target);
-
-            _Position += target.Length;            
         }
     }
     #endif

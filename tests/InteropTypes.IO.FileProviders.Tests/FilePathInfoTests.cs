@@ -13,7 +13,7 @@ namespace InteropTypes.IO
         [Test]
         public void TestOperators()
         {
-            var p = new FilePathInfo("c:\\");
+            var p = new PathInfo("c:\\");
 
             p /= "hello";
             p /= "world";

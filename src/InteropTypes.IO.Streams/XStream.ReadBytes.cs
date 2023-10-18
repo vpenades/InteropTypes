@@ -9,15 +9,18 @@ using BYTESSEGMENT = System.ArraySegment<byte>;
 
 namespace InteropTypes.IO
 {
+
+    #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     partial class XStream
+    #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
         /// <summary>
         /// Reads bytes from the stream until the end of the stream or until the destination buffer is full.
         /// </summary>
         /// <param name="stream">The source stream.</param>
         /// <param name="bytes">The destination buffer.</param>
-        /// <returns>the number of bytes read.</returns>
-        public static int TryReadBytes(this STREAM stream, Span<Byte> bytes)
+        /// <returns>the number of bytes read, or 0 if EOF</returns>
+        public static int TryReadBytesToEnd(this STREAM stream, Span<Byte> bytes)
         {
             GuardReadable(stream);
 
@@ -39,12 +42,12 @@ namespace InteropTypes.IO
         /// </summary>
         /// <param name="stream">The source stream.</param>
         /// <param name="bytes">The destination buffer.</param>
-        /// <returns>the number of bytes read.</returns>
-        public static int TryReadBytes(this STREAM stream, Memory<Byte> bytes)
+        /// <returns>the number of bytes read, or 0 if EOF</returns>
+        public static int TryReadBytesToEnd(this STREAM stream, Memory<Byte> bytes)
         {
             if (MemoryMarshal.TryGetArray(bytes, out BYTESSEGMENT array))
             {
-                return TryReadBytes(stream, array);
+                return TryReadBytesToEnd(stream, array);
             }
 
             GuardReadable(stream);            
@@ -67,8 +70,8 @@ namespace InteropTypes.IO
         /// </summary>
         /// <param name="stream">The source stream.</param>
         /// <param name="bytes">The destination buffer.</param>
-        /// <returns>the number of bytes read.</returns>
-        public static int TryReadBytes(this STREAM stream, BYTESSEGMENT bytes)
+        /// <returns>the number of bytes read, or 0 if EOF</returns>
+        public static int TryReadBytesToEnd(this STREAM stream, BYTESSEGMENT bytes)
         {
             GuardReadable(stream);
 
@@ -91,8 +94,8 @@ namespace InteropTypes.IO
         /// <param name="stream">The source stream.</param>
         /// <param name="bytes">The destination buffer.</param>
         /// <param name="ctoken">cancellation token</param>
-        /// <returns>the number of bytes read.</returns>
-        public static async ValueTask<int> TryReadBytesAsync(this STREAM stream, Memory<Byte> bytes, CancellationToken ctoken)
+        /// <returns>the number of bytes read, or 0 if EOF</returns>
+        public static async ValueTask<int> TryReadBytesToEndAsync(this STREAM stream, Memory<Byte> bytes, CancellationToken ctoken)
         {
             GuardReadable(stream);
 

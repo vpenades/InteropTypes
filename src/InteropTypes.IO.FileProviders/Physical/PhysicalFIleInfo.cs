@@ -58,8 +58,7 @@ namespace InteropTypes.IO
 
         #region data
 
-        private readonly FileInfo _File;
-        private bool _IsDirty;
+        private readonly FileInfo _File;        
 
         public override int GetHashCode()
         {
@@ -79,14 +78,7 @@ namespace InteropTypes.IO
 
         #region properties
 
-        internal FileInfo File
-        {
-            get
-            {
-                if (_IsDirty) { _File.Refresh(); _IsDirty = false; }
-                return _File;
-            }
-        }
+        internal FileInfo File => _File;
 
         /// <summary>
         /// Always false.
@@ -109,8 +101,7 @@ namespace InteropTypes.IO
         {            
             File?.Directory?.Create();
             var s = File?.Create();
-            _IsDirty = true;
-            return s;
+            return XStream.WrapWithCloseActions(s, len => File.Refresh());
         }
 
         public override object GetService(Type serviceType)
@@ -147,8 +138,7 @@ namespace InteropTypes.IO
         {            
             _EnsureDirectory(mode);
             var s = File?.Open(mode, access, share);
-            _IsDirty = true;
-            return s;
+            return XStream.WrapWithCloseActions(s, len => File.Refresh());
         }
 
         private void _EnsureDirectory(FileMode mode)
