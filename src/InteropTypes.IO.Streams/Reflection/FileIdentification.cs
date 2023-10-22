@@ -2,101 +2,26 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InteropTypes.IO.Reflection
 {
     /// <summary>
     /// Represents an instance able to identify whether a file is of a given file format.
     /// </summary>    
-    internal abstract class FileIdentification
+    internal abstract partial class FileIdentification
     {
-        #region static API
+        #region static API        
 
-        static FileIdentification() { _Init(_Signatures); }
-
-        private static void _Init(Dictionary<FileIdentification, string> signatures)
-        {
-            // https://en.wikipedia.org/wiki/List_of_file_signatures
-
-            signatures[CreateFromSignature("425A68")] = "bz2";
-            signatures[CreateFromSignature("474946383761")] = "gif"; // GIF87a
-            signatures[CreateFromSignature("474946383961")] = "gif"; // GIF89a
-
-            signatures[CreateFromSignature("49492A00")] = "tif"; // little endian
-            signatures[CreateFromSignature("4D4D002A")] = "tif"; // big endian
-
-            signatures[CreateFromSignature("762F3101")] = "exr";
-
-            signatures[CreateFromSignature("FFD8FFDB")] = "jpg";
-            signatures[CreateFromSignature("FFD8FFE0")] = "jpg";
-            signatures[CreateFromSignature("FFD8FFEE")] = "jpg";
-            signatures[CreateFromSignature("FFD8FFE000104A4649460001")] = "jpg";
-
-            signatures[CreateFromSignature("FFD8FFE1????457869660000")] = "jpg";
-
-            // https://github.com/link-u/avif-sample-images
-            signatures[CreateFromSignature("000000206674797061766966")] = "avif"; // 'ftypavif' this image format is used to disguise JPGs from stock sites.
-
-            signatures[CreateFromSignature("4D5A")] = "exe"; // exe,dll and many other
-
-            signatures[CreateFromSignature("504B0304")] = "zip";
-            signatures[CreateFromSignature("504B0506")] = "zip"; // empty
-            signatures[CreateFromSignature("504B0708")] = "zip"; // spanned
-
-            signatures[CreateFromSignature("526172211A0700")] = "rar"; // ver 1.5
-            signatures[CreateFromSignature("526172211A070100")] = "rar"; // ver 5.0
-
-            signatures[CreateFromSignature("89504E470D0A1A0A")] = "png";
-
-            signatures[CreateFromSignature("FFFE")] = "txt";
-            signatures[CreateFromSignature("FEFF")] = "txt";
-            signatures[CreateFromSignature("EFBBBF")] = "txt";
-            signatures[CreateFromSignature("FFFE0000")] = "txt";
-            signatures[CreateFromSignature("0000FEFF")] = "txt";
-
-            signatures[CreateFromSignature("2B2F7638")] = "txt";
-            signatures[CreateFromSignature("2B2F7639")] = "txt";
-            signatures[CreateFromSignature("2B2F762B")] = "txt";
-            signatures[CreateFromSignature("2B2F762F")] = "txt";
-
-            signatures[CreateFromSignature("0EFEFF")] = "txt";
-            signatures[CreateFromSignature("DD736673")] = "txt";
-
-            signatures[CreateFromSignature("255044462D")] = "pdf";
-
-            signatures[CreateFromSignature("38425053")] = "psd";
-
-            signatures[CreateFromSignature("52494646")] = "wav";
-
-            signatures[CreateFromSignature("FFF2")] = "mp3";
-            signatures[CreateFromSignature("FFF3")] = "mp3";
-            signatures[CreateFromSignature("FFFB")] = "mp3";
-
-            signatures[CreateFromSignature("424D")] = "bmp";
-
-            signatures[CreateFromSignature("4344303031")] = "iso";
-
-            signatures[CreateFromSignature("1F8B")] = "gz"; // also tar.gz
-            signatures[CreateFromSignature("FD377A585A00")] = "xz"; // also tar.xz
-            signatures[CreateFromSignature("7573746172003030")] = "tar";
-            signatures[CreateFromSignature("7573746172202000")] = "tar";
-
-            signatures[CreateFromSignature("377ABCAF271C")] = "7z";
-
-            signatures[CreateFromSignature("04224D18")] = "lz4";
-
-            signatures[CreateFromSignature("4D534346")] = "cab";
-
-            signatures[CreateFromSignature("233F52414449414E43450A")] = "hdr";
-
-            signatures[CreateFromText("<!doctype html")] = "html";
-            signatures[CreateFromText("<!DOCTYPE html")] = "html";
-        }
-
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private static readonly Dictionary<FileIdentification, string> _Signatures = new Dictionary<FileIdentification, string>();
 
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         private static int? _MinimumHeaderSize;
 
+        /// <summary>
+        /// Represents the minimum number of bytes to read from a file header to run against all registered signatures.
+        /// </summary>
         public static int SharedMinimumHeaderSize
         {
             get
@@ -130,15 +55,53 @@ namespace InteropTypes.IO.Reflection
 
         #region lifecycle
 
-        internal static FileIdentification CreateFromText(string text)
+        internal static FileIdentification CreateFromAscii(string text)
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(text);
+            var bytes = System.Text.Encoding.ASCII.GetBytes(text);
             return new _MaskedBytesHeader(bytes, null);
+        }
+
+        internal static FileIdentification CreateFromManySignatures(params string[] signatures)
+        {
+            var children = signatures.Select(CreateFromSignature);
+
+            return new _CompositeHeader(children);
         }
 
         internal static FileIdentification CreateFromSignature(string signature)
         {
-            return new _MaskedBytesHeader(signature);
+            if (signature == null) throw new ArgumentNullException(nameof(signature));
+            if ((uint)signature.Length % 2 != 0) throw new FormatException("must be multiple of 2");
+
+            var bytes = new List<Byte>();
+            var mask = new List<Byte>();
+
+            while (signature.Length > 0)
+            {
+                var c = signature.Substring(0, 2);
+
+                if (byte.TryParse(c, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out var b))
+                {
+                    bytes.Add(b);
+                    mask.Add(0xff);
+                }
+                else
+                {
+                    // ?? = any value
+                    // HHLLhhll = uint
+
+                    bytes.Add(0);
+                    mask.Add(0);
+                }
+
+                signature = signature.Substring(2);
+            }
+
+            var rbytes = bytes.ToArray();
+            var rmask = bytes.ToArray();
+
+            if (rmask.All(x => x == 0xff)) return new _PlainBytesHeader(rbytes);
+            else return new _MaskedBytesHeader(rbytes, rmask);
         }
 
         #endregion
@@ -158,45 +121,122 @@ namespace InteropTypes.IO.Reflection
 
         #endregion
 
-        #region nested types        
+        #region nested types    
+
+        private sealed class _CompositeHeader : FileIdentification, IEquatable<_CompositeHeader>
+        {
+            #region lifecycle
+            public _CompositeHeader(IEnumerable<FileIdentification> chidren)
+            {
+                _Children = chidren.Distinct().OrderByDescending(item => item.MinimumHeaderSize).ToArray();
+                MinimumHeaderSize = _Children.Max(x => x.MinimumHeaderSize);
+            }
+
+            #endregion
+
+            #region data
+
+            private readonly IReadOnlyList<FileIdentification> _Children;
+            public override int GetHashCode()
+            {
+                int h = 0;
+                foreach (var c in _Children) { h += c.GetHashCode(); h *= 224822519; }
+                return (int)h;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is _CompositeHeader other && this.Equals(other);
+            }
+
+            public bool Equals(_CompositeHeader other)
+            {
+                return this._Children.SequenceEqual(other._Children);
+            }
+
+            #endregion
+
+            #region API
+
+            /// <summary>
+            /// Gets the maximum number of bytes required to identify this header
+            /// </summary>
+            public override int MinimumHeaderSize { get; }
+
+            /// <summary>
+            /// checks if the passed bytes match this header
+            /// </summary>
+            /// <param name="header">the bytes of the file header. Must have a lenth of at least <see cref="MinimumHeaderSize"/></param>
+            /// <returns>true if there's a match</returns>        
+            public override bool IsMatch(ReadOnlySpan<Byte> header)
+            {
+                foreach(var c in _Children)
+                {
+                    if (c.IsMatch(header)) return true;
+                }
+                return false;
+            }
+
+            #endregion
+        }
+
+        private sealed class _PlainBytesHeader : FileIdentification, IEquatable<_PlainBytesHeader>
+        {
+            #region lifecycle
+            public _PlainBytesHeader(byte[] bytes)
+            {
+                _Bytes = bytes;                
+            }
+
+            #endregion
+
+            #region data
+
+            private readonly Byte[] _Bytes;
+            public override int GetHashCode()
+            {
+                uint h = 0;
+                foreach (var b in _Bytes) { h += b; h *= 2246822519U; }
+                return (int)h;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is _PlainBytesHeader other && this.Equals(other);
+            }
+
+            public bool Equals(_PlainBytesHeader other)
+            {
+                return this._Bytes.AsSpan().SequenceEqual(other._Bytes);
+            }
+
+            #endregion
+
+            #region API
+
+            /// <summary>
+            /// Gets the maximum number of bytes required to identify this header
+            /// </summary>
+            public override int MinimumHeaderSize => _Bytes.Length;
+
+            /// <summary>
+            /// checks if the passed bytes match this header
+            /// </summary>
+            /// <param name="header">the bytes of the file header. Must have a lenth of at least <see cref="MinimumHeaderSize"/></param>
+            /// <returns>true if there's a match</returns>        
+            public override bool IsMatch(ReadOnlySpan<Byte> header)
+            {
+                if (header.Length < _Bytes.Length) return false;
+
+                return _Bytes.AsSpan().SequenceEqual(header.Slice(0,header.Length));
+            }
+
+            #endregion
+        }
 
         private sealed class _MaskedBytesHeader : FileIdentification, IEquatable<_MaskedBytesHeader>
         {
-            #region lifecycle            
-
-            public _MaskedBytesHeader(string signature)
-            {
-                if (signature == null) throw new ArgumentNullException(nameof(signature));
-                if ((uint)signature.Length % 2 != 0) throw new FormatException("must be multiple of 2");
-
-                var bytes = new List<Byte>();
-                var mask = new List<Byte>();
-
-                while (signature.Length > 0)
-                {
-                    var c = signature.Substring(0, 2);
-
-                    if (byte.TryParse(c, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out var b))
-                    {
-                        bytes.Add(b);
-                        mask.Add(0xff);
-                    }
-                    else
-                    {
-                        // ?? = any value
-                        // HHLLhhll = uint
-
-                        bytes.Add(0);
-                        mask.Add(0);
-                    }
-
-                    signature = signature.Substring(2);
-                }
-
-                _Bytes = bytes.ToArray();
-                _Mask = bytes.ToArray();
-            }
-
+            #region lifecycle
             public _MaskedBytesHeader(byte[] bytes, byte[] mask)
             {
                 _Bytes = bytes;
