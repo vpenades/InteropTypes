@@ -34,7 +34,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// </remarks>        
         public interface IConvertTo
         {
-            void Set<TPixel>(TPixel pixel) where TPixel : unmanaged;
+            void Set<TPixel>(in TPixel pixel) where TPixel : unmanaged;
             void SetFrom<TPixel>(ref TPixel pixel) where TPixel : unmanaged;
 
             TPIxel To<TPIxel>() where TPIxel : unmanaged;

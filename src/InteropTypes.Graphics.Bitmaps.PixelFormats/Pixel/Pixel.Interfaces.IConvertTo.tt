@@ -25,24 +25,30 @@ namespace InteropTypes.Graphics.Bitmaps
 
         _writeDocInherit();
         _writeFastestMethodAttribute();
-        WriteLine($"public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged");
-        _writeOpenBlock();        
+        WriteLine($"public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged");
+        _writeOpenBlock();
+        WriteLine("switch(pixel)");
+        _writeOpenBlock();
         foreach(var other in PixelFormatsAllNames)
         {
-            WriteLine($"if (typeof(TPixel) == typeof({other})) {{ SetValue(Unsafe.As<TPixel, {other}>(ref pixel)); }}");            
+            WriteLine($"case {other} typedPixel: SetValue(typedPixel); return;");            
         }
-        WriteLine("throw new NotImplementedException($\"Cannot convert to {typeof(TPixel).Name}\");");
+        WriteLine("default: throw new NotImplementedException($\"Cannot convert to {typeof(TPixel).Name}\");");
+        _writeCloseBlock();
         _writeCloseBlock();
 
         _writeDocInherit();
         _writeFastestMethodAttribute();
         WriteLine($"public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged");
-        _writeOpenBlock();        
+        _writeOpenBlock();
+        WriteLine("switch(pixel)");
+        _writeOpenBlock();
         foreach(var other in PixelFormatsAllNames)
         {
-            WriteLine($"if (typeof(TPixel) == typeof({other})) {{ SetValue(Unsafe.As<TPixel, {other}>(ref pixel)); }}");            
+            WriteLine($"case {other} typedPixel: SetValue(typedPixel); return;");
         }
-        WriteLine("throw new NotImplementedException($\"Cannot convert to {typeof(TPixel).Name}\");");
+        WriteLine("default: throw new NotImplementedException($\"Cannot convert to {typeof(TPixel).Name}\");");
+        _writeCloseBlock();
         _writeCloseBlock();
 
         _writeDocInherit();

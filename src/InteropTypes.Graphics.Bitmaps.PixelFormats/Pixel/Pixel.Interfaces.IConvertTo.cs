@@ -19,54 +19,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -131,54 +137,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -243,54 +255,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -355,54 +373,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -467,54 +491,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -579,54 +609,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -691,54 +727,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -803,54 +845,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -915,54 +963,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1027,54 +1081,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1139,54 +1199,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1251,54 +1317,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1363,54 +1435,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1475,54 +1553,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1587,54 +1671,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1699,54 +1789,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1811,54 +1907,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -1923,54 +2025,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
@@ -2035,54 +2143,60 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void Set<TPixel>(TPixel pixel) where TPixel: unmanaged
+            public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) { SetValue(Unsafe.As<TPixel, Alpha8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance8)) { SetValue(Unsafe.As<TPixel, Luminance8>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance16)) { SetValue(Unsafe.As<TPixel, Luminance16>(ref pixel)); }
-                if (typeof(TPixel) == typeof(Luminance32F)) { SetValue(Unsafe.As<TPixel, Luminance32F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR565)) { SetValue(Unsafe.As<TPixel, BGR565>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA5551)) { SetValue(Unsafe.As<TPixel, BGRA5551>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA4444)) { SetValue(Unsafe.As<TPixel, BGRA4444>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR24)) { SetValue(Unsafe.As<TPixel, BGR24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB24)) { SetValue(Unsafe.As<TPixel, RGB24>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA32)) { SetValue(Unsafe.As<TPixel, BGRA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA32)) { SetValue(Unsafe.As<TPixel, RGBA32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(ARGB32)) { SetValue(Unsafe.As<TPixel, ARGB32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP32)) { SetValue(Unsafe.As<TPixel, RGBP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRP32)) { SetValue(Unsafe.As<TPixel, BGRP32>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGB96F)) { SetValue(Unsafe.As<TPixel, RGB96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGR96F)) { SetValue(Unsafe.As<TPixel, BGR96F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(BGRA128F)) { SetValue(Unsafe.As<TPixel, BGRA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBA128F)) { SetValue(Unsafe.As<TPixel, RGBA128F>(ref pixel)); }
-                if (typeof(TPixel) == typeof(RGBP128F)) { SetValue(Unsafe.As<TPixel, RGBP128F>(ref pixel)); }
-                throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                switch(pixel)
+                {
+                    case Alpha8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance8 typedPixel: SetValue(typedPixel); return;
+                    case Luminance16 typedPixel: SetValue(typedPixel); return;
+                    case Luminance32F typedPixel: SetValue(typedPixel); return;
+                    case BGR565 typedPixel: SetValue(typedPixel); return;
+                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
+                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
+                    case BGR24 typedPixel: SetValue(typedPixel); return;
+                    case RGB24 typedPixel: SetValue(typedPixel); return;
+                    case BGRA32 typedPixel: SetValue(typedPixel); return;
+                    case RGBA32 typedPixel: SetValue(typedPixel); return;
+                    case ARGB32 typedPixel: SetValue(typedPixel); return;
+                    case RGBP32 typedPixel: SetValue(typedPixel); return;
+                    case BGRP32 typedPixel: SetValue(typedPixel); return;
+                    case RGB96F typedPixel: SetValue(typedPixel); return;
+                    case BGR96F typedPixel: SetValue(typedPixel); return;
+                    case BGRA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBA128F typedPixel: SetValue(typedPixel); return;
+                    case RGBP128F typedPixel: SetValue(typedPixel); return;
+                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
+                }
             }
 
             /// <inheritdoc/>

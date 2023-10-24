@@ -24,6 +24,31 @@ namespace InteropTypes.Graphics.Bitmaps
             Assert.AreEqual(1, b);
         }
 
+
+        /* Sadly, the value returned by the case is a defensive copy.
+        [Test]
+        public void TestSwitch()
+        {
+            Assert.AreEqual("hello", _TestSwitch(""));
+            Assert.AreEqual(17, _TestSwitch(0));
+        }
+
+
+        private T _TestSwitch<T>(T value)
+        {
+            switch(value)
+            {
+                case string typedValue:  typedValue = "hello"; break;
+                case int typedValue: typedValue = 17; break;
+            }
+
+            return value;
+        }*/
+
+
+        
+
+
         [Test]
         public void CheckPixelValues()
         {
