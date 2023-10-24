@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Silk.NET.OpenGL;
-
 using OPENGL = Silk.NET.OpenGL.GL;
 
 using VEC2 = System.Numerics.Vector2;
 using VEC3 = System.Numerics.Vector3;
 using VEC4 = System.Numerics.Vector4;
 using MAT4X4 = System.Numerics.Matrix4x4;
-using System.ComponentModel.Design;
 
 namespace InteropTypes.Graphics.Backends.SilkGL
 {
@@ -183,24 +180,12 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
             _gl.ThrowOnError();
 
-            if (typeof(T) == typeof(float))
+            switch(value)
             {
-                _gl.Uniform1(_Index, System.Runtime.CompilerServices.Unsafe.As<T, float>(ref value));
-            }
-
-            if (typeof(T) == typeof(VEC2))
-            {
-                _gl.Uniform2(_Index, System.Runtime.CompilerServices.Unsafe.As<T, VEC2>(ref value));
-            }
-
-            if (typeof(T) == typeof(VEC3))
-            {
-                _gl.Uniform3(_Index, System.Runtime.CompilerServices.Unsafe.As<T, VEC3>(ref value));
-            }
-
-            if (typeof(T) == typeof(VEC4))
-            {
-                _gl.Uniform4(_Index, System.Runtime.CompilerServices.Unsafe.As<T, VEC4>(ref value));
+                case Single typedVal: _gl.Uniform1(_Index, typedVal); break;
+                case VEC2 typedVal: _gl.Uniform2(_Index, typedVal); break;
+                case VEC3 typedVal: _gl.Uniform3(_Index, typedVal); break;
+                case VEC4 typedVal: _gl.Uniform4(_Index, typedVal); break;
             }
 
             _gl.ThrowOnError();
