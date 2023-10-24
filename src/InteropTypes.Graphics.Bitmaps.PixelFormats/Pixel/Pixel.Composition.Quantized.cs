@@ -64,6 +64,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValueOver(BGRP32 src, BGRP32 blend)
             {
+                if (src.A == 0) return;
                 var wmix = (this.A * src.A) >> 8;
                 var wsrc = src.A - wmix;
                 var wdst = 256 - wsrc - wmix; // technically should be (dst.A - wmix), but we subtract from 256 to compensate weights.
@@ -79,7 +80,7 @@ namespace InteropTypes.Graphics.Bitmaps
             [MethodImpl(_PrivateConstants.Fastest)]
             public void SetValueOver(BGRP32 src, BGRP32 blend, int opacity256)
             {
-                var a = (src.A * opacity256) >> 8;
+                var a = (src.A * opacity256) >> 8; if (a == 0) return;
                 var wmix = (this.A * a) >> 8;
                 var wsrc = a - wmix;
                 var wdst = 256 - wsrc - wmix; // technically should be (dst.A - wmix), but we subtract from 256 to compensate weights.

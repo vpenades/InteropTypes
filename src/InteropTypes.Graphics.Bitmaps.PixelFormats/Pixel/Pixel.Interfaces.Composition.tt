@@ -19,7 +19,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public interface IComposerApplicatorQ<TDstPixel>
         {
-            void ApplyCompositionTo(ref TDstPixel dst, int opacity);
+            void ApplyCompositionTo(ref TDstPixel dst, int opacity16384);
         }
 
         public interface IComposerApplicatorF<TDstPixel>
@@ -34,10 +34,10 @@ namespace InteropTypes.Graphics.Bitmaps
 void _writeApply24To24(string dstFtm)
 {
     _writeDocInherit();
-    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity)");
+    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity16384)");
     _writeOpenBlock();
-    WriteLine("var x = 16384 - opacity;");
-    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity) / 16384;", "R", "G", "B");
+    WriteLine("var x = 16384 - opacity16384;");
+    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity16384) / 16384;", "R", "G", "B");
     WriteLine($"dst = new {dstFtm}(_R, _G, _B);");
     _writeCloseBlock();
 }
@@ -45,12 +45,12 @@ void _writeApply24To24(string dstFtm)
 void _writeApply32ATo24(string dstFtm)
 {
     _writeDocInherit();
-    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity)");
-    _writeOpenBlock();
-    WriteLine("if (this.A == 0) return;");
-    WriteLine("opacity = opacity * this.A / 255;");
-    WriteLine("var x = 16384 - opacity;");
-    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity) / 16384;", "R", "G", "B");
+    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity16384)");
+    _writeOpenBlock();    
+    WriteLine("if (this.A == 0) return;"); // we only need to check this.A because it is expected that opacity16384 is not zero
+    WriteLine("opacity16384 = opacity16384 * this.A / 255;");    
+    WriteLine("var x = 16384 - opacity16384;");
+    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity16384) / 16384;", "R", "G", "B");
     WriteLine($"dst = new {dstFtm}(_R, _G, _B);");
     _writeCloseBlock();
 }
@@ -58,12 +58,12 @@ void _writeApply32ATo24(string dstFtm)
 void _writeApply32PTo24(string dstFtm)
 {
     _writeDocInherit();
-    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity)");
+    WriteLine($"public void ApplyCompositionTo(ref {dstFtm} dst, int opacity16384)");
     _writeOpenBlock();
-    WriteLine("if (this.A == 0) return;");
-    WriteLine("var x = 16384 - opacity;");
-    WriteLine("opacity = opacity * this.A / 255;");    
-    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity) / 16384;", "R", "G", "B");
+    WriteLine("if (this.A == 0) return;"); // we only need to check this.A because it is expected that opacity16384 is not zero
+    WriteLine("var x = 16384 - opacity16384;");
+    WriteLine("opacity16384 = opacity16384 * this.A / 255;");    
+    _writeExpanded("var _@ = (dst.@ * x + this.@ * opacity16384) / 16384;", "R", "G", "B");
     WriteLine($"dst = new {dstFtm}(_R, _G, _B);");
     _writeCloseBlock();
 }

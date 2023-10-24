@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public interface IComposerApplicatorQ<TDstPixel>
         {
-            void ApplyCompositionTo(ref TDstPixel dst, int opacity);
+            void ApplyCompositionTo(ref TDstPixel dst, int opacity16384);
         }
 
         public interface IComposerApplicatorF<TDstPixel>
@@ -30,22 +30,22 @@ namespace InteropTypes.Graphics.Bitmaps
         {
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref BGR24 dst, int opacity)
+            public void ApplyCompositionTo(ref BGR24 dst, int opacity16384)
             {
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new BGR24(_R, _G, _B);
             }
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref RGB24 dst, int opacity)
+            public void ApplyCompositionTo(ref RGB24 dst, int opacity16384)
             {
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new RGB24(_R, _G, _B);
             }
         }
@@ -55,22 +55,22 @@ namespace InteropTypes.Graphics.Bitmaps
         {
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref BGR24 dst, int opacity)
+            public void ApplyCompositionTo(ref BGR24 dst, int opacity16384)
             {
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new BGR24(_R, _G, _B);
             }
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref RGB24 dst, int opacity)
+            public void ApplyCompositionTo(ref RGB24 dst, int opacity16384)
             {
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new RGB24(_R, _G, _B);
             }
         }
@@ -80,26 +80,26 @@ namespace InteropTypes.Graphics.Bitmaps
         {
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref BGR24 dst, int opacity)
+            public void ApplyCompositionTo(ref BGR24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                opacity = opacity * this.A / 255;
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new BGR24(_R, _G, _B);
             }
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref RGB24 dst, int opacity)
+            public void ApplyCompositionTo(ref RGB24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                opacity = opacity * this.A / 255;
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new RGB24(_R, _G, _B);
             }
         }
@@ -109,26 +109,26 @@ namespace InteropTypes.Graphics.Bitmaps
         {
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref BGR24 dst, int opacity)
+            public void ApplyCompositionTo(ref BGR24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                opacity = opacity * this.A / 255;
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new BGR24(_R, _G, _B);
             }
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref RGB24 dst, int opacity)
+            public void ApplyCompositionTo(ref RGB24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                opacity = opacity * this.A / 255;
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new RGB24(_R, _G, _B);
             }
         }
@@ -138,26 +138,26 @@ namespace InteropTypes.Graphics.Bitmaps
         {
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref BGR24 dst, int opacity)
+            public void ApplyCompositionTo(ref BGR24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                opacity = opacity * this.A / 255;
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new BGR24(_R, _G, _B);
             }
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref RGB24 dst, int opacity)
+            public void ApplyCompositionTo(ref RGB24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                opacity = opacity * this.A / 255;
-                var x = 16384 - opacity;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var x = 16384 - opacity16384;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new RGB24(_R, _G, _B);
             }
         }
@@ -167,26 +167,26 @@ namespace InteropTypes.Graphics.Bitmaps
         {
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref BGR24 dst, int opacity)
+            public void ApplyCompositionTo(ref BGR24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                var x = 16384 - opacity;
-                opacity = opacity * this.A / 255;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new BGR24(_R, _G, _B);
             }
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref RGB24 dst, int opacity)
+            public void ApplyCompositionTo(ref RGB24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                var x = 16384 - opacity;
-                opacity = opacity * this.A / 255;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new RGB24(_R, _G, _B);
             }
         }
@@ -196,26 +196,26 @@ namespace InteropTypes.Graphics.Bitmaps
         {
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref BGR24 dst, int opacity)
+            public void ApplyCompositionTo(ref BGR24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                var x = 16384 - opacity;
-                opacity = opacity * this.A / 255;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new BGR24(_R, _G, _B);
             }
 
             /// <inheritdoc/>
-            public void ApplyCompositionTo(ref RGB24 dst, int opacity)
+            public void ApplyCompositionTo(ref RGB24 dst, int opacity16384)
             {
                 if (this.A == 0) return;
-                var x = 16384 - opacity;
-                opacity = opacity * this.A / 255;
-                var _R = (dst.R * x + this.R * opacity) / 16384;
-                var _G = (dst.G * x + this.G * opacity) / 16384;
-                var _B = (dst.B * x + this.B * opacity) / 16384;
+                var x = 16384 - opacity16384;
+                opacity16384 = opacity16384 * this.A / 255;
+                var _R = (dst.R * x + this.R * opacity16384) / 16384;
+                var _G = (dst.G * x + this.G * opacity16384) / 16384;
+                var _B = (dst.B * x + this.B * opacity16384) / 16384;
                 dst = new RGB24(_R, _G, _B);
             }
         }

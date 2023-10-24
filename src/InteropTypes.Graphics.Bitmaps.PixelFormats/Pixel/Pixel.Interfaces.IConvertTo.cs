@@ -48,35 +48,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -138,35 +109,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -284,35 +226,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -374,35 +287,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -520,35 +404,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -610,35 +465,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -756,35 +582,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -846,35 +643,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -992,35 +760,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -1082,35 +821,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -1228,35 +938,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -1318,35 +999,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -1464,35 +1116,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -1554,35 +1177,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -1700,35 +1294,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -1790,35 +1355,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
@@ -1936,35 +1472,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -2054,35 +1561,6 @@ namespace InteropTypes.Graphics.Bitmaps
 
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
             public readonly TPixel To<TPixel>() where TPixel: unmanaged
             {
                 #if NET6_0_OR_GREATER
@@ -2144,35 +1622,6 @@ namespace InteropTypes.Graphics.Bitmaps
             /// <inheritdoc/>
             [MethodImpl(_PrivateConstants.Fastest)]
             public void Set<TPixel>(in TPixel pixel) where TPixel: unmanaged
-            {
-                switch(pixel)
-                {
-                    case Alpha8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance8 typedPixel: SetValue(typedPixel); return;
-                    case Luminance16 typedPixel: SetValue(typedPixel); return;
-                    case Luminance32F typedPixel: SetValue(typedPixel); return;
-                    case BGR565 typedPixel: SetValue(typedPixel); return;
-                    case BGRA5551 typedPixel: SetValue(typedPixel); return;
-                    case BGRA4444 typedPixel: SetValue(typedPixel); return;
-                    case BGR24 typedPixel: SetValue(typedPixel); return;
-                    case RGB24 typedPixel: SetValue(typedPixel); return;
-                    case BGRA32 typedPixel: SetValue(typedPixel); return;
-                    case RGBA32 typedPixel: SetValue(typedPixel); return;
-                    case ARGB32 typedPixel: SetValue(typedPixel); return;
-                    case RGBP32 typedPixel: SetValue(typedPixel); return;
-                    case BGRP32 typedPixel: SetValue(typedPixel); return;
-                    case RGB96F typedPixel: SetValue(typedPixel); return;
-                    case BGR96F typedPixel: SetValue(typedPixel); return;
-                    case BGRA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBA128F typedPixel: SetValue(typedPixel); return;
-                    case RGBP128F typedPixel: SetValue(typedPixel); return;
-                    default: throw new NotImplementedException($"Cannot convert to {typeof(TPixel).Name}");
-                }
-            }
-
-            /// <inheritdoc/>
-            [MethodImpl(_PrivateConstants.Fastest)]
-            public void SetFrom<TPixel>(ref TPixel pixel) where TPixel: unmanaged
             {
                 switch(pixel)
                 {
