@@ -79,80 +79,80 @@ namespace InteropTypes.IO
             if (!stream.CanSeek) throw new ArgumentException("Can't seek strean", nameof(stream));
         }
 
-        public static bool TryGetBaseStream(STREAM stream, out STREAM baseStream)
+        public static bool TryGetFileInfo(STREAM stream, out FileInfo fileInfo)
         {
-            baseStream = null;
+            // dig into the stream for the underlaying stream.
+            stream = GetBaseStream(stream);
 
-            if (stream == null) return false;
+            switch(stream)
+            {
+                case System.IO.FileStream derived: fileInfo = new FileInfo(derived.Name); return true;
+                case IServiceProvider service:                    
+                    if (service.GetService(typeof(FileInfo)) is FileInfo finfo)
+                    {
+                        fileInfo = finfo;
+                        return true;
+                    }
+                    break;
+            }                    
+
+            fileInfo = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Peels the current stream until it finds the underlayig base stream.
+        /// </summary>
+        /// <param name="stream">The stream to peel.</param>        
+        /// <returns>true if a base stream was found.</returns>
+        public static STREAM GetBaseStream(STREAM stream)
+        {
+            if (stream == null) return null;
 
             try // with known types
             {
                 switch (stream)
                 {
-                    case BufferedStream derived: baseStream = derived.UnderlyingStream; break;
+                    case BufferedStream derived: stream = derived.UnderlyingStream; break;
 
-                    case System.IO.Compression.GZipStream derived: baseStream = derived.BaseStream; break;
-                    case System.IO.Compression.BrotliStream derived: baseStream = derived.BaseStream; break;
-                    case System.IO.Compression.DeflateStream derived: baseStream = derived.BaseStream; break;                    
+                    case System.IO.Compression.GZipStream derived: stream = derived.BaseStream; break;
+                    case System.IO.Compression.BrotliStream derived: stream = derived.BaseStream; break;
+                    case System.IO.Compression.DeflateStream derived: stream = derived.BaseStream; break;                    
 
                     #if !NETSTANDARD
-                    case System.IO.Compression.ZLibStream derived: baseStream = derived.BaseStream; break;
+                    case System.IO.Compression.ZLibStream derived: stream = derived.BaseStream; break;
                     #endif
 
-                    case _CloseActionStream derived: baseStream = derived.BaseStream; break;
+                    case _CloseActionStream derived: stream = derived.BaseStream; break;
                 }
             }
-            catch(ObjectDisposedException) { return false; }
+            catch(ObjectDisposedException)
+            {
+                return null;
+            }
 
             try // with unknown types with reflection
             {
-                baseStream ??= stream
+                stream ??= stream
                     .GetType()
                     .GetProperty("BaseStream")
                     ?.GetValue(stream, null) as STREAM;
 
-                baseStream ??= stream
+                stream ??= stream
                     .GetType()
                     .GetProperty("UnderlyingStream")
                     ?.GetValue(stream, null) as STREAM;
             }
             catch (Exception ex)
             when (ex is AmbiguousMatchException || ex is MethodAccessException || ex is TargetException || ex is TargetInvocationException)
-            { }
-
-            return baseStream != null;
-        }
-
-        public static bool TryGetFileInfo(STREAM stream, out FileInfo fileInfo)
-        {
-            while(true)            
             {
-                // try to retrieve a FileInfo
-
-                if (stream is System.IO.FileStream fs)
-                {
-                    fileInfo = new FileInfo(fs.Name);
-                    return true;
-                }
-
-                if (stream is IServiceProvider sp)
-                {
-                    if (sp.GetService(typeof(FileInfo)) is FileInfo finfo)
-                    {
-                        fileInfo = finfo; return true;
-                    }
-                }
-
-                // dig into the stream for the underlaying stream:
-
-                if (!TryGetBaseStream(stream, out var baseStream)) break;
-                
-                stream = baseStream;
+                return null;
             }
 
-            fileInfo = null;
-            return false;
+            return stream;
         }
+
+        
 
         /// <summary>
         /// Tries to get the length of an open stream.

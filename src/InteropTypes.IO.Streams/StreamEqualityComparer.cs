@@ -79,7 +79,7 @@ namespace InteropTypes.IO
         /// <param name="x">the 1st stream</param>
         /// <param name="y">the 2nd stream</param>
         /// <returns>true if the content of both streams is equal</returns>
-        public bool AreStreamsContentEqual(STREAM x, STREAM y)
+        public virtual bool AreStreamsContentEqual(STREAM x, STREAM y)
         {
             if (x == y) return true;
             if (x == null) return false;
