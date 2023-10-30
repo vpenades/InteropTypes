@@ -52,7 +52,7 @@ namespace InteropTypes.IO
         public PhysicalDirectoryInfo(DirectoryInfo dinfo, IPhysicalFileFactory parent = null)
         {
             Directory = dinfo;
-            _Factory = parent ?? PhysicalFileProvider.UseRootProvider(dinfo);
+            _Factory = parent ?? PhysicalFileProvider.UseRootProvider(dinfo.Root);
         }
 
         #endregion

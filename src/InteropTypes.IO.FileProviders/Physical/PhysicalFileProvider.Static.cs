@@ -6,18 +6,22 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-using XFILEINFO = Microsoft.Extensions.FileProviders.IFileInfo;
-
 namespace InteropTypes.IO
 {
     partial class PhysicalFileProvider
     {
-        static PhysicalFileProvider()
-        {
-            _Providers = new ConcurrentDictionary<string, PhysicalFileProvider>();
-        }
+        private static readonly ConcurrentDictionary<string, PhysicalFileProvider> _Providers = new ConcurrentDictionary<string, PhysicalFileProvider>();
 
-        private static readonly ConcurrentDictionary<string, PhysicalFileProvider> _Providers;
+        public static PhysicalFileProvider Create(System.IO.DirectoryInfo dinfo)
+        {
+            if (dinfo == null) throw new ArgumentNullException(nameof(dinfo));
+
+            // when creating file providers, if the path matches a root drive, used the cached versions instead.
+
+            if (dinfo.Root.FullName == dinfo.FullName) return UseRootProvider(dinfo);
+
+            return new PhysicalFileProvider(dinfo);
+        }
 
         public static IEnumerable<PhysicalFileProvider> GetDriveProviders()
         {
@@ -28,10 +32,12 @@ namespace InteropTypes.IO
 
         public static PhysicalFileProvider UseRootProvider(System.IO.DriveInfo dinfo)
         {
+            if (dinfo == null) throw new ArgumentNullException(nameof(dinfo));
+
             return UseRootProvider(dinfo.RootDirectory);
         }
 
-        public static PhysicalFileProvider UseRootProvider(System.IO.DirectoryInfo dinfo)
+        internal static PhysicalFileProvider UseRootProvider(System.IO.DirectoryInfo dinfo)
         {
             if (dinfo == null) return null;
 
@@ -46,5 +52,7 @@ namespace InteropTypes.IO
 
             return provider;
         }        
+
+        
     }
 }

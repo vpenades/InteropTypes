@@ -10,9 +10,28 @@ namespace InteropTypes.IO
     public class PhysicalTests
     {
         [Test]
-        public void CreateAndEnumerateReference()
+        public void CreateAndEnumerateReferenceMS()
         {
-            using var provider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(TestContext.CurrentContext.TestDirectory);
+            var dinfo = new System.IO.DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+
+            using var provider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(dinfo.FullName);
+
+            _TestProvider(provider);
+        }
+
+        [Test]
+        public void CreateAndEnumerateReferenceInterop()
+        {
+            var dinfo = new System.IO.DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+
+            var provider = InteropTypes.IO.PhysicalFileProvider.Create(dinfo);
+
+            _TestProvider(provider);
+        }
+
+        private static void _TestProvider(Microsoft.Extensions.FileProviders.IFileProvider provider)
+        {
+            Assert.IsTrue(provider.GetDirectoryContents(string.Empty).Exists);
 
             var contents = provider.GetDirectoryContents(string.Empty);
             contents._PrintContents();

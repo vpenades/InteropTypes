@@ -24,116 +24,39 @@ namespace InteropTypes.IO
 
         #region lifecycle
         
+        /// <summary>
+        /// Use <see cref="Create(DirectoryInfo)"/> public API.
+        /// </summary>
+        /// <param name="root">root directory.</param>
         private PhysicalFileProvider(System.IO.DirectoryInfo root)
         {
+            System.Diagnostics.Debug.Assert(root != null);
             Root = root;
         }
 
         #endregion
 
-        #region properties
+        #region properties        
 
         /// <summary>
         /// The root directory for this instance.
-        /// </summary>
+        /// </summary>        
         public System.IO.DirectoryInfo Root { get; }
 
         #endregion
 
         #region API
-
-        private string GetFullPath(string path)
-        {
-            if (FilePathUtils.PathNavigatesAboveRoot(path)) { return null; }
-
-            string fullPath;
-
-            try { fullPath = Path.GetFullPath(Path.Combine(Root.FullName, path)); }
-            catch { return null; }
-
-            if (!IsUnderneathRoot(fullPath))
-            {
-                return null;
-            }
-
-            return fullPath;
-        }
-
-        private bool IsUnderneathRoot(string fullPath)
-        {
-            return fullPath.StartsWith(Root.FullName, StringComparison.OrdinalIgnoreCase);
-        }
-
-        // <summary>
-        /// Locate a file at the given path by directly mapping path segments to physical directories.
-        /// </summary>
-        /// <param name="subpath">A path under the root directory</param>
-        /// <returns>The file information. Caller must check <see cref="IFileInfo.Exists"/> property. </returns>
+        
         public IFileInfo GetFileInfo(string subpath)
         {
-            if (string.IsNullOrEmpty(subpath) || FilePathUtils.HasInvalidPathChars(subpath))
-            {
-                return new NotFoundFileInfo(subpath);
-            }
-
-            // Relative paths starting with leading slashes are okay
-            subpath = subpath.TrimStart(_pathSeparators);
-
-            // Absolute paths not permitted.
-            if (Path.IsPathRooted(subpath)) return new NotFoundFileInfo(subpath);
-
-            string fullPath = GetFullPath(subpath);
-            if (fullPath == null) return new NotFoundFileInfo(subpath);
-
-            var fileInfo = new FileInfo(fullPath);
-            if (!fileInfo.Exists) return new NotFoundFileInfo(subpath);
-
-            return CreateFileInfo(fileInfo);
+            return _GetFileInfo(subpath, false);
         }
-
-        /// <summary>
-        /// Enumerate a directory at the given path, if any.
-        /// </summary>
-        /// <param name="subpath">A path under the root directory. Leading slashes are ignored.</param>
-        /// <returns>
-        /// Contents of the directory. Caller must check <see cref="IDirectoryContents.Exists"/> property. <see cref="NotFoundDirectoryContents" /> if
-        /// <paramref name="subpath" /> is absolute, if the directory does not exist, or <paramref name="subpath" /> has invalid
-        /// characters.
-        /// </returns>
+        
         public IDirectoryContents GetDirectoryContents(string subpath)
         {
-            try
-            {
-                if (subpath == null || FilePathUtils.HasInvalidPathChars(subpath))
-                {
-                    return NotFoundDirectoryContents.Singleton;
-                }
-
-                // Relative paths starting with leading slashes are okay
-                subpath = subpath.TrimStart(_pathSeparators);
-
-                // Absolute paths not permitted.
-                if (Path.IsPathRooted(subpath))
-                {
-                    return NotFoundDirectoryContents.Singleton;
-                }
-
-                string fullPath = GetFullPath(subpath);                
-
-                if (fullPath == null || !Directory.Exists(fullPath))
-                {
-                    return NotFoundDirectoryContents.Singleton;
-                }
-
-                return CreateDirectoryInfo(new System.IO.DirectoryInfo(fullPath))
-                    as IDirectoryContents
-                    ?? NotFoundDirectoryContents.Singleton;
-            }
-            catch (Exception ex)
-            when (ex is DirectoryNotFoundException || ex is IOException || ex is UnauthorizedAccessException)
-            {
-                return NotFoundDirectoryContents.Singleton;
-            }            
+            return _GetFileInfo(subpath, true) is IDirectoryContents dir && dir.Exists
+                ? dir
+                : NotFoundDirectoryContents.Singleton;
         }
 
         public IChangeToken Watch(string filter)
@@ -144,6 +67,57 @@ namespace InteropTypes.IO
         #endregion
 
         #region API factory
+
+        private IFileInfo _GetFileInfo(string subpath, bool isDirectory)
+        {
+            subpath ??= string.Empty;
+
+            if (FilePathUtils.HasInvalidPathChars(subpath)) throw new ArgumentException("Invalid characters", nameof(subpath));            
+
+            if (!isDirectory && string.IsNullOrEmpty(subpath)) return new NotFoundFileInfo(subpath);
+
+            // Absolute paths not permitted.
+            if (subpath.Length > 0 && Path.IsPathRooted(subpath)) return new NotFoundFileInfo(subpath);
+
+            // Relative paths starting with leading slashes are okay
+            subpath = subpath.TrimStart(_pathSeparators);            
+
+            string fullPath = GetFullPath(subpath);
+            if (fullPath == null) return new NotFoundFileInfo(subpath);
+
+            if (isDirectory)
+            {
+                var dinfo = new DirectoryInfo(fullPath);
+                if (dinfo.Exists) return CreateDirectoryInfo(dinfo);
+            }
+            else
+            {
+                var finfo = new FileInfo(fullPath);
+                if (finfo.Exists) return CreateFileInfo(finfo);
+            }
+
+            return new NotFoundFileInfo(subpath);
+        }
+
+        private string GetFullPath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return Root.FullName;
+
+            if (FilePathUtils.PathNavigatesAboveRoot(path)) { return null; }
+
+            try
+            {
+                var fullPath = Path.GetFullPath(Path.Combine(Root.FullName, path));
+
+                return IsUnderneathRoot(fullPath) ? fullPath : null;
+            }
+            catch { return null; }
+        }
+
+        private bool IsUnderneathRoot(string fullPath)
+        {
+            return fullPath.StartsWith(Root.FullName, StringComparison.OrdinalIgnoreCase);
+        }
 
         public virtual PhysicalSystemInfo CreateInfo(FileSystemInfo xinfo)
         {
