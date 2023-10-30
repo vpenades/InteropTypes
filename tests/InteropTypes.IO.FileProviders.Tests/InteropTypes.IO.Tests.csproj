@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>    
+    <TargetFramework>net7.0-windows</TargetFramework>    
     <IsTestProject>true</IsTestProject>
     <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Crypto\InteropTypes.Crypto.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders.SVN\InteropTypes.IO.FileProviders.SVN.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.SharpCompress\InteropTypes.IO.SharpCompress.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.Streams\InteropTypes.IO.Streams.csproj" />

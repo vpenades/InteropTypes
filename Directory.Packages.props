@@ -135,6 +135,8 @@
     <!-- Other -->
 
     <PackageVersion Include="SharpCompress" Version="0.34.1" />
+
+    <PackageVersion Include="SharpSvn" Version="1.14001.156" />
     
   </ItemGroup>
   
