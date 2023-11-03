@@ -104,6 +104,11 @@ foreach(var __ByteSize in __hashByteSizes)
                 {
                     if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
                 }
+
+                if (service.GetService(typeof(System.Text.Json.Nodes.JsonNode)) is System.Text.Json.Nodes.JsonNode node)
+                {
+                    if (TryGetFromJson(node, jsonProperty, out result)) return true;
+                }
             }
 
             result = default;
@@ -113,6 +118,12 @@ foreach(var __ByteSize in __hashByteSizes)
         public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash<#= __BitSize #> result)
         {
             var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.Nodes.JsonNode node, string jsonProperty, out Hash<#= __BitSize #> result)
+        {
+            var val = node.FindFirstOrDefault(jsonProperty);
             return TryParse(val, out result);
         }
 
@@ -258,6 +269,7 @@ return true;
 
         public int ByteCount => BYTESIZE;
 
+        /// <summary>Gets whether all the bytes of the hash are zero</summary>
         public bool IsZero
         {
             get
@@ -275,6 +287,7 @@ return true;
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash<#= __BitSize #>, Byte>(span);
         }
 
+        /// <summary>Gets this hash as an array of bytes</summary>
         public Byte[] ToBytes()
         {
             var bytes = new Byte[BYTESIZE];
@@ -282,12 +295,14 @@ return true;
             return bytes;
         }
 
+        /// <summary>Gets this hash as a base64 string</summary>
         public string ToBase64String()
         {            
             var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
+        /// <summary>Gets this hash as an hexadecimal string</summary>
         public string ToHexString()
         {            
             var bytes = AsReadOnlyBytes();         
@@ -299,9 +314,9 @@ return true;
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash<#= __BitSize #>>(target)[0] = this;
         }
 
-        /// <remarks>
+        /// <summary>
         /// Reads a hash value from the stream <paramref name="reader"/>
-        /// </remarks>
+        /// </summary>
         public static Hash<#= __BitSize #> ReadFrom(System.IO.Stream reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -311,15 +326,18 @@ return true;
             return new Hash<#= __BitSize #>(bytes);
         }
 
-        /// <remarks>
+        /// <summary>
         /// Writes this hash value to the stream <paramref name="writer"/>
-        /// </remarks>
+        /// </summary>
         public void WriteTo(System.IO.Stream writer)
         {
             var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
+        /// <summary>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </summary>
         public static Hash<#= __BitSize #> ReadFrom(System.IO.BinaryReader reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -328,6 +346,9 @@ return true;
             return new Hash<#= __BitSize #>(bytes);
         }
 
+        /// <summary>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </summary>
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
             var bytes = AsReadOnlyBytes();         
@@ -420,6 +441,7 @@ return true;
 
         #region nested types
 
+        /// <summary>Interface implemented by objects from which a hash can be computed.</summary>
         public interface ISource
         {
             Hash<#= __BitSize #> GetHash<#= __BitSize #>Code();

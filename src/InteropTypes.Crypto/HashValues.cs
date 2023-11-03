@@ -65,6 +65,11 @@ namespace InteropTypes.Crypto
                 {
                     if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
                 }
+
+                if (service.GetService(typeof(System.Text.Json.Nodes.JsonNode)) is System.Text.Json.Nodes.JsonNode node)
+                {
+                    if (TryGetFromJson(node, jsonProperty, out result)) return true;
+                }
             }
 
             result = default;
@@ -74,6 +79,12 @@ namespace InteropTypes.Crypto
         public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash96 result)
         {
             var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.Nodes.JsonNode node, string jsonProperty, out Hash96 result)
+        {
+            var val = node.FindFirstOrDefault(jsonProperty);
             return TryParse(val, out result);
         }
 
@@ -219,6 +230,7 @@ namespace InteropTypes.Crypto
 
         public int ByteCount => BYTESIZE;
 
+        /// <summary>Gets whether all the bytes of the hash are zero</summary>
         public bool IsZero
         {
             get
@@ -236,6 +248,7 @@ namespace InteropTypes.Crypto
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash96, Byte>(span);
         }
 
+        /// <summary>Gets this hash as an array of bytes</summary>
         public Byte[] ToBytes()
         {
             var bytes = new Byte[BYTESIZE];
@@ -243,12 +256,14 @@ namespace InteropTypes.Crypto
             return bytes;
         }
 
+        /// <summary>Gets this hash as a base64 string</summary>
         public string ToBase64String()
         {            
             var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
+        /// <summary>Gets this hash as an hexadecimal string</summary>
         public string ToHexString()
         {            
             var bytes = AsReadOnlyBytes();         
@@ -260,9 +275,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash96>(target)[0] = this;
         }
 
-        /// <remarks>
+        /// <summary>
         /// Reads a hash value from the stream <paramref name="reader"/>
-        /// </remarks>
+        /// </summary>
         public static Hash96 ReadFrom(System.IO.Stream reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -272,15 +287,18 @@ namespace InteropTypes.Crypto
             return new Hash96(bytes);
         }
 
-        /// <remarks>
+        /// <summary>
         /// Writes this hash value to the stream <paramref name="writer"/>
-        /// </remarks>
+        /// </summary>
         public void WriteTo(System.IO.Stream writer)
         {
             var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
+        /// <summary>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </summary>
         public static Hash96 ReadFrom(System.IO.BinaryReader reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -289,6 +307,9 @@ namespace InteropTypes.Crypto
             return new Hash96(bytes);
         }
 
+        /// <summary>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </summary>
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
             var bytes = AsReadOnlyBytes();         
@@ -381,6 +402,7 @@ namespace InteropTypes.Crypto
 
         #region nested types
 
+        /// <summary>Interface implemented by objects from which a hash can be computed.</summary>
         public interface ISource
         {
             Hash96 GetHash96Code();
@@ -500,6 +522,11 @@ namespace InteropTypes.Crypto
                 {
                     if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
                 }
+
+                if (service.GetService(typeof(System.Text.Json.Nodes.JsonNode)) is System.Text.Json.Nodes.JsonNode node)
+                {
+                    if (TryGetFromJson(node, jsonProperty, out result)) return true;
+                }
             }
 
             result = default;
@@ -509,6 +536,12 @@ namespace InteropTypes.Crypto
         public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash128 result)
         {
             var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.Nodes.JsonNode node, string jsonProperty, out Hash128 result)
+        {
+            var val = node.FindFirstOrDefault(jsonProperty);
             return TryParse(val, out result);
         }
 
@@ -654,6 +687,7 @@ namespace InteropTypes.Crypto
 
         public int ByteCount => BYTESIZE;
 
+        /// <summary>Gets whether all the bytes of the hash are zero</summary>
         public bool IsZero
         {
             get
@@ -671,6 +705,7 @@ namespace InteropTypes.Crypto
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash128, Byte>(span);
         }
 
+        /// <summary>Gets this hash as an array of bytes</summary>
         public Byte[] ToBytes()
         {
             var bytes = new Byte[BYTESIZE];
@@ -678,12 +713,14 @@ namespace InteropTypes.Crypto
             return bytes;
         }
 
+        /// <summary>Gets this hash as a base64 string</summary>
         public string ToBase64String()
         {            
             var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
+        /// <summary>Gets this hash as an hexadecimal string</summary>
         public string ToHexString()
         {            
             var bytes = AsReadOnlyBytes();         
@@ -695,9 +732,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash128>(target)[0] = this;
         }
 
-        /// <remarks>
+        /// <summary>
         /// Reads a hash value from the stream <paramref name="reader"/>
-        /// </remarks>
+        /// </summary>
         public static Hash128 ReadFrom(System.IO.Stream reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -707,15 +744,18 @@ namespace InteropTypes.Crypto
             return new Hash128(bytes);
         }
 
-        /// <remarks>
+        /// <summary>
         /// Writes this hash value to the stream <paramref name="writer"/>
-        /// </remarks>
+        /// </summary>
         public void WriteTo(System.IO.Stream writer)
         {
             var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
+        /// <summary>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </summary>
         public static Hash128 ReadFrom(System.IO.BinaryReader reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -724,6 +764,9 @@ namespace InteropTypes.Crypto
             return new Hash128(bytes);
         }
 
+        /// <summary>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </summary>
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
             var bytes = AsReadOnlyBytes();         
@@ -816,9 +859,10 @@ namespace InteropTypes.Crypto
 
         #region nested types
 
+        /// <summary>Interface implemented by objects from which a hash can be computed.</summary>
         public interface ISource
         {
-            Hash128 GetHash128Code(); // TODO: add a string hashAlgorythm
+            Hash128 GetHash128Code();
         }
 
         /// <summary>
@@ -935,6 +979,11 @@ namespace InteropTypes.Crypto
                 {
                     if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
                 }
+
+                if (service.GetService(typeof(System.Text.Json.Nodes.JsonNode)) is System.Text.Json.Nodes.JsonNode node)
+                {
+                    if (TryGetFromJson(node, jsonProperty, out result)) return true;
+                }
             }
 
             result = default;
@@ -944,6 +993,12 @@ namespace InteropTypes.Crypto
         public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash224 result)
         {
             var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.Nodes.JsonNode node, string jsonProperty, out Hash224 result)
+        {
+            var val = node.FindFirstOrDefault(jsonProperty);
             return TryParse(val, out result);
         }
 
@@ -1097,6 +1152,7 @@ namespace InteropTypes.Crypto
 
         public int ByteCount => BYTESIZE;
 
+        /// <summary>Gets whether all the bytes of the hash are zero</summary>
         public bool IsZero
         {
             get
@@ -1116,6 +1172,7 @@ namespace InteropTypes.Crypto
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash224, Byte>(span);
         }
 
+        /// <summary>Gets this hash as an array of bytes</summary>
         public Byte[] ToBytes()
         {
             var bytes = new Byte[BYTESIZE];
@@ -1123,12 +1180,14 @@ namespace InteropTypes.Crypto
             return bytes;
         }
 
+        /// <summary>Gets this hash as a base64 string</summary>
         public string ToBase64String()
         {            
             var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
+        /// <summary>Gets this hash as an hexadecimal string</summary>
         public string ToHexString()
         {            
             var bytes = AsReadOnlyBytes();         
@@ -1140,9 +1199,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash224>(target)[0] = this;
         }
 
-        /// <remarks>
+        /// <summary>
         /// Reads a hash value from the stream <paramref name="reader"/>
-        /// </remarks>
+        /// </summary>
         public static Hash224 ReadFrom(System.IO.Stream reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -1152,15 +1211,18 @@ namespace InteropTypes.Crypto
             return new Hash224(bytes);
         }
 
-        /// <remarks>
+        /// <summary>
         /// Writes this hash value to the stream <paramref name="writer"/>
-        /// </remarks>
+        /// </summary>
         public void WriteTo(System.IO.Stream writer)
         {
             var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
+        /// <summary>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </summary>
         public static Hash224 ReadFrom(System.IO.BinaryReader reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -1169,6 +1231,9 @@ namespace InteropTypes.Crypto
             return new Hash224(bytes);
         }
 
+        /// <summary>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </summary>
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
             var bytes = AsReadOnlyBytes();         
@@ -1261,6 +1326,7 @@ namespace InteropTypes.Crypto
 
         #region nested types
 
+        /// <summary>Interface implemented by objects from which a hash can be computed.</summary>
         public interface ISource
         {
             Hash224 GetHash224Code();
@@ -1380,6 +1446,11 @@ namespace InteropTypes.Crypto
                 {
                     if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
                 }
+
+                if (service.GetService(typeof(System.Text.Json.Nodes.JsonNode)) is System.Text.Json.Nodes.JsonNode node)
+                {
+                    if (TryGetFromJson(node, jsonProperty, out result)) return true;
+                }
             }
 
             result = default;
@@ -1389,6 +1460,12 @@ namespace InteropTypes.Crypto
         public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash256 result)
         {
             var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.Nodes.JsonNode node, string jsonProperty, out Hash256 result)
+        {
+            var val = node.FindFirstOrDefault(jsonProperty);
             return TryParse(val, out result);
         }
 
@@ -1542,6 +1619,7 @@ namespace InteropTypes.Crypto
 
         public int ByteCount => BYTESIZE;
 
+        /// <summary>Gets whether all the bytes of the hash are zero</summary>
         public bool IsZero
         {
             get
@@ -1561,6 +1639,7 @@ namespace InteropTypes.Crypto
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash256, Byte>(span);
         }
 
+        /// <summary>Gets this hash as an array of bytes</summary>
         public Byte[] ToBytes()
         {
             var bytes = new Byte[BYTESIZE];
@@ -1568,12 +1647,14 @@ namespace InteropTypes.Crypto
             return bytes;
         }
 
+        /// <summary>Gets this hash as a base64 string</summary>
         public string ToBase64String()
         {            
             var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
+        /// <summary>Gets this hash as an hexadecimal string</summary>
         public string ToHexString()
         {            
             var bytes = AsReadOnlyBytes();         
@@ -1585,9 +1666,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash256>(target)[0] = this;
         }
 
-        /// <remarks>
+        /// <summary>
         /// Reads a hash value from the stream <paramref name="reader"/>
-        /// </remarks>
+        /// </summary>
         public static Hash256 ReadFrom(System.IO.Stream reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -1597,15 +1678,18 @@ namespace InteropTypes.Crypto
             return new Hash256(bytes);
         }
 
-        /// <remarks>
+        /// <summary>
         /// Writes this hash value to the stream <paramref name="writer"/>
-        /// </remarks>
+        /// </summary>
         public void WriteTo(System.IO.Stream writer)
         {
             var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
+        /// <summary>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </summary>
         public static Hash256 ReadFrom(System.IO.BinaryReader reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -1614,6 +1698,9 @@ namespace InteropTypes.Crypto
             return new Hash256(bytes);
         }
 
+        /// <summary>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </summary>
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
             var bytes = AsReadOnlyBytes();         
@@ -1706,6 +1793,7 @@ namespace InteropTypes.Crypto
 
         #region nested types
 
+        /// <summary>Interface implemented by objects from which a hash can be computed.</summary>
         public interface ISource
         {
             Hash256 GetHash256Code();
@@ -1825,6 +1913,11 @@ namespace InteropTypes.Crypto
                 {
                     if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
                 }
+
+                if (service.GetService(typeof(System.Text.Json.Nodes.JsonNode)) is System.Text.Json.Nodes.JsonNode node)
+                {
+                    if (TryGetFromJson(node, jsonProperty, out result)) return true;
+                }
             }
 
             result = default;
@@ -1834,6 +1927,12 @@ namespace InteropTypes.Crypto
         public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash384 result)
         {
             var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.Nodes.JsonNode node, string jsonProperty, out Hash384 result)
+        {
+            var val = node.FindFirstOrDefault(jsonProperty);
             return TryParse(val, out result);
         }
 
@@ -1995,6 +2094,7 @@ namespace InteropTypes.Crypto
 
         public int ByteCount => BYTESIZE;
 
+        /// <summary>Gets whether all the bytes of the hash are zero</summary>
         public bool IsZero
         {
             get
@@ -2016,6 +2116,7 @@ namespace InteropTypes.Crypto
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash384, Byte>(span);
         }
 
+        /// <summary>Gets this hash as an array of bytes</summary>
         public Byte[] ToBytes()
         {
             var bytes = new Byte[BYTESIZE];
@@ -2023,12 +2124,14 @@ namespace InteropTypes.Crypto
             return bytes;
         }
 
+        /// <summary>Gets this hash as a base64 string</summary>
         public string ToBase64String()
         {            
             var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
+        /// <summary>Gets this hash as an hexadecimal string</summary>
         public string ToHexString()
         {            
             var bytes = AsReadOnlyBytes();         
@@ -2040,9 +2143,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash384>(target)[0] = this;
         }
 
-        /// <remarks>
+        /// <summary>
         /// Reads a hash value from the stream <paramref name="reader"/>
-        /// </remarks>
+        /// </summary>
         public static Hash384 ReadFrom(System.IO.Stream reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -2052,15 +2155,18 @@ namespace InteropTypes.Crypto
             return new Hash384(bytes);
         }
 
-        /// <remarks>
+        /// <summary>
         /// Writes this hash value to the stream <paramref name="writer"/>
-        /// </remarks>
+        /// </summary>
         public void WriteTo(System.IO.Stream writer)
         {
             var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
+        /// <summary>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </summary>
         public static Hash384 ReadFrom(System.IO.BinaryReader reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -2069,6 +2175,9 @@ namespace InteropTypes.Crypto
             return new Hash384(bytes);
         }
 
+        /// <summary>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </summary>
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
             var bytes = AsReadOnlyBytes();         
@@ -2161,6 +2270,7 @@ namespace InteropTypes.Crypto
 
         #region nested types
 
+        /// <summary>Interface implemented by objects from which a hash can be computed.</summary>
         public interface ISource
         {
             Hash384 GetHash384Code();
@@ -2280,6 +2390,11 @@ namespace InteropTypes.Crypto
                 {
                     if (TryGetFromJson(doc.RootElement, jsonProperty, out result)) return true;
                 }
+
+                if (service.GetService(typeof(System.Text.Json.Nodes.JsonNode)) is System.Text.Json.Nodes.JsonNode node)
+                {
+                    if (TryGetFromJson(node, jsonProperty, out result)) return true;
+                }
             }
 
             result = default;
@@ -2289,6 +2404,12 @@ namespace InteropTypes.Crypto
         public static bool TryGetFromJson(System.Text.Json.JsonElement element, string jsonProperty, out Hash512 result)
         {
             var val = element.FindFirstOrDefault(jsonProperty);
+            return TryParse(val, out result);
+        }
+
+        public static bool TryGetFromJson(System.Text.Json.Nodes.JsonNode node, string jsonProperty, out Hash512 result)
+        {
+            var val = node.FindFirstOrDefault(jsonProperty);
             return TryParse(val, out result);
         }
 
@@ -2458,6 +2579,7 @@ namespace InteropTypes.Crypto
 
         public int ByteCount => BYTESIZE;
 
+        /// <summary>Gets whether all the bytes of the hash are zero</summary>
         public bool IsZero
         {
             get
@@ -2481,6 +2603,7 @@ namespace InteropTypes.Crypto
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash512, Byte>(span);
         }
 
+        /// <summary>Gets this hash as an array of bytes</summary>
         public Byte[] ToBytes()
         {
             var bytes = new Byte[BYTESIZE];
@@ -2488,12 +2611,14 @@ namespace InteropTypes.Crypto
             return bytes;
         }
 
+        /// <summary>Gets this hash as a base64 string</summary>
         public string ToBase64String()
         {            
             var bytes = AsReadOnlyBytes();         
             return bytes.ToBase64String();
         }
 
+        /// <summary>Gets this hash as an hexadecimal string</summary>
         public string ToHexString()
         {            
             var bytes = AsReadOnlyBytes();         
@@ -2505,9 +2630,9 @@ namespace InteropTypes.Crypto
             System.Runtime.InteropServices.MemoryMarshal.Cast<Byte, Hash512>(target)[0] = this;
         }
 
-        /// <remarks>
+        /// <summary>
         /// Reads a hash value from the stream <paramref name="reader"/>
-        /// </remarks>
+        /// </summary>
         public static Hash512 ReadFrom(System.IO.Stream reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -2517,15 +2642,18 @@ namespace InteropTypes.Crypto
             return new Hash512(bytes);
         }
 
-        /// <remarks>
+        /// <summary>
         /// Writes this hash value to the stream <paramref name="writer"/>
-        /// </remarks>
+        /// </summary>
         public void WriteTo(System.IO.Stream writer)
         {
             var bytes = AsReadOnlyBytes();
             bytes.WriteBytesTo(writer);
         }
 
+        /// <summary>
+        /// Reads a hash value from the stream <paramref name="reader"/>
+        /// </summary>
         public static Hash512 ReadFrom(System.IO.BinaryReader reader)
         {            
             Span<Byte> bytes = stackalloc byte[BYTESIZE];
@@ -2534,6 +2662,9 @@ namespace InteropTypes.Crypto
             return new Hash512(bytes);
         }
 
+        /// <summary>
+        /// Writes this hash value to the stream <paramref name="writer"/>
+        /// </summary>
         public void WriteTo(System.IO.BinaryWriter writer)
         {            
             var bytes = AsReadOnlyBytes();         
@@ -2626,6 +2757,7 @@ namespace InteropTypes.Crypto
 
         #region nested types
 
+        /// <summary>Interface implemented by objects from which a hash can be computed.</summary>
         public interface ISource
         {
             Hash512 GetHash512Code();

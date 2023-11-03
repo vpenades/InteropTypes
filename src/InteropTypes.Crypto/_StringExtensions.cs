@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace InteropTypes
 {
@@ -81,6 +82,19 @@ namespace InteropTypes
                     if (result != null) return result;
                 }
             }
+
+            return null;
+        }
+
+        public static string FindFirstOrDefault(this JsonNode node, string propertyName)
+        {
+            if (node is JsonObject dict)
+            {
+                if (dict.TryGetPropertyValue(propertyName, out var result))
+                {
+                    if (result is JsonValue value && value.TryGetValue<string>(out var txt)) return txt;
+                }
+            }            
 
             return null;
         }
