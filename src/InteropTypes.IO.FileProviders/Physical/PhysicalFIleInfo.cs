@@ -9,7 +9,7 @@ namespace InteropTypes.IO
     /// <summary>
     /// Represents a file on a physical filesystem
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{PhysicalPath}")]
+    [System.Diagnostics.DebuggerDisplay("🗎 {PhysicalPath}")]
     #if !NETSTANDARD
     // this is required to prevent CreateWriteStream and IServiceProvider methods from being trimmed
     [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All)]

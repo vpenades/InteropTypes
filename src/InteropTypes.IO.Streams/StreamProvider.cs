@@ -28,13 +28,7 @@ namespace InteropTypes.IO
     {
         #region API
 
-        public static StreamProvider<T> Default { get; } = _Initialize();
-
-        // [RequiresUnreferencedCode("Calls InteropTypes.IO.StreamProvider<T>._DefaultProvider._TryGetReadStream<TSrv>(T, out Stream)")]
-        public abstract STREAM CreateReadStreamFrom(T obj);
-
-        // [RequiresUnreferencedCode("Calls InteropTypes.IO.StreamProvider<T>._DefaultProvider._TryGetReadStream<TSrv>(T, out Stream)")]
-        public abstract STREAM CreateWriteStreamFrom(T obj);
+        public static StreamProvider<T> Default { get; } = _Initialize();       
 
         public System.IO.BinaryReader CreateBinaryReader(T src, Encoding encoding)
         {
@@ -51,51 +45,49 @@ namespace InteropTypes.IO
 
         public BYTESSEGMENT ReadAllBytesFrom(T src)
         {
-            using(var s = CreateReadStreamFrom(src))
-            {
-                return XStream.ReadAllBytes(s);
-            }
+            using var s = CreateReadStreamFrom(src);
+            return XStream.ReadAllBytes(s);
         }        
 
         public void WriteAllBytesTo(T dst, BYTESSEGMENT bytes)
         {
-            using(var s = CreateWriteStreamFrom(dst))
-            {
-                XStream.WriteAllBytes(s, bytes);
-            }
+            using var s = CreateWriteStreamFrom(dst);
+            XStream.WriteAllBytes(s, bytes);
         }
 
         public string ReadAllTextFrom(T src)
         {
-            using (var s = CreateReadStreamFrom(src))
-            {
-                return XStream.ReadAllText(s);
-            }
+            using var s = CreateReadStreamFrom(src);
+            return XStream.ReadAllText(s);
         }
 
         public string ReadAllTextFrom(T src, Encoding encoding)
         {
-            using (var s = CreateReadStreamFrom(src))
-            {
-                return XStream.ReadAllText(s, encoding);
-            }
+            using var s = CreateReadStreamFrom(src);
+            return XStream.ReadAllText(s, encoding);
         }
 
         public void WriteAllTextTo(T dst, string contents)
         {
-            using (var s = CreateWriteStreamFrom(dst))
-            {
-                XStream.WriteAllText(s, contents);
-            }
+            using var s = CreateWriteStreamFrom(dst);
+            XStream.WriteAllText(s, contents);
         }
 
         public void WriteAllTextTo(T dst, string contents, Encoding encoding)
         {
-            using (var s = CreateWriteStreamFrom(dst))
-            {
-                XStream.WriteAllText(s, contents, encoding);
-            }
-        }        
+            using var s = CreateWriteStreamFrom(dst);
+            XStream.WriteAllText(s, contents, encoding);
+        }
+
+        #endregion
+
+        #region abstract API
+
+        // [RequiresUnreferencedCode("Calls InteropTypes.IO.StreamProvider<T>._DefaultProvider._TryGetReadStream<TSrv>(T, out Stream)")]
+        public abstract STREAM CreateReadStreamFrom(T obj);
+
+        // [RequiresUnreferencedCode("Calls InteropTypes.IO.StreamProvider<T>._DefaultProvider._TryGetReadStream<TSrv>(T, out Stream)")]
+        public abstract STREAM CreateWriteStreamFrom(T obj);
 
         #endregion
 
@@ -122,66 +114,20 @@ namespace InteropTypes.IO
             
             public override STREAM CreateReadStreamFrom(T obj)
             {
-                if (obj == null) throw new ArgumentNullException(nameof(obj));
-
-                // static type evaluation
-
-                if (typeof(T) == typeof(Uri))
+                switch (obj)
                 {
-                    var uri = Unsafe.As<T, Uri>(ref obj);
-                    if (uri.IsFile)
-                    {
-                        var finfo = new FileInfo(uri.LocalPath);
-                        return StreamProvider<FileInfo>.Default.CreateReadStreamFrom(finfo);
-                    }                    
-
-                    throw new ArgumentException($"Unsupported {uri}");
-                }
-
-                if (typeof(T) == typeof(FileInfo)) return Unsafe.As<T, FileInfo>(ref obj).OpenRead();
-
-                if (typeof(T) == typeof(Byte[]))
-                {
-                    var array = Unsafe.As<T, Byte[]>(ref obj);
-                    return array.Length == 0
-                        ? new System.IO.MemoryStream(Array.Empty<byte>(),false)
-                        : (Stream)new System.IO.MemoryStream(array,0, array.Length, false);
-                }
-
-                if (typeof(T) == typeof(BYTESSEGMENT))
-                {
-                    var segment = Unsafe.As<T, BYTESSEGMENT>(ref obj);
-                    return XStream.CreateFrom(segment, false);
-                }
-
-                if (typeof(T) == typeof(IReadOnlyList<Byte>))
-                {
-                    var list = Unsafe.As<T, IReadOnlyList<Byte>>(ref obj);
-                    return XStream.CreateFrom(list);
+                    case null: throw new ArgumentNullException(nameof(obj));
+                    case Uri uri: return XStream.TryGetFileInfo(uri, out var fileInfo) ? fileInfo.OpenRead() : throw new ArgumentException($"Unsupported {uri}");
+                    case FileInfo finfo: return finfo.OpenRead();
+                    case IFileInfo finfo when !finfo.IsDirectory: return finfo.CreateReadStream();
+                    case Byte[] array: return XStream.CreateMemoryStream(array);
+                    case BYTESSEGMENT segment: return XStream.CreateMemoryStream(segment, false);
+                    case IReadOnlyList<Byte> list: return XStream.WrapList(list);
+                    case System.IO.Compression.ZipArchiveEntry zipEntry: return XStream.OpenArchive(zipEntry, FileMode.Open);
+                    case READWRITESTREAM1 lambda: return lambda.Invoke(FileMode.Open);
+                    case READWRITESTREAM2 lambda: return lambda.Invoke(FileMode.Open, FileAccess.Read);
+                    case READWRITESTREAM3 lambda: return lambda.Invoke(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);                    
                 }                
-
-                if (typeof(T) == typeof(List<Byte>))
-                {
-                    var list = Unsafe.As<T, List<Byte>>(ref obj);
-                    return XStream.CreateFrom(list, FileMode.Open);
-                }
-
-                if (typeof(T) == typeof(System.IO.Compression.ZipArchiveEntry))
-                {
-                    var zentry = Unsafe.As<T, System.IO.Compression.ZipArchiveEntry>(ref obj);
-                    return XStream.CreateFrom(zentry, FileMode.Open);
-                }                
-
-                if (typeof(T) == typeof(READWRITESTREAM1)) return Unsafe.As<T, READWRITESTREAM1>(ref obj).Invoke(FileMode.Open);
-
-                if (typeof(T) == typeof(READWRITESTREAM2)) return Unsafe.As<T, READWRITESTREAM2>(ref obj).Invoke(FileMode.Open, FileAccess.Read);                            
-
-                if (typeof(IFileInfo).IsAssignableFrom(typeof(T)))
-                {
-                    var xinfo = Unsafe.As<T, IFileInfo>(ref obj);
-                    if (xinfo.IsDirectory) throw new ArgumentException("Expected a file, got a directory", nameof(obj));
-                    return xinfo.CreateReadStream();
-                }
 
                 if (typeof(IServiceProvider).IsAssignableFrom(typeof(T)))
                 {
@@ -191,12 +137,7 @@ namespace InteropTypes.IO
                     if (_TryGetReadStream<READWRITESTREAM2>(obj, out var s3)) return s3;
                 }
 
-                // runtime type evaluation
-
-                if (obj is FileInfo fi) return StreamProvider<FileInfo>.Default.CreateReadStreamFrom(fi);
-                if (obj is IReadOnlyList<Byte> lb) return StreamProvider<IReadOnlyList<Byte>>.Default.CreateReadStreamFrom(lb);
-                if (obj is IFileInfo xfi) return StreamProvider<IFileInfo>.Default.CreateReadStreamFrom(xfi);
-                if (obj is IServiceProvider srv) return StreamProvider<IServiceProvider>.Default.CreateReadStreamFrom(srv);
+                // runtime type evaluation                
 
                 if (_TryGetFromMethod(obj, "CreateReadStream", out var sx)) return sx;
 
@@ -205,44 +146,17 @@ namespace InteropTypes.IO
 
             public override STREAM CreateWriteStreamFrom(T obj)
             {
-                if (obj == null) throw new ArgumentNullException(nameof(obj));
-
-                // static type evaluation
-
-                if (typeof(T) == typeof(Uri))
+                switch(obj)
                 {
-                    var uri = Unsafe.As<T, Uri>(ref obj);
-                    if (uri.IsFile)
-                    {
-                        var finfo = new FileInfo(uri.LocalPath);
-                        return StreamProvider<FileInfo>.Default.CreateWriteStreamFrom(finfo);
-                    }
-
-                    throw new ArgumentException($"Unsupported {uri}");
-                }
-
-                if (typeof(T) == typeof(FileInfo))
-                {
-                    var finfo = Unsafe.As<T, FileInfo>(ref obj);
-                    finfo.Directory.Create();                    
-                    return finfo.Create();
-                }
-
-                if (typeof(T) == typeof(List<Byte>))
-                {
-                    var list = Unsafe.As<T, List<Byte>>(ref obj);
-                    return XStream.CreateFrom(list, FileMode.Create);
-                }
-
-                if (typeof(T) == typeof(System.IO.Compression.ZipArchiveEntry))
-                {
-                    var zentry = Unsafe.As<T, System.IO.Compression.ZipArchiveEntry>(ref obj);
-                    return XStream.CreateFrom(zentry, FileMode.CreateNew);
-                }
-
-                if (typeof(T) == typeof(READWRITESTREAM1)) return Unsafe.As<T, READWRITESTREAM1>(ref obj).Invoke(FileMode.Create);
-
-                if (typeof(T) == typeof(READWRITESTREAM2)) return Unsafe.As<T, READWRITESTREAM2>(ref obj).Invoke(FileMode.Create, FileAccess.Write);                
+                    case null: throw new ArgumentNullException(nameof(obj));
+                    case Uri uri: return XStream.TryGetFileInfo(uri, out var fileInfo) ? fileInfo.OpenWrite() : throw new ArgumentException($"Unsupported {uri}");
+                    case FileInfo finfo: finfo.Directory.Create(); return finfo.Create();
+                    case List<Byte> list: return XStream.WrapList(list, FileMode.Create);
+                    case System.IO.Compression.ZipArchiveEntry zipEntry: return XStream.OpenArchive(zipEntry, FileMode.CreateNew);
+                    case READWRITESTREAM1 lambda: return lambda.Invoke(FileMode.Create);
+                    case READWRITESTREAM2 lambda: return lambda.Invoke(FileMode.Create, FileAccess.Write);
+                    case READWRITESTREAM3 lambda: return lambda.Invoke(FileMode.Create, FileAccess.Write, FileShare.None);
+                }                
 
                 if (typeof(IServiceProvider).IsAssignableFrom(typeof(T)))
                 {
@@ -252,11 +166,7 @@ namespace InteropTypes.IO
                     if (_TryGetWriteStream<READWRITESTREAM2>(obj, out var s3)) return s3;
                 }
 
-                // runtime type evaluation
-
-                if (obj is FileInfo fi) return StreamProvider<FileInfo>.Default.CreateWriteStreamFrom(fi);
-                if (obj is List<Byte> lb) return StreamProvider<List<Byte>>.Default.CreateWriteStreamFrom(lb);
-                if (obj is IServiceProvider srv) return StreamProvider<IServiceProvider>.Default.CreateWriteStreamFrom(srv);
+                // runtime type evaluation                
 
                 if (_TryGetFromMethod(obj, "CreateWriteStream", out var sx)) return sx;
 

@@ -18,9 +18,9 @@ namespace InteropTypes.IO
 
             var offsetPath = basePath.Length;
 
-            var entries = XFile.EnumerateFiles(contents, System.IO.SearchOption.AllDirectories);            
+            var entries = LinkedFileInfo.EnumerateFiles(contents, System.IO.SearchOption.TopDirectoryOnly);            
 
-            foreach (var entry in entries)
+            foreach (var (path,entry) in entries)
             {
                 var h256 = Crypto.Hash256.Sha256FromFile(entry);
 

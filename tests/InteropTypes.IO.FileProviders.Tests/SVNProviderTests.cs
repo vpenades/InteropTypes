@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.IO.VersionControl;
+
 using Microsoft.Extensions.FileProviders;
 
 using NUnit.Framework;
+
+using SharpCompress.Common;
 
 using SharpSvn;
 
@@ -23,32 +27,24 @@ namespace InteropTypes.IO
             {
                 TestContext.WriteLine($"Rev:{client.LastChangeRevision} T:{client.LastChangeTime}");
 
-                var root = client.GetFileInfo(null);
+                var root = client.GetDirectoryContents(null);
 
-                _DumpDirectory(root,string.Empty);
+                _DumpDirectory(root);
             }
         }
 
-        private static void _DumpDirectory(IFileInfo entry, string indent)
+        private static void _DumpDirectory(IDirectoryContents contents)
         {
-            if (entry.IsDirectory)
-            {
-                TestContext.WriteLine($"{indent}📁 {entry.Name}");
+            var files = LinkedFileInfo.EnumerateFiles(contents, System.IO.SearchOption.AllDirectories).ToList();
 
-                var children = (entry as IDirectoryContents).ToList();
-
-                foreach (var child in children.OrderBy(item => item.Name))
-                {
-                    _DumpDirectory(child, indent + "    ");                    
-                }
-            }
-            else
+            foreach(var entry in files)
             {
+                var indent = string.Join("", Enumerable.Repeat("    ", entry.Depth));
+
                 var rev = SVNFileProvider.GetRevisionFrom(entry);
-
                 TestContext.WriteLine($"{indent}🗎 {entry.Name} Len:{entry.Length} R:{rev.Revision} T:{entry.LastModified}");
 
-                return;
+                continue;
 
                 using var s = entry.CreateReadStream();
 

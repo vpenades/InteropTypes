@@ -14,36 +14,41 @@ namespace InteropTypes.IO.Archives
 {
     partial class SharpCompressFileProvider
     {
-        public static bool Contains(IArchive archive, Microsoft.Extensions.FileProviders.IFileInfo extFile)
+        // Todo: Support ReadOnlySequence<Byte> which is provided by RecyclableMemoryStream which can exceed 4gb
+
+        public static bool Contains(IArchive archive, IFileInfo other)
+        {
+            if (other == null) return false;
+            if (other.IsDirectory || !other.Exists) return false;
+
+            using var otherStream = XStream.CreateMemoryStream(other.CreateReadStream, true);
+
+            return Contains(archive, otherStream);
+        }
+
+        public static bool Contains(IArchive archive, System.IO.MemoryStream memStream)
         {
             if (archive == null) return false;
-            if (extFile == null) throw new ArgumentNullException(nameof(extFile));
-            if (!extFile.Exists) throw new ArgumentException("must exist", nameof(extFile));
+            if (memStream == null) throw new ArgumentNullException(nameof(memStream));
+            if (!memStream.CanSeek) throw new ArgumentException("can't seek", nameof(memStream));
+            if (!memStream.CanRead) throw new ArgumentException("can't seek", nameof(memStream));
 
-            const int MaxLength = 1024 * 1024 * 512; // 512 mb
-
-            var extBody = extFile.Length < MaxLength
-                ? XStream.ReadAllBytes(extFile.CreateReadStream)
-                : null;
+            Stream _openMemStream()
+            {
+                // prepares the stream to read from the beginning.
+                memStream.Position = 0;
+                return memStream;
+            }
 
             bool _AreEqual(IArchiveEntry xentry)
             {
                 if (xentry == null) return false;
                 if (xentry.IsDirectory) return false;
-                if (xentry.Size != extFile.Length) return false;
+                if (xentry.Size != memStream.Length) return false;
 
-                if (extBody != null)
-                {
-                    var xentryBody = XStream.ReadAllBytes(xentry.OpenEntryStream);
-                    return extBody.AsSpan().SequenceEqual(xentryBody);
-                }
-
-                else
-                {                    
-                    return StreamEqualityComparer
+                return StreamEqualityComparer
                         .Default
-                        .AreStreamsContentEqual(xentry.OpenEntryStream, extFile.CreateReadStream);
-                }
+                        .AreStreamsContentEqual(xentry.OpenEntryStream, _openMemStream);
             }
 
             if (archive.IsSolid)
@@ -69,9 +74,8 @@ namespace InteropTypes.IO.Archives
             return false;
         }
 
-
         [System.Diagnostics.DebuggerDisplay("{Key}")]
-        struct _ReaderEntry : IArchiveEntry, IDisposable, Microsoft.Extensions.FileProviders.IFileInfo
+        struct _ReaderEntry : IArchiveEntry, IDisposable, IFileInfo
         {
             #region constructor
 
@@ -157,7 +161,6 @@ namespace InteropTypes.IO.Archives
 
             #endregion
         }
-
 
         class _ReaderArchive : IReader
         {

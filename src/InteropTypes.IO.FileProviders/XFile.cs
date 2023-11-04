@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 using Microsoft.Extensions.FileProviders;
 
@@ -16,17 +16,47 @@ namespace InteropTypes.IO
     /// </summary>
     public static partial class XFile
     {
-        public static XFILEINFO UseFile(XFILEINFO xdir, string fileName)
+        public static bool TryUseFile(XFILEINFO xdir, string fileName, out XFILEINFO fileInfo)
         {
             GuardIsValidDirectory(xdir);
 
             if (xdir is PhysicalDirectoryInfo pdir)
             {
-                return pdir.UseFile(fileName);
+                fileInfo = pdir.UseFile(fileName);
+                return true;
             }
 
-            throw new NotSupportedException();
-        }        
+            if (TryGetDirectoryInfo(xdir, out var dinfo))
+            {
+                pdir = new PhysicalDirectoryInfo(dinfo);
+                fileInfo = pdir.UseFile(fileName);
+                return true;
+            }            
+
+            fileInfo = default;
+            return false;
+        }
+
+        public static bool TryUseDirectory(XFILEINFO xdir, string fileName, out XFILEINFO dirInfo)
+        {
+            GuardIsValidDirectory(xdir);
+
+            if (xdir is PhysicalDirectoryInfo pdir)
+            {
+                dirInfo = pdir.UseDirectory(fileName);
+                return true;
+            }
+
+            if (TryGetDirectoryInfo(xdir, out var dinfo))
+            {
+                pdir = new PhysicalDirectoryInfo(dinfo);
+                dirInfo = pdir.UseDirectory(fileName);
+                return true;
+            }
+
+            dirInfo = default;
+            return false;
+        }
 
         public static bool TryGetFileInfo(XFILEINFO xinfo, out FileInfo fileInfo)
         {
@@ -57,7 +87,7 @@ namespace InteropTypes.IO
         public static bool TryGetDirectoryInfo(XFILEINFO xinfo, out DirectoryInfo directoryInfo)
         {
             directoryInfo = null;
-            if (xinfo == null) return false;
+            if (xinfo == null) return false;            
             if (!xinfo.IsDirectory) return false;
 
             if (xinfo is IServiceProvider src)
@@ -70,99 +100,43 @@ namespace InteropTypes.IO
 
             try
             {
-                directoryInfo = new System.IO.DirectoryInfo(xinfo.PhysicalPath);
+                if (!string.IsNullOrEmpty(xinfo.PhysicalPath))
+                {
+                    directoryInfo = new System.IO.DirectoryInfo(xinfo.PhysicalPath);
+                    if (directoryInfo.Exists) return true;
+                }                
+            }
+            catch (Exception ex)
+            when (ex is ArgumentException || ex is System.Security.SecurityException)
+            { }
+
+            directoryInfo = null;
+            return false;
+        }
+
+        public static bool TryGetDirectoryContents(XFILEINFO entry, out IDirectoryContents contents)
+        {
+            contents = NotFoundDirectoryContents.Singleton;
+
+            if (entry == null) return false;
+            if (!entry.Exists) return false;
+            if (!entry.IsDirectory) return false;
+
+            switch (entry)
+            {
+                case IDirectoryContents dcontents: { contents = dcontents; return true; }
+                case IFileProvider fprovider: { contents = fprovider.GetDirectoryContents(string.Empty); return true; }
+            }
+
+            // https://github.com/dotnet/runtime/issues/86354
+
+            if (TryGetDirectoryInfo(entry, out var dinfo))
+            {
+                contents = new PhysicalDirectoryInfo(dinfo);
                 return true;
             }
-            catch
-            {
-                directoryInfo = null;
-                return false;
-            }
-        }
 
-        internal static bool _IsMSPhysicalFile(XFILEINFO xinfo)
-        {
-            if (xinfo == null) return false;
-            if (xinfo.IsDirectory) return false;
-            return xinfo.GetType().FullName == "Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo";
-        }
-
-        internal static bool _IsMSPhysicalDirectory(XFILEINFO xinfo)
-        {
-            if (xinfo == null) return false;
-            if (!xinfo.IsDirectory) return false;
-            return xinfo.GetType().FullName == "Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo";
-        }
-
-        
-
-        public static IEnumerable<XFILEINFO> EnumerateFiles(XFILEINFO dinfo, SearchOption searchOption)
-        {
-            return _XFileEnumerator._EnumerateFiles(dinfo, searchOption == SearchOption.AllDirectories)
-                ?? Array.Empty<XFILEINFO>();
-        }
-
-        public static IEnumerable<XFILEINFO> EnumerateFiles(IDirectoryContents dinfo, SearchOption searchOption)
-        {
-            return _XFileEnumerator._EnumerateFiles(dinfo, searchOption == SearchOption.AllDirectories)
-                ?? Array.Empty<XFILEINFO>();
-        }
-    }
-
-    static class _XFileEnumerator
-    {
-        public static IEnumerable<XFILEINFO> _EnumerateFiles(IEnumerable<XFILEINFO> entries, bool allDirectories)
-        {
-            if (entries == null) return null;
-
-            if (entries is IDirectoryContents dc && !dc.Exists) return null;
-
-            IEnumerable<XFILEINFO> outEntries = null;
-
-            if (allDirectories)
-            {
-                foreach (var entry in entries.Where(item => item.IsDirectory))
-                {
-                    outEntries = _Concat(outEntries, _EnumerateFiles(entry, allDirectories));
-                }
-            }
-
-            return _Concat(outEntries, entries.Where(item => !item.IsDirectory));
-        }
-
-        public static IEnumerable<XFILEINFO> _EnumerateFiles(XFILEINFO entry, bool allDirectories)
-        {
-            if (entry == null) return null;
-            if (!entry.IsDirectory) return null;
-
-            // this should be enough, but it's not...
-            var contents = entry as IEnumerable<XFILEINFO>;
-
-            // some implementations might use this...
-            if (contents == null && entry is IFileProvider fProvider)
-            {
-                contents = fProvider.GetDirectoryContents(string.Empty);
-            }
-
-            // hack for Microsoft PhysicalDirectoryInfo not implementing IDirectoryContents
-            if (contents == null && XFile._IsMSPhysicalDirectory(entry))
-            {
-                // https://github.com/dotnet/runtime/issues/86354
-
-                var dinfo = new System.IO.DirectoryInfo(entry.PhysicalPath);
-
-                var zprovider = new PhysicalDirectoryInfo(dinfo);
-                contents = zprovider;
-            }
-
-            return _EnumerateFiles(contents, allDirectories);            
+            return false;
         }        
-
-        private static IEnumerable<XFILEINFO> _Concat(IEnumerable<XFILEINFO> a, IEnumerable<XFILEINFO> b)
-        {
-            if (a == null) return b;
-            if (b == null) return a;
-            return a.Concat(b);
-        }        
-    }
+    }    
 }

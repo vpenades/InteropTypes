@@ -2,8 +2,13 @@
 
   <PropertyGroup>
     <!-- https://github.com/AmpScm/SharpSvn/issues/69 -->
-    <TargetFramework>net6.0-windows</TargetFramework>    
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>InteropTypes.IO.VersionControl</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>    
+    <Compile Include="..\Shared\FileProviders.ReadOnlyDirectoryInfo.cs" Link="Collections\FileProviders.ReadOnlyDirectoryInfo.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="InteropTypes.IO.Tests"/>

@@ -11,7 +11,7 @@ using Microsoft.Extensions.FileProviders;
 using SharpSvn;
 using SharpSvn.Remote;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.VersionControl
 {
     
     abstract class SVNDirectoryInfo : SVNEntryInfo, IFileInfo, IDirectoryContents
@@ -79,7 +79,7 @@ namespace InteropTypes.IO
     }
 
     [System.Diagnostics.DebuggerDisplay("📁 {_Target.FileName}")]
-    class _SVNClientDirectoryInfo : SVNDirectoryInfo
+    sealed class _SVNClientDirectoryInfo : SVNDirectoryInfo
     {
         public _SVNClientDirectoryInfo(SvnClient client, SvnTarget target, ISvnRepositoryListItem args)
         {

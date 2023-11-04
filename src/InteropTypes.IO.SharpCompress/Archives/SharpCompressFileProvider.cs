@@ -9,8 +9,8 @@ using SharpCompress.Archives;
 namespace InteropTypes.IO.Archives
 {
     [System.Diagnostics.DebuggerDisplay("{_Path}")]
-    public partial class SharpCompressFileProvider 
-        : Primitives.ArchiveFileProviderBase<IArchiveEntry>
+    public sealed partial class SharpCompressFileProvider 
+        : Primitives.ArchiveFileProviderBase<IArchiveEntry>        
         , IDisposable
     {
         #region lifecycle
@@ -19,9 +19,10 @@ namespace InteropTypes.IO.Archives
         {
             try
             {
-                var f = SharpCompress.Archives.ArchiveFactory.Open(stream);
+                var f = ArchiveFactory.Open(stream);
+                if (f == null) return null;
 
-                return Create(f, "<stream>");
+                return Create(f, false, "<stream>");
             }
             catch { return null; }
         }
@@ -30,30 +31,35 @@ namespace InteropTypes.IO.Archives
         {
             try
             {
-                var f = SharpCompress.Archives.ArchiveFactory.Open(path);
+                var f = ArchiveFactory.Open(path);
+                if (f == null) return null;
 
-                return Create(f, path);
+                return Create(f, false, path);
             }
             catch { return null; }
         }
 
-        public static SharpCompressFileProvider Create(IArchive archive, string path)
+        public static SharpCompressFileProvider Create(IArchive archive, bool leaveArchiveOpen, string path)
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (archive.IsSolid) throw new NotImplementedException("Solid archives not supported yet");
 
-            return new SharpCompressFileProvider(archive, path);
+            var accessor = new SharpCompressArchiveAccessor(archive);
+
+            return new SharpCompressFileProvider(archive, leaveArchiveOpen, accessor, path);
         }
 
-        protected SharpCompressFileProvider(IArchive archive, string path)
+        protected SharpCompressFileProvider(IArchive archive, bool leaveArchiveOpen, Primitives.IArchiveAccessor<IArchiveEntry> accessor, string path)
+            : base(accessor)
         {
             _Archive = archive;
+            _LeaveArchiveOpen = leaveArchiveOpen;
             _Path = path;
         }
 
         public void Dispose()
         {
-            _Archive?.Dispose();
+            if (!_LeaveArchiveOpen) _Archive?.Dispose();
             _Archive = null;
         }
 
@@ -63,52 +69,8 @@ namespace InteropTypes.IO.Archives
 
         private string _Path;
         private IArchive _Archive;
-
-        #endregion
-
-        #region implementation
-
-        protected override IEnumerable<IArchiveEntry> GetAllEntries(bool onlyDirectories)
-        {
-            return _Archive.Entries.Where(item => item.IsDirectory == onlyDirectories);
-        }
-
-        protected internal override Stream OpenEntryReadStream(IArchiveEntry entry, FileMode mode)
-        {
-            var s = entry.OpenEntryStream();
-
-            if (mode == FileMode.Create && s.CanWrite) return s;
-            if (mode == FileMode.Open && s.CanRead) return s;
-
-            s.Dispose();
-            return null;
-        }
-
-        protected internal override long GetEntryFileLength(IArchiveEntry entry)
-        {
-            return entry.Size;
-        }
-
-        protected internal override DateTimeOffset GetEntryLastWriteTime(IArchiveEntry entry)
-        {
-            return entry.LastModifiedTime ?? DateTime.MinValue;
-        }
-
-        protected internal override string GetEntryKey(IArchiveEntry entry)
-        {
-            return entry.Key;
-        }
-
-        protected internal override string GetEntryComment(IArchiveEntry entry)
-        {
-            if (entry is SharpCompress.Archives.Zip.ZipArchiveEntry zipEntry)
-            {
-                return zipEntry.Comment;
-            }
-
-            return base.GetEntryComment(entry);
-        }
+        private bool _LeaveArchiveOpen;
 
         #endregion        
-    }
+    }    
 }

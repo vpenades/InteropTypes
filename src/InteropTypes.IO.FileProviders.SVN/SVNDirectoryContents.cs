@@ -9,7 +9,7 @@ using Microsoft.Extensions.FileProviders;
 
 using SharpSvn;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.VersionControl
 {
     [System.Diagnostics.DebuggerDisplay("{_Target.FileName}")]
     struct _DirectoryContents : IDirectoryContents
@@ -33,7 +33,7 @@ namespace InteropTypes.IO
 
         #region API
 
-        public bool Exists => !(_Client?.IsDisposed ?? true);
+        public readonly bool Exists => !(_Client?.IsDisposed ?? true);
 
         public IEnumerator<IFileInfo> GetEnumerator() { return _GetContents().GetEnumerator(); }
 

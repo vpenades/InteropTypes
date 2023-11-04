@@ -11,6 +11,8 @@ using MEMSTREAM = System.IO.MemoryStream;
 
 namespace InteropTypes.IO
 {
+    // // Todo: Support ReadOnlySequence<Byte> which is provided by RecyclableMemoryStream which can exceed 4gb
+
     /// <summary>
     /// Context used to compare two streams
     /// </summary>
@@ -320,22 +322,9 @@ namespace InteropTypes.IO
         /// </summary>
         public class RecyclableContext : StreamEqualityComparer
         {
-            private readonly WeakReference<Microsoft.IO.RecyclableMemoryStreamManager> _Manager = new WeakReference<Microsoft.IO.RecyclableMemoryStreamManager>(null);
-
-            private Microsoft.IO.RecyclableMemoryStreamManager _GetManager()
-            {
-                if (_Manager.TryGetTarget(out var manager)) return manager;
-
-                manager = new Microsoft.IO.RecyclableMemoryStreamManager();
-
-                _Manager.SetTarget(manager);
-
-                return manager;                
-            }
-
             protected override bool TryCreateMemoryStream(long capacity, out MEMSTREAM memoryStream)
             {
-                var manager = _GetManager();
+                var manager = XStream._GetLargeStreamManager();
 
                 memoryStream = new Microsoft.IO.RecyclableMemoryStream(manager, string.Empty, capacity);
                 return true;

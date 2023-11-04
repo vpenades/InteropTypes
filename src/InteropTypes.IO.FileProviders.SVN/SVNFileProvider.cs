@@ -13,7 +13,7 @@ using Microsoft.Extensions.Primitives;
 
 using SharpSvn;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.VersionControl
 {
 
     [System.Diagnostics.DebuggerDisplay("🐢 {_Target.FileName}")]
@@ -27,18 +27,20 @@ namespace InteropTypes.IO
             ArgumentNullException.ThrowIfNull(target);
 
             Client = client;
-            _Target = target;
+            
 
-            if (!Client.GetInfo(_Target, out _Info)) throw new ArgumentException($"can't access {target}", nameof(target));
-        }
+            if (!Client.GetInfo(target, out _Info)) throw new ArgumentException($"can't access {target}", nameof(target));
+
+            _Reader = new _StaticRepoReader(client, target);
+        }        
 
         #endregion
 
-        #region data
+        #region data        
 
         public SvnClient Client { get; protected set; }
 
-        private SvnTarget _Target;
+        private IFileProvider _Reader;
 
         private SvnInfoEventArgs _Info;
 
@@ -56,20 +58,17 @@ namespace InteropTypes.IO
 
         public IDirectoryContents GetDirectoryContents(string subpath)
         {
-            return new _DirectoryContents(Client, _Target.Concat(subpath));
+            return _Reader.GetDirectoryContents(subpath);
         }
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            var target = _Target.Concat(subpath);
-
-            return SVNEntryInfo.Create(Client, target) as IFileInfo
-                ?? new Microsoft.Extensions.FileProviders.NotFoundFileInfo(subpath);
+            return _Reader.GetFileInfo(subpath);
         }
 
-        public IChangeToken Watch(string filter)
+        IChangeToken IFileProvider.Watch(string filter)
         {
-            throw new NotSupportedException();
+            return _Reader.Watch(filter);
         }
 
         #endregion
@@ -85,7 +84,7 @@ namespace InteropTypes.IO
         }
 
         #endregion
-    }
+    }    
 
     public class SVNDisposableFileProvider : SVNFileProvider, IDisposable
     {

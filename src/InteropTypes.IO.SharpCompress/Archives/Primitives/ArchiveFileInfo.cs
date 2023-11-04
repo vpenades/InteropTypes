@@ -8,14 +8,28 @@ using Microsoft.Extensions.FileProviders;
 
 namespace InteropTypes.IO.Archives.Primitives
 {
-    [System.Diagnostics.DebuggerDisplay("{EntryKey}  {Length}")]
-    internal readonly struct ArchiveFileInfoBase<TEntry> : IFileInfo, IServiceProvider
+    [System.Diagnostics.DebuggerDisplay("🗎 {ToDebugString(),nq}")]
+    internal readonly struct ArchiveFileInfo<TEntry> : IFileInfo, IServiceProvider
     {
         #region lifecycle
 
-        public ArchiveFileInfoBase(ArchiveFileProviderBase<TEntry> provider, TEntry entry)
+        internal string ToDebugString()
         {
-            _Provider = provider;
+            if (_Archive == null) return "<NULL>";
+
+            var entryKey = _Archive.GetEntryKey(_Entry);
+
+            return $"🗎 {Name} 🡒 <{entryKey} {Length}>";
+        }
+
+        public static IFileInfo Create(IArchiveAccessor<TEntry> archive, TEntry entry)
+        {
+            return new ArchiveFileInfo<TEntry>(archive, entry);
+        }
+
+        public ArchiveFileInfo(IArchiveAccessor<TEntry> archive, TEntry entry)
+        {
+            _Archive = archive;
             _Entry = entry;
         }
 
@@ -23,32 +37,18 @@ namespace InteropTypes.IO.Archives.Primitives
 
         #region data
 
-        private readonly ArchiveFileProviderBase<TEntry> _Provider;
+        private readonly IArchiveAccessor<TEntry> _Archive;
         private readonly TEntry _Entry;
 
         #endregion
 
-        #region properties
-
-        public string EntryKey => _Provider.GetEntryKey(_Entry);
-
-        /// <inheritdoc/>        
-        public bool Exists => _Entry != null;
-
-        /// <inheritdoc/>
-        public long Length => _Provider.GetEntryFileLength(_Entry);
-
-        /// <inheritdoc/>
-        public string PhysicalPath => null; // file is not directly accesible, so we must return null as per IFileInfo specification.
-
-        /// <inheritdoc/>
-        public string Name => Path.GetFileName(EntryKey);
-
-        /// <inheritdoc/>
-        public DateTimeOffset LastModified => _Provider.GetEntryLastWriteTime(_Entry);
-
-        /// <inheritdoc/>
+        #region properties        
         public bool IsDirectory => false;
+        public bool Exists => _Archive != null && _Entry != null;
+        public long Length => _Archive.GetEntryFileLength(_Entry);
+        public string PhysicalPath => null;
+        public string Name => Path.GetFileName(_Archive.GetEntryKey(_Entry));
+        public DateTimeOffset LastModified => _Archive.GetEntryLastWriteTime(_Entry);
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace InteropTypes.IO.Archives.Primitives
         /// <inheritdoc/>
         public Stream CreateReadStream()
         {
-            var s =  _Provider.OpenEntryReadStream(_Entry, FileMode.Open);
+            var s = _Archive.OpenEntryReadStream(_Entry, FileMode.Open);
 
             if (s == null) return null;
 
@@ -80,14 +80,14 @@ namespace InteropTypes.IO.Archives.Primitives
 
             // services used to parse metadata from entry comment (if available)
 
-            if (serviceType == typeof(string)) return _Provider.GetEntryComment(_Entry);
+            if (serviceType == typeof(string)) return _Archive.GetEntryComment(_Entry);
 
             if (serviceType == typeof(JsonDocument))
             {
                 try
                 {
 
-                    var comment = _Provider.GetEntryComment(_Entry);
+                    var comment = _Archive.GetEntryComment(_Entry);
                     return string.IsNullOrWhiteSpace(comment)
                         ? null
                         : (object)JsonDocument.Parse(comment);
@@ -99,7 +99,7 @@ namespace InteropTypes.IO.Archives.Primitives
             {
                 try
                 {
-                    var comment = _Provider.GetEntryComment(_Entry);
+                    var comment = _Archive.GetEntryComment(_Entry);
                     return string.IsNullOrWhiteSpace(comment)
                         ? null
                         : (object)System.Xml.Linq.XDocument.Parse(comment);
@@ -112,7 +112,7 @@ namespace InteropTypes.IO.Archives.Primitives
 
         private Stream _Open1(FileMode mode)
         {
-            return _Provider.OpenEntryReadStream(_Entry, mode);
+            return _Archive.OpenEntryReadStream(_Entry, mode);
         }
         private Stream _Open2(FileMode mode, FileAccess access)
         {

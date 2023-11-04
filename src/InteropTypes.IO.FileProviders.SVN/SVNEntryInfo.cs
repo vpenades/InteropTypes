@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using SharpSvn;
 using SharpSvn.Remote;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.VersionControl
 {
     abstract class SVNEntryInfo : IServiceProvider
     {
-        #region API
+        #region Lifecycle
 
         public static SVNEntryInfo Create(SvnClient client, SvnTarget target)
         {

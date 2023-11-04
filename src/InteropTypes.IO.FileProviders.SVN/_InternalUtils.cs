@@ -78,9 +78,7 @@ namespace InteropTypes.IO
             var args = new SvnListArgs();
             args.Depth = searchOpt.ToSvnDepth();
             args.RetrieveEntries = SvnDirEntryItems.AllFieldsV15; // retrieve all information for each entry
-            // args.Revision = target.Revision; ?? is this needed?
-
-            
+            // args.Revision = target.Revision; ?? is this needed?            
 
             // Get the list of files and directories from the remote repository
             if (client.GetList(target, args, out var list))
@@ -93,6 +91,5 @@ namespace InteropTypes.IO
                 }
             }
         }
-
     }
 }

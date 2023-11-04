@@ -10,7 +10,7 @@ using Microsoft.Extensions.FileProviders;
 using SharpSvn;
 using SharpSvn.Remote;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.VersionControl
 {
     
     abstract class SVNFileInfo : SVNEntryInfo, IFileInfo
@@ -40,7 +40,7 @@ namespace InteropTypes.IO
     }
 
     [System.Diagnostics.DebuggerDisplay("🗎 {_Target.FileName} {Length}")]
-    class _SVNClientFileInfo : SVNFileInfo
+    sealed class _SVNClientFileInfo : SVNFileInfo
     {
         #region lifecycle
 
@@ -48,7 +48,7 @@ namespace InteropTypes.IO
         {
             _Client = client;
             _Target = target;
-            Update(target,args);
+            Update(target, args);
         }
 
         public _SVNClientFileInfo(SvnClient client, SvnTarget target, SvnInfoEventArgs args)

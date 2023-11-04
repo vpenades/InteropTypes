@@ -1,11 +1,8 @@
 ﻿using System.Linq;
 using System.Reflection;
-
-
-
 using NUnit.Framework;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.Providers
 {
     public class PhysicalTests
     {
@@ -24,7 +21,7 @@ namespace InteropTypes.IO
         {
             var dinfo = new System.IO.DirectoryInfo(TestContext.CurrentContext.TestDirectory);
 
-            var provider = InteropTypes.IO.PhysicalFileProvider.Create(dinfo);
+            var provider = PhysicalFileProvider.Create(dinfo);
 
             _TestProvider(provider);
         }
@@ -42,8 +39,8 @@ namespace InteropTypes.IO
         {
             var dinfo = new System.IO.DirectoryInfo(TestContext.CurrentContext.TestDirectory);
             var provider = new PhysicalDirectoryInfo(dinfo);
-            
+
             provider._PrintContents();
-        }        
+        }
     }
 }

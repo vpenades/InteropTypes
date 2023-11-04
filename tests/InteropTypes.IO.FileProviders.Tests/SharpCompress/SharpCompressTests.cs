@@ -31,12 +31,28 @@ namespace InteropTypes.IO.Archives
         {
             var path = ResourceInfo.From("test.cbz");
 
-            using var provider = SharpCompressFileProvider.Open(path);            
+            using var provider = SharpCompressFileProvider.Open(path);
 
-            var contents = provider.GetDirectoryContents(string.Empty);
-            contents._PrintContents();
+            var kk = provider.GetDirectoryContents(null);
+            kk._PrintContents();            
 
-            var firstEntry = contents.FirstOrDefault(item => !item.IsDirectory);
+            var finfo = provider.GetFileInfo("c");
+
+            var contents1 = provider.GetDirectoryContents(null);
+            var contents2 = provider.GetDirectoryContents("c\\");
+
+            Assert.AreEqual(4, contents1.Count());
+            Assert.AreEqual(1, contents1.Where(item => item.IsDirectory).Count());
+            contents1._PrintContents();            
+
+            Assert.IsTrue(provider.GetDirectoryContents("c").Exists);
+            Assert.IsTrue(contents2.Exists);
+            Assert.IsTrue(contents2.Any(item => item.IsDirectory && item.Name=="c"));
+            Assert.IsTrue(provider.GetFileInfo("a.txt").Exists);
+            Assert.IsTrue(provider.GetFileInfo("c\\c\\b.txt").Exists);
+            Assert.IsTrue(provider.GetFileInfo("c/c\\b.txt").Exists);
+
+            var firstEntry = contents1.FirstOrDefault(item => !item.IsDirectory);
 
             var bytes = StreamProvider<IFileInfo>.Default.ReadAllBytesFrom(firstEntry);
 

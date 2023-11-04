@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace InteropTypes.IO
+namespace InteropTypes.IO.Providers
 {
     internal class XFileTests
     {
@@ -33,7 +33,7 @@ namespace InteropTypes.IO
 
             // ------
 
-            var baseDir = new PhysicalDirectoryInfo(ainfo.File.Directory);            
+            var baseDir = new PhysicalDirectoryInfo(ainfo.File.Directory);
 
             XFile.WriteAllText(baseDir, "someFile.txt", inText);
 
