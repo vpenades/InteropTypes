@@ -10,12 +10,6 @@ using Microsoft.Extensions.FileProviders;
 
 using NUnit.Framework;
 
-using SharpCompress.Common;
-
-using SharpSvn;
-
-using ShellLink.Flags;
-
 namespace InteropTypes.IO
 {
     internal class SVNProviderTests
