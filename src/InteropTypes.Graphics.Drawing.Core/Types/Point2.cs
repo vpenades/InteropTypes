@@ -208,6 +208,13 @@ namespace InteropTypes.Graphics.Drawing
         [System.Runtime.InteropServices.FieldOffset(0)]
         public VECTOR2 XY;
 
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public readonly void Deconstruct(out float x, out float y)
+        {
+            x = this.X;
+            y = this.Y;
+        }
+
         /// <inheritdoc/>
         public readonly override int GetHashCode() => XY.GetHashCode();
 

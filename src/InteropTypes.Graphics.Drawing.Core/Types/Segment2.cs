@@ -71,6 +71,13 @@ namespace InteropTypes.Graphics.Drawing
         public readonly Vector2 A;
         public readonly Vector2 B;
 
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public readonly void Deconstruct(out Vector2 a, out Vector2 b)
+        {
+            a = this.A;
+            b = this.B;
+        }
+
         /// <inheritdoc/>
         public readonly override int GetHashCode() { return A.GetHashCode() ^ B.GetHashCode(); }
 
