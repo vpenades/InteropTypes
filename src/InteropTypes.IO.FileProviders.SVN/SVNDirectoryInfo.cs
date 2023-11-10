@@ -81,6 +81,8 @@ namespace InteropTypes.IO.VersionControl
     [System.Diagnostics.DebuggerDisplay("📁 {_Target.FileName}")]
     sealed class _SVNClientDirectoryInfo : SVNDirectoryInfo
     {
+        #region lifecycle
+
         public _SVNClientDirectoryInfo(SvnClient client, SvnTarget target, ISvnRepositoryListItem args)
         {
             _Client = client;
@@ -95,8 +97,16 @@ namespace InteropTypes.IO.VersionControl
             Update(target, args);
         }
 
+        #endregion
+
+        #region data
+
         private SvnClient _Client;
         private SvnTarget _Target;
+
+        #endregion
+
+        #region API
 
         protected override IEnumerable<IFileInfo> LoadDirectoryContents()
         {
@@ -113,7 +123,15 @@ namespace InteropTypes.IO.VersionControl
 
             if (!_Client.Export(_Target, dstDir.FullName, args)) throw new InvalidOperationException();
         }
-    }
 
-    
+        public override object GetService(Type serviceType)
+        {
+            if (serviceType == typeof(SvnClient)) return _Client;
+            if (serviceType == typeof(SvnTarget)) return _Target;
+
+            return base.GetService(serviceType);
+        }
+
+        #endregion
+    }
 }

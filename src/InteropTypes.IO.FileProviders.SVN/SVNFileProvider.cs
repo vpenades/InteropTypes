@@ -77,10 +77,9 @@ namespace InteropTypes.IO.VersionControl
 
         public static SvnRevision GetRevisionFrom(IFileInfo finfo)
         {
-            var srv = finfo as IServiceProvider;
-            if (srv == null) return null;
-
-            return srv.GetService(typeof(SvnRevision)) as SvnRevision;
+            return finfo is IServiceProvider srv
+                ? srv.GetService(typeof(SvnRevision)) as SvnRevision
+                : null;
         }
 
         #endregion
