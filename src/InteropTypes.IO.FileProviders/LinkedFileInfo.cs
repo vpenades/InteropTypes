@@ -19,7 +19,7 @@ namespace InteropTypes.IO
     /// so when we do a forward naviagation, we can keep the recursive parents as a linked list.
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{ToString(),nq}")]
-    public class LinkedFileInfo : IEquatable<LinkedFileInfo>, XFILEINFO, IServiceProvider
+    public class LinkedFileInfo : XFILEINFO, IServiceProvider
     {
         #region lifecycle
 
@@ -43,36 +43,25 @@ namespace InteropTypes.IO
 
             if (xinfo is LinkedFileInfo) throw new ArgumentException("already has a parent", nameof(xinfo));
 
+            // check for circular references
+            var p = parent;
+            while(p != null)
+            {
+                if (Object.ReferenceEquals(p, xinfo)) throw new ArgumentException("circular reference", nameof(xinfo));
+                p = p is LinkedFileInfo plink ? plink.Parent : null;
+            }
+
             return xinfo.IsDirectory
                 ? new _LinkedDirectoryInfo(parent, xinfo)
                 : new LinkedFileInfo(parent, xinfo);
-        }
-
-        public static LinkedFileInfo Create(IDirectoryContents[] path, XFILEINFO xinfo)
-        {
-            if (path == null || path.Length == 0) return Create(xinfo);
-            if (path.Any(part => part == null)) throw new ArgumentException("null path", nameof(path));
-            if (path.OfType<XFILEINFO>().Any(part => !part.IsDirectory)) throw new ArgumentException("invalid path", nameof(path));
-
-            if (xinfo is LinkedFileInfo) throw new ArgumentException("already has a parent", nameof(xinfo));
-
-            IDirectoryContents parent = null;
-
-            foreach(var part in path)
-            {
-                if (part is XFILEINFO xpart) parent = Create(parent, xpart) as IDirectoryContents;
-                else parent = part;
-            }
-
-            return Create(parent, xinfo);
-        }
+        }        
 
         protected LinkedFileInfo(IDirectoryContents parent, XFILEINFO xinfo)
         {
-            if (xinfo == null) throw new ArgumentNullException(nameof(xinfo));            
+            if (xinfo is LinkedFileInfo) throw new ArgumentException("xinfo cannot be a linked item", nameof(xinfo));
 
             Parent = parent;
-            Entry = xinfo;
+            Entry = xinfo ?? throw new ArgumentNullException(nameof(xinfo));
         }
 
         #endregion
@@ -82,32 +71,16 @@ namespace InteropTypes.IO
         /// <summary>
         /// Represents the parent Directory, or null.
         /// </summary>
+        /// <remarks>
+        /// This property can be casted to <see cref="LinkedFileInfo"/>
+        /// to navigate back to the previous Parent down to the root.
+        /// </remarks>
         public IDirectoryContents Parent { get; }
 
         /// <summary>
         /// Represents a File or a Directory.
         /// </summary>
-        public XFILEINFO Entry { get; }        
-
-        public override int GetHashCode() { return HashCode.Combine(Parent, Entry); }
-        public override bool Equals(object obj)
-        {
-            return obj is LinkedFileInfo other && Equals(other);
-        }
-        public static bool operator ==(LinkedFileInfo left, LinkedFileInfo right)
-        {
-            return left.Equals(right);
-        }
-        public static bool operator !=(LinkedFileInfo left, LinkedFileInfo right)
-        {
-            return !left.Equals(right);
-        }
-        public bool Equals(LinkedFileInfo other)
-        {
-            if (!Object.Equals(this.Parent, other.Parent)) return false;
-            if (!Object.Equals(this.Entry, other.Entry)) return false;
-            return true;
-        }
+        public XFILEINFO Entry { get; }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void Deconstruct(out IDirectoryContents parent, out XFILEINFO entry)
@@ -202,55 +175,50 @@ namespace InteropTypes.IO
 
         #region static API
 
-        public static IEnumerable<LinkedFileInfo> EnumerateFiles(XFILEINFO dinfo, SearchOption searchOption)
+        public static IEnumerable<LinkedFileInfo> Enumerate(XFILEINFO dinfo, SearchOption searchOption)
         {
-            dinfo ??= new NotFoundFileInfo("null");
-
-            return XFile.TryGetDirectoryContents(dinfo, out var contents)
-                ? EnumerateFiles(contents, searchOption)
+            return XFile.TryCastToDirectoryContents(dinfo, out var contents)
+                ? Enumerate(contents, searchOption)
                 : Enumerable.Empty<LinkedFileInfo>();
         }
 
-        public static IEnumerable<LinkedFileInfo> EnumerateFiles(IDirectoryContents contents, SearchOption searchOption)
+        public static IEnumerable<LinkedFileInfo> Enumerate(IDirectoryContents contents, SearchOption searchOption)
         {
-            contents ??= NotFoundDirectoryContents.Singleton;
+            if (contents == null) return Enumerable.Empty<LinkedFileInfo>();
 
-            var basePath = new[] { contents };
-
-            if (searchOption == SearchOption.TopDirectoryOnly)
-            {
-                return contents.Select(entry => Create(entry));
-            }
-
-            return _RecursivelyEnumerateFiles(basePath)
-                ?? Array.Empty<LinkedFileInfo>();
+            return searchOption == SearchOption.TopDirectoryOnly
+                ? contents.Select(Create)
+                : _EnumerateRecursively(contents);
         }
 
-        private static IEnumerable<LinkedFileInfo> _RecursivelyEnumerateFiles(IDirectoryContents[] basePath)
+        private static IEnumerable<LinkedFileInfo> _EnumerateRecursively(IDirectoryContents parent)
         {
-            var entries = basePath.Last();
+            if (parent == null) yield break;
 
-            // dig tree
-
-            foreach (var entry in entries)
+            foreach (var entry in parent)
             {
-                if (XFile.TryGetDirectoryContents(entry, out var contents))
-                {
-                    var subPath = basePath.Concat(new[] { contents }).ToArray();
+                System.Diagnostics.Debug.Assert(entry != null);
+                if (entry == null) continue;
 
-                    foreach (var child in _RecursivelyEnumerateFiles(subPath))
+                var linkedEntry = Create(parent, entry);
+                System.Diagnostics.Debug.Assert(linkedEntry != null);
+                if (linkedEntry == null) continue;
+
+                yield return linkedEntry;                
+
+                if (XFile.TryCastToDirectoryContents(entry, out var contents))
+                {
+                    System.Diagnostics.Debug.Assert(entry.IsDirectory);
+
+                    foreach (var child in _EnumerateRecursively(contents))
                     {
                         yield return child;
                     }
                 }
-                else
-                {
-                    yield return Create(basePath, entry);
-                }
             }
-        }        
+        }
 
-        #endregion
+        #endregion        
     }
 
     [System.Diagnostics.DebuggerDisplay("{ToString(),nq}")]
@@ -275,7 +243,7 @@ namespace InteropTypes.IO
 
         private IDirectoryContents _GetEntryContents()
         {
-            return XFile.TryGetDirectoryContents(Entry, out var contents)
+            return XFile.TryCastToDirectoryContents(Entry, out var contents)
                 ? contents
                 : NotFoundDirectoryContents.Singleton;
         }
