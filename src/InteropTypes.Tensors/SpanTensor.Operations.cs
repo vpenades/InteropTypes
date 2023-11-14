@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using System.Numerics.Tensors;
+
 
 namespace InteropTypes.Tensors
 {
@@ -28,12 +28,13 @@ namespace InteropTypes.Tensors
             return (min, max);
         }
 
+        /*
         static int DimensionsDotProduct<T>(this Tensor<T> tensor)
         {
             int count = 1;
             foreach (var dl in tensor.Dimensions) count *= dl;
             return count;
-        }
+        }*/
 
         public static void Transpose<T>(SpanTensor2<T> src, SpanTensor2<T> dst)
             where T : unmanaged

@@ -88,11 +88,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor<#= TDIMCOUNT#>(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -144,6 +145,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != <#= TDIMCOUNT#>) dst = null;
@@ -152,7 +154,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         <# if (TDIMCOUNT > 1) { #>
 

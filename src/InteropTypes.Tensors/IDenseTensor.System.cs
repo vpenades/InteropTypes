@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics.Tensors;
 using System.Text;
 
+/*
 namespace InteropTypes.Tensors
 {
     /// <summary>
@@ -138,3 +139,4 @@ namespace InteropTypes.Tensors
         }
     }
 }
+*/

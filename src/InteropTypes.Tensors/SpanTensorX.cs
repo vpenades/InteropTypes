@@ -78,11 +78,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor1(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -120,6 +121,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 1) dst = null;
@@ -128,7 +130,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         
@@ -274,11 +276,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor2(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -323,6 +326,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 2) dst = null;
@@ -331,7 +335,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         public readonly void CopyTo(SpanTensor1<T> dst, int tailIdx)
@@ -581,11 +585,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor3(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -630,6 +635,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 3) dst = null;
@@ -638,7 +644,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         public readonly void CopyTo(SpanTensor2<T> dst, int tailIdx)
@@ -888,11 +894,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor4(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -937,6 +944,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 4) dst = null;
@@ -945,7 +953,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         public readonly void CopyTo(SpanTensor3<T> dst, int tailIdx)
@@ -1195,11 +1203,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor5(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -1244,6 +1253,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 5) dst = null;
@@ -1252,7 +1262,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         public readonly void CopyTo(SpanTensor4<T> dst, int tailIdx)
@@ -1502,11 +1512,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor6(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -1551,6 +1562,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 6) dst = null;
@@ -1559,7 +1571,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         public readonly void CopyTo(SpanTensor5<T> dst, int tailIdx)
@@ -1809,11 +1821,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor7(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -1858,6 +1871,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 7) dst = null;
@@ -1866,7 +1880,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         public readonly void CopyTo(SpanTensor6<T> dst, int tailIdx)
@@ -2097,11 +2111,12 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public SpanTensor8(DenseTensor<T> tensor)
         {
             _Dimensions = tensor.Dimensions;
             _Buffer = tensor.Buffer.Span;            
-        }
+        }*/
 
         #endregion
 
@@ -2146,6 +2161,7 @@ namespace InteropTypes.Tensors
             this._Buffer.CopyTo(dst);
         }      
 
+        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
         public readonly void CopyTo(ref DenseTensor<T> dst)
         {
             if (dst != null && dst.Dimensions.Length != 8) dst = null;
@@ -2154,7 +2170,7 @@ namespace InteropTypes.Tensors
             if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
 
             this._Buffer.CopyTo(dst.Buffer.Span);
-        }        
+        }*/
 
         
         public readonly void CopyTo(SpanTensor7<T> dst, int tailIdx)
