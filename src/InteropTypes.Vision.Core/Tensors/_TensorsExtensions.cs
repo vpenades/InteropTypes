@@ -255,12 +255,13 @@ namespace InteropTypes.Tensors
             return bgr;
         }
 
+        /*
         public static System.Numerics.Tensors.DenseTensor<Byte> ToDenseTensor(this MemoryBitmap bitmap)
         {
             var dimensions = new int[] { 1, bitmap.Height, bitmap.Width, bitmap.PixelByteSize };
 
             return new System.Numerics.Tensors.DenseTensor<byte>(bitmap.Memory, dimensions);
-        }
+        }*/
 
         /// <summary>
         /// Copies the ROI of an image to the target tensor.

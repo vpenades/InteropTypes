@@ -18,8 +18,8 @@ namespace InteropTypes.IO
                 .Enumerate(contents, System.IO.SearchOption.AllDirectories)
                 .ToList();
 
+            // Equality check
             var hashed = entries.Distinct(FileInfoComparer.OrdinalIgnoreCase).ToList();
-
             Assert.AreEqual(entries.Count, hashed.Count);
 
             foreach (var entry in entries)

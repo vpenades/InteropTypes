@@ -99,15 +99,21 @@ namespace InteropTypes.IO
                 if (xparent == null) return false;
                 if (yparent == null) return false;
 
-                if (xparent is XFILEINFO xdir && yparent is XFILEINFO ydir)
+                var xpinfo = xparent as XFILEINFO;
+                var ypinfo = yparent as XFILEINFO;
+                if (xpinfo != null || ypinfo != null)
                 {
-                    return Equals(xdir, ydir);
+                    return Equals(xpinfo, ypinfo);
                 }
 
                 return false;
-            }            
+            }
+
 
             // we do not have enough information to compare
+
+            return false;
+
             throw new NotSupportedException(x.GetType().Name + " =?= " + y.GetType().Name);            
         }
 
@@ -115,7 +121,7 @@ namespace InteropTypes.IO
         {
             if (obj == null) return 0;
 
-            switch(obj)
+            switch(obj) // equality for known types
             {
                 case null: return 0;
                 case PhysicalFileInfo typed: return typed.GetHashCode();
@@ -123,6 +129,8 @@ namespace InteropTypes.IO
             }
 
             var h = GetSanitizedPath(obj).GetHashCode(_Comparer);
+
+            // FileSystemInfoComparer<FileInfo>.Default.GetHashCode(File);
 
             return HashCode.Combine(obj.GetType(), obj.IsDirectory, obj.LastModified, h);
         }
