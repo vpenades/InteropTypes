@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0;net6.0-windows;net6.0-android</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net6.0-windows;net8.0-android</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>  
 
   <!--
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-android' ">
     <PackageReference Include="Xamarin.Essentials" ExcludeAssets="Runtime" />
   </ItemGroup>
   -->
