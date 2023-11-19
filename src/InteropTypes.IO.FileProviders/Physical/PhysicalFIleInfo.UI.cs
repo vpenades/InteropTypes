@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace InteropTypes.IO
 {
-    partial class PhysicalFIleInfo
+    partial class PhysicalFileInfo
     {
         public static async Task<PhysicalFileInfo> TryOpenFileDialogAsync(string filter, Guid? clientId)
         {

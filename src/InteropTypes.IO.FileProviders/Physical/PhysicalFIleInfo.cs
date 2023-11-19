@@ -65,11 +65,21 @@ namespace InteropTypes.IO
             return FileSystemInfoComparer<FileInfo>.Default.GetHashCode(File);
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is IFileInfo other && Equals(other);
+        }
+
         public bool Equals(IFileInfo other)
         {
             if (object.ReferenceEquals(this, other)) return true;
 
-            return other is PhysicalFileInfo pfinfo && FileSystemInfoComparer<FileInfo>.Default.Equals(this.File, pfinfo.File);
+            if (XFile.TryGetFileInfo(other, out var finfo))
+            {
+                return FileSystemInfoComparer<FileInfo>.Default.Equals(this.File, finfo);
+            }
+
+            return false;
         }
 
         protected sealed override FileSystemInfo GetSystemInfo() { return File; }

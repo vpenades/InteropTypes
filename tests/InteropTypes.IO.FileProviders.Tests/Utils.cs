@@ -12,25 +12,34 @@ namespace InteropTypes.IO
 {
     internal static class Utils
     {
-        public static void _PrintContents(this IDirectoryContents contents, int indent = 0)
+        public static void _PrintContents(this IDirectoryContents contents)
         {
-            var basePath = (contents as IFileInfo)?.PhysicalPath ?? string.Empty;
+            var entries = LinkedFileInfo
+                .Enumerate(contents, System.IO.SearchOption.AllDirectories)
+                .ToList();
 
-            var offsetPath = basePath.Length;
+            var hashed = entries.Distinct(FileInfoComparer.OrdinalIgnoreCase).ToList();
 
-            var entries = LinkedFileInfo.EnumerateFiles(contents, System.IO.SearchOption.TopDirectoryOnly);            
+            Assert.AreEqual(entries.Count, hashed.Count);
 
-            foreach (var (path,entry) in entries)
+            foreach (var entry in entries)
             {
-                var h256 = Crypto.Hash256.Sha256FromFile(entry);
-
-                Indent(indent); TestContext.WriteLine($"🗎 {entry.Name} => {h256.ToHexString()}");
-
-                if (entry is IServiceProvider srv)
+                if (entry.IsDirectory)
                 {
-                    if (srv.GetService(typeof(JsonDocument)) is JsonDocument ppp)
+                    Indent(entry.Depth); TestContext.WriteLine($"📁 {entry.Name}");
+                }
+
+                else
+                {
+                    var h256 = Crypto.Hash256.Sha256FromFile(entry);
+                    Indent(entry.Depth); TestContext.WriteLine($"🗎 {entry.Name} => {h256.ToHexString()}");
+
+                    if (entry is IServiceProvider srv)
                     {
-                        Indent(indent + 2); TestContext.WriteLine(ppp.RootElement);                        
+                        if (srv.GetService(typeof(JsonDocument)) is JsonDocument ppp)
+                        {
+                            Indent(entry.Depth + 2); TestContext.WriteLine(ppp.RootElement);
+                        }
                     }
                 }
             }

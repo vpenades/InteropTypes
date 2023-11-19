@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -50,9 +51,17 @@ namespace InteropTypes.Graphics.Drawing
 
         #region data
 
-        public System.Numerics.Vector3 Position;
+        public Vector3 Position;
         public UInt32 Color;
-        public System.Numerics.Vector2 TextureCoord;
+        public Vector2 TextureCoord;
+
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public readonly void Deconstruct(out Vector3 position, out UInt32 color, out Vector2 texcoord)
+        {
+            position = this.Position;
+            color = this.Color;
+            texcoord = this.TextureCoord;
+        }
 
         /// <inheritdoc/>
         public readonly override int GetHashCode() { return Position.GetHashCode(); }

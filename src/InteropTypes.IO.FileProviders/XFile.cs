@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 
 using Microsoft.Extensions.FileProviders;
+using Microsoft.VisualBasic;
 
 using XFILEINFO = Microsoft.Extensions.FileProviders.IFileInfo;
 
@@ -90,15 +91,18 @@ namespace InteropTypes.IO
             if (xinfo == null) return false;            
             if (!xinfo.IsDirectory) return false;
 
+            // We use IServiceProvider to try get the internal DirectoryInfo object
+            // to prevent having multiple instances.
             if (xinfo is IServiceProvider src)
             {
                 if (src.GetService(typeof(DirectoryInfo)) is DirectoryInfo dinfo)
                 {
-                    directoryInfo = dinfo; return true;
+                    directoryInfo = dinfo;
+                    return true;
                 }
             }
 
-            try
+            try // access PhysicalPath to derive a parent directory.
             {
                 if (!string.IsNullOrEmpty(xinfo.PhysicalPath))
                 {
@@ -114,7 +118,7 @@ namespace InteropTypes.IO
             return false;
         }
 
-        public static bool TryGetDirectoryContents(XFILEINFO entry, out IDirectoryContents contents)
+        public static bool TryCastToDirectoryContents(XFILEINFO entry, out IDirectoryContents contents)
         {
             contents = NotFoundDirectoryContents.Singleton;
 
@@ -138,5 +142,38 @@ namespace InteropTypes.IO
 
             return false;
         }        
+
+        public static bool TryGetParentContainer(XFILEINFO entry, out IDirectoryContents parent)
+        {
+            parent = NotFoundDirectoryContents.Singleton;
+
+            switch(entry)
+            {
+                case null: return false;
+                case LinkedFileInfo linkedFileInfo:
+                    parent = linkedFileInfo.Parent ?? NotFoundDirectoryContents.Singleton;
+                    return true;
+                case IServiceProvider srv:
+                    {
+                        parent = srv.GetService(typeof(IDirectoryContents)) as IDirectoryContents;
+
+                        // there's the risk that "parent" is actually the same instance as "entry",
+                        // so we have to check for that.
+
+                        if (parent != null && object.ReferenceEquals(parent, entry)) return true;
+
+                        parent = null;
+                        break;
+                    }
+            }
+
+            if (TryGetDirectoryInfo(entry, out var dinfo))
+            {
+                parent = new PhysicalDirectoryInfo(dinfo);
+                return true;
+            }
+
+            return false;
+        }
     }    
 }

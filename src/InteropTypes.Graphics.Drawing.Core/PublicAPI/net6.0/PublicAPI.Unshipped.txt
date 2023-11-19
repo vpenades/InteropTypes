@@ -237,6 +237,7 @@ InteropTypes.Graphics.Drawing.Point2
 InteropTypes.Graphics.Drawing.Point2.CopyTo(System.Span<float> dst) -> void
 InteropTypes.Graphics.Drawing.Point2.CopyTo(System.Span<InteropTypes.Graphics.Drawing.Point2> dst) -> void
 InteropTypes.Graphics.Drawing.Point2.CopyTo(System.Span<System.Numerics.Vector2> dst) -> void
+InteropTypes.Graphics.Drawing.Point2.Deconstruct(out float x, out float y) -> void
 InteropTypes.Graphics.Drawing.Point2.DominantAxis.get -> int
 InteropTypes.Graphics.Drawing.Point2.Equals(InteropTypes.Graphics.Drawing.Point2 other) -> bool
 InteropTypes.Graphics.Drawing.Point2.Equals(System.Drawing.PointF other) -> bool
@@ -268,6 +269,7 @@ InteropTypes.Graphics.Drawing.Point3.CompareTo(InteropTypes.Graphics.Drawing.Bou
 InteropTypes.Graphics.Drawing.Point3.CopyTo(System.Span<float> dst) -> void
 InteropTypes.Graphics.Drawing.Point3.CopyTo(System.Span<InteropTypes.Graphics.Drawing.Point3> dst) -> void
 InteropTypes.Graphics.Drawing.Point3.CopyTo(System.Span<System.Numerics.Vector3> dst) -> void
+InteropTypes.Graphics.Drawing.Point3.Deconstruct(out float x, out float y, out float z) -> void
 InteropTypes.Graphics.Drawing.Point3.DominantAxis.get -> int
 InteropTypes.Graphics.Drawing.Point3.Equals(InteropTypes.Graphics.Drawing.Point3 other) -> bool
 InteropTypes.Graphics.Drawing.Point3.Equals(System.Numerics.Vector3 other) -> bool
@@ -306,6 +308,7 @@ InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(float ow) -> InteropTypes
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor) -> InteropTypes.Graphics.Drawing.PolygonStyle
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor, float ow) -> InteropTypes.Graphics.Drawing.PolygonStyle
 InteropTypes.Graphics.Drawing.Segment2
+InteropTypes.Graphics.Drawing.Segment2.Deconstruct(out System.Numerics.Vector2 a, out System.Numerics.Vector2 b) -> void
 InteropTypes.Graphics.Drawing.Segment2.Direction.get -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Segment2.DirectionNormalized.get -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Segment2.DominantAxis.get -> int
@@ -320,6 +323,7 @@ InteropTypes.Graphics.Drawing.Segment2.Ordinal.get -> InteropTypes.Graphics.Draw
 InteropTypes.Graphics.Drawing.Segment2.Segment2() -> void
 InteropTypes.Graphics.Drawing.Segment3
 InteropTypes.Graphics.Drawing.Segment3.CompareTo(InteropTypes.Graphics.Drawing.BoundingSphere other) -> int
+InteropTypes.Graphics.Drawing.Segment3.Deconstruct(out System.Numerics.Vector3 a, out System.Numerics.Vector3 b) -> void
 InteropTypes.Graphics.Drawing.Segment3.Direction.get -> System.Numerics.Vector3
 InteropTypes.Graphics.Drawing.Segment3.DirectionNormalized.get -> System.Numerics.Vector3
 InteropTypes.Graphics.Drawing.Segment3.DominantAxis.get -> int
@@ -346,6 +350,7 @@ InteropTypes.Graphics.Drawing.SurfaceStyle.With(InteropTypes.Graphics.Drawing.Ou
 InteropTypes.Graphics.Drawing.SurfaceStyle.WithOutline(float outlineWidth) -> InteropTypes.Graphics.Drawing.SurfaceStyle
 InteropTypes.Graphics.Drawing.Vertex2
 InteropTypes.Graphics.Drawing.Vertex2.Color -> uint
+InteropTypes.Graphics.Drawing.Vertex2.Deconstruct(out System.Numerics.Vector2 position, out uint color, out System.Numerics.Vector2 texcoord) -> void
 InteropTypes.Graphics.Drawing.Vertex2.Equals(InteropTypes.Graphics.Drawing.Vertex2 other) -> bool
 InteropTypes.Graphics.Drawing.Vertex2.IsFinite.get -> bool
 InteropTypes.Graphics.Drawing.Vertex2.Position -> System.Numerics.Vector2
@@ -357,6 +362,7 @@ InteropTypes.Graphics.Drawing.Vertex2.Vertex2(InteropTypes.Graphics.Drawing.Poin
 InteropTypes.Graphics.Drawing.Vertex2.Vertex2(InteropTypes.Graphics.Drawing.Point2 p, InteropTypes.Graphics.Drawing.Point2 t) -> void
 InteropTypes.Graphics.Drawing.Vertex3
 InteropTypes.Graphics.Drawing.Vertex3.Color -> uint
+InteropTypes.Graphics.Drawing.Vertex3.Deconstruct(out System.Numerics.Vector3 position, out uint color, out System.Numerics.Vector2 texcoord) -> void
 InteropTypes.Graphics.Drawing.Vertex3.Equals(InteropTypes.Graphics.Drawing.Vertex3 other) -> bool
 InteropTypes.Graphics.Drawing.Vertex3.IsFinite.get -> bool
 InteropTypes.Graphics.Drawing.Vertex3.Position -> System.Numerics.Vector3

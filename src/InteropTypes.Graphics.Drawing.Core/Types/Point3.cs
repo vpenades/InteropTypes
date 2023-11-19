@@ -151,7 +151,7 @@ namespace InteropTypes.Graphics.Drawing
         /// The Z component of the point.
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(8)]
-        public float Z;        
+        public float Z;
 
         /// <summary>
         /// The X and Y component of the point.
@@ -170,6 +170,14 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
         public VECTOR3 XYZ;
+
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public readonly void Deconstruct(out float x, out float y, out float z)
+        {
+            x = this.X;
+            y = this.Y;
+            z = this.Z;
+        }
 
         /// <inheritdoc/>
         public readonly override int GetHashCode() => XYZ.GetHashCode();

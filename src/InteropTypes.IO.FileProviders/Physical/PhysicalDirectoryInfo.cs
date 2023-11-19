@@ -72,7 +72,12 @@ namespace InteropTypes.IO
         {
             if (object.ReferenceEquals(this, obj)) return true;
 
-            return obj is PhysicalDirectoryInfo other && FileSystemInfoComparer<DirectoryInfo>.Default.Equals(this.Directory, other.Directory);
+            if (XFile.TryGetDirectoryInfo(obj, out var dinfo))
+            {
+                return FileSystemInfoComparer<DirectoryInfo>.Default.Equals(this.Directory, dinfo);
+            }
+
+            return false;
         }
 
         protected sealed override FileSystemInfo GetSystemInfo() { return Directory; }
