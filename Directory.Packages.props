@@ -24,17 +24,17 @@
 
     <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="8.0.0-rc.2.23479.6" />
-    <PackageVersion Include="System.Drawing.Common" Version="7.0.0" />
-    <PackageVersion Include="System.Text.Json" Version="7.0.3" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="8.0.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.0" />
     
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.25.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.25.1" />
 
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.0" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.4" />
@@ -53,16 +53,16 @@
     <PackageVersion Include="ShaderGen.Build" Version="1.2.0-beta3" />
     <PackageVersion Include="ShaderGen.Primitives" Version="1.2.0-beta3" />
 
-    <PackageVersion Include="Silk.NET.Input" Version="2.18.0" />
-    <PackageVersion Include="Silk.NET.OpenGL" Version="2.18.0" />
-    <PackageVersion Include="Silk.NET.Windowing" Version="2.18.0" />
+    <PackageVersion Include="Silk.NET.Input" Version="2.19.0" />
+    <PackageVersion Include="Silk.NET.OpenGL" Version="2.19.0" />
+    <PackageVersion Include="Silk.NET.Windowing" Version="2.19.0" />
     
     <!-- Graphics Libraries -->
 
     <PackageVersion Include="Prism.Wpf" Version="8.1.97" />
 
-    <PackageVersion Include="Microsoft.Maui.Graphics" Version="7.0.101" />
-    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="7.0.101" />
+    <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.3" />
+    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.3" />
 
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.0.2" />
     <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.0.1" />
@@ -73,7 +73,7 @@
 
     <PackageVersion Include="SkiaSharp" Version="2.88.6" />
 
-    <PackageVersion Include="SvgNet" Version="3.3.5" />
+    <PackageVersion Include="SvgNet" Version="3.3.6" />
 
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
 
@@ -95,7 +95,7 @@
     
     <!-- Video Libraries -->
 
-    <PackageVersion Include="FFmpeg.AutoGen" Version="6.0.0.2" />
+    <PackageVersion Include="FFmpeg.AutoGen" Version="6.1.0" />
     <PackageVersion Include="FFMpegCore" Version="5.1.0" />
     <PackageVersion Include="FFMpegCore.Extensions.System.Drawing.Common" Version="5.0.0" />
     <PackageVersion Include="LibVLCSharp" Version="3.8.2" />
@@ -123,7 +123,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.4" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.1" />
     
@@ -134,7 +134,7 @@
     
     <!-- Other -->
 
-    <PackageVersion Include="SharpCompress" Version="0.34.1" />
+    <PackageVersion Include="SharpCompress" Version="0.34.2" />
 
     <PackageVersion Include="SharpSvn" Version="1.14001.156" />
     
