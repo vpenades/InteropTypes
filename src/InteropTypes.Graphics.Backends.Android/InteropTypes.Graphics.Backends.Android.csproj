@@ -3,7 +3,8 @@
   <!-- https://github.com/xamarin/xamarin-android/blob/main/Documentation/guides/OneDotNetSingleProject.md -->
 
   <PropertyGroup>
-    <TargetFramework>net8.0-android</TargetFramework>    
+    <TargetFramework>net8.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
