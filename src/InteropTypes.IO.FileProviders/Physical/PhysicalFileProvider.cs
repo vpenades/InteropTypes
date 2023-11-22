@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
 
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
@@ -72,7 +68,7 @@ namespace InteropTypes.IO
         {
             subpath ??= string.Empty;
 
-            if (FilePathUtils.HasInvalidPathChars(subpath)) throw new ArgumentException("Invalid characters", nameof(subpath));            
+            if (FilePathUtils.HasInvalidNameChars(subpath)) throw new ArgumentException("Invalid characters", nameof(subpath));            
 
             if (!isDirectory && string.IsNullOrEmpty(subpath)) return new NotFoundFileInfo(subpath);
 

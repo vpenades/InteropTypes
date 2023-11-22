@@ -37,29 +37,50 @@ namespace InteropTypes.IO
             return false;
         }
 
-        private static char[] GetInvalidFileNameChars() => Path.GetInvalidFileNameChars()
+        private static char[] _GetInvalidFileNameChars() => Path.GetInvalidFileNameChars();
+
+        private static char[] _GetInvalidPathChars() => Path
+            .GetInvalidPathChars()
             .Where(c => c != Path.DirectorySeparatorChar && c != Path.AltDirectorySeparatorChar)
             .ToArray();
 
-        private static char[] GetInvalidFilterChars() => GetInvalidFileNameChars()
+        private static char[] _GetInvalidFilterChars() => _GetInvalidPathChars()
             .Where(c => c != '*' && c != '|' && c != '?')
             .ToArray();
 
+        /*
         #if NET8_0_OR_GREATER
-        private static readonly SearchValues<char> _invalidFileNameChars = SearchValues.Create(GetInvalidFileNameChars());
-        private static readonly SearchValues<char> _invalidFilterChars = SearchValues.Create(GetInvalidFilterChars());
-        #else
-        private static readonly char[] _invalidFileNameChars = GetInvalidFileNameChars();
-        private static readonly char[] _invalidFilterChars = GetInvalidFilterChars();
-        #endif
+        private static readonly System.Buffers.SearchValues<char> _invalidPathChars = System.Buffers.SearchValues.Create(_GetInvalidPathChars());
+        private static readonly System.Buffers.SearchValues<char> _invalidNameChars = System.Buffers.SearchValues.Create(_GetInvalidFileNameChars());
+        private static readonly System.Buffers.SearchValues<char> _invalidFilterChars = System.Buffers.SearchValues.Create(_GetInvalidFilterChars());        
 
-        private static readonly char[] _pathSeparators = new[]
-            {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar};
+        private static bool Intesects(string text, System.Buffers.SearchValues<char> chars)
+        {
+            return text.AsSpan().IndexOfAny(chars) >= 0;
+        }
+
+        #else
+        */
+
+        private static readonly char[] _invalidPathChars = _GetInvalidPathChars();
+        private static readonly char[] _invalidNameChars = _GetInvalidFileNameChars();
+        private static readonly char[] _invalidFilterChars = _GetInvalidFilterChars();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool _Intesects(string text, char[] chars)
+        {
+            return text.AsSpan().IndexOfAny(chars) >= 0;
+        }
+
+        // #endif
+
+        private static readonly char[] _pathSeparators = new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
         #endregion
 
         #region API
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool ContainsDirectorySeparator(string path) { return path.Any(IsDirectorySeparator); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -69,37 +90,23 @@ namespace InteropTypes.IO
             return c == System.IO.Path.DirectorySeparatorChar || c == System.IO.Path.AltDirectorySeparatorChar;
         }
 
-        
-
-        public static bool TryGetCompositedExtension(string fileName, int dots, out string extension)
+        internal static bool HasInvalidNameChars(string name)
         {
-            if (dots < 1) throw new ArgumentOutOfRangeException(nameof(dots), "Must be equal or greater than 1");
-
-            var l = fileName.Length - 1;
-            var r = -1;
-
-            while (dots > 0 && l >= 0)
-            {
-                if (fileName[l] == '.')
-                {
-                    r = l;
-                    --dots;
-                }
-
-                --l;
-            }
-
-            if (dots != 0)
-            {
-                extension = null;
-                return false;
-            }
-
-            extension = fileName.Substring(r);
-            return true;
+            // technically, a name with whitespaces is valid, but not recomended.
+            return name == null || _Intesects(name, _invalidNameChars);
         }
 
-        
+        internal static bool HasInvalidPathChars(string path)
+        {
+            // technically, a name with whitespaces is valid, but not recomended.
+            return path == null || _Intesects(path, _invalidPathChars);
+        }
+
+        internal static bool HasInvalidFilterChars(string filter)
+        {
+            // technically, a name with whitespaces is valid, but not recomended.
+            return filter == null || _Intesects(filter, _invalidFilterChars);
+        }
 
         internal static IEnumerable<string> SplitPath(string path)
         {
@@ -120,19 +127,10 @@ namespace InteropTypes.IO
             if (sb.Length > 0) yield return sb.ToString();
         }
 
-        internal static bool HasInvalidPathChars(string path)
-        {
-            if (path == null) return true;
+        
 
-            return path.AsSpan().IndexOfAny(_invalidFileNameChars) >= 0;
-        }
-
-        internal static bool HasInvalidFilterChars(string path)
-        {
-            return path.AsSpan().IndexOfAny(_invalidFilterChars) >= 0;
-        }
-
-        internal static string EnsureTrailingSlash(string path)
+        [Obsolete("This method is ambiguous because it can't infer which separator to use.")]
+        internal static string EnsureTrailingSeparator(string path)
         {
             if (!string.IsNullOrEmpty(path) &&
                 path[path.Length - 1] != Path.DirectorySeparatorChar)
@@ -170,7 +168,46 @@ namespace InteropTypes.IO
             }
 
             return false;
-        }               
+        }
+
+        /// <summary>
+        /// Tries to get a composite extension of a file.
+        /// </summary>
+        /// <param name="fileName">the filename from where to get the extension.</param>
+        /// <param name="dots">the number of dots used by the extension.</param>
+        /// <param name="extension">the resulting extension.</param>
+        /// <returns>true if an extension was found</returns>        
+        public static bool TryGetCompositedExtension(string fileName, int dots, out string extension)
+        {
+            if (dots < 1) throw new ArgumentOutOfRangeException(nameof(dots), "Must be equal or greater than 1");
+
+            var l = fileName.Length - 1;
+            var r = -1;
+
+            while (dots > 0 && l >= 0)
+            {
+                var c = fileName[l];
+
+                if (IsDirectorySeparator(c) || c == ':' || c=='?' || c=='*') break;
+
+                if (c == '.')
+                {
+                    r = l;
+                    --dots;
+                }
+
+                --l;
+            }
+
+            if (dots != 0)
+            {
+                extension = null;
+                return false;
+            }
+
+            extension = fileName.Substring(r);
+            return true;
+        }
 
         #endregion
     }

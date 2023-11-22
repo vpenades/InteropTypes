@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net6.0-windows;net8.0;net8.0-windows</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0-windows' OR '$(TargetFramework)' == 'net8.0-windows'">
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   
