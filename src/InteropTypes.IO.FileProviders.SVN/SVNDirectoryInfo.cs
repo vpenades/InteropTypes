@@ -88,6 +88,8 @@ namespace InteropTypes.IO.VersionControl
             _Client = client;
             _Target = target;
             Update(target, args);
+
+            _Revision = args.Entry.Revision;
         }
 
         public _SVNClientDirectoryInfo(SvnClient client, SvnTarget target, SvnInfoEventArgs args)
@@ -95,6 +97,8 @@ namespace InteropTypes.IO.VersionControl
             _Client = client;
             _Target = target;
             Update(target, args);
+
+            _Revision = args.Revision;
         }
 
         #endregion
@@ -103,6 +107,7 @@ namespace InteropTypes.IO.VersionControl
 
         private SvnClient _Client;
         private SvnTarget _Target;
+        private SvnRevision _Revision;
 
         #endregion
 
@@ -110,7 +115,7 @@ namespace InteropTypes.IO.VersionControl
 
         protected override IEnumerable<IFileInfo> LoadDirectoryContents()
         {
-            return new _DirectoryContents(_Client,_Target);
+            return new _DirectoryContents(_Client,_Target, _Revision);
         }
 
         public override void CopyTo(System.IO.DirectoryInfo dstDir, SearchOption searchOption, bool overwrite = true)

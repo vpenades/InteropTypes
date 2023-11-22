@@ -16,10 +16,11 @@ namespace InteropTypes.IO.VersionControl
     {
         #region lifecycle
 
-        public _DirectoryContents(SvnClient client, SvnTarget target)
+        public _DirectoryContents(SvnClient client, SvnTarget repositoryUrl, SvnRevision revision)
         {
             _Client = client;
-            _Target = target;
+            _Target = repositoryUrl;
+            _Revision = revision;
         }
 
         #endregion
@@ -28,6 +29,7 @@ namespace InteropTypes.IO.VersionControl
 
         private SvnClient _Client;
         private SvnTarget _Target;
+        private SvnRevision _Revision;
 
         #endregion
 
@@ -43,7 +45,7 @@ namespace InteropTypes.IO.VersionControl
         {
             var opts = System.IO.SearchOption.AllDirectories;
 
-            var list = _Client.FindFilesAndDirectories(_Target, opts).ToList();
+            var list = _Client.FindFilesAndDirectories(_Target, opts, _Revision).ToList();
 
             return _Populate(list, string.Empty, opts == System.IO.SearchOption.AllDirectories);
         }

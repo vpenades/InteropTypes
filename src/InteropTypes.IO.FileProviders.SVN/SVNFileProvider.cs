@@ -21,17 +21,17 @@ namespace InteropTypes.IO.VersionControl
     {
         #region lifecycle
 
-        public SVNFileProvider(SvnClient client, SvnTarget target)
+        public SVNFileProvider(SvnClient client, SvnTarget repositoryUrl, SvnRevision revision = null)
         {
             ArgumentNullException.ThrowIfNull(client);
-            ArgumentNullException.ThrowIfNull(target);
+            ArgumentNullException.ThrowIfNull(repositoryUrl);
 
-            Client = client;
-            
+            Client = client;            
 
-            if (!Client.GetInfo(target, out _Info)) throw new ArgumentException($"can't access {target}", nameof(target));
+            if (!Client.GetInfo(repositoryUrl, out _Info)) throw new ArgumentException($"can't access {repositoryUrl}", nameof(repositoryUrl));
 
-            _Reader = new _StaticRepoReader(client, target);
+            // using a static reader that reads the whole repository in one shot.
+            _Reader = new _StaticRepoReader(client, repositoryUrl, revision);
         }        
 
         #endregion
@@ -75,6 +75,11 @@ namespace InteropTypes.IO.VersionControl
 
         #region helpers
 
+        public static long GetRevisionNumberFrom(IFileInfo finfo)
+        {
+            return finfo is SVNEntryInfo svnInfo ? svnInfo.Revision : -1;
+        }
+
         public static SvnRevision GetRevisionFrom(IFileInfo finfo)
         {
             return finfo is IServiceProvider srv
@@ -89,17 +94,17 @@ namespace InteropTypes.IO.VersionControl
     {
         #region lifecycle
 
-        public SVNDisposableFileProvider(SvnTarget target)
-            : base(new SvnClient(), target) { }
+        public SVNDisposableFileProvider(SvnTarget repositoryUrl, SvnRevision revision = null)
+            : base(new SvnClient(), repositoryUrl, revision) { }
 
-        public SVNDisposableFileProvider(SvnTarget target, NetworkCredential credentials)
-            : base(new SvnClient(), target)
+        public SVNDisposableFileProvider(SvnTarget repositoryUrl, NetworkCredential credentials, SvnRevision revision = null)
+            : base(new SvnClient(), repositoryUrl, revision)
         {
             this.Client.Authentication.DefaultCredentials = credentials;
         }
 
-        public SVNDisposableFileProvider(SvnTarget target, Action<SvnClient> configure)
-            : base(new SvnClient(), target)
+        public SVNDisposableFileProvider(SvnTarget repositoryUrl, Action<SvnClient> configure, SvnRevision revision = null)
+            : base(new SvnClient(), repositoryUrl, revision)
         {
             configure(this.Client);
         }

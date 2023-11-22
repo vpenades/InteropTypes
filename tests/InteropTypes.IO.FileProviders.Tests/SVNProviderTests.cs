@@ -4,28 +4,53 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using InteropTypes.Crypto;
 using InteropTypes.IO.VersionControl;
 
 using Microsoft.Extensions.FileProviders;
+using Microsoft.VisualBasic.Logging;
 
 using NUnit.Framework;
+
+using SharpSvn;
 
 namespace InteropTypes.IO
 {
     internal class SVNProviderTests
     {
-        [Test]
-        public void LoadSVNDirectoryTree()
+        [TestCase(15, 1, "9C1AD3091FC8210C1A790F08660871ECC4F7CA46878D4FB89DBB4BC897E27870")]
+        [TestCase(160, 156, "A7473F98566B6002CE75082C13470EB932159A713B68C2D1B58AA297EC220C82")]
+        [TestCase(long.MaxValue, -1, "")]
+        public void LoadSVNDirectoryTree(long revNumber, int readmeRev, string readmeSha256)
         {
-            using (var client = new SVNDisposableFileProvider("https://github.com/vpenades/InteropTypes.git/trunk/"))
+            var rev = revNumber == long.MaxValue
+                ? SvnRevision.Head
+                : (SvnRevision)revNumber;
+
+            using (var client = new SVNDisposableFileProvider("https://github.com/vpenades/InteropTypes.git/trunk/", rev))
             {
-                TestContext.WriteLine($"Rev:{client.LastChangeRevision} T:{client.LastChangeTime}");
+                TestContext.WriteLine($"LastR:{client.LastChangeRevision} LastT:{client.LastChangeTime}");
 
                 var root = client.GetDirectoryContents(null);
 
                 _DumpDirectory(root);
+
+                if (readmeRev > 0)
+                {
+                    var finfoA = root.FirstOrDefault(item => !item.IsDirectory && item.Name == "README.md");
+                    Assert.NotNull(finfoA);
+
+                    var finfoB = client.GetFileInfo("README.md");
+                    Assert.NotNull(finfoB);
+
+                    Assert.AreEqual(readmeRev, SVNFileProvider.GetRevisionNumberFrom(finfoB));
+
+                    var sha256 = Hash256.Sha256FromFile(finfoB).ToHexString();
+
+                    Assert.AreEqual(sha256, readmeSha256);                    
+                }
             }
-        }
+        }        
 
         private static void _DumpDirectory(IDirectoryContents contents)
         {

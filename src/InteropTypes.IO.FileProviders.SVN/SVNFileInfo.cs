@@ -39,7 +39,7 @@ namespace InteropTypes.IO.VersionControl
         #endregion
     }
 
-    [System.Diagnostics.DebuggerDisplay("🗎 {_Target.FileName} {Length}")]
+    [System.Diagnostics.DebuggerDisplay("🗎 {_Target.FileName} {Length} Rev:{Revision}")]
     sealed class _SVNClientFileInfo : SVNFileInfo
     {
         #region lifecycle
@@ -63,7 +63,7 @@ namespace InteropTypes.IO.VersionControl
         #region data
 
         private SvnClient _Client;
-        private SvnTarget _Target;
+        private SvnTarget _Target;        
 
         private WeakReference<Byte[]> _CachedContent;
 
@@ -73,7 +73,7 @@ namespace InteropTypes.IO.VersionControl
 
         public override Stream CreateReadStream()
         {
-            return _InternalUtils.GetMemoryStream(ref _CachedContent, () => _Client.OpenReadStream(_Target));
+            return _InternalUtils.GetCachedMemoryStream(ref _CachedContent, () => _Client.OpenReadStream(_Target, this.Revision));
         }
 
         public override object GetService(Type serviceType)
