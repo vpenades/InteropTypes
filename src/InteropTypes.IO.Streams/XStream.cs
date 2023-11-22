@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using STREAM = System.IO.Stream;
+using System.Xml.Schema;
 
 namespace InteropTypes.IO
 {

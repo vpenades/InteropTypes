@@ -30,17 +30,19 @@ namespace InteropTypes.IO
 
         public static StreamProvider<T> Default { get; } = _Initialize();       
 
-        public System.IO.BinaryReader CreateBinaryReader(T src, Encoding encoding)
+        public System.IO.BinaryReader CreateBinaryReader(T src, Encoding encoding = null)
         {
             var s = CreateReadStreamFrom(src);
             if (s == null) return null;
-            return new System.IO.BinaryReader(s, encoding, false);
+
+            return XStream.CreateBinaryReader(s, false, encoding);
         }
-        public System.IO.BinaryWriter CreateBinaryWriter(T dst, Encoding encoding)
+        public System.IO.BinaryWriter CreateBinaryWriter(T dst, Encoding encoding = null)
         {
             var s = CreateWriteStreamFrom(dst);
             if (s == null) return null;
-            return new System.IO.BinaryWriter(s, encoding, false);
+
+            return XStream.CreateBinaryWriter(s, false, encoding);
         }
 
         public BYTESSEGMENT ReadAllBytesFrom(T src)
@@ -49,31 +51,19 @@ namespace InteropTypes.IO
             return XStream.ReadAllBytes(s);
         }        
 
-        public void WriteAllBytesTo(T dst, BYTESSEGMENT bytes)
+        public void WriteAllBytesTo(T dst, IReadOnlyList<Byte> bytes)
         {
             using var s = CreateWriteStreamFrom(dst);
             XStream.WriteAllBytes(s, bytes);
-        }
+        }        
 
-        public string ReadAllTextFrom(T src)
-        {
-            using var s = CreateReadStreamFrom(src);
-            return XStream.ReadAllText(s);
-        }
-
-        public string ReadAllTextFrom(T src, Encoding encoding)
+        public string ReadAllTextFrom(T src, Encoding encoding = null)
         {
             using var s = CreateReadStreamFrom(src);
             return XStream.ReadAllText(s, encoding);
         }
-
-        public void WriteAllTextTo(T dst, string contents)
-        {
-            using var s = CreateWriteStreamFrom(dst);
-            XStream.WriteAllText(s, contents);
-        }
-
-        public void WriteAllTextTo(T dst, string contents, Encoding encoding)
+        
+        public void WriteAllTextTo(T dst, string contents, Encoding encoding = null)
         {
             using var s = CreateWriteStreamFrom(dst);
             XStream.WriteAllText(s, contents, encoding);

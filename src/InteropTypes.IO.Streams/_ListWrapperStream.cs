@@ -20,7 +20,7 @@ namespace InteropTypes.IO
 
         internal string ToDebuggerDisplay()
         {
-            if (_Reader == null || _Writer == null) return "DISPOSED";
+            if (_Reader == null) return "DISPOSED";
 
             var data = string.Empty;
 
@@ -70,6 +70,8 @@ namespace InteropTypes.IO
 
         protected _ListWrapperStream(TList list)
         {
+            System.Diagnostics.Debug.Assert(list != null);
+
             _Reader = list;
             _Writer = list as IList<Byte>;
         }
@@ -111,13 +113,13 @@ namespace InteropTypes.IO
         {
             get
             {
-                if (_Reader == null) throw new ObjectDisposedException("List");
+                _GuardDisposed();
                 return _Position;
             }
 
             set
             {
-                if (_Reader == null) throw new ObjectDisposedException("List");
+                _GuardDisposed();
                 lock (_Mutex)
                 {
                     if (value < 0 || value >= _Reader.Count) throw new ArgumentOutOfRangeException(nameof(value));
@@ -216,22 +218,21 @@ namespace InteropTypes.IO
 
                 if (_Position >= _Writer.Count) _Position = _Writer.Count;
             }
-        }        
+        }
 
         #endregion
     }
 
     /// <summary>
-    /// Specialised <see cref="List{T}"/> wrapper stream using Net6+ CollectionsMarshal
+    /// Specialised wrapper stream using <see cref="System.Runtime.InteropServices.CollectionsMarshal.AsSpan"/>
     /// </summary>
     #if !NETSTANDARD
     [System.Diagnostics.DebuggerDisplay("{ToDebuggerDisplay(),nq}")]
     class _ListWrapperStreamNet6 : _ListWrapperStream<List<Byte>>
     {
-        public _ListWrapperStreamNet6(List<byte> list) : base(list)
-        {
-            
-        }
+        public _ListWrapperStreamNet6(List<byte> list)
+            : base(list)
+        { }
         
         public override int Read(byte[] buffer, int offset, int count)
         {
@@ -249,7 +250,7 @@ namespace InteropTypes.IO
 
         public override int Read(Span<byte> target)
         {
-            if (_Reader == null) throw new NotSupportedException();
+            _GuardDisposed();
 
             lock (_Mutex)
             {
@@ -285,8 +286,9 @@ namespace InteropTypes.IO
 
         public override void Write(ReadOnlySpan<Byte> source)
         {
-            // _Reader is a full List<Byte> so we don't need _Writer
-            if (_Reader == null) throw new NotSupportedException();
+            _GuardDisposed();
+
+            // _Reader is a full List<Byte> so we don't need to use _Writer
 
             lock (_Mutex)
             {
@@ -308,6 +310,7 @@ namespace InteropTypes.IO
             }
         }
     }
+
     #endif
 
 }
