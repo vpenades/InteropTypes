@@ -8,6 +8,10 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />    
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="InteropTypes.Crypto.Tests"/>
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
