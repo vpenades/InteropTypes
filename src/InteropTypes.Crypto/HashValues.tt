@@ -173,7 +173,26 @@ foreach(var __ByteSize in __hashByteSizes)
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash<#= __BitSize #>(bytes);
-        }        
+        }
+
+        public static Hash<#= __BitSize #> From<THash>(THash collection)
+            where THash: IReadOnlyList<Byte>
+        {
+            switch(collection)
+            {
+                case null: throw new ArgumentException(nameof(collection));
+                case Byte[] array: return new Hash<#= __BitSize #>(array);
+                case ArraySegment<Byte> segment: return new Hash<#= __BitSize #>(segment);                
+            }
+
+            if (collection.Count != BYTESIZE) throw new ArgumentException($"Byte len is {collection.Count}, expected {BYTESIZE}", nameof(collection));
+
+            Span<byte> bytes = stackalloc byte[BYTESIZE];
+
+            for(int i=0; i < bytes.Length; ++i) bytes[i] = collection[i];
+            
+            return new Hash<#= __BitSize #>(bytes);
+        }
 
         public Hash<#= __BitSize #>(ReadOnlySpan<Byte> bytes)
         {

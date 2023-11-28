@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace InteropTypes.Crypto
@@ -63,16 +65,21 @@ namespace InteropTypes.Crypto
             return new Hash512(bytes);
         }
 
-        public static Hash512 Sha256FromList(List<Byte> list)
+        public static Hash512 Sha256FromList<TBytes>(TBytes collection)
+            where TBytes : IEnumerable<Byte>
         {
-            if (list == null) return default;
-
-            #if NETSTANDARD
-            var bytes = list.ToArray();
-            #else
-            var bytes = CollectionsMarshal.AsSpan(list);
-            #endif
-            return Sha512FromBytes(bytes);
+            switch (collection)
+            {
+                case null: return default;
+                case Byte[] array: return Sha512FromBytes(array);
+                case ArraySegment<Byte> segment: return Sha512FromBytes(segment);
+                #if NET6_0_OR_GREATER
+                case List<Byte> list:                    
+                    var bytes = CollectionsMarshal.AsSpan(list);
+                    return Sha512FromBytes(bytes);
+                #endif
+                    default: return Sha512FromBytes(collection.ToArray());
+            }
         }
 
         public static Hash512 Sha512FromBytes(ReadOnlySpan<Byte> bytes)

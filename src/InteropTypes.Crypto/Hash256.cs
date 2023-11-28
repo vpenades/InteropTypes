@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace InteropTypes.Crypto
 {    
@@ -69,16 +70,21 @@ namespace InteropTypes.Crypto
             return new Hash256(bytes);
         }
 
-        public static Hash256 Sha256FromList(List<Byte> list)
+        public static Hash256 Sha256FromList<TBytes>(TBytes collection)
+            where TBytes: IEnumerable<Byte>
         {
-            if (list == null) return default;
-
-            #if NETSTANDARD
-            var bytes = list.ToArray();
-            #else
-            var bytes = CollectionsMarshal.AsSpan(list);
-            #endif
-            return Sha256FromBytes(bytes);            
+            switch(collection)
+            {
+                case null: return default;
+                case Byte[] array: return Sha256FromBytes(array);
+                case ArraySegment<Byte> segment: return Sha256FromBytes(segment);
+                #if NET6_0_OR_GREATER
+                case List<Byte> list:                    
+                    var bytes = CollectionsMarshal.AsSpan(list);
+                    return Sha256FromBytes(bytes);
+                #endif
+                    default: return Sha256FromBytes(collection.ToArray());
+            }
         }
 
         public static Hash256 Sha256FromBytes(ReadOnlySpan<Byte> bytes)

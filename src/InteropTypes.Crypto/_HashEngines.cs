@@ -18,6 +18,5 @@ namespace InteropTypes
         public static HashAlgorithm Sha256Engine { get; } = new Lazy<HashAlgorithm>(SHA256.Create).Value;
 
         public static HashAlgorithm Md5Engine { get; } = new Lazy<HashAlgorithm>(MD5.Create).Value;
-
     }
 }

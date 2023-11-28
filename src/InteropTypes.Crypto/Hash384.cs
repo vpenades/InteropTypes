@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace InteropTypes.Crypto
@@ -62,16 +64,21 @@ namespace InteropTypes.Crypto
             return new Hash384(bytes);
         }
 
-        public static Hash384 Sha256FromList(List<Byte> list)
+        public static Hash384 Sha256FromList<TBytes>(TBytes collection)
+            where TBytes : IEnumerable<Byte>
         {
-            if (list == null) return default;
-
-            #if NETSTANDARD
-            var bytes = list.ToArray();
-            #else
-            var bytes = CollectionsMarshal.AsSpan(list);
-            #endif
-            return Sha384FromBytes(bytes);
+            switch (collection)
+            {
+                case null: return default;
+                case Byte[] array: return Sha384FromBytes(array);
+                case ArraySegment<Byte> segment: return Sha384FromBytes(segment);
+                #if NET6_0_OR_GREATER
+                case List<Byte> list:                    
+                    var bytes = CollectionsMarshal.AsSpan(list);
+                    return Sha384FromBytes(bytes);
+                #endif
+                    default: return Sha384FromBytes(collection.ToArray());
+            }
         }
 
         public static Hash384 Sha384FromBytes(ReadOnlySpan<Byte> bytes)

@@ -134,7 +134,26 @@ namespace InteropTypes.Crypto
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash96(bytes);
-        }        
+        }
+
+        public static Hash96 From<THash>(THash collection)
+            where THash: IReadOnlyList<Byte>
+        {
+            switch(collection)
+            {
+                case null: throw new ArgumentException(nameof(collection));
+                case Byte[] array: return new Hash96(array);
+                case ArraySegment<Byte> segment: return new Hash96(segment);                
+            }
+
+            if (collection.Count != BYTESIZE) throw new ArgumentException($"Byte len is {collection.Count}, expected {BYTESIZE}", nameof(collection));
+
+            Span<byte> bytes = stackalloc byte[BYTESIZE];
+
+            for(int i=0; i < bytes.Length; ++i) bytes[i] = collection[i];
+            
+            return new Hash96(bytes);
+        }
 
         public Hash96(ReadOnlySpan<Byte> bytes)
         {
@@ -591,7 +610,26 @@ namespace InteropTypes.Crypto
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash128(bytes);
-        }        
+        }
+
+        public static Hash128 From<THash>(THash collection)
+            where THash: IReadOnlyList<Byte>
+        {
+            switch(collection)
+            {
+                case null: throw new ArgumentException(nameof(collection));
+                case Byte[] array: return new Hash128(array);
+                case ArraySegment<Byte> segment: return new Hash128(segment);                
+            }
+
+            if (collection.Count != BYTESIZE) throw new ArgumentException($"Byte len is {collection.Count}, expected {BYTESIZE}", nameof(collection));
+
+            Span<byte> bytes = stackalloc byte[BYTESIZE];
+
+            for(int i=0; i < bytes.Length; ++i) bytes[i] = collection[i];
+            
+            return new Hash128(bytes);
+        }
 
         public Hash128(ReadOnlySpan<Byte> bytes)
         {
@@ -1048,7 +1086,26 @@ namespace InteropTypes.Crypto
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash224(bytes);
-        }        
+        }
+
+        public static Hash224 From<THash>(THash collection)
+            where THash: IReadOnlyList<Byte>
+        {
+            switch(collection)
+            {
+                case null: throw new ArgumentException(nameof(collection));
+                case Byte[] array: return new Hash224(array);
+                case ArraySegment<Byte> segment: return new Hash224(segment);                
+            }
+
+            if (collection.Count != BYTESIZE) throw new ArgumentException($"Byte len is {collection.Count}, expected {BYTESIZE}", nameof(collection));
+
+            Span<byte> bytes = stackalloc byte[BYTESIZE];
+
+            for(int i=0; i < bytes.Length; ++i) bytes[i] = collection[i];
+            
+            return new Hash224(bytes);
+        }
 
         public Hash224(ReadOnlySpan<Byte> bytes)
         {
@@ -1515,7 +1572,26 @@ namespace InteropTypes.Crypto
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash256(bytes);
-        }        
+        }
+
+        public static Hash256 From<THash>(THash collection)
+            where THash: IReadOnlyList<Byte>
+        {
+            switch(collection)
+            {
+                case null: throw new ArgumentException(nameof(collection));
+                case Byte[] array: return new Hash256(array);
+                case ArraySegment<Byte> segment: return new Hash256(segment);                
+            }
+
+            if (collection.Count != BYTESIZE) throw new ArgumentException($"Byte len is {collection.Count}, expected {BYTESIZE}", nameof(collection));
+
+            Span<byte> bytes = stackalloc byte[BYTESIZE];
+
+            for(int i=0; i < bytes.Length; ++i) bytes[i] = collection[i];
+            
+            return new Hash256(bytes);
+        }
 
         public Hash256(ReadOnlySpan<Byte> bytes)
         {
@@ -1982,7 +2058,26 @@ namespace InteropTypes.Crypto
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash384(bytes);
-        }        
+        }
+
+        public static Hash384 From<THash>(THash collection)
+            where THash: IReadOnlyList<Byte>
+        {
+            switch(collection)
+            {
+                case null: throw new ArgumentException(nameof(collection));
+                case Byte[] array: return new Hash384(array);
+                case ArraySegment<Byte> segment: return new Hash384(segment);                
+            }
+
+            if (collection.Count != BYTESIZE) throw new ArgumentException($"Byte len is {collection.Count}, expected {BYTESIZE}", nameof(collection));
+
+            Span<byte> bytes = stackalloc byte[BYTESIZE];
+
+            for(int i=0; i < bytes.Length; ++i) bytes[i] = collection[i];
+            
+            return new Hash384(bytes);
+        }
 
         public Hash384(ReadOnlySpan<Byte> bytes)
         {
@@ -2459,7 +2554,26 @@ namespace InteropTypes.Crypto
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash512(bytes);
-        }        
+        }
+
+        public static Hash512 From<THash>(THash collection)
+            where THash: IReadOnlyList<Byte>
+        {
+            switch(collection)
+            {
+                case null: throw new ArgumentException(nameof(collection));
+                case Byte[] array: return new Hash512(array);
+                case ArraySegment<Byte> segment: return new Hash512(segment);                
+            }
+
+            if (collection.Count != BYTESIZE) throw new ArgumentException($"Byte len is {collection.Count}, expected {BYTESIZE}", nameof(collection));
+
+            Span<byte> bytes = stackalloc byte[BYTESIZE];
+
+            for(int i=0; i < bytes.Length; ++i) bytes[i] = collection[i];
+            
+            return new Hash512(bytes);
+        }
 
         public Hash512(ReadOnlySpan<Byte> bytes)
         {
