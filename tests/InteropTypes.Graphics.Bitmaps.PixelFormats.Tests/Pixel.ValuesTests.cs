@@ -20,8 +20,8 @@ namespace InteropTypes.Graphics.Bitmaps
             b ^= a;
             a ^= b;
 
-            Assert.AreEqual(17, a);
-            Assert.AreEqual(1, b);
+            Assert.That(a, Is.EqualTo(17));
+            Assert.That(b, Is.EqualTo(1));
         }
 
 
@@ -69,7 +69,7 @@ namespace InteropTypes.Graphics.Bitmaps
             where TPixel : unmanaged, Pixel.IConvertTo
             where TRefPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TRefPixel>
         {
-            Assert.AreEqual(sizeof(TRefPixel), sizeof(TPixel));
+            Assert.That(sizeof(TPixel), Is.EqualTo(sizeof(TRefPixel)));
 
             Span<byte> tmp = stackalloc byte[sizeof(TPixel)];
             var pixVal = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, TPixel>(tmp);
@@ -83,9 +83,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
             TestContext.WriteLine($"{cv.R} {cv.G} {cv.B} {cv.A}");
 
-            Assert.Greater(cv.R, cv.G);
-            Assert.Greater(cv.G, cv.B);
-            if (f.HasUnpremulAlpha) Assert.Greater(cv.B, cv.A);
+            Assert.That(cv.R, Is.GreaterThan(cv.G));
+            Assert.That(cv.G, Is.GreaterThan(cv.B));
+            if (f.HasUnpremulAlpha) Assert.That(cv.B, Is.GreaterThan(cv.A));
         }
     }
 }

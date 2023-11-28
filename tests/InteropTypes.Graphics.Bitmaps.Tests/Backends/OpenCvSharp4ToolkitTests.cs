@@ -17,7 +17,7 @@ namespace InteropTypes.Graphics.Backends
         [SetUp]
         public void SetUp()
         {
-            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
+            Assert.That(IntPtr.Size, Is.EqualTo(8), "x64 test environment required");
         }
 
         [TestCase("Resources\\shannon.jpg")]

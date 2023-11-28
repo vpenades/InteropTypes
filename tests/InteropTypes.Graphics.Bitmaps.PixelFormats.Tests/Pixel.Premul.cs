@@ -59,11 +59,11 @@ namespace InteropTypes.Graphics.Bitmaps
             var premul2 = Pixel.BGRP32.From(color);
 
             var premul3 = default(Pixel.BGRP32);
-            color.CopyTo(ref premul3);            
+            color.CopyTo(ref premul3);
 
-            Assert.AreEqual(premulRef0, premul1);
-            Assert.AreEqual(premulRef0, premul2);
-            Assert.AreEqual(premulRef0, premul3);
+            Assert.That(premul1, Is.EqualTo(premulRef0));
+            Assert.That(premul2, Is.EqualTo(premulRef0));
+            Assert.That(premul3, Is.EqualTo(premulRef0));
 
             // unpremul
 
@@ -72,8 +72,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var color2 = premul1.To<TPixel>();
 
-            Assert.AreEqual(rndtrpRef0, color1);
-            Assert.AreEqual(rndtrpRef0, color2);            
+            Assert.That(color1, Is.EqualTo(rndtrpRef0));
+            Assert.That(color2, Is.EqualTo(rndtrpRef0));            
         }
     }
 }

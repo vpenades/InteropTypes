@@ -13,11 +13,11 @@ namespace InteropTypes.Graphics.Drawing
         [Test]
         public void Point3Tests()
         {
-            Assert.AreEqual(12, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Point3)));
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(Point3)), Is.EqualTo(12));
 
-            Assert.AreEqual(0, new Point3(-3, 0, 0).DominantAxis);
-            Assert.AreEqual(1, new Point3(0, -3, 0).DominantAxis);
-            Assert.AreEqual(2, new Point3(0, 0, -3).DominantAxis);
+            Assert.That(new Point3(-3, 0, 0).DominantAxis, Is.EqualTo(0));
+            Assert.That(new Point3(0, -3, 0).DominantAxis, Is.EqualTo(1));
+            Assert.That(new Point3(0, 0, -3).DominantAxis, Is.EqualTo(2));
         }
 
         [Test]
@@ -25,9 +25,9 @@ namespace InteropTypes.Graphics.Drawing
         {
             var sphere = new BoundingSphere((-5, 0, 0), 1);
 
-            Assert.AreEqual(-1, new Point3(-5, 0, 0).CompareTo(sphere)); // inside
-            Assert.AreEqual(0, new Point3(-5, 1, 0).CompareTo(sphere)); // at boundary
-            Assert.AreEqual(1, new Point3(-5, 2, 0).CompareTo(sphere)); // outside
+            Assert.That(new Point3(-5, 0, 0).CompareTo(sphere), Is.EqualTo(-1)); // inside
+            Assert.That(new Point3(-5, 1, 0).CompareTo(sphere), Is.EqualTo(0)); // at boundary
+            Assert.That(new Point3(-5, 2, 0).CompareTo(sphere), Is.EqualTo(1)); // outside
         }
 
         /*

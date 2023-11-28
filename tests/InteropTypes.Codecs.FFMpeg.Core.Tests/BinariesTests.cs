@@ -18,7 +18,7 @@ namespace InteropTypes.Codecs
 
             var exe = System.IO.Path.Combine(path.FullName, "ffmpeg.exe");
 
-            Assert.IsTrue(System.IO.File.Exists(exe)); 
+            Assert.That(System.IO.File.Exists(exe)); 
         }
     }
 }

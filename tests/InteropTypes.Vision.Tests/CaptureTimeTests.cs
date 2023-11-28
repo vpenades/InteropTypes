@@ -21,7 +21,7 @@ namespace InteropTypes.Vision
 
             var ttt = tt.Ticks;
 
-            Assert.AreEqual(1, ttt);
+            Assert.That(ttt, Is.EqualTo(1));
         }        
     }
 }

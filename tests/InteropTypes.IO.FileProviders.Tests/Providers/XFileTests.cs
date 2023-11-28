@@ -29,7 +29,7 @@ namespace InteropTypes.IO.Providers
 
             var outText = XFile.ReadAllText(xinfo);
 
-            Assert.AreEqual(inText, outText);
+            Assert.That(outText, Is.EqualTo(inText));
 
             // ------
 
@@ -41,7 +41,7 @@ namespace InteropTypes.IO.Providers
 
             outText = System.IO.File.ReadAllText(path);
 
-            Assert.AreEqual(inText, outText);
+            Assert.That(outText, Is.EqualTo(inText));
         }
     }
 }

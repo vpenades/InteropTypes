@@ -41,10 +41,13 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var p = dst.GetPixel(0, 0);
 
-            Assert.AreEqual(0, p.R);
-            Assert.AreEqual(0, p.G);
-            Assert.AreEqual(255, p.B); // formerly R
-            Assert.AreEqual(255, p.A);
+            Assert.Multiple(() =>
+            {
+                Assert.That(p.R, Is.EqualTo(0));
+                Assert.That(p.G, Is.EqualTo(0));
+                Assert.That(p.B, Is.EqualTo(255)); // formerly R
+                Assert.That(p.A, Is.EqualTo(255));
+            });
 
             // float RGB to Vector3
 

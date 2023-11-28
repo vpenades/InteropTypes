@@ -23,7 +23,7 @@ namespace InteropTypes.IO.Archives
 
             var bytes = StreamProvider<SharpCompress.Archives.IArchiveEntry>.Default.ReadAllBytesFrom(firstEntry);
 
-            Assert.AreEqual(firstEntry.Size, bytes.Count);
+            Assert.That(bytes.Count, Is.EqualTo(firstEntry.Size));
         }
 
         [Test]
@@ -41,22 +41,22 @@ namespace InteropTypes.IO.Archives
             var contents1 = provider.GetDirectoryContents(null);
             var contents2 = provider.GetDirectoryContents("c\\");
 
-            Assert.AreEqual(4, contents1.Count());
-            Assert.AreEqual(1, contents1.Where(item => item.IsDirectory).Count());
-            contents1._PrintContents();            
+            Assert.That(contents1.Count(), Is.EqualTo(4));
+            Assert.That(contents1.Where(item => item.IsDirectory).Count(), Is.EqualTo(1));
+            contents1._PrintContents();
 
-            Assert.IsTrue(provider.GetDirectoryContents("c").Exists);
-            Assert.IsTrue(contents2.Exists);
-            Assert.IsTrue(contents2.Any(item => item.IsDirectory && item.Name=="c"));
-            Assert.IsTrue(provider.GetFileInfo("a.txt").Exists);
-            Assert.IsTrue(provider.GetFileInfo("c\\c\\b.txt").Exists);
-            Assert.IsTrue(provider.GetFileInfo("c/c\\b.txt").Exists);
+            Assert.That(provider.GetDirectoryContents("c").Exists);
+            Assert.That(contents2.Exists);
+            Assert.That(contents2.Any(item => item.IsDirectory && item.Name=="c"));
+            Assert.That(provider.GetFileInfo("a.txt").Exists);
+            Assert.That(provider.GetFileInfo("c\\c\\b.txt").Exists);
+            Assert.That(provider.GetFileInfo("c/c\\b.txt").Exists);
 
             var firstEntry = contents1.FirstOrDefault(item => !item.IsDirectory);
 
             var bytes = StreamProvider<IFileInfo>.Default.ReadAllBytesFrom(firstEntry);
 
-            Assert.AreEqual(firstEntry.Length, bytes.Count);
+            Assert.That(bytes.Count, Is.EqualTo(firstEntry.Length));
         }
     }
 }

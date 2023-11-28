@@ -20,7 +20,7 @@ namespace InteropTypes.IO
 
             p = p / "1" / "2" / "file.txt";
 
-            Assert.AreEqual("c:\\hello\\world\\1\\2\\file.txt", p.Path);
+            Assert.That(p.Path, Is.SamePath("c:\\hello\\world\\1\\2\\file.txt"));
         }
     }
 }

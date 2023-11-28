@@ -20,7 +20,7 @@ namespace InteropTypes.IO
 
             // Equality check
             var hashed = entries.Distinct(FileInfoComparer.OrdinalIgnoreCase).ToList();
-            Assert.AreEqual(entries.Count, hashed.Count);
+            Assert.That(hashed.Count, Is.EqualTo(entries.Count));
 
             foreach (var entry in entries)
             {

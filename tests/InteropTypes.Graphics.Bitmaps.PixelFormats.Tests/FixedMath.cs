@@ -13,15 +13,15 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void Test255To16384()
         {
-            Assert.AreEqual(0x4000, FixedMathCC8.From255To16384(255));
-            Assert.AreEqual(0x1fff, FixedMathCC8.From255To16384(127));
-            Assert.AreEqual(8256, FixedMathCC8.From255To16384(128));
+            Assert.That(FixedMathCC8.From255To16384(255), Is.EqualTo(0x4000));
+            Assert.That(FixedMathCC8.From255To16384(127), Is.EqualTo(0x1fff));
+            Assert.That(FixedMathCC8.From255To16384(128), Is.EqualTo(8256));
 
             for (uint i=0; i < 256; ++i)
             {
                 var expanded = FixedMathCC8.From255To16384(i);
                 var ii = FixedMathCC8.From16384To255(expanded);
-                Assert.AreEqual(i,ii);
+                Assert.That(ii, Is.EqualTo(i));
             }
         }
 
@@ -45,8 +45,8 @@ namespace InteropTypes.Graphics.Bitmaps
                     var mref = (uint)Math.Round((ifp * jfp) * 255f);                    
                     var dref = (uint)Math.Round( dddd * 255f);
 
-                    Assert.Less(mref, 256);
-                    Assert.Less(dref, 256);
+                    Assert.That(mref, Is.LessThan(256));
+                    Assert.That(dref, Is.LessThan(256));
 
                     TestContext.WriteLine($"{i}x{j} = {mref}");
                     TestContext.WriteLine($"{i}/{j} = {dref}");
@@ -54,10 +54,10 @@ namespace InteropTypes.Graphics.Bitmaps
                     // slow
                     var mval0 = (i * j) / 255;
                     var dval0 = Math.Min(255, (i * 255) / j);
-                    Assert.Less(dval0, 256);
+                    Assert.That(dval0, Is.LessThan(256));
 
-                    Assert.AreEqual(mref, mval0, 1);
-                    Assert.AreEqual(dref, dval0, 1);
+                    Assert.That(mval0, Is.EqualTo(mref).Within(1));
+                    Assert.That(dval0, Is.EqualTo(dref).Within(1));
 
                     // expanded 65535
 
@@ -72,8 +72,8 @@ namespace InteropTypes.Graphics.Bitmaps
                     mval1 = FixedMathCC8.From65535To255(mval1);
                     dval1 = FixedMathCC8.From65535To255(dval1);
 
-                    Assert.AreEqual(mref, mval1, 1);
-                    Assert.AreEqual(dref, dval1, 1);
+                    Assert.That(mval1, Is.EqualTo(mref).Within(1));
+                    Assert.That(dval1, Is.EqualTo(dref).Within(1));
 
                     // reciprocal 65535
 
@@ -94,15 +94,15 @@ namespace InteropTypes.Graphics.Bitmaps
                     mval4 = FixedMathCC8.ToByte(mval4);
                     dval4 = FixedMathCC8.ToByte(dval4);
 
-                    Assert.AreEqual(mref, mval4, 1);
-                    Assert.AreEqual(dref, dval4, 1);
+                    Assert.That(mval4, Is.EqualTo(mref).Within(1));
+                    Assert.That(dval4, Is.EqualTo(dref).Within(1));
 
                     // reciprocal direct to 255 (12+12+8)
 
                     var rj12 = FixedMathCC8.ToReciprocalByte(j12);
                     dval4 = FixedMathCC8.ToByte(i12 ,rj12);
 
-                    Assert.AreEqual(dref, dval4, 1);
+                    Assert.That(dval4, Is.EqualTo(dref).Within(1));
                 }
             }
         }
@@ -138,7 +138,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
                     kmul >>= 16;
 
-                    // Assert.AreEqual(kmul, color);
+                    // Assert.That(color, Is.EqualTo(kmul));
 
                     if (kmul != color) TestContext.WriteLine($"{color},{alpha} => {kmul}");
                 }
@@ -156,7 +156,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var final = FixedMathCC8.ToByte(FixedMathCC8.FromByte(color), rcpa);
 
-            Assert.AreEqual(color, final);            
+            Assert.That(final, Is.EqualTo(color));            
         }        
     }
 }

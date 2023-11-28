@@ -17,11 +17,11 @@ namespace InteropTypes.IO
 
             using var s2 = XStream.WrapWithCloseActions(XStream.CreateMemoryStream(rnds, true), len=> TestContext.Progress.WriteLine($"{len}"));
 
-            Assert.AreEqual(0, s2.Position);
-            Assert.AreEqual(rnds.Length, s2.Length);
+            Assert.That(s2.Position, Is.EqualTo(0));
+            Assert.That(s2.Length, Is.EqualTo(rnds.Length));
             
             var seq = XStream.ReadAllBytesSequence(s2);
-            Assert.AreEqual(rnds.Length, seq.Length);
+            Assert.That(seq.Length, Is.EqualTo(rnds.Length));
 
             using var s3 = XStream.WrapWithCloseActions(XStream.CreateMemoryStream(false), len => TestContext.Progress.WriteLine($"{len}"));
             XStream.WriteAllBytes(s3, seq);
@@ -31,9 +31,9 @@ namespace InteropTypes.IO
 
             using var s4 = XStream.WrapList(list);
 
-            rnds.Position = 0;            
+            rnds.Position = 0;
 
-            Assert.IsTrue(StreamEqualityComparer.Default.AreStreamsContentEqual(rnds, s4));
+            Assert.That(StreamEqualityComparer.Default.AreStreamsContentEqual(rnds, s4), Is.True);
         }
     }
 }

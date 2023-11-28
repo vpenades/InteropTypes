@@ -21,13 +21,13 @@ namespace InteropTypes.Graphics.Drawing
             Span<Vector3> sawOut1 = stackalloc Vector3[saw.Length * 2];
 
             var l = new Plane(Vector3.UnitY, 1).ClipPolygonToPlane(sawOut1, saw);
-            Assert.AreEqual(5, l);
+            Assert.That(l, Is.EqualTo(5));
 
             l = new Plane(Vector3.UnitY, -2).ClipPolygonToPlane(sawOut1, saw);
-            Assert.AreEqual(6, l);
+            Assert.That(l, Is.EqualTo(6));
 
             l = new Plane(-Vector3.UnitY, 2).ClipPolygonToPlane(sawOut1, saw);
-            Assert.AreEqual(7, l);
+            Assert.That(l, Is.EqualTo(7));
         }
 
         [Test]
@@ -47,10 +47,10 @@ namespace InteropTypes.Graphics.Drawing
             Parametric.PolygonClipper3.ClipLineToPlane(ref aa, ref bb, plane);
 
             var u = Plane.DotCoordinate(plane, aa);
-            Assert.IsTrue(u >= -0.001f);
+            Assert.That(u >= -0.001f);
 
             u = Plane.DotCoordinate(plane, bb);
-            Assert.IsTrue(u >= -0.001f);
+            Assert.That(u >= -0.001f);
         }
 
         [TestCase("Scene1")]

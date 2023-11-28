@@ -27,9 +27,9 @@ namespace InteropTypes.Graphics.Drawing
         [Test]
         public void TestModularScale()
         {
-            Assert.AreEqual(1, Matrix4x4.Identity.DecomposeScale());
-            Assert.AreEqual(0.5f, Matrix4x4.CreateScale(0.5f).DecomposeScale(), 0.0001f);
-            Assert.AreEqual(3, Matrix4x4.CreateScale(3).DecomposeScale(), 0.0001f);
+            Assert.That(Matrix4x4.Identity.DecomposeScale(), Is.EqualTo(1));
+            Assert.That(Matrix4x4.CreateScale(0.5f).DecomposeScale(), Is.EqualTo(0.5f).Within(0.0001f));
+            Assert.That(Matrix4x4.CreateScale(3).DecomposeScale(), Is.EqualTo(3).Within(0.0001f));
         }
 
         

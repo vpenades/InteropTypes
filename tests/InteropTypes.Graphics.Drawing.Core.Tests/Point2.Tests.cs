@@ -13,7 +13,7 @@ namespace InteropTypes.Graphics.Drawing
         [Test]
         public void Point2Tests()
         {
-            Assert.AreEqual(8, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Point2)));
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(Point2)), Is.EqualTo(8));
         }
     }
 }

@@ -21,9 +21,9 @@ namespace InteropTypes.IO
             var kk = ResourceInfo.From("test.cbz");
             var xinfo = new PhysicalFileInfo(kk.File);
 
-            Assert.NotZero(StreamProvider<IFileInfo>.Default.ReadAllBytesFrom(xinfo).Count);
-            Assert.NotZero(StreamProvider<PhysicalFileInfo>.Default.ReadAllBytesFrom(xinfo).Count);
-            Assert.NotZero(StreamProvider<IServiceProvider>.Default.ReadAllBytesFrom(xinfo).Count);            
+            Assert.That(StreamProvider<IFileInfo>.Default.ReadAllBytesFrom(xinfo).Count, Is.Not.Zero);
+            Assert.That(StreamProvider<PhysicalFileInfo>.Default.ReadAllBytesFrom(xinfo).Count, Is.Not.Zero);
+            Assert.That(StreamProvider<IServiceProvider>.Default.ReadAllBytesFrom(xinfo).Count, Is.Not.Zero);            
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace InteropTypes.IO
 
             var result = provider.ReadAllBytesFrom(list);
 
-            CollectionAssert.AreEqual(result, new byte[] { 1, 2, 4 });
+            Assert.That(new byte[] { 1, 2, 4 }, Is.EqualTo(result).AsCollection);
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace InteropTypes.IO
             var kk = ResourceInfo.From("test.cbz");
 
             var bytes = StreamProvider<FileInfo>.Default.ReadAllBytesFrom(kk);
-            Assert.NotZero(bytes.Count);
+            Assert.That(bytes.Count, Is.Not.Zero);
         }
     }
 }

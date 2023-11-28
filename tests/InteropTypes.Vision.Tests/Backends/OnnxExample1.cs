@@ -73,7 +73,7 @@ namespace InteropTypes.Vision.Backends
                     TestContext.WriteLine($"{pair.Label} = {pair.Score}");
                 }
 
-                Assert.AreEqual(expectedResult, pairs[0].Label);
+                Assert.That(pairs[0].Label, Is.EqualTo(expectedResult));
             }
         }
 

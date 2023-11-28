@@ -13,9 +13,9 @@ namespace InteropTypes.Graphics.Drawing
         [Test]
         public void Vertex3Tests()
         {
-            Assert.AreEqual(12+4+8, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vertex3)));
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vertex3)), Is.EqualTo(12 +4+8));
 
-            Assert.AreEqual(new ColorStyle(-1), new ColorStyle(uint.MaxValue));
+            Assert.That(new ColorStyle(uint.MaxValue), Is.EqualTo(new ColorStyle(-1)));
         }
     }
 }

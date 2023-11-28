@@ -25,37 +25,37 @@ namespace InteropTypes.IO
 
             using (var srcStream = XStream.WrapList(buffer.ToList()))
             {
-                Assert.IsTrue(srcStream.CanRead);
-                Assert.AreEqual(0, srcStream.Position);
-                Assert.AreEqual(buffSize, srcStream.Length);
+                Assert.That(srcStream.CanRead, Is.True);
+                Assert.That(srcStream.Position, Is.EqualTo(0));
+                Assert.That(srcStream.Length, Is.EqualTo(buffSize));
 
                 var dst = XStream.ReadAllBytes(srcStream);
 
-                CollectionAssert.AreEqual(buffer, dst);
+                Assert.That(dst, Is.EqualTo(buffer).AsCollection);
             }
 
             using (var srcStream = XStream.WrapList(buffer))
             {
-                Assert.IsTrue(srcStream.CanRead);
-                Assert.AreEqual(0, srcStream.Position);
-                Assert.AreEqual(buffSize, srcStream.Length);
+                Assert.That(srcStream.CanRead, Is.True);
+                Assert.That(srcStream.Position, Is.EqualTo(0));
+                Assert.That(srcStream.Length, Is.EqualTo(buffSize));
 
                 var dst = XStream.ReadAllBytes(srcStream);
 
-                CollectionAssert.AreEqual(buffer, dst);
+                Assert.That(dst, Is.EqualTo(buffer).AsCollection);
             }
 
             using (var srcStream = XStream.WrapList(buffer.ToList()))
             {
-                Assert.IsTrue(srcStream.CanRead);
-                Assert.AreEqual(0, srcStream.Position);
-                Assert.AreEqual(buffSize, srcStream.Length);
+                Assert.That(srcStream.CanRead);
+                Assert.That(srcStream.Position, Is.EqualTo(0));
+                Assert.That(srcStream.Length, Is.EqualTo(buffSize));
 
                 var dst = await XStream
                     .ReadAllBytesAsync(srcStream, System.Threading.CancellationToken.None)
                     .ConfigureAwait(false);
 
-                CollectionAssert.AreEqual(buffer, dst);
+                Assert.That(dst, Is.EqualTo(buffer).AsCollection);
             }
         }
 
@@ -73,34 +73,34 @@ namespace InteropTypes.IO
             list.Add(67);
 
             using (var dstStream = XStream.WrapList(list, FileMode.Create))
-            {                
-                Assert.IsTrue(dstStream.CanWrite);
-                Assert.AreEqual(0, dstStream.Length);
-                Assert.AreEqual(0, dstStream.Position);
+            {
+                Assert.That(dstStream.CanWrite);
+                Assert.That(dstStream.Length, Is.EqualTo(0));
+                Assert.That(dstStream.Position, Is.EqualTo(0));
 
                 dstStream.Write(buffer,0, buffer.Length);
 
-                Assert.AreEqual(buffer.Length, dstStream.Length);
-                Assert.AreEqual(buffer.Length, dstStream.Position);
+                Assert.That(dstStream.Length, Is.EqualTo(buffer.Length));
+                Assert.That(dstStream.Position, Is.EqualTo(buffer.Length));
             }
 
-            CollectionAssert.AreEqual(buffer, list);
+            Assert.That(list, Is.EqualTo(buffer).AsCollection);
 
             using (var dstStream = XStream.WrapList(list, FileMode.Create))
             {
-                Assert.IsTrue(dstStream.CanWrite);
-                Assert.AreEqual(0, dstStream.Length);
-                Assert.AreEqual(0, dstStream.Position);
+                Assert.That(dstStream.CanWrite);
+                Assert.That(dstStream.Length, Is.EqualTo(0));
+                Assert.That(dstStream.Position, Is.EqualTo(0));
 
                 await dstStream
                     .WriteAsync(buffer, System.Threading.CancellationToken.None)
                     .ConfigureAwait(false);
 
-                Assert.AreEqual(buffer.Length, dstStream.Length);
-                Assert.AreEqual(buffer.Length, dstStream.Position);
+                Assert.That(dstStream.Length, Is.EqualTo(buffer.Length));
+                Assert.That(dstStream.Position, Is.EqualTo(buffer.Length));
             }
 
-            CollectionAssert.AreEqual(buffer, list);
+            Assert.That(list, Is.EqualTo(buffer).AsCollection);
         }
 
     }

@@ -24,7 +24,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var x = Pixel.RGBA32.Lerp(a, b, c, d, 512, 512);
 
-            Assert.AreEqual(new Pixel.RGBA32(169, 169, 255, 191), x);
+            Assert.That(x, Is.EqualTo(new Pixel.RGBA32(169, 169, 255, 191)));
         }
 
         [Test]
@@ -49,8 +49,8 @@ namespace InteropTypes.Graphics.Bitmaps
                 var pp = new Pixel.BGRP32(col);
                 var uu = new Pixel.BGRA32(pp);
 
-                Assert.AreEqual(pp, col.To<Pixel.BGRP32>());
-                Assert.AreEqual(uu, pp.To<Pixel.BGRA32>());
+                Assert.That(col.To<Pixel.BGRP32>(), Is.EqualTo(pp));
+                Assert.That(pp.To<Pixel.BGRA32>(), Is.EqualTo(uu));
                 
                 var r0 = _LerpToBGRP32(col, col, 0);
                 col.AssertEqualsWithPremul(r0);
@@ -87,8 +87,8 @@ namespace InteropTypes.Graphics.Bitmaps
                 var pp = new Pixel.BGRP32(col);
                 var uu = new Pixel.BGRA32(pp);
 
-                Assert.AreEqual(pp, col.To<Pixel.BGRP32>());
-                Assert.AreEqual(uu, pp.To<Pixel.BGRA32>());
+                Assert.That(col.To<Pixel.BGRP32>(), Is.EqualTo(pp));
+                Assert.That(pp.To<Pixel.BGRA32>(), Is.EqualTo(uu));
                          
                 var r0 = Pixel.BGRA32.LerpToBGRP32(col, col, col, col, 0, 0);
                 col.AssertEqualsWithPremul(r0);
@@ -114,8 +114,8 @@ namespace InteropTypes.Graphics.Bitmaps
             {
                 var opaque = new Pixel.BGR24(1, r, 255);
 
-                _CheckLinear<Pixel.BGR24, Pixel.BGR24>(opaque, result => Assert.AreEqual(opaque, result));
-                _CheckLinear<Pixel.BGR24, Pixel.BGRP32>(opaque, result => Assert.AreEqual(opaque, result.To<Pixel.BGR24>()));
+                _CheckLinear<Pixel.BGR24, Pixel.BGR24>(opaque, result => Assert.That(result, Is.EqualTo(opaque)));
+                _CheckLinear<Pixel.BGR24, Pixel.BGRP32>(opaque, result => Assert.That(result.To<Pixel.BGR24>(), Is.EqualTo(opaque)));
 
                 for (int a = 0; a < 256; ++a)
                 {

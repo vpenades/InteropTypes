@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>    
-    <PlatformTarget>x64</PlatformTarget>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <RootNamespace>InteropTypes.Graphics.Bitmaps</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>8.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <IsTestProject>true</IsTestProject>
@@ -19,8 +17,7 @@
     <Compile Include="..\Shared\TestUtils.cs" Link="TestUtils.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="SkiaSharp" />
+  <ItemGroup>    
     <PackageReference Include="OpenCvSharp4.Windows" />    
     <PackageReference Include="VideoLAN.LibVLC.Windows" />
   </ItemGroup>

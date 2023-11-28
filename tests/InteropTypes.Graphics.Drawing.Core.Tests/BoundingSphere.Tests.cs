@@ -25,7 +25,7 @@ namespace InteropTypes.Graphics.Drawing
 
                 var det = matrix.GetDeterminant();
                 var volume = Math.Abs(det);
-                Assert.LessOrEqual(Math.Abs(volume - 1), BoundingSphere.SCALEDECOMPOSITIONEPSILON);
+                Assert.That(Math.Abs(volume - 1), Is.LessThanOrEqualTo(BoundingSphere.SCALEDECOMPOSITIONEPSILON));
             }            
         }
 
@@ -35,8 +35,8 @@ namespace InteropTypes.Graphics.Drawing
             var spheres = RandomSpheres.CreateRandom(new Random(117));
             var bounds = BoundingSphere.From(spheres);
 
-            Assert.IsTrue(Point3.AreEqual(bounds.Center, (5.929292f, 3.881005f, 4.277648f), 0.00001f));
-            Assert.AreEqual(7.21709871f, bounds.Radius, 0.000001f);
+            Assert.That(Point3.AreEqual(bounds.Center, (5.929292f, 3.881005f, 4.277648f), 0.00001f));
+            Assert.That(bounds.Radius, Is.EqualTo(7.21709871f).Within(0.000001f));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace InteropTypes.Graphics.Drawing
         {
             var sphere = BoundingSphere.FromPoints(new Point3[] { (-1, 0, 0), (1, 0, 0), (0,0,0) });
 
-            Assert.AreEqual(new BoundingSphere(Point3.Zero, 1), sphere);
+            Assert.That(sphere, Is.EqualTo(new BoundingSphere(Point3.Zero, 1)));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace InteropTypes.Graphics.Drawing
             
             var merged = BoundingSphere.Merge(sphere1,sphere2);
 
-            Assert.AreEqual(new BoundingSphere(Point3.Zero, 3), merged);
+            Assert.That(merged, Is.EqualTo(new BoundingSphere(Point3.Zero, 3)));
         }
 
         [Test]
@@ -63,15 +63,15 @@ namespace InteropTypes.Graphics.Drawing
         {
             var plane = new System.Numerics.Plane(System.Numerics.Vector3.UnitX, -3);
 
-            Assert.AreEqual(-1, new BoundingSphere((-4.1f, 0, 0), 1).CompareTo(plane)); // behind plane
-            Assert.AreEqual(0, new BoundingSphere((2.5f, 0, 0), 1).CompareTo(plane)); // overlapping plane
-            Assert.AreEqual(1, new BoundingSphere((4.1f, 0, 0), 1).CompareTo(plane)); // over plane
+            Assert.That(new BoundingSphere((-4.1f, 0, 0), 1).CompareTo(plane), Is.EqualTo(-1)); // behind plane
+            Assert.That(new BoundingSphere((2.5f, 0, 0), 1).CompareTo(plane), Is.Zero); // overlapping plane
+            Assert.That(new BoundingSphere((4.1f, 0, 0), 1).CompareTo(plane), Is.EqualTo(1)); // over plane
 
             var sphere = new BoundingSphere((3, 0, 0), 1);
 
-            Assert.AreEqual(1, new BoundingSphere((7.1f, 0, 0), 1).CompareTo(sphere)); // outside
-            Assert.AreEqual(0, new BoundingSphere((2.5f, 0, 0), 1).CompareTo(sphere));  // overlapping bounds
-            Assert.AreEqual(-1, new BoundingSphere((3.5f, 0, 0), 0.2f).CompareTo(sphere)); // inside
+            Assert.That(new BoundingSphere((7.1f, 0, 0), 1).CompareTo(sphere), Is.EqualTo(1)); // outside
+            Assert.That(new BoundingSphere((2.5f, 0, 0), 1).CompareTo(sphere), Is.Zero);  // overlapping bounds
+            Assert.That(new BoundingSphere((3.5f, 0, 0), 0.2f).CompareTo(sphere), Is.EqualTo(-1)); // inside
         }
     }
 }

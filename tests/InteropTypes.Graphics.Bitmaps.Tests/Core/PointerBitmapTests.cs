@@ -19,18 +19,18 @@ namespace InteropTypes.Graphics.Bitmaps
             {
                 ptr = ptr.Slice((1, 1, 2, 2));
 
-                Assert.AreEqual(true, ptr.IsReadOnly);
+                Assert.That(ptr.IsReadOnly);
 
-                Assert.AreEqual(2, ptr.Width);
-                Assert.AreEqual(2, ptr.Height);
-                Assert.AreEqual(16, ptr.StepByteSize);
+                Assert.That(ptr.Width, Is.EqualTo(2));
+                Assert.That(ptr.Height, Is.EqualTo(2));
+                Assert.That(ptr.StepByteSize, Is.EqualTo(16));
 
                 var ptrSpan = ptr.AsSpanBitmapOfType<int>();
 
-                Assert.AreEqual(0, ptrSpan.GetPixel(0, 0));
-                Assert.AreEqual(0, ptrSpan.GetPixel(1, 0));
-                Assert.AreEqual(0, ptrSpan.GetPixel(0, 1));
-                Assert.AreEqual(0, ptrSpan.GetPixel(1, 1));
+                Assert.That(ptrSpan.GetPixel(0, 0), Is.Zero);
+                Assert.That(ptrSpan.GetPixel(1, 0), Is.Zero);
+                Assert.That(ptrSpan.GetPixel(0, 1), Is.Zero);
+                Assert.That(ptrSpan.GetPixel(1, 1), Is.Zero);
             }
 
             var bmp = new MemoryBitmap<int>(4, 4, Pixel.ARGB32.Format);

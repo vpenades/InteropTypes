@@ -41,13 +41,13 @@ namespace InteropTypes.Graphics.Drawing
             var cam2 = CameraTransform2D.Create(Matrix3x2.Identity, (500, -500));    // Bottom-Top
 
             Point2 p1 = Vector2.Transform(Vector2.Zero, cam1.CreateFinalMatrix((500, 500)));
-            Assert.AreEqual(Point2.Zero, p1);
+            Assert.That(p1, Is.EqualTo(Point2.Zero));
 
             p1 = Vector2.Transform(Vector2.Zero, cam2.CreateFinalMatrix((1000, 1000)));
-            Assert.AreEqual(new Point2(0, 1000), p1);
+            Assert.That(p1, Is.EqualTo(new Point2(0, 1000)));
 
             p1 = Vector2.Transform(Vector2.Zero, cam1.CreateFinalMatrix((1000, 500)));
-            Assert.AreEqual(new Point2(250, 0), p1);
+            Assert.That(p1, Is.EqualTo(new Point2(250, 0)));
         }
 
         [Test]
@@ -60,27 +60,27 @@ namespace InteropTypes.Graphics.Drawing
             var innerCamera = CameraTransform2D.Create(Matrix3x2.CreateTranslation(700,0), (500, -500));
 
             // get virtual viewport
-            Assert.IsTrue(Transforms.Canvas2DTransform.TryCreate(backend, innerCamera, out var virtualCanvas));
+            Assert.That(Transforms.Canvas2DTransform.TryCreate(backend, innerCamera, out var virtualCanvas));
 
             // draw onto the virtual canvas
             virtualCanvas.DrawRectangle((2, 2), (1, 1), System.Drawing.Color.Red);
 
             // check bounds in the physical backend
-            var (bMin, bMax) = backend.BoundingBox;            
-            Assert.AreEqual(53, bMax.X);
-            Assert.AreEqual(498, bMax.Y);
+            var (bMin, bMax) = backend.BoundingBox;
+            Assert.That(bMax.X, Is.EqualTo(53));
+            Assert.That(bMax.Y, Is.EqualTo(498));
             bMax -= bMin;
-            Assert.AreEqual(1, bMax.X);
-            Assert.AreEqual(1, bMax.Y);
+            Assert.That(bMax.X, Is.EqualTo(1));
+            Assert.That(bMax.Y, Is.EqualTo(1));
 
             // check if we can retrieve the outer camera bounds
-            Assert.IsTrue(CameraTransform2D.TryGetOuterCamera(virtualCanvas, out var outerCamera));
+            Assert.That(CameraTransform2D.TryGetOuterCamera(virtualCanvas, out var outerCamera));
 
             var outerRect = outerCamera.GetOuterBoundingRect();
-            Assert.AreEqual(-50, outerRect.X);
-            Assert.AreEqual(0, outerRect.Y);
-            Assert.AreEqual(2000, outerRect.Width);
-            Assert.AreEqual(500, outerRect.Height);
+            Assert.That(outerRect.X, Is.EqualTo(-50));
+            Assert.That(outerRect.Y, Is.EqualTo(0));
+            Assert.That(outerRect.Width, Is.EqualTo(2000));
+            Assert.That(outerRect.Height, Is.EqualTo(500));
         }        
     }
 }

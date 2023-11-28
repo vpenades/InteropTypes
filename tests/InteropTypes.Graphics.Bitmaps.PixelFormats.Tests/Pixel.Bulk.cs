@@ -20,7 +20,7 @@ namespace InteropTypes.Graphics.Bitmaps
                     var r1 = (x * y) / 255;
                     var r2 = (x * y).DivideBy255();
 
-                    Assert.AreEqual(r1, r2);
+                    Assert.That(r1, Is.EqualTo(r2));
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace InteropTypes.Graphics.Bitmaps
                     dstP = new Pixel.BGRA32(dstP.R, dstP.G, dstP.B, (Byte)255);
                 }
 
-                Assert.AreEqual(srcP, dstP);
+                Assert.That(srcP, Is.EqualTo(dstP));
             }            
         }
 
@@ -115,10 +115,13 @@ namespace InteropTypes.Graphics.Bitmaps
                 var srcP = new Pixel.RGBP32(srcA);
                 var dstP = new Pixel.RGBP32(dstA);
 
-                Assert.AreEqual(srcP.PreR, dstP.PreR, 1);
-                Assert.AreEqual(srcP.PreG, dstP.PreG, 1);
-                Assert.AreEqual(srcP.PreB, dstP.PreB, 1);
-                Assert.AreEqual(srcP.A, dstP.A, 1);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(dstP.PreR, Is.EqualTo(srcP.PreR).Within(1));
+                    Assert.That(dstP.PreG, Is.EqualTo(srcP.PreG).Within(1));
+                    Assert.That(dstP.PreB, Is.EqualTo(srcP.PreB).Within(1));
+                    Assert.That(dstP.A, Is.EqualTo(srcP.A).Within(1));
+                });
             }
         }        
     }

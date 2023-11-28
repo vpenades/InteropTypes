@@ -11,19 +11,19 @@ namespace InteropTypes.Vision
         [Test]
         public void TestEquality()
         {
-            Assert.AreEqual(new Score(0, false), Score.Zero);
-            Assert.AreEqual(new Score(1, true), Score.Ok);
+            Assert.That(Score.Zero, Is.EqualTo(new Score(0, false)));
+            Assert.That(Score.Ok, Is.EqualTo(new Score(1, true)));
 
-            Assert.Less(Score.Zero, Score.Ok);
-            Assert.IsTrue(Score.Ok > Score.Zero);
-            Assert.IsTrue(Score.Zero < Score.Ok);
+            Assert.That(Score.Zero, Is.LessThan(Score.Ok));
+            Assert.That(Score.Ok > Score.Zero);
+            Assert.That(Score.Zero < Score.Ok);
 
-            Assert.IsTrue(new Score(1, false) > new Score(0, false));
-            Assert.IsTrue(new Score(0, true) > new Score(1, false));
+            Assert.That(new Score(1, false) > new Score(0, false));
+            Assert.That(new Score(0, true) > new Score(1, false));
 
             var s1 = new Score(0.54234f, true);
 
-            Assert.AreNotEqual(s1, Score.Ok);
+            Assert.That(Score.Ok, Is.Not.EqualTo(s1));
 
             var sig0 = new Score(-17, Score.ResultType.Sigmoid);
             var sig1 = new Score(0, Score.ResultType.Sigmoid);

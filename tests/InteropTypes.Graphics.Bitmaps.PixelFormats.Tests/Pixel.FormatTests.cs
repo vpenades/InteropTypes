@@ -12,8 +12,8 @@ namespace InteropTypes.Graphics.Bitmaps
     {
         [Test]
         public void TestFormatMemoryFootprint()
-        {            
-            Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat)));
+        {
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat)), Is.EqualTo(4));
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Bitmaps
             foreach (var fmt in PixelFormat.AllFormats)
             {
                 var pixelType = fmt.GetPixelTypeOrNull();
-                Assert.NotNull(pixelType);                
+                Assert.That(pixelType, Is.Not.Null);                
 
                 var pixel = Activator.CreateInstance(pixelType);                
 
@@ -56,7 +56,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 }
             }
 
-            Assert.IsFalse(fail);
+            Assert.That(fail, Is.False);
         }
     }
 }

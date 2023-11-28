@@ -15,10 +15,10 @@ namespace InteropTypes.Graphics.Drawing
         {
             var obj = new _GlobalStyleFrontEndExample();
 
-            Assert.IsTrue(GlobalStyle.TrySetGlobalProperty(obj, GlobalStyle.COLOR, ColorStyle.Red));
-            Assert.IsTrue(GlobalStyle.TryGetGlobalProperty<ColorStyle>(obj, GlobalStyle.COLOR, out var color));
+            Assert.That(GlobalStyle.TrySetGlobalProperty(obj, GlobalStyle.COLOR, ColorStyle.Red));
+            Assert.That(GlobalStyle.TryGetGlobalProperty<ColorStyle>(obj, GlobalStyle.COLOR, out var color));
 
-            Assert.AreEqual(ColorStyle.Red, color);
+            Assert.That(color, Is.EqualTo(ColorStyle.Red));
         }
 
 

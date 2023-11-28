@@ -18,9 +18,9 @@ namespace InteropTypes.Graphics.Bitmaps
         public void TestHashCodes()
         {
             var gray = new MemoryBitmap<Byte>(256, 256, Pixel.Luminance8.Format);
-            Assert.AreEqual(256, gray.Info.StepByteSize);
+            Assert.That(gray.Info.StepByteSize, Is.EqualTo(256));
             var grayWithStride = new MemoryBitmap<Byte>(256, 256, Pixel.Luminance8.Format, 320);
-            Assert.AreEqual(320, grayWithStride.Info.StepByteSize);
+            Assert.That(grayWithStride.Info.StepByteSize, Is.EqualTo(320));
 
 
             var rnd = new Random(117);
@@ -31,16 +31,16 @@ namespace InteropTypes.Graphics.Bitmaps
 
             grayWithStride.SetPixels(0, 0, gray.AsSpanBitmap());
 
-            Assert.AreEqual(gray.GetHashCode(), grayWithStride.GetHashCode());
+            Assert.That(grayWithStride.GetHashCode(), Is.EqualTo(gray.GetHashCode()));
 
             var span = gray.AsSpanBitmap();
             var less = span.AsTypeless();
             var hash = gray.GetHashCode();
 
-            Assert.AreEqual(1953103375, hash);
-            Assert.AreEqual(hash, gray.AsTypeless().GetHashCode());
-            Assert.AreEqual(hash, span.GetHashCode());
-            Assert.AreEqual(hash, less.GetHashCode());
+            Assert.That(hash, Is.EqualTo(1953103375));
+            Assert.That(gray.AsTypeless().GetHashCode(), Is.EqualTo(hash));
+            Assert.That(span.GetHashCode(), Is.EqualTo(hash));
+            Assert.That(less.GetHashCode(), Is.EqualTo(hash));
         }
     }
 }

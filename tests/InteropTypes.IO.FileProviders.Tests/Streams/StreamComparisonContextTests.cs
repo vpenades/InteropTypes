@@ -19,15 +19,15 @@ namespace InteropTypes.IO
             var c = new System.IO.MemoryStream(new byte[] { 1, 2, 3, 4 });
             var d = new System.IO.MemoryStream(new byte[] { 1, 2, 4 });
 
-            Assert.IsFalse(StreamEqualityComparer.Default.AreStreamsContentEqual(a, b));
+            Assert.That(StreamEqualityComparer.Default.AreStreamsContentEqual(a, b), Is.False);
             a.Position= 0;
             b.Position= 0;
 
-            Assert.IsTrue(StreamEqualityComparer.Default.AreStreamsContentEqual(b, d));
+            Assert.That(StreamEqualityComparer.Default.AreStreamsContentEqual(b, d), Is.True);
             b.Position = 0;
             d.Position = 0;
 
-            Assert.IsFalse(StreamEqualityComparer.Default.AreStreamsContentEqual(a, c));
+            Assert.That(StreamEqualityComparer.Default.AreStreamsContentEqual(a, c), Is.False);
             a.Position = 0;
             c.Position = 0;
         }
@@ -39,11 +39,11 @@ namespace InteropTypes.IO
             var b = new RandomStream(int.MaxValue / 8, 3);
             var c = new RandomStream(int.MaxValue / 8, 2);
 
-            Assert.IsFalse(StreamEqualityComparer.Default.AreStreamsContentEqual(a, b));
+            Assert.That(StreamEqualityComparer.Default.AreStreamsContentEqual(a, b), Is.False);
             a.Position = 0;
             b.Position = 0;
 
-            Assert.IsTrue(StreamEqualityComparer.Default.AreStreamsContentEqual(a, c));
+            Assert.That(StreamEqualityComparer.Default.AreStreamsContentEqual(a, c), Is.True);
             a.Position = 0;
             c.Position = 0;
         }

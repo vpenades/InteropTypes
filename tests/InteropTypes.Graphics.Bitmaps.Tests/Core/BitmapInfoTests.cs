@@ -19,13 +19,13 @@ namespace InteropTypes.Graphics.Bitmaps
             var b = new BitmapInfo(10, 10, Pixel.Alpha8.Format, 15);
 
             // having the same hash code does not mean they're equal.
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+            Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
 
             // The layout comparison should be equal.
-            Assert.AreEqual(a.Layout, b.Layout);
+            Assert.That(b.Layout, Is.EqualTo(a.Layout));
 
             // structure wise comparisons is not equal.
-            Assert.AreNotEqual(a, b);
+            Assert.That(b, Is.Not.EqualTo(a));
         }
 
     }

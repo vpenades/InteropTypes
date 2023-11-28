@@ -181,7 +181,7 @@ namespace InteropTypes.Graphics.Bitmaps
             dst1.AsSpanBitmap().TryGetAllPixels(out var dst1pix);
             dst2.AsSpanBitmap().TryGetAllPixels(out var dst2pix);
 
-            Assert.IsTrue(dst1pix.SequenceEqual(dst2pix));
+            Assert.That(dst1pix.SequenceEqual(dst2pix));
         }
 
 

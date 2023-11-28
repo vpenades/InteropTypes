@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Drawing
 
             var spriteFont = Bitmaps.Fonts.XnaSpriteFont.Load(fontPath);
 
-            Assert.AreEqual(224, spriteFont.Glyphs.Count);
+            Assert.That(spriteFont.Glyphs, Has.Count.EqualTo(224));
 
             for (int i = 0; i < spriteFont.Glyphs.Count; ++i)
             {
@@ -48,7 +48,7 @@ namespace InteropTypes.Graphics.Drawing
 
             var b = Fonts.HersheyFont.Default.MeasureTextLine("Hello world!");
 
-            Assert.AreEqual(a, b);
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]

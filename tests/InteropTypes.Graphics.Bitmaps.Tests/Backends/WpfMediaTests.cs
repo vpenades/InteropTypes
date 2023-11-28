@@ -18,7 +18,7 @@ namespace InteropTypes.Graphics.Backends
         [SetUp]
         public void SetUp()
         {
-            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
+            Assert.That(IntPtr.Size, Is.EqualTo(8), "x64 test environment required");
         }
 
         [TestCase("Resources\\diagram.jpg")]
@@ -62,27 +62,27 @@ namespace InteropTypes.Graphics.Backends
 
             src256.Source.SetPixels<Byte>(100);
             src256.CopyTo(ref dst);
-            Assert.NotNull(dst);
-            Assert.AreEqual(typeof(WriteableBitmap), dst.GetType());
-            Assert.AreEqual(256, dst.PixelWidth);
-            Assert.AreEqual(256, dst.PixelHeight);
-            Assert.IsTrue(allPixelsEqualTo(dst, 100));
+            Assert.That(dst, Is.Not.Null);
+            Assert.That(dst.GetType(), Is.EqualTo(typeof(WriteableBitmap)));
+            Assert.That(dst.PixelWidth, Is.EqualTo(256));
+            Assert.That(dst.PixelHeight, Is.EqualTo(256));
+            Assert.That(allPixelsEqualTo(dst, 100));
 
             src256.Source.SetPixels<Byte>(105);
             src256.CopyTo(ref dst);
-            Assert.IsTrue(allPixelsEqualTo(dst, 105));
+            Assert.That(allPixelsEqualTo(dst, 105));
 
             src512.Source.SetPixels<Byte>(130);
             src512.CopyTo(ref dst);
-            Assert.NotNull(dst);
-            Assert.AreEqual(typeof(WriteableBitmap), dst.GetType());
-            Assert.AreEqual(512, dst.PixelWidth);
-            Assert.AreEqual(512, dst.PixelHeight);
-            Assert.IsTrue(allPixelsEqualTo(dst, 130));
+            Assert.That(dst, Is.Not.Null);
+            Assert.That(dst.GetType(), Is.EqualTo(typeof(WriteableBitmap)));
+            Assert.That(dst.PixelWidth, Is.EqualTo(512));
+            Assert.That(dst.PixelHeight, Is.EqualTo(512));
+            Assert.That(allPixelsEqualTo(dst, 130));
 
             src512.Source.SetPixels<Byte>(135);
             src512.CopyTo(ref dst);
-            Assert.IsTrue(allPixelsEqualTo(dst, 135));
+            Assert.That(allPixelsEqualTo(dst, 135));
         }
     }
 }

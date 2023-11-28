@@ -33,23 +33,23 @@ namespace Interop.MathFSource.Tests
 
         private static void TestIntrinsics(Func<double, double> doubleFunc, Func<float, float> singleFunc, float tolerance)
         {
-            Assert.AreEqual(doubleFunc(-1.5), singleFunc(-1.5f), tolerance);
-            Assert.AreEqual(doubleFunc(-0.6), singleFunc(-0.6f), tolerance);
-            Assert.AreEqual(doubleFunc(-0.5), singleFunc(-0.5f), tolerance);
-            Assert.AreEqual(doubleFunc(-0.4), singleFunc(-0.4f), tolerance);
+            Assert.That(singleFunc(-1.5f), Is.EqualTo(doubleFunc(-1.5)).Within(tolerance));
+            Assert.That(singleFunc(-0.6f), Is.EqualTo(doubleFunc(-0.6)).Within(tolerance));
+            Assert.That(singleFunc(-0.5f), Is.EqualTo(doubleFunc(-0.5)).Within(tolerance));
+            Assert.That(singleFunc(-0.4f), Is.EqualTo(doubleFunc(-0.4)).Within(tolerance));
 
-            Assert.AreEqual(doubleFunc(0), singleFunc(0), tolerance);
+            Assert.That(singleFunc(0), Is.EqualTo(doubleFunc(0)).Within(tolerance));
 
-            Assert.AreEqual(doubleFunc(0.4), singleFunc(0.4f), tolerance);
-            Assert.AreEqual(doubleFunc(0.5), singleFunc(0.5f), tolerance);
-            Assert.AreEqual(doubleFunc(0.6), singleFunc(0.6f), tolerance);
-            Assert.AreEqual(doubleFunc(1.5), singleFunc(1.5f), tolerance);            
+            Assert.That(singleFunc(0.4f), Is.EqualTo(doubleFunc(0.4)).Within(tolerance));
+            Assert.That(singleFunc(0.5f), Is.EqualTo(doubleFunc(0.5)).Within(tolerance));
+            Assert.That(singleFunc(0.6f), Is.EqualTo(doubleFunc(0.6)).Within(tolerance));
+            Assert.That(singleFunc(1.5f), Is.EqualTo(doubleFunc(1.5)).Within(tolerance));            
         }
 
         [Test]
         public void TestIEEERemainder()
         {
-            Assert.AreEqual(Math.IEEERemainder(2, 1.6f), MathF.IEEERemainder(2, 1.6f), 0.00001f);            
+            Assert.That(MathF.IEEERemainder(2, 1.6f), Is.EqualTo(Math.IEEERemainder(2, 1.6f)).Within(0.00001f));            
         }
     }
 }

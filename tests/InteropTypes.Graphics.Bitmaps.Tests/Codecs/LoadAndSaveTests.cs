@@ -19,7 +19,7 @@ namespace InteropTypes.Codecs
         [SetUp]
         public void SetUp()
         {
-            Assert.AreEqual(8, IntPtr.Size, "x64 test environment required");
+            Assert.That(IntPtr.Size, Is.EqualTo(8), "x64 test environment required");
         }
 
         [TestCase("shannon.jpg")]
@@ -29,7 +29,7 @@ namespace InteropTypes.Codecs
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var bitmap = MemoryBitmap.Load(ResourceInfo.From(filePath));
-            Assert.IsFalse(bitmap.IsEmpty);
+            Assert.That(bitmap.IsEmpty, Is.False);
             TestContext.WriteLine(bitmap.Info);
             sw.Stop();
         }
@@ -81,10 +81,9 @@ namespace InteropTypes.Codecs
         public void LoadWithMultiCodec(string filePath)
         {
             var img = MemoryBitmap.Load(ResourceInfo.From(filePath), Codecs.STBCodec.Default, Codecs.OpenCvCodec.Default, Codecs.ImageSharpCodec.Default, Codecs.GDICodec.Default, Codecs.SkiaCodec.Default);
-
-            Assert.NotNull(img);
-            Assert.AreEqual(512, img.Width);
-            Assert.AreEqual(512, img.Height);
+            
+            Assert.That(img.Width, Is.EqualTo(512));
+            Assert.That(img.Height, Is.EqualTo(512));
         }
 
         // [TestCase("shannon.dds")]
@@ -95,14 +94,12 @@ namespace InteropTypes.Codecs
         [TestCase("shannon.webp")]
         public void LoadWithConversion(string filePath)
         {
-            var bgr = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From(filePath), STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
-            Assert.NotNull(bgr);
+            var bgr = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From(filePath), STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);            
 
-            var rgb = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From(filePath), STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);
-            Assert.NotNull(rgb);            
+            var rgb = MemoryBitmap<Pixel.BGR24>.Load(ResourceInfo.From(filePath), STBCodec.Default, OpenCvCodec.Default, ImageSharpCodec.Default, GDICodec.Default, SkiaCodec.Default);            
 
-            Assert.AreEqual(512, bgr.Width);
-            Assert.AreEqual(512, bgr.Height);
+            Assert.That(bgr.Width, Is.EqualTo(512));
+            Assert.That(bgr.Height, Is.EqualTo(512));
         }
 
         [Test]

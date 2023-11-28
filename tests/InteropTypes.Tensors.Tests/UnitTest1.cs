@@ -28,8 +28,8 @@ namespace InteropTypes.Tensors
 
             var indices = s1.GetDecomposedIndex(idx);
 
-            Assert.AreEqual(1, indices[0]);
-            Assert.AreEqual(2, indices[1]);
+            Assert.That(indices[0], Is.EqualTo(1));
+            Assert.That(indices[1], Is.EqualTo(2));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace InteropTypes.Tensors
             SpanTensor.MatrixMultiply(t1, t2, tr);
             var trm = SpanTensor.ToMatrix4x4(tr);
 
-            Assert.AreEqual(mr, trm);            
+            Assert.That(trm, Is.EqualTo(mr));            
         }
 
         [Test]

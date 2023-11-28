@@ -40,7 +40,7 @@ namespace InteropTypes.Graphics.Drawing
         [Test]
         public void ColorStyleTests()
         {
-            Assert.AreEqual(4, System.Runtime.InteropServices.Marshal.SizeOf(typeof(ColorStyle)));            
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(ColorStyle)), Is.EqualTo(4));            
         }
 
 
@@ -60,8 +60,8 @@ namespace InteropTypes.Graphics.Drawing
                     var aa = 257 * a;
                     var premulFast = (r * aa + 255) >> 16;
 
-                    Assert.LessOrEqual(premulFast, aa);
-                    Assert.AreEqual(premulSlow, premulFast);                    
+                    Assert.That(premulFast, Is.LessThanOrEqualTo(aa));
+                    Assert.That(premulFast, Is.EqualTo(premulSlow));                    
                 }
             }
         }
@@ -85,17 +85,17 @@ namespace InteropTypes.Graphics.Drawing
                     // fast premul
                     var aa = 257 * a;
                     var premulFast = (r * aa + 255) >> 16;
-                    Assert.LessOrEqual(premulFast, aa);
+                    Assert.That(premulFast, Is.LessThanOrEqualTo(aa));
 
                     // fast unpremul
                     var rcp = (65536 * 255) / a;
                     var unpremulFast = (premulSlow * rcp + 255) >> 16;
-                    Assert.LessOrEqual(unpremulFast, 255);
+                    Assert.That(unpremulFast, Is.LessThanOrEqualTo(255));
 
                     // checks
 
-                    Assert.AreEqual(premulSlow, premulFast);
-                    Assert.AreEqual(unpremulSlow, unpremulFast);                    
+                    Assert.That(premulFast, Is.EqualTo(premulSlow));
+                    Assert.That(unpremulFast, Is.EqualTo(unpremulSlow));                    
                 }
             }            
         }

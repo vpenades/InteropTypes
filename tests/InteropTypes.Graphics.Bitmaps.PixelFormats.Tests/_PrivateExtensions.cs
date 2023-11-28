@@ -201,7 +201,7 @@ namespace InteropTypes.Graphics.Bitmaps
             if (b.A == 255)
             {
                 var bb = new Pixel.BGRA32(b);
-                Assert.AreEqual(a, bb);
+                Assert.That(bb,Is.EqualTo(a));
                 return;
             }
 
@@ -209,7 +209,7 @@ namespace InteropTypes.Graphics.Bitmaps
             if (b.PreG > b.A) throw new ArgumentOutOfRangeException(nameof(b));
             if (b.PreB > b.A) throw new ArgumentOutOfRangeException(nameof(b));
 
-            Assert.AreEqual(a.A, b.A, "Alpha");            
+            Assert.That(a.A, Is.EqualTo(b.A), "Alpha");            
             if (a.A == 0) return;
 
             // premultiply usually rounds down the RGB components.
@@ -221,16 +221,13 @@ namespace InteropTypes.Graphics.Bitmaps
             var errorG = a.G - art.G;
             var errorB = a.B - art.B;
 
-            // valid values must be between the rounded down values and the true values.
 
-            Assert.GreaterOrEqual(brt.R, art.R, "Red");
-            Assert.LessOrEqual(brt.R, a.R + errorR, "Red");
-
-            Assert.GreaterOrEqual(brt.G, art.G, "Green");
-            Assert.LessOrEqual(brt.G, a.G + errorG, "Green");
-
-            Assert.GreaterOrEqual(brt.B, art.B, "Blue");
-            Assert.LessOrEqual(brt.B, a.B + errorB, "Blue");
+            Assert.Multiple(() => // valid values must be between the rounded down values and the true values.
+            {
+                Assert.That(brt.R, Is.InRange(art.R, a.R + errorR), "Red");
+                Assert.That(brt.G, Is.InRange(art.G, a.G + errorR), "Green");
+                Assert.That(brt.B, Is.InRange(art.B, a.B + errorR), "Blue");
+            });
         }
 
         public static bool EqualsWithPremul(this Pixel.BGRA32 a, Pixel.BGRP32 b)

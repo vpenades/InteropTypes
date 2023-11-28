@@ -18,18 +18,18 @@ namespace InteropTypes.IO
                 return FilePathUtils.TryGetCompositedExtension(name, dots, out var ext) ? ext : "<ERROR>";
             }
 
-            Assert.AreEqual(".1", _GetExt(".1", 1));
-            Assert.AreEqual(".1", _GetExt("file.1", 1));
-            Assert.AreEqual(".2", _GetExt("file.1.2", 1));
-            Assert.AreEqual(".1.2", _GetExt("file.1.2", 2));
-            Assert.AreEqual(".1.2", _GetExt(".1.2", 2));
-            Assert.AreEqual(".2.3", _GetExt(".1.2.3", 2));
-            Assert.AreEqual(".1.2.3", _GetExt(".1.2.3", 3));
-            Assert.AreEqual(".2ext.2", _GetExt(".2ext.2", 2));
+            Assert.That(_GetExt(".1", 1), Is.EqualTo(".1"));
+            Assert.That(_GetExt("file.1", 1), Is.EqualTo(".1"));
+            Assert.That(_GetExt("file.1.2", 1), Is.EqualTo(".2"));
+            Assert.That(_GetExt("file.1.2", 2), Is.EqualTo(".1.2"));
+            Assert.That(_GetExt(".1.2", 2), Is.EqualTo(".1.2"));
+            Assert.That(_GetExt(".1.2.3", 2), Is.EqualTo(".2.3"));
+            Assert.That(_GetExt(".1.2.3", 3), Is.EqualTo(".1.2.3"));
+            Assert.That(_GetExt(".2ext.2", 2), Is.EqualTo(".2ext.2"));
 
-            Assert.AreEqual("<ERROR>", _GetExt(".1", 2));
-            Assert.AreEqual("<ERROR>", _GetExt("1", 2));
-            Assert.AreEqual("<ERROR>", _GetExt(".1.2", 3));
+            Assert.That(_GetExt(".1", 2), Is.EqualTo("<ERROR>"));
+            Assert.That(_GetExt("1", 2), Is.EqualTo("<ERROR>"));
+            Assert.That(_GetExt(".1.2", 3), Is.EqualTo("<ERROR>"));
         }
     }
 }

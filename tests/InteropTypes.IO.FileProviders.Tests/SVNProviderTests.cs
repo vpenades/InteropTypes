@@ -18,6 +18,16 @@ namespace InteropTypes.IO
 {
     internal class SVNProviderTests
     {
+        [Test]
+        public void LogSVNTest()
+        {
+            using (var client = new SVNDisposableFileProvider("https://github.com/vpenades/InteropTypes.git/trunk/",15))
+            {
+                var log = client.GetLog(client.LastChangeRevision - 30);
+            }
+        }
+
+
         [TestCase(15, 1, "9C1AD3091FC8210C1A790F08660871ECC4F7CA46878D4FB89DBB4BC897E27870")]
         [TestCase(160, 156, "A7473F98566B6002CE75082C13470EB932159A713B68C2D1B58AA297EC220C82")]
         [TestCase(long.MaxValue, -1, "")]
@@ -38,16 +48,16 @@ namespace InteropTypes.IO
                 if (readmeRev > 0)
                 {
                     var finfoA = root.FirstOrDefault(item => !item.IsDirectory && item.Name == "README.md");
-                    Assert.NotNull(finfoA);
+                    Assert.That(finfoA, Is.Not.Null);
 
                     var finfoB = client.GetFileInfo("README.md");
-                    Assert.NotNull(finfoB);
+                    Assert.That(finfoB, Is.Not.Null);
 
-                    Assert.AreEqual(readmeRev, SVNFileProvider.GetRevisionNumberFrom(finfoB));
+                    Assert.That(SVNFileProvider.GetRevisionNumberFrom(finfoB), Is.EqualTo(readmeRev));
 
                     var sha256 = Hash256.Sha256FromFile(finfoB).ToHexString();
 
-                    Assert.AreEqual(sha256, readmeSha256);                    
+                    Assert.That(readmeSha256, Is.EqualTo(sha256));                    
                 }
             }
         }        

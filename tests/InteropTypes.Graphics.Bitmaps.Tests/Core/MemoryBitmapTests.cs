@@ -28,10 +28,10 @@ namespace InteropTypes.Graphics.Bitmaps
         public void CreateMemoryBitmapWithKnownType()
         {
             var m1 = new MemoryBitmap<Pixel.BGRA32>(16, 16);
-            Assert.AreEqual(Pixel.BGRA32.Format, m1.PixelFormat);
+            Assert.That(m1.PixelFormat, Is.EqualTo(Pixel.BGRA32.Format));
 
             var m2 = new MemoryBitmap<Pixel.BGRA32>(new Byte[256*4], 16, 16);
-            Assert.AreEqual(Pixel.BGRA32.Format, m2.PixelFormat);
+            Assert.That(m2.PixelFormat, Is.EqualTo(Pixel.BGRA32.Format));
         }
 
         [Test]
@@ -46,8 +46,8 @@ namespace InteropTypes.Graphics.Bitmaps
 
             m2.Save(new AttachmentInfo("result.png"));
 
-            Assert.AreEqual(0xff00ff00, m2.GetPixel(0, 0));
-            Assert.AreEqual(0xffff00ff, m2.GetPixel(0, 1));            
+            Assert.That(m2.GetPixel(0, 0), Is.EqualTo(0xff00ff00));
+            Assert.That(m2.GetPixel(0, 1), Is.EqualTo(0xffff00ff));            
         }
 
         [Test]
@@ -85,17 +85,17 @@ namespace InteropTypes.Graphics.Bitmaps
             src.SetPixels(1);
 
             var (min, max) = SpanBitmap.MinMax(src);
-            Assert.AreEqual(min, 1);
-            Assert.AreEqual(max, 1);
+            Assert.That(1, Is.EqualTo(min));
+            Assert.That(1, Is.EqualTo(max));
 
             SpanBitmap.CopyPixels(src, dst, (0,128), (0, 255));
-            Assert.IsTrue(dst.EnumeratePixels().All(p => p.Pixel == 128));
+            Assert.That(dst.EnumeratePixels().All(p => p.Pixel == 128));
 
             SpanBitmap.CopyPixels(src, dst, (0,1), (10, 255));
-            Assert.IsTrue(dst.EnumeratePixels().All(p => p.Pixel == 10));            
+            Assert.That(dst.EnumeratePixels().All(p => p.Pixel == 10));            
 
             SpanBitmap.CopyPixels(src, dst, (0,1), (2, 3));
-            Assert.IsTrue(dst.EnumeratePixels().All(p => p.Pixel == 2));
+            Assert.That(dst.EnumeratePixels().All(p => p.Pixel == 2));
         }
 
         [Test]
@@ -106,18 +106,18 @@ namespace InteropTypes.Graphics.Bitmaps
 
             src.SetPixels(Vector3.One);
 
-            Assert.IsTrue(SpanBitmap.ArePixelsEqual(src, src));
+            Assert.That(SpanBitmap.ArePixelsEqual(src, src));
 
             SpanBitmap.CopyPixels(src, dst, (0,128), (0, 255));
-            Assert.IsTrue(dst.EnumeratePixels().All(p => p.Pixel.Equals(new PixelBGR(128))));
+            Assert.That(dst.EnumeratePixels().All(p => p.Pixel.Equals(new PixelBGR(128))));
 
             SpanBitmap.CopyPixels(src, dst, (0,1), (10, 255));
-            Assert.IsTrue(dst.EnumeratePixels().All(p => p.Pixel.Equals(new PixelBGR(10))));
+            Assert.That(dst.EnumeratePixels().All(p => p.Pixel.Equals(new PixelBGR(10))));
 
             SpanBitmap.CopyPixels(src, dst, (0,1), (2, 3));
-            Assert.IsTrue(dst.EnumeratePixels().All(p => p.Pixel.Equals(new PixelBGR(2))));
+            Assert.That(dst.EnumeratePixels().All(p => p.Pixel.Equals(new PixelBGR(2))));
 
-            Assert.IsTrue(SpanBitmap.ArePixelsEqual(dst, dst));
+            Assert.That(SpanBitmap.ArePixelsEqual(dst, dst));
         }
 
         [System.Diagnostics.DebuggerDisplay("{ToString(),nq}")]

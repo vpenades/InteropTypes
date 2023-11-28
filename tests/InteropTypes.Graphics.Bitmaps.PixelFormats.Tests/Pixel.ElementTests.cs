@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void TestComponentMemoryFootprint()
         {
-            Assert.AreEqual(1, System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelComponent)));            
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelComponent)), Is.EqualTo(1));            
         }
 
         [Test]
@@ -23,19 +23,19 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             #if DEBUG // requires debug mode
 
-            Assert.AreEqual(PEF.Empty, default(PixelComponent).Id);
+            Assert.That(default(PixelComponent).Id, Is.EqualTo(PEF.Empty));
 
             // PixelFormat._GetBitLen(c);
 
-            Assert.AreEqual(0, (int)PEF.Empty);
+            Assert.That((int)PEF.Empty, Is.EqualTo(0));
 
             var values = Enum.GetValues(typeof(PEF))
                 .Cast<PEF>()
                 .ToArray();
 
             // all values of ElementId must be contained within 0 and 255 to fit in 1 byte
-            Assert.LessOrEqual(0, values.Select(item => (int)item).Min());
-            Assert.GreaterOrEqual(255, values.Select(item => (int)item).Max());
+            Assert.That(0, Is.LessThanOrEqualTo(values.Select(item => (int)item).Min()));
+            Assert.That(255, Is.GreaterThanOrEqualTo(values.Select(item => (int)item).Max()));
 
             int lastLen = -1;
 
@@ -47,9 +47,9 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 var blen = element.BitCount;
 
-                if (c == PEF.Empty) { Assert.AreEqual(0, blen); continue; }
+                if (c == PEF.Empty) { Assert.That(blen, Is.EqualTo(0)); continue; }
 
-                Assert.Greater(blen, 0);
+                Assert.That(blen, Is.GreaterThan(0));
 
                 var xlen = -1;
                 var xflt = false;
@@ -73,12 +73,12 @@ namespace InteropTypes.Graphics.Bitmaps
                 if (name.EndsWith("32F")) { xlen = 32; xflt = true; }
                 if (name.EndsWith("64F")) { xlen = 64; xflt = true; }
 
-                Assert.AreEqual(xlen, blen, "Reported bit length and suffix must match.");
-                Assert.GreaterOrEqual(xlen, lastLen, "Bit lengths must be declared in ascending order.");
+                Assert.That(blen, Is.EqualTo(xlen), "Reported bit length and suffix must match.");
+                Assert.That(xlen, Is.GreaterThanOrEqualTo(lastLen), "Bit lengths must be declared in ascending order.");
 
                 if (!name.StartsWith("Millimeter"))
                 {
-                    Assert.AreEqual(xflt, element.IsFloating, "Reported bit length and suffix must match.");
+                    Assert.That(element.IsFloating, Is.EqualTo(xflt), "Reported bit length and suffix must match.");
                 }                
 
                 lastLen = xlen;

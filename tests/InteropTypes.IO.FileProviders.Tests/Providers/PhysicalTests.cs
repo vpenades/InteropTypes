@@ -28,7 +28,7 @@ namespace InteropTypes.IO.Providers
 
         private static void _TestProvider(Microsoft.Extensions.FileProviders.IFileProvider provider)
         {
-            Assert.IsTrue(provider.GetDirectoryContents(string.Empty).Exists);
+            Assert.That(provider.GetDirectoryContents(string.Empty).Exists);
 
             var contents = provider.GetDirectoryContents(string.Empty);
             contents._PrintContents();

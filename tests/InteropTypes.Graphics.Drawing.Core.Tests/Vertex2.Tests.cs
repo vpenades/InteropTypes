@@ -13,7 +13,7 @@ namespace InteropTypes.Graphics.Drawing
         [Test]
         public void Vertex2Tests()
         {
-            Assert.AreEqual(8+4+8, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vertex2)));
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(Vertex2)), Is.EqualTo(8 +4+8));
         }
     }
 }
