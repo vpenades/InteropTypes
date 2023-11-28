@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -26,7 +27,8 @@ namespace InteropTypes.IO.VersionControl
             ArgumentNullException.ThrowIfNull(client);
             ArgumentNullException.ThrowIfNull(repositoryUrl);
 
-            Client = client;            
+            Client = client;
+            _Target = repositoryUrl;
 
             if (!Client.GetInfo(repositoryUrl, out _Info)) throw new ArgumentException($"can't access {repositoryUrl}", nameof(repositoryUrl));
 
@@ -39,6 +41,8 @@ namespace InteropTypes.IO.VersionControl
         #region data        
 
         public SvnClient Client { get; protected set; }
+
+        private SvnTarget _Target;
 
         private IFileProvider _Reader;
 
@@ -88,7 +92,28 @@ namespace InteropTypes.IO.VersionControl
         }
 
         #endregion
-    }    
+
+        #region extras
+
+        public IReadOnlyCollection<SvnLogEventArgs> GetLog(SvnRevision start, SvnRevision end = null)
+        {
+            end ??= SvnRevision.Head;
+
+            var range = new SvnRevisionRange(start, end);
+
+            // Create a SvnLogArgs object with the revision range and the verbose mode
+            var args = new SvnLogArgs(range);
+            args.RetrieveChangedPaths = true;
+
+            // Retrieve the log messages for the revision range
+            
+            Client.GetLog(new Uri(_Target.TargetName), args, out var logItems);
+
+            return logItems;
+        }
+
+        #endregion
+    }
 
     public class SVNDisposableFileProvider : SVNFileProvider, IDisposable
     {
