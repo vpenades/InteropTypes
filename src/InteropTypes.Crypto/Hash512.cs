@@ -10,6 +10,21 @@ namespace InteropTypes.Crypto
 {
     partial struct Hash512
     {
+        /// <summary>
+        /// Creates a secret key from a user password and a salt.
+        /// </summary>
+        public static Hash512 Rfc2898KeyFromPasswordAndSalt(string clearPassword, Hash128 publicSalt, int iterations)
+        {
+            if (string.IsNullOrEmpty(clearPassword)) throw new ArgumentNullException(nameof(clearPassword));
+
+            // https://stackoverflow.com/questions/70913958/best-way-to-store-passwords
+
+            using (var rfc = new Rfc2898DeriveBytes(clearPassword, publicSalt.ToBytes(), iterations, HashAlgorithmName.SHA512))
+            {
+                return new Hash512(rfc.GetBytes(BYTESIZE));
+            }
+        }
+
         public static Hash512 Sha512FromFile(System.IO.FileInfo finfo)
         {
             using (var s = finfo.OpenRead())
