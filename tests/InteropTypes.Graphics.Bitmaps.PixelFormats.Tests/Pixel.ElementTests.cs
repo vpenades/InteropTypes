@@ -34,8 +34,8 @@ namespace InteropTypes.Graphics.Bitmaps
                 .ToArray();
 
             // all values of ElementId must be contained within 0 and 255 to fit in 1 byte
-            Assert.That(0, Is.LessThanOrEqualTo(values.Select(item => (int)item).Min()));
-            Assert.That(255, Is.GreaterThanOrEqualTo(values.Select(item => (int)item).Max()));
+            Assert.That(values.Select(item => (int)item).Min(), Is.LessThanOrEqualTo(0));
+            Assert.That(values.Select(item => (int)item).Max(), Is.GreaterThanOrEqualTo(255));
 
             int lastLen = -1;
 
@@ -54,20 +54,20 @@ namespace InteropTypes.Graphics.Bitmaps
                 var xlen = -1;
                 var xflt = false;
 
-                if (name.EndsWith("1")) xlen = 1;
-                if (name.EndsWith("3")) xlen = 3;                
-                if (name.EndsWith("5")) xlen = 5;
-                if (name.EndsWith("7")) xlen = 7;
-                if (name.EndsWith("8")) xlen = 8;
+                if (name.EndsWith('1')) xlen = 1;
+                if (name.EndsWith('3')) xlen = 3;                
+                if (name.EndsWith('5')) xlen = 5;
+                if (name.EndsWith('7')) xlen = 7;
+                if (name.EndsWith('8')) xlen = 8;
 
                 if (name.EndsWith("16")) xlen = 16;
-                else if (name.EndsWith("6")) xlen = 6;
+                else if (name.EndsWith('6')) xlen = 6;
 
                 if (name.EndsWith("24")) xlen = 24;
-                else if (name.EndsWith("4")) xlen = 4;
+                else if (name.EndsWith('4')) xlen = 4;
 
                 if (name.EndsWith("32")) xlen = 32;
-                else if (name.EndsWith("2")) xlen = 2;
+                else if (name.EndsWith('2')) xlen = 2;
 
 
                 if (name.EndsWith("32F")) { xlen = 32; xflt = true; }
