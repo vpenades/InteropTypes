@@ -30,7 +30,7 @@
     
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
+    <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
@@ -64,8 +64,8 @@
     <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.3" />
     <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.3" />
 
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.0" />
-    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.0.1" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.1" />
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.0" />
 
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
