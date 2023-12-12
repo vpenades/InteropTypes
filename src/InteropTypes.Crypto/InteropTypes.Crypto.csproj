@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="InteropTypes.Crypto.Tests"/>
+    <InternalsVisibleTo Include="InteropTypes.Crypto.Tests" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
