@@ -350,23 +350,26 @@ namespace InteropTypes.Graphics.Bitmaps
             public static BGRP32 From<TPixel>(in TPixel value) // according to benchmarks, this method is about as fast as a direct constructor
                 where TPixel : unmanaged
             {
-                if (typeof(TPixel) == typeof(Alpha8)) return new BGRP32(Unsafe.As<TPixel, Alpha8>(ref Unsafe.AsRef(value)));
-                if (typeof(TPixel) == typeof(Luminance8)) return new BGRP32(Unsafe.As<TPixel, Luminance8>(ref Unsafe.AsRef(value)));
+                switch(value)
+                {
+                    case Alpha8 pixel: return new BGRP32(pixel);
+                    case Luminance8 pixel: return new BGRP32(pixel);
 
-                if (typeof(TPixel) == typeof(BGR565)) return new BGRP32(Unsafe.As<TPixel, BGR565>(ref Unsafe.AsRef(value)));
-                if (typeof(TPixel) == typeof(BGR24)) return new BGRP32(Unsafe.As<TPixel, BGR24>(ref Unsafe.AsRef(value)));
-                if (typeof(TPixel) == typeof(RGB24)) return new BGRP32(Unsafe.As<TPixel, RGB24>(ref Unsafe.AsRef(value)));
+                    case BGR565 pixel: return new BGRP32(pixel);
+                    case BGR24 pixel: return new BGRP32(pixel);
+                    case RGB24 pixel: return new BGRP32(pixel);
 
-                if (typeof(TPixel) == typeof(BGRA5551)) return new BGRP32(Unsafe.As<TPixel, BGRA5551>(ref Unsafe.AsRef(value)));
-                if (typeof(TPixel) == typeof(BGRA4444)) return new BGRP32(Unsafe.As<TPixel, BGRA4444>(ref Unsafe.AsRef(value)));
-                if (typeof(TPixel) == typeof(BGRA32)) return new BGRP32(Unsafe.As<TPixel, BGRA32>(ref Unsafe.AsRef(value)));
-                if (typeof(TPixel) == typeof(RGBA32)) return new BGRP32(Unsafe.As<TPixel, RGBA32>(ref Unsafe.AsRef(value)));
-                if (typeof(TPixel) == typeof(ARGB32)) return new BGRP32(Unsafe.As<TPixel, ARGB32>(ref Unsafe.AsRef(value)));
+                    case BGRA5551 pixel: return new BGRP32(pixel);
+                    case BGRA4444 pixel: return new BGRP32(pixel);
+                    case BGRA32 pixel: return new BGRP32(pixel);
+                    case RGBA32 pixel: return new BGRP32(pixel);
+                    case ARGB32 pixel: return new BGRP32(pixel);
 
-                if (typeof(TPixel) == typeof(BGRP32)) return Unsafe.As<TPixel, BGRP32>(ref Unsafe.AsRef(value));
-                if (typeof(TPixel) == typeof(RGBP32)) return new BGRP32(Unsafe.As<TPixel, RGBP32>(ref Unsafe.AsRef(value)));
+                    case BGRP32 pixel: return pixel;
+                    case RGBP32 pixel: return new BGRP32(pixel);
 
-                throw new NotImplementedException();
+                    default: throw new NotImplementedException();
+                }                
             }
 
             #endregion
