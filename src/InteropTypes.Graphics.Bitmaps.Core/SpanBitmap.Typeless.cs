@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Bitmaps
             _Writable = isReadOnly ? null : other._Writable;
         }
 
-        public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
+        public unsafe SpanBitmap(IntPtr data, BitmapInfo info, bool isReadOnly = false)
         {
             Guard.NotNull(nameof(data), data);
 
@@ -38,13 +38,13 @@ namespace InteropTypes.Graphics.Bitmaps
             _Writable = isReadOnly ? null : span;
         }
 
-        public SpanBitmap(Span<Byte> data, in BitmapInfo info)
+        public SpanBitmap(Span<Byte> data, BitmapInfo info)
         {
             _Info = info;
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        public SpanBitmap(ReadOnlySpan<Byte> data, in BitmapInfo info)
+        public SpanBitmap(ReadOnlySpan<Byte> data, BitmapInfo info)
         {
             _Info = info;
             _Readable = data.Slice(0, _Info.BitmapByteSize);
@@ -200,7 +200,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <param name="rect">The region to crop.</param>
         /// <returns>A <see cref="SpanBitmap"/> representing the cropped region.</returns>        
         [System.Diagnostics.DebuggerStepThrough]
-        public SpanBitmap Slice(in BitmapBounds rect)
+        public SpanBitmap Slice(BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);
 

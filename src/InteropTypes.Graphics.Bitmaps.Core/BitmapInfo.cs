@@ -29,7 +29,7 @@ namespace InteropTypes.Graphics.Bitmaps
     {
         // Todo: Maybe a better name for this struct is BitmapDesc or BitmapLayout
 
-        #region debug
+        #region diagnostics
         public string ToDebuggerDisplayString() { return $"{PixelFormat}×{Width}×{Height}"; }
 
         #endregion
@@ -217,6 +217,9 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <summary>
         /// Gets the number of bytes used by a visible pixel row.
         /// </summary>
+        /// <remarks>
+        /// This value must be equal or smaller than <see cref="StepByteSize"/>
+        /// </remarks>
         public int RowByteSize => Width * PixelByteSize;
 
         /// <summary>
@@ -225,7 +228,7 @@ namespace InteropTypes.Graphics.Bitmaps
         /// <remarks>
         /// When using a byte stride, the last row does not need a tailing stride.
         /// </remarks>        
-        public int BitmapByteSize => Height == 0 ? 0 : StepByteSize * (Height - 1) + PixelByteSize * Width;
+        public int BitmapByteSize => Height == 0 ? 0 : StepByteSize * (Height - 1) + RowByteSize;
 
         /// <summary>
         /// Gets the <see cref="SIZE"/> of the bitmap, in pixels.

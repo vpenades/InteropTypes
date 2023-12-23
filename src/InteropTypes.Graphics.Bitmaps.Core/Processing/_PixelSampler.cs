@@ -31,7 +31,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             internal readonly int _Height;
 
             public readonly void UpdateIterator(float x, float y, out _PixelSampler<TPixel> iterator)
-            {
+            {                
                 iterator = new _PixelSampler<TPixel>(new System.Numerics.Vector2(x, y), this);
             }
 
@@ -46,7 +46,7 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
         /// </summary>
         /// <param name="dst">The destination point.</param>
         /// <param name="srcXform">the transform to apply.</param>            
-        private _PixelSampler(in System.Numerics.Vector2 dst, in Factory factory)
+        private _PixelSampler(System.Numerics.Vector2 dst, Factory factory)
         {
             _Bytes = factory._Bytes;
             _ByteStride = factory._ByteStride;

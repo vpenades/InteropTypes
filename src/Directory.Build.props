@@ -20,9 +20,12 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
     <IsTrimmable>true</IsTrimmable>
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   
   <!-- Analysers =================================================================================== -->

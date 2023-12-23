@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Bitmaps
             _Writable = isReadOnly ? null : other._Writable;
         }
 
-        public unsafe SpanBitmap(IntPtr data, in BitmapInfo info, bool isReadOnly = false)
+        public unsafe SpanBitmap(IntPtr data, BitmapInfo info, bool isReadOnly = false)
         {
             Guard.NotNull(nameof(data), data);
             info.ArgumentIsCompatiblePixelFormat<TPixel>();
@@ -39,14 +39,14 @@ namespace InteropTypes.Graphics.Bitmaps
             _Writable = isReadOnly ? null : span;
         }
 
-        internal SpanBitmap(Span<Byte> data, in BitmapInfo info)
+        internal SpanBitmap(Span<Byte> data, BitmapInfo info)
         {
             info.ArgumentIsCompatiblePixelFormat<TPixel>();
             _Info = info;
             _Readable = _Writable = data.Slice(0, _Info.BitmapByteSize);
         }
 
-        internal SpanBitmap(ReadOnlySpan<Byte> data, in BitmapInfo info)
+        internal SpanBitmap(ReadOnlySpan<Byte> data, BitmapInfo info)
         {
             info.ArgumentIsCompatiblePixelFormat<TPixel>();
             _Info = info;
@@ -236,7 +236,7 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public SpanBitmap<TPixel> Slice(in BitmapBounds rect)
+        public SpanBitmap<TPixel> Slice(BitmapBounds rect)
         {
             var (offset, info) = _Info.Slice(rect);
 
