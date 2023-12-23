@@ -18,7 +18,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void Example1()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.webp");
+            var filePath = ResourceInfo.From("shannon.webp");
 
             // Use SkiaSharp to load a WEBP image:
             var bmp = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
@@ -78,7 +78,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void Example2()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.webp");
+            var filePath = ResourceInfo.From("shannon.webp");
 
             // Use SkiaSharp to load a WEBP image:
             var bmp = MemoryBitmap.Load(filePath, Codecs.SkiaCodec.Default);
@@ -105,7 +105,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test(Description ="Simple conversion From ImageSharp to System.Drawing")]
         public void Example3()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+            var filePath = ResourceInfo.From("shannon.jpg");
 
             using var image = SixLabors.ImageSharp.Image.Load<Bgra32>(filePath);
 

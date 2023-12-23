@@ -13,7 +13,7 @@ namespace InteropTypes.Graphics.Bitmaps.Transform
         [Test]
         public void Laplacian1()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.webp");
+            var filePath = ResourceInfo.From("shannon.webp");
 
             // Use SkiaSharp to load a WEBP image:
             var bmp = MemoryBitmap<Pixel.BGR24>.Load(filePath, Codecs.SkiaCodec.Default);            
@@ -43,11 +43,11 @@ namespace InteropTypes.Graphics.Bitmaps.Transform
 
 
 
-        [TestCase("Resources\\shannon.webp", 15)]
-        [TestCase("Resources\\cat.png", 5)]
+        [TestCase("shannon.webp", 15)]
+        [TestCase("cat.png", 5)]
         public void Blur1(string resName, int ksize)
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, resName);
+            var filePath = ResourceInfo.From(resName);
             
             var bmp = MemoryBitmap<Pixel.BGRA32>.Load(filePath, Codecs.SkiaCodec.Default);
 

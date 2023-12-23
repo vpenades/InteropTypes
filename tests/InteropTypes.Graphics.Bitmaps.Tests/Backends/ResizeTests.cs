@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Backends
         [Test]
         public void ResizeImage()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+            var filePath = ResourceInfo.From("shannon.jpg");
 
             var bitmap = MemoryBitmap
                 .Load(filePath, InteropTypes.Codecs.SkiaCodec.Default)

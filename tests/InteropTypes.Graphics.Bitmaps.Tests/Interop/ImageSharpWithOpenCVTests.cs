@@ -15,11 +15,11 @@ namespace InteropTypes.Graphics.Bitmaps
     [Category("Backends")]
     public class ImageSharpWithOpenCVTests
     {
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\white.png")]
+        [TestCase("shannon.jpg")]
+        [TestCase("white.png")]
         public void LoadImage(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            filePath = ResourceInfo.From(filePath);
             
             var membmp = MemoryBitmap.Load(filePath, Codecs.OpenCvCodec.Default);
 
@@ -27,11 +27,11 @@ namespace InteropTypes.Graphics.Bitmaps
         }
 
 
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\white.png")]
+        [TestCase("shannon.jpg")]
+        [TestCase("white.png")]
         public void DetectImageFeatures(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            filePath = ResourceInfo.From(filePath);
 
             var img = Image.Load<SixLabors.ImageSharp.PixelFormats.Rgb24>(filePath);
 

@@ -37,7 +37,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         private static MemoryBitmap LoadShannonImage()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
+            var filePath = ResourceInfo.From("shannon.jpg");
 
             // load a bitmap with SkiaSharp, which is known to support WEBP.
             var mem = MemoryBitmap.Load(filePath, Codecs.GDICodec.Default);
@@ -101,13 +101,13 @@ namespace InteropTypes.Graphics.Bitmaps
             var src = LoadShannonImage().OfType<Pixel.BGR24>();
             src.Save(new AttachmentInfo("input.png"));
 
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\cat.png");
+            var filePath = ResourceInfo.From("cat.png");
             var cat00 = MemoryBitmap
                 .Load(filePath, Codecs.GDICodec.Default)
                 .OfType<Pixel.BGRA32>();
             
 
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\QRCode.png");
+            filePath = ResourceInfo.From("QRCode.png");
             var qrcode = MemoryBitmap
                 .Load(filePath, Codecs.GDICodec.Default)
                 .OfType<Pixel.BGRA32>();

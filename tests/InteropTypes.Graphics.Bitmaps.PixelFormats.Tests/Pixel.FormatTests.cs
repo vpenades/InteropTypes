@@ -13,7 +13,7 @@ namespace InteropTypes.Graphics.Bitmaps
         [Test]
         public void TestFormatMemoryFootprint()
         {
-            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf(typeof(PixelFormat)), Is.EqualTo(4));
+            Assert.That(System.Runtime.InteropServices.Marshal.SizeOf<PixelFormat>(), Is.EqualTo(4), "PixelFormat must be 4 bytes size to ensure memory alignment and small memory footprint");
         }
 
         [Test]

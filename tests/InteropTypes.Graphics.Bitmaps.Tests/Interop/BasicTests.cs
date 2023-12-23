@@ -14,10 +14,10 @@ namespace InteropTypes.Graphics.Bitmaps
     [Category("Backends")]
     public class BasicTests
     {
-        [TestCase("Resources\\shannon.jpg")]        
+        [TestCase("shannon.jpg")]        
         public void CalculateImageBlurFactor(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            filePath = ResourceInfo.From(filePath);
 
             // load image using GDI
             var bitmap = MemoryBitmap

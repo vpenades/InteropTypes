@@ -25,14 +25,14 @@ namespace InteropTypes.Graphics.Backends
             Assert.That(IntPtr.Size, Is.EqualTo(8), "x64 test environment required");
         }
 
-        [TestCase("Resources\\QRCode.png", "http://tecnohotelnews.com/")]
+        [TestCase("QRCode.png", "http://tecnohotelnews.com/")]
         // [TestCase("Resources\\glyphs_printed.jpg", null)]
-        [TestCase("Resources\\ios-11-camera-qr-code-scan.jpg", "WIFI:T:WPA2;S:iMore;P:iMore12345678;;")]
+        [TestCase("ios-11-camera-qr-code-scan.jpg", "WIFI:T:WPA2;S:iMore;P:iMore12345678;;")]
         public void ZXingFindQRCode(string filePath, string expected)
         {
             // http://www.cvsandbox.com/
 
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            filePath = ResourceInfo.From(filePath);
 
             using var image = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(filePath);
 

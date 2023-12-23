@@ -31,16 +31,14 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawLine((180, 260),(800,300), 9, LineStyle.Yellow.With(LineCapStyle.Round).WithOutline(System.Drawing.Color.Green, 1));
 
             bmp.Save(new AttachmentInfo("result.png"));            
-        }
-
-        
+        }        
 
         [Test]
         public void DrawingTest()
         {
             var bmp = new MemoryBitmap<Pixel.BGR24>(512, 512);
 
-            var cat = MemoryBitmap.Load("Resources\\cat.png", Codecs.GDICodec.Default);
+            var cat = MemoryBitmap.Load(ResourceInfo.From("cat.png"), Codecs.GDICodec.Default);
             var asset = new ImageSource(cat, (0, 0), (32,35), (15,15));
 
             var dc = bmp.CreateDrawingContext();

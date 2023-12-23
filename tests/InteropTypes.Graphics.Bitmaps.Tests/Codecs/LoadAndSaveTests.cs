@@ -118,8 +118,8 @@ namespace InteropTypes.Codecs
         [Test]
         public void SaveMjpeg()
         {
-            var f1 = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");
-            var f2 = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon-blurred.jpg");
+            var f1 = ResourceInfo.From("shannon.jpg");
+            var f2 = ResourceInfo.From("shannon-blurred.jpg");
 
             var ff1 = MemoryBitmap.Load(f1, GDICodec.Default);
             var ff2 = MemoryBitmap.Load(f2, GDICodec.Default);

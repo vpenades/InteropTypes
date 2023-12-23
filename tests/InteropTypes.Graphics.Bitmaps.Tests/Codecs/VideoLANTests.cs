@@ -14,6 +14,7 @@ namespace InteropTypes.Codecs
         // [Test] // gets stucked somewhere
         public async Task DecodeMp4Frames()
         {
+            /*
             var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\count-video.mp4");
 
             int idx = 0;
@@ -21,9 +22,11 @@ namespace InteropTypes.Codecs
             var uri = new Uri(filePath, UriKind.Absolute);
 
             var codec = new VideoLanCodecAsync(uri);
+            
 
 
             await codec.DecodeAsync(bmp => TestContext.WriteLine("Frame received"));
+            */
 
             /*
             foreach (var bitmap in codec.Decode())

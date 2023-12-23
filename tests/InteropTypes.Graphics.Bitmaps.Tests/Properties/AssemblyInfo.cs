@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-[assembly: ResourcePathFormat("*/Resources")]
+[assembly: ResourcePathFormat("{SolutionDirectory}/tests/Resources")]
 [assembly: AttachmentPathFormat("*/TestResults/?")]

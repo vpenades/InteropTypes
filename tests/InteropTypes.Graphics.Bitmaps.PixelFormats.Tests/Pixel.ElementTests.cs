@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace InteropTypes.Graphics.Bitmaps
 {
@@ -34,8 +35,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 .ToArray();
 
             // all values of ElementId must be contained within 0 and 255 to fit in 1 byte
-            Assert.That(values.Select(item => (int)item).Min(), Is.LessThanOrEqualTo(0));
-            Assert.That(values.Select(item => (int)item).Max(), Is.GreaterThanOrEqualTo(255));
+            Assert.That(values.Select(item => (int)item), Is.All.InRange(0,255));            
 
             int lastLen = -1;
 

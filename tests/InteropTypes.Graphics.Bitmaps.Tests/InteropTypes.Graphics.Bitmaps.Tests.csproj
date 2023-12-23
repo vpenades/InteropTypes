@@ -7,33 +7,40 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <Content Include="..\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+  </PropertyGroup>    
   
   <ItemGroup>
     <Compile Include="..\Shared\TestUtils.cs" Link="TestUtils.cs" />
+  </ItemGroup>  
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />    
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />    
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ZXing\InteropTypes.Graphics.Backends.ZXing.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4.Windows" />    
   </ItemGroup>
 
   <ItemGroup>    
-    <PackageReference Include="OpenCvSharp4.Windows" />    
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
+  </ItemGroup>
+
+  <!--
+  <ItemGroup>    
     <PackageReference Include="VideoLAN.LibVLC.Windows" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.WPF\InteropTypes.Graphics.Backends.WPF.csproj" />    
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ZXing\InteropTypes.Graphics.Backends.ZXing.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />    
-    <ProjectReference Include="..\..\src\InteropTypes.Codecs.VideoLAN\InteropTypes.Codecs.VideoLAN.csproj" />    
-    <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Codecs.MJPEG\InteropTypes.Codecs.MJPEG.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
-  </ItemGroup>  
+    <ProjectReference Include="..\..\src\InteropTypes.Codecs.VideoLAN\InteropTypes.Codecs.VideoLAN.csproj" />        
+  </ItemGroup>
+  -->
 
 </Project>

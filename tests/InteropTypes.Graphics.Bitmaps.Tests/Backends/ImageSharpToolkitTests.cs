@@ -13,12 +13,12 @@ namespace InteropTypes.Graphics.Backends
     [Category("Backends")]
     public class ImageSharpTests
     {
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\diagram.jpg")]
-        [TestCase("Resources\\white.png")]
+        [TestCase("shannon.jpg")]
+        [TestCase("diagram.jpg")]
+        [TestCase("white.png")]
         public void LoadImage(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            filePath = ResourceInfo.From(filePath);
 
             var bitmap = MemoryBitmap.Load(filePath, InteropTypes.Codecs.ImageSharpCodec.Default);
 

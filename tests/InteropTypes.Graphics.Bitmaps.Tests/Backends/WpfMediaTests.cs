@@ -21,12 +21,12 @@ namespace InteropTypes.Graphics.Backends
             Assert.That(IntPtr.Size, Is.EqualTo(8), "x64 test environment required");
         }
 
-        [TestCase("Resources\\diagram.jpg")]
-        [TestCase("Resources\\white.png")]
-        [TestCase("Resources\\shannon.jpg")]
+        [TestCase("diagram.jpg")]
+        [TestCase("white.png")]
+        [TestCase("shannon.jpg")]
         public void LoadImageWPF(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            filePath = ResourceInfo.From(filePath);
 
             var uri = new Uri(filePath, UriKind.Absolute);
 

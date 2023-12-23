@@ -20,12 +20,12 @@ namespace InteropTypes.Graphics.Backends
             Assert.That(IntPtr.Size, Is.EqualTo(8), "x64 test environment required");
         }
 
-        [TestCase("Resources\\shannon.jpg")]
-        [TestCase("Resources\\diagram.jpg")]
-        [TestCase("Resources\\white.png")]
+        [TestCase("shannon.jpg")]
+        [TestCase("diagram.jpg")]
+        [TestCase("white.png")]
         public void LoadImage(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, filePath);
+            filePath = ResourceInfo.From(filePath);
 
             var bitmap = MemoryBitmap.Load(filePath, InteropTypes.Codecs.OpenCvCodec.Default);
 
@@ -35,7 +35,7 @@ namespace InteropTypes.Graphics.Backends
         [Test]
         public void WarpAffineTransform()
         {
-            var filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources\\shannon.jpg");            
+            var filePath = ResourceInfo.From("shannon.jpg");            
 
             var src = MemoryBitmap.Load(filePath, InteropTypes.Codecs.OpenCvCodec.Default);
             var dst = new MemoryBitmap(512, 512, src.Info.PixelFormat);
@@ -61,11 +61,11 @@ namespace InteropTypes.Graphics.Backends
             dst.Save(new AttachmentInfo("result.soft.jpg"));
         }
 
-        [TestCase("capture1.jpg")]
-        [TestCase("capture2.jpg")]
+        [TestCase("Aruco\\capture1.jpg")]
+        [TestCase("Aruco\\capture2.jpg")]
         public void TryDetectAruco4x4(string filePath)
         {
-            filePath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "Aruco", filePath);
+            filePath = ResourceInfo.From(filePath);
             var bitmap = MemoryBitmap.Load(filePath, InteropTypes.Codecs.OpenCvCodec.Default);            
 
             var arucoContext = new Vision.Backends.MarkersContext();
