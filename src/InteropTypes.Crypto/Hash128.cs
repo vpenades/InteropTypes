@@ -95,13 +95,14 @@ namespace InteropTypes.Crypto
 
         public static Hash128 FromGuid(in Guid guid)
         {
-            ref var guidRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(guid);
+            
+            ref var guidRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in guid);            
             return System.Runtime.CompilerServices.Unsafe.As<Guid, Hash128>(ref guidRef);
         }
 
         public Guid ToGuid()
         {
-            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in this);            
             return System.Runtime.CompilerServices.Unsafe.As<Hash128, Guid>(ref hRef);
         }
     }

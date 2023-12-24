@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   
   <ItemGroup>
@@ -15,6 +16,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Configuration" />
+  </ItemGroup>  
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

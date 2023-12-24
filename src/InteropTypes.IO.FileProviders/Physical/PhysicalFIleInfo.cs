@@ -100,64 +100,30 @@ namespace InteropTypes.IO
         #endregion
 
         #region API
-
-        /// <inheritdoc />
+        
         public sealed override Stream CreateReadStream()
         {
             return File?.OpenRead();
         }
         
         public Stream CreateWriteStream()
+        {
+            return CreateStream(FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+        }
+
+        public Stream CreateStream(FileMode mode, FileAccess access, FileShare share)
         {            
-            File?.Directory?.Create();
-            var s = File?.Create();
-            return XStream.WrapWithCloseActions(s, len => File.Refresh());
+            return new FileInfoServices(File).CreateStream(mode, access, share);
         }
 
         public override object GetService(Type serviceType)
-        {            
-            if (serviceType == typeof(Func<FileMode, Stream>)) return (Func<FileMode, Stream>)_Open1;
-            if (serviceType == typeof(Func<FileMode, FileAccess, Stream>)) return (Func<FileMode, FileAccess, Stream>)_Open2;
-            if (serviceType == typeof(Func<FileMode, FileAccess, FileShare, Stream>)) return (Func<FileMode, FileAccess, FileShare, Stream>)CreateStream;
-
-            if (serviceType == typeof(FileInfo)) return File;
-
-            return base.GetService(serviceType);
-        }        
-
-        #if !NETSTANDARD
-        [System.Diagnostics.CodeAnalysis.DynamicDependency(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All, typeof(PhysicalFileInfo))]
-        #endif
-        private Stream _Open1(FileMode mode)
-        {
-            return _Open2(mode, (mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite));
-        }        
-
-        #if !NETSTANDARD
-        [System.Diagnostics.CodeAnalysis.DynamicDependency(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All, typeof(PhysicalFileInfo))]
-        #endif
-        private Stream _Open2(FileMode mode, FileAccess access)
-        {
-            return CreateStream(mode, access, FileShare.None);
+        {   
+            return new FileInfoServices(File)
+                .GetService(serviceType)
+                ?? base.GetService(serviceType);
         }
-
-        #if !NETSTANDARD
-        [System.Diagnostics.CodeAnalysis.DynamicDependency(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All, typeof(PhysicalFileInfo))]
-        #endif
-        public Stream CreateStream(FileMode mode, FileAccess access, FileShare share)
-        {            
-            _EnsureDirectory(mode);
-            var s = File?.Open(mode, access, share);
-            return XStream.WrapWithCloseActions(s, len => File.Refresh());
-        }
-
-        private void _EnsureDirectory(FileMode mode)
-        {
-            if (mode == FileMode.Create || mode == FileMode.CreateNew || mode == FileMode.OpenOrCreate)
-            {
-                File?.Directory?.Create();
-            }
-        }
+        
+        
 
         #endregion
     }

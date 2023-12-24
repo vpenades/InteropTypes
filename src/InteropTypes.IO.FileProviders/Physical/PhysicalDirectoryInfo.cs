@@ -140,12 +140,9 @@ namespace InteropTypes.IO
 
         public override object GetService(Type serviceType)
         {
-            // service used to create files and directories
-            if (serviceType == typeof(Func<string, IFileInfo>)) return (Func<string, IFileInfo>)UseFileInfo;
-
-            if (serviceType == typeof(DirectoryInfo)) return Directory;
-
-            return base.GetService(serviceType);
+            return new DirectoryInfoServices(Directory,_Factory)
+                .GetService(serviceType)
+                ?? base.GetService(serviceType);
         }
 
         /// <summary>
@@ -160,52 +157,17 @@ namespace InteropTypes.IO
         /// <exception cref="ArgumentException"></exception>
         public IFileInfo UseFileInfo(string name)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-
-            bool isDirectory = false;
-
-            if (_EndsWithSeparator(name))
-            {
-                isDirectory = true;
-                name = name.Substring(0, name.Length - 1);
-            }
-
-            if (Path.GetInvalidFileNameChars().Any(name.Contains))
-            {
-                throw new ArgumentException("invalid name chars", nameof(name));
-            }
-
-            return isDirectory
-                ? UseDirectory(name)
-                : UseFile(name);
-        }
-
-        private static bool _EndsWithSeparator(string path)
-        {            
-            if (path.EndsWith(System.IO.Path.DirectorySeparatorChar)) return true;
-            if (path.EndsWith(System.IO.Path.AltDirectorySeparatorChar)) return true;
-            
-            return false;
+            return new DirectoryInfoServices(Directory, _Factory).UseFileInfo(name);
         }
 
         internal IFileInfo UseFile(string name)
         {
-            name = System.IO.Path.Combine(Directory.FullName, name);
-
-            var file = new System.IO.FileInfo(name);
-            return _Factory
-                ?.CreateFileInfo(file)
-                ?? new PhysicalFileInfo(file);
+            return new DirectoryInfoServices(Directory, _Factory).UseFile(name);
         }
 
         internal IFileInfo UseDirectory(string name)
         {
-            name = System.IO.Path.Combine(Directory.FullName, name);
-
-            var dir = new System.IO.DirectoryInfo(name);
-            return _Factory
-                ?.CreateDirectoryInfo(dir)
-                ?? new PhysicalDirectoryInfo(dir);
+            return new DirectoryInfoServices(Directory, _Factory).UseDirectory(name);
         }
 
         #endregion
