@@ -52,14 +52,14 @@ namespace $rootnamespace$
 
             while(baseInfo != null)
             {
-                if (baseInfo.Contais(finfo)) return baseInfo.FullName.Substring(path.Length).TrimStart('\\').TrimStart('/');
+                if (baseInfo.Contains(finfo)) return baseInfo.FullName.Substring(path.Length).TrimStart('\\').TrimStart('/');
                 baseInfo = baseInfo.Parent;
             }
 
             throw new ArgumentException("invalid path", nameof(baseInfo));
         }
 
-        public static string Contains(this DirectoryInfo dinfo, FileSystemInfo sinfo)
+        public static bool Contains(this DirectoryInfo dinfo, FileSystemInfo sinfo)
         {
             return sinfo.FullNameStartsWith(dinfo.FullName);
         }
