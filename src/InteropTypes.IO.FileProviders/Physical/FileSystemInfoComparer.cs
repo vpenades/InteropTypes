@@ -26,8 +26,8 @@ namespace InteropTypes.IO
                 if (fa.Length != fb.Length) return false;                
             }
 
-            var apath = x.FullName;
-            var bpath = y.FullName;            
+            var apath = x.FullName.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+            var bpath = y.FullName.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);            
 
             // https://stackoverflow.com/questions/430256/how-do-i-determine-whether-the-filesystem-is-case-sensitive-in-net
             // https://stackoverflow.com/questions/7344978/verifying-path-equality-with-net
@@ -45,7 +45,9 @@ namespace InteropTypes.IO
         {
             return obj == null
                 ? 0
-                : obj.FullName.GetHashCode(FilePathUtils.PathComparisonMode);
+                : obj.FullName
+                .Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar)
+                .GetHashCode(FilePathUtils.PathComparisonMode);
         }
 
         
