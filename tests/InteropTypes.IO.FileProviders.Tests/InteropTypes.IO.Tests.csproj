@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\InteropTypes.IO.FileSystemInfo.Ext.Sources\_FileSystemInfoExtensions.cs.pp" Link="_FileSystemInfoExtensions.cs.pp" />
+    <Compile Include="..\..\src\InteropTypes.IO.FileSystemInfo.Ext.Sources\_FileSystemInfoExtensions.cs.pp" Link="_FileSystemInfoExtensions.cs" />
   </ItemGroup>
 
   <ItemGroup>

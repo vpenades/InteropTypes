@@ -18,6 +18,8 @@
       directory.Contains(...);
       file.FullNameEquals(...);
       directory.FullNameEquals(...);
+      directory.FullNameStartsWith(...);
+      directory.GetRelativePath(...);
     </Description>
   </PropertyGroup>
 

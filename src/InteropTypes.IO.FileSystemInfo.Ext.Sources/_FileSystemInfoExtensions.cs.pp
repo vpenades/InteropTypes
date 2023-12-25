@@ -86,7 +86,7 @@ namespace $rootnamespace$
             {
                 var c = fileName[l];
 
-                if (IsDirectorySeparator(c) || c == ':' || c=='?' || c=='*') break;
+                if (Array.IndexOf(_InvalidChars,c) >= 0) break;
 
                 if (c == '.')
                 {
