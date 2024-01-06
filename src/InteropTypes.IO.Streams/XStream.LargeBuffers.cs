@@ -126,7 +126,7 @@ namespace InteropTypes.IO
             {
                 var buffer = new Byte[LARGESTREAMMANAGER.DefaultBlockSize];
 
-                var len = srcStream.TryReadBytesToEnd(buffer);
+                var len = XStream.TryReadBytesToEnd(srcStream, buffer);
                 if (len == 0) break;
 
                 totalLength += len;
@@ -159,7 +159,7 @@ namespace InteropTypes.IO
             {
                 var buffer = new Byte[LARGESTREAMMANAGER.DefaultBlockSize];
 
-                var len = await srcStream.TryReadBytesToEndAsync(buffer, token).ConfigureAwait(false);
+                var len = await XStream.TryReadBytesToEndAsync(srcStream, buffer, token).ConfigureAwait(false);
                 if (len == 0) break;
 
                 totalLength += len;

@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);DISABLENUGETTEMPLATE</DefineConstants>
+    <DefineConstants>$(DefineConstants);USEEXPLICITSYSTEMNAMESPACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\InteropTypes.IO.FileSystemInfo.Ext.Sources\_FileSystemInfoExtensions.cs.pp" Link="_FileSystemInfoExtensions.cs" />
+    <Compile Include="..\..\src\InteropTypes.IO.FileSystemInfo.Ext.Sources\*.cs" LinkBase="Sources" />
+    <Compile Include="..\..\src\InteropTypes.IO.FileSystemInfo.Ext.Sources\*.cs.pp" LinkBase="Sources" />    
   </ItemGroup>
 
   <ItemGroup>

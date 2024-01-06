@@ -4,16 +4,19 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Reflection;
 
 using STREAM = System.IO.Stream;
-using System.Xml.Schema;
+
 
 namespace InteropTypes.IO
 {
     public static partial class XStream    
     {
         #region diagnostics
+
+        #if NETSTANDARD
 
         public static void GuardReadable(STREAM stream)
         {
@@ -32,6 +35,28 @@ namespace InteropTypes.IO
             if (stream == null) throw new ArgumentNullException(nameof(stream));
             if (!stream.CanSeek) throw new ArgumentException("Can't seek strean", nameof(stream));
         }
+
+        #else
+
+        public static void GuardReadable(STREAM stream, [CallerArgumentExpression("stream")] string name = null)
+        {
+            if (stream == null) throw new ArgumentNullException(name);
+            if (!stream.CanRead) throw new ArgumentException("Can't read from strean", name);
+        }
+
+        public static void GuardWriteable(STREAM stream, [CallerArgumentExpression("stream")] string name = null)
+        {
+            if (stream == null) throw new ArgumentNullException(name);
+            if (!stream.CanWrite) throw new ArgumentException("Can't read from strean", name);
+        }
+
+        public static void GuardSeekable(STREAM stream, [CallerArgumentExpression("stream")] string name = null)
+        {
+            if (stream == null) throw new ArgumentNullException(name);
+            if (!stream.CanSeek) throw new ArgumentException("Can't seek strean", name);
+        }
+
+        #endif
 
         #endregion
 

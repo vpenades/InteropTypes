@@ -138,6 +138,7 @@ namespace InteropTypes.IO
         protected static string GetSanitizedPath(XFILEINFO xinfo)
         {
             var path = xinfo.PhysicalPath ?? xinfo.Name;
+            path = path.Trim(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.PathSeparator);
             return path.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.PathSeparator);
         }
     }
