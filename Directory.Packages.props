@@ -25,8 +25,8 @@
     <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageVersion Include="System.Numerics.Tensors" Version="8.0.0" />
-    <PackageVersion Include="System.Drawing.Common" Version="8.0.0" />
-    <PackageVersion Include="System.Text.Json" Version="8.0.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="8.0.1" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.1" />
     
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
@@ -34,7 +34,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.25.1" />
+    <PackageVersion Include="Google.Protobuf" Version="3.25.2" />
 
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.5" />
@@ -42,7 +42,7 @@
     <PackageVersion Include="NuGet.Configuration" Version="6.8.0" />
 
 
-    <PackageVersion Include="CodeSugar.System.IO.Sources" Version="1.0.0-preview-20240105-084731" />
+    <PackageVersion Include="CodeSugar.System.IO.Sources" Version="1.0.0-preview-20240110-234435" />
     
     <!-- Game Engines -->
 
@@ -76,7 +76,7 @@
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
-    <PackageVersion Include="SkiaSharp" Version="2.88.6" />
+    <PackageVersion Include="SkiaSharp" Version="2.88.7" />
 
     <PackageVersion Include="SvgNet" Version="3.3.6" />
 
@@ -121,7 +121,7 @@
     <PackageVersion Include="TestAttachments.NUnit" Version="4.0.0-preview-20240102-0955" />
     <PackageVersion Include="TestImages.ImageSharp" Version="4.0.0-preview-20240102-0955" />
 
-    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.4.0-beta.1" />
+    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.0-beta.1" />
     
     <PackageVersion Include="NUnit" Version="4.0.1" />
     <PackageVersion Include="NUnit.Analyzers" Version="3.10.0" />
@@ -140,7 +140,7 @@
     
     <!-- Other -->
 
-    <PackageVersion Include="SharpCompress" Version="0.35.0" />
+    <PackageVersion Include="SharpCompress" Version="0.36.0" />
 
     <PackageVersion Include="SharpSvn" Version="1.14001.156" />
     
