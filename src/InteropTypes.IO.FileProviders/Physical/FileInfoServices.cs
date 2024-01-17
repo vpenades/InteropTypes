@@ -13,10 +13,9 @@ namespace InteropTypes.IO
     {
         #region constructors
 
-        public FileInfoServices(System.IO.DirectoryInfo dinfo, string filePath)
-        {
-            filePath = System.IO.Path.Combine(dinfo.FullName, filePath);
-            _Finfo = new System.IO.FileInfo(filePath);
+        public FileInfoServices(System.IO.DirectoryInfo dinfo,params string[] filePath)
+        {            
+            _Finfo = dinfo.GetFile(filePath);
         }
 
         public FileInfoServices(string filePath)
