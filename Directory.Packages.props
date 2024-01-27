@@ -42,7 +42,7 @@
     <PackageVersion Include="NuGet.Configuration" Version="6.8.0" />
 
 
-    <PackageVersion Include="CodeSugar.System.IO.Sources" Version="1.0.0-preview-20240110-234435" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-preview-20240125-123640" />
     
     <!-- Game Engines -->
 
@@ -66,11 +66,11 @@
 
     <PackageVersion Include="Prism.Wpf" Version="8.1.97" />
 
-    <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.3" />
-    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.3" />
+    <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.6" />
 
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.2" />
-    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.0" />
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.1" />
 
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
@@ -82,7 +82,7 @@
 
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
 
-    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0030" />
+    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0031" />
     
     <!-- Avalonia -->
 
@@ -121,7 +121,7 @@
     <PackageVersion Include="TestAttachments.NUnit" Version="4.0.0-preview-20240102-0955" />
     <PackageVersion Include="TestImages.ImageSharp" Version="4.0.0-preview-20240102-0955" />
 
-    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.0-beta.1" />
+    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
     
     <PackageVersion Include="NUnit" Version="4.0.1" />
     <PackageVersion Include="NUnit.Analyzers" Version="3.10.0" />

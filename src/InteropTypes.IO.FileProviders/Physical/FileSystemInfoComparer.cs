@@ -13,6 +13,6 @@ namespace InteropTypes.IO
     {
         private FileSystemInfoComparer() { }
 
-        public static IEqualityComparer<T> Default { get; } = CodeSugarIO.GetFullNameComparer<T>();        
+        public static IEqualityComparer<T> Default { get; } = CodeSugarForSystemIO.GetFullNameComparer<T>();        
     }
 }

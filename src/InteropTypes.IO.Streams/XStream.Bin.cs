@@ -15,53 +15,53 @@ namespace InteropTypes.IO
     {
         public static BinaryWriter CreateBinaryWriter(STREAM stream, bool leaveStreamOpen = true, Encoding encoding = null)
         {
-            return CodeSugarIO.CreateBinaryWriter(stream, leaveStreamOpen, encoding);
+            return CodeSugarForSystemIO.CreateBinaryWriter(stream, leaveStreamOpen, encoding);
         }
 
         public static BinaryReader CreateBinaryReader(STREAM stream, bool leaveStreamOpen = true, Encoding encoding = null)
         {
-            return CodeSugarIO.CreateBinaryReader(stream, leaveStreamOpen, encoding);
+            return CodeSugarForSystemIO.CreateBinaryReader(stream, leaveStreamOpen, encoding);
         }
 
         public static void WriteAllBytes(Func<STREAM> stream, IReadOnlyList<Byte> bytes)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
             using var s = stream();
-            CodeSugarIO.WriteAllBytes(s, bytes);
+            CodeSugarForSystemIO.WriteAllBytes(s, bytes);
         }        
 
         public static void WriteAllBytes(STREAM stream, IReadOnlyList<Byte> bytes)
         {
-            CodeSugarIO.WriteAllBytes(stream, bytes);
+            CodeSugarForSystemIO.WriteAllBytes(stream, bytes);
         }
 
         public static async Task WriteAllBytesAsync(Func<STREAM> stream, IReadOnlyList<Byte> bytes, CancellationToken ctoken)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
             using var s = stream();
-            await CodeSugarIO.WriteAllBytesAsync(s, bytes, ctoken).ConfigureAwait(false);
+            await CodeSugarForSystemIO.WriteAllBytesAsync(s, bytes, ctoken).ConfigureAwait(false);
         }
 
         public static async Task WriteAllBytesAsync(STREAM stream, IReadOnlyList<Byte> bytes, CancellationToken ctoken)
         {
-            await CodeSugarIO.WriteAllBytesAsync(stream, bytes, ctoken).ConfigureAwait(false);
+            await CodeSugarForSystemIO.WriteAllBytesAsync(stream, bytes, ctoken).ConfigureAwait(false);
         }
 
         public static BYTESSEGMENT ReadAllBytes(Func<STREAM> stream)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
             using var s = stream();
-            return CodeSugarIO.ReadAllBytes(s);
+            return CodeSugarForSystemIO.ReadAllBytes(s);
         }
 
         public static BYTESSEGMENT ReadAllBytes(STREAM stream)
         {
-            return CodeSugarIO.ReadAllBytes(stream);
+            return CodeSugarForSystemIO.ReadAllBytes(stream);
         }
 
         public static async Task<BYTESSEGMENT> ReadAllBytesAsync(STREAM stream, CancellationToken ctoken)
         {
-            return await CodeSugarIO.ReadAllBytesAsync(stream, ctoken);
+            return await CodeSugarForSystemIO.ReadAllBytesAsync(stream, ctoken);
         }
     }
 }
