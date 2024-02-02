@@ -42,7 +42,7 @@
     <PackageVersion Include="NuGet.Configuration" Version="6.8.0" />
 
 
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-preview-20240125-123640" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-preview-20240202-142111" />
     
     <!-- Game Engines -->
 
@@ -109,8 +109,8 @@
     
     <!-- Machine Learning -->
 
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.16.3" />
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.16.3" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.17.0" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.17.0" />
     
     <PackageVersion Include="OpenCvSharp4" Version="4.9.0.20240103" />
     <PackageVersion Include="OpenCvSharp4.Windows" Version="4.9.0.20240103" />
@@ -124,7 +124,7 @@
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
     
     <PackageVersion Include="NUnit" Version="4.0.1" />
-    <PackageVersion Include="NUnit.Analyzers" Version="3.10.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.0.1" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
@@ -142,7 +142,7 @@
 
     <PackageVersion Include="SharpCompress" Version="0.36.0" />
 
-    <PackageVersion Include="SharpSvn" Version="1.14001.156" />
+    <PackageVersion Include="SharpSvn" Version="1.14003.272" />
     
   </ItemGroup>
   
