@@ -8,8 +8,32 @@ namespace InteropTypes.Tensors
 {
     partial class SpanTensor
     {
-        public static (T min, T max) GetMinMax<T>(this Span<T> span)
+        public static ReadOnlySpan<T> AsReadOnly<T>(this Span<T> span)
         {
+            return span;
+        }
+
+        public static (T min, T max) GetMinMax<T>(this Span<T> span)
+            where T : unmanaged
+        {
+            return span.AsReadOnly().GetMinMax();            
+        }
+
+        public static (T min, T max) GetMinMax<T>(this ReadOnlySpan<T> span)
+            where T:unmanaged
+        {
+            if (typeof(T) == typeof(float))
+            {
+                var spanf = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(span);
+                var minf = System.Numerics.Tensors.TensorPrimitives.Min(spanf);
+                var maxf = System.Numerics.Tensors.TensorPrimitives.Max(spanf);
+
+                var mint = System.Runtime.CompilerServices.Unsafe.As<float, T>(ref minf);
+                var maxt = System.Runtime.CompilerServices.Unsafe.As<float, T>(ref maxf);
+
+                return (mint,maxt);
+            }
+
             var comparer = Comparer<T>.Default;
 
             if (span.Length == 0) return (default, default);
@@ -52,7 +76,7 @@ namespace InteropTypes.Tensors
                 {
                     dst[y, x] = src[x, y];
                 }
-            }
+            }            
         }
     }
 }

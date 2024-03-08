@@ -9,8 +9,6 @@ using System.Text;
 namespace InteropTypes.Tensors
 {
     
-    
-        
     /// <summary>
     /// Represents a dense tensor of 1 dimensions.
     /// </summary>
@@ -29,7 +27,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor1<T> VerifyDimensions(int d0)
         {
@@ -41,6 +39,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor1<T>(SpanTensor1<T> other) { return new SpanTensor1<T>(other); }
+
+        public SpanTensor1(SpanTensor1<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor1(TensorSize1 dims)
         {            
@@ -76,14 +88,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize1(d0);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor1(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -98,19 +103,23 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize1 Dimensions => _Dimensions;
+        public readonly TensorSize1 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
         
-        public T this[int idx] { readonly get => _Buffer[idx]; set => _Buffer[idx] = value; }
+        public T this[int idx]
+        {
+            readonly       
+            get => _Buffer[idx];
+            set => _Buffer[idx] = value;
+                        
+        }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -120,17 +129,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 1) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         
@@ -153,62 +152,61 @@ namespace InteropTypes.Tensors
         }        
 
         
-        
         public readonly SpanTensor1<T> Reshaped(int d0)
         {
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
         
 
         #endregion
     }
 
     
-        
     /// <summary>
     /// Represents a dense tensor of 2 dimensions.
     /// </summary>
@@ -227,7 +225,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor2<T> VerifyDimensions(int d0, int d1)
         {
@@ -239,6 +237,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor2<T>(SpanTensor2<T> other) { return new SpanTensor2<T>(other); }
+
+        public SpanTensor2(SpanTensor2<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor2(TensorSize2 dims)
         {            
@@ -274,14 +286,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize2(d0, d1);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor2(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -296,11 +301,9 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize2 Dimensions => _Dimensions;
+        public readonly TensorSize2 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -310,12 +313,15 @@ namespace InteropTypes.Tensors
         public T this[int d0, int d1]        
         {
             
-            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1)];
+            readonly       
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1)];
+
             set => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1)] = value;
+ 
         }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -325,17 +331,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 2) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         public readonly void CopyTo(SpanTensor1<T> dst, int tailIdx)
@@ -428,6 +424,7 @@ namespace InteropTypes.Tensors
             return updated;
         }
 
+        
         public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
@@ -441,6 +438,7 @@ namespace InteropTypes.Tensors
             }
         }
 
+        
         
         
         public readonly unsafe SpanTensor3<TElement> DownCast<TElement>()
@@ -462,62 +460,61 @@ namespace InteropTypes.Tensors
         }        
 
         
-        
         public readonly SpanTensor1<T> Reshaped(int d0)
         {
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
         
 
         #endregion
     }
 
     
-        
     /// <summary>
     /// Represents a dense tensor of 3 dimensions.
     /// </summary>
@@ -536,7 +533,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor3<T> VerifyDimensions(int d0, int d1, int d2)
         {
@@ -548,6 +545,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor3<T>(SpanTensor3<T> other) { return new SpanTensor3<T>(other); }
+
+        public SpanTensor3(SpanTensor3<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor3(TensorSize3 dims)
         {            
@@ -583,14 +594,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize3(d0, d1, d2);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor3(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -605,11 +609,9 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize3 Dimensions => _Dimensions;
+        public readonly TensorSize3 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -619,12 +621,15 @@ namespace InteropTypes.Tensors
         public T this[int d0, int d1, int d2]        
         {
             
-            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2)];
+            readonly       
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2)];
+
             set => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2)] = value;
+ 
         }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -634,17 +639,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 3) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         public readonly void CopyTo(SpanTensor2<T> dst, int tailIdx)
@@ -737,6 +732,7 @@ namespace InteropTypes.Tensors
             return updated;
         }
 
+        
         public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
@@ -750,6 +746,7 @@ namespace InteropTypes.Tensors
             }
         }
 
+        
         
         
         public readonly unsafe SpanTensor4<TElement> DownCast<TElement>()
@@ -771,62 +768,61 @@ namespace InteropTypes.Tensors
         }        
 
         
-        
         public readonly SpanTensor1<T> Reshaped(int d0)
         {
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
         
 
         #endregion
     }
 
     
-        
     /// <summary>
     /// Represents a dense tensor of 4 dimensions.
     /// </summary>
@@ -845,7 +841,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor4<T> VerifyDimensions(int d0, int d1, int d2, int d3)
         {
@@ -857,6 +853,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor4<T>(SpanTensor4<T> other) { return new SpanTensor4<T>(other); }
+
+        public SpanTensor4(SpanTensor4<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor4(TensorSize4 dims)
         {            
@@ -892,14 +902,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize4(d0, d1, d2, d3);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor4(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -914,11 +917,9 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize4 Dimensions => _Dimensions;
+        public readonly TensorSize4 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -928,12 +929,15 @@ namespace InteropTypes.Tensors
         public T this[int d0, int d1, int d2, int d3]        
         {
             
-            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3)];
+            readonly       
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3)];
+
             set => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3)] = value;
+ 
         }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -943,17 +947,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 4) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         public readonly void CopyTo(SpanTensor3<T> dst, int tailIdx)
@@ -1046,6 +1040,7 @@ namespace InteropTypes.Tensors
             return updated;
         }
 
+        
         public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
@@ -1059,6 +1054,7 @@ namespace InteropTypes.Tensors
             }
         }
 
+        
         
         
         public readonly unsafe SpanTensor5<TElement> DownCast<TElement>()
@@ -1080,62 +1076,61 @@ namespace InteropTypes.Tensors
         }        
 
         
-        
         public readonly SpanTensor1<T> Reshaped(int d0)
         {
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
         
 
         #endregion
     }
 
     
-        
     /// <summary>
     /// Represents a dense tensor of 5 dimensions.
     /// </summary>
@@ -1154,7 +1149,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor5<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4)
         {
@@ -1166,6 +1161,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor5<T>(SpanTensor5<T> other) { return new SpanTensor5<T>(other); }
+
+        public SpanTensor5(SpanTensor5<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor5(TensorSize5 dims)
         {            
@@ -1201,14 +1210,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor5(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -1223,11 +1225,9 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize5 Dimensions => _Dimensions;
+        public readonly TensorSize5 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -1237,12 +1237,15 @@ namespace InteropTypes.Tensors
         public T this[int d0, int d1, int d2, int d3, int d4]        
         {
             
-            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4)];
+            readonly       
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4)];
+
             set => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4)] = value;
+ 
         }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -1252,17 +1255,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 5) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         public readonly void CopyTo(SpanTensor4<T> dst, int tailIdx)
@@ -1355,6 +1348,7 @@ namespace InteropTypes.Tensors
             return updated;
         }
 
+        
         public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
@@ -1368,6 +1362,7 @@ namespace InteropTypes.Tensors
             }
         }
 
+        
         
         
         public readonly unsafe SpanTensor6<TElement> DownCast<TElement>()
@@ -1389,62 +1384,61 @@ namespace InteropTypes.Tensors
         }        
 
         
-        
         public readonly SpanTensor1<T> Reshaped(int d0)
         {
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
         
 
         #endregion
     }
 
     
-        
     /// <summary>
     /// Represents a dense tensor of 6 dimensions.
     /// </summary>
@@ -1463,7 +1457,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor6<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5)
         {
@@ -1475,6 +1469,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor6<T>(SpanTensor6<T> other) { return new SpanTensor6<T>(other); }
+
+        public SpanTensor6(SpanTensor6<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor6(TensorSize6 dims)
         {            
@@ -1510,14 +1518,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor6(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -1532,11 +1533,9 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize6 Dimensions => _Dimensions;
+        public readonly TensorSize6 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -1546,12 +1545,15 @@ namespace InteropTypes.Tensors
         public T this[int d0, int d1, int d2, int d3, int d4, int d5]        
         {
             
-            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5)];
+            readonly       
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5)];
+
             set => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5)] = value;
+ 
         }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -1561,17 +1563,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 6) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         public readonly void CopyTo(SpanTensor5<T> dst, int tailIdx)
@@ -1664,6 +1656,7 @@ namespace InteropTypes.Tensors
             return updated;
         }
 
+        
         public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
@@ -1677,6 +1670,7 @@ namespace InteropTypes.Tensors
             }
         }
 
+        
         
         
         public readonly unsafe SpanTensor7<TElement> DownCast<TElement>()
@@ -1698,62 +1692,61 @@ namespace InteropTypes.Tensors
         }        
 
         
-        
         public readonly SpanTensor1<T> Reshaped(int d0)
         {
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
         
 
         #endregion
     }
 
     
-        
     /// <summary>
     /// Represents a dense tensor of 7 dimensions.
     /// </summary>
@@ -1772,7 +1765,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor7<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
@@ -1784,6 +1777,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor7<T>(SpanTensor7<T> other) { return new SpanTensor7<T>(other); }
+
+        public SpanTensor7(SpanTensor7<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor7(TensorSize7 dims)
         {            
@@ -1819,14 +1826,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor7(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -1841,11 +1841,9 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize7 Dimensions => _Dimensions;
+        public readonly TensorSize7 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -1855,12 +1853,15 @@ namespace InteropTypes.Tensors
         public T this[int d0, int d1, int d2, int d3, int d4, int d5, int d6]        
         {
             
-            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6)];
+            readonly       
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6)];
+
             set => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6)] = value;
+ 
         }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -1870,17 +1871,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 7) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         public readonly void CopyTo(SpanTensor6<T> dst, int tailIdx)
@@ -1973,6 +1964,7 @@ namespace InteropTypes.Tensors
             return updated;
         }
 
+        
         public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
@@ -1994,56 +1986,56 @@ namespace InteropTypes.Tensors
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
         
 
         #endregion
     }
 
     
-        
     /// <summary>
     /// Represents a dense tensor of 8 dimensions.
     /// </summary>
@@ -2062,7 +2054,7 @@ namespace InteropTypes.Tensors
             text += $" [{min} < {max}]";
 
             return text;
-        }
+        }        
 
         public SpanTensor8<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
@@ -2074,6 +2066,20 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region lifecycle
+
+        /*
+
+        public static implicit operator SpanTensor8<T>(SpanTensor8<T> other) { return new SpanTensor8<T>(other); }
+
+        public SpanTensor8(SpanTensor8<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+        */
+        
+        
 
         public SpanTensor8(TensorSize8 dims)
         {            
@@ -2109,14 +2115,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public SpanTensor8(DenseTensor<T> tensor)
-        {
-            _Dimensions = tensor.Dimensions;
-            _Buffer = tensor.Buffer.Span;            
-        }*/
+        }        
 
         #endregion
 
@@ -2131,11 +2130,9 @@ namespace InteropTypes.Tensors
         #endregion
 
         #region properties
-        public readonly TensorSize8 Dimensions => _Dimensions;
+        public readonly TensorSize8 Dimensions => _Dimensions;        
 
         public readonly Span<T> Span => _Buffer;
-
-        public readonly ReadOnlySpan<T> ReadOnlySpan => _Buffer;
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -2145,12 +2142,15 @@ namespace InteropTypes.Tensors
         public T this[int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7]        
         {
             
-            readonly get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6, d7)];
+            readonly       
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6, d7)];
+
             set => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6, d7)] = value;
+ 
         }
 
         
-        public readonly Statistics Statistics => Statistics.Create(this.ReadOnlySpan);
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
 
         #endregion
 
@@ -2160,17 +2160,7 @@ namespace InteropTypes.Tensors
         {
             this._Buffer.CopyTo(dst);
         }      
-
-        /* DenseTensor<T> removed from S.N.T may be redirected to ONNX
-        public readonly void CopyTo(ref DenseTensor<T> dst)
-        {
-            if (dst != null && dst.Dimensions.Length != 8) dst = null;
-            // if dims don't match, dst = null
-
-            if (dst == null) dst = new DenseTensor<T>(_Dimensions.ToArray());
-
-            this._Buffer.CopyTo(dst.Buffer.Span);
-        }*/
+        
 
         
         public readonly void CopyTo(SpanTensor7<T> dst, int tailIdx)
@@ -2263,6 +2253,7 @@ namespace InteropTypes.Tensors
             return updated;
         }
 
+        
         public void ApplySwap(int index0, int index1)
         {
             var span0 = this[index0].Span;
@@ -2284,49 +2275,2356 @@ namespace InteropTypes.Tensors
             if (_Buffer.Length != (d0)) throw new ArgumentException();
             return new SpanTensor1<T>(_Buffer, d0);
         }
-        
+
         public readonly SpanTensor2<T> Reshaped(int d0, int d1)
         {
             if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
             return new SpanTensor2<T>(_Buffer, d0, d1);
         }
-        
+
         public readonly SpanTensor3<T> Reshaped(int d0, int d1, int d2)
         {
             if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
             return new SpanTensor3<T>(_Buffer, d0, d1, d2);
         }
-        
+
         public readonly SpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
             return new SpanTensor4<T>(_Buffer, d0, d1, d2, d3);
         }
-        
+
         public readonly SpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
             return new SpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
         }
-        
+
         public readonly SpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
             return new SpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
         }
-        
+
         public readonly SpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
             return new SpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
         }
-        
+
         public readonly SpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
             if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
             return new SpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
         }
-              
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 1 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor1<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor1<T> VerifyDimensions(int d0)
+        {
+            
+            _Dimensions.VerifyDimensions(d0);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor1<T>(SpanTensor1<T> other) { return new ReadOnlySpanTensor1<T>(other); }
+
+        public ReadOnlySpanTensor1(SpanTensor1<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor1(TensorSize1 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor1(int d0)
+        {            
+            _Dimensions = new TensorSize1(d0);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor1(ReadOnlySpan<T> data, TensorSize1 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor1(ReadOnlySpan<T> data, int d0)
+        {
+            _Dimensions = new TensorSize1(d0);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor1(IntPtr data, TensorSize1 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor1(IntPtr data, int d0)
+        {
+            _Dimensions = new TensorSize1(d0);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize1 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize1 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public T this[int idx]
+        {
+                  
+            get => _Buffer[idx];
+                                    
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        
+        public readonly unsafe ReadOnlySpanTensor2<TElement> DownCast<TElement>()
+            where TElement:unmanaged
+        {
+            var thisSize = sizeof(T);
+            var otherSize = sizeof(TElement);
+
+            if (otherSize > thisSize) throw new ArgumentException(nameof(TElement));            
+
+            int last = thisSize / otherSize;
+
+            if (last * otherSize != thisSize) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdims = new TensorSize2(_Dimensions, last);
+
+            return new ReadOnlySpanTensor2<TElement>(xdata, xdims);
+        }        
+
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 2 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor2<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor2<T> VerifyDimensions(int d0, int d1)
+        {
+            
+            _Dimensions.VerifyDimensions(d0, d1);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor2<T>(SpanTensor2<T> other) { return new ReadOnlySpanTensor2<T>(other); }
+
+        public ReadOnlySpanTensor2(SpanTensor2<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor2(TensorSize2 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor2(int d0, int d1)
+        {            
+            _Dimensions = new TensorSize2(d0, d1);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor2(ReadOnlySpan<T> data, TensorSize2 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor2(ReadOnlySpan<T> data, int d0, int d1)
+        {
+            _Dimensions = new TensorSize2(d0, d1);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor2(IntPtr data, TensorSize2 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor2(IntPtr data, int d0, int d1)
+        {
+            _Dimensions = new TensorSize2(d0, d1);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize2 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize2 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public ReadOnlySpanTensor1<T> this[int idx] => GetSubTensor(idx);
+
+        public T this[int d0, int d1]        
+        {
+            
+                  
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1)];
+
+             
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        public readonly void CopyTo(SpanTensor1<T> dst, int tailIdx)
+        {
+            if (dst._Dimensions != this._Dimensions.Tail1) throw new ArgumentException(nameof(dst));
+
+            var step = this._Dimensions.Last;
+            var len = this._Buffer.Length / step;
+
+            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
+        }
+
+        public readonly ReadOnlySpanTensor1<T> GetSubTensor(int idx)
+        {
+            if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
+
+            var st = _Dimensions.GetTensorTail(idx);
+            
+            var data = _Buffer.Slice(st.offs, st.dims.StepSize);
+
+            return new ReadOnlySpanTensor1<T>(data,st.dims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor2<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize2(_Dimensions.Head1, lastDim);            
+
+            return new ReadOnlySpanTensor2<TElement>(xdata, xdims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor1<TElement> UpCast<TElement>()
+            where TElement:unmanaged
+        {
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+
+            return new ReadOnlySpanTensor1<TElement>(xdata, _Dimensions.GetTensorHead());
+        }
+
+        public readonly void CopyTransposed(SpanTensor2<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public readonly bool CopyTransposed(ref SpanTensor2<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor2<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        /*
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
+
+        */
+
+        
+        
+        public readonly unsafe ReadOnlySpanTensor3<TElement> DownCast<TElement>()
+            where TElement:unmanaged
+        {
+            var thisSize = sizeof(T);
+            var otherSize = sizeof(TElement);
+
+            if (otherSize > thisSize) throw new ArgumentException(nameof(TElement));            
+
+            int last = thisSize / otherSize;
+
+            if (last * otherSize != thisSize) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdims = new TensorSize3(_Dimensions, last);
+
+            return new ReadOnlySpanTensor3<TElement>(xdata, xdims);
+        }        
+
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 3 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor3<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor3<T> VerifyDimensions(int d0, int d1, int d2)
+        {
+            
+            _Dimensions.VerifyDimensions(d0, d1, d2);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor3<T>(SpanTensor3<T> other) { return new ReadOnlySpanTensor3<T>(other); }
+
+        public ReadOnlySpanTensor3(SpanTensor3<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor3(TensorSize3 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor3(int d0, int d1, int d2)
+        {            
+            _Dimensions = new TensorSize3(d0, d1, d2);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor3(ReadOnlySpan<T> data, TensorSize3 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor3(ReadOnlySpan<T> data, int d0, int d1, int d2)
+        {
+            _Dimensions = new TensorSize3(d0, d1, d2);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor3(IntPtr data, TensorSize3 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor3(IntPtr data, int d0, int d1, int d2)
+        {
+            _Dimensions = new TensorSize3(d0, d1, d2);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize3 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize3 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public ReadOnlySpanTensor2<T> this[int idx] => GetSubTensor(idx);
+
+        public T this[int d0, int d1, int d2]        
+        {
+            
+                  
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2)];
+
+             
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        public readonly void CopyTo(SpanTensor2<T> dst, int tailIdx)
+        {
+            if (dst._Dimensions != this._Dimensions.Tail2) throw new ArgumentException(nameof(dst));
+
+            var step = this._Dimensions.Last;
+            var len = this._Buffer.Length / step;
+
+            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
+        }
+
+        public readonly ReadOnlySpanTensor2<T> GetSubTensor(int idx)
+        {
+            if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
+
+            var st = _Dimensions.GetTensorTail(idx);
+            
+            var data = _Buffer.Slice(st.offs, st.dims.StepSize);
+
+            return new ReadOnlySpanTensor2<T>(data,st.dims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor3<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize3(_Dimensions.Head2, lastDim);            
+
+            return new ReadOnlySpanTensor3<TElement>(xdata, xdims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor2<TElement> UpCast<TElement>()
+            where TElement:unmanaged
+        {
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+
+            return new ReadOnlySpanTensor2<TElement>(xdata, _Dimensions.GetTensorHead());
+        }
+
+        public readonly void CopyTransposed(SpanTensor3<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public readonly bool CopyTransposed(ref SpanTensor3<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor3<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        /*
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
+
+        */
+
+        
+        
+        public readonly unsafe ReadOnlySpanTensor4<TElement> DownCast<TElement>()
+            where TElement:unmanaged
+        {
+            var thisSize = sizeof(T);
+            var otherSize = sizeof(TElement);
+
+            if (otherSize > thisSize) throw new ArgumentException(nameof(TElement));            
+
+            int last = thisSize / otherSize;
+
+            if (last * otherSize != thisSize) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdims = new TensorSize4(_Dimensions, last);
+
+            return new ReadOnlySpanTensor4<TElement>(xdata, xdims);
+        }        
+
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 4 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor4<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor4<T> VerifyDimensions(int d0, int d1, int d2, int d3)
+        {
+            
+            _Dimensions.VerifyDimensions(d0, d1, d2, d3);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor4<T>(SpanTensor4<T> other) { return new ReadOnlySpanTensor4<T>(other); }
+
+        public ReadOnlySpanTensor4(SpanTensor4<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor4(TensorSize4 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor4(int d0, int d1, int d2, int d3)
+        {            
+            _Dimensions = new TensorSize4(d0, d1, d2, d3);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor4(ReadOnlySpan<T> data, TensorSize4 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor4(ReadOnlySpan<T> data, int d0, int d1, int d2, int d3)
+        {
+            _Dimensions = new TensorSize4(d0, d1, d2, d3);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor4(IntPtr data, TensorSize4 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor4(IntPtr data, int d0, int d1, int d2, int d3)
+        {
+            _Dimensions = new TensorSize4(d0, d1, d2, d3);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize4 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize4 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public ReadOnlySpanTensor3<T> this[int idx] => GetSubTensor(idx);
+
+        public T this[int d0, int d1, int d2, int d3]        
+        {
+            
+                  
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3)];
+
+             
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        public readonly void CopyTo(SpanTensor3<T> dst, int tailIdx)
+        {
+            if (dst._Dimensions != this._Dimensions.Tail3) throw new ArgumentException(nameof(dst));
+
+            var step = this._Dimensions.Last;
+            var len = this._Buffer.Length / step;
+
+            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
+        }
+
+        public readonly ReadOnlySpanTensor3<T> GetSubTensor(int idx)
+        {
+            if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
+
+            var st = _Dimensions.GetTensorTail(idx);
+            
+            var data = _Buffer.Slice(st.offs, st.dims.StepSize);
+
+            return new ReadOnlySpanTensor3<T>(data,st.dims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor4<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize4(_Dimensions.Head3, lastDim);            
+
+            return new ReadOnlySpanTensor4<TElement>(xdata, xdims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor3<TElement> UpCast<TElement>()
+            where TElement:unmanaged
+        {
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+
+            return new ReadOnlySpanTensor3<TElement>(xdata, _Dimensions.GetTensorHead());
+        }
+
+        public readonly void CopyTransposed(SpanTensor4<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public readonly bool CopyTransposed(ref SpanTensor4<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor4<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        /*
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
+
+        */
+
+        
+        
+        public readonly unsafe ReadOnlySpanTensor5<TElement> DownCast<TElement>()
+            where TElement:unmanaged
+        {
+            var thisSize = sizeof(T);
+            var otherSize = sizeof(TElement);
+
+            if (otherSize > thisSize) throw new ArgumentException(nameof(TElement));            
+
+            int last = thisSize / otherSize;
+
+            if (last * otherSize != thisSize) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdims = new TensorSize5(_Dimensions, last);
+
+            return new ReadOnlySpanTensor5<TElement>(xdata, xdims);
+        }        
+
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 5 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor5<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor5<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4)
+        {
+            
+            _Dimensions.VerifyDimensions(d0, d1, d2, d3, d4);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor5<T>(SpanTensor5<T> other) { return new ReadOnlySpanTensor5<T>(other); }
+
+        public ReadOnlySpanTensor5(SpanTensor5<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor5(TensorSize5 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor5(int d0, int d1, int d2, int d3, int d4)
+        {            
+            _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor5(ReadOnlySpan<T> data, TensorSize5 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor5(ReadOnlySpan<T> data, int d0, int d1, int d2, int d3, int d4)
+        {
+            _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor5(IntPtr data, TensorSize5 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor5(IntPtr data, int d0, int d1, int d2, int d3, int d4)
+        {
+            _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize5 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize5 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public ReadOnlySpanTensor4<T> this[int idx] => GetSubTensor(idx);
+
+        public T this[int d0, int d1, int d2, int d3, int d4]        
+        {
+            
+                  
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4)];
+
+             
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        public readonly void CopyTo(SpanTensor4<T> dst, int tailIdx)
+        {
+            if (dst._Dimensions != this._Dimensions.Tail4) throw new ArgumentException(nameof(dst));
+
+            var step = this._Dimensions.Last;
+            var len = this._Buffer.Length / step;
+
+            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
+        }
+
+        public readonly ReadOnlySpanTensor4<T> GetSubTensor(int idx)
+        {
+            if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
+
+            var st = _Dimensions.GetTensorTail(idx);
+            
+            var data = _Buffer.Slice(st.offs, st.dims.StepSize);
+
+            return new ReadOnlySpanTensor4<T>(data,st.dims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor5<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize5(_Dimensions.Head4, lastDim);            
+
+            return new ReadOnlySpanTensor5<TElement>(xdata, xdims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor4<TElement> UpCast<TElement>()
+            where TElement:unmanaged
+        {
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+
+            return new ReadOnlySpanTensor4<TElement>(xdata, _Dimensions.GetTensorHead());
+        }
+
+        public readonly void CopyTransposed(SpanTensor5<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public readonly bool CopyTransposed(ref SpanTensor5<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor5<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        /*
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
+
+        */
+
+        
+        
+        public readonly unsafe ReadOnlySpanTensor6<TElement> DownCast<TElement>()
+            where TElement:unmanaged
+        {
+            var thisSize = sizeof(T);
+            var otherSize = sizeof(TElement);
+
+            if (otherSize > thisSize) throw new ArgumentException(nameof(TElement));            
+
+            int last = thisSize / otherSize;
+
+            if (last * otherSize != thisSize) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdims = new TensorSize6(_Dimensions, last);
+
+            return new ReadOnlySpanTensor6<TElement>(xdata, xdims);
+        }        
+
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 6 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor6<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor6<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            
+            _Dimensions.VerifyDimensions(d0, d1, d2, d3, d4, d5);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor6<T>(SpanTensor6<T> other) { return new ReadOnlySpanTensor6<T>(other); }
+
+        public ReadOnlySpanTensor6(SpanTensor6<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor6(TensorSize6 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor6(int d0, int d1, int d2, int d3, int d4, int d5)
+        {            
+            _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor6(ReadOnlySpan<T> data, TensorSize6 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor6(ReadOnlySpan<T> data, int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor6(IntPtr data, TensorSize6 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor6(IntPtr data, int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize6 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize6 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public ReadOnlySpanTensor5<T> this[int idx] => GetSubTensor(idx);
+
+        public T this[int d0, int d1, int d2, int d3, int d4, int d5]        
+        {
+            
+                  
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5)];
+
+             
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        public readonly void CopyTo(SpanTensor5<T> dst, int tailIdx)
+        {
+            if (dst._Dimensions != this._Dimensions.Tail5) throw new ArgumentException(nameof(dst));
+
+            var step = this._Dimensions.Last;
+            var len = this._Buffer.Length / step;
+
+            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
+        }
+
+        public readonly ReadOnlySpanTensor5<T> GetSubTensor(int idx)
+        {
+            if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
+
+            var st = _Dimensions.GetTensorTail(idx);
+            
+            var data = _Buffer.Slice(st.offs, st.dims.StepSize);
+
+            return new ReadOnlySpanTensor5<T>(data,st.dims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor6<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize6(_Dimensions.Head5, lastDim);            
+
+            return new ReadOnlySpanTensor6<TElement>(xdata, xdims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor5<TElement> UpCast<TElement>()
+            where TElement:unmanaged
+        {
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+
+            return new ReadOnlySpanTensor5<TElement>(xdata, _Dimensions.GetTensorHead());
+        }
+
+        public readonly void CopyTransposed(SpanTensor6<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public readonly bool CopyTransposed(ref SpanTensor6<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor6<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        /*
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
+
+        */
+
+        
+        
+        public readonly unsafe ReadOnlySpanTensor7<TElement> DownCast<TElement>()
+            where TElement:unmanaged
+        {
+            var thisSize = sizeof(T);
+            var otherSize = sizeof(TElement);
+
+            if (otherSize > thisSize) throw new ArgumentException(nameof(TElement));            
+
+            int last = thisSize / otherSize;
+
+            if (last * otherSize != thisSize) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdims = new TensorSize7(_Dimensions, last);
+
+            return new ReadOnlySpanTensor7<TElement>(xdata, xdims);
+        }        
+
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 7 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor7<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor7<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            
+            _Dimensions.VerifyDimensions(d0, d1, d2, d3, d4, d5, d6);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor7<T>(SpanTensor7<T> other) { return new ReadOnlySpanTensor7<T>(other); }
+
+        public ReadOnlySpanTensor7(SpanTensor7<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor7(TensorSize7 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor7(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {            
+            _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor7(ReadOnlySpan<T> data, TensorSize7 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor7(ReadOnlySpan<T> data, int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor7(IntPtr data, TensorSize7 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor7(IntPtr data, int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize7 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize7 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public ReadOnlySpanTensor6<T> this[int idx] => GetSubTensor(idx);
+
+        public T this[int d0, int d1, int d2, int d3, int d4, int d5, int d6]        
+        {
+            
+                  
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6)];
+
+             
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        public readonly void CopyTo(SpanTensor6<T> dst, int tailIdx)
+        {
+            if (dst._Dimensions != this._Dimensions.Tail6) throw new ArgumentException(nameof(dst));
+
+            var step = this._Dimensions.Last;
+            var len = this._Buffer.Length / step;
+
+            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
+        }
+
+        public readonly ReadOnlySpanTensor6<T> GetSubTensor(int idx)
+        {
+            if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
+
+            var st = _Dimensions.GetTensorTail(idx);
+            
+            var data = _Buffer.Slice(st.offs, st.dims.StepSize);
+
+            return new ReadOnlySpanTensor6<T>(data,st.dims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor7<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize7(_Dimensions.Head6, lastDim);            
+
+            return new ReadOnlySpanTensor7<TElement>(xdata, xdims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor6<TElement> UpCast<TElement>()
+            where TElement:unmanaged
+        {
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+
+            return new ReadOnlySpanTensor6<TElement>(xdata, _Dimensions.GetTensorHead());
+        }
+
+        public readonly void CopyTransposed(SpanTensor7<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public readonly bool CopyTransposed(ref SpanTensor7<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor7<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        /*
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
+
+        */
+
+        
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
+        
+
+        #endregion
+    }
+
+    
+    /// <summary>
+    /// Represents a dense tensor of 8 dimensions.
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{_GetDebuggerDisplayString(),nq}")]
+    public readonly ref partial struct ReadOnlySpanTensor8<T>
+    where T : unmanaged
+    {
+        #region debug
+
+        private string _GetDebuggerDisplayString()
+        {
+            var text = "Tensor " + string.Join("×", _Dimensions) + "×" + typeof(T).Name;
+
+            var (min, max) = _Buffer.GetMinMax();
+
+            text += $" [{min} < {max}]";
+
+            return text;
+        }        
+
+        public ReadOnlySpanTensor8<T> VerifyDimensions(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            
+            _Dimensions.VerifyDimensions(d0, d1, d2, d3, d4, d5, d6, d7);
+            return this;
+        }
+
+        #endregion
+
+        #region lifecycle
+
+        
+        public static implicit operator ReadOnlySpanTensor8<T>(SpanTensor8<T> other) { return new ReadOnlySpanTensor8<T>(other); }
+
+        public ReadOnlySpanTensor8(SpanTensor8<T> other)
+        {
+            _Dimensions = other._Dimensions;
+            _Buffer = other._Buffer;
+        }
+
+                
+        
+
+        public ReadOnlySpanTensor8(TensorSize8 dims)
+        {            
+            _Dimensions = dims;
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor8(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {            
+            _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
+            _Buffer = new T[_Dimensions.StepSize];
+        }
+
+        public ReadOnlySpanTensor8(ReadOnlySpan<T> data, TensorSize8 dims)
+        {
+            _Dimensions = dims;
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }
+
+        public ReadOnlySpanTensor8(ReadOnlySpan<T> data, int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
+            _Buffer = data.Slice(0, _Dimensions.StepSize);
+        }        
+
+        public unsafe ReadOnlySpanTensor8(IntPtr data, TensorSize8 dims)
+        {            
+            _Dimensions = dims;            
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }
+
+        public unsafe ReadOnlySpanTensor8(IntPtr data, int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
+            _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
+        }        
+
+        #endregion
+
+        #region data        
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly TensorSize8 _Dimensions;
+
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+        internal readonly ReadOnlySpan<T> _Buffer;        
+
+        #endregion
+
+        #region properties
+        public readonly TensorSize8 Dimensions => _Dimensions;        
+
+        public readonly ReadOnlySpan<T> Span => _Buffer;
+
+        public readonly T[] ToArray() { return _Buffer.ToArray(); }
+        
+        
+        public ReadOnlySpanTensor7<T> this[int idx] => GetSubTensor(idx);
+
+        public T this[int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7]        
+        {
+            
+                  
+            get => _Buffer[_Dimensions.GetFlattenedIndex(d0, d1, d2, d3, d4, d5, d6, d7)];
+
+             
+        }
+
+        
+        public readonly Statistics Statistics => Statistics.Create<T>(this.Span);
+
+        #endregion
+
+        #region API
+
+        public readonly void CopyTo(Span<T> dst)
+        {
+            this._Buffer.CopyTo(dst);
+        }      
+        
+
+        
+        public readonly void CopyTo(SpanTensor7<T> dst, int tailIdx)
+        {
+            if (dst._Dimensions != this._Dimensions.Tail7) throw new ArgumentException(nameof(dst));
+
+            var step = this._Dimensions.Last;
+            var len = this._Buffer.Length / step;
+
+            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
+        }
+
+        public readonly ReadOnlySpanTensor7<T> GetSubTensor(int idx)
+        {
+            if (idx < 0 || idx >= _Dimensions.Dim0) throw new IndexOutOfRangeException(nameof(idx));
+
+            var st = _Dimensions.GetTensorTail(idx);
+            
+            var data = _Buffer.Slice(st.offs, st.dims.StepSize);
+
+            return new ReadOnlySpanTensor7<T>(data,st.dims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor8<TElement> Cast<TElement>()
+            where TElement:unmanaged
+        {
+            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            
+            var xdims = new TensorSize8(_Dimensions.Head7, lastDim);            
+
+            return new ReadOnlySpanTensor8<TElement>(xdata, xdims);
+        }
+
+        public readonly unsafe ReadOnlySpanTensor7<TElement> UpCast<TElement>()
+            where TElement:unmanaged
+        {
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+
+            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+
+            return new ReadOnlySpanTensor7<TElement>(xdata, _Dimensions.GetTensorHead());
+        }
+
+        public readonly void CopyTransposed(SpanTensor8<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));            
+            if (dst.Dimensions != this.Dimensions) throw new ArgumentException($"dimensions mismatch.", nameof(dst));            
+
+            // TODO: if memory overlaps, we can use a swap strategy, instead of a copy strategy
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+        }
+        
+        public readonly bool CopyTransposed(ref SpanTensor8<T> dst, params int[] indices)
+        {
+            var size = this.Dimensions[0];
+
+            if (indices.Length != size) throw new ArgumentException($"must have {size} arguments.", nameof(indices));
+
+            var updated = false;
+
+            if (dst.Dimensions != this.Dimensions)
+            {
+                dst = new SpanTensor8<T>(this.Dimensions);
+                updated = true;
+            }
+
+            if (this.Span.Overlaps(dst.Span)) throw new ArgumentException("Memory overlaps", nameof(dst));
+
+            for(int i=0; i < size; ++i)
+            {
+                var srcSpan = this[i].Span;
+                var dstSpan = dst[indices[i]].Span;
+                
+                srcSpan.CopyTo(dstSpan);            
+            }
+
+            return updated;
+        }
+
+        /*
+
+        public void ApplySwap(int index0, int index1)
+        {
+            var span0 = this[index0].Span;
+            var span1 = this[index1].Span;            
+
+            for(int i=0; i < span0.Length; ++i)
+            {
+                var tmp = span0[i];
+                span0[i] = span1[i];
+                span1[i] = tmp;
+            }
+        }
+
+        */
+
+        
+        
+        public readonly ReadOnlySpanTensor1<T> Reshaped(int d0)
+        {
+            if (_Buffer.Length != (d0)) throw new ArgumentException();
+            return new ReadOnlySpanTensor1<T>(_Buffer, d0);
+        }
+
+        public readonly ReadOnlySpanTensor2<T> Reshaped(int d0, int d1)
+        {
+            if (_Buffer.Length != (d0 * d1)) throw new ArgumentException();
+            return new ReadOnlySpanTensor2<T>(_Buffer, d0, d1);
+        }
+
+        public readonly ReadOnlySpanTensor3<T> Reshaped(int d0, int d1, int d2)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2)) throw new ArgumentException();
+            return new ReadOnlySpanTensor3<T>(_Buffer, d0, d1, d2);
+        }
+
+        public readonly ReadOnlySpanTensor4<T> Reshaped(int d0, int d1, int d2, int d3)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3)) throw new ArgumentException();
+            return new ReadOnlySpanTensor4<T>(_Buffer, d0, d1, d2, d3);
+        }
+
+        public readonly ReadOnlySpanTensor5<T> Reshaped(int d0, int d1, int d2, int d3, int d4)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4)) throw new ArgumentException();
+            return new ReadOnlySpanTensor5<T>(_Buffer, d0, d1, d2, d3, d4);
+        }
+
+        public readonly ReadOnlySpanTensor6<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5)) throw new ArgumentException();
+            return new ReadOnlySpanTensor6<T>(_Buffer, d0, d1, d2, d3, d4, d5);
+        }
+
+        public readonly ReadOnlySpanTensor7<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6)) throw new ArgumentException();
+            return new ReadOnlySpanTensor7<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6);
+        }
+
+        public readonly ReadOnlySpanTensor8<T> Reshaped(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
+        {
+            if (_Buffer.Length != (d0 * d1 * d2 * d3 * d4 * d5 * d6 * d7)) throw new ArgumentException();
+            return new ReadOnlySpanTensor8<T>(_Buffer, d0, d1, d2, d3, d4, d5, d6, d7);
+        }
+
+      
         
 
         #endregion

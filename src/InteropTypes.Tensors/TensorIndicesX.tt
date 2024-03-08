@@ -11,12 +11,18 @@ using System.Text;
 
 namespace InteropTypes.Tensors
 {
-    <# var TDIM_MAX = 8; #>
+    <#
+    
+    var TDIM_MAX = 8;
 
-    <# for(var TDIMCOUNT = 1; TDIMCOUNT <= TDIM_MAX; ++TDIMCOUNT) { #>
-    <# var TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int i{idx}")); #>
+    for(var TDIMCOUNT = 1; TDIMCOUNT <= TDIM_MAX; ++TDIMCOUNT)
+    {
+        var TARGS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int i{idx}"));
+        var TFIELDS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Index{idx}"));
 
-    <# var TTENSORINDICES = $"TensorIndices{TDIMCOUNT}"; #>
+        var TTENSORINDICES = $"TensorIndices{TDIMCOUNT}";
+    
+    #>
 
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -102,12 +108,7 @@ public static readonly <#= TTENSORINDICES#> Invalid = (<#= TNEGXX#>);
 
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> h ^= Index<#= TDIM#>.GetHashCode(); h *=17;
-            <# } #>
-
-            return h;
+            return HashCode.Combine(<#=TFIELDS#>);
         }
 
         public static bool AreEqual(in <#= TTENSORINDICES#> a, in <#= TTENSORINDICES#> b)
@@ -157,9 +158,8 @@ public static readonly <#= TTENSORINDICES#> Invalid = (<#= TNEGXX#>);
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
-        <# var TITEMS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Index{idx}")); #>
-public readonly int[] ToArray() { return new int[] { <#= TITEMS#> }; }        
+        
+        public readonly int[] ToArray() { return new int[] { <#=TFIELDS#> }; }        
 
         #endregion
 
@@ -201,11 +201,10 @@ public readonly int[] ToArray() { return new int[] { <#= TITEMS#> }; }
 
         <# } else { #>
 
-        <#
-        TITEMS = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Index{idx}"));        
+        <#            
         var TRESULT = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"int Index{idx}"));        
         #>
-public readonly (<#= TRESULT#>) ToValueTuple() { return (<#= TITEMS#>); }
+public readonly (<#= TRESULT#>) ToValueTuple() { return (<#=TFIELDS#>); }
 
         <# } #>
 

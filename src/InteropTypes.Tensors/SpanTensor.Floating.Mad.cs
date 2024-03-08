@@ -65,7 +65,7 @@ namespace InteropTypes.Tensors
 
             for (int y = 0; y < src.Dimensions[0]; ++y)
             {
-                var srcRow = src[y].ReadOnlySpan;
+                var srcRow = src[y].Span;
                 var dstRowX = dstX[y].Span;
                 var dstRowY = dstY[y].Span;
                 var dstRowZ = dstZ[y].Span;
@@ -83,7 +83,7 @@ namespace InteropTypes.Tensors
 
             for (int y = 0; y < src.Dimensions[0]; ++y)
             {
-                var srcRow = src[y].ReadOnlySpan;
+                var srcRow = src[y].Span;
                 var dstRowX = dstX[y].Span;
                 var dstRowY = dstY[y].Span;
                 var dstRowZ = dstZ[y].Span;
@@ -133,9 +133,9 @@ namespace InteropTypes.Tensors
 
             for (int y = 0; y < dst.Dimensions[0]; ++y)
             {
-                var srcRowX = srcX[y].ReadOnlySpan;
-                var srcRowY = srcY[y].ReadOnlySpan;
-                var srcRowZ = srcZ[y].ReadOnlySpan;
+                var srcRowX = srcX[y].Span;
+                var srcRowY = srcY[y].Span;
+                var srcRowZ = srcZ[y].Span;
 
                 var dstRow = dst[y].Span;
 
@@ -152,10 +152,10 @@ namespace InteropTypes.Tensors
 
             for (int y = 0; y < dst.Dimensions[0]; ++y)
             {
-                var srcRowX = srcX[y].ReadOnlySpan;
-                var srcRowY = srcY[y].ReadOnlySpan;
-                var srcRowZ = srcZ[y].ReadOnlySpan;
-                var srcRowW = srcW[y].ReadOnlySpan;
+                var srcRowX = srcX[y].Span;
+                var srcRowY = srcY[y].Span;
+                var srcRowZ = srcZ[y].Span;
+                var srcRowW = srcW[y].Span;
 
                 var dstRow = dst[y].Span;
 
@@ -167,7 +167,7 @@ namespace InteropTypes.Tensors
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
 
-            var srcSpan = src.UpCast<Vector3>().ReadOnlySpan;
+            var srcSpan = src.UpCast<Vector3>().Span;
             var dstSpan = dst.Span;
 
             MultiplyAdd.Transform(srcSpan, dstSpan, xform);
@@ -177,7 +177,7 @@ namespace InteropTypes.Tensors
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
 
-            var srcSpan = src.UpCast<Vector4>().ReadOnlySpan;
+            var srcSpan = src.UpCast<Vector4>().Span;
             var dstSpan = dst.Span;
 
             MultiplyAdd.Transform(srcSpan, dstSpan, xform);

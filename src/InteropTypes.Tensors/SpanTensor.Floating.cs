@@ -67,21 +67,9 @@ namespace InteropTypes.Tensors
         public static void Sum(TENSOR2S left, TENSOR2S right, ref TENSOR2S result)
         {
             if (left.Dimensions != right.Dimensions) throw new ArgumentException(nameof(right.Dimensions));
-            if (left.Dimensions != result.Dimensions) result = new TENSOR2S(left.Dimensions);
+            if (left.Dimensions != result.Dimensions) result = new TENSOR2S(left.Dimensions);            
 
-            var leftSpan = left.Span;
-            var rightSpan = right.Span;
-            var resultSpan = result.Span;
-
-            if (leftSpan.Overlaps(resultSpan)) throw new ArgumentException("memory overlap", nameof(result));
-            if (rightSpan.Overlaps(resultSpan)) throw new ArgumentException("memory overlap", nameof(result));
-
-            // todo: cast to Vector4 and do a vectorial sum
-
-            for (int i = 0; i < resultSpan.Length; ++i)
-            {
-                resultSpan[i] = leftSpan[i] + rightSpan[i];
-            }
+            System.Numerics.Tensors.TensorPrimitives.Add(left.Span, right.Span, result.Span);
         }
 
         /// <summary>

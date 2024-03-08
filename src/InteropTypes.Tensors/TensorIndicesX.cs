@@ -7,8 +7,6 @@ using System.Text;
 namespace InteropTypes.Tensors
 {
     
-        
-    
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
     /// </summary>
@@ -67,11 +65,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0);
         }
 
         public static bool AreEqual(in TensorIndices1 a, in TensorIndices1 b)
@@ -117,7 +111,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0 }; }        
 
         #endregion
@@ -158,7 +152,6 @@ namespace InteropTypes.Tensors
         #endregion
     }
 
-        
     
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -235,12 +228,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-             h ^= Index1.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0, Index1);
         }
 
         public static bool AreEqual(in TensorIndices2 a, in TensorIndices2 b)
@@ -289,7 +277,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0, Index1 }; }        
 
         #endregion
@@ -331,7 +319,6 @@ namespace InteropTypes.Tensors
         #endregion
     }
 
-        
     
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -413,13 +400,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-             h ^= Index1.GetHashCode(); h *=17;
-             h ^= Index2.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0, Index1, Index2);
         }
 
         public static bool AreEqual(in TensorIndices3 a, in TensorIndices3 b)
@@ -471,7 +452,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2 }; }        
 
         #endregion
@@ -513,7 +494,6 @@ namespace InteropTypes.Tensors
         #endregion
     }
 
-        
     
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -600,14 +580,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-             h ^= Index1.GetHashCode(); h *=17;
-             h ^= Index2.GetHashCode(); h *=17;
-             h ^= Index3.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0, Index1, Index2, Index3);
         }
 
         public static bool AreEqual(in TensorIndices4 a, in TensorIndices4 b)
@@ -662,7 +635,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3 }; }        
 
         #endregion
@@ -704,7 +677,6 @@ namespace InteropTypes.Tensors
         #endregion
     }
 
-        
     
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -796,15 +768,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-             h ^= Index1.GetHashCode(); h *=17;
-             h ^= Index2.GetHashCode(); h *=17;
-             h ^= Index3.GetHashCode(); h *=17;
-             h ^= Index4.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0, Index1, Index2, Index3, Index4);
         }
 
         public static bool AreEqual(in TensorIndices5 a, in TensorIndices5 b)
@@ -862,7 +826,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4 }; }        
 
         #endregion
@@ -904,7 +868,6 @@ namespace InteropTypes.Tensors
         #endregion
     }
 
-        
     
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -1001,16 +964,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-             h ^= Index1.GetHashCode(); h *=17;
-             h ^= Index2.GetHashCode(); h *=17;
-             h ^= Index3.GetHashCode(); h *=17;
-             h ^= Index4.GetHashCode(); h *=17;
-             h ^= Index5.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0, Index1, Index2, Index3, Index4, Index5);
         }
 
         public static bool AreEqual(in TensorIndices6 a, in TensorIndices6 b)
@@ -1071,7 +1025,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5 }; }        
 
         #endregion
@@ -1113,7 +1067,6 @@ namespace InteropTypes.Tensors
         #endregion
     }
 
-        
     
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -1215,17 +1168,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-             h ^= Index1.GetHashCode(); h *=17;
-             h ^= Index2.GetHashCode(); h *=17;
-             h ^= Index3.GetHashCode(); h *=17;
-             h ^= Index4.GetHashCode(); h *=17;
-             h ^= Index5.GetHashCode(); h *=17;
-             h ^= Index6.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0, Index1, Index2, Index3, Index4, Index5, Index6);
         }
 
         public static bool AreEqual(in TensorIndices7 a, in TensorIndices7 b)
@@ -1289,7 +1232,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5, Index6 }; }        
 
         #endregion
@@ -1331,7 +1274,6 @@ namespace InteropTypes.Tensors
         #endregion
     }
 
-        
     
     /// <summary>
     /// Represents the indices of a specific element within a tensor.
@@ -1438,18 +1380,7 @@ namespace InteropTypes.Tensors
         
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Index0.GetHashCode(); h *=17;
-             h ^= Index1.GetHashCode(); h *=17;
-             h ^= Index2.GetHashCode(); h *=17;
-             h ^= Index3.GetHashCode(); h *=17;
-             h ^= Index4.GetHashCode(); h *=17;
-             h ^= Index5.GetHashCode(); h *=17;
-             h ^= Index6.GetHashCode(); h *=17;
-             h ^= Index7.GetHashCode(); h *=17;
-            
-            return h;
+            return HashCode.Combine(Index0, Index1, Index2, Index3, Index4, Index5, Index6, Index7);
         }
 
         public static bool AreEqual(in TensorIndices8 a, in TensorIndices8 b)
@@ -1516,7 +1447,7 @@ namespace InteropTypes.Tensors
         public readonly IEnumerator<int> GetEnumerator() { return _Enumerate().GetEnumerator(); }
 
         readonly IEnumerator IEnumerable.GetEnumerator() { return _Enumerate().GetEnumerator(); }
-
+        
         public readonly int[] ToArray() { return new int[] { Index0, Index1, Index2, Index3, Index4, Index5, Index6, Index7 }; }        
 
         #endregion

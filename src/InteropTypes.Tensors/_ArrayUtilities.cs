@@ -23,48 +23,11 @@ namespace InteropTypes.Tensors
             if (a.Overlaps(b)) throw new ArgumentException("buffers must not overlap");
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static void Split(Span<float> span, out Span<Vector4> span4, out Span<float> span1)
-        {
-            var len = span.Length / 4;
-            span4 = MEMMARSHALL.Cast<float, Vector4>(span.Slice(0, len));
-
-            len *= 4;
-            span1 = MEMMARSHALL.Cast<float, float>(span).Slice(len);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static void Split(ReadOnlySpan<float> span, out ReadOnlySpan<Vector4> span4, out ReadOnlySpan<float> span1)
-        {
-            var len = span.Length / 4;
-            span4 = MEMMARSHALL.Cast<float, Vector4>(span.Slice(0, len));
-
-            len *= 4;
-            span1 = MEMMARSHALL.Cast<float, float>(span).Slice(len);
-        }
+        
 
         public static void VectorSum(ReadOnlySpan<float> left, ReadOnlySpan<float> right, Span<float> result)
         {
-            if (result.Length >= 4)
-            {
-                Split(left, out var left4, out var left1);
-                Split(right, out var right4, out var right1);
-                Split(result, out var result4, out var result1);
-
-                for (int i = 0; i < result4.Length; ++i)
-                {
-                    result4[i] = left4[i] + right4[i];
-                }
-
-                left = left1;
-                right = right1;
-                result = result1;
-            }
-
-            for (int i = 0; i < result.Length; ++i)
-            {
-                result[i] = left[i] + right[i];
-            }
+            System.Numerics.Tensors.TensorPrimitives.Add(left, right, result);
         }
 
         /// <summary>
@@ -76,6 +39,8 @@ namespace InteropTypes.Tensors
         /// </remarks>
         public static void ApplySoftMax(Span<float> span)
         {
+            
+
             float sum = 0;
 
             for (int i = 0; i < span.Length; ++i)
