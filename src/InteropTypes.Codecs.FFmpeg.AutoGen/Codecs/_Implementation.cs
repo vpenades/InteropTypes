@@ -152,15 +152,14 @@ namespace InteropTypes.Graphics.Backends.Codecs
 
                         state["pts"] = frame.pts;
                         state["pkt_dts"] = frame.pkt_dts;
-                        state["pkt_pos"] = frame.pkt_pos;
-                        state["pkt_size"] = frame.pkt_size;
-                        state["pkt_duration"] = frame.pkt_duration;                        
+                        // state["pkt_pos"] = frame.pkt_pos;
+                        // state["pkt_size"] = frame.pkt_size;
+                        // state["pkt_duration"] = frame.pkt_duration;                        
                         state["best_effort_timestamp"] = frame.best_effort_timestamp;
 
                         state["display_picture_number"] = frame.display_picture_number;
                         state["coded_picture_number"] = frame.coded_picture_number;
                         state["decode_error_flags"] = frame.decode_error_flags;
-
 
                         var convertedFrame = vfc.ConvertToMemoryBitmap(frame);
                         

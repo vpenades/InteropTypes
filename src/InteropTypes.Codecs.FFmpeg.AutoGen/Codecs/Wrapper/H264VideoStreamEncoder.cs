@@ -15,7 +15,7 @@ namespace InteropTypes.Codecs
     {
         #region lifecycle
 
-        public H264VideoStreamEncoder(Stream stream, int fps, Size frameSize)
+        public H264VideoStreamEncoder(Stream stream, Size frameSize)
         {
             _Stream = stream;
 
@@ -36,10 +36,6 @@ namespace InteropTypes.Codecs
             _Context->width = frameSize.Width;
             _Context->height = frameSize.Height;
 
-            // frames per second
-            _Context->time_base = new AVRational{ num =1, den =fps};
-            _Context->framerate = new AVRational{ num =fps, den = 1};
-
             /* emit one intra frame every ten frames
              * check frame pict_type before passing frame
              * to encoder, if frame->pict_type is AV_PICTURE_TYPE_I
@@ -51,29 +47,19 @@ namespace InteropTypes.Codecs
             _Context->pix_fmt = AVPixelFormat.AV_PIX_FMT_YUV420P;
 
             if (_Codec->id == AVCodecID.AV_CODEC_ID_H264)
-                ffmpeg.av_opt_set(_Context->priv_data, "preset", "slow", 0);
-
-            // open it
-            var ret = ffmpeg.avcodec_open2(_Context, _Codec, null);
-            if (ret < 0) throw new InvalidOperationException();        
-            
-            // create working frame
-
-            _Frame = ffmpeg.av_frame_alloc();
-            if (_Frame == null) { return; }
-
-            _Frame->format = (int)_Context->pix_fmt;
-            _Frame->width = _Context->width;
-            _Frame->height = _Context->height;
-            
-            ret = ffmpeg.av_frame_get_buffer(_Frame, 0);
-            if (ret < 0) throw new InvalidOperationException();            
-        }
+                ffmpeg.av_opt_set(_Context->priv_data, "preset", "slow", 0);            
+        }        
 
         public void Dispose()
         {
-            ffmpeg.avcodec_close(_Context);
-            ffmpeg.av_free(_Context);
+            // we should use an interlocked exchange here, but it does not work with pointers
+            var ctx = _Context;
+            _Context = null;
+
+            if (ctx == null) return;
+
+            ffmpeg.avcodec_close(ctx);
+            ffmpeg.av_free(ctx);
         }
 
         #endregion
@@ -88,11 +74,43 @@ namespace InteropTypes.Codecs
 
         private Stream _Stream;
 
-        private byte[] endcode = { 0, 0, 1, 0xb7 };
+        private static readonly byte[] _EndCode = { 0, 0, 1, 0xb7 };
 
         #endregion
 
         #region API
+
+        /// <summary>
+        /// Setups the codec to encode frames at fixed frame rate
+        /// </summary>
+        /// <remarks>
+        /// must be set before calling <see cref="Open"/>
+        /// </remarks>
+        public void SetFixedFrameRate(int fps)
+        {
+            if (fps <= 1) throw new ArgumentOutOfRangeException(nameof(fps));
+            _Context->time_base = new AVRational { num = 1, den = fps };
+            _Context->framerate = new AVRational { num = fps, den = 1 };
+        }
+
+        public void Open()
+        {
+            // open it
+            var ret = ffmpeg.avcodec_open2(_Context, _Codec, null);
+            if (ret < 0) throw new InvalidOperationException();
+
+            // create working frame
+
+            _Frame = ffmpeg.av_frame_alloc();
+            if (_Frame == null) throw new InvalidOperationException();
+
+            _Frame->format = (int)_Context->pix_fmt;
+            _Frame->width = _Context->width;
+            _Frame->height = _Context->height;
+
+            ret = ffmpeg.av_frame_get_buffer(_Frame, 0);
+            if (ret < 0) throw new InvalidOperationException();
+        }
 
         public void Encode(int idx, Action<AVFrame> frameUpdater)
         {
@@ -116,8 +134,10 @@ namespace InteropTypes.Codecs
 
             _Frame->pts = idx;
 
-           // encode the image
-           _Encode(_Context, _Frame, _Packet, _Stream);
+            // _Frame->pkt_dts = idx * 248; no effect
+
+            // encode the image
+            _Encode(_Context, _Frame, _Packet, _Stream);
         }
 
         public void Drain()
@@ -134,11 +154,11 @@ namespace InteropTypes.Codecs
 
             if (_Codec->id == AVCodecID.AV_CODEC_ID_MPEG1VIDEO || _Codec->id == AVCodecID.AV_CODEC_ID_MPEG2VIDEO)
             {
-                _Stream.Write(endcode, 0, endcode.Length);
+                _Stream.Write(_EndCode, 0, _EndCode.Length);
             }
         }
 
-        static void _Encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt, Stream outfile)
+        private static void _Encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt, Stream outfile)
         {
             /* send the frame to the encoder */
             // if (frame != null)  printf("Send frame %3"PRId64"\n", frame->pts);

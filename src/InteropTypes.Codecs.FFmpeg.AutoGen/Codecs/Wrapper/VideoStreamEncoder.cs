@@ -50,22 +50,7 @@ namespace InteropTypes.Codecs
 
         #endregion
 
-        #region API        
-
-        private (VideoFrameConverter converter, IEncoder encoder) GetEncoder(BitmapInfo format)
-        {
-            if (_Encoder != null) return (_Converter, _Encoder);
-
-            var ss = new Size(format.Width, format.Height);
-
-            _Converter = new VideoFrameConverter( ss, AVPixelFormat.AV_PIX_FMT_BGR24, ss, AVPixelFormat.AV_PIX_FMT_YUV420P);
-
-            _Format = format;
-            _Stream = File.OpenWrite(_FilePath);
-            _Encoder = new H264VideoStreamEncoder(_Stream, _FramesPerSecond, ss);
-
-            return (_Converter, _Encoder);
-        }
+        #region API
 
         public unsafe void PushFrame(SpanBitmap inputFrame)
         {
@@ -76,7 +61,7 @@ namespace InteropTypes.Codecs
         {
             if (inputFrame.IsEmpty) return;            
 
-            var (converter, encoder) = GetEncoder(inputFrame.Info);
+            var (converter, encoder) = _GetEncoder(inputFrame.Info);
 
             if (!inputFrame.Info.Equals(_Format)) return;
 
@@ -88,6 +73,26 @@ namespace InteropTypes.Codecs
             encoder.Encode((int)_FrameCount, updater);
 
             ++_FrameCount;
+        }
+
+        private (VideoFrameConverter converter, IEncoder encoder) _GetEncoder(BitmapInfo format)
+        {
+            if (_Encoder != null) return (_Converter, _Encoder);
+
+            var ss = new Size(format.Width, format.Height);
+
+            _Converter = new VideoFrameConverter(ss, AVPixelFormat.AV_PIX_FMT_BGR24, ss, AVPixelFormat.AV_PIX_FMT_YUV420P);
+
+            _Format = format;
+            _Stream = File.OpenWrite(_FilePath);
+
+            var encoder = new H264VideoStreamEncoder(_Stream, ss);
+            encoder.SetFixedFrameRate(_FramesPerSecond);
+            encoder.Open();
+
+            _Encoder = encoder;
+
+            return (_Converter, _Encoder);
         }
 
         public void Drain() { _Encoder?.Drain(); }

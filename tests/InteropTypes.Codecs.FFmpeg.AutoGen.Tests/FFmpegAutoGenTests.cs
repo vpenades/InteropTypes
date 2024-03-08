@@ -37,13 +37,30 @@ namespace InteropTypes.Codecs
             var input = ResourceInfo.From("count-video.mp4");
             var output = AttachmentInfo.From("result.h264");
 
-            var inputFrames = FFmpegAutoGen.DecodeFrames(input);
+            var inputFrames = FFmpegAutoGen.DecodeFrames(input);           
 
-            var finfo = output.WriteObject(f => FFmpegAutoGen.EncodeFrames(f, 20, inputFrames.Select(item => item.bitmap)));            
+            var finfo = output.WriteObject(f => FFmpegAutoGen.EncodeFrames(f, 20, inputFrames.Select(item => item.bitmap)));
 
-            foreach (var (bitmap, state) in FFmpegAutoGen.DecodeFrames(finfo.FullName))
+            var outputFrames = FFmpegAutoGen.DecodeFrames(finfo.FullName);
+
+            TestContext.WriteLine("------------------------------------------------------------------------------ INPUT");
+            _PrintFramesInfo(inputFrames);
+            TestContext.WriteLine("------------------------------------------------------------------------------ OUTPUT");
+            _PrintFramesInfo(outputFrames);
+        }
+
+        private static void _PrintFramesInfo(IEnumerable<(MemoryBitmap, VideoFrameMetadata)> frames)
+        {
+            bool isFirst = true;
+            
+            foreach (var (bitmap, state) in frames)
             {
-                TestContext.WriteLine(string.Join(" ", state.Times.Select(item => (item.Key, item.Value.num / (float)item.Value.den))));
+                if (isFirst)
+                {
+                    TestContext.WriteLine(string.Join(" ", state.Times.Select(item => $"{item.Key}={item.Value.num}/{item.Value.den}")));
+                    isFirst = false;
+                }                
+
                 TestContext.WriteLine(string.Join(" ", state.State));                
             }
         }
