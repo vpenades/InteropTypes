@@ -1,0 +1,105 @@
+﻿<#+
+
+public class SpanTensorCodeGen
+{
+	public SpanTensorCodeGen(Action<IEnumerable<string>> lw, int dims, bool isReadOnly)
+	{
+		this._LinesWriter = lw;
+		this.Dimensions = dims;
+		this.IsReadOnly = isReadOnly;
+	}
+
+	private readonly Action<IEnumerable<string>> _LinesWriter;
+  
+  public int Dimensions { get; }
+	public bool IsReadOnly { get; }
+
+	public SpanTensorCodeGen PlusOne => new SpanTensorCodeGen(_LinesWriter, Dimensions+1, IsReadOnly);
+	public SpanTensorCodeGen MinusOne => new SpanTensorCodeGen(_LinesWriter, Dimensions+1, IsReadOnly);
+
+	public string SpanTypeName => IsReadOnly ? "ReadOnlySpan<T>" : "Span<T>";
+
+	public string TensorSizeName => $"TensorSize{Dimensions}";
+
+	public string WriteableClassName => $"SpanTensor{Dimensions}";
+	public string WriteableClassNamePlusOne => $"SpanTensor{Dimensions+1}";
+	public string WriteableClassNameMinusOne => $"SpanTensor{Dimensions-1}";
+	
+
+	public string ClassName => (IsReadOnly ? "ReadOnly" : String.Empty) + WriteableClassName;
+	public string ClassNamePlusOne => (IsReadOnly ? "ReadOnly" : String.Empty) + WriteableClassNamePlusOne;	
+	public string ClassNameMinusOne => (IsReadOnly ? "ReadOnly" : String.Empty) + WriteableClassNameMinusOne;	
+	
+
+	public string GetDimensions(string separator, string prefix)
+	{
+		return String.Join(separator,Enumerable.Range(0,Dimensions).Select(idx => $"{prefix}{idx}")); 
+	}
+
+
+	public string Arguments => GetDimensions(", ", "int d");	
+
+		public string NewTensorSize => $"new {TensorSizeName}(" + GetDimensions(", ", "d") + ")";
+
+	
+	public IEnumerable<string> WriteContructors()	
+	{
+		var lines = Enumerable.Empty<string>();
+
+		if (IsReadOnly) lines = lines.Concat( WriteImplicitConstructor() );
+		
+		lines = lines.Concat( WriteContructors(string.Empty,"new T[_Dimensions.StepSize]") );
+		lines = lines.Concat( WriteContructors($"{SpanTypeName} data, ","data.Slice(0, _Dimensions.StepSize)") );
+		lines = lines.Concat( WriteContructors("IntPtr data, ", $"new {SpanTypeName}(data.ToPointer(), _Dimensions.StepSize)") );
+		
+		return lines;
+	}
+
+	public IEnumerable<string> WriteImplicitConstructor()
+	{
+		yield return $"public static implicit operator {ClassName}<T>({WriteableClassName}<T> other) {{ return new {ClassName}<T>(other); }}";
+		yield return "";
+		yield return $"public {ClassName}({WriteableClassName}<T> other)";
+				yield return "{";
+				yield return "_Dimensions = other._Dimensions;";
+				yield return "_Buffer = other._Buffer;";
+				yield return "}";
+	}
+
+	public IEnumerable<string> WriteContructors(string arg1, string data1)	
+	{
+		var unsafeKW = arg1.Contains("IntPtr") ? "unsafe " : "";
+
+		yield return $"public {unsafeKW}{ClassName}({arg1}{TensorSizeName} dims)";
+				yield return "{";
+				yield return $"_Dimensions = dims;";
+				yield return $"_Buffer = {data1};";
+				yield return "}";		
+
+		var dims = GetDimensions(", ", "d");
+
+				yield return $"public {unsafeKW}{ClassName}({arg1}{Arguments})";
+				yield return "{";
+				yield return $"_Dimensions = new {TensorSizeName}({dims});";
+				yield return $"_Buffer = {data1};";
+				yield return "}";		
+	}
+
+
+	public IEnumerable<string> WriteReshapedMethod()	
+	{		
+				var length = GetDimensions(" * ", "d");
+		var args = GetDimensions(", ", "d");
+
+		var newTensor = $"new {ClassName}<T>(_Buffer, {args})";
+
+		yield return $"public readonly {ClassName}<T> Reshaped({this.Arguments})";
+		yield return "{";
+		yield return $"if (_Buffer.Length != ({length})) throw new ArgumentException();";
+		yield return $"return {newTensor};";
+		yield return "}";
+		}
+	}
+
+#>
+

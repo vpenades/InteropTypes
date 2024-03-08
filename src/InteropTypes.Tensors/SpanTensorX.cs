@@ -40,28 +40,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor1<T>(SpanTensor1<T> other) { return new SpanTensor1<T>(other); }
-
-        public SpanTensor1(SpanTensor1<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor1(TensorSize1 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor1(int d0)
-        {            
+        {
             _Dimensions = new TensorSize1(d0);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -76,11 +62,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize1(d0);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor1(IntPtr data, TensorSize1 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -88,7 +74,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize1(d0);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -238,28 +224,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor2<T>(SpanTensor2<T> other) { return new SpanTensor2<T>(other); }
-
-        public SpanTensor2(SpanTensor2<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor2(TensorSize2 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor2(int d0, int d1)
-        {            
+        {
             _Dimensions = new TensorSize2(d0, d1);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -274,11 +246,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize2(d0, d1);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor2(IntPtr data, TensorSize2 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -286,7 +258,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize2(d0, d1);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -546,28 +518,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor3<T>(SpanTensor3<T> other) { return new SpanTensor3<T>(other); }
-
-        public SpanTensor3(SpanTensor3<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor3(TensorSize3 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor3(int d0, int d1, int d2)
-        {            
+        {
             _Dimensions = new TensorSize3(d0, d1, d2);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -582,11 +540,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize3(d0, d1, d2);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor3(IntPtr data, TensorSize3 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -594,7 +552,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize3(d0, d1, d2);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -854,28 +812,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor4<T>(SpanTensor4<T> other) { return new SpanTensor4<T>(other); }
-
-        public SpanTensor4(SpanTensor4<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor4(TensorSize4 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor4(int d0, int d1, int d2, int d3)
-        {            
+        {
             _Dimensions = new TensorSize4(d0, d1, d2, d3);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -890,11 +834,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize4(d0, d1, d2, d3);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor4(IntPtr data, TensorSize4 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -902,7 +846,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize4(d0, d1, d2, d3);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -1162,28 +1106,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor5<T>(SpanTensor5<T> other) { return new SpanTensor5<T>(other); }
-
-        public SpanTensor5(SpanTensor5<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor5(TensorSize5 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor5(int d0, int d1, int d2, int d3, int d4)
-        {            
+        {
             _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -1198,11 +1128,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor5(IntPtr data, TensorSize5 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -1210,7 +1140,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -1470,28 +1400,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor6<T>(SpanTensor6<T> other) { return new SpanTensor6<T>(other); }
-
-        public SpanTensor6(SpanTensor6<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor6(TensorSize6 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor6(int d0, int d1, int d2, int d3, int d4, int d5)
-        {            
+        {
             _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -1506,11 +1422,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor6(IntPtr data, TensorSize6 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -1518,7 +1434,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -1778,28 +1694,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor7<T>(SpanTensor7<T> other) { return new SpanTensor7<T>(other); }
-
-        public SpanTensor7(SpanTensor7<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor7(TensorSize7 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor7(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
-        {            
+        {
             _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -1814,11 +1716,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor7(IntPtr data, TensorSize7 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -1826,7 +1728,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -2067,28 +1969,14 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        /*
-
-        public static implicit operator SpanTensor8<T>(SpanTensor8<T> other) { return new SpanTensor8<T>(other); }
-
-        public SpanTensor8(SpanTensor8<T> other)
-        {
-            _Dimensions = other._Dimensions;
-            _Buffer = other._Buffer;
-        }
-
-        */
-        
-        
-
         public SpanTensor8(TensorSize8 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public SpanTensor8(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
-        {            
+        {
             _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -2103,11 +1991,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe SpanTensor8(IntPtr data, TensorSize8 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -2115,7 +2003,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -2356,7 +2244,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor1<T>(SpanTensor1<T> other) { return new ReadOnlySpanTensor1<T>(other); }
 
         public ReadOnlySpanTensor1(SpanTensor1<T> other)
@@ -2365,17 +2252,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor1(TensorSize1 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor1(int d0)
-        {            
+        {
             _Dimensions = new TensorSize1(d0);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -2390,11 +2274,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize1(d0);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor1(IntPtr data, TensorSize1 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -2402,7 +2286,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize1(d0);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -2551,7 +2435,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor2<T>(SpanTensor2<T> other) { return new ReadOnlySpanTensor2<T>(other); }
 
         public ReadOnlySpanTensor2(SpanTensor2<T> other)
@@ -2560,17 +2443,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor2(TensorSize2 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor2(int d0, int d1)
-        {            
+        {
             _Dimensions = new TensorSize2(d0, d1);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -2585,11 +2465,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize2(d0, d1);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor2(IntPtr data, TensorSize2 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -2597,7 +2477,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize2(d0, d1);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -2858,7 +2738,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor3<T>(SpanTensor3<T> other) { return new ReadOnlySpanTensor3<T>(other); }
 
         public ReadOnlySpanTensor3(SpanTensor3<T> other)
@@ -2867,17 +2746,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor3(TensorSize3 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor3(int d0, int d1, int d2)
-        {            
+        {
             _Dimensions = new TensorSize3(d0, d1, d2);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -2892,11 +2768,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize3(d0, d1, d2);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor3(IntPtr data, TensorSize3 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -2904,7 +2780,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize3(d0, d1, d2);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -3165,7 +3041,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor4<T>(SpanTensor4<T> other) { return new ReadOnlySpanTensor4<T>(other); }
 
         public ReadOnlySpanTensor4(SpanTensor4<T> other)
@@ -3174,17 +3049,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor4(TensorSize4 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor4(int d0, int d1, int d2, int d3)
-        {            
+        {
             _Dimensions = new TensorSize4(d0, d1, d2, d3);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -3199,11 +3071,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize4(d0, d1, d2, d3);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor4(IntPtr data, TensorSize4 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -3211,7 +3083,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize4(d0, d1, d2, d3);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -3472,7 +3344,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor5<T>(SpanTensor5<T> other) { return new ReadOnlySpanTensor5<T>(other); }
 
         public ReadOnlySpanTensor5(SpanTensor5<T> other)
@@ -3481,17 +3352,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor5(TensorSize5 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor5(int d0, int d1, int d2, int d3, int d4)
-        {            
+        {
             _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -3506,11 +3374,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor5(IntPtr data, TensorSize5 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -3518,7 +3386,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize5(d0, d1, d2, d3, d4);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -3779,7 +3647,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor6<T>(SpanTensor6<T> other) { return new ReadOnlySpanTensor6<T>(other); }
 
         public ReadOnlySpanTensor6(SpanTensor6<T> other)
@@ -3788,17 +3655,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor6(TensorSize6 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor6(int d0, int d1, int d2, int d3, int d4, int d5)
-        {            
+        {
             _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -3813,11 +3677,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor6(IntPtr data, TensorSize6 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -3825,7 +3689,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize6(d0, d1, d2, d3, d4, d5);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -4086,7 +3950,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor7<T>(SpanTensor7<T> other) { return new ReadOnlySpanTensor7<T>(other); }
 
         public ReadOnlySpanTensor7(SpanTensor7<T> other)
@@ -4095,17 +3958,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor7(TensorSize7 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor7(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
-        {            
+        {
             _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -4120,11 +3980,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor7(IntPtr data, TensorSize7 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -4132,7 +3992,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize7(d0, d1, d2, d3, d4, d5, d6);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
@@ -4374,7 +4234,6 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
-        
         public static implicit operator ReadOnlySpanTensor8<T>(SpanTensor8<T> other) { return new ReadOnlySpanTensor8<T>(other); }
 
         public ReadOnlySpanTensor8(SpanTensor8<T> other)
@@ -4383,17 +4242,14 @@ namespace InteropTypes.Tensors
             _Buffer = other._Buffer;
         }
 
-                
-        
-
         public ReadOnlySpanTensor8(TensorSize8 dims)
-        {            
+        {
             _Dimensions = dims;
             _Buffer = new T[_Dimensions.StepSize];
         }
 
         public ReadOnlySpanTensor8(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
-        {            
+        {
             _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
             _Buffer = new T[_Dimensions.StepSize];
         }
@@ -4408,11 +4264,11 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
             _Buffer = data.Slice(0, _Dimensions.StepSize);
-        }        
+        }
 
         public unsafe ReadOnlySpanTensor8(IntPtr data, TensorSize8 dims)
-        {            
-            _Dimensions = dims;            
+        {
+            _Dimensions = dims;
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
@@ -4420,7 +4276,7 @@ namespace InteropTypes.Tensors
         {
             _Dimensions = new TensorSize8(d0, d1, d2, d3, d4, d5, d6, d7);
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
-        }        
+        }
 
         #endregion
 
