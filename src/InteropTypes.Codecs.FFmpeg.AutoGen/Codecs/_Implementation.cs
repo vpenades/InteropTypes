@@ -23,7 +23,7 @@ namespace InteropTypes.Graphics.Backends.Codecs
         }
 
         public static void _EnsureBinariesAreSet()
-        {
+        {            
             if (!FFmpegHelper.Initialize()) throw new InvalidOperationException("ffmpeg not initialized.");
         }
 

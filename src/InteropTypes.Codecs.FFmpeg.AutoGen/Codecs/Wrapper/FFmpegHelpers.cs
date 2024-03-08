@@ -18,11 +18,13 @@ namespace InteropTypes.Codecs
 
             var path = Path.GetDirectoryName(typeof(FFmpegHelper).Assembly.Location);
 
-            path = Path.Combine(path, "ffmpeg5", Environment.Is64BitProcess ? "win-x64" : "win-x86");
+            path = Path.Combine(path, "ffmpeg6", Environment.Is64BitProcess ? "win-x64" : "win-x86");
 
             if (!Directory.Exists(path)) throw new System.IO.DirectoryNotFoundException(path);
 
             ffmpeg.RootPath = path;
+
+            DynamicallyLoadedBindings.Initialize();
         }
 
         private static bool _RegisterInitialized;

@@ -34,20 +34,12 @@ namespace InteropTypes.Codecs
         [Test]
         public void EncodeH264Frames()
         {
-            var inputFrames = FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4"));
+            var input = ResourceInfo.From("count-video.mp4");
+            var output = AttachmentInfo.From("result.h264");
 
-            
-            var finfo = AttachmentInfo
-                .From("output.h264")
-                .WriteObject(f => FFmpegAutoGen.EncodeFrames(f, 20, inputFrames.Select(item => item.bitmap)));
-            
+            var inputFrames = FFmpegAutoGen.DecodeFrames(input);
 
-            /*
-            var xframes = inputFrames.Select(item => (item.bitmap, item.state.State["pts"]));
-
-            var finfo = AttachmentInfo
-                .From("output.h264")
-                .WriteObject(f => FFmpegAutoGen.EncodeFrames(f, xframes));*/
+            var finfo = output.WriteObject(f => FFmpegAutoGen.EncodeFrames(f, 20, inputFrames.Select(item => item.bitmap)));            
 
             foreach (var (bitmap, state) in FFmpegAutoGen.DecodeFrames(finfo.FullName))
             {
@@ -60,8 +52,6 @@ namespace InteropTypes.Codecs
         [Test]
         public void ProcessMp4Frames()
         {
-            TestContext.CurrentContext.AttachFolderBrowserShortcut();
-
             var input = ResourceInfo.From("count-video.mp4");
             var output = AttachmentInfo.From("result.h264");
 
@@ -71,7 +61,6 @@ namespace InteropTypes.Codecs
 
                 var dc = InteropTypes.Graphics.Backends.InteropDrawing.CreateDrawingContext(bmpx);
                 dc.DrawTextLine(System.Numerics.Matrix3x2.CreateTranslation(10, 10), "hello", 100, System.Drawing.Color.Black);
-
             }
 
             FFmpegAutoGen.ProcessFrames(input, output, _drawOver, 3);
