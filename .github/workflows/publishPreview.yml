@@ -12,19 +12,21 @@ jobs:
       uses: actions/setup-dotnet@v4    
 
     - name: Install Workload
-      run: dotnet workload install android wasm-tools maui wasi-experimental      
+      run: dotnet workload install maui-windows android wasm-tools wasi-experimental  # ois and maui-ios are not supported in ubuntu machines https://github.com/dotnet/maui/issues/15929
 
     - name: Checkout
       uses: actions/checkout@v4
     - name: Install dependencies
       run: dotnet restore  
 
+    - name: Create build solution
+      run: dotnet slngen -c Release -o build.sln --launch false src\**\*.csproj
     
     - name: define version suffix      
       run: echo "VERSIONSUFFIX=Preview-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV    
 
     - name: Build
-      run: dotnet build -c Release --version-suffix ${{ env.VERSIONSUFFIX }}
+      run: dotnet build build.sl -c Release --version-suffix ${{env.VERSIONSUFFIX}}
 
 #    - name: Test
 #      run: dotnet test -c Release --no-build
