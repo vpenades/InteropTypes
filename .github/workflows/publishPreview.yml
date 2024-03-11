@@ -8,20 +8,21 @@ jobs:
     timeout-minutes: 5
     steps:   
 
-    - name: Install Workload
-      run: dotnet workload install android wasm-tools maui-windows wasi-experimental Microsoft.ios.Sdk.net8
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4    
 
-    - name: define version suffix      
-      run: echo "VERSIONSUFFIX=Preview-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+    - name: Install Workload
+      run: dotnet workload install android wasm-tools maui-windows wasi-experimental
+
+    - name: Install dependencies
+      run: dotnet restore    
 
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3    
-
-    - name: Install dependencies
-      run: dotnet restore
+    
+    - name: define version suffix      
+      run: echo "VERSIONSUFFIX=Preview-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV    
 
     - name: Build
       run: dotnet build -c Release --version-suffix ${{ env.VERSIONSUFFIX }}
