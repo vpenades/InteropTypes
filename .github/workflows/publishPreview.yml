@@ -9,7 +9,10 @@ jobs:
     steps:   
 
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4    
+      uses: actions/setup-dotnet@v4
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
 
     - name: Install Workload
       run: dotnet workload install maui-windows android wasm-tools wasi-experimental  # ois and maui-ios are not supported in ubuntu machines https://github.com/dotnet/maui/issues/15929
