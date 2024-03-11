@@ -12,7 +12,7 @@ jobs:
       uses: actions/setup-dotnet@v4    
 
     - name: Install Workload
-      run: dotnet workload install android wasm-tools maui-windows maui-ios wasi-experimental      
+      run: dotnet workload install android wasm-tools maui wasi-experimental      
 
     - name: Checkout
       uses: actions/checkout@v4
