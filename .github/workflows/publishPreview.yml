@@ -7,18 +7,35 @@ jobs:
     runs-on: ubuntu-latest    
     timeout-minutes: 5
     steps:
+    - name: Install WASI Workload
+      run: dotnet workload install wasi-experimental # required to build iOS projects
+
+    - name: Install WASM Workload
+      run: dotnet workload install wasm-tools
+
+    - name: Install Android Workload
+      run: dotnet workload install android
+
+    
+
     - name: define version suffix      
       run: echo "VERSIONSUFFIX=Preview-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+
     - name: Checkout
       uses: actions/checkout@v4
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3    
+
     - name: Install dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build -c Release --version-suffix ${{ env.VERSIONSUFFIX }}
+
 #    - name: Test
 #      run: dotnet test -c Release --no-build
+
     - name: Pack nugets
       run: dotnet pack -c Release --no-build --output .
 #    - name: Push to NuGet
