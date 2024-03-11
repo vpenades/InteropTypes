@@ -9,7 +9,7 @@ jobs:
     steps:   
 
     - name: Install Workload
-      run: dotnet workload install android ios macos maccatalyst wasm-tools maui-windows
+      run: dotnet workload install android wasm-tools maui-windows wasi-experimental
 
     - name: define version suffix      
       run: echo "VERSIONSUFFIX=Preview-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
