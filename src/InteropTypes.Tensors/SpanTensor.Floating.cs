@@ -6,7 +6,8 @@ using System.Text;
 using TENSOR2S = InteropTypes.Tensors.SpanTensor2<float>;
 using TENSOR3S = InteropTypes.Tensors.SpanTensor3<float>;
 
-
+using ROTENSOR2S = InteropTypes.Tensors.ReadOnlySpanTensor2<float>;
+using ROTENSOR3S = InteropTypes.Tensors.ReadOnlySpanTensor3<float>;
 
 namespace InteropTypes.Tensors
 {
@@ -57,14 +58,14 @@ namespace InteropTypes.Tensors
                 .Reshaped(values.Length,4,4);
         }        
 
-        public static Matrix4x4 ToMatrix4x4(TENSOR2S src)
+        public static Matrix4x4 ToMatrix4x4(ROTENSOR2S src)
         {
             return src                
                 .Reshaped(16)
                 .Cast<Matrix4x4>()[0];
         }
 
-        public static void Sum(TENSOR2S left, TENSOR2S right, ref TENSOR2S result)
+        public static void Sum(ROTENSOR2S left, ROTENSOR2S right, ref TENSOR2S result)
         {
             if (left.Dimensions != right.Dimensions) throw new ArgumentException(nameof(right.Dimensions));
             if (left.Dimensions != result.Dimensions) result = new TENSOR2S(left.Dimensions);            
@@ -78,7 +79,7 @@ namespace InteropTypes.Tensors
         /// <param name="a">1st matrix</param>
         /// <param name="b">2nd matrix</param>
         /// <param name="result">result</param>
-        public static void MatrixMultiply(TENSOR2S a, TENSOR2S b, TENSOR2S result)
+        public static void MatrixMultiply(ROTENSOR2S a, ROTENSOR2S b, TENSOR2S result)
         {
             if (result.Dimensions[0] != a.Dimensions[0]) throw new ArgumentException("dimension 0 mismatch", nameof(result));
             if (result.Dimensions[1] != b.Dimensions[1]) throw new ArgumentException("dimension 1 mismatch", nameof(result));
