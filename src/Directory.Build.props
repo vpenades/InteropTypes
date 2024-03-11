@@ -20,6 +20,10 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
