@@ -26,14 +26,19 @@ jobs:
       run: echo "VERSIONSUFFIX=Preview-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV    
 
     - name: Build
-      run: dotnet build build.sl -c Release --version-suffix ${{env.VERSIONSUFFIX}}
+      run: dotnet build build.sln -c Release --version-suffix ${{env.VERSIONSUFFIX}}
 
 #    - name: Test
 #      run: dotnet test -c Release --no-build
 
     - name: Pack nugets
-      run: dotnet pack -c Release --no-build --output .
+      run: dotnet pack build.sln -c Release --no-build --output .
+
 #    - name: Push to NuGet
 #      run: dotnet nuget push "*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
-#    - name: unlist
-#      run: dotnet nuget delete 
+
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Tensors.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+      
+    - name: unlist
+      run: dotnet nuget delete "InteropTypes.Tensors.1.0.0-${{env.VERSIONSUFFIX}}" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
