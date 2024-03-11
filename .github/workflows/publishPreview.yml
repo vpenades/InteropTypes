@@ -59,4 +59,4 @@ jobs:
       run: dotnet nuget push "InteropTypes.Tensors.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
       
     - name: unlist
-      run: dotnet nuget delete "InteropTypes.Tensors.1.0.0-${{env.VERSIONSUFFIX}}" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget delete InteropTypes.Tensors 1.0.0-${{env.VERSIONSUFFIX}} --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
