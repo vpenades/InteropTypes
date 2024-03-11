@@ -33,6 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Packages.props = Directory.Packages.props
 		src\Shared\Encoded7BitInt32.cs = src\Shared\Encoded7BitInt32.cs
 		Project Hierarchy.dgml = Project Hierarchy.dgml
+		.github\workflows\publishPreview.yml = .github\workflows\publishPreview.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
