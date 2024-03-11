@@ -19,6 +19,12 @@
       "commands": [
         "mgcb-editor-windows"
       ]
+    },
+    "Microsoft.VisualStudio.SlnGen.Tool": {
+      "version": "11.2.6",
+      "commands": [
+        "slngen"
+      ]
     }    
   }
 }
