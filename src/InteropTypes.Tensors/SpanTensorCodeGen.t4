@@ -84,11 +84,38 @@ public class SpanTensorCodeGen
 				yield return $"_Buffer = {data1};";
 				yield return "}";		
 	}
+  
+  public IEnumerable<string> WriteCopyToMethods()
+  {  
+    yield return "public readonly void CopyTo(Span<T> dst)";
+    yield return "{";
+    yield return "this._Buffer.CopyTo(dst);";
+    yield return "}";
+  
+		yield return $"public readonly void CopyTo<TOther>({WriteableClassName}<TOther> dst) where TOther:unmanaged";
+    yield return "{";
+    yield return "if (this.Dimensions != dst.Dimensions) throw new ArgumentException(\"Dimensions mismatch\",nameof(dst));";
+    yield return "var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);";
+    yield return "if (!result) throw new ArgumentException(\"type conversion not supported\",nameof(dst));";
+    yield return "}";
+    
+    if (this.Dimensions <= 1) yield break;
+
+    yield return $"public readonly void CopyTo({WriteableClassNameMinusOne}<T> dst, int tailIdx)";
+    yield return "{";
+    yield return $"if (dst._Dimensions != this._Dimensions.Tail{this.Dimensions-1}) throw new ArgumentException(nameof(dst));";
+    yield return "";
+    yield return "var step = this._Dimensions.Last;";
+    yield return "var len = this._Buffer.Length / step;";
+    yield return "";
+    yield return "for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];";
+    yield return "}";
+  }
 
 
-	public IEnumerable<string> WriteReshapedMethod()	
+      public IEnumerable<string> WriteReshapedMethod()	
 	{		
-				var length = GetDimensions(" * ", "d");
+		var length = GetDimensions(" * ", "d");
 		var args = GetDimensions(", ", "d");
 
 		var newTensor = $"new {ClassName}<T>(_Buffer, {args})";

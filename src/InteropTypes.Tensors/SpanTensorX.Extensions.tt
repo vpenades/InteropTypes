@@ -52,11 +52,11 @@ namespace InteropTypes.Tensors
         }
 
         public static int IndexOfMax<T>(this SpanTensor1<T> tensor, IComparer<T> comparer = null)
-        where T : unmanaged, IEquatable<T>
+        where T : unmanaged
         {
             var span = tensor._Buffer;
 
-            if (span.Length == 0) return -1;
+            if (span.IsEmpty) return -1;
 
             if (comparer == null) comparer = Comparer<T>.Default;
 
@@ -98,13 +98,20 @@ namespace InteropTypes.Tensors
 
         
         public static TensorIndices<#= TDIMCOUNT#> IndexOfMax<T>(this SpanTensor<#= TDIMCOUNT#><T> tensor, IComparer<T> comparer = null)
-        where T : unmanaged, IEquatable<T>
+        where T : unmanaged
         {
-            var span = tensor._Buffer;
+            var span = tensor._Buffer;            
 
-            if (span.Length == 0) return TensorIndices<#= TDIMCOUNT#>.Invalid;
+            if (typeof(T) == typeof(float))
+            {
+                var floats = System.Runtime.InteropServices.MemoryMarshal.Cast<T,float>(span);
+                var fidx = System.Numerics.Tensors.TensorPrimitives.IndexOfMax(floats);
+                return fidx < 0 ? TensorIndices<#= TDIMCOUNT#>.Invalid : tensor._Dimensions.GetDecomposedIndex(fidx);
+            }
 
-            if (comparer == null) comparer = Comparer<T>.Default;            
+            if (span.IsEmpty) return TensorIndices<#= TDIMCOUNT#>.Invalid;
+
+            if (comparer == null) comparer = Comparer<T>.Default;
 
             T max = span[0];
             var idx = 0;

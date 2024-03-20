@@ -28,6 +28,8 @@ namespace InteropTypes.Tensors
         public Byte Y;
         public Byte Z;
 
+        public Byte Gray => (Byte)((int)X + (int)Y + (int)Z);
+
         #endregion
 
         #region API

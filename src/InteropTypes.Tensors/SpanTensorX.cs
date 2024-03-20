@@ -114,7 +114,16 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
+        }
+
+        public readonly void CopyTo<TOther>(SpanTensor1<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
+   
         
 
         
@@ -302,10 +311,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor2<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor1<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail1) throw new ArgumentException(nameof(dst));
@@ -315,6 +329,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly SpanTensor1<T> GetSubTensor(int idx)
         {
@@ -596,10 +617,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor3<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor2<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail2) throw new ArgumentException(nameof(dst));
@@ -609,6 +635,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly SpanTensor2<T> GetSubTensor(int idx)
         {
@@ -890,10 +923,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor4<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor3<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail3) throw new ArgumentException(nameof(dst));
@@ -903,6 +941,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly SpanTensor3<T> GetSubTensor(int idx)
         {
@@ -1184,10 +1229,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor5<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor4<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail4) throw new ArgumentException(nameof(dst));
@@ -1197,6 +1247,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly SpanTensor4<T> GetSubTensor(int idx)
         {
@@ -1478,10 +1535,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor6<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor5<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail5) throw new ArgumentException(nameof(dst));
@@ -1491,6 +1553,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly SpanTensor5<T> GetSubTensor(int idx)
         {
@@ -1772,10 +1841,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor7<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor6<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail6) throw new ArgumentException(nameof(dst));
@@ -1785,6 +1859,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly SpanTensor6<T> GetSubTensor(int idx)
         {
@@ -2047,10 +2128,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor8<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor7<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail7) throw new ArgumentException(nameof(dst));
@@ -2060,6 +2146,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly SpanTensor7<T> GetSubTensor(int idx)
         {
@@ -2325,7 +2418,16 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
+        }
+
+        public readonly void CopyTo<TOther>(SpanTensor1<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
+   
         
 
         
@@ -2520,10 +2622,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor2<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor1<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail1) throw new ArgumentException(nameof(dst));
@@ -2533,6 +2640,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly ReadOnlySpanTensor1<T> GetSubTensor(int idx)
         {
@@ -2823,10 +2937,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor3<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor2<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail2) throw new ArgumentException(nameof(dst));
@@ -2836,6 +2955,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly ReadOnlySpanTensor2<T> GetSubTensor(int idx)
         {
@@ -3126,10 +3252,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor4<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor3<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail3) throw new ArgumentException(nameof(dst));
@@ -3139,6 +3270,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly ReadOnlySpanTensor3<T> GetSubTensor(int idx)
         {
@@ -3429,10 +3567,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor5<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor4<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail4) throw new ArgumentException(nameof(dst));
@@ -3442,6 +3585,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly ReadOnlySpanTensor4<T> GetSubTensor(int idx)
         {
@@ -3732,10 +3882,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor6<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor5<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail5) throw new ArgumentException(nameof(dst));
@@ -3745,6 +3900,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly ReadOnlySpanTensor5<T> GetSubTensor(int idx)
         {
@@ -4035,10 +4197,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor7<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor6<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail6) throw new ArgumentException(nameof(dst));
@@ -4048,6 +4215,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly ReadOnlySpanTensor6<T> GetSubTensor(int idx)
         {
@@ -4319,10 +4493,15 @@ namespace InteropTypes.Tensors
         public readonly void CopyTo(Span<T> dst)
         {
             this._Buffer.CopyTo(dst);
-        }      
-        
+        }
 
-        
+        public readonly void CopyTo<TOther>(SpanTensor8<TOther> dst) where TOther:unmanaged
+        {
+            if (this.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch",nameof(dst));
+            var result = _ArrayUtilities.TryConvertSpan<T,TOther>(this.Span, dst.Span);
+            if (!result) throw new ArgumentException("type conversion not supported",nameof(dst));
+        }
+
         public readonly void CopyTo(SpanTensor7<T> dst, int tailIdx)
         {
             if (dst._Dimensions != this._Dimensions.Tail7) throw new ArgumentException(nameof(dst));
@@ -4332,6 +4511,13 @@ namespace InteropTypes.Tensors
 
             for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
         }
+
+   
+        
+
+        
+
+        
 
         public readonly ReadOnlySpanTensor7<T> GetSubTensor(int idx)
         {

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
+    <ProjectReference Include="..\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
   </ItemGroup>
 
   <ItemGroup>    

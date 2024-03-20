@@ -95,6 +95,11 @@ namespace InteropTypes.Tensors
 
         public static readonly MultiplyAdd Identity = new MultiplyAdd(Vector4.One, Vector4.Zero);
 
+        public MultiplyAdd X => new MultiplyAdd(Multiply.X, Addition.X);
+        public MultiplyAdd Y => new MultiplyAdd(Multiply.Y, Addition.Y);
+        public MultiplyAdd Z => new MultiplyAdd(Multiply.Z, Addition.Z);
+        public MultiplyAdd W => new MultiplyAdd(Multiply.W, Addition.W);
+
         #endregion
 
         #region API

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Numerics;
 
 using NUnit.Framework;
@@ -11,13 +12,37 @@ namespace InteropTypes.Tensors
         [SetUp]
         public void Setup()
         {
-        }
+        }        
 
         [Test]
         public void Test1()
         {
             Assert.Pass();
         }
+
+        [Test]
+        public void TestByteToFloatConversion()
+        {
+            var bytes = Enumerable.Range(0,256).Select(idx => (Byte)idx).ToArray();
+
+            var floats = new float[256];
+
+            _ArrayUtilities.TryConvertSpan<Byte,float>(bytes, floats);
+
+            for(int i=0; i < floats.Length; i++)
+            {
+                floats[i] /= 255;
+            }
+
+            var hexints = System.Runtime.InteropServices.MemoryMarshal.Cast<float,uint>(floats);
+
+            foreach(var v in hexints)
+            {
+                TestContext.WriteLine(v.ToString("x"));
+            }
+
+        }
+
 
         [Test]
         public void TestIndexing()
@@ -93,6 +118,19 @@ namespace InteropTypes.Tensors
             var w = new float[3];
 
             combined.SVD(w, v);
+        }
+
+
+        [Test]
+        public void MultiplyAddTest()
+        {
+            var src = new float[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+            var dst = new float[src.Length];
+
+            var mul = new float[] { 1, 2, 3 };
+            var add = new float[] { 2, 2, 2 };            
+
+            System.Numerics.Tensors.TensorPrimitives.MultiplyAdd(src,mul,add,dst);
         }
     }
 

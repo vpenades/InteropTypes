@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
@@ -24,6 +26,65 @@ namespace InteropTypes.Tensors
         }
 
         
+        public static bool TryConvertSpan<TSrc,TDst>(ReadOnlySpan<TSrc> src, Span<TDst> dst)
+            where TSrc: unmanaged
+            where TDst: unmanaged
+        {
+            if (src.Length > dst.Length) throw new ArgumentException("destination too short.", nameof(dst));
+
+            if (typeof(TSrc) == typeof(TDst))
+            {
+                MEMMARSHALL.Cast<TSrc, TDst>(src).CopyTo(dst);
+                return true;                
+            }
+
+            if (typeof(TSrc) == typeof(Half) && typeof(TDst) == typeof(Single))
+            {
+                var srcx = MEMMARSHALL.Cast<TSrc, Half>(src);
+                var dstx = MEMMARSHALL.Cast<TDst, Single>(dst);
+
+                #if NET8_0_OR_GREATER
+                System.Numerics.Tensors.TensorPrimitives.ConvertToSingle(srcx, dstx);                                
+                #else
+                for (int i=0; i < srcx.Length; ++i) { dstx[i] = (float)srcx[i]; }                
+                #endif
+                return true;
+            }
+
+            if (typeof(TSrc) == typeof(Single) && typeof(TDst) == typeof(Half))
+            {
+                var srcx = MEMMARSHALL.Cast<TSrc, Single>(src);
+                var dstx = MEMMARSHALL.Cast<TDst, Half>(dst);
+
+                #if NET8_0_OR_GREATER
+                System.Numerics.Tensors.TensorPrimitives.ConvertToHalf(srcx, dstx);                
+                #else
+                for (int i=0; i < srcx.Length; ++i) { dstx[i] = (Half)srcx[i]; }                
+                #endif
+                return true;
+            }
+
+            if (typeof(TSrc) == typeof(Byte) && typeof(TDst) == typeof(float))
+            {
+                var srcx = MEMMARSHALL.Cast<TSrc, byte>(src);
+                var dstx = MEMMARSHALL.Cast<TDst, float>(dst);                
+
+                for (int i=0; i < srcx.Length; ++i) { dstx[i] = srcx[i]; }
+                return true;
+            }
+
+            if (typeof(TSrc) == typeof(float) && typeof(TDst) == typeof(Byte))
+            {
+                var srcx = MEMMARSHALL.Cast<TSrc, float>(src);
+                var dstx = MEMMARSHALL.Cast<TDst, byte>(dst);
+
+                for (int i = 0; i < srcx.Length; ++i) { dstx[i] = (Byte)srcx[i]; }
+                return true;
+            }
+
+            return false;
+        }
+
 
         public static void VectorSum(ReadOnlySpan<float> left, ReadOnlySpan<float> right, Span<float> result)
         {
@@ -75,5 +136,11 @@ namespace InteropTypes.Tensors
                 span[i] = new Vector2(v1, v2) / vm;
             }
         }
+
+
+
+
+       
+
     }
 }

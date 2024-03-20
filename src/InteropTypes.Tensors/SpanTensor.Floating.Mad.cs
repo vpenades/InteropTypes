@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
+using ROTENSOR2S = InteropTypes.Tensors.ReadOnlySpanTensor2<float>;
+using ROTENSOR2V3 = InteropTypes.Tensors.ReadOnlySpanTensor2<System.Numerics.Vector3>;
+using ROTENSOR2V4 = InteropTypes.Tensors.ReadOnlySpanTensor2<System.Numerics.Vector4>;
+using ROTENSOR3S = InteropTypes.Tensors.ReadOnlySpanTensor3<float>;
+
 using TENSOR2S = InteropTypes.Tensors.SpanTensor2<float>;
 using TENSOR2V3 = InteropTypes.Tensors.SpanTensor2<System.Numerics.Vector3>;
 using TENSOR2V4 = InteropTypes.Tensors.SpanTensor2<System.Numerics.Vector4>;
-
 using TENSOR3S = InteropTypes.Tensors.SpanTensor3<float>;
 
 namespace InteropTypes.Tensors
@@ -23,9 +27,10 @@ namespace InteropTypes.Tensors
                     row[i] = xform.Transform(row[i]);
                 }
             }
-        }
+        }       
+        
 
-        public static void Copy(TENSOR2V3 src, TENSOR3S dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2V3 src, TENSOR3S dst, in MultiplyAdd xform)
         {
             if (dst.Dimensions[0] == 3)
             {
@@ -41,7 +46,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(TENSOR2V4 src, TENSOR3S dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2V4 src, TENSOR3S dst, in MultiplyAdd xform)
         {
             if (dst.Dimensions[0] == 4)
             {
@@ -57,7 +62,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(TENSOR2V3 src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2V3 src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, in MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dstX), src.Dimensions, dstX.Dimensions);
             TensorSize2.GuardEquals(nameof(src), nameof(dstY), src.Dimensions, dstY.Dimensions);
@@ -74,7 +79,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        public static void Copy(TENSOR2V4 src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, TENSOR2S dstW, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2V4 src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, TENSOR2S dstW, in MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dstX), src.Dimensions, dstX.Dimensions);
             TensorSize2.GuardEquals(nameof(src), nameof(dstY), src.Dimensions, dstY.Dimensions);
@@ -93,7 +98,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        public static void Copy(TENSOR3S src, TENSOR2V3 dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR3S src, TENSOR2V3 dst, in MultiplyAdd xform)
         {
             if (src.Dimensions[0] == 3)
             {
@@ -109,7 +114,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(TENSOR3S src, TENSOR2V4 dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR3S src, TENSOR2V4 dst, in MultiplyAdd xform)
         {
             if (src.Dimensions[0] == 4)
             {
@@ -125,7 +130,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(TENSOR2S srcX, TENSOR2S srcY, TENSOR2S srcZ, TENSOR2V3 dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2S srcX, ROTENSOR2S srcY, ROTENSOR2S srcZ, TENSOR2V3 dst, in MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(srcX), nameof(dst), srcX.Dimensions, dst.Dimensions);
             TensorSize2.GuardEquals(nameof(srcY), nameof(dst), srcY.Dimensions, dst.Dimensions);
@@ -143,7 +148,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        public static void Copy(TENSOR2S srcX, TENSOR2S srcY, TENSOR2S srcZ, TENSOR2S srcW, TENSOR2V4 dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2S srcX, ROTENSOR2S srcY, ROTENSOR2S srcZ, ROTENSOR2S srcW, TENSOR2V4 dst, in MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(srcX), nameof(dst), srcX.Dimensions, dst.Dimensions);
             TensorSize2.GuardEquals(nameof(srcY), nameof(dst), srcY.Dimensions, dst.Dimensions);
@@ -163,7 +168,7 @@ namespace InteropTypes.Tensors
             }
         }
 
-        public static void Copy(TENSOR2V3 src, TENSOR2V3 dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2V3 src, TENSOR2V3 dst, in MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
 
@@ -173,7 +178,7 @@ namespace InteropTypes.Tensors
             MultiplyAdd.Transform(srcSpan, dstSpan, xform);
         }
 
-        public static void Copy(TENSOR2V4 src, TENSOR2V4 dst, in MultiplyAdd xform)
+        public static void Copy(ROTENSOR2V4 src, TENSOR2V4 dst, in MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
 
@@ -183,7 +188,7 @@ namespace InteropTypes.Tensors
             MultiplyAdd.Transform(srcSpan, dstSpan, xform);
         }
 
-        public static void Copy(SpanTensor3<Byte> src, TENSOR2V3 dst, MultiplyAdd xform)
+        public static void Copy(ReadOnlySpanTensor3<Byte> src, TENSOR2V3 dst, MultiplyAdd xform)
         {
             if (src.Dimensions[2] == 3)
             {
@@ -208,7 +213,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(SpanTensor3<Byte> src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, MultiplyAdd xform)
+        public static void Copy(ReadOnlySpanTensor3<Byte> src, TENSOR2S dstX, TENSOR2S dstY, TENSOR2S dstZ, MultiplyAdd xform)
         {
             if (src.Dimensions[2] == 3)
             {
@@ -237,7 +242,7 @@ namespace InteropTypes.Tensors
             throw new NotImplementedException();
         }
 
-        public static void Copy(TENSOR2S src, SpanTensor2<Byte> dst, MultiplyAdd xform)
+        public static void Copy(ROTENSOR2S src, SpanTensor2<Byte> dst, MultiplyAdd xform)
         {
             TensorSize2.GuardEquals(nameof(src), nameof(dst), src.Dimensions, dst.Dimensions);
 

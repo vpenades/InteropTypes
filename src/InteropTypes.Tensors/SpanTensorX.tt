@@ -131,23 +131,20 @@ namespace InteropTypes.Tensors
 
         #region API
 
-        public readonly void CopyTo(Span<T> dst)
-        {
-            this._Buffer.CopyTo(dst);
-        }      
+        <#
+        
+        ClearIndent();
+        PushIndent("        ");
+        _WriteLines(context.WriteCopyToMethods());
+        PopIndent();
+        
+        #>   
         
 
         <# if (TDIMCOUNT > 1) { #>
 
-        public readonly void CopyTo(<#=context.WriteableClassNameMinusOne#><T> dst, int tailIdx)
-        {
-            if (dst._Dimensions != this._Dimensions.Tail<#= TDIMCOUNT-1#>) throw new ArgumentException(nameof(dst));
 
-            var step = this._Dimensions.Last;
-            var len = this._Buffer.Length / step;
-
-            for (int i=0; i < len; ++i) dst._Buffer[i] = this._Buffer[i * step + tailIdx];
-        }
+        
 
         public readonly <#= CLASSNAMEMINUSONE#><T> GetSubTensor(int idx)
         {

@@ -11,9 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CodeSugar.Sys.IO.Sources" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
-  </ItemGroup>
+  </ItemGroup>  
 
 </Project>
