@@ -67,6 +67,29 @@ jobs:
     - name: Push to NuGet
       run: dotnet nuget push "InteropTypes.Graphics.Backends.ImageSharp.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
 
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Graphics.Backends.GDI.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Graphics.Backends.WPF.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Graphics.Backends.GLTF.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Graphics.Backends.SpanBitmap.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Codecs.STB.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Codecs.MJPEG.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Crypto.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    
+
       
 #    - name: unlist
 #      run: dotnet nuget delete InteropTypes.Tensors 1.0.0-${{env.VERSIONSUFFIX}} --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
