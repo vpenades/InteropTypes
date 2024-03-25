@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- package name should be as short as possible-->
+    <PackageId>InteropTypes.Tensors.ONNX</PackageId>
+
+    <!-- packed as source code package -->
+    <IsPackable>false</IsPackable> 
+    
+    <IsPackableAsSources>true</IsPackableAsSources>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>
+      Glue code between Microsoft.ML.OnnxRuntime and InteropTypes.Tensors
+    </Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);INTEROPTYPES_TENSORS_USEONNXRUNTIMENAMESPACE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
+  </ItemGroup>
+
+</Project>

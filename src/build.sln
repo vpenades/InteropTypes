@@ -1,5 +1,5 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Crypto", "InteropTypes.Crypto\InteropTypes.Crypto.csproj", "{B76F75F6-4612-4C38-9C5F-C4ED701BD1BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GLTF", "InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj", "{42983F4A-B120-48A5-A196-A53AEA09D167}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.FFmpeg.AutoGen", "InteropTypes.Codecs.FFmpeg.AutoGen\InteropTypes.Codecs.FFmpeg.AutoGen.csproj", "{51B1B607-0A58-4B42-93E3-B190D6714BCC}"
 EndProject
@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.MJPEG",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Codecs.STB", "InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj", "{016C08F3-F525-487E-944D-4A0E9DDE5CA8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Crypto", "InteropTypes.Crypto\InteropTypes.Crypto.csproj", "{B76F75F6-4612-4C38-9C5F-C4ED701BD1BF}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.Avalonia", "InteropTypes.Graphics.Backends.Avalonia\InteropTypes.Graphics.Backends.Avalonia.csproj", "{1BE9C071-5ED3-4816-A722-236EE81C5824}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GDI", "InteropTypes.Graphics.Backends.GDI\InteropTypes.Graphics.Backends.GDI.csproj", "{E5AF4E73-D6DC-461F-9639-CA7DAA241B42}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.GLTF", "InteropTypes.Graphics.Backends.GLTF\InteropTypes.Graphics.Backends.GLTF.csproj", "{42983F4A-B120-48A5-A196-A53AEA09D167}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Graphics.Backends.ImageSharp", "InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj", "{0CB4482F-4387-49F4-B31C-99467EA132E2}"
 EndProject
@@ -49,6 +49,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.SharpCompre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.Streams", "InteropTypes.IO.Streams\InteropTypes.IO.Streams.csproj", "{5CA2E7A2-C150-41F8-B99E-F71123988CF0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors.OnnxRuntime", "InteropTypes.Tensors.OnnxRuntime\InteropTypes.Tensors.OnnxRuntime.csproj", "{2AC52F83-469E-459E-9B40-F191A939B82B}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors", "InteropTypes.Tensors\InteropTypes.Tensors.csproj", "{46545CAF-F91C-473D-A2E2-7F8D33FEF7CB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Backends.ZXing", "InteropTypes.Vision.Backends.ZXing\InteropTypes.Vision.Backends.ZXing.csproj", "{3F355FCD-6F43-4055-A2F6-DB9393E58CDC}"
@@ -60,20 +62,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B76F75F6-4612-4C38-9C5F-C4ED701BD1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B76F75F6-4612-4C38-9C5F-C4ED701BD1BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42983F4A-B120-48A5-A196-A53AEA09D167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42983F4A-B120-48A5-A196-A53AEA09D167}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51B1B607-0A58-4B42-93E3-B190D6714BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51B1B607-0A58-4B42-93E3-B190D6714BCC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1906F9B4-4A10-4074-920F-9C900BAA21E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1906F9B4-4A10-4074-920F-9C900BAA21E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{016C08F3-F525-487E-944D-4A0E9DDE5CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{016C08F3-F525-487E-944D-4A0E9DDE5CA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76F75F6-4612-4C38-9C5F-C4ED701BD1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76F75F6-4612-4C38-9C5F-C4ED701BD1BF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1BE9C071-5ED3-4816-A722-236EE81C5824}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BE9C071-5ED3-4816-A722-236EE81C5824}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E5AF4E73-D6DC-461F-9639-CA7DAA241B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5AF4E73-D6DC-461F-9639-CA7DAA241B42}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42983F4A-B120-48A5-A196-A53AEA09D167}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42983F4A-B120-48A5-A196-A53AEA09D167}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0CB4482F-4387-49F4-B31C-99467EA132E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CB4482F-4387-49F4-B31C-99467EA132E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2FD007BB-BF2D-4881-A556-5418F4BDBA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -110,6 +112,8 @@ Global
 		{7AFC8B2D-E94B-4CCB-AAA6-9593D10109C6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5CA2E7A2-C150-41F8-B99E-F71123988CF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CA2E7A2-C150-41F8-B99E-F71123988CF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AC52F83-469E-459E-9B40-F191A939B82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AC52F83-469E-459E-9B40-F191A939B82B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46545CAF-F91C-473D-A2E2-7F8D33FEF7CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46545CAF-F91C-473D-A2E2-7F8D33FEF7CB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3F355FCD-6F43-4055-A2F6-DB9393E58CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
