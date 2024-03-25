@@ -25,6 +25,12 @@
       "commands": [
         "slngen"
       ]
-    }    
+    },
+    "SourceNugetPackageBuilder.Tool": {
+      "version": "1.0.0-pre-20240325-111420",
+      "commands": [
+        "PackAsSourcesNuget"
+      ]
+    }
   }
 }

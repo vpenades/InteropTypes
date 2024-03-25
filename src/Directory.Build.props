@@ -8,7 +8,7 @@
   <PropertyGroup>
     <Authors>Vicente Penades</Authors>
     <Company>Vicente Penades</Company>
-    <Copyright>Copyright (c) 2023 Vicente Penades</Copyright>
+    <Copyright>Copyright (c) $([System.DateTime]::Now.ToString(`yyyy`)) Vicente Penades</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
