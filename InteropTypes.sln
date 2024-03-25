@@ -34,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\Shared\Encoded7BitInt32.cs = src\Shared\Encoded7BitInt32.cs
 		Project Hierarchy.dgml = Project Hierarchy.dgml
 		.github\workflows\publishPreview.yml = .github\workflows\publishPreview.yml
+		.github\workflows\publishSourcePackages.yml = .github\workflows\publishSourcePackages.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -163,7 +164,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.IO.FileProvide
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Crypto.Tests", "tests\InteropTypes.Crypto.Tests\InteropTypes.Crypto.Tests.csproj", "{13DE92F5-2C39-4734-9B6F-D2AEF737D3C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Tensors.OnnxRuntime", "src\InteropTypes.Tensors.OnnxRuntime\InteropTypes.Tensors.OnnxRuntime.csproj", "{52F37ED5-1EF8-401A-9F49-411CFB9D1B99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors.OnnxRuntime", "src\InteropTypes.Tensors.OnnxRuntime\InteropTypes.Tensors.OnnxRuntime.csproj", "{52F37ED5-1EF8-401A-9F49-411CFB9D1B99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
