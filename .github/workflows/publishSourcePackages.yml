@@ -41,7 +41,7 @@ jobs:
       run: dotnet restore src/build.sln    
 
     - name: define version suffix      
-      run: echo "VERSIONSUFFIXSHORT=Prv-$(date +'%YY%m%d-%H%M')" >> $GITHUB_ENV      
+      run: echo "VERSIONSUFFIXSHORT=Prv-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV      
 
 #    - name: Test
 #      run: dotnet test -c Release --no-build    
