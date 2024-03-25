@@ -35,6 +35,9 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install dependencies
+      run: dotnet tool restore
+
+    - name: Install dependencies
       run: dotnet restore src/build.sln
 
     # - name: Create build solution
