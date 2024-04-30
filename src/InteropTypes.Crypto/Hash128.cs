@@ -59,7 +59,12 @@ namespace InteropTypes.Crypto
                 return Md5FromBytes(buff);
             }
 
+            var position = stream.CanSeek ? stream.Position : -1;
+
             var bytes = _HashEngines.Md5Engine.ComputeHash(stream);
+
+            // restore original position after reading
+            if (position >= 0) stream.TrySetPosition(position);
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash128(bytes);

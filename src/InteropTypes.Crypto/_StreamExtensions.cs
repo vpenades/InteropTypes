@@ -58,5 +58,23 @@ namespace InteropTypes
         {
             stream.Write(bytes, 0, bytes.Length);
         }
+
+        public static bool TrySetPosition(this System.IO.Stream stream, long position)
+        {
+            if (stream == null) return false;
+            if (!stream.CanSeek) return false;
+            if (position < 0) return false;
+
+            try
+            {
+                stream.Position = position;
+                return true;
+            }
+            catch (ObjectDisposedException) { }
+            catch (System.IO.IOException) { }
+            catch (System.NotSupportedException) { }
+
+            return false;
+        }
     }
 }

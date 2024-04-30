@@ -79,7 +79,12 @@ namespace InteropTypes.Crypto
                 return Sha256FromBytes(buff);
             }
 
+            var position = stream.CanSeek ? stream.Position : -1;
+
             var bytes = _HashEngines.Sha256Engine.ComputeHash(stream);
+
+            // restore original position after reading
+            if (position >= 0) stream.TrySetPosition(position);
 
             System.Diagnostics.Debug.Assert(bytes.Length == BYTESIZE);
             return new Hash256(bytes);
