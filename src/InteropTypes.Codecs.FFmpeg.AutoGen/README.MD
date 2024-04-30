@@ -13,3 +13,8 @@
 #### Other libraries
 
 - [FFmpegArgs](https://github.com/tqk2811/FFmpegArgs)
+
+
+#### Native libraries
+
+https://www.gyan.dev/ffmpeg/builds/
