@@ -5,8 +5,18 @@ using NUnit.Framework;
 
 namespace InteropTypes.Crypto
 {
-    public class Hash256Tests
+    public class HashXTests
     {
+        [Test]
+        public unsafe void TestHashStructLength()
+        {
+            Assert.That(sizeof(Hash96), Is.EqualTo(Hash96.BYTESIZE));
+            Assert.That(sizeof(Hash128), Is.EqualTo(Hash128.BYTESIZE));
+            Assert.That(sizeof(Hash256), Is.EqualTo(Hash256.BYTESIZE));
+            Assert.That(sizeof(Hash384), Is.EqualTo(Hash384.BYTESIZE));
+            Assert.That(sizeof(Hash512), Is.EqualTo(Hash512.BYTESIZE));
+        }
+
         [Test]
         public void TestCreateSha256()
         {

@@ -10,6 +10,9 @@ namespace InteropTypes.Crypto
     /// <summary>
     /// Creates a context that can be used to encrypt and decrypt data.
     /// </summary>
+    /// <remarks>
+    /// Implemented by <see cref="AESCryptoSerializer"/>
+    /// </remarks>
     public abstract class CryptoSerializer : IDisposable
     {
         #region lifecycle
