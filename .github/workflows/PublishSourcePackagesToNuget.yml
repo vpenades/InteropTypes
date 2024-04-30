@@ -6,6 +6,7 @@ jobs:
   build:  
     uses: ./.github/workflows/BuildPackages.yml
   publish:
+    needs: build
     runs-on: ubuntu-latest        
     steps:   
 
