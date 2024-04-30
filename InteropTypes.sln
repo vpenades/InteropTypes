@@ -34,8 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Packages.props = Directory.Packages.props
 		src\Shared\Encoded7BitInt32.cs = src\Shared\Encoded7BitInt32.cs
 		Project Hierarchy.dgml = Project Hierarchy.dgml
-		.github\workflows\publishBuiltPackagesToNuget.yml = .github\workflows\publishBuiltPackagesToNuget.yml
-		.github\workflows\publishSourcePackagesToNuget.yml = .github\workflows\publishSourcePackagesToNuget.yml
+		.github\workflows\PublishAllPackagesToNuget.yml = .github\workflows\PublishAllPackagesToNuget.yml
+		.github\workflows\PublishSourcePackagesToNuget.yml = .github\workflows\PublishSourcePackagesToNuget.yml
 		README.md = README.md
 	EndProjectSection
 EndProject

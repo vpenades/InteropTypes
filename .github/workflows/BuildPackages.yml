@@ -61,10 +61,11 @@ jobs:
     - name: Pack sources
       run: dotnet PackAsSourcesNuget src/build.sln --output . --append-sources-suffix true --version-suffix ${{env.VERSIONSUFFIXSHORT}}
 
-    - name: Archive code coverage results
+    - name: Archive nuget packages
       uses: actions/upload-artifact@v4
       with:
         name: nuget packages
+        retention-days: 1
         path: |
             *.nupkg
             *.snupkg
