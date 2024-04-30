@@ -1,6 +1,6 @@
 name: Build packages and store artifacts
 
-on: workflow_dispatch
+on: [workflow_dispatch, workflow_call]
     
 jobs:
   build:
