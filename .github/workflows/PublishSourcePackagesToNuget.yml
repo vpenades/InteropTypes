@@ -16,4 +16,4 @@ jobs:
         name: nuget-packages
 
     - name: Push to NuGet
-      run: dotnet nuget push "*.Sources.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push "*.Sources.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
