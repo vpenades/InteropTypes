@@ -64,7 +64,7 @@ jobs:
     - name: Archive nuget packages
       uses: actions/upload-artifact@v4
       with:
-        name: nuget packages
+        name: nuget-packages
         retention-days: 1
         path: |
             *.nupkg

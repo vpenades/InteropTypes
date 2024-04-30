@@ -11,7 +11,7 @@ jobs:
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v4
       with:
-        name: nuget packages
+        name: nuget-packages
 
 #    - name: Push to NuGet
 #      run: dotnet nuget push "*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
