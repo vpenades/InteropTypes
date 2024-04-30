@@ -160,10 +160,23 @@ namespace InteropTypes.Graphics.Bitmaps
         
 
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
+        public readonly TPixel GetPixelUnchecked(int x, int y) { return GetScanlinePixels(y)[x]; }
 
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
+        public readonly void SetPixelUnchecked(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
+
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public readonly TPixel GetPixel(int x, int y)
+        {
+            return this.Info.Contains(x, y) ? GetScanlinePixels(y)[x] : default;
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public readonly void SetPixel(int x, int y, TPixel value)
+        {
+            if (this.Info.Contains(x, y)) UseScanlinePixels(y)[x] = value;
+        }
 
         /// <summary>
         /// Returns a pixel typeless <see cref="SpanBitmap"/>.
@@ -198,17 +211,31 @@ namespace InteropTypes.Graphics.Bitmaps
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly TPixel GetPixel(int x, int y) { return GetScanlinePixels(y)[x]; }
+        public readonly TPixel GetPixel(int x, int y) { return Info.Contains(x,y) ? GetScanlinePixels(y)[x] :default; }
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly void SetPixel(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
+        public readonly void SetPixel(int x, int y, TPixel value) { if (Info.Contains(x, y)) UseScanlinePixels(y)[x] = value; }
         
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly TPixel GetPixel(POINT point) { return GetScanlinePixels(point.Y)[point.X]; }
+        public readonly TPixel GetPixel(POINT point) { return Info.Contains(point.X, point.Y) ? GetScanlinePixels(point.Y)[point.X] : default; }
         
         [System.Diagnostics.DebuggerStepThrough]
-        public readonly void SetPixel(POINT point, TPixel value) { UseScanlinePixels(point.Y)[point.X] = value; }
+        public readonly void SetPixel(POINT point, TPixel value) { if (Info.Contains(point.X, point.Y)) UseScanlinePixels(point.Y)[point.X] = value; }
+
+        /// <inheritdoc />
+        [System.Diagnostics.DebuggerStepThrough]
+        public readonly TPixel GetPixelUnchecked(int x, int y) { return GetScanlinePixels(y)[x]; }
+
+        /// <inheritdoc />
+        [System.Diagnostics.DebuggerStepThrough]
+        public readonly void SetPixelUnchecked(int x, int y, TPixel value) { UseScanlinePixels(y)[x] = value; }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public readonly TPixel GetPixelUnchecked(POINT point) { return GetScanlinePixels(point.Y)[point.X]; }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public readonly void SetPixelUnchecked(POINT point, TPixel value) { UseScanlinePixels(point.Y)[point.X] = value; }
 
         /// <inheritdoc />
         [System.Diagnostics.DebuggerStepThrough]

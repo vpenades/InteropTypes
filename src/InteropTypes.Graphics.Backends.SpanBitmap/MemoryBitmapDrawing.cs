@@ -152,7 +152,7 @@ namespace InteropTypes.Graphics.Backends
             {
                 int x = (int)a.X;
                 int y = (int)a.Y;
-                if (bounds.Contains(x, y)) bitmap.SetPixel(x, y, color);
+                if (bounds.Contains(x, y)) bitmap.SetPixelUnchecked(x, y, color);
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace InteropTypes.Graphics.Backends
                 {
                     int x = (int)ptr.X;
                     int y = (int)ptr.Y;
-                    if (bounds.Contains(x,y)) bitmap.SetPixel(x,y, color);
+                    if (bounds.Contains(x,y)) bitmap.SetPixelUnchecked(x,y, color);
                     ptr += d;
                 }                
             }
@@ -188,7 +188,7 @@ namespace InteropTypes.Graphics.Backends
                 {
                     int x = (int)ptr.X;
                     int y = (int)ptr.Y;
-                    if (bounds.Contains(x, y)) bitmap.SetPixel(x, y, color);
+                    if (bounds.Contains(x, y)) bitmap.SetPixelUnchecked(x, y, color);
                     ptr += d;
                 }
             }

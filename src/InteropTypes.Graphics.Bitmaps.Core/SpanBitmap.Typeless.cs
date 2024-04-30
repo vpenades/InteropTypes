@@ -309,7 +309,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 case Pixel.Luminance16.Code: OfType<Pixel.Luminance16>().SetPixels(color); break;
                 case Pixel.Luminance32F.Code: OfType<Pixel.Luminance32F>().SetPixels(color); break;
 
-                case Pixel.BGR565.Code: OfType< Pixel.BGR565>().SetPixels(color); break;
+                case Pixel.BGR565.Code: OfType<Pixel.BGR565>().SetPixels(color); break;
                 case Pixel.BGRA4444.Code: OfType<Pixel.BGRA4444>().SetPixels(color); break;
                 case Pixel.BGRA5551.Code: OfType<Pixel.BGRA5551>().SetPixels(color); break;
 

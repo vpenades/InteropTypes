@@ -24,9 +24,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 {
                     var xx = x * src.Width / dst.Width;
 
-                    var p = src.GetPixel(xx, yy);
+                    var p = src.GetPixelUnchecked(xx, yy);
 
-                    dst.SetPixel(x, y, p);
+                    dst.SetPixelUnchecked(x, y, p);
                 }
             }
         }
