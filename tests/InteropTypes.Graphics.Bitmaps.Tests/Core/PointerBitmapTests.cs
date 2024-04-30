@@ -27,10 +27,10 @@ namespace InteropTypes.Graphics.Bitmaps
 
                 var ptrSpan = ptr.AsSpanBitmapOfType<int>();
 
-                Assert.That(ptrSpan.GetPixel(0, 0), Is.Zero);
-                Assert.That(ptrSpan.GetPixel(1, 0), Is.Zero);
-                Assert.That(ptrSpan.GetPixel(0, 1), Is.Zero);
-                Assert.That(ptrSpan.GetPixel(1, 1), Is.Zero);
+                Assert.That(ptrSpan.GetPixelUnchecked(0, 0), Is.Zero);
+                Assert.That(ptrSpan.GetPixelUnchecked(1, 0), Is.Zero);
+                Assert.That(ptrSpan.GetPixelUnchecked(0, 1), Is.Zero);
+                Assert.That(ptrSpan.GetPixelUnchecked(1, 1), Is.Zero);
             }
 
             var bmp = new MemoryBitmap<int>(4, 4, Pixel.ARGB32.Format);

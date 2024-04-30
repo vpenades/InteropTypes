@@ -39,7 +39,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var dst = src.AsSpanBitmap().ReinterpretAs<Pixel.RGBA32>();            
 
-            var p = dst.GetPixel(0, 0);
+            var p = dst.GetPixelUnchecked(0, 0);
 
             Assert.Multiple(() =>
             {

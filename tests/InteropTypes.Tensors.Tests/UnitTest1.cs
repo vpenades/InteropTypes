@@ -120,7 +120,7 @@ namespace InteropTypes.Tensors
             combined.SVD(w, v);
         }
 
-
+        [Explicit("This is just a test to check the funcionality of TensorPrimitives")]
         [Test]
         public void MultiplyAddTest()
         {
