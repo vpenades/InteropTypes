@@ -86,6 +86,30 @@ namespace InteropTypes.Tensors
         }
 
 
+        public static void FillDimensionsFromAny(Span<int> dst, ReadOnlySpan<int> src)
+        {
+            if (src.Length == dst.Length) { src.CopyTo(dst); return; }
+
+            if (src.Length < dst.Length)
+            {
+                var len = dst.Length - src.Length;
+                dst.Slice(0, len).Fill(1);
+                src.CopyTo(dst.Slice(len));
+                return;
+            }
+            else
+                {
+                    var len = src.Length - dst.Length;
+                    for (int i = 0; i < len; ++i)
+                    {
+                        if (src[i] != 1) throw new ArgumentOutOfRangeException(nameof(src), "must be 1");
+                    }
+
+                    src.Slice(len).CopyTo(dst);
+            }
+        }
+
+
         public static void VectorSum(ReadOnlySpan<float> left, ReadOnlySpan<float> right, Span<float> result)
         {
             System.Numerics.Tensors.TensorPrimitives.Add(left, right, result);

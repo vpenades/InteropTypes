@@ -67,5 +67,14 @@ namespace InteropTypes.Tensors.Imaging
                 }
             }
         }
+
+        public static void DrawPixelRectangle<TPixel>(this SpanTensor2<TPixel> bitmap, XY a, XY b, TPixel color)
+            where TPixel : unmanaged
+        {
+            DrawPixelLine(bitmap, a, new XY(b.X, a.Y), color);
+            DrawPixelLine(bitmap, new XY(b.X, a.Y), b, color);
+            DrawPixelLine(bitmap, b, new XY(a.X, b.Y), color);
+            DrawPixelLine(bitmap, new XY(a.X, b.Y), a, color);
+        }
     }
 }

@@ -10,8 +10,7 @@
     <PackageId>InteropTypes.Tensors.ONNX</PackageId>
 
     <!-- packed as source code package -->
-    <IsPackable>false</IsPackable> 
-    
+    <IsPackable>false</IsPackable>    
     <IsPackableAsSources>true</IsPackableAsSources>
   </PropertyGroup>
 

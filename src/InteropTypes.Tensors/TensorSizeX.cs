@@ -14,10 +14,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize1
         : IReadOnlyList<int>
-        , IEquatable<TensorSize1>        
-
+        , IEquatable<TensorSize1>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -39,6 +38,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize1(dims);
         }
+
+        public static TensorSize1 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize1 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize1 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize1 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 1) return new TensorSize1(dims);
+
+            Span<int> xdims = stackalloc int[1];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize1(xdims);
+        }        
 
         public TensorSize1(int d0)
         {
@@ -255,10 +286,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize2
         : IReadOnlyList<int>
-        , IEquatable<TensorSize2>        
-
+        , IEquatable<TensorSize2>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -281,6 +311,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize2(dims);
         }
+
+        public static TensorSize2 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize2 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize2 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize2 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 2) return new TensorSize2(dims);
+
+            Span<int> xdims = stackalloc int[2];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize2(xdims);
+        }        
 
         public TensorSize2(int d0, int d1)
         {
@@ -563,10 +625,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize3
         : IReadOnlyList<int>
-        , IEquatable<TensorSize3>        
-
+        , IEquatable<TensorSize3>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -590,6 +651,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize3(dims);
         }
+
+        public static TensorSize3 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize3 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize3 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize3 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 3) return new TensorSize3(dims);
+
+            Span<int> xdims = stackalloc int[3];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize3(xdims);
+        }        
 
         public TensorSize3(int d0, int d1, int d2)
         {
@@ -907,10 +1000,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize4
         : IReadOnlyList<int>
-        , IEquatable<TensorSize4>        
-
+        , IEquatable<TensorSize4>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -935,6 +1027,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize4(dims);
         }
+
+        public static TensorSize4 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize4 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize4 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize4 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 4) return new TensorSize4(dims);
+
+            Span<int> xdims = stackalloc int[4];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize4(xdims);
+        }        
 
         public TensorSize4(int d0, int d1, int d2, int d3)
         {
@@ -1290,10 +1414,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize5
         : IReadOnlyList<int>
-        , IEquatable<TensorSize5>        
-
+        , IEquatable<TensorSize5>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -1319,6 +1442,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize5(dims);
         }
+
+        public static TensorSize5 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize5 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize5 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize5 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 5) return new TensorSize5(dims);
+
+            Span<int> xdims = stackalloc int[5];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize5(xdims);
+        }        
 
         public TensorSize5(int d0, int d1, int d2, int d3, int d4)
         {
@@ -1715,10 +1870,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize6
         : IReadOnlyList<int>
-        , IEquatable<TensorSize6>        
-
+        , IEquatable<TensorSize6>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -1745,6 +1899,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize6(dims);
         }
+
+        public static TensorSize6 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize6 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize6 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize6 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 6) return new TensorSize6(dims);
+
+            Span<int> xdims = stackalloc int[6];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize6(xdims);
+        }        
 
         public TensorSize6(int d0, int d1, int d2, int d3, int d4, int d5)
         {
@@ -2185,10 +2371,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize7
         : IReadOnlyList<int>
-        , IEquatable<TensorSize7>        
-
+        , IEquatable<TensorSize7>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -2216,6 +2401,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize7(dims);
         }
+
+        public static TensorSize7 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize7 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize7 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize7 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 7) return new TensorSize7(dims);
+
+            Span<int> xdims = stackalloc int[7];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize7(xdims);
+        }        
 
         public TensorSize7(int d0, int d1, int d2, int d3, int d4, int d5, int d6)
         {
@@ -2703,10 +2920,9 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public readonly partial struct TensorSize8
         : IReadOnlyList<int>
-        , IEquatable<TensorSize8>        
-
+        , IEquatable<TensorSize8>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -2735,6 +2951,38 @@ namespace InteropTypes.Tensors
         {
             return new TensorSize8(dims);
         }
+
+        public static TensorSize8 FromAny(IReadOnlyList<int> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize8 FromAny(IReadOnlyList<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Count];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize8 FromAny(ReadOnlySpan<long> dims)
+        {
+            Span<int> xdims = stackalloc int[dims.Length];
+            for(int i=0; i < xdims.Length; ++i) xdims[i] = (int)dims[i];
+            return FromAny(xdims);
+        }
+
+        public static TensorSize8 FromAny(ReadOnlySpan<int> dims)
+        {
+            if (dims.Length == 8) return new TensorSize8(dims);
+
+            Span<int> xdims = stackalloc int[8];
+
+            _ArrayUtilities.FillDimensionsFromAny(xdims, dims);
+
+            return new TensorSize8(xdims);
+        }        
 
         public TensorSize8(int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7)
         {
