@@ -25,7 +25,7 @@
     <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageVersion Include="System.Numerics.Tensors" Version="8.0.0" />
-    <PackageVersion Include="System.Drawing.Common" Version="8.0.3" />
+    <PackageVersion Include="System.Drawing.Common" Version="8.0.4" />
     <PackageVersion Include="System.Text.Json" Version="8.0.3" />
     
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
@@ -34,7 +34,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.26.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.26.1" />
 
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.6" />
@@ -42,7 +42,7 @@
     <PackageVersion Include="NuGet.Configuration" Version="6.9.1" />
 
 
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-preview-20240326-110152" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-preview-20240409-201409" />
     
     <!-- Game Engines -->
 
@@ -58,25 +58,25 @@
     <PackageVersion Include="ShaderGen.Build" Version="1.2.0-beta3" />
     <PackageVersion Include="ShaderGen.Primitives" Version="1.2.0-beta3" />
 
-    <PackageVersion Include="Silk.NET.Input" Version="2.20.0" />
-    <PackageVersion Include="Silk.NET.OpenGL" Version="2.20.0" />
-    <PackageVersion Include="Silk.NET.Windowing" Version="2.20.0" />
+    <PackageVersion Include="Silk.NET.Input" Version="2.21.0" />
+    <PackageVersion Include="Silk.NET.OpenGL" Version="2.21.0" />
+    <PackageVersion Include="Silk.NET.Windowing" Version="2.21.0" />
     
     <!-- Graphics Libraries -->
 
     <PackageVersion Include="Prism.Wpf" Version="8.1.97" />
 
-    <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.14" />
-    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.14" />
+    <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.21" />
+    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.21" />
 
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.3" />
-    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.2" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.4" />
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.3" />
 
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
-    <PackageVersion Include="SkiaSharp" Version="2.88.7" />
+    <PackageVersion Include="SkiaSharp" Version="2.88.8" />
 
     <PackageVersion Include="SvgNet" Version="3.3.6" />
 
@@ -109,8 +109,8 @@
     
     <!-- Machine Learning -->
 
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.17.1" />
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.17.1" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.17.3" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.17.3" />
     
     <PackageVersion Include="OpenCvSharp4" Version="4.9.0.20240103" />
     <PackageVersion Include="OpenCvSharp4.Windows" Version="4.9.0.20240103" />
@@ -124,7 +124,7 @@
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
     
     <PackageVersion Include="NUnit" Version="4.1.0" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.1.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.2.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
@@ -140,7 +140,7 @@
     
     <!-- Other -->
 
-    <PackageVersion Include="SharpCompress" Version="0.36.0" />
+    <PackageVersion Include="SharpCompress" Version="0.37.2" />
 
     <PackageVersion Include="SharpSvn" Version="1.14003.272" />
     
