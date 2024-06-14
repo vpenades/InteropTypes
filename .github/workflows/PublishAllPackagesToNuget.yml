@@ -3,10 +3,10 @@ name: Publish ALL packages to Nuget
 on: workflow_dispatch
     
 jobs:
-  build:  
+  build_job:  
     uses: ./.github/workflows/BuildPackages.yml
-  publish:
-    needs: build
+  publish_job:
+    needs: build_job
     runs-on: ubuntu-latest        
     steps:   
 
