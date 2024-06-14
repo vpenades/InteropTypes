@@ -102,6 +102,16 @@ namespace InteropTypes.Tensors
 
         #endregion
 
+        #region operators
+
+        public static MultiplyAdd operator *(MultiplyAdd left, MultiplyAdd right)
+        {
+            var (m, a) = right.GetVector4();
+            return left.ConcatMul(m).ConcatAdd(a);
+        }
+
+        #endregion
+
         #region API
 
         public bool IsIdentity => Multiply.XYZW == Vector4.One && Addition.XYZW == Vector4.Zero;        

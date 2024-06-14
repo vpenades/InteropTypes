@@ -11,6 +11,9 @@ namespace InteropTypes.Tensors.Imaging
     /// <summary>
     /// Represents a bitmap created upon the data of a <see cref="SpanTensor2{T}"/> or <see cref="SpanTensor3{T}"/>
     /// </summary>
+    /// <remarks>
+    /// This structure can represent RGB channels as interleaved values or as separated planes.
+    /// </remarks>
     public readonly ref struct TensorBitmap<T>
         where T: unmanaged
     {
@@ -48,6 +51,12 @@ namespace InteropTypes.Tensors.Imaging
         internal readonly Span<T> _ChannelZ;
         internal readonly Span<T> _ChannelW;
 
+        /// <summary>
+        /// stores the number of planes used.
+        /// </summary>
+        /// <remarks>
+        /// If value is 1 and <see cref="T"/> is a composite type like <see cref="Vector3"/> or <see cref="_PixelXYZ24"/> then this is an interleaved value
+        /// </remarks>
         internal readonly int _Channels;
         internal readonly int _Width;
         internal readonly int _Height;
