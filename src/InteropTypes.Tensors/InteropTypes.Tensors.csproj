@@ -10,7 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Numerics.Tensors" />    
+    <PackageReference Include="System.Numerics.Tensors" />
+    <PackageReference Include="CodeSugar.Tensors.Sources" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">

@@ -14,7 +14,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices1 : IReadOnlyList<int>, IEquatable<TensorIndices1>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -82,6 +82,14 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorIndices1 other) { return AreEqual(this, other); }
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices1 other ? AreEqual(this, other) : false; }
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            
+            return crc.Value;
+        }
 
         #endregion        
 
@@ -160,7 +168,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices2 : IReadOnlyList<int>, IEquatable<TensorIndices2>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -247,6 +255,15 @@ namespace InteropTypes.Tensors
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices2 other ? AreEqual(this, other) : false; }
 
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            crc.AppendChecksum(Index1);
+            
+            return crc.Value;
+        }
+
         #endregion        
 
         #region API - List
@@ -327,7 +344,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices3 : IReadOnlyList<int>, IEquatable<TensorIndices3>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -420,6 +437,16 @@ namespace InteropTypes.Tensors
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices3 other ? AreEqual(this, other) : false; }
 
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            crc.AppendChecksum(Index1);
+            crc.AppendChecksum(Index2);
+            
+            return crc.Value;
+        }
+
         #endregion        
 
         #region API - List
@@ -502,7 +529,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices4 : IReadOnlyList<int>, IEquatable<TensorIndices4>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -601,6 +628,17 @@ namespace InteropTypes.Tensors
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices4 other ? AreEqual(this, other) : false; }
 
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            crc.AppendChecksum(Index1);
+            crc.AppendChecksum(Index2);
+            crc.AppendChecksum(Index3);
+            
+            return crc.Value;
+        }
+
         #endregion        
 
         #region API - List
@@ -685,7 +723,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices5 : IReadOnlyList<int>, IEquatable<TensorIndices5>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -790,6 +828,18 @@ namespace InteropTypes.Tensors
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices5 other ? AreEqual(this, other) : false; }
 
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            crc.AppendChecksum(Index1);
+            crc.AppendChecksum(Index2);
+            crc.AppendChecksum(Index3);
+            crc.AppendChecksum(Index4);
+            
+            return crc.Value;
+        }
+
         #endregion        
 
         #region API - List
@@ -876,7 +926,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices6 : IReadOnlyList<int>, IEquatable<TensorIndices6>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -987,6 +1037,19 @@ namespace InteropTypes.Tensors
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices6 other ? AreEqual(this, other) : false; }
 
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            crc.AppendChecksum(Index1);
+            crc.AppendChecksum(Index2);
+            crc.AppendChecksum(Index3);
+            crc.AppendChecksum(Index4);
+            crc.AppendChecksum(Index5);
+            
+            return crc.Value;
+        }
+
         #endregion        
 
         #region API - List
@@ -1075,7 +1138,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices7 : IReadOnlyList<int>, IEquatable<TensorIndices7>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -1192,6 +1255,20 @@ namespace InteropTypes.Tensors
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices7 other ? AreEqual(this, other) : false; }
 
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            crc.AppendChecksum(Index1);
+            crc.AppendChecksum(Index2);
+            crc.AppendChecksum(Index3);
+            crc.AppendChecksum(Index4);
+            crc.AppendChecksum(Index5);
+            crc.AppendChecksum(Index6);
+            
+            return crc.Value;
+        }
+
         #endregion        
 
         #region API - List
@@ -1282,7 +1359,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct TensorIndices8 : IReadOnlyList<int>, IEquatable<TensorIndices8>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -1404,6 +1481,21 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorIndices8 other) { return AreEqual(this, other); }
 
         public readonly override bool Equals(object obj) { return obj is TensorIndices8 other ? AreEqual(this, other) : false; }
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Index0);
+            crc.AppendChecksum(Index1);
+            crc.AppendChecksum(Index2);
+            crc.AppendChecksum(Index3);
+            crc.AppendChecksum(Index4);
+            crc.AppendChecksum(Index5);
+            crc.AppendChecksum(Index6);
+            crc.AppendChecksum(Index7);
+            
+            return crc.Value;
+        }
 
         #endregion        
 

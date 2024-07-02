@@ -12,6 +12,7 @@ namespace InteropTypes.Tensors.Imaging
 {    
     internal class SpanPlanesBitmapRGBTests
     {
+        // OBSOLETE
         [Test]
         public void TestConversion()
         {
@@ -39,6 +40,7 @@ namespace InteropTypes.Tensors.Imaging
             Assert.That(result, Is.EqualTo(array));
         }
 
+        // OBSOLETE
         [Test]
         public void RoundtripTensorConversion()
         {
@@ -52,6 +54,7 @@ namespace InteropTypes.Tensors.Imaging
             }
         }
 
+        // OBSOLETE
         [Test]
         public void RoundtripPlanesConversion()
         {

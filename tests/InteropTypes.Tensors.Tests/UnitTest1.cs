@@ -1,8 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
+using InteropTypes.Tensors.Imaging;
+
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+
 using NUnit.Framework;
+
+using XY = System.Numerics.Vector2;
 
 namespace InteropTypes.Tensors
 {
@@ -120,18 +128,87 @@ namespace InteropTypes.Tensors
             combined.SVD(w, v);
         }
 
-        [Explicit("This is just a test to check the funcionality of TensorPrimitives")]
+
         [Test]
-        public void MultiplyAddTest()
+        public void LeastSquaresFitting2D() // does not work
         {
-            var src = new float[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-            var dst = new float[src.Length];
+            var aa = new XY[] { XY.Zero, XY.One, new XY(3, 7), new XY(2,5), new XY(-5, 7) };
+            var bb = new XY[aa.Length];
 
-            var mul = new float[] { 1, 2, 3 };
-            var add = new float[] { 2, 2, 2 };            
+            var referenceX = Matrix3x2.CreateScale(2,3) * Matrix3x2.CreateRotation(0.5f) * Matrix3x2.CreateTranslation(6, 7);
 
-            System.Numerics.Tensors.TensorPrimitives.MultiplyAdd(src,mul,add,dst);
+            for(int i=0; i<aa.Length; i++)
+            {
+                bb[i] = XY.Transform(aa[i], referenceX);
+            }            
+
+            var resultX = LeastSquaresFitting2D_MathNet(aa, bb);
+
+            Assert.That(resultX.M11, Is.EqualTo(referenceX.M11).Within(0.0001f));
+            Assert.That(resultX.M12, Is.EqualTo(referenceX.M12).Within(0.0001f));
+            Assert.That(resultX.M21, Is.EqualTo(referenceX.M21).Within(0.0001f));
+            Assert.That(resultX.M22, Is.EqualTo(referenceX.M22).Within(0.0001f));
+            Assert.That(resultX.M31, Is.EqualTo(referenceX.M31).Within(0.0001f));
+            Assert.That(resultX.M32, Is.EqualTo(referenceX.M32).Within(0.0001f));
         }
+
+
+        public static Matrix3x2 LeastSquaresFitting2D_MathNet(IReadOnlyList<XY> sourcePoints, IReadOnlyList<XY> destinationPoints)
+        {
+            if (sourcePoints.Count != destinationPoints.Count) throw new ArgumentException("size mismatch", nameof(destinationPoints));
+
+            if (sourcePoints.Count == 0) return Matrix3x2.Identity;            
+
+            if (sourcePoints.Count == 1) return Matrix3x2.CreateTranslation(destinationPoints[0] - sourcePoints[0]);
+
+            // center around centroids (does not work?) (maybe we can add the centroid as part of the points?)
+            var scenter = sourcePoints.Aggregate((a, b) => a + b) / sourcePoints.Count;
+            var dcenter = destinationPoints.Aggregate((a, b) => a + b) / destinationPoints.Count;
+
+            // center around 1st point
+            scenter = sourcePoints[0];
+            dcenter = destinationPoints[0];
+
+            var d = dcenter - scenter;            
+
+            var src = new double[sourcePoints.Count, 2];
+            for (int i = 0; i < sourcePoints.Count; ++i)
+            {
+                var p = sourcePoints[i] - scenter; // bring to origin. Technically we should calculate the point's centroid ?
+
+                src[i, 0] = p.X;
+                src[i, 1] = p.Y;
+            }
+
+            var dst = new double[destinationPoints.Count, 2];
+            for (int i = 0; i < destinationPoints.Count; ++i)
+            {
+                var p = destinationPoints[i] - dcenter; // bring to origin. Technically we should calculate the point's centroid ?
+
+                dst[i, 0] = p.X;
+                dst[i, 1] = p.Y;
+            }
+
+            // Create matrices from the points
+            var sourceMatrix = DenseMatrix.OfArray(src);
+            var destinationMatrix = DenseMatrix.OfArray(dst);
+
+
+            // Perform least squares calculation to find the transformation matrix
+            var qrMatrix = sourceMatrix.QR();
+            var transformationMatrix = qrMatrix.Solve(destinationMatrix);
+
+            Matrix3x2 result = default;
+
+            result.M11 = (float)transformationMatrix[0,0];
+            result.M12 = (float)transformationMatrix[0,1];
+            result.M21 = (float)transformationMatrix[1,0];
+            result.M22 = (float)transformationMatrix[1,1];
+            result.Translation = d;
+
+            return result;
+        }
+
     }
 
 

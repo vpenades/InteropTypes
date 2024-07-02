@@ -5,6 +5,7 @@ using System.Text;
 using InteropTypes.Graphics.Bitmaps;
 
 using InteropTypes.Tensors;
+using InteropTypes.Tensors.Imaging;
 
 namespace InteropTypes.Vision
 {
@@ -57,6 +58,13 @@ namespace InteropTypes.Vision
             throw new NotImplementedException($"{src.PixelFormat}");
         }
 
+        /// <summary>
+        /// Uses "Fitting"
+        /// </summary>
+        /// <typeparam name="TSrcPixel"></typeparam>
+        /// <param name="src"></param>
+        /// <param name="dst"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public void CopyImage<TSrcPixel>(SpanBitmap<TSrcPixel> src, SpanTensor3<float> dst)
             where TSrcPixel:unmanaged, Pixel.IReflection
         {
@@ -67,23 +75,23 @@ namespace InteropTypes.Vision
 
             var sampler = src.AsBitmapSampler();            
 
-            if (dst.Dimensions[2] == 3) // dst[h][w][3]
+            if (dst.Dimensions[2] == 3) // dst[h][w][3] INTERLEAVED
             {
                 var tmpTensor = dst.UpCast<System.Numerics.Vector3>();
-                tmpTensor.AsTensorBitmap(dstEncoding).FitPixels(sampler, cmad);
+                tmpTensor.AsTensorBitmap<float>(dstEncoding).FitPixels(sampler, cmad);
                 return;
             }
 
-            if (dst.Dimensions[2] == 4) // dst[h][w][4]
+            if (dst.Dimensions[2] == 4) // dst[h][w][4] INTERLEAVED
             {
                 var tmpTensor = dst.UpCast<System.Numerics.Vector4>();
-                tmpTensor.AsTensorBitmap(dstEncoding).FitPixels(sampler, cmad);
+                tmpTensor.AsTensorBitmap<float>(dstEncoding).FitPixels(sampler, cmad);
                 return;
             }
 
-            if (dst.Dimensions[0] == 3) // dst[3][h][w]
+            if (dst.Dimensions[0] == 3) // dst[3][h][w] PLANES
             {
-                dst.AsBitmapSampler(dstEncoding).FitPixels(sampler, cmad);
+                new TensorBitmap<float>(dst, dstEncoding, ColorRanges.Identity).FitPixels(sampler, cmad);
                 return;
             }            
 

@@ -147,16 +147,13 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #>public readonly int Dim<#= TDIM#>;
         <# } #>
 
+        <# var THASHCODE = String.Join(", ",Enumerable.Range(0,TDIMCOUNT).Select(idx => $"Dim{idx}")); #>
+
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #> h ^= Dim<#= TDIM#>.GetHashCode(); h *=17;
-            <# } #>
-            
-            return h;
-        }
+            return HashCode.Combine(<#=THASHCODE#>);
+        }        
 
         public static bool AreEqual(in <#= TTENSORSIZE#> a, in <#= TTENSORSIZE#> b)
         {
@@ -174,7 +171,17 @@ public static readonly (<#= TDECLX#>) Invalid = (<#= TNEGXX#>);
         public readonly bool Equals(<#= TTENSORSIZE#> other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is <#= TTENSORSIZE#> other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is <#= TTENSORSIZE#> other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #>
+crc.AppendChecksum(Dim<#=TDIM#>);
+            <# } #>
+
+            return crc.Value;
+        }
 
         #endregion
 

@@ -102,15 +102,12 @@ namespace InteropTypes.Tensors
         
         public readonly int Dim0;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0);
+        }        
 
         public static bool AreEqual(in TensorSize1 a, in TensorSize1 b)
         {
@@ -127,7 +124,15 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize1 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize1 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize1 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            
+            return crc.Value;
+        }
 
         #endregion
 
@@ -389,16 +394,12 @@ namespace InteropTypes.Tensors
         public readonly int Dim0;
         public readonly int Dim1;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-             h ^= Dim1.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0, Dim1);
+        }        
 
         public static bool AreEqual(in TensorSize2 a, in TensorSize2 b)
         {
@@ -416,7 +417,16 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize2 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize2 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize2 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            crc.AppendChecksum(Dim1);
+            
+            return crc.Value;
+        }
 
         #endregion
 
@@ -734,17 +744,12 @@ namespace InteropTypes.Tensors
         public readonly int Dim1;
         public readonly int Dim2;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-             h ^= Dim1.GetHashCode(); h *=17;
-             h ^= Dim2.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0, Dim1, Dim2);
+        }        
 
         public static bool AreEqual(in TensorSize3 a, in TensorSize3 b)
         {
@@ -763,7 +768,17 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize3 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize3 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize3 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            crc.AppendChecksum(Dim1);
+            crc.AppendChecksum(Dim2);
+            
+            return crc.Value;
+        }
 
         #endregion
 
@@ -1115,18 +1130,12 @@ namespace InteropTypes.Tensors
         public readonly int Dim2;
         public readonly int Dim3;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-             h ^= Dim1.GetHashCode(); h *=17;
-             h ^= Dim2.GetHashCode(); h *=17;
-             h ^= Dim3.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0, Dim1, Dim2, Dim3);
+        }        
 
         public static bool AreEqual(in TensorSize4 a, in TensorSize4 b)
         {
@@ -1146,7 +1155,18 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize4 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize4 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize4 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            crc.AppendChecksum(Dim1);
+            crc.AppendChecksum(Dim2);
+            crc.AppendChecksum(Dim3);
+            
+            return crc.Value;
+        }
 
         #endregion
 
@@ -1535,19 +1555,12 @@ namespace InteropTypes.Tensors
         public readonly int Dim3;
         public readonly int Dim4;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-             h ^= Dim1.GetHashCode(); h *=17;
-             h ^= Dim2.GetHashCode(); h *=17;
-             h ^= Dim3.GetHashCode(); h *=17;
-             h ^= Dim4.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0, Dim1, Dim2, Dim3, Dim4);
+        }        
 
         public static bool AreEqual(in TensorSize5 a, in TensorSize5 b)
         {
@@ -1568,7 +1581,19 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize5 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize5 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize5 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            crc.AppendChecksum(Dim1);
+            crc.AppendChecksum(Dim2);
+            crc.AppendChecksum(Dim3);
+            crc.AppendChecksum(Dim4);
+            
+            return crc.Value;
+        }
 
         #endregion
 
@@ -1997,20 +2022,12 @@ namespace InteropTypes.Tensors
         public readonly int Dim4;
         public readonly int Dim5;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-             h ^= Dim1.GetHashCode(); h *=17;
-             h ^= Dim2.GetHashCode(); h *=17;
-             h ^= Dim3.GetHashCode(); h *=17;
-             h ^= Dim4.GetHashCode(); h *=17;
-             h ^= Dim5.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5);
+        }        
 
         public static bool AreEqual(in TensorSize6 a, in TensorSize6 b)
         {
@@ -2032,7 +2049,20 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize6 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize6 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize6 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            crc.AppendChecksum(Dim1);
+            crc.AppendChecksum(Dim2);
+            crc.AppendChecksum(Dim3);
+            crc.AppendChecksum(Dim4);
+            crc.AppendChecksum(Dim5);
+            
+            return crc.Value;
+        }
 
         #endregion
 
@@ -2504,21 +2534,12 @@ namespace InteropTypes.Tensors
         public readonly int Dim5;
         public readonly int Dim6;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-             h ^= Dim1.GetHashCode(); h *=17;
-             h ^= Dim2.GetHashCode(); h *=17;
-             h ^= Dim3.GetHashCode(); h *=17;
-             h ^= Dim4.GetHashCode(); h *=17;
-             h ^= Dim5.GetHashCode(); h *=17;
-             h ^= Dim6.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6);
+        }        
 
         public static bool AreEqual(in TensorSize7 a, in TensorSize7 b)
         {
@@ -2541,7 +2562,21 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize7 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize7 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize7 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            crc.AppendChecksum(Dim1);
+            crc.AppendChecksum(Dim2);
+            crc.AppendChecksum(Dim3);
+            crc.AppendChecksum(Dim4);
+            crc.AppendChecksum(Dim5);
+            crc.AppendChecksum(Dim6);
+            
+            return crc.Value;
+        }
 
         #endregion
 
@@ -3059,22 +3094,12 @@ namespace InteropTypes.Tensors
         public readonly int Dim6;
         public readonly int Dim7;
         
+        
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            int h=0;
-
-             h ^= Dim0.GetHashCode(); h *=17;
-             h ^= Dim1.GetHashCode(); h *=17;
-             h ^= Dim2.GetHashCode(); h *=17;
-             h ^= Dim3.GetHashCode(); h *=17;
-             h ^= Dim4.GetHashCode(); h *=17;
-             h ^= Dim5.GetHashCode(); h *=17;
-             h ^= Dim6.GetHashCode(); h *=17;
-             h ^= Dim7.GetHashCode(); h *=17;
-                        
-            return h;
-        }
+            return HashCode.Combine(Dim0, Dim1, Dim2, Dim3, Dim4, Dim5, Dim6, Dim7);
+        }        
 
         public static bool AreEqual(in TensorSize8 a, in TensorSize8 b)
         {
@@ -3098,7 +3123,22 @@ namespace InteropTypes.Tensors
         public readonly bool Equals(TensorSize8 other) { return AreEqual(this, other); }
 
         /// <inheritdoc/>
-        public readonly override bool Equals(object obj) { return obj is TensorSize8 other ? AreEqual(this, other) : false; }
+        public readonly override bool Equals(object obj) { return obj is TensorSize8 other ? AreEqual(this, other) : false; }        
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(Dim0);
+            crc.AppendChecksum(Dim1);
+            crc.AppendChecksum(Dim2);
+            crc.AppendChecksum(Dim3);
+            crc.AppendChecksum(Dim4);
+            crc.AppendChecksum(Dim5);
+            crc.AppendChecksum(Dim6);
+            crc.AppendChecksum(Dim7);
+            
+            return crc.Value;
+        }
 
         #endregion
 

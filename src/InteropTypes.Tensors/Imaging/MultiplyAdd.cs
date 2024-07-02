@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
+
+using InteropTypes.Tensors.Imaging;
 
 using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
 
@@ -114,7 +117,21 @@ namespace InteropTypes.Tensors
 
         #region API
 
-        public bool IsIdentity => Multiply.XYZW == Vector4.One && Addition.XYZW == Vector4.Zero;        
+        public bool IsIdentity => Multiply.XYZW == Vector4.One && Addition.XYZW == Vector4.Zero;
+        public MultiplyAdd GetShuffled(ColorEncoding encoding)
+        {
+            switch(encoding)
+            {
+                case ColorEncoding.A: return new MultiplyAdd(new Vector4(Multiply.W), new Vector4(Addition.W));
+                case ColorEncoding.L: return new MultiplyAdd(new Vector4(Multiply.Y), new Vector4(Addition.Y));
+                case ColorEncoding.RGB: return new MultiplyAdd(new Vector4(Multiply.X, Multiply.Y, Multiply.Z, 1), new Vector4(Addition.X, Addition.Y, Addition.Z, 0) );
+                case ColorEncoding.BGR: return new MultiplyAdd(new Vector4(Multiply.Z, Multiply.Y, Multiply.X, 1), new Vector4(Addition.Z, Addition.Y, Addition.X, 0));
+                case ColorEncoding.RGBA: return this;
+                case ColorEncoding.BGRA: return new MultiplyAdd(new Vector4(Multiply.Z, Multiply.Y, Multiply.X, Multiply.W), new Vector4(Addition.Z, Addition.Y, Addition.X, Addition.W));
+                case ColorEncoding.ARGB: return new MultiplyAdd(new Vector4(Multiply.W, Multiply.X, Multiply.Y, Multiply.Z),new Vector4(Addition.W, Addition.X, Addition.Y, Addition.Z));
+                default: throw new NotImplementedException();
+            }
+        }
 
         public MultiplyAdd GetTransposedWZYX()
         {
@@ -136,6 +153,8 @@ namespace InteropTypes.Tensors
 
         public MultiplyAdd GetInverse()
         {
+            if (this.IsIdentity) return this;
+
             var m = Vector4.One / Multiply.XYZW;
 
             return new MultiplyAdd(m, -Addition.XYZW * m);
@@ -229,7 +248,7 @@ namespace InteropTypes.Tensors
         {
             value *= Multiply.XYZW;
             value += Addition.XYZW;            
-        }
+        }        
 
         public void ApplyTransformTo(Span<Vector4> dst)
         {
@@ -238,10 +257,7 @@ namespace InteropTypes.Tensors
             var m = this.Multiply.XYZW;
             var a = this.Addition.XYZW;
 
-            for(int i=0; i < dst.Length; ++i)
-            {
-                dst[i] = dst[i] * m + a;
-            }
+            dst.InPlaceMultiplyAdd(m, a);
         }
 
         public static void Transform(ReadOnlySpan<Vector4> src, Span<Vector4> dst, MultiplyAdd xform)
@@ -366,18 +382,7 @@ namespace InteropTypes.Tensors
         {
             if (this.IsIdentity) return;
 
-            if (_TryGetHomogeneous3(out var mad))
-            {
-                _Split(dst3, out var dst4, out var dst1);                
-                mad.ApplyTransformTo(dst4);                
-                mad.ApplyTransformTo(dst1);
-                return;
-            }
-
-            for (int i = 0; i < dst3.Length; ++i)
-            {
-                dst3[i] = Transform(dst3[i]);
-            }
+            dst3.InPlaceMultiplyAdd(this.Multiply.XYZ, this.Addition.XYZ);
         }
 
         public static void Transform(ReadOnlySpan<Vector3> src3, Span<Vector3> dst3, MultiplyAdd xform)
@@ -533,6 +538,8 @@ namespace InteropTypes.Tensors
 
         #region scalar
 
+        public (float Multiply, float Add) GetScalar() { return (Multiply.X, Addition.X); }
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private static void _Split(Span<float> span, out Span<Vector4> span4, out Span<float> span1)
         {
@@ -564,15 +571,8 @@ namespace InteropTypes.Tensors
         public void ApplyTransformTo(Span<Single> dst)
         {
             if (this.IsIdentity) return;
-            
-            _Split(dst, out var dst4, out var dst1);
 
-            new MultiplyAdd(Multiply.X, Addition.X).ApplyTransformTo(dst4);
-
-            for (int i = 0; i < dst1.Length; ++i)
-            {
-                dst1[i] = Transform(dst1[i]);
-            }
+            dst.InPlaceMultiplyAdd(Multiply.X, Addition.X);
         }
 
         public static void Transform(ReadOnlySpan<Single> src, Span<Single> dst, MultiplyAdd xform)

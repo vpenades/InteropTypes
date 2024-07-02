@@ -46,10 +46,11 @@ namespace InteropTypes.Tensors.Imaging
 
         }
 
-            [Test]
+        
+        [Test]
         public void DisplayAsciiImage()
         {
-            var imgPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "cat.png");
+            var imgPath = ResourceInfo.From("cat.png");
 
             var img = Graphics.Bitmaps.MemoryBitmap<BGR24>.Load(imgPath);
 

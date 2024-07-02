@@ -6,9 +6,11 @@
     <RootNamespace>InteropTypes.Tensors</RootNamespace>    
   </PropertyGroup>
 
+  <!--
   <ItemGroup>
     <Content Include="..\Resources\**" LinkBase="Resources" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  -->
 
   <ItemGroup>
     <PackageReference Include="CodeSugar.Sys.IO.Sources" />

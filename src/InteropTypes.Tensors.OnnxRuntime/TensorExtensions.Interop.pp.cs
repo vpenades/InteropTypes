@@ -3,7 +3,9 @@
 #nullable disable
 
 using System;
+
 using InteropTypes.Tensors;
+using InteropTypes.Tensors.Imaging;
 
 using ONNXTENSORS = Microsoft.ML.OnnxRuntime.Tensors;
 
@@ -17,6 +19,13 @@ namespace $rootnamespace$
 {
     static partial class InteropTensorsForOnnxRuntime
     {
+        public static TensorBitmap<T> AsTensorBitmap<T>(this ONNXTENSORS.DenseTensor<T> tensor, ColorEncoding encoding, ColorRanges ranges)
+            where T:unmanaged, IConvertible
+        {
+            var tmp = AsSpanTensor3(tensor);
+            return new TensorBitmap<T>(tmp, encoding, ranges);
+        }
+
         public static SpanTensor1<T> AsSpanTensor1<T>(this ONNXTENSORS.DenseTensor<T> tensor) where T : unmanaged
         {
             if (tensor == null) throw new ArgumentNullException(nameof(tensor));
@@ -120,6 +129,6 @@ namespace $rootnamespace$
 
             if (tensor.Dimensions.Length != 5) throw new ArgumentException("Dimensions mismatch");
             return new ReadOnlySpanTensor5<T>(tensor.Buffer.Span, tensor.Dimensions);
-        }
+        }        
     }
 }

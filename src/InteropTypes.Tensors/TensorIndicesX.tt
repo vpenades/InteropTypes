@@ -31,7 +31,7 @@ namespace InteropTypes.Tensors
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public partial struct <#= TTENSORINDICES#> : IReadOnlyList<int>, IEquatable<<#= TTENSORINDICES#>>
     {
-        #region debug
+        #region diagnostics
 
         private readonly string _GetDebuggerDisplayString()
         {
@@ -126,6 +126,16 @@ public static readonly <#= TTENSORINDICES#> Invalid = (<#= TNEGXX#>);
         public readonly bool Equals(<#= TTENSORINDICES#> other) { return AreEqual(this, other); }
 
         public readonly override bool Equals(object obj) { return obj is <#= TTENSORINDICES#> other ? AreEqual(this, other) : false; }
+
+        public readonly uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            <# for(var TDIM = 0; TDIM < TDIMCOUNT; ++TDIM) { #>
+crc.AppendChecksum(Index<#=TDIM#>);
+            <# } #>
+
+            return crc.Value;
+        }
 
         #endregion        
 

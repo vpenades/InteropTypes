@@ -16,7 +16,7 @@ namespace InteropTypes.Tensors
     public static class _TensorsExtensions
     {
         public static void CopyTo<TSrc, TDst>(this Imaging.TensorBitmap<TSrc> src, ref MemoryBitmap<TDst> dst)
-            where TSrc : unmanaged
+            where TSrc : unmanaged, IConvertible
             where TDst : unmanaged
         {
             if (dst.Width != src.Width || dst.Height != src.Height)
@@ -28,7 +28,7 @@ namespace InteropTypes.Tensors
             {
                 for(int x=0; x <dst.Width; x++)
                 {
-                    var pixel = src.GetPixel(x, y);
+                    var pixel = src.ScaledPixels.GetPixelUnchecked(x, y);
                     var rgba = new Pixel.RGBA128F(pixel).To<TDst>();
                     dst.SetPixel(x, y, rgba);
                 }
@@ -36,17 +36,21 @@ namespace InteropTypes.Tensors
         }
 
         public static bool TryGetSpanBitmap<T>(this Imaging.TensorBitmap<T> src, out SpanBitmap dst)
-            where T:unmanaged
+            where T:unmanaged, IConvertible
         {
-            if (src.NumChannels != 1) { dst = default; return false; }
+            if (!src.TryGetImageInterleaved(out var t3))
+            {
+                dst = default;
+                return false;
+            }
 
             var fmt = GetFormat<T>(src.Encoding);
-
-            dst = new SpanBitmap(src.GetChannelX<Byte>(), src.Width, src.Height, fmt);
+            var span = MEMMARSHAL.Cast<T, byte>(t3.Span);
+            dst = new SpanBitmap(span, src.Width, src.Height, fmt);
             return true;
         }
 
-        
+
         public static unsafe PixelFormat GetFormat<TPixel>(Imaging.ColorEncoding encoding)
             where TPixel:unmanaged
         {
@@ -132,7 +136,7 @@ namespace InteropTypes.Tensors
             return new Imaging.BitmapSampler<TPixel>(src.ReadableBytes, src.Info.StepByteSize, src.Width, src.Height, encoding);
         }
 
-        public static unsafe void FillBitmap(this Imaging.TensorBitmap<Vector3> dst, SpanBitmap src, in Imaging.BitmapTransform xform)            
+        public static unsafe void FillBitmap(this Imaging.TensorBitmap<float> dst, SpanBitmap src, in Imaging.BitmapTransform xform)            
         {
             switch(src.PixelFormat.Code)
             {
@@ -152,7 +156,7 @@ namespace InteropTypes.Tensors
             throw new NotSupportedException($"{src.PixelFormat}");
         }
 
-        public static unsafe void FillBitmap<TSrcPixel>(this Imaging.TensorBitmap<Vector3> dst, SpanBitmap<TSrcPixel> src, in Imaging.BitmapTransform xform)
+        public static unsafe void FillBitmap<TSrcPixel>(this Imaging.TensorBitmap<float> dst, SpanBitmap<TSrcPixel> src, in Imaging.BitmapTransform xform)
             where TSrcPixel:unmanaged
         {
             var sampler = src.AsBitmapSampler();

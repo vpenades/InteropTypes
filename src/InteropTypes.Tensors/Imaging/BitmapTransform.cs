@@ -23,11 +23,7 @@ namespace InteropTypes.Tensors.Imaging
 
     using SAMPLERITERATOR = _RowTransformIterator;
 
-    public enum ColorEncoding
-    {
-        Undefined,        
-        A, L, RGB, BGR, RGBA, BGRA, ARGB
-    }
+    
 
     public struct BitmapTransform
     {
@@ -71,133 +67,115 @@ namespace InteropTypes.Tensors.Imaging
 
         #region API        
 
-        static bool _NeedsReverse(ColorEncoding a, ColorEncoding b)
-        {
-            if (a == ColorEncoding.BGR || a == ColorEncoding.BGRA)
-            {
-                return b == ColorEncoding.RGB || b == ColorEncoding.RGBA || b == ColorEncoding.ARGB;
-            }
-
-            if (b == ColorEncoding.BGR || b == ColorEncoding.BGRA)
-            {
-                return a == ColorEncoding.RGB || a == ColorEncoding.RGBA || a == ColorEncoding.ARGB;
-            }
-
-            return false;
-        }
-
-        public readonly unsafe void FillPixels<TSrcPixel, TDstPixel>(TensorBitmap<TDstPixel> target, BitmapSampler<TSrcPixel> source)
+        public readonly unsafe void FillPixels<TSrcPixel, TDstElement>(TensorBitmap<TDstElement> target, BitmapSampler<TSrcPixel> source)
             where TSrcPixel : unmanaged
-            where TDstPixel : unmanaged
+            where TDstElement : unmanaged, IConvertible
         {
             // TODO: if Transform is identity, do a plain copy
 
-            var reverseRGB = _NeedsReverse(target._Encoding, source.Encoding);
+            var reverseRGB = target._ColorEncoding.NeedsReverseRGB(source.Encoding);
 
-            if (target._Channels == 1)
+            if (sizeof(TSrcPixel) == 3) // 888 => gray, 888, XYZ
             {
-                if (sizeof(TSrcPixel) == 3)
+                var sampler = source.Cast<_PixelXYZ24>();
+
+                // interleaved target
+
+                /*
+                if (target.TryGetImageInterleaved<byte>(out var dstGray8))
                 {
-                    var sampler = source.Cast<_PixelXYZ24>();
+                    _TransferPixels(sampler, dstGray8);
+                    return;
+                }*/
 
-                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB 24 to RGB float
-                    {
-                        var dstXYZ = target.GetTensorX<System.Numerics.Vector3>();
-                        _TransferPixels(sampler, dstXYZ, reverseRGB);
-                        return;
-                    }
-
-                    if (typeof(TDstPixel) == typeof(float)) // RGB24 to gray
-                    {
-                        var dstGray = target.GetTensorX<float>();
-                        _TransferPixels(sampler, dstGray);
-                        return;
-                    }
-
-                    if (sizeof(TDstPixel) == 3) // RGB 24 to RGB 24
-                    {
-                        var dstXYZ = target.GetTensorX<_PixelXYZ24>();
-                        _TransferPixels(sampler, dstXYZ);
-                        return;
-                    }
+                if (target.TryGetImageInterleaved<float>(out var dstGrayf))
+                {
+                    _TransferPixels(sampler, dstGrayf);
+                    return;
                 }
 
-                if (sizeof(TSrcPixel) == 4)
+                if (target.TryGetImageInterleaved<_PixelXYZ24>(out var dstXYZ888))
                 {
-                    var sampler = source.Cast<uint>();
-
-                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB 24 to RGB float
-                    {
-                        var dstXYZ = target.GetTensorX<System.Numerics.Vector3>();
-                        _TransferPixels(sampler, dstXYZ, reverseRGB);
-                        return;
-                    }
-
-                    if (typeof(TDstPixel) == typeof(float)) // RGB24 to gray
-                    {
-                        var dstGray = target.GetTensorX<float>();
-                        _TransferPixels(sampler, dstGray);
-                        return;
-                    }
+                    _TransferPixels(sampler, dstXYZ888, reverseRGB);
+                    return;
                 }
 
-                if (typeof(TSrcPixel) == typeof(System.Numerics.Vector3))
+                if (target.TryGetImageInterleaved<System.Numerics.Vector3>(out var dstXYZfff))
                 {
-                    var sampler = source.Cast<System.Numerics.Vector3>();
+                    _TransferPixels(sampler, dstXYZfff, reverseRGB);
+                    return;
+                }                
 
-                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector3)) // RGB float to RGB float
-                    {
-                        var dstXYZ = target.GetTensorX<System.Numerics.Vector3>();
-                        _TransferPixels(sampler, dstXYZ, reverseRGB);
-                        return;
-                    }
+                // planar target
+
+                if (target.NumPlanes != 3) _ThrowUnsupported(typeof(TDstElement));
+
+                /*
+                if (target.TryGetImagePlanes<byte>(out var dstR8, out var dstG8, out var dstB8))
+                {
+                    _TransferPixels(sampler, dstR8, dstG8, dstB8, ColorEncoding.RGB.NeedsReverse(source.Encoding));
+                    return;
+                }*/
+
+                if (target.TryGetImagePlanes<float>(out var dstRf, out var dstGf, out var dstBf))
+                {
+                    _TransferPixels(sampler, dstRf, dstGf, dstBf, ColorEncoding.RGB.NeedsReverseRGB(source.Encoding));
+                    return;
+                }                
+            }
+
+            if (sizeof(TSrcPixel) == 4) // RGBA
+            {
+                var sampler = source.Cast<uint>();
+
+                // interleaved target
+
+                if (target.TryGetImageInterleaved<System.Numerics.Vector4>(out var dstXYZWfff))
+                {
+                    _TransferPixels(sampler, dstXYZWfff);
+                    return;
                 }
 
-                if (typeof(TSrcPixel) == typeof(System.Numerics.Vector4))
-                {
-                    var sampler = source.Cast<System.Numerics.Vector4>();
 
-                    if (typeof(TDstPixel) == typeof(System.Numerics.Vector4)) // RGBA float to RGBA float
-                    {
-                        var dstXYZW = target.GetTensorX<System.Numerics.Vector4>();
-                        _TransferPixels(sampler, dstXYZW);
-                        return;
-                    }
+            }
+
+            if (typeof(TSrcPixel) == typeof(System.Numerics.Vector3))
+            {
+                var sampler = source.Cast<System.Numerics.Vector3>();
+
+                // interleaved target
+
+                if (target.TryGetImageInterleaved<System.Numerics.Vector3>(out var dstXYZ))
+                {
+                    _TransferPixels(sampler, dstXYZ, reverseRGB);
+                    return;
+                }
+
+                // planar target
+
+                if (target.NumPlanes != 3) _ThrowUnsupported(typeof(TDstElement));
+
+                if (target.TryGetImagePlanes<float>(out var dstRf, out var dstGf, out var dstBf))
+                {
+                    _TransferPixels(sampler, dstRf, dstGf, dstBf, ColorEncoding.RGB.NeedsReverseRGB(source.Encoding));
+                    return;
                 }
             }
 
-            if (target._Channels == 3)
+            if (typeof(TSrcPixel) == typeof(System.Numerics.Vector4))
             {
-                if (sizeof(TSrcPixel) == 3)// RGB24 to RGB split
+                var sampler = source.Cast<System.Numerics.Vector4>();
+
+                // interleaved target
+
+                if (target.TryGetImageInterleaved<System.Numerics.Vector4>(out var dstXYZW))
                 {
-                    var sampler = source.Cast<_PixelXYZ24>();
-
-                    if (typeof(TDstPixel) == typeof(float)) 
-                    {
-                        var dstX = target.GetTensorX<float>();
-                        var dstY = target.GetTensorY<float>();
-                        var dstZ = target.GetTensorZ<float>();
-                        _TransferPixels(sampler, dstX, dstY, dstZ, reverseRGB);
-                        return;
-                    }
-                }
-
-                if (sizeof(TSrcPixel) == 4) // RGBA32 to RGB split
-                {
-                    var sampler = source.Cast<uint>();
-
-                    if (typeof(TDstPixel) == typeof(float)) 
-                    {
-                        var dstX = target.GetTensorX<float>();
-                        var dstY = target.GetTensorY<float>();
-                        var dstZ = target.GetTensorZ<float>();
-                        _TransferPixels(sampler, dstX, dstY, dstZ, reverseRGB);
-                        return;
-                    }
+                    _TransferPixels(sampler, dstXYZW);
+                    return;
                 }
             }
 
-            _ThrowUnsupported(typeof(TDstPixel));
+            _ThrowUnsupported(typeof(TDstElement));
         }      
 
         [System.Diagnostics.DebuggerStepThrough]
@@ -210,7 +188,25 @@ namespace InteropTypes.Tensors.Imaging
 
         #region API - Core
 
-        readonly void _TransferPixels(SAMPLERXYZ24 srcSampler, TENSORXYZ24 dst)
+        readonly void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSOR32F dst) // RGB to Gray
+            where TSrcPixel : unmanaged
+        {
+            SAMPLERITERATOR iter;
+
+            var colorXform = ColorTransform.ConcatMul(0.2989f, 0.5870f, 0.1140f); 
+
+            for (int dy = 0; dy < dst.BitmapSize.Height; ++dy)
+            {
+                iter = new SAMPLERITERATOR(0, dy, this.Transform);
+
+                var dstRow = dst[dy].Span.Slice(0, dst.BitmapSize.Width);
+                var context = new _RowProcessorInfo<TSrcPixel, float>(this.UseBilinear, dstRow, srcSampler, colorXform);
+
+                _rowProcessor(context, iter);
+            }
+        }
+
+        readonly void _TransferPixels(SAMPLERXYZ24 srcSampler, TENSORXYZ24 dst, bool reverse)
         {
             SAMPLERITERATOR iter;
 
@@ -222,27 +218,10 @@ namespace InteropTypes.Tensors.Imaging
 
                 var context = new _RowProcessorInfo<_PixelXYZ24,_PixelXYZ24>(this.UseBilinear, dstRow, srcSampler, ColorTransform);
 
-                _rowProcessor(context, iter);
+                if (reverse) _rowProcessorReverse(context, iter);
+                else _rowProcessorForward(context, iter);
             }
-        }
-
-        readonly void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSOR32F dst)
-            where TSrcPixel : unmanaged
-        {
-            SAMPLERITERATOR iter;
-
-            var colorXform = ColorTransform.ConcatMul(0.2989f, 0.5870f, 0.1140f); // RGB to Gray
-
-            for (int dy = 0; dy < dst.BitmapSize.Height; ++dy)
-            {
-                iter = new SAMPLERITERATOR(0, dy, this.Transform);
-
-                var dstRow = dst[dy].Span.Slice(0, dst.BitmapSize.Width);                
-                var context = new _RowProcessorInfo<TSrcPixel, float>(this.UseBilinear, dstRow, srcSampler, colorXform);
-
-                _rowProcessor(context, iter);
-            }
-        }
+        }        
 
         readonly void _TransferPixels<TSrcPixel>(BitmapSampler<TSrcPixel> srcSampler, TENSORXYZ96F dst, bool reverse)
             where TSrcPixel : unmanaged
@@ -299,32 +278,8 @@ namespace InteropTypes.Tensors.Imaging
                     dstRowZ = tmp;
                 }
 
-                _rowProcessorSplit(dstRowX, dstRowY, dstRowZ, srcSampler, iter, this.ColorTransform, this.UseBilinear);
+                _rowProcessorPlanes(dstRowX, dstRowY, dstRowZ, srcSampler, iter, this.ColorTransform, this.UseBilinear);
             }
-        }
-
-        // RGB24 to RGB24
-        static void _rowProcessor(_RowProcessorInfo<_PixelXYZ24,_PixelXYZ24> context, SAMPLERITERATOR srcIterator)
-        {
-            var mul = new _PixelXYZ24(1, 1, 1);
-            var add = new _PixelXYZ24(0, 0, 0);
-
-            if (context.UseBilinear)
-            {
-                for (int i = 0; i < context.Target.Length; ++i)
-                {
-                    srcIterator.MoveNext(out int sx, out int sy, out int rx, out int ry);
-                    context.Target[i] = context.Source.GetSample(sx, sy, rx, ry, context.ColorTransform);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < context.Target.Length; ++i)
-                {
-                    srcIterator.MoveNext(out int sx, out int sy);
-                    context.Target[i] = context.Source.GetPixel(sx, sy);
-                }
-            }            
         }
 
         // Any to float gray
@@ -351,7 +306,48 @@ namespace InteropTypes.Tensors.Imaging
                     context.Target[i] = sample.X + sample.Y + sample.Z;
                 }
             }
-        }        
+        }
+
+        // RGB24 to RGB24
+        static void _rowProcessorForward(_RowProcessorInfo<_PixelXYZ24, _PixelXYZ24> context, SAMPLERITERATOR srcIterator)
+        {
+            if (context.UseBilinear)
+            {
+                for (int i = 0; i < context.Target.Length; ++i)
+                {
+                    srcIterator.MoveNext(out int sx, out int sy, out int rx, out int ry);
+                    context.Target[i] = context.Source.GetSample(sx, sy, rx, ry, context.ColorTransform);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < context.Target.Length; ++i)
+                {
+                    srcIterator.MoveNext(out int sx, out int sy);
+                    context.Target[i] = context.Source.GetPixel(sx, sy);
+                }
+            }            
+        }
+
+        static void _rowProcessorReverse(_RowProcessorInfo<_PixelXYZ24, _PixelXYZ24> context, SAMPLERITERATOR srcIterator)
+        {
+            if (context.UseBilinear)
+            {
+                for (int i = 0; i < context.Target.Length; ++i)
+                {
+                    srcIterator.MoveNext(out int sx, out int sy, out int rx, out int ry);
+                    context.Target[i] = context.Source.GetSample(sx, sy, rx, ry, context.ColorTransform).GetReverse();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < context.Target.Length; ++i)
+                {
+                    srcIterator.MoveNext(out int sx, out int sy);
+                    context.Target[i] = context.Source.GetPixel(sx, sy).GetReverse();
+                }
+            }
+        }
 
         // Any to Vector3
         static void _rowProcessorForward<TSrcPixel>(_RowProcessorInfo<TSrcPixel, System.Numerics.Vector3> context, SAMPLERITERATOR srcIterator)
@@ -432,7 +428,7 @@ namespace InteropTypes.Tensors.Imaging
             }
         }
 
-        static void _rowProcessorSplit<TSrcPixel>(TARGET32F rowDstX, TARGET32F rowDstY, TARGET32F rowDstZ, BitmapSampler<TSrcPixel> rowSrc, SAMPLERITERATOR srcIterator, MultiplyAdd mad, bool useBilinear)
+        static void _rowProcessorPlanes<TSrcPixel>(TARGET32F rowDstX, TARGET32F rowDstY, TARGET32F rowDstZ, BitmapSampler<TSrcPixel> rowSrc, SAMPLERITERATOR srcIterator, MultiplyAdd mad, bool useBilinear)
             where TSrcPixel:unmanaged
         {
             if (useBilinear)

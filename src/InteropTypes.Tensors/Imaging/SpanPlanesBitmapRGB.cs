@@ -8,6 +8,7 @@ using System.Text;
 
 namespace InteropTypes.Tensors.Imaging
 {
+    [Obsolete("Use TensorBitmap")]
     /// <summary>
     /// Represents a bitmap image defined as three R,G and B separated planes
     /// </summary>
@@ -97,7 +98,7 @@ namespace InteropTypes.Tensors.Imaging
         #region API
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetPixel(int x, int y, T r, T g, T b)
+        public void SetPixelUnchecked(int x, int y, T r, T g, T b)
         {
             var idx = y * _Width + x;
             _ChannelR[idx] = r;
@@ -105,13 +106,39 @@ namespace InteropTypes.Tensors.Imaging
             _ChannelB[idx] = b;
         }
 
-        public (T r, T g, T b) GetPixel(int x, int y)
+        public (T r, T g, T b) GetPixelUnchecked(int x, int y)
         {
             var idx = y * _Width + x;
 
             return (_ChannelR[idx], _ChannelG[idx], _ChannelB[idx]);
         }
 
+        public void ApplyMultiplyAdd(MultiplyAdd mad)
+        {
+            if (typeof(T) != typeof(float)) throw new InvalidOperationException("invalid type");
+
+            var rrr = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(_ChannelR);
+            mad.X.ApplyTransformTo(rrr);
+
+            var ggg = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(_ChannelG);
+            mad.Y.ApplyTransformTo(ggg);
+
+            var bbb = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(_ChannelB);
+            mad.Z.ApplyTransformTo(bbb);
+        }
+
+        public void SetBitmap(ReadOnlySpanTensor3<T> bitmap, ColorEncoding encoding)
+        {
+            if (bitmap.Dimensions[0] != _Height) throw new ArgumentException("Height mismatch", nameof(bitmap));
+            if (bitmap.Dimensions[1] != _Width) throw new ArgumentException("Width mismatch", nameof(bitmap));
+            if (bitmap.Dimensions[2] != 3) throw new ArgumentException("invalid pixel format", nameof(bitmap));
+
+            for (int y = 0; y < _Height; ++y)
+            {
+                var srcRow = bitmap.GetSubTensor(y);
+                this.SetRow(y, srcRow.Span, encoding);
+            }
+        }
 
         public void SetBitmap<TPixel>(ReadOnlySpanTensor2<TPixel> bitmap, ColorEncoding encoding)
             where TPixel:unmanaged
@@ -171,18 +198,7 @@ namespace InteropTypes.Tensors.Imaging
             SetRow(y, srcRGB, encoding);
         }
 
-        public void SetBitmap(ReadOnlySpanTensor3<T> bitmap, ColorEncoding encoding)
-        {
-            if (bitmap.Dimensions[0] != _Height) throw new ArgumentException("Height mismatch", nameof(bitmap));
-            if (bitmap.Dimensions[1] != _Width) throw new ArgumentException("Width mismatch", nameof(bitmap));
-            if (bitmap.Dimensions[2] != 3) throw new ArgumentException("invalid pixel format", nameof(bitmap));
-
-            for (int y = 0; y < _Height; ++y)
-            {
-                var srcRow = bitmap.GetSubTensor(y);
-                this.SetRow(y, srcRow.Span, encoding);
-            }
-        }
+        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void SetRow(int y, ReadOnlySpanTensor2<T> row, ColorEncoding encoding)
@@ -222,19 +238,7 @@ namespace InteropTypes.Tensors.Imaging
         }
         
 
-        public void ApplyMultiplyAdd(MultiplyAdd mad)
-        {
-            if (typeof(T) != typeof(float)) throw new InvalidOperationException("invalid type");
-
-            var rrr = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(_ChannelR);            
-            mad.X.ApplyTransformTo(rrr);
-
-            var ggg = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(_ChannelG);            
-            mad.Y.ApplyTransformTo(ggg);
-
-            var bbb = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(_ChannelB);            
-            mad.Z.ApplyTransformTo(bbb);
-        }        
+            
 
 
         public unsafe void CopyTo<TPixel>(SpanTensor2<TPixel> dst, ColorEncoding dstEncoding)

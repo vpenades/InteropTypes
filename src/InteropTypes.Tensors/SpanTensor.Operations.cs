@@ -22,6 +22,8 @@ namespace InteropTypes.Tensors
         public static (T min, T max) GetMinMax<T>(this ReadOnlySpan<T> span)
             where T:unmanaged
         {
+            if (span.IsEmpty) return (default, default);
+
             if (typeof(T) == typeof(float))
             {
                 var spanf = System.Runtime.InteropServices.MemoryMarshal.Cast<T, float>(span);
@@ -34,9 +36,7 @@ namespace InteropTypes.Tensors
                 return (mint,maxt);
             }
 
-            var comparer = Comparer<T>.Default;
-
-            if (span.Length == 0) return (default, default);
+            var comparer = Comparer<T>.Default;            
 
             T min = span[0];
             T max = span[0];

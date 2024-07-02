@@ -9,6 +9,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 
 using InteropTypes.Tensors;
+using InteropTypes.Tensors.Imaging;
 
 using ORTVALUE = Microsoft.ML.OnnxRuntime.OrtValue;
 using ORTVALUEINFO = Microsoft.ML.OnnxRuntime.OrtTensorTypeAndShapeInfo;
@@ -23,6 +24,23 @@ namespace $rootnamespace$
 {
     static partial class InteropTensorsForOnnxRuntime
     {
+        public static bool TryGetTensorBitmap<T>(this ORTVALUE value, ColorEncoding encoding,  out TensorBitmap<T> result)
+            where T : unmanaged, IConvertible
+        {
+            return TryGetTensorBitmap(value, encoding, ColorRanges.Identity, out result);
+        }
+
+        public static bool TryGetTensorBitmap<T>(this ORTVALUE value, ColorEncoding encoding, ColorRanges ranges, out TensorBitmap<T> result)
+            where T : unmanaged, IConvertible
+        {
+            if (!TryGetSpanTensor3<T>(value, out var t3)) { result = default; return false; }
+
+            if (t3.Dimensions.Dim0 > 4 || t3.Dimensions.Dim2 > 4) { result = default; return false; }
+            
+            result = new TensorBitmap<T>(t3, encoding, ranges);
+            return true;
+        }
+
         public static ReadOnlySpanTensor1<T> AsReadOnlySpanTensor1<T>(this ORTVALUE value)
             where T: unmanaged
         {

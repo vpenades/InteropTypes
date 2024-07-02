@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Numerics.Tensors;
 using System.Text;
 
+using MEMORYMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
+
 namespace InteropTypes.Tensors
 {
     <#
@@ -48,7 +50,7 @@ namespace InteropTypes.Tensors
     public readonly ref partial struct <#= CLASSNAME#><T>
     where T : unmanaged
     {
-        #region debug
+        #region diagnostics
 
         private string _GetDebuggerDisplayString()
         {
@@ -97,6 +99,14 @@ namespace InteropTypes.Tensors
         public readonly <#= TENSORSIZENAME#> Dimensions => _Dimensions;        
 
         public readonly <#=SPANTYPE#> Span => _Buffer;
+
+        public uint GetChecksum()
+        {
+            var crc = Crc32.Create();
+            crc.AppendChecksum(this.Dimensions);
+            crc.AppendChecksum(_Buffer);
+            return crc.Value;
+        }
 
         public readonly T[] ToArray() { return _Buffer.ToArray(); }
         
@@ -158,25 +168,42 @@ namespace InteropTypes.Tensors
         }
 
         public readonly unsafe <#= CLASSNAME#><TElement> Cast<TElement>()
-            where TElement:unmanaged
+            where TElement:unmanaged        
         {
-            var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);
+            var xdata = MEMORYMARSHALL.Cast<T,TElement>(_Buffer);
 
-            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            if (typeof(T) == typeof(TElement))
+            {
+                return new <#= CLASSNAME#><TElement>(xdata, _Dimensions);
+            }
+            else
+            {
+                var lastDim = _Dimensions.Last * sizeof(T) / sizeof(TElement);            
             
-            var xdims = new <#= TENSORSIZENAME#>(_Dimensions.Head<#= TDIMCOUNT-1#>, lastDim);            
+                var xdims = new <#= TENSORSIZENAME#>(_Dimensions.Head<#= TDIMCOUNT-1#>, lastDim);            
 
-            return new <#= CLASSNAME#><TElement>(xdata, xdims);
+                return new <#= CLASSNAME#><TElement>(xdata, xdims);
+            }
         }
 
         public readonly unsafe <#= CLASSNAMEMINUSONE#><TElement> UpCast<TElement>()
+            where TElement:unmanaged        
+        {
+            return TryUpCast<TElement>(out var result)
+                ? result
+                : throw new ArgumentException(nameof(TElement));
+        }
+
+        public readonly unsafe bool TryUpCast<TElement>(out <#= CLASSNAMEMINUSONE#><TElement> result)
             where TElement:unmanaged
         {
-            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) throw new ArgumentException(nameof(TElement));
+            result = default;
+            if (sizeof(T) * _Dimensions.Last != sizeof(TElement)) return false;
 
-            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdata = MEMORYMARSHALL.Cast<T,TElement>(_Buffer);
 
-            return new <#= CLASSNAMEMINUSONE#><TElement>(xdata, _Dimensions.GetTensorHead());
+            result = new <#= CLASSNAMEMINUSONE#><TElement>(xdata, _Dimensions.GetTensorHead());
+            return true;
         }
 
         public readonly void CopyTransposed(<#=context.WriteableClassName#><T> dst, params int[] indices)
@@ -259,7 +286,7 @@ namespace InteropTypes.Tensors
 
             if (last * otherSize != thisSize) throw new ArgumentException(nameof(TElement));
 
-            var xdata = System.Runtime.InteropServices.MemoryMarshal.Cast<T,TElement>(_Buffer);
+            var xdata = MEMORYMARSHALL.Cast<T,TElement>(_Buffer);
             var xdims = new <#= TENSORSIZENAMEPLUSONE#>(_Dimensions, last);
 
             return new <#= CLASSNAMEPLUSONE#><TElement>(xdata, xdims);

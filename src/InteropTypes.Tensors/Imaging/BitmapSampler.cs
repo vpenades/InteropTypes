@@ -72,8 +72,9 @@ namespace InteropTypes.Tensors.Imaging
 
         #region API        
 
+        [Obsolete("wrong code, needs to be verified", true)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool Contains(in System.Drawing.Rectangle other)
+        public bool Contains(in System.Drawing.Rectangle other)
         {
             if (other.Left < 0) return false;
             if (other.Top < 0) return false;
@@ -83,7 +84,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe ref readonly TPixel GetPixel(int x, int y)
+        public unsafe ref readonly TPixel GetPixel(int x, int y)
         {            
             x = Math.Clamp(x, 0, _LastX);
             y = Math.Clamp(y, 0, _LastY);            
@@ -96,7 +97,7 @@ namespace InteropTypes.Tensors.Imaging
         }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private readonly unsafe ref readonly TDstPixel _GetPixelAs<TDstPixel>(int x, int y)
+        private unsafe ref readonly TDstPixel _GetPixelAs<TDstPixel>(int x, int y)
             where TDstPixel : unmanaged
         {
             if (sizeof(TPixel) < sizeof(TDstPixel)) throw new InvalidOperationException();
@@ -112,7 +113,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe TPixel GetSample(int x, int y, int rx, int by, in MultiplyAdd mad)
+        public unsafe TPixel GetSample(int x, int y, int rx, int by, in MultiplyAdd mad)
         {
             if (sizeof(TPixel) == 3)
             {
@@ -126,25 +127,25 @@ namespace InteropTypes.Tensors.Imaging
                 // so we need to divide by 4 to convert the fractions.
                 var r = _PixelXYZ24.BiLerp(a, b, c, d, (uint)rx / 16, (uint)by / 16);
 
-                return Unsafe.As<_PixelXYZ24, TPixel>(ref r);
+                return r.Cast<TPixel>();
             }
 
             if (typeof(TPixel) == typeof(Vector3))
             {
-                var a = _GetPixelAs<Vector3>(x, y);
-                var b = _GetPixelAs<Vector3>(x + 1, y);
-                var c = _GetPixelAs<Vector3>(x, y + 1);
-                var d = _GetPixelAs<Vector3>(x + 1, y + 1);
+                var tl = _GetPixelAs<Vector3>(x, y);
+                var tr = _GetPixelAs<Vector3>(x + 1, y);
+                var bl = _GetPixelAs<Vector3>(x, y + 1);
+                var br = _GetPixelAs<Vector3>(x + 1, y + 1);
 
                 var rxf = (float)rx / (float)16384;
                 var byf = (float)by / (float)16384;
 
                 // aggregate with weights
-                var r = d * rxf * byf;
-                r += c * (1 - rxf) * byf;
+                var r = br * rxf * byf;
+                r += bl * (1 - rxf) * byf;
                 byf = 1 - byf;
-                r = b * rxf * byf;
-                r += a * (1 - rxf) * byf;
+                r = tr * rxf * byf;
+                r += tl * (1 - rxf) * byf;
 
                 r = mad.Transform(r);
 
@@ -155,7 +156,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe float GetScalarPixel(int x, int y)
+        public unsafe float GetScalarPixel(int x, int y)
         {
             if (typeof(TPixel) == typeof(float))
             {
@@ -166,7 +167,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe float GetScalarSample(int x, int y, int rx, int by)
+        public unsafe float GetScalarSample(int x, int y, int rx, int by)
         {
             if (typeof(TPixel) == typeof(float))
             {
@@ -192,7 +193,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe Vector3 GetVector3Pixel(int x, int y)
+        public unsafe Vector3 GetVector3Pixel(int x, int y)
         {
             if (sizeof(TPixel) == 3)
             {
@@ -209,7 +210,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe void GetVector3Pixel(int x, int y, out Vector3 result)
+        public unsafe void GetVector3Pixel(int x, int y, out Vector3 result)
         {
             if (sizeof(TPixel) == 3)
             {
@@ -284,7 +285,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe Vector4 GetVector4Pixel(int x, int y)
+        public unsafe Vector4 GetVector4Pixel(int x, int y)
         {
             if (typeof(TPixel) == typeof(Vector4))
             {
@@ -295,7 +296,7 @@ namespace InteropTypes.Tensors.Imaging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly unsafe Vector4 GetVector4Sample(int x, int y, int rx, int by)
+        public unsafe Vector4 GetVector4Sample(int x, int y, int rx, int by)
         {
             if (typeof(TPixel) == typeof(Vector4))
             {

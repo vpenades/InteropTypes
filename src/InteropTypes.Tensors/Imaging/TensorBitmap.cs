@@ -2,54 +2,155 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using System.Diagnostics;
 
 using TRANSFORM = System.Numerics.Matrix3x2;
 using MMARSHAL = System.Runtime.InteropServices.MemoryMarshal;
 
+
 namespace InteropTypes.Tensors.Imaging
 {
+
     /// <summary>
     /// Represents a bitmap created upon the data of a <see cref="SpanTensor2{T}"/> or <see cref="SpanTensor3{T}"/>
     /// </summary>
     /// <remarks>
-    /// This structure can represent RGB channels as interleaved values or as separated planes.
+    /// This structure can represent RGB values as pixels with interleaved channels, or as separated planes.
     /// </remarks>
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public readonly ref struct TensorBitmap<T>
-        where T: unmanaged
+        where T: unmanaged, IConvertible
     {
-        #region constructors
-        public TensorBitmap(SpanTensor2<T> tensor, ColorEncoding encoding)
+        #region diagnostics
+        private string GetDebuggerDisplay()
         {
-            _ChannelX = tensor.Span;
-            _ChannelY = default;
-            _ChannelZ = default;
-            _ChannelW = default;
-            _Channels = 1;
-            _Width = tensor.Dimensions[1];
-            _Height = tensor.Dimensions[0];
-            _Encoding = encoding;
+            return $"{Width}x{Height}x{_ColorEncoding}";
         }
 
-        public TensorBitmap(SpanTensor3<T> tensor, ColorEncoding encoding)
+        #endregion
+
+        #region constructors
+
+        public static TensorBitmap<T> CreateInterleaved(int width, int height, ColorEncoding encoding)
         {
-            _ChannelX = tensor.Dimensions[0] > 0 ? tensor[0].Span : default;
-            _ChannelY = tensor.Dimensions[0] > 1 ? tensor[1].Span : default;
-            _ChannelZ = tensor.Dimensions[0] > 2 ? tensor[2].Span : default;
-            _ChannelW = tensor.Dimensions[0] > 3 ? tensor[3].Span : default;
-            _Channels = tensor.Dimensions[0];
-            _Width = tensor.Dimensions[2];
-            _Height = tensor.Dimensions[1];
-            _Encoding = encoding;
+            return CreateInterleaved(width, height, encoding, ColorRanges.GetRangesFor<T>());
+        }
+
+        public static TensorBitmap<T> CreateInterleaved(int width, int height, ColorEncoding encoding, ColorRanges ranges)
+        {
+            _GuardTemplateParam();
+
+            var t3 = new SpanTensor3<T>(height, width, encoding.GetChannelCount());
+            return new TensorBitmap<T>(t3, encoding, ranges);            
+        }
+
+        public static TensorBitmap<T> CreatePlanes(int width, int height, ColorEncoding encoding)
+        {
+            return CreatePlanes(width, height, encoding, ColorRanges.GetRangesFor<T>());
+        }
+
+        public static TensorBitmap<T> CreatePlanes(int width, int height, ColorEncoding encoding, ColorRanges ranges)
+        {
+            _GuardTemplateParam();
+
+            var t3 = new SpanTensor3<T>(encoding.GetChannelCount(), height, width);
+            return new TensorBitmap<T>(t3, encoding, ranges);
+        }
+
+        public static unsafe TensorBitmap<T> CreateFrom<TOther>(SpanTensor2<TOther> srcTensor, ColorEncoding srcEncoding)
+            where TOther : unmanaged
+        {
+            return CreateFrom(srcTensor, srcEncoding, ColorRanges.GetRangesFor<T>());
+        }
+
+        public static unsafe TensorBitmap<T> CreateFrom<TOther>(SpanTensor2<TOther> srcTensor, ColorEncoding srcEncoding, ColorRanges srcRanges)
+            where TOther: unmanaged
+        {
+            _GuardTemplateParam();
+
+            int srcElementCount = -1;
+
+            if (typeof(T) == typeof(float))
+            {
+                if (typeof(TOther) == typeof(float)) srcElementCount = 1;
+                if (typeof(TOther) == typeof(System.Numerics.Vector2)) srcElementCount = 2;
+                if (typeof(TOther) == typeof(System.Numerics.Vector3)) srcElementCount = 3;
+                if (typeof(TOther) == typeof(System.Numerics.Vector4)) srcElementCount = 4;
+                if (typeof(TOther) == typeof(System.Numerics.Quaternion)) srcElementCount = 4;                
+            }
+
+            if (typeof(T) == typeof(Byte))
+            {
+                srcElementCount = sizeof(TOther);
+
+                if (typeof(TOther) == typeof(float)) srcElementCount = -1;
+            }
+
+            if (srcEncoding == ColorEncoding.Undefined)
+            {
+                switch (srcElementCount)
+                {
+                    case 1: srcEncoding = ColorEncoding.A; break;
+                    case 3: srcEncoding = ColorEncoding.RGB; break;
+                    case 4: srcEncoding = ColorEncoding.RGBA; break;
+                }
+            }
+
+            if (srcEncoding.GetChannelCount() != srcElementCount) throw new ArgumentException("encoding mismatch", nameof(srcEncoding));
+
+            var downCast = srcTensor.DownCast<T>();
+            return new Imaging.TensorBitmap<T>(downCast, srcEncoding, srcRanges);
+        }
+
+        public TensorBitmap(SpanTensor3<T> srcTensor, ColorEncoding encoding, ColorRanges ranges)
+        {
+            _GuardTemplateParam();
+
+            if (srcTensor.Dimensions.Dim0 == 1) // reshape to interleaved
+            {
+                srcTensor = srcTensor.Reshaped(srcTensor.Dimensions.Dim1, srcTensor.Dimensions.Dim2, 1);
+            }
+
+            _ColorEncoding = encoding;
+            _ColorRanges = ranges;
+
+            _Interleaved = srcTensor;
+
+            if (srcTensor.Dimensions.Dim0 < srcTensor.Dimensions.Dim2) // planes
+            {
+                _Width = srcTensor.Dimensions.Dim2;
+                _Height = srcTensor.Dimensions.Dim1;
+
+                _PlanesCount = srcTensor.Dimensions[0];
+                _Planes = SpanPlanesBitmapRGBA<T>.CreateFrom(srcTensor, encoding);
+            }
+
+            else // interleaved
+            {
+                // notice that in here, we could support both float[3] and Vector3[1]
+
+                _Width = _Interleaved.Dimensions.Dim1;
+                _Height = _Interleaved.Dimensions.Dim0;
+
+                _PlanesCount = 0;
+                _Planes = default;
+            }
+        }
+
+        private static void _GuardTemplateParam()
+        {
+            if (typeof(T) == typeof(Byte)) return;
+            if (typeof(T) == typeof(float)) return;
+
+            throw new InvalidOperationException("must by byte or float");
         }
 
         #endregion
 
         #region data
 
-        internal readonly Span<T> _ChannelX;
-        internal readonly Span<T> _ChannelY;
-        internal readonly Span<T> _ChannelZ;
-        internal readonly Span<T> _ChannelW;
+        internal readonly SpanTensor3<T> _Interleaved;
+        private readonly SpanPlanesBitmapRGBA<T> _Planes;        
 
         /// <summary>
         /// stores the number of planes used.
@@ -57,230 +158,326 @@ namespace InteropTypes.Tensors.Imaging
         /// <remarks>
         /// If value is 1 and <see cref="T"/> is a composite type like <see cref="Vector3"/> or <see cref="_PixelXYZ24"/> then this is an interleaved value
         /// </remarks>
-        internal readonly int _Channels;
+
         internal readonly int _Width;
         internal readonly int _Height;
-        internal readonly ColorEncoding _Encoding;
+
+        internal readonly int _PlanesCount;
+        internal readonly ColorEncoding _ColorEncoding;
+        private readonly ColorRanges _ColorRanges;
 
         #endregion
 
         #region properties
-
-        public ColorEncoding Encoding => _Encoding;
-
-        public int NumChannels => _Channels;
-
+        public ColorEncoding Encoding => _ColorEncoding;
+        public int NumPlanes => _PlanesCount;
         public int Width => _Width;
-
         public int Height => _Height;
+
+        public bool HasPlanes => _PlanesCount != 0;
+
+        public static readonly bool ElementsAreBytes = typeof(T) == typeof(byte);
+
+        public static readonly bool ElementsAreSingles = typeof(T) == typeof(float);
+        public unsafe bool PixelIsInteger
+        {
+            get
+            {               
+                if (typeof(T) == typeof(byte)) return true;
+                if (sizeof(T) == 3) return true;
+
+                return !PixelIsFloating;
+            }
+        }
+
+        public unsafe bool PixelIsFloating
+        {
+            get
+            {
+                if (typeof(T) == typeof(Half)) return false;
+                if (typeof(T) == typeof(Single)) return false;
+                if (typeof(T) == typeof(Double)) return false;
+                if (typeof(T) == typeof(System.Numerics.Vector2)) return false;
+                if (typeof(T) == typeof(System.Numerics.Vector3)) return false;
+                if (typeof(T) == typeof(System.Numerics.Vector4)) return false;
+                return false;
+            }
+        }
+
+        public ScaledPixelsAccessor ScaledPixels => new ScaledPixelsAccessor(this);
 
         #endregion
 
         #region API
 
-        public void CopyTo<TOther>(TensorBitmap<TOther> dst)
-            where TOther : unmanaged
+        public static unsafe bool ElementsAreCompatible<TOther>()
+            where TOther: unmanaged
         {
-            if (this._Width != dst._Width) throw new ArgumentException("width mismatch",nameof(dst));
-            if (this._Height != dst._Height) throw new ArgumentException("height mismatch", nameof(dst));
-
-            for(int y=0; y < dst._Height; ++y)
+            if (typeof(T) == typeof(Byte))
             {
-                for (int x = 0; x < dst._Width; ++x)
-                {
-                    var value = this.GetPixel(x, y);
-                    dst.SetPixel(x, y, value);
-                }
-            }
-        }
-
-        public Vector4  GetPixel(int x, int y)
-        {
-            switch(_Channels)
-            {
-                case 1: return _GetPixelX(x, y);
-                case 3: return _GetPixelXYZ(x, y);
+                if (typeof(TOther) == typeof(float)) return false;
+                return sizeof(TOther) <= 4;
             }
 
-            throw new NotImplementedException();
-        }
-
-        public void SetPixel(int x, int y, in Vector4 value)
-        {
-            switch(_Channels)
-            {
-                case 1: _SetPixelX(x, y, value); return;
-            }
-        }
-
-        private unsafe Vector4 _GetPixelX(int x, int y)
-        {
-            if (sizeof(T) == 1)
-            {
-                var v = GetChannelX<Byte>()[y * _Width + x];
-                switch (_Encoding)
-                {
-                    case ColorEncoding.A: return new Vector4(255f, 255f, 255f, v) / 255f;
-                    default: return new Vector4(v, v, v, 255f) / 255f;
-                }
-            }
-
-            if (sizeof(T) == 3)
-            {                
-                var xyz = GetChannelX<_PixelXYZ24>()[y * _Width + x];
-                switch(_Encoding)
-                {
-                    case ColorEncoding.BGR: return new Vector4(xyz.Z, xyz.Y, xyz.X, 255f) / 255f;
-                    default: return new Vector4(xyz.X, xyz.Y, xyz.Z, 255f) / 255f;
-                }
-            }
-
-            if (sizeof(T) == 4)
-            {
-                var bytes = MMARSHAL.Cast<T,Byte>(_ChannelX.Slice(y*_Width+x,4));
-                
-                switch (_Encoding)
-                {                    
-                    case ColorEncoding.BGRA: return new Vector4(bytes[2], bytes[1], bytes[0], bytes[3]) / 255f;
-                    case ColorEncoding.ARGB: return new Vector4(bytes[1], bytes[2], bytes[3], bytes[0]) / 255f;
-                    default: return new Vector4(bytes[0], bytes[1], bytes[2], bytes[3]) / 255f;
-                }
-            }
-
-            if (typeof(T) == typeof(Vector3))
-            {
-                var xyz = GetChannelX<Vector3>()[y * _Width + x];
-                switch (_Encoding)
-                {
-                    case ColorEncoding.BGR: return new Vector4(xyz.Z, xyz.Y, xyz.X, 1);
-                    default: return new Vector4(xyz, 1);
-                }
-            }
-
-            if (typeof(T) == typeof(Vector4))
-            {
-                var xyzw = GetChannelX<Vector4>()[y * _Width + x];
-                switch (_Encoding)
-                {
-                    case ColorEncoding.BGRA: return new Vector4(xyzw.Z, xyzw.Y, xyzw.X, xyzw.W);
-                    case ColorEncoding.ARGB: return new Vector4(xyzw.W, xyzw.X, xyzw.Y, xyzw.Z);
-                    default: return xyzw;
-                }
-            }
-
-            throw new NotImplementedException();
-        }
-
-        private Vector4 _GetPixelXYZ(int x, int y)
-        {
-            int idx = y * _Width + x;
             if (typeof(T) == typeof(float))
             {
-                var xx = GetChannelX<float>()[idx];
-                var yy = GetChannelY<float>()[idx];
-                var zz = GetChannelZ<float>()[idx];
+                if (typeof(TOther) == typeof(float)) return true;
+                if (typeof(TOther) == typeof(System.Numerics.Vector2)) return true;
+                if (typeof(TOther) == typeof(System.Numerics.Vector3)) return true;
+                if (typeof(TOther) == typeof(System.Numerics.Vector4)) return true;
+            }
 
-                if (_Encoding == ColorEncoding.BGR)
+            return false;
+        }
+
+        public unsafe bool TryGetTyped<TTyped>(out TensorBitmap<TTyped> result)
+            where TTyped : unmanaged, IConvertible
+        {
+            if (typeof(T) != typeof(TTyped)) { result = default; return false; }
+            result = new TensorBitmap<TTyped>(_Interleaved.Cast<TTyped>(), _ColorEncoding, _ColorRanges);
+            return true;
+        }
+
+        public unsafe bool TryGetImageInterleaved<TOther>(out SpanTensor2<TOther> dst)
+            where TOther : unmanaged
+        {
+            dst = default;
+            if (_PlanesCount != 0) return false;
+
+            if (sizeof(T) * _Interleaved.Dimensions.Last != sizeof(TOther)) return false;
+
+            dst = _Interleaved.UpCast<TOther>();
+
+            if (this.Height != dst.Dimensions[0]) return false;
+            if (this.Width != dst.Dimensions[1]) return false;
+
+            return true;
+        }
+
+        public unsafe bool TryGetImageInterleaved(out SpanTensor3<T> dst)
+        {
+            dst = default;
+            if (_PlanesCount != 0) return false;
+
+            dst = _Interleaved;
+
+            if (this.Height != dst.Dimensions[0]) return false;
+            if (this.Width != dst.Dimensions[1]) return false;
+
+            return true;
+        }
+
+        public unsafe bool TryGetImagePlanes<TOther>(out SpanTensor2<TOther> redPlane, out SpanTensor2<TOther> greenPlane, out SpanTensor2<TOther> bluePlane)
+            where TOther : unmanaged
+        {
+            if (_PlanesCount < 3 || sizeof(T) != sizeof(TOther))
+            {
+                redPlane = default;
+                greenPlane = default;
+                bluePlane = default;
+                return false;
+            }
+
+            redPlane = _Planes.PlaneRed.Cast<TOther>();
+            greenPlane = _Planes.PlaneGreen.Cast<TOther>();
+            bluePlane = _Planes.PlaneBlue.Cast<TOther>();
+
+            System.Diagnostics.Debug.Assert(redPlane.Dimensions == greenPlane.Dimensions);
+            System.Diagnostics.Debug.Assert(redPlane.Dimensions == bluePlane.Dimensions);
+
+            return true;
+        }
+
+        public void SetPixels<TOther>(TensorBitmap<TOther> src)
+            where TOther:unmanaged, IConvertible
+        {
+            if (this._Interleaved.Dimensions != src._Interleaved.Dimensions) throw new ArgumentException("dims mismatch", nameof(src));
+
+            if (this.HasPlanes && src.HasPlanes) // planes to planes
+            {
+                var rgbaRangeTransfer
+                    = this._ColorRanges.ToMultiplyAdd().GetShuffled(this._ColorEncoding)
+                    * src._ColorRanges.ToMultiplyAdd().GetShuffled(src._ColorEncoding).GetInverse();
+
+                this._Planes.SetPixels(src._Planes, rgbaRangeTransfer);
+                return;
+            }
+
+            if (!this.HasPlanes)
+            {
+                this.SetPixels<TOther>(src._Interleaved, src._ColorEncoding, src._ColorRanges);
+            }
+            
+            // slow fallback
+
+            this.ScaledPixels.SetPixels(src.ScaledPixels);
+        }
+
+        public void SetPixels<TOther>(ReadOnlySpanTensor3<TOther> srcBitmap, ColorEncoding srcPixEncoding, ColorRanges srcPixRanges)
+            where TOther: unmanaged, IConvertible
+        {
+            if (typeof(TOther) != typeof(Byte) && typeof(TOther) != typeof(float)) throw new InvalidOperationException();
+
+            if (HasPlanes)
+            {
+                throw new NotImplementedException();
+            }
+
+
+            var rgbaRangeTransfer = ColorRanges.GetConversionTransform(srcPixRanges, srcPixEncoding, _ColorRanges, _ColorEncoding);
+
+            if (this._Interleaved.Dimensions != srcBitmap.Dimensions)
+            {
+                if (_ColorEncoding == srcPixEncoding)
                 {
-                    var t = xx;
-                    xx = zz;
-                    zz = t;
+                    _Interleaved.FillFrom(srcBitmap, rgbaRangeTransfer);
+                    return;
                 }
 
-                var rgba = new Vector4(xx, yy, zz, 1);
+                // TODO: do a row per row conversion
+            }            
 
-                rgba = Vector4.Min(Vector4.One, rgba);
-                rgba = Vector4.Max(Vector4.Zero, rgba);
-                return rgba;
+            throw new NotImplementedException();
+        }        
+
+        public void SetRowScaledPixels(int y, ReadOnlySpan<Vector4> scaledRowPixels)
+        {
+            if (_PlanesCount == 0)
+            {
+                scaledRowPixels.CopyScaledPixelTo(_Interleaved[y].Span,_ColorEncoding);
+            }
+            else
+            {
+                var tensor = new ReadOnlySpanTensor2<Vector4>(scaledRowPixels, scaledRowPixels.Length, 1).Cast<float>();
+
+                _Planes.SetInterleavedRow(y, tensor, ColorEncoding.RGBA);
+            }
+        }
+
+        public void SetRowPixels<TSrc>(int y, ReadOnlySpanTensor2<TSrc> srcRowPixels, ColorEncoding srcPixEncoding, ColorRanges srcPixRanges)
+            where TSrc: unmanaged
+        {
+            var rgbaRangeTransfer = ColorRanges.GetConversionTransform(srcPixRanges, srcPixEncoding, _ColorRanges, _ColorEncoding);
+
+            if (HasPlanes)
+            {
+                if (typeof(TSrc) == typeof(Byte))
+                {
+                    _Planes.SetInterleavedRow(y, srcRowPixels.Cast<Byte>(), srcPixEncoding);
+                    return;
+                }
+
+                throw new NotImplementedException();                
+            }
+            
+            if (_ColorEncoding == srcPixEncoding)
+            {
+                _Interleaved[y].FillFrom(srcRowPixels, rgbaRangeTransfer);
+                return;
+            }            
+        }                
+
+        public void ApplyMultiplyAdd(MultiplyAdd mad, bool shuffleMadRGBA = false)
+        {
+            if (HasPlanes)
+            {
+                _Planes.ApplyMultiplyAdd(mad);
+                return;
+            }
+
+            if (shuffleMadRGBA) mad = mad.GetShuffled(_ColorEncoding);
+
+            switch(_ColorEncoding)
+            {
+                case ColorEncoding.RGBA:
+                case ColorEncoding.BGRA:
+                case ColorEncoding.ARGB:
+                    if (_Interleaved.TryUpCast<System.Numerics.Vector4>(out var t4))
+                    {
+                        mad.ApplyTransformTo(t4.Span);
+                        return;
+                    }
+                    break;
+                case ColorEncoding.RGB:
+                case ColorEncoding.BGR:                
+                    if (_Interleaved.TryUpCast<System.Numerics.Vector3>(out var t3))
+                    {
+                        mad.ApplyTransformTo(t3.Span);
+                        return;
+                    }
+                    break;
+
+                case ColorEncoding.A:
+                case ColorEncoding.L:
+                    if (_Interleaved.TryUpCast<float>(out var t1))
+                    {
+                        mad.ApplyTransformTo(t1.Span);
+                        return;
+                    }
+                    break;
             }
 
             throw new NotImplementedException();
         }
 
-        private unsafe void _SetPixelX(int x, int y, in Vector4 value)
+        public ColorRanges EvaluateGetContentColorRanges()
         {
-            if (sizeof(T) == 1)
+            if (_PlanesCount > 0) return _Planes.EvaluateGetContentColorRanges();
+
+            var ranges = new ColorRanges.Serializable(float.MaxValue, float.MinValue);
+
+            for(int y=0; y < _Interleaved.Dimensions.Dim0; ++y)
             {
-                var src = value * 255;
-                ref var dst = ref GetChannelX<Byte>()[y * _Width + x];
-                switch (_Encoding)
+                var row = _Interleaved[y];
+
+                for (int x = 0; x < row.Dimensions.Dim0; ++x)
                 {
-                    case ColorEncoding.A:
-                        dst = (Byte)src.W;
-                        break;
-                    default:
-                        dst = (Byte)((src.X + src.Y + src.Z) / 3f);
-                        break;                    
+                    var pixel = row[x].Span;
+                    T r = default;
+                    T g = default;
+                    T b = default;
+                    T a = default;
+
+                    switch(_ColorEncoding)
+                    {
+                        case ColorEncoding.A: a = pixel[0]; break;
+                        case ColorEncoding.L: a = pixel[0]; break;
+                        case ColorEncoding.RGB: r = pixel[0]; g = pixel[1]; b = pixel[2]; break;
+                        case ColorEncoding.BGR: r = pixel[2]; g = pixel[1]; b = pixel[0]; break;
+                        case ColorEncoding.RGBA: r = pixel[0]; g = pixel[1]; b = pixel[2]; a = pixel[3]; break;
+                        case ColorEncoding.BGRA: r = pixel[2]; g = pixel[1]; b = pixel[0]; a = pixel[3]; break;
+                        case ColorEncoding.ARGB: r = pixel[3]; g = pixel[0]; b = pixel[1]; a = pixel[2]; break;
+                        default: throw new NotImplementedException();
+                    }
+
+                    var rr = r.ToSingle(System.Globalization.CultureInfo.InvariantCulture);
+                    var gg = g.ToSingle(System.Globalization.CultureInfo.InvariantCulture);
+                    var bb = b.ToSingle(System.Globalization.CultureInfo.InvariantCulture);
+                    var aa = a.ToSingle(System.Globalization.CultureInfo.InvariantCulture);
+
+                    ranges.RedMin = Math.Min(ranges.RedMin, rr);
+                    ranges.RedMax = Math.Max(ranges.RedMax, rr);
+
+                    ranges.GreenMin = Math.Min(ranges.GreenMin, gg);
+                    ranges.GreenMax = Math.Max(ranges.GreenMax, gg);
+
+                    ranges.BlueMin = Math.Min(ranges.BlueMin, bb);
+                    ranges.BlueMax = Math.Max(ranges.BlueMax, bb);
+
+                    ranges.AlphaMin = Math.Min(ranges.AlphaMin, rr);
+                    ranges.AlphaMax = Math.Max(ranges.AlphaMax, rr);
                 }
             }
 
-            if (sizeof(T) == 3)
-            {
-                var src = value * 255;
-                ref var dst = ref GetChannelX<_PixelXYZ24>()[y * _Width + x];
-                switch (_Encoding)
-                {
-                    case ColorEncoding.BGR:
-                        dst.X = (Byte)src.Z;
-                        dst.Y = (Byte)src.Y;
-                        dst.Z = (Byte)src.X;
-                        break;
-                    default:
-                        dst.X = (Byte)src.X;
-                        dst.Y = (Byte)src.Y;
-                        dst.Z = (Byte)src.Z;
-                        break;
-                }
-            }
+            
+
+                
+            return ranges;
         }
 
-        public unsafe SpanTensor2<TT> GetTensorX<TT>()
-            where TT : unmanaged
-        {
-            return new SpanTensor2<TT>(GetChannelX<TT>(), _Height, _Width);
-        }
+        #endregion
 
-        public unsafe SpanTensor2<TT> GetTensorY<TT>()
-            where TT : unmanaged
-        {
-            return new SpanTensor2<TT>(GetChannelY<TT>(), _Height, _Width);
-        }
-
-        public unsafe SpanTensor2<TT> GetTensorZ<TT>()
-            where TT : unmanaged
-        {
-            return new SpanTensor2<TT>(GetChannelZ<TT>(), _Height, _Width);
-        }
-
-        public unsafe SpanTensor2<TT> GetTensorW<TT>()
-            where TT : unmanaged
-        {
-            return new SpanTensor2<TT>(GetChannelW<TT>(), _Height, _Width);
-        }
-
-        public unsafe Span<TT> GetChannelX<TT>()
-            where TT : unmanaged
-        {
-            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelX);
-        }
-
-        public unsafe Span<TT> GetChannelY<TT>()
-            where TT : unmanaged
-        {
-            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelY);
-        }
-
-        public unsafe Span<TT> GetChannelZ<TT>()
-            where TT : unmanaged
-        {
-            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelZ);
-        }
-
-        public unsafe Span<TT> GetChannelW<TT>()
-            where TT : unmanaged
-        {
-            return sizeof(T) < sizeof(TT) ? throw new ArgumentException(typeof(T).Name) : MMARSHAL.Cast<T, TT>(_ChannelW);
-        }
+        #region sampler filling API
 
         public void FitPixels<TSrcPixel>(BitmapSampler<TSrcPixel> source, BitmapTransform xform)
         where TSrcPixel : unmanaged
@@ -298,7 +495,243 @@ namespace InteropTypes.Tensors.Imaging
             xform.FillPixels(this, source);
         }
 
+        #endregion
+
+        #region nested type        
+
+        /// <summary>
+        /// Represents an accessor that allows reading and writing individual pixels in a standarized Vector4-as-RGBA style.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="TensorBitmap{T}.ScaledPixels"/> for access.
+        /// </remarks>
+        public readonly ref struct ScaledPixelsAccessor
+        {
+            #region lifecycle
+            internal ScaledPixelsAccessor(TensorBitmap<T> tensor)
+            {
+                _Tensor = tensor;
+                _Forward = tensor._ColorRanges.ToMultiplyAdd();
+                _Inverse = _Forward.GetInverse();
+            }
+
+            #endregion
+
+            #region data
+
+            private readonly TensorBitmap<T> _Tensor;
+            private readonly MultiplyAdd _Forward;
+            private readonly MultiplyAdd _Inverse;
+
+            #endregion
+
+            #region properties
+            public int Width => _Tensor.Width;
+            public int Height => _Tensor.Height;
+
+            #endregion
+
+            #region API
+
+            public void SetPixels<TOther>(TensorBitmap<TOther>.ScaledPixelsAccessor srcPixels)
+                where TOther : unmanaged, IConvertible
+            {
+                // the only optimization we can do here is to do a row transfer using an intermediate row buffer
+
+                if (true) // use ROWS
+                {
+                    Span<Vector4> transfer = stackalloc Vector4[this.Width];
+
+                    for (int y = 0; y < this.Height; ++y)
+                    {
+                        srcPixels.GetRowPixels(y, transfer);
+                        this.SetRowPixels(y, transfer);
+                    }
+
+                }
+                else // use individual pixels
+                {
+                    for (int y = 0; y < this.Height; ++y)
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            var value = srcPixels.GetPixelUnchecked(x, y);
+                            SetPixelUnchecked(x, y, value);
+                        }
+                    }
+                }
+            }
+
+            public Vector4 GetPixel(int x, int y)
+            {
+                x = Math.Clamp(x, 0, _Tensor.Width - 1);
+                y = Math.Clamp(y, 0, _Tensor.Height - 1);
+                return GetPixelUnchecked(x, y);
+            }
+            public void SetPixel(int x, int y, Vector4 value)
+            {
+                if (x < 0) return;
+                if (x >= _Tensor.Width) return;
+
+                if (y < 0) return;
+                if (y >= _Tensor.Height) return;
+
+                SetPixelUnchecked(x, y, value);
+            }
+
+            public void GetRowPixels(int y, Span<Vector4> dst)
+            {
+                if (_Tensor._PlanesCount == 0)
+                {
+                    var srcRow = _Tensor._Interleaved[y];
+
+                    if (_Inverse.IsIdentity)
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            dst[x] = _Tensor._ColorEncoding.ToScaledPixel(srcRow[x].Span);
+                        }
+                    }
+                    else
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            var value = _Tensor._ColorEncoding.ToScaledPixel(srcRow[x].Span);
+                            dst[x] = _Inverse.Transform(value);
+                        }
+                    }
+                }
+                else
+                {
+                    if (_Inverse.IsIdentity)
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            var value = _Tensor._Planes._GetScalarPixelUnchecked(x, y);                            
+                        }
+                    }
+                    else
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            var value = _Tensor._Planes._GetScalarPixelUnchecked(x, y);
+                            dst[x] = _Inverse.Transform(value);
+                        }
+                    }
+                }
+            }
+            public void SetRowPixels(int y, ReadOnlySpan<Vector4> src)
+            {
+                if (_Tensor._PlanesCount == 0)
+                {
+                    var dstRow = _Tensor._Interleaved[y];
+
+                    if (_Forward.IsIdentity)
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            src[x].CopyScaledPixelTo(dstRow[x].Span, _Tensor._ColorEncoding);
+                        }
+                    }
+                    else
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            var value = _Forward.Transform(src[x]);
+
+                            value.CopyScaledPixelTo(dstRow[x].Span, _Tensor._ColorEncoding);
+                        }
+                    }
+                }
+                else
+                {
+                    if (_Forward.IsIdentity)
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            _Tensor._Planes._SetScalarPixelUnchecked(x, y, src[x]);
+                        }
+                    }
+                    else
+                    {
+                        for (int x = 0; x < this.Width; ++x)
+                        {
+                            var value = _Forward.Transform(src[x]);
+
+                            _Tensor._Planes._SetScalarPixelUnchecked(x, y, value);
+                        }
+                    }
+                }
+            }
+
+            public Vector4 GetPixelUnchecked(int x, int y)
+            {
+                var v4 = _Tensor._PlanesCount == 0
+                    ? _Tensor._ColorEncoding.ToScaledPixel(_Tensor._Interleaved[y][x].Span)
+                    : _Tensor._Planes._GetScalarPixelUnchecked(x, y);
+                
+                return _Inverse.Transform(v4);
+            }
+            public void SetPixelUnchecked(int x, int y, Vector4 value)
+            {
+                value = _Forward.Transform(value);
+
+                if (_Tensor._PlanesCount == 0) value.CopyScaledPixelTo(_Tensor._Interleaved[y][x].Span, _Tensor._ColorEncoding);
+                else _Tensor._Planes._SetScalarPixelUnchecked(x, y, value);
+            }
+
+            #endregion
+        }
+
+        /// <summary>
+        /// Represents a context that is capable of Fill a <see cref="TensorBitmap{T}"/> using various transforms
+        /// </summary>
+        /// <remarks>
+        /// Objects implementing this interface usually wrap a source image
+        /// </remarks>
+        public interface IFactory
+        {
+            public (int Width, int Height) OriginalSize { get; }
+
+            /// <summary>
+            /// If called before a <see cref="TryFitPixelsToTensorBitmap(TensorBitmap{T}, float?)"/> call, it will cache the resulting image for subsequent calls.
+            /// </summary>        
+            public void CacheNext();
+
+            public bool TryTransferPixelsToTensorBitmap(TensorBitmap<T> dst)
+            {
+                return TryFitPixelsToTensorBitmap(dst, TRANSFORM.Identity);
+            }
+
+            public bool TryFitPixelsToTensorBitmap(TensorBitmap<T> dst, System.Drawing.RectangleF srcRect, float? aspectRatioscaleFactor = null)
+            {
+                var dstRect = new System.Drawing.RectangleF(0, 0, dst.Width, dst.Height);
+                var xform = _Transforms.GetFitMatrix(srcRect, dstRect, aspectRatioscaleFactor);
+
+                // TODO: if srcRect is outside OriginalSize, simply fill dst with black
+
+                return TryFitPixelsToTensorBitmap(dst, xform);
+            }
+
+            public bool TryFitPixelsToTensorBitmap(TensorBitmap<T> dst, float? aspectRatioscaleFactor = null)
+            {
+                TRANSFORM xform = GetFitMatrix(dst.Width, dst.Height, aspectRatioscaleFactor);
+
+                return TryFitPixelsToTensorBitmap(dst, xform);
+            }
+
+            public TRANSFORM GetFitMatrix(float dstWidth, float dstHeight, float? aspectRatioScaleFactor = null)
+            {
+                var srcRect = new System.Drawing.RectangleF(0, 0, OriginalSize.Width, OriginalSize.Height);
+                var dstRect = new System.Drawing.RectangleF(0, 0, dstWidth, dstHeight);
+
+                return _Transforms.GetFitMatrix(srcRect, dstRect, aspectRatioScaleFactor);
+            }
+
+            public bool TryFitPixelsToTensorBitmap(TensorBitmap<T> dst, TRANSFORM xform);
+        }
 
         #endregion
-    }       
+    }
+
 }

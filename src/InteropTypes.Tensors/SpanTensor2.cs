@@ -107,5 +107,94 @@ namespace InteropTypes.Tensors
                 }
             }
         }
+
+        public void FillFrom<TSrc>(ReadOnlySpanTensor2<TSrc> src, MultiplyAdd mad)
+            where TSrc : unmanaged
+        {
+            if (src.Dimensions.Dim1 > 4) throw new InvalidOperationException("this is intended to be used interpreting the tesor as a single row of pixels");
+
+            if (typeof(T) == typeof(float) || typeof(T) == typeof(System.Numerics.Vector3) || typeof(T) == typeof(System.Numerics.Vector4))
+            {
+                var dstSingles = this.Cast<float>();
+
+                if (typeof(TSrc) == typeof(float))
+                {
+                    _SpanTensor2Toolkit.Transfer(src.Cast<float>(), dstSingles, mad);
+                    return;
+                }
+
+                if (typeof(TSrc) == typeof(Byte))
+                {
+                    _SpanTensor2Toolkit.Transfer(src.Cast<byte>(), dstSingles, mad);
+                    return;
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+    }
+
+
+    static class _SpanTensor2Toolkit
+    {
+        public static void Transfer(ReadOnlySpanTensor2<float> src, SpanTensor2<float> dst, MultiplyAdd mad)
+        {
+            if (src.Dimensions != dst.Dimensions) throw new ArgumentException();            
+
+            switch (src.Dimensions.Dim1)
+            {
+                case 4:
+                    {
+                        var (mul, add) = mad.GetVector4();
+                        src.UpCast<System.Numerics.Vector4>().Span.MultiplyAddTo(mul, add, dst.UpCast<System.Numerics.Vector4>().Span);
+                        break;
+                    }
+
+                case 3:
+                    {
+                        var (mul, add) = mad.GetVector3();
+                        src.UpCast<System.Numerics.Vector3>().Span.MultiplyAddTo(mul, add, dst.UpCast<System.Numerics.Vector3>().Span);
+                        break;
+                    }
+                case 1:
+                    {
+                        var (mul, add) = mad.GetScalar();
+                        src.UpCast<float>().Span.MultiplyAddTo(mul, add, dst.UpCast<float>().Span);
+                        break;
+                    }
+                default: throw new ArgumentException("invalid dimensions", nameof(src));
+            }
+        }
+
+        public static void Transfer(ReadOnlySpanTensor2<byte> src, SpanTensor2<float> dst, MultiplyAdd mad)
+        {
+            if (src.Dimensions != dst.Dimensions) throw new ArgumentException();
+
+            var srcBytes = src.Cast<Byte>().Span;
+
+            switch (src.Dimensions.Dim1)
+            {
+                case 4:
+                    {
+                        var (mul, add) = mad.GetVector4();
+                        srcBytes.ScaledMultiplyAddTo(mul, add, dst.UpCast<System.Numerics.Vector4>().Span);
+                        break;
+                    }
+
+                case 3:
+                    {
+                        var (mul, add) = mad.GetVector3();
+                        srcBytes.ScaledMultiplyAddTo(mul, add, dst.UpCast<System.Numerics.Vector3>().Span);
+                        break;
+                    }
+                case 1:
+                    {
+                        var (mul, add) = mad.GetScalar();
+                        srcBytes.ScaledMultiplyAddTo(mul, add, dst.UpCast<float>().Span);
+                        break;
+                    }
+                default: throw new ArgumentException("invalid dimensions", nameof(src));
+            }
+        }
     }
 }

@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.Tensors.Imaging;
+
+using NUnit.Framework;
+
+using SixLabors.ImageSharp;
 
 using MEMMARSHAL = System.Runtime.InteropServices.MemoryMarshal;
 
@@ -30,6 +36,15 @@ namespace InteropTypes.Tensors
         }
 
         
+        public static void AttachToCurrentTest<T>(this TensorBitmap<T> bmp, string fileName)
+            where T:unmanaged, IConvertible
+        {
+            using (var dstImg = InteropTypes.Graphics.Backends.ImageSharpToolkit.ToImageSharpRgb24(bmp))
+            {
+                AttachmentInfo.From(fileName).WriteObject(f => dstImg.Save(f));
+            }
+        }
+
 
         public static void AttachToCurrentTest(this SpanTensor2<BGR24> tensor, string fileName)
         {

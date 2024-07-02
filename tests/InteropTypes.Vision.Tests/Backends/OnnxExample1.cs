@@ -317,7 +317,7 @@ namespace InteropTypes.Vision.Backends
                 MemoryBitmap<Pixel.BGR24> resultBitmap = default;
 
                 result
-                    .AsTensorBitmap(Tensors.Imaging.ColorEncoding.BGR)
+                    .AsTensorBitmap<float>(Tensors.Imaging.ColorEncoding.BGR)
                     .CopyTo(ref resultBitmap);                
                 
                 resultBitmap.Save(new AttachmentInfo(imagePath));
@@ -395,7 +395,7 @@ namespace InteropTypes.Vision.Backends
             srcTensor.CopyTo(dstTensor, new TensorSize2(512, 512), _kernel, new TensorIndices2(32,32));
 
             // copy the tensor data back to the dst image
-            dstTensor.AsTensorBitmap(Tensors.Imaging.ColorEncoding.L).CopyTo(ref dstImage);
+            dstTensor.AsTensorBitmap<Byte>(Tensors.Imaging.ColorEncoding.L).CopyTo(ref dstImage);            
         }
 
         void _kernel(SpanTensor2<Pixel.RGB24> src, SpanTensor2<Pixel.Luminance8> dst)
@@ -445,7 +445,7 @@ namespace InteropTypes.Vision.Backends
                 result[i].BoundingBox = new System.Drawing.Rectangle((int)bbox[0], (int)bbox[1], (int)bbox[2], (int)bbox[3]);
 
                 MemoryBitmap<Pixel.BGR24> bmp = default;
-                align_imgs[i].AsTensorBitmap(Tensors.Imaging.ColorEncoding.RGB).CopyTo(ref bmp);
+                align_imgs[i].AsTensorBitmap<Byte>(Tensors.Imaging.ColorEncoding.RGB).CopyTo(ref bmp);
                 result[i].AlignedImage = bmp;
 
                 var lmarks = lmks[i].ToArray();
