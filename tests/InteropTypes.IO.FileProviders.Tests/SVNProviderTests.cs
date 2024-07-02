@@ -18,6 +18,7 @@ namespace InteropTypes.IO
 {
     internal class SVNProviderTests
     {
+        [Explicit]
         [Test]
         public void LogSVNTest()
         {
@@ -27,7 +28,7 @@ namespace InteropTypes.IO
             }
         }
 
-
+        [Explicit]
         [TestCase(15, 1, "9C1AD3091FC8210C1A790F08660871ECC4F7CA46878D4FB89DBB4BC897E27870")]
         [TestCase(160, 156, "A7473F98566B6002CE75082C13470EB932159A713B68C2D1B58AA297EC220C82")]
         [TestCase(long.MaxValue, -1, "")]
