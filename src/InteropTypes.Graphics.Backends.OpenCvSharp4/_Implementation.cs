@@ -137,7 +137,7 @@ namespace InteropTypes.Graphics
             if (src.Info.IsEmpty) { wrap = null; return true; }
             if (!TryGetExactPixelFormat(src.Info.PixelFormat, out var fmt)) { wrap = null; return false; }
 
-            wrap = new CVMATRIX(src.Info.Height, src.Info.Width, fmt, src.Pointer, src.Info.StepByteSize);
+            wrap = CVMATRIX.FromPixelData(src.Info.Height, src.Info.Width, fmt, src.Pointer, src.Info.StepByteSize);
 
             return true;
         }
@@ -170,7 +170,7 @@ namespace InteropTypes.Graphics
 
         public static CVMATRIX ToMat(in System.Numerics.Matrix3x2 src)
         {
-            var dst = new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F, 1);
+            var dst = new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F);
             src.CopyTo(dst);
             return dst;
         }
@@ -191,7 +191,7 @@ namespace InteropTypes.Graphics
 
         public static void CopyTo(this in System.Numerics.Matrix3x2 src, ref CVMATRIX dst)
         {
-            if (dst == null) dst = new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F, 1);
+            if (dst == null) dst = new CVMATRIX(2, 3, CVDEPTHTYPE.CV_32F);
             else
             {
                 if (dst.Type() != CVDEPTHTYPE.CV_32F) throw new ArgumentOutOfRangeException(nameof(dst), "Type");

@@ -79,8 +79,8 @@ namespace InteropTypes.Vision.Backends
 
                 if (!fs.IsOpened()) return;
 
-                if (_CameraTransform == null) _CameraTransform = new CVMATRIX(3, 3, CVDEPTHTYPE.CV_32F, 1);
-                if (_CameraDistortion == null) _CameraDistortion = new CVMATRIX(1, 8, CVDEPTHTYPE.CV_32F, 1);
+                if (_CameraTransform == null) _CameraTransform = new CVMATRIX(3, 3, CVDEPTHTYPE.CV_32F);
+                if (_CameraDistortion == null) _CameraDistortion = new CVMATRIX(1, 8, CVDEPTHTYPE.CV_32F);
 
                 fs["cameraMatrix"].ReadMat(_CameraTransform);
                 fs["dist_coeffs"].ReadMat(_CameraDistortion);
@@ -97,8 +97,8 @@ namespace InteropTypes.Vision.Backends
 
                 if (!fs.IsOpened()) return;
 
-                if (_CameraTransform == null) _CameraTransform = new CVMATRIX(3, 3, CVDEPTHTYPE.CV_32F, 1);
-                if (_CameraDistortion == null) _CameraDistortion = new CVMATRIX(1, 8, CVDEPTHTYPE.CV_32F, 1);
+                if (_CameraTransform == null) _CameraTransform = new CVMATRIX(3, 3, CVDEPTHTYPE.CV_32F);
+                if (_CameraDistortion == null) _CameraDistortion = new CVMATRIX(1, 8, CVDEPTHTYPE.CV_32F);
 
                 fs["cameraMatrix"].ReadMat(_CameraTransform);
                 fs["dist_coeffs"].ReadMat(_CameraDistortion);
