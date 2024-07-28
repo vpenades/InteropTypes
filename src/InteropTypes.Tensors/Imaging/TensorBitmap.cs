@@ -479,8 +479,62 @@ namespace InteropTypes.Tensors.Imaging
 
         #region sampler filling API
 
+        public void FillPixels<TSrcElement>(TensorBitmap<TSrcElement> source, BitmapTransform xform)
+            where TSrcElement : unmanaged, IConvertible
+        {
+            if (source.NumPlanes > 0) throw new ArgumentException("source as planes not supported", nameof(source));
+
+            xform.ColorTransform = source._ColorRanges.ToMultiplyAdd().GetInverse() * xform.ColorTransform;
+
+            if (typeof(TSrcElement) == typeof(Byte))
+            {
+                var sourceTensor = source._Interleaved.Cast<Byte>();
+
+                switch (source.Encoding)
+                {
+                    case ColorEncoding.RGB:
+                    case ColorEncoding.BGR:
+                        var sampler3 = BitmapSampler<_PixelXYZ24>.From(source._Interleaved.UpCast<_PixelXYZ24>(), source.Encoding);
+                        FillPixels(sampler3, xform);
+                        return;
+
+                    case ColorEncoding.RGBA:
+                    case ColorEncoding.BGRA:
+                    case ColorEncoding.ARGB:
+                        var sampler4 = BitmapSampler<uint>.From(source._Interleaved.UpCast<uint>(), source.Encoding);
+                        FillPixels(sampler4, xform);
+                        return;
+
+                    default: throw new NotImplementedException();
+                }
+            }
+
+            if (typeof(TSrcElement) == typeof(float))
+            {
+                switch (source.Encoding)
+                {
+                    case ColorEncoding.RGB:
+                    case ColorEncoding.BGR:                        
+                        var sampler3 = BitmapSampler<Vector3>.From(source._Interleaved.UpCast<Vector3>(), source.Encoding);
+                        FillPixels(sampler3, xform);
+                        return;
+
+                    case ColorEncoding.RGBA:
+                    case ColorEncoding.BGRA:
+                    case ColorEncoding.ARGB:                        
+                        var sampler4 = BitmapSampler<Vector4>.From(source._Interleaved.UpCast<Vector4>(), source.Encoding);
+                        FillPixels(sampler4, xform);
+                        return;
+
+                    default: throw new NotImplementedException();
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
         public void FitPixels<TSrcPixel>(BitmapSampler<TSrcPixel> source, BitmapTransform xform)
-        where TSrcPixel : unmanaged
+            where TSrcPixel : unmanaged
         {
             var ww = (float)source.Width / (float)this._Width;
             var hh = (float)source.Height / (float)this._Height;
@@ -492,8 +546,10 @@ namespace InteropTypes.Tensors.Imaging
         public void FillPixels<TSrcPixel>(BitmapSampler<TSrcPixel> source, BitmapTransform xform)
             where TSrcPixel : unmanaged
         {
+            // most probably, the fastest way to process
+
             xform.FillPixels(this, source);
-        }
+        }        
 
         #endregion
 
