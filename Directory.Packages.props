@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AvaloniaVersion>11.1.0</AvaloniaVersion>
+    <AvaloniaVersion>11.1.1</AvaloniaVersion>
   </PropertyGroup>
   
   <ItemGroup>
@@ -126,7 +126,7 @@
     
     <PackageVersion Include="NUnit" Version="4.1.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.2.0" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     

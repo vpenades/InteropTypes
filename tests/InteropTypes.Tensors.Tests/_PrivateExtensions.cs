@@ -39,7 +39,7 @@ namespace InteropTypes.Tensors
         public static void AttachToCurrentTest<T>(this TensorBitmap<T> bmp, string fileName)
             where T:unmanaged, IConvertible
         {
-            using (var dstImg = InteropTypes.Graphics.Backends.ImageSharpToolkit.ToImageSharpRgb24(bmp))
+            using (var dstImg = bmp.ToImageSharpRgb24())
             {
                 AttachmentInfo.From(fileName).WriteObject(f => dstImg.Save(f));
             }

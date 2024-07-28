@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace InteropTypes.Tensors.Imaging
@@ -36,7 +37,7 @@ namespace InteropTypes.Tensors.Imaging
 
             using (var img = SixLabors.ImageSharp.Image.Load<TSrcPixel>(imgPath))
             {
-                var tfactory = InteropTypes.Graphics.Backends.ImageSharpToolkit.CreateTensorBitmapFactory<TSrcPixel,float>(img);
+                var tfactory = img.CreateTensorBitmapFactory<TSrcPixel,float>();
 
                 var dst = _CreateDst(usePlanes, dstEncoding, img.Width, img.Height);
                 tfactory.TryTransferPixelsToTensorBitmap(dst);

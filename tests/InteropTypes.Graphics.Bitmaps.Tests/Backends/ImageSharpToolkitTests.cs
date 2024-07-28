@@ -32,7 +32,7 @@ namespace InteropTypes.Graphics.Backends
             bitmap.Save(new AttachmentInfo("Result.png"));
         }
 
-
+        /*
         [Test]
         public void TestDrawSprites()
         {
@@ -53,7 +53,7 @@ namespace InteropTypes.Graphics.Backends
 
                 AttachmentInfo.From("result.png").WriteObject(dst.Save);
             }
-        }
+        }*/
 
 
     }

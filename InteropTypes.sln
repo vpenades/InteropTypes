@@ -163,6 +163,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Crypto.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors.OnnxRuntime", "src\InteropTypes.Tensors.OnnxRuntime\InteropTypes.Tensors.OnnxRuntime.csproj", "{52F37ED5-1EF8-401A-9F49-411CFB9D1B99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Tensors.ImageSharp", "src\InteropTypes.Tensors.ImageSharp\InteropTypes.Tensors.ImageSharp.csproj", "{39DE5999-C293-4C6D-A735-C6C2FD45FD1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -409,6 +411,10 @@ Global
 		{52F37ED5-1EF8-401A-9F49-411CFB9D1B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52F37ED5-1EF8-401A-9F49-411CFB9D1B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52F37ED5-1EF8-401A-9F49-411CFB9D1B99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39DE5999-C293-4C6D-A735-C6C2FD45FD1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DE5999-C293-4C6D-A735-C6C2FD45FD1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DE5999-C293-4C6D-A735-C6C2FD45FD1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DE5999-C293-4C6D-A735-C6C2FD45FD1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -473,6 +479,7 @@ Global
 		{4125863C-D491-4D0C-8344-B0E063CB1370} = {95C56366-7EDC-4DEC-B7A9-E8CA41231E27}
 		{13DE92F5-2C39-4734-9B6F-D2AEF737D3C4} = {95C56366-7EDC-4DEC-B7A9-E8CA41231E27}
 		{52F37ED5-1EF8-401A-9F49-411CFB9D1B99} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
+		{39DE5999-C293-4C6D-A735-C6C2FD45FD1F} = {227D251E-A653-47FC-AAF3-60FE3AD17C89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}

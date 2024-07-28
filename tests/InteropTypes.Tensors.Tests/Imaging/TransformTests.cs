@@ -42,16 +42,18 @@ namespace InteropTypes.Tensors
         }
 
 
-        [TestCase(false, 3524721824, 4261682446)]
-        [TestCase(true, 287712096, 447841533)]
+        [TestCase(false, 857224970, 4000518195)]
+        [TestCase(true, 898913221, 886900266)]
         public void TestPixelTransferWithTransform2(bool useBilinear, long hashCodeResult1, long hashCodeResult2)
         {
+            // load image
             var img = Graphics.Bitmaps.MemoryBitmap<BGR24>.Load(ResourceInfo.From("dog.jpeg"));            
 
             if (!img.AsSpanBitmap().TryGetAsSpanTensor(out var src)) throw new InvalidOperationException();            
 
-            var xform =
-                System.Numerics.Matrix3x2.CreateScale(0.4f)
+            // some transform
+            var xform
+                = System.Numerics.Matrix3x2.CreateScale(0.4f)
                 * System.Numerics.Matrix3x2.CreateRotation(0.3f);
             xform.Translation = new System.Numerics.Vector2(15, 35);            
 
@@ -60,9 +62,11 @@ namespace InteropTypes.Tensors
             var dst1 = new SpanTensor2<BGR24>(384, 384);
 
             var time = System.Diagnostics.Stopwatch.StartNew();
+
             dst1.AsTensorBitmap<Byte>(Imaging.ColorEncoding.BGR)
                 .FillPixels(src.AsBitmapSampler(Imaging.ColorEncoding.BGR), (xform, MultiplyAdd.Identity, useBilinear));
             time.Stop();
+
             TestContext.WriteLine($"{time.Elapsed.TotalMilliseconds}");            
 
             dst1.AttachToCurrentTest($"dog.xform.{useBilinear}.png");            

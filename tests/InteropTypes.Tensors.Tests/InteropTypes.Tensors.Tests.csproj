@@ -14,12 +14,13 @@
 
   <ItemGroup>
     <PackageReference Include="CodeSugar.Sys.IO.Sources" />
+    <PackageReference Include="MathNet.Numerics" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Codecs.STB\InteropTypes.Codecs.STB.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Tensors.ImageSharp\InteropTypes.Tensors.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Tensors.OnnxRuntime\InteropTypes.Tensors.OnnxRuntime.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
   </ItemGroup>  
