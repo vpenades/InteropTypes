@@ -8,12 +8,46 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Processors.Transforms;
+
+using SIZE = System.Drawing.Size;
+using RECT = System.Drawing.Rectangle;
+
+using XY = System.Numerics.Vector2;
+using XFORM = System.Numerics.Matrix3x2;
 
 namespace InteropTypes
 {
     static partial class _Implementation
     {
-        public static void DrawSpriteTo<TDstPixel, TSrcPixel>(Image<TDstPixel> target, Matrix3x2 spriteTransform, Image<TSrcPixel> sprite)
+        public static SixLabors.ImageSharp.Image<TPixel> CloneCropped<TPixel>(this SixLabors.ImageSharp.Image<TPixel> src, RECT srcRect)
+            where TPixel : unmanaged, SixLabors.ImageSharp.PixelFormats.IPixel<TPixel>
+        {
+            var dst = new SixLabors.ImageSharp.Image<TPixel>(srcRect.Width, srcRect.Height);
+
+            var p = new Point(-srcRect.X, -srcRect.Y);
+            dst.Mutate(dc => dc.DrawImage(src, p, 1));
+            return dst;
+
+            // ImageSharp's Crop is very strict
+            // var xRect = new SixLabors.ImageSharp.Rectangle(srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height);
+            // return src.Clone(dc => dc.Crop(xRect));
+        }
+
+        public static Image<TPixel> CloneTransformed<TPixel>(this Image<TPixel> src, SIZE dstSize, XFORM xform, IResampler sampler = null)
+            where TPixel : unmanaged, IPixel<TPixel>
+        {            
+            var srcRect = new SixLabors.ImageSharp.Rectangle(0, 0, src.Width, src.Height);
+            var xform4 = new System.Numerics.Matrix4x4(xform);
+            var dstSiz = new SixLabors.ImageSharp.Size(dstSize.Width, dstSize.Height);
+
+            sampler ??= KnownResamplers.Bicubic;
+
+            return src.Clone(dc => dc.Transform(srcRect, xform4, dstSiz, sampler));
+        }       
+
+        
+        public static void DrawSpriteTo<TDstPixel, TSrcPixel>(Image<TDstPixel> target, XFORM spriteTransform, Image<TSrcPixel> sprite)
             where TDstPixel : unmanaged, IPixel<TDstPixel>
             where TSrcPixel : unmanaged, IPixel<TSrcPixel>
         {
@@ -49,14 +83,14 @@ namespace InteropTypes
             // works for fonts and shapes, but NOT for images
             // target.Mutate(ctx => ctx.SetDrawingTransform(spriteTransform).DrawImage(sprite, 1));
 
-            Matrix3x2.Invert(spriteTransform, out var inverseTransform);
+            XFORM.Invert(spriteTransform, out var inverseTransform);
 
             void _process(Span<Vector4> dstSpan, Point value)
             {
                 for (int i = 0; i < dstSpan.Length; i++)
                 {
-                    var v = new System.Numerics.Vector2(i, value.Y);
-                    v = Vector2.Transform(v, inverseTransform);
+                    var v = new XY(i, value.Y);
+                    v = XY.Transform(v, inverseTransform);
 
                     var xx = Math.Clamp((int)v.X, 0, sprite.Width - 1);
                     var yy = Math.Clamp((int)v.Y, 0, sprite.Height - 1);

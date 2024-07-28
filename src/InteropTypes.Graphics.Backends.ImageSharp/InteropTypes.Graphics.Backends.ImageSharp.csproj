@@ -7,15 +7,13 @@
   </PropertyGroup>  
 
   <ItemGroup>
-    <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
-    <ProjectReference Include="..\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
+    <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />    
   </ItemGroup>
 
   <ItemGroup>    
     <PackageReference Include="MathNet.Numerics" />
     <PackageReference Include="SixLabors.ImageSharp" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" />
-    <PackageReference Include="CodeSugar.Tensors.Sources" PrivateAssets="all" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" />    
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
