@@ -34,7 +34,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.27.2" />
+    <PackageVersion Include="Google.Protobuf" Version="3.27.3" />
 
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.10" />
@@ -67,8 +67,8 @@
 
     <PackageVersion Include="Prism.Wpf" Version="8.1.97" />
 
-    <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.70" />
-    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.70" />
+    <PackageVersion Include="Microsoft.Maui.Graphics" Version="8.0.71" />
+    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="8.0.71" />
 
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
@@ -79,7 +79,7 @@
 
     <PackageVersion Include="SkiaSharp" Version="2.88.8" />
 
-    <PackageVersion Include="SvgNet" Version="3.3.6" />
+    <PackageVersion Include="SvgNet" Version="3.3.8" />
 
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
 
