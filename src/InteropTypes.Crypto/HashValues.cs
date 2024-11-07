@@ -337,6 +337,14 @@ namespace InteropTypes.Crypto
         }
 
         /// <summary>
+        /// Gets the <see href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming Distance</see> between the two hashes.
+        /// </summary>        
+        public static int HammingDistance(in Hash96 left, in Hash96 right)
+        {
+            return (left ^ right).GetEnabledBitsCount();
+        }
+
+        /// <summary>
         /// Gets the number of enabled bits.
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
@@ -355,7 +363,7 @@ namespace InteropTypes.Crypto
             }
 
             return count;
-        }
+        }        
 
         /// <summary>
         /// Checks whether the two values are similar, given how many bits match.
@@ -363,7 +371,7 @@ namespace InteropTypes.Crypto
         public static bool AreSimilar(in Hash96 left, in Hash96 right, int minBits)
         {
             System.Diagnostics.Debug.Assert(minBits >= 0);
-            return (left ^ right).GetEnabledBitsCount() <= minBits;
+            return HammingDistance(left, right) <= minBits;
         }
 
         public static IEqualityComparer<Hash96> GetComparer(int minBits, int hashIndex = -1)
@@ -813,6 +821,14 @@ namespace InteropTypes.Crypto
         }
 
         /// <summary>
+        /// Gets the <see href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming Distance</see> between the two hashes.
+        /// </summary>        
+        public static int HammingDistance(in Hash128 left, in Hash128 right)
+        {
+            return (left ^ right).GetEnabledBitsCount();
+        }
+
+        /// <summary>
         /// Gets the number of enabled bits.
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
@@ -831,7 +847,7 @@ namespace InteropTypes.Crypto
             }
 
             return count;
-        }
+        }        
 
         /// <summary>
         /// Checks whether the two values are similar, given how many bits match.
@@ -839,7 +855,7 @@ namespace InteropTypes.Crypto
         public static bool AreSimilar(in Hash128 left, in Hash128 right, int minBits)
         {
             System.Diagnostics.Debug.Assert(minBits >= 0);
-            return (left ^ right).GetEnabledBitsCount() <= minBits;
+            return HammingDistance(left, right) <= minBits;
         }
 
         public static IEqualityComparer<Hash128> GetComparer(int minBits, int hashIndex = -1)
@@ -1299,6 +1315,14 @@ namespace InteropTypes.Crypto
         }
 
         /// <summary>
+        /// Gets the <see href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming Distance</see> between the two hashes.
+        /// </summary>        
+        public static int HammingDistance(in Hash224 left, in Hash224 right)
+        {
+            return (left ^ right).GetEnabledBitsCount();
+        }
+
+        /// <summary>
         /// Gets the number of enabled bits.
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
@@ -1317,7 +1341,7 @@ namespace InteropTypes.Crypto
             }
 
             return count;
-        }
+        }        
 
         /// <summary>
         /// Checks whether the two values are similar, given how many bits match.
@@ -1325,7 +1349,7 @@ namespace InteropTypes.Crypto
         public static bool AreSimilar(in Hash224 left, in Hash224 right, int minBits)
         {
             System.Diagnostics.Debug.Assert(minBits >= 0);
-            return (left ^ right).GetEnabledBitsCount() <= minBits;
+            return HammingDistance(left, right) <= minBits;
         }
 
         public static IEqualityComparer<Hash224> GetComparer(int minBits, int hashIndex = -1)
@@ -1785,6 +1809,14 @@ namespace InteropTypes.Crypto
         }
 
         /// <summary>
+        /// Gets the <see href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming Distance</see> between the two hashes.
+        /// </summary>        
+        public static int HammingDistance(in Hash256 left, in Hash256 right)
+        {
+            return (left ^ right).GetEnabledBitsCount();
+        }
+
+        /// <summary>
         /// Gets the number of enabled bits.
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
@@ -1803,7 +1835,7 @@ namespace InteropTypes.Crypto
             }
 
             return count;
-        }
+        }        
 
         /// <summary>
         /// Checks whether the two values are similar, given how many bits match.
@@ -1811,7 +1843,7 @@ namespace InteropTypes.Crypto
         public static bool AreSimilar(in Hash256 left, in Hash256 right, int minBits)
         {
             System.Diagnostics.Debug.Assert(minBits >= 0);
-            return (left ^ right).GetEnabledBitsCount() <= minBits;
+            return HammingDistance(left, right) <= minBits;
         }
 
         public static IEqualityComparer<Hash256> GetComparer(int minBits, int hashIndex = -1)
@@ -2281,6 +2313,14 @@ namespace InteropTypes.Crypto
         }
 
         /// <summary>
+        /// Gets the <see href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming Distance</see> between the two hashes.
+        /// </summary>        
+        public static int HammingDistance(in Hash384 left, in Hash384 right)
+        {
+            return (left ^ right).GetEnabledBitsCount();
+        }
+
+        /// <summary>
         /// Gets the number of enabled bits.
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
@@ -2299,7 +2339,7 @@ namespace InteropTypes.Crypto
             }
 
             return count;
-        }
+        }        
 
         /// <summary>
         /// Checks whether the two values are similar, given how many bits match.
@@ -2307,7 +2347,7 @@ namespace InteropTypes.Crypto
         public static bool AreSimilar(in Hash384 left, in Hash384 right, int minBits)
         {
             System.Diagnostics.Debug.Assert(minBits >= 0);
-            return (left ^ right).GetEnabledBitsCount() <= minBits;
+            return HammingDistance(left, right) <= minBits;
         }
 
         public static IEqualityComparer<Hash384> GetComparer(int minBits, int hashIndex = -1)
@@ -2787,6 +2827,14 @@ namespace InteropTypes.Crypto
         }
 
         /// <summary>
+        /// Gets the <see href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming Distance</see> between the two hashes.
+        /// </summary>        
+        public static int HammingDistance(in Hash512 left, in Hash512 right)
+        {
+            return (left ^ right).GetEnabledBitsCount();
+        }
+
+        /// <summary>
         /// Gets the number of enabled bits.
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
@@ -2805,7 +2853,7 @@ namespace InteropTypes.Crypto
             }
 
             return count;
-        }
+        }        
 
         /// <summary>
         /// Checks whether the two values are similar, given how many bits match.
@@ -2813,7 +2861,7 @@ namespace InteropTypes.Crypto
         public static bool AreSimilar(in Hash512 left, in Hash512 right, int minBits)
         {
             System.Diagnostics.Debug.Assert(minBits >= 0);
-            return (left ^ right).GetEnabledBitsCount() <= minBits;
+            return HammingDistance(left, right) <= minBits;
         }
 
         public static IEqualityComparer<Hash512> GetComparer(int minBits, int hashIndex = -1)

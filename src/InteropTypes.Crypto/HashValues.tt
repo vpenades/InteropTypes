@@ -376,6 +376,14 @@ return true;
         }
 
         /// <summary>
+        /// Gets the <see href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming Distance</see> between the two hashes.
+        /// </summary>        
+        public static int HammingDistance(in Hash<#= __BitSize #> left, in Hash<#= __BitSize #> right)
+        {
+            return (left ^ right).GetEnabledBitsCount();
+        }
+
+        /// <summary>
         /// Gets the number of enabled bits.
         /// </summary>
         /// <returns>A count of enabled bits.</returns>
@@ -394,7 +402,7 @@ return true;
             }
 
             return count;
-        }
+        }        
 
         /// <summary>
         /// Checks whether the two values are similar, given how many bits match.
@@ -402,7 +410,7 @@ return true;
         public static bool AreSimilar(in Hash<#= __BitSize #> left, in Hash<#= __BitSize #> right, int minBits)
         {
             System.Diagnostics.Debug.Assert(minBits >= 0);
-            return (left ^ right).GetEnabledBitsCount() <= minBits;
+            return HammingDistance(left, right) <= minBits;
         }
 
         public static IEqualityComparer<Hash<#= __BitSize #>> GetComparer(int minBits, int hashIndex = -1)
