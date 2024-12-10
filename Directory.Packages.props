@@ -65,10 +65,7 @@
     
     <!-- Graphics Libraries -->
 
-    <PackageVersion Include="Prism.Wpf" Version="9.0.537" />
-
-    <PackageVersion Include="Microsoft.Maui.Graphics" Version="9.0.12" />
-    <PackageVersion Include="Microsoft.Maui.Graphics.Skia" Version="9.0.12" />
+    <PackageVersion Include="Prism.Wpf" Version="9.0.537" />    
 
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
