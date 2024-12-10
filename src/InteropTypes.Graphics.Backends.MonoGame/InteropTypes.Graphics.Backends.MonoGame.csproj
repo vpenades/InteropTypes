@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
     <LangVersion>10</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
@@ -12,21 +12,27 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- this is the last version supporting NetStandard2.0-->
-    <MonoGameLastNetStandardVersion>[3.8.0.1641]</MonoGameLastNetStandardVersion>
+    <!-- this is the last version supporting NetStandard2.0 -->
+    <MonoGameLastNetStandardVersion>[3.8.0.1641]</MonoGameLastNetStandardVersion>    
+    <!-- this is the last version supporting Net6 -->
+    <MonoGameLastNetSixVersion>[3.8.1.303]</MonoGameLastNetSixVersion>
   </PropertyGroup>
  
   <ItemGroup>
     <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />    
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" />    
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">    
-    <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" VersionOverride="$(MonoGameLastNetStandardVersion)" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageReference Update="MonoGame.Framework.DesktopGL" PrivateAssets="all" VersionOverride="$(MonoGameLastNetStandardVersion)" />
   </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+    <PackageReference Update="MonoGame.Framework.DesktopGL" PrivateAssets="all" VersionOverride="$(MonoGameLastNetSixVersion)" />    
+  </ItemGroup>  
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
