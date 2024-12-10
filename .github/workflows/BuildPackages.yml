@@ -26,8 +26,8 @@ jobs:
 
       # ---------------------------------------------  Workloads
 
-    - name: Install Workload
-      run: dotnet workload install android wasm-tools wasi-experimental  # ois and maui-ios are not supported in ubuntu machines https://github.com/dotnet/maui/issues/15929
+     # - name: Install Workload
+      # run: dotnet workload install android wasm-tools wasi-experimental  # ois and maui-ios are not supported in ubuntu machines https://github.com/dotnet/maui/issues/15929
 
       # ---------------------------------------------  checkout repo
 
