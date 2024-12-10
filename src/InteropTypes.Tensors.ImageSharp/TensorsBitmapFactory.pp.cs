@@ -24,6 +24,22 @@ namespace $rootnamespace$
     {
         #region API
 
+        public static TensorBitmap<TDstElement>.IFactory CreateTensorBitmapFactory<TDstElement>(this Image srcImage)            
+            where TDstElement : unmanaged, IConvertible
+        {
+            switch(srcImage)
+            {
+                case null: return null;
+                case Image<SIXLABORSPIXFMT.Rgb24> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Rgb24, TDstElement>(typedImage);
+                case Image<SIXLABORSPIXFMT.Bgr24> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Bgr24, TDstElement>(typedImage);
+                case Image<SIXLABORSPIXFMT.Rgba32> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Rgba32, TDstElement>(typedImage);
+                case Image<SIXLABORSPIXFMT.Bgra32> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Bgra32, TDstElement>(typedImage);
+                case Image<SIXLABORSPIXFMT.Argb32> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Argb32, TDstElement>(typedImage);
+                case Image<SIXLABORSPIXFMT.RgbaVector> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.RgbaVector, TDstElement>(typedImage);
+                default: throw new NotImplementedException(srcImage.GetType().Name);
+            }            
+        }
+
         public static TensorBitmap<TDstElement>.IFactory CreateTensorBitmapFactory<TSrcPixel, TDstElement>(this Image<TSrcPixel> srcImage)
             where TSrcPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TSrcPixel>
             where TDstElement : unmanaged, IConvertible
@@ -163,7 +179,7 @@ namespace $rootnamespace$
                 if (UseSixLaborsRotation)
                 {
                     // full transform with Sixlabors            
-                    using (var cloned = _Source.CloneTransformed(new System.Drawing.Size(key.DstWidth, key.DstHeight), xform))
+                    using (var cloned = _Source._CloneTransformed(new System.Drawing.Size(key.DstWidth, key.DstHeight), xform))
                     {
                         return new _DerivedImage<TSrcPixel>(cloned);
                     }
@@ -218,7 +234,9 @@ namespace $rootnamespace$
                 var minHeight = Math.Min(_Source.Height, dst.Height);
                 var minWidth = Math.Min(_Source.Width, dst.Width);
 
-                Span<Vector4> transferRow = stackalloc Vector4[minWidth];
+                Span<Vector4> transferRow = stackalloc Vector4[dst.Width];
+
+                transferRow.Fill(default);
 
                 for (int y = 0; y < minHeight; y++)
                 {
@@ -346,6 +364,4 @@ namespace $rootnamespace$
 
         #endregion
     }
-
-
 }

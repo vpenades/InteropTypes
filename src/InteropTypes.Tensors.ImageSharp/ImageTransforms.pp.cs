@@ -26,7 +26,7 @@ namespace $rootnamespace$
 {
     internal static partial class InteropTensorsForImageSharp
     {
-        public static SIXLABORS.Image<TPixel> CloneCropped<TPixel>(this SIXLABORS.Image<TPixel> src, RECT srcRect)
+        private static SIXLABORS.Image<TPixel> _CloneCropped<TPixel>(this SIXLABORS.Image<TPixel> src, RECT srcRect)
             where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
         {
             var dst = new SIXLABORS.Image<TPixel>(srcRect.Width, srcRect.Height);
@@ -40,7 +40,7 @@ namespace $rootnamespace$
             // return src.Clone(dc => dc.Crop(xRect));
         }
 
-        public static SIXLABORS.Image<TPixel> CloneTransformed<TPixel>(this SIXLABORS.Image<TPixel> src, SIZE dstSize, XFORM xform, IResampler sampler = null)
+        private static SIXLABORS.Image<TPixel> _CloneTransformed<TPixel>(this SIXLABORS.Image<TPixel> src, SIZE dstSize, XFORM xform, IResampler sampler = null)
             where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
         {            
             var srcRect = new SIXLABORS.Rectangle(0, 0, src.Width, src.Height);
@@ -51,9 +51,8 @@ namespace $rootnamespace$
 
             return src.Clone(dc => dc.Transform(srcRect, xform4, dstSiz, sampler));
         }       
-
         
-        public static void DrawSpriteTo<TDstPixel, TSrcPixel>(this SIXLABORS.Image<TDstPixel> target, XFORM spriteTransform, SIXLABORS.Image<TSrcPixel> sprite)
+        private static void _DrawSpriteTo<TDstPixel, TSrcPixel>(this SIXLABORS.Image<TDstPixel> target, XFORM spriteTransform, SIXLABORS.Image<TSrcPixel> sprite)
             where TDstPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TDstPixel>
             where TSrcPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TSrcPixel>
         {

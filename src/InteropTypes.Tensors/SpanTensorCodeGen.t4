@@ -11,7 +11,7 @@ public class SpanTensorCodeGen
 
 	private readonly Action<IEnumerable<string>> _LinesWriter;
   
-  public int Dimensions { get; }
+    public int Dimensions { get; }
 	public bool IsReadOnly { get; }
 
 	public SpanTensorCodeGen PlusOne => new SpanTensorCodeGen(_LinesWriter, Dimensions+1, IsReadOnly);
@@ -20,13 +20,15 @@ public class SpanTensorCodeGen
 	public string SpanTypeName => IsReadOnly ? "ReadOnlySpan<T>" : "Span<T>";
 
 	public string TensorSizeName => $"TensorSize{Dimensions}";
-
+	
 	public string WriteableClassName => $"SpanTensor{Dimensions}";
 	public string WriteableClassNamePlusOne => $"SpanTensor{Dimensions+1}";
 	public string WriteableClassNameMinusOne => $"SpanTensor{Dimensions-1}";
+
+	public string ReadOnlyClassName => $"ReadOnlySpanTensor{Dimensions}";
 	
 
-	public string ClassName => (IsReadOnly ? "ReadOnly" : String.Empty) + WriteableClassName;
+	public string ClassName => IsReadOnly ? ReadOnlyClassName : WriteableClassName;
 	public string ClassNamePlusOne => (IsReadOnly ? "ReadOnly" : String.Empty) + WriteableClassNamePlusOne;	
 	public string ClassNameMinusOne => (IsReadOnly ? "ReadOnly" : String.Empty) + WriteableClassNameMinusOne;	
 	
@@ -47,6 +49,7 @@ public class SpanTensorCodeGen
 		var lines = Enumerable.Empty<string>();
 
 		if (IsReadOnly) lines = lines.Concat( WriteImplicitConstructor() );
+		else lines = lines.Append($"public {ReadOnlyClassName}<T> AsReadOnly() => new {ReadOnlyClassName}<T>(this);");
 		
 		lines = lines.Concat( WriteContructors(string.Empty,"new T[_Dimensions.StepSize]") );
 		lines = lines.Concat( WriteContructors($"{SpanTypeName} data, ","data.Slice(0, _Dimensions.StepSize)") );

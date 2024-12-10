@@ -48,7 +48,7 @@ namespace $rootnamespace$
             return dstImage;
         }
 
-        public static void SaveToImageSharp<TPixel>(this SpanTensor2<TPixel> src, FINFO dst)
+        public static void SaveToImageSharp<TPixel>(this ReadOnlySpanTensor2<TPixel> src, FINFO dst)
             where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
         {
             using (var img = src.ToImageSharp())
@@ -57,15 +57,15 @@ namespace $rootnamespace$
             }
         }
 
-        public static void SaveToImageSharp(this SpanTensor2<XYZ> src, FINFO dst)
+        public static void SaveToImageSharp(this ReadOnlySpanTensor2<XYZ> srcRGB, FINFO dst)
         {
-            using (var img = src.ToImageSharp<SIXLABORSPIXFMT.Rgb24>())
+            using (var img = srcRGB.ToImageSharp<SIXLABORSPIXFMT.Rgb24>())
             {
                 img.Save(dst.FullName);
             }
         }
 
-        public static SIXLABORS.Image<TPixel> ToImageSharp<TPixel>(this SpanTensor2<TPixel> src)
+        public static SIXLABORS.Image<TPixel> ToImageSharp<TPixel>(this ReadOnlySpanTensor2<TPixel> src)
             where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
         {
             var dst = new SIXLABORS.Image<TPixel>(src.BitmapSize.Width, src.BitmapSize.Height);
@@ -73,17 +73,23 @@ namespace $rootnamespace$
             return dst;
         }
 
-        public static SIXLABORS.Image<TPixel> ToImageSharp<TPixel>(this SpanTensor2<XYZ> src)
+        public static SIXLABORS.Image<TPixel> ToImageSharp<TPixel>(this ReadOnlySpanTensor2<XYZ> srcRGB)
             where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
         {
-            var dst = new SIXLABORS.Image<TPixel>(src.BitmapSize.Width, src.BitmapSize.Height);
-            src.CopyTo(dst);
+            var dst = new SIXLABORS.Image<TPixel>(srcRGB.BitmapSize.Width, srcRGB.BitmapSize.Height);
+            srcRGB.CopyTo(dst);
             return dst;
         }
 
+        public static SIXLABORS.Image<TPixel> ToImageSharp<TPixel>(this ReadOnlySpanTensor2<XYZ> srcRGB, MultiplyAdd srcMAD)
+            where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
+        {
+            var dst = new SIXLABORS.Image<TPixel>(srcRGB.BitmapSize.Width, srcRGB.BitmapSize.Height);
+            srcRGB.CopyTo(srcMAD, dst);
+            return dst;
+        }
 
-
-        public static void CopyTo<TPixel>(this SpanTensor2<TPixel> src, SIXLABORS.Image<TPixel> dst)
+        public static void CopyTo<TPixel>(this ReadOnlySpanTensor2<TPixel> src, SIXLABORS.Image<TPixel> dst)
             where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
         {
             if (dst == null) throw new ArgumentNullException(nameof(dst));
@@ -100,29 +106,48 @@ namespace $rootnamespace$
             }
         }
 
-        public static void CopyTo<TPixel>(this SpanTensor2<XYZ> src, SIXLABORS.Image<TPixel> dst)
+        public static void CopyTo<TPixel>(this ReadOnlySpanTensor2<XYZ> srcRGB, SIXLABORS.Image<TPixel> dst)
+           where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
+        {
+            CopyTo(srcRGB, MultiplyAdd.Identity, dst);
+        }
+
+        public static void CopyTo<TPixel>(this ReadOnlySpanTensor2<XYZ> srcRGB, MultiplyAdd srcMAD, SIXLABORS.Image<TPixel> dst)
             where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
         {
             if (dst == null) throw new ArgumentNullException(nameof(dst));
 
-            var w = Math.Min(src.BitmapSize.Width, dst.Width);
-            var h = Math.Min(src.BitmapSize.Height, dst.Height);
+            var w = Math.Min(srcRGB.BitmapSize.Width, dst.Width);
+            var h = Math.Min(srcRGB.BitmapSize.Height, dst.Height);            
 
             var tmp = default(TPixel);
 
             for (int y = 0; y < h; y++)
             {
-                var srcRow = src.GetRowSpan(y).Slice(0, w);
+                var srcRow = srcRGB.GetRowSpan(y).Slice(0, w);
                 var dstRow = dst.DangerousGetPixelRowMemory(y).Span.Slice(0, w);
 
                 XYZW v4;
 
-                for (int x = 0; x < w; x++)
+                if (srcMAD.IsIdentity)
                 {
-                    v4 = new XYZW(srcRow[x], 1);
-                    tmp.FromScaledVector4(v4);
-                    dstRow[x] = tmp;
+                    for (int x = 0; x < w; x++)
+                    {
+                        v4 = new XYZW(srcRow[x], 1);
+                        tmp.FromScaledVector4(v4);
+                        dstRow[x] = tmp;
+                    }
                 }
+                else
+                {
+                    for (int x = 0; x < w; x++)
+                    {
+                        v4 = new XYZW(srcRow[x], 1);
+                        v4 = srcMAD.Transform(v4);
+                        tmp.FromScaledVector4(v4);
+                        dstRow[x] = tmp;
+                    }
+                }                
             }
         }
 

@@ -42,6 +42,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor1<T> AsReadOnly() => new ReadOnlySpanTensor1<T>(this);
         public SpanTensor1(TensorSize1 dims)
         {
             _Dimensions = dims;
@@ -243,6 +244,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor2<T> AsReadOnly() => new ReadOnlySpanTensor2<T>(this);
         public SpanTensor2(TensorSize2 dims)
         {
             _Dimensions = dims;
@@ -574,6 +576,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor3<T> AsReadOnly() => new ReadOnlySpanTensor3<T>(this);
         public SpanTensor3(TensorSize3 dims)
         {
             _Dimensions = dims;
@@ -905,6 +908,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor4<T> AsReadOnly() => new ReadOnlySpanTensor4<T>(this);
         public SpanTensor4(TensorSize4 dims)
         {
             _Dimensions = dims;
@@ -1236,6 +1240,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor5<T> AsReadOnly() => new ReadOnlySpanTensor5<T>(this);
         public SpanTensor5(TensorSize5 dims)
         {
             _Dimensions = dims;
@@ -1567,6 +1572,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor6<T> AsReadOnly() => new ReadOnlySpanTensor6<T>(this);
         public SpanTensor6(TensorSize6 dims)
         {
             _Dimensions = dims;
@@ -1898,6 +1904,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor7<T> AsReadOnly() => new ReadOnlySpanTensor7<T>(this);
         public SpanTensor7(TensorSize7 dims)
         {
             _Dimensions = dims;
@@ -2210,6 +2217,7 @@ namespace InteropTypes.Tensors
 
         #region lifecycle
 
+        public ReadOnlySpanTensor8<T> AsReadOnly() => new ReadOnlySpanTensor8<T>(this);
         public SpanTensor8(TensorSize8 dims)
         {
             _Dimensions = dims;

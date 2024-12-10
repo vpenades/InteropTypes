@@ -37,7 +37,7 @@ namespace InteropTypes.Tensors.Imaging
 
             using (var img = SixLabors.ImageSharp.Image.Load<TSrcPixel>(imgPath))
             {
-                var tfactory = img.CreateTensorBitmapFactory<TSrcPixel,float>();
+                var tfactory = img.CreateTensorBitmapFactory<float>();
 
                 var dst = _CreateDst(usePlanes, dstEncoding, img.Width, img.Height);
                 tfactory.TryTransferPixelsToTensorBitmap(dst);
