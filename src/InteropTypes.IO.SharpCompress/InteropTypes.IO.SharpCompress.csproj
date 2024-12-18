@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>
 
@@ -10,12 +10,6 @@
     <Compile Include="..\Shared\FileProviders.ReadOnlyDirectoryInfo.cs" Link="Collections\FileProviders.ReadOnlyDirectoryInfo.cs" />
   </ItemGroup>
 
-  <!--
-  <ItemGroup>
-    <InternalsVisibleTo Include="InteropTypes.IO.Tests"/>
-  </ItemGroup>
-  -->
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
@@ -23,6 +17,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />    
     <PackageReference Include="SharpCompress" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.1' ">
+    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
+    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

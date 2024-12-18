@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0;net6.0-windows;net8.0-android</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net6.0-windows;net8.0;net8.0-android</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>  
 
@@ -18,6 +18,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.1' ">
+    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
+    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0-windows' ">
+    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />
   </ItemGroup>
 
 

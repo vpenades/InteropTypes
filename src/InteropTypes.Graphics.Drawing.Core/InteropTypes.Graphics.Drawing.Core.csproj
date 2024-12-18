@@ -16,7 +16,7 @@
     </Description>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 

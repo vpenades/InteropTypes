@@ -16,9 +16,6 @@ using VENDOR = Avalonia;
 
 namespace InteropTypes.Graphics.Backends
 {
-    
-    
-
     internal partial class _AvaloniaResourceCache
     {
         #region data        

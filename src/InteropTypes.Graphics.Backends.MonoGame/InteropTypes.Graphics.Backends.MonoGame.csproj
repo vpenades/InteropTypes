@@ -38,6 +38,10 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' ">
+    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />    
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" /> 
