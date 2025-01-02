@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AvaloniaVersion>11.2.2</AvaloniaVersion>
+    <AvaloniaVersion>11.2.3</AvaloniaVersion>
   </PropertyGroup>
   
   <ItemGroup>
@@ -28,7 +28,7 @@
     <PackageVersion Include="System.Text.Json" Version="9.0.0" />
     <PackageVersion Include="System.Drawing.Common" Version="9.0.0" />
     <PackageVersion Include="System.Numerics.Tensors" Version="9.0.0" />    
-    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="9.0.0"/>
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="9.0.0" />
     
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.0" />
@@ -36,7 +36,7 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.29.1" />
+    <PackageVersion Include="Google.Protobuf" Version="3.29.2" />
 
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.13" />
@@ -122,11 +122,11 @@
 
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
     
-    <PackageVersion Include="NUnit" Version="4.2.2" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.4.0" />
+    <PackageVersion Include="NUnit" Version="4.3.2" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.5.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.3" />
     
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" />
