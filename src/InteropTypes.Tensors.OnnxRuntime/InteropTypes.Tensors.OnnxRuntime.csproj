@@ -29,10 +29,6 @@
     <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' ">
-    <PackageReference Include="Microsoft.ML.OnnxRuntime.Managed" VersionOverride="1.19.2" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Tensors\InteropTypes.Tensors.csproj" />
   </ItemGroup>

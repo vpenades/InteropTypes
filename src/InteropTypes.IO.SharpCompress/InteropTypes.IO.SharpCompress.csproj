@@ -17,15 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />    
     <PackageReference Include="SharpCompress" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.1' ">
-    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
-    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />
-  </ItemGroup>
+  </ItemGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.IO.Streams\InteropTypes.IO.Streams.csproj" />

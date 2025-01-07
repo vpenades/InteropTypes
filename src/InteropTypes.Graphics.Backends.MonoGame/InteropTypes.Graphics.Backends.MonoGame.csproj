@@ -9,14 +9,7 @@
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- this is the last version supporting NetStandard2.0 -->
-    <MonoGameLastNetStandardVersion>[3.8.0.1641]</MonoGameLastNetStandardVersion>    
-    <!-- this is the last version supporting Net6 -->
-    <MonoGameLastNetSixVersion>[3.8.1.303]</MonoGameLastNetSixVersion>
-  </PropertyGroup>
+  </PropertyGroup>  
  
   <ItemGroup>
     <Compile Include="..\Shared\ValueListSet.cs" Link="Collections\ValueListSet.cs" />    
@@ -24,23 +17,11 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Update="MonoGame.Framework.DesktopGL" PrivateAssets="all" VersionOverride="$(MonoGameLastNetStandardVersion)" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Update="MonoGame.Framework.DesktopGL" PrivateAssets="all" VersionOverride="$(MonoGameLastNetSixVersion)" />    
   </ItemGroup>  
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' ">
-    <PackageReference Update="Microsoft.Extensions.FileProviders.Abstractions" VersionOverride="8.0.0" />    
-  </ItemGroup>
+  </ItemGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />

@@ -144,5 +144,29 @@
     <PackageVersion Include="SharpSvn" Version="1.14003.290" />
     
   </ItemGroup>
+
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
+    <PackageVersion Update="System.Text.Json" Version="8.0.5" />
+    <PackageVersion Update="System.Drawing.Common" Version="8.0.0" />
+    <PackageVersion Update="System.Numerics.Tensors" Version="8.0.0" />
+    <PackageVersion Update="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+    <PackageVersion Update="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
+    <PackageVersion Update="Microsoft.ML.OnnxRuntime.Managed" Version="1.19.2" />
+    <PackageVersion Update="Microsoft.ML.OnnxRuntime.DirectML" Version="1.19.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageVersion Update="SixLabors.ImageSharp" Version="2.1.9" />
+    <PackageVersion Update="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageVersion Update="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
+    <PackageVersion Update="MonoGame.Framework.DesktopGL"  Version="3.8.1.303" />
+  </ItemGroup>  
   
 </Project>
