@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0;net6.0-windows;net8.0;net8.0-android</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net8.0;net6.0-windows;net8.0-android</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
   </PropertyGroup>  
 
