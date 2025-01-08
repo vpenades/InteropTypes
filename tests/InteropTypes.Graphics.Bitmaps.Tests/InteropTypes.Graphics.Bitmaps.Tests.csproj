@@ -23,11 +23,13 @@
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />    
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ZXing\InteropTypes.Graphics.Backends.ZXing.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.Avalonia\InteropTypes.Graphics.Backends.Avalonia.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4.Windows" />    
+    <PackageReference Include="OpenCvSharp4.Windows" />
+    <PackageReference Include="Avalonia.Headless.NUnit" />
   </ItemGroup>
 
   <ItemGroup>    

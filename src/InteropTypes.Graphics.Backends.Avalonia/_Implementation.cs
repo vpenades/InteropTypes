@@ -27,6 +27,12 @@ namespace InteropTypes.Graphics.Backends
 
         public static bool TryGetBitmapInfo(AVABITMAP image, out BitmapInfo binfo)
         {
+            if (image.Format == null || image.AlphaFormat == null)
+            {
+                binfo = default;
+                return false;
+            }
+
             var fmt = ToPixelFormatAlpha(image.Format ?? default, false);
 
             binfo = new BitmapInfo(image.PixelSize.Width, image.PixelSize.Height, fmt);
@@ -45,6 +51,14 @@ namespace InteropTypes.Graphics.Backends
             }
 
             dst.AsSpanBitmap().PinWritablePointer(_copyPixels);
+        }
+
+        public static MemoryBitmap ToMemoryBitmap(AVARWBITMAP src)
+        {
+            using (var srcLock = src.Lock())
+            {
+                return AsPointerBitmap(srcLock).AsSpanBitmap().ToMemoryBitmap();
+            }
         }
 
         public static void CopyPixels(MemoryBitmap src, AVARWBITMAP dst)
