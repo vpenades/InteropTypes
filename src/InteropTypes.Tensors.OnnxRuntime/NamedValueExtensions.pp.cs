@@ -5,13 +5,11 @@
 using System;
 using System.Linq;
 using System.Numerics;
-using InteropTypes.Tensors;
 
 using ONNX = Microsoft.ML.OnnxRuntime;
 using ONNXTENSORS = Microsoft.ML.OnnxRuntime.Tensors;
 
 using NAMEDVALUE = Microsoft.ML.OnnxRuntime.NamedOnnxValue;
-
 
 #if INTEROPTYPES_USEINTEROPNAMESPACE
 namespace InteropTypes.Tensors
