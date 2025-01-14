@@ -16,17 +16,17 @@ namespace InteropTypes.Graphics.Backends
         [Test]
         public void TestRescale()
         {
-            var bitmap = MemoryBitmap.Load(ResourceInfo.From("shannon.jpg"), InteropTypes.Codecs.GDICodec.Default);
+            var bitmap = MemoryBitmap.Load(ResourceInfo.From("shannon.jpg"), InteropTypes.Codecs.MagicScalerCodec.Default);
 
             bitmap = MagicScalerToolkit.Rescale(bitmap, 30, 30);
 
-            AttachmentInfo.From("result.jpg").WriteObject(f => bitmap.Save(f));
+            AttachmentInfo.From("result.jpg").WriteObject(f => bitmap.Save(f, InteropTypes.Codecs.MagicScalerCodec.Default));
         }
 
         [Test]
         public void TestTransform()
         {
-            var bitmap = MemoryBitmap.Load(ResourceInfo.From("shannon.jpg"), InteropTypes.Codecs.GDICodec.Default);
+            var bitmap = MemoryBitmap.Load(ResourceInfo.From("shannon.jpg"), InteropTypes.Codecs.MagicScalerCodec.Default);
 
             var xform = Matrix3x2.CreateScale(0.3f) * Matrix3x2.CreateRotation(0.3f) * Matrix3x2.CreateTranslation(20, 20);
 
@@ -36,7 +36,7 @@ namespace InteropTypes.Graphics.Backends
 
             var result = MagicScalerToolkit.ToMemoryBitmap(xformer);
 
-            AttachmentInfo.From("result.jpg").WriteObject(f => result.Save(f));
+            AttachmentInfo.From("result.jpg").WriteObject(f => result.Save(f, InteropTypes.Codecs.MagicScalerCodec.Default));
         }
     }
 }
