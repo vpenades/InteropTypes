@@ -4,6 +4,12 @@ using System.Text;
 
 namespace InteropTypes.Tensors
 {
+    /// <summary>
+    /// Calculates the Crc32 checksum of an array
+    /// </summary>
+    /// <remarks>
+    /// Used to calculate the Checksum of the contents of a tensor
+    /// </remarks>
     struct Crc32
     {
         #region constants
@@ -29,12 +35,16 @@ namespace InteropTypes.Tensors
 
         #endregion
 
+        #region constructors
+
         public static Crc32 Create()
         {
             var crc = new Crc32();
             crc.Reset();
             return crc;
         }
+
+        #endregion
 
         #region data
 
@@ -43,6 +53,8 @@ namespace InteropTypes.Tensors
         public uint Value => ~_crc;
 
         #endregion
+
+        #region API
 
         public static uint ComputeChecksum<T>(Span<T> input) where T:unmanaged
         {
@@ -94,5 +106,7 @@ namespace InteropTypes.Tensors
                 _crc = (_crc >> 8) ^ CrcTable[index];
             }            
         }
+
+        #endregion
     }
 }
