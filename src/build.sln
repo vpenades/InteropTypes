@@ -63,6 +63,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Vision.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors.ImageSharp", "InteropTypes.Tensors.ImageSharp\InteropTypes.Tensors.ImageSharp.csproj", "{3E665254-D674-4555-B6E5-42F66CAB3965}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Backends.MagicScaler", "InteropTypes.Graphics.Backends.MagicScaler\InteropTypes.Graphics.Backends.MagicScaler.csproj", "{CAD165C6-B927-491B-B2C5-922830FB728E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -189,6 +191,10 @@ Global
 		{3E665254-D674-4555-B6E5-42F66CAB3965}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E665254-D674-4555-B6E5-42F66CAB3965}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E665254-D674-4555-B6E5-42F66CAB3965}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAD165C6-B927-491B-B2C5-922830FB728E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAD165C6-B927-491B-B2C5-922830FB728E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAD165C6-B927-491B-B2C5-922830FB728E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAD165C6-B927-491B-B2C5-922830FB728E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

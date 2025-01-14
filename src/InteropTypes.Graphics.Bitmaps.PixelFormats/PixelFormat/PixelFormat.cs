@@ -181,6 +181,12 @@ namespace InteropTypes.Graphics.Bitmaps
 
         #region data
 
+        /// <summary>
+        /// The <see cref="UInt32"/> code associated with this pixel format
+        /// </summary>
+        /// <remarks>
+        /// When using in a Switch-Case block, use the predefined codes, ex: <see cref="Pixel.BGR24.Code"/>
+        /// </remarks>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Runtime.InteropServices.FieldOffset(0)]
         public readonly UInt32 Code;

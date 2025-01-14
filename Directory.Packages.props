@@ -71,6 +71,8 @@
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
 
+    <PackageVersion Include="PhotoSauce.MagicScaler" Version="0.15.0" />
+
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
@@ -159,7 +161,7 @@
     <PackageVersion Update="Microsoft.ML.OnnxRuntime.Managed" Version="1.19.2" />
     <PackageVersion Update="Microsoft.ML.OnnxRuntime.DirectML" Version="1.19.2" />
     <PackageVersion Update="CommunityToolkit.Mvvm" Version="8.3.2" />
-    
+    <PackageVersion Update="PhotoSauce.MagicScaler" Version="0.14.2" />    
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
