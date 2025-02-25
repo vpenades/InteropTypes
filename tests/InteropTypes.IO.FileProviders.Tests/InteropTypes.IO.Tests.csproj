@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.Crypto\InteropTypes.Crypto.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.IO.FilePreviews\InteropTypes.IO.FilePreviews.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders.SVN\InteropTypes.IO.FileProviders.SVN.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.FileProviders\InteropTypes.IO.FileProviders.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.IO.SharpCompress\InteropTypes.IO.SharpCompress.csproj" />

@@ -1,0 +1,6 @@
+SHGetFileInfo
+SHCreateItemFromParsingName
+DestroyIcon
+DeleteObject
+IShellItemImageFactory
+IThumbnailProvider
