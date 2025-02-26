@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InteropTypes.Tensors.ImageS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.IO.FilePreviews", "InteropTypes.IO.FilePreviews\InteropTypes.IO.FilePreviews.csproj", "{1BF2203E-4D75-4653-A634-1074A67B304F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Backends.MagicScaler", "InteropTypes.Graphics.Backends.MagicScaler\InteropTypes.Graphics.Backends.MagicScaler.csproj", "{7EBAD3A5-A346-46AB-8E3A-CF780F79F7CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +197,10 @@ Global
 		{1BF2203E-4D75-4653-A634-1074A67B304F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BF2203E-4D75-4653-A634-1074A67B304F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BF2203E-4D75-4653-A634-1074A67B304F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EBAD3A5-A346-46AB-8E3A-CF780F79F7CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EBAD3A5-A346-46AB-8E3A-CF780F79F7CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EBAD3A5-A346-46AB-8E3A-CF780F79F7CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EBAD3A5-A346-46AB-8E3A-CF780F79F7CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
