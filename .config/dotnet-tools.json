@@ -21,13 +21,13 @@
       ]
     },
     "Microsoft.VisualStudio.SlnGen.Tool": {
-      "version": "12.0.3",
+      "version": "12.0.15",
       "commands": [
         "slngen"
       ]
     },
     "SourceNugetPackageBuilder.Tool": {
-      "version": "1.0.0-pre-20240424-132602",
+      "version": "1.0.0-pre-20250109-155317",
       "commands": [
         "PackAsSourcesNuget"
       ]

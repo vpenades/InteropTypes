@@ -23,12 +23,17 @@
   <PropertyGroup>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
+  
+  <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->
+  <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/prepare-libraries-for-trimming -->
+  <!-- https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/trimming-unsupported-targetframework -->
+  <!-- https://github.com/NuGetPackageExplorer/NuGetPackageExplorer/issues/1703 -->
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   
