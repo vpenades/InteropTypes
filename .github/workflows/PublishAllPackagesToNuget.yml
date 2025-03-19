@@ -40,6 +40,9 @@ jobs:
       run: dotnet nuget push "InteropTypes.Graphics.Backends.GLTF.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
 
     - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Graphics.Backends.Avalonia.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
       run: dotnet nuget push "InteropTypes.Graphics.Backends.SpanBitmap.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
 
     - name: Push to NuGet

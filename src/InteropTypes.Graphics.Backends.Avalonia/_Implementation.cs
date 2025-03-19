@@ -93,6 +93,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static AVABITMAP CreateAvaloniaBitmap(PointerBitmap src)
         {
+            if (src.IsEmpty) return null;
+
             var (color, alpha) = ToPixelFormat(src.PixelFormat);
 
             return new AVABITMAP(color, alpha, src.Pointer, new AVAPIXSIZE(src.Width, src.Height), new AVAVECTOR2(96, 96), src.StepByteSize);
