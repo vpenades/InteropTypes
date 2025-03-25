@@ -41,6 +41,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static void CopyPixels(AVABITMAP src,  MemoryBitmap dst)
         {
+            if (src == null) return;
+
             // https://github.com/AvaloniaUI/Avalonia/issues/12169            
 
             var srcRect = new AVAPIXRECT(0, 0, src.PixelSize.Width, src.PixelSize.Height);
@@ -55,6 +57,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static MemoryBitmap ToMemoryBitmap(AVARWBITMAP src)
         {
+            if (src == null) return default;
+
             using (var srcLock = src.Lock())
             {
                 return AsPointerBitmap(srcLock).AsSpanBitmap().ToMemoryBitmap();
@@ -63,6 +67,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static void CopyPixels(MemoryBitmap src, AVARWBITMAP dst)
         {
+            if (src.IsEmpty) return;
+
             using (var dstLock = dst.Lock())
             {
                 var dstPtr = AsPointerBitmap(dstLock);
@@ -72,6 +78,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static void CopyPixels(SpanBitmap src, AVARWBITMAP dst)
         {
+            if (src.IsEmpty) return;
+
             using (var dstLock = dst.Lock())
             {
                 var dstPtr = AsPointerBitmap(dstLock);
@@ -81,6 +89,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static PointerBitmap AsPointerBitmap(ILockedFramebuffer frameBuffer)
         {
+            if (frameBuffer == null) return default;
+
             var dstFmt = ToPixelFormatAlpha(frameBuffer.Format);
             var bmpInfo = new BitmapInfo(frameBuffer.Size.Width, frameBuffer.Size.Height, dstFmt, frameBuffer.RowBytes);
             return new PointerBitmap(frameBuffer.Address, bmpInfo);
@@ -88,6 +98,8 @@ namespace InteropTypes.Graphics.Backends
 
         public static AVABITMAP CreateAvaloniaBitmap(SpanBitmap src)
         {
+            if (src.IsEmpty) return null;
+
             return src.PinReadablePointer(CreateAvaloniaBitmap);            
         }
 
