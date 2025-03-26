@@ -40,8 +40,6 @@
 
   <ItemGroup>
     <PackageReference Remove="ErrorProne.NET.Structs" />
-  </ItemGroup>
-
-  
+  </ItemGroup>  
 
 </Project>

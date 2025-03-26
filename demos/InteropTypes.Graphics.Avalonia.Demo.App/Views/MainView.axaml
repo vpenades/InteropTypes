@@ -5,44 +5,50 @@
              xmlns:vm="clr-namespace:InteropTypes.ViewModels"
              xmlns:l="clr-namespace:InteropTypes.Views"
              xmlns:interop="urn:InteropTypes"
+             xmlns:demo="using:InteropTypes"
+             xmlns:drawing="using:InteropTypes.Graphics.Backends.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="InteropTypes.Views.MainView"
-             x:DataType="vm:MainViewModel">
-  
+             x:DataType="demo:AppMVVM">
+
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
-  </Design.DataContext>  
+  </Design.DataContext>
 
   <TabControl>
-    
+
     <TabItem Header="Avalonia Controls">
       <StackPanel>
-        <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button Content="Hello World" HorizontalAlignment="Center" />
         <ProgressBar Width="100" Height="10" />
       </StackPanel>
     </TabItem>
-    
+
     <TabItem Header="File System">
       <StackPanel>
         <interop:FolderNavBar x:Name="myNavBar" />
         <interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
       </StackPanel>
     </TabItem>
-    
-    <TabItem Header="Sprites2D">
-      <DockPanel>
-        <TextBlock Text="Interop Sprites" DockPanel.Dock="Top" />
-        <Border BorderBrush="Red" BorderThickness="5" >
-          <Viewbox>            
-            <interop:Canvas2DView x:Name="myCanvas" Width="800" Height="600" OnRender="OnRender" RenderFrameRate="30" />            
-          </Viewbox>            
-        </Border>
-      </DockPanel>
+
+    <TabItem Header="Sprites 2D">
+      <drawing:Canvas2DView Canvas="{Binding Canvas2}" />
     </TabItem>
-    
+
+    <TabItem Header="Scene 3D">
+
+      <drawing:Scene3DView Scene="{Binding Rockets}" >
+        <drawing:Scene3DView.ViewportTemplate>
+          <drawing:Scene3DViewportTemplate>
+            <demo:CustomCamera3DPanel UpDirectionIsZ="true" FrameRate="30" />
+          </drawing:Scene3DViewportTemplate>
+        </drawing:Scene3DView.ViewportTemplate>
+      </drawing:Scene3DView>
+      
+    </TabItem>
+
   </TabControl>
 
 </UserControl>

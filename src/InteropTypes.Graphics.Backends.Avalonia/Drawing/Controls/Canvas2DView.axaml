@@ -1,0 +1,25 @@
+﻿<ControlTheme x:Class="InteropTypes.Graphics.Backends.Controls.Canvas2DViewDefaultTheme"
+              xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:controls="using:InteropTypes.Graphics.Backends.Controls"
+              TargetType="controls:Canvas2DView">
+
+  <Setter Property="Background">
+    <LinearGradientBrush StartPoint="50%,0%" EndPoint="50%,100%">
+      <GradientStop Color="DarkBlue" Offset="0" />
+      <GradientStop Color="SkyBlue" Offset="1" />
+    </LinearGradientBrush>
+  </Setter>
+
+  <Setter Property="Template">
+    <ControlTemplate TargetType="controls:Canvas2DView">
+      <Border Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              Padding="{TemplateBinding Padding}">
+        <ContentPresenter x:Name="PART_Presenter" Content="{TemplateBinding Viewport}" />
+      </Border>
+    </ControlTemplate>
+  </Setter>
+
+</ControlTheme>

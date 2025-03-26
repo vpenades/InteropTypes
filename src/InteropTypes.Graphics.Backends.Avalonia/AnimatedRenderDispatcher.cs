@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,37 +13,31 @@ namespace InteropTypes.Graphics.Backends
     /// <summary>
     /// helper class used to force a render update on a <see cref="System.Windows.FrameworkElement"/>
     /// </summary>
+    /// <remarks>
+    /// Maybe this is achieved better using Avalonia Behaviors
+    /// </remarks>
     struct _AnimatedRenderDispatcher
     {
         #region lifecycle
-        public _AnimatedRenderDispatcher(System.Windows.FrameworkElement element, TimeSpan interval)
+        public _AnimatedRenderDispatcher(Control element, TimeSpan interval)
         {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(element))
-            {
-                this = default;
-                return;
-            }
-
-            if (element == null) throw new ArgumentNullException(nameof(element));
             if (interval <= TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(interval));
 
             _Timer = null;
-            _Parent = element;
+            _Parent = element ?? throw new ArgumentNullException(nameof(element));
             _Interval = interval;
 
             element.Loaded += _Loaded;
             element.Unloaded -= _Unloaded;
         }
 
-        private void _Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void _Loaded(object sender, RoutedEventArgs e)
         {
-            _Timer = new System.Windows.Threading.DispatcherTimer(System.Windows.Threading.DispatcherPriority.Normal, _Parent.Dispatcher);
-            _Timer.Interval = this._Interval;
-            _Timer.Tick += _Timer_Tick;
+            _Timer = new Avalonia.Threading.DispatcherTimer(_Interval, Avalonia.Threading.DispatcherPriority.Normal, _Timer_Tick);
             _Timer.Start();
         }
 
-        private void _Unloaded(object sender, System.Windows.RoutedEventArgs e)
+        private void _Unloaded(object sender, RoutedEventArgs e)
         {
             Release();
         }
@@ -54,13 +52,13 @@ namespace InteropTypes.Graphics.Backends
 
         #region data
 
-        private System.Windows.FrameworkElement _Parent;
+        private Visual _Parent;
         private TimeSpan _Interval;
-        private System.Windows.Threading.DispatcherTimer _Timer;
+        private Avalonia.Threading.DispatcherTimer _Timer;
 
         #endregion
 
-        #region loop        
+        #region loop
 
         private void _Timer_Tick(object sender, EventArgs e)
         {

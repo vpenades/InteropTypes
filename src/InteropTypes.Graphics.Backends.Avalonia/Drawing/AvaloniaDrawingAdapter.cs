@@ -19,7 +19,7 @@ using FONTSTYLE = InteropTypes.Graphics.Drawing.FontStyle;
 using POINT2 = InteropTypes.Graphics.Drawing.Point2;
 
 
-namespace InteropTypes.Graphics.Backends.Drawing
+namespace InteropTypes.Graphics.Backends
 {
     /// <summary>
     /// Wraps a <see cref="AVACONTEXT"/> and

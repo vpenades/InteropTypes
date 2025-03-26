@@ -92,9 +92,7 @@
                 
                 
             </Border>            
-        </TabItem>
-
-        
+        </TabItem>        
 
     </TabControl>
 </Window>

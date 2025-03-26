@@ -41,13 +41,13 @@ namespace InteropTypes.Graphics.Backends.WPF
 
         #region dependency properties
 
-        private static readonly PropertyFactory<Canvas2DView> _PropFactory;
-
-        static readonly StaticProperty<DRAWABLE> CanvasProperty = _PropFactory.RegisterCallback<DRAWABLE>(nameof(Canvas), null);
+        private static readonly PropertyFactory<Canvas2DView> _PropFactory;        
 
         static readonly StaticProperty<CAMERATEMPLATE> ViewportTemplateProperty = _PropFactory.RegisterCallback<CAMERATEMPLATE>(nameof(ViewportTemplate), null);
 
         static readonly StaticProperty<Primitives.Canvas2DViewport> ViewportProperty = _PropFactory.RegisterCallback<Primitives.Canvas2DViewport>(nameof(Viewport), null);
+
+        static readonly StaticProperty<DRAWABLE> CanvasProperty = _PropFactory.RegisterCallback<DRAWABLE>(nameof(Canvas), null);
 
         #endregion
 

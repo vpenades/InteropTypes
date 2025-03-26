@@ -11,6 +11,8 @@ public partial class MainView : UserControl
     {
         InitializeComponent();
 
+        this.DataContext = new InteropTypes.AppMVVM();
+
         this.Loaded += MainView_Loaded;
     }
 
