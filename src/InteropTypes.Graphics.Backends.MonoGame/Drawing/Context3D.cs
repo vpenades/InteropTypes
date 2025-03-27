@@ -26,7 +26,7 @@ namespace InteropTypes.Graphics.Backends
         public void Dispose()
         {
             SetPassThroughTarget(null);
-            Interlocked.Exchange(ref _Effect3D, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _Effect3D, null)?.Dispose();
             _Device = null;
         }
 

@@ -105,7 +105,7 @@ namespace InteropTypes.Graphics.Backends
             throw new NotImplementedException($"Unknown source: {imageSource}");
         }
 
-        private static Texture2D _loadTexture(GraphicsDevice gd, Func<Stream> openDocFunc)
+        private static Texture2D _loadTexture(GraphicsDevice gd, Func<System.IO.Stream> openDocFunc)
         {
             Texture2D tex;
 

@@ -29,8 +29,8 @@ namespace InteropTypes.Graphics.Backends
 
             _Device = null;
 
-            Interlocked.Exchange(ref _Effect, null)?.Dispose();
-            Interlocked.Exchange(ref _Textures, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _Effect, null)?.Dispose();
+            System.Threading.Interlocked.Exchange(ref _Textures, null)?.Dispose();
 
             _CurrTexture = null;
 

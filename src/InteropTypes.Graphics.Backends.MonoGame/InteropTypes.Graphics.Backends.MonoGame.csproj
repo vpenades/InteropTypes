@@ -5,10 +5,6 @@
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
     <LangVersion>10</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>  
  
   <ItemGroup>
