@@ -34,6 +34,9 @@ jobs:
       run: dotnet nuget push "InteropTypes.Graphics.Backends.GDI.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
 
     - name: Push to NuGet
+      run: dotnet nuget push "InteropTypes.Graphics.Backends.MonoGame.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
+
+    - name: Push to NuGet
       run: dotnet nuget push "InteropTypes.Graphics.Backends.WPF.*.nupkg" --api-key ${{secrets.InteropTypes_PublishToNuget}} --source https://api.nuget.org/v3/index.json
 
     - name: Push to NuGet
