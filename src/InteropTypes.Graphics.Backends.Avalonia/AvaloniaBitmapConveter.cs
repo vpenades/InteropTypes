@@ -10,7 +10,7 @@ using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Backends
 {
-    class AvaloniaBitmapConverter : IValueConverter
+    public class AvaloniaBitmapConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
