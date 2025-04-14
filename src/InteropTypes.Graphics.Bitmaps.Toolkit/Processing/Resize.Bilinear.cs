@@ -16,6 +16,68 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
             {
                 dst.SetPixels(0, 0, src);
                 return;
+            }            
+
+            if (dst.PixelFormat == Pixel.Luminance8.Format)
+            {
+                var dstX = dst.OfType<Pixel.Luminance8>();
+
+                switch (src.PixelFormat.Code)
+                {
+                    case Pixel.Luminance8.Code: _FitPixels3(src.OfType<Pixel.Luminance8>(), dstX, transform); return;
+                    case Pixel.BGR565.Code: _FitPixels3(src.OfType<Pixel.BGR565>(), dstX, transform); return;
+                    case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
+                    case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
+                    case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
+                    case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
+                    case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
+                    case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;
+                }
+            }
+
+            if (dst.PixelFormat == Pixel.Luminance32F.Format)
+            {
+                var dstX = dst.OfType<Pixel.Luminance32F>();
+
+                switch (src.PixelFormat.Code)
+                {
+                    case Pixel.Luminance8.Code: _FitPixels3(src.OfType<Pixel.Luminance8>(), dstX, transform); return;
+                    case Pixel.Luminance32F.Code: _FitPixels3(src.OfType<Pixel.Luminance32F>(), dstX, transform); return;
+                    case Pixel.BGR565.Code: _FitPixels3(src.OfType<Pixel.BGR565>(), dstX, transform); return;
+                    case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
+                    case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
+                    case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
+                    case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
+                    case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
+                    case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;
+                }
+            }
+
+            if (dst.PixelFormat == Pixel.BGR565.Format)
+            {
+                var dstX = dst.OfType<Pixel.BGR565>();
+
+                switch (src.PixelFormat.Code)
+                {
+                    case Pixel.Luminance8.Code: _FitPixels3(src.OfType<Pixel.Luminance8>(), dstX, transform); return;
+                    case Pixel.Luminance32F.Code: _FitPixels3(src.OfType<Pixel.Luminance32F>(), dstX, transform); return;
+                    case Pixel.BGR565.Code: _FitPixels3(src.OfType<Pixel.BGR565>(), dstX, transform); return;
+                    case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
+                    case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
+                    case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
+                    case Pixel.RGBA32.Code: _FitPixels3(src.OfType<Pixel.RGBA32>(), dstX, transform); return;
+                    case Pixel.BGRA32.Code: _FitPixels3(src.OfType<Pixel.BGRA32>(), dstX, transform); return;
+                    case Pixel.RGB96F.Code: _FitPixels3(src.OfType<Pixel.RGB96F>(), dstX, transform); return;
+                    case Pixel.BGR96F.Code: _FitPixels3(src.OfType<Pixel.BGR96F>(), dstX, transform); return;
+                    case Pixel.BGRA128F.Code: _FitPixels3(src.OfType<Pixel.BGRA128F>(), dstX, transform); return;
+                    case Pixel.RGBA128F.Code: _FitPixels3(src.OfType<Pixel.RGBA128F>(), dstX, transform); return;
+                }
             }
 
             if (dst.PixelFormat == Pixel.BGR24.Format)
@@ -24,6 +86,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 switch (src.PixelFormat.Code)
                 {
+                    case Pixel.Luminance8.Code: _FitPixels3(src.OfType<Pixel.Luminance8>(), dstX, transform); return;
+                    case Pixel.Luminance32F.Code: _FitPixels3(src.OfType<Pixel.Luminance32F>(), dstX, transform); return;
+                    case Pixel.BGR565.Code: _FitPixels3(src.OfType<Pixel.BGR565>(), dstX, transform); return;
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
@@ -42,6 +107,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 switch (src.PixelFormat.Code)
                 {
+                    case Pixel.Luminance8.Code: _FitPixels3(src.OfType<Pixel.Luminance8>(), dstX, transform); return;
+                    case Pixel.Luminance32F.Code: _FitPixels3(src.OfType<Pixel.Luminance32F>(), dstX, transform); return;
+                    case Pixel.BGR565.Code: _FitPixels3(src.OfType<Pixel.BGR565>(), dstX, transform); return;
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
@@ -60,6 +128,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 switch (src.PixelFormat.Code)
                 {
+                    case Pixel.Luminance8.Code: _FitPixels3(src.OfType<Pixel.Luminance8>(), dstX, transform); return;
+                    case Pixel.Luminance32F.Code: _FitPixels3(src.OfType<Pixel.Luminance32F>(), dstX, transform); return;
+                    case Pixel.BGR565.Code: _FitPixels3(src.OfType<Pixel.BGR565>(), dstX, transform); return;
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
@@ -78,6 +149,9 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
                 switch (src.PixelFormat.Code)
                 {
+                    case Pixel.Luminance8.Code: _FitPixels3(src.OfType<Pixel.Luminance8>(), dstX, transform); return;
+                    case Pixel.Luminance32F.Code: _FitPixels3(src.OfType<Pixel.Luminance32F>(), dstX, transform); return;
+                    case Pixel.BGR565.Code: _FitPixels3(src.OfType<Pixel.BGR565>(), dstX, transform); return;
                     case Pixel.BGR24.Code: _FitPixels3(src.OfType<Pixel.BGR24>(), dstX, transform); return;
                     case Pixel.RGB24.Code: _FitPixels3(src.OfType<Pixel.RGB24>(), dstX, transform); return;
                     case Pixel.ARGB32.Code: _FitPixels3(src.OfType<Pixel.ARGB32>(), dstX, transform); return;
@@ -90,7 +164,10 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
                 }
             }
 
+            // default will use nearest neighbor
+
             // TODO: for pixels with alpha support, alpha premultiplication should be required.
+            // TODO: instead of throwing, simply use nearest 
 
             throw new NotImplementedException($"{dst.PixelFormat} format not inplemented on {nameof(dst)}.");
         }

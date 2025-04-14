@@ -18,15 +18,33 @@ namespace InteropTypes.Graphics.Bitmaps.Processing
 
             for (int y = 0; y < dst.Height; ++y)
             {
-                var yy = y * src.Height / dst.Height;
+                var yy = y * src.Height / dst.Height;                
+                var srcRow = src.GetScanlinePixels(yy);
+                var dstRow = dst.UseScanlinePixels(y);
 
-                for (int x = 0; x < dst.Height; ++x)
+                for (int x = 0; x < dstRow.Length; ++x)
                 {
-                    var xx = x * src.Width / dst.Width;
+                    dstRow[x] = srcRow[x * src.Width / dst.Width];
+                }
+            }
+        }
 
-                    var p = src.GetPixelUnchecked(xx, yy);
+        public static void FitPixelsNearest<TSrcPixel, TdstPixel>(SpanBitmap<TdstPixel> dst, SpanBitmap<TSrcPixel> src)
+            where TSrcPixel : unmanaged, Pixel.IConvertTo
+            where TdstPixel : unmanaged
+        {
+            // TODO: cannot run in parallel because src & dst cannot be passed to lambdas
+            // we would need to pin and use PointerBitmaps            
 
-                    dst.SetPixelUnchecked(x, y, p);
+            for (int y = 0; y < dst.Height; ++y)
+            {
+                var yy = y * src.Height / dst.Height;
+                var srcRow = src.GetScanlinePixels(yy);
+                var dstRow = dst.UseScanlinePixels(y);
+
+                for (int x = 0; x < dstRow.Length; ++x)
+                {
+                    dstRow[x] = srcRow[x * src.Width / dst.Width].To<TdstPixel>();
                 }
             }
         }
