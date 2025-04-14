@@ -39,7 +39,16 @@ namespace InteropTypes.Graphics.Backends
             return true;
         }
 
-        public static void CopyPixels(AVABITMAP src,  MemoryBitmap dst)
+        public static MemoryBitmap ToMemoryBitmap(AVABITMAP src)
+        {
+            var avfmt = (src.Format, src.AlphaFormat);
+            var dstFmt = _Implementation.ToPixelFormat(avfmt);
+            var dst = new MemoryBitmap(src.PixelSize.Width, src.PixelSize.Height, dstFmt);
+            CopyPixels(src,dst);
+            return dst;
+        }
+
+        public static void CopyPixels(AVABITMAP src, MemoryBitmap dst)
         {
             if (src == null) return;
 

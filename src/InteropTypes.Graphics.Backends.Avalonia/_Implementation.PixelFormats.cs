@@ -5,8 +5,6 @@ using System.Text;
 using INTEROPFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
 using INTEROPPIX = InteropTypes.Graphics.Bitmaps.Pixel;
 
-
-
 using AVALONIAFORMAT = Avalonia.Platform.PixelFormat;
 using AVALONIAALPHA = Avalonia.Platform.AlphaFormat;
 
@@ -47,7 +45,14 @@ namespace InteropTypes.Graphics.Backends
             dstColor = default;
             dstAlpha = default;
             return false;
-        }        
+        }
+
+        public static INTEROPFMT ToPixelFormat((AVALONIAFORMAT? Color, AVALONIAALPHA? Alpha) fmt, bool allowCompatibleFormats = false)
+        {
+            var fmt2 = (fmt.Color ?? AVALONIAFORMAT.Rgba8888, fmt.Alpha ?? AVALONIAALPHA.Opaque);
+
+            return ToPixelFormat(fmt2, allowCompatibleFormats);
+        }
 
         public static INTEROPFMT ToPixelFormat((AVALONIAFORMAT Color, AVALONIAALPHA Alpha) fmt, bool allowCompatibleFormats = false)
         {
