@@ -10,10 +10,12 @@ namespace InteropTypes
 {
     public class BindableNoiseTexture
     {
-        public BindableNoiseTexture()
+        public BindableNoiseTexture(int width, int height)
         {
+            _Width= width;
+            _Height= height;
             _BindableBitmap = new BindableBitmap();
-            _BindableSprite = new ImageSource(_BindableBitmap, (0, 0), (64, 64), (0, 0));
+            _BindableSprite = new ImageSource(_BindableBitmap, (0, 0), (width, height), (0, 0));
         }        
 
         public async Task RunAsync()
@@ -26,6 +28,9 @@ namespace InteropTypes
             Task.Run(_UpdateBindableAsync);
         }
 
+        private int _Width;
+        private int _Height;
+
         private BindableBitmap _BindableBitmap;
         private ImageSource _BindableSprite;
 
@@ -33,7 +38,7 @@ namespace InteropTypes
 
         async Task _UpdateBindableAsync()
         {
-            var tmp = new MemoryBitmap<Pixel.RGB24>(64, 64);
+            var tmp = new MemoryBitmap<Pixel.RGB24>(_Width, _Height);
             var rnd = new Random();
             var pix = default(Pixel.RGB24);
 

@@ -68,25 +68,28 @@ namespace InteropTypes.Graphics.Backends
             {
                 attr = mgasset.Attributes;
                 imageSource = mgasset.Source;
-            }            
-            if (imageSource is System.Drawing.Color gdicolor)
-            {
-                var tex = _CreateSolidTexture(gd, 16, 16, gdicolor.ToXna());
-                return (tex, attr);
             }
 
-            if (imageSource is XNACOLOR xnacolor)
+            switch (imageSource)
             {
-                var tex = _CreateSolidTexture(gd, 16, 16, xnacolor);
-                return (tex, attr);
-            }            
+                case System.Drawing.Color gdicolor:
+                    {
+                        var tex = _CreateSolidTexture(gd, 16, 16, gdicolor.ToXna());
+                        return (tex, attr);
+                    }
 
-            // default attempt
+                case XNACOLOR xnacolor:
+                    {
+                        var tex = _CreateSolidTexture(gd, 16, 16, xnacolor);
+                        return (tex, attr);
+                    }
 
-            if (imageSource is Microsoft.Extensions.FileProviders.IFileInfo xinfo)
-            {
-                var tex = _loadTexture(gd, xinfo.CreateReadStream);
-                if (tex != null) return (tex, attr);
+                case Microsoft.Extensions.FileProviders.IFileInfo xinfo:
+                    {
+                        var tex = _loadTexture(gd, xinfo.CreateReadStream);
+                        if (tex != null) return (tex, attr);
+                        break;
+                    }
             }
 
             var texx = _loadTexture(gd, () => ImageSource.TryOpenRead(imageSource));

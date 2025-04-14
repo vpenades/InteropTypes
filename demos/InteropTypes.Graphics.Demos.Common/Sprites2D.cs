@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Drawing;
 
 using XFORM = System.Numerics.Matrix3x2;
 using XY = System.Numerics.Vector2;
 using COLOR = System.Drawing.Color;
-using System.Threading.Tasks;
 
 namespace InteropTypes
 {
@@ -31,11 +31,13 @@ namespace InteropTypes
         public async Task RunDynamicsAsync()
         {
             await _NoiseBitmap.RunAsync().ConfigureAwait(false);
+            await _NoiseBitmap2.RunAsync().ConfigureAwait(false);
         }
 
         public void RunDynamicsThread()
         {
             _NoiseBitmap.RunTask();
+            _NoiseBitmap2.RunTask();
         }
 
         #region data
@@ -62,7 +64,8 @@ namespace InteropTypes
 
         private static readonly ImageSource _TinyCat = ImageSource.CreateFromBitmap(_GetImageReference("Tiny\\cat.png"), (32, 35), (16, 20)).WithScale(3);
 
-        private InteropTypes.BindableNoiseTexture _NoiseBitmap = new BindableNoiseTexture();
+        private InteropTypes.BindableNoiseTexture _NoiseBitmap = new BindableNoiseTexture(64,64);
+        private InteropTypes.BindableNoiseTexture _NoiseBitmap2 = new BindableNoiseTexture(32, 32);
 
         #endregion
 
@@ -105,6 +108,7 @@ namespace InteropTypes
         void DrawDynamicTexture(ICanvas2D dc)
         {
             if (_NoiseBitmap != null) dc.DrawImage(XFORM.CreateTranslation(0, 0), _NoiseBitmap.Sprite);
+            if (_NoiseBitmap2 != null) dc.DrawImage(XFORM.CreateTranslation(0, 0), _NoiseBitmap2.Sprite);
         }
 
         void DrawEmbedded(ICanvas2D dc)
