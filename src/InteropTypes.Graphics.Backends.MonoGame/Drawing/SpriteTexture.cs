@@ -32,7 +32,7 @@ namespace InteropTypes.Graphics.Backends
     {
         public SpriteTextureAttributes(SamplerState sampler, float tb)
         {
-            if (sampler == null) sampler = SamplerState.LinearClamp;
+            sampler ??= SamplerState.LinearClamp;
             Sampler = sampler;
             TextureBleed = tb;
         }
