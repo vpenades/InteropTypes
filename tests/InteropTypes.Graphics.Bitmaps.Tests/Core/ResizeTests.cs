@@ -29,7 +29,7 @@ namespace InteropTypes.Graphics.Bitmaps
             BitmapsToolkit.FitPixels(src, dst, (0, 1));
             var elapsed = sw.Elapsed;
 
-            TestContext.WriteLine($"{elapsed.Milliseconds}ms {elapsed.Ticks}ticks");
+            TestContext.Out.WriteLine($"{elapsed.Milliseconds}ms {elapsed.Ticks}ticks");
 
             src.Save(AttachmentInfo.From("input.png"));
             dst.Save(AttachmentInfo.From($"output_{dstSize}.png"));
@@ -73,7 +73,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var mirrorEffect = new Processing.BitmapMirror(hflip,vflip,multiThread);
 
-            using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"{w}x{h} HFlip:{hflip} VFlip:{vflip} {Math.Round(t.TotalMilliseconds / 1000)}ms")))
+            using (PerformanceBenchmark.Run(t => TestContext.Out.WriteLine($"{w}x{h} HFlip:{hflip} VFlip:{vflip} {Math.Round(t.TotalMilliseconds / 1000)}ms")))
             {
                 for (int r = 0; r < 1000; ++r)
                 {
@@ -118,7 +118,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             var dst = new MemoryBitmap<Pixel.BGR24>(512, 512);
 
-            using(PerformanceBenchmark.Run(t => TestContext.WriteLine($"Transform {(int)t.TotalMilliseconds}ms")))
+            using(PerformanceBenchmark.Run(t => TestContext.Out.WriteLine($"Transform {(int)t.TotalMilliseconds}ms")))
             {
                 dst.SetPixels(xx, src.AsSpanBitmap(), useBilinear, 1);
             }            

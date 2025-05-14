@@ -3,9 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>    
-  </PropertyGroup>  
+  </PropertyGroup>
 
-  <ItemGroup>
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);CA1416</NoWarn> <!-- this call site is reachable on all platforms, only supported in windows6.1 -->
+	</PropertyGroup>
+
+	<ItemGroup>
     <PackageReference Include="SvgNet" />    
   </ItemGroup>
 

@@ -262,7 +262,7 @@ namespace InteropTypes.Crypto
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
         {            
-            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash96, Byte>(span);
         }
@@ -746,7 +746,7 @@ namespace InteropTypes.Crypto
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
         {            
-            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash128, Byte>(span);
         }
@@ -1240,7 +1240,7 @@ namespace InteropTypes.Crypto
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
         {            
-            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash224, Byte>(span);
         }
@@ -1734,7 +1734,7 @@ namespace InteropTypes.Crypto
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
         {            
-            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash256, Byte>(span);
         }
@@ -2238,7 +2238,7 @@ namespace InteropTypes.Crypto
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
         {            
-            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash384, Byte>(span);
         }
@@ -2752,7 +2752,7 @@ namespace InteropTypes.Crypto
 
         private ReadOnlySpan<Byte> AsReadOnlyBytes()
         {            
-            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(this);
+            ref var hRef = ref System.Runtime.CompilerServices.Unsafe.AsRef(in this);
             var span = System.Runtime.InteropServices.MemoryMarshal.CreateReadOnlySpan(ref hRef, 1);
             return System.Runtime.InteropServices.MemoryMarshal.Cast<Hash512, Byte>(span);
         }

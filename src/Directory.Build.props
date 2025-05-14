@@ -40,25 +40,8 @@
   <!-- Analysers =================================================================================== -->
 
   <PropertyGroup>
-    <NoWarn>1701;1702;1591;CA1062;CA1304;CA1310;CA1000;CA2225</NoWarn>
+    <NoWarn>1701;1702;1591;CA1000;CA1034;CA1051;CA1062;CA1304;CA1310;CA1510;CA1512;CA1707;CA2225</NoWarn>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- Enable all FxCop rules with NetAnalyzers
-    https://docs.microsoft.com/es-es/visualstudio/code-quality/migrate-from-fxcop-analyzers-to-net-analyzers?view=vs-2022#migration-steps
-    -->
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <!-- <CodeAnalysisRuleSet>$(MsBuildThisFileDirectory)..\solution.ruleset</CodeAnalysisRuleSet>  -->
-  </PropertyGroup>
-
-  <ItemGroup>
-    
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>   
-    
-  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net6.0-windows'">
     

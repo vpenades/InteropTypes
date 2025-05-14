@@ -36,7 +36,7 @@ namespace InteropTypes.Graphics.Bitmaps
             
             var blurfactor3 = Processing.SharpnessEvaluator.Evaluate(bitmap, 0.25);
 
-            TestContext.WriteLine($"{filePath} => {blurfactor1}, {blurfactor2}, {blurfactor3}");
+            TestContext.Out.WriteLine($"{filePath} => {blurfactor1}, {blurfactor2}, {blurfactor3}");
 
             bitmap.AttachToCurrentTestAll("final.png");
         }

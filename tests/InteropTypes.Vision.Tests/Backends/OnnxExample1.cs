@@ -70,7 +70,7 @@ namespace InteropTypes.Vision.Backends
 
                 foreach(var pair in pairs)
                 {
-                    TestContext.WriteLine($"{pair.Label} = {pair.Score}");
+                    TestContext.Out.WriteLine($"{pair.Label} = {pair.Score}");
                 }
 
                 Assert.That(pairs[0].Label, Is.EqualTo(expectedResult));
@@ -267,7 +267,7 @@ namespace InteropTypes.Vision.Backends
 
                 for(int i=0; i < resultv4.Length; ++i)
                 {
-                    TestContext.WriteLine(resultv4[i]);
+                    TestContext.Out.WriteLine(resultv4[i]);
                 }
             }
         }

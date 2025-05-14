@@ -30,7 +30,7 @@ namespace InteropTypes.Codecs
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var bitmap = MemoryBitmap.Load(ResourceInfo.From(filePath));
             Assert.That(bitmap.IsEmpty, Is.False);
-            TestContext.WriteLine(bitmap.Info);
+            TestContext.Out.WriteLine(bitmap.Info);
             sw.Stop();
         }
 
@@ -50,7 +50,7 @@ namespace InteropTypes.Codecs
                 var bitmap = MemoryBitmap.Load(ResourceInfo.From(filePath), decoder);
                 sw.Stop();
 
-                TestContext.WriteLine($"Loading {System.IO.Path.GetFileName(filePath)} with {decoder} tool {sw.ElapsedMilliseconds}");                
+                TestContext.Out.WriteLine($"Loading {System.IO.Path.GetFileName(filePath)} with {decoder} tool {sw.ElapsedMilliseconds}");                
 
                 foreach (var encoder in codecs.OfType<IBitmapEncoder>())
                 {
@@ -153,12 +153,12 @@ namespace InteropTypes.Codecs
         [TestCase("dog.jpeg")]
         public void LoadJpegPerformanceTest(string filePath)
         {
-            TestContext.WriteLine(filePath);
-            TestContext.WriteLine("");            
+            TestContext.Out.WriteLine(filePath);
+            TestContext.Out.WriteLine("");            
 
             void _writeToTest(string hdr, TimeSpan t)
             {
-                TestContext.WriteLine($"{hdr} {t.TotalMilliseconds}ms");
+                TestContext.Out.WriteLine($"{hdr} {t.TotalMilliseconds}ms");
             }
 
             void _doNothing(string hdr, TimeSpan t) { }
@@ -210,7 +210,7 @@ namespace InteropTypes.Codecs
                     _action2($"STB  OutputFmt: {bmp.PixelFormat}", TimeSpan.Zero);
                 }
 
-                TestContext.WriteLine("");
+                TestContext.Out.WriteLine("");
             }
         }
 

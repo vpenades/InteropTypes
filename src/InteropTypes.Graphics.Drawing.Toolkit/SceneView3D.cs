@@ -16,7 +16,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public static implicit operator SceneView3D(Matrix4x4 xform)
         {
-            if (!Matrix4x4.Invert(xform, out Matrix4x4 _)) throw new ArgumentException(nameof(xform));
+            if (!Matrix4x4.Invert(xform, out Matrix4x4 _)) throw new ArgumentException("Invalid matrix", nameof(xform));
 
             return new SceneView3D { _CameraMatrix = xform };
         }

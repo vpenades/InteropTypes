@@ -46,7 +46,7 @@ namespace InteropTypes.Graphics.Backends
 
             // report result:
 
-            TestContext.WriteLine($"Code found: {code?.Text}");
+            TestContext.Out.WriteLine($"Code found: {code?.Text}");
 
             var points = code.ResultPoints.Select(item => (item.X, item.Y)).ToArray();
             var font = SixLabors.Fonts.SystemFonts.CreateFont("Arial", 20);

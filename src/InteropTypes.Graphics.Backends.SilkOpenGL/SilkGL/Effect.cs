@@ -173,7 +173,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
 
         void SetCameraMatrix(Matrix4x4 matrix)
         {
-            if (!Matrix4x4.Invert(matrix, out var inverted)) throw new ArgumentException(nameof(matrix));
+            if (!Matrix4x4.Invert(matrix, out var inverted)) throw new ArgumentException("Invalid matrix", nameof(matrix));
             SetViewMatrix(inverted);
         }
     }

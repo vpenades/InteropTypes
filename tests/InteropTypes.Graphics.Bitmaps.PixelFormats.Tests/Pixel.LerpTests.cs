@@ -210,7 +210,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
             // var rgbp = Pixel.BGRP128F.Lerp(ap, bp, 0.5f);
             // var final = default(TDstPixel).From(rgbp);
-            // TestContext.WriteLine($"{a} ^ {b} = {final}");
+            // TestContext.Out.WriteLine($"{a} ^ {b} = {final}");
             // return final;
 
             return default;

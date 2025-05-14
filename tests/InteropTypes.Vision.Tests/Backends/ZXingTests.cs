@@ -47,7 +47,7 @@ namespace InteropTypes.Vision.Backends
 
             // report result:
 
-            TestContext.WriteLine($"Code found: {code?.Text}");
+            TestContext.Out.WriteLine($"Code found: {code?.Text}");
 
             image
                 .CreateDrawingContext()

@@ -19,8 +19,8 @@ namespace InteropTypes.Codecs
         {
             foreach (var (bitmap, state) in FFmpegAutoGen.DecodeFrames(ResourceInfo.From("count-video.mp4")))
             {
-                TestContext.WriteLine(string.Join(" ", state.Times.Select(item => (item.Key, item.Value.den / (float)item.Value.num))));
-                TestContext.WriteLine(string.Join(" ", state.State));
+                TestContext.Out.WriteLine(string.Join(" ", state.Times.Select(item => (item.Key, item.Value.den / (float)item.Value.num))));
+                TestContext.Out.WriteLine(string.Join(" ", state.State));
 
                 var idx = state.State["index"];
 
@@ -43,9 +43,9 @@ namespace InteropTypes.Codecs
 
             var outputFrames = FFmpegAutoGen.DecodeFrames(finfo.FullName);
 
-            TestContext.WriteLine("------------------------------------------------------------------------------ INPUT");
+            TestContext.Out.WriteLine("------------------------------------------------------------------------------ INPUT");
             _PrintFramesInfo(inputFrames);
-            TestContext.WriteLine("------------------------------------------------------------------------------ OUTPUT");
+            TestContext.Out.WriteLine("------------------------------------------------------------------------------ OUTPUT");
             _PrintFramesInfo(outputFrames);
         }
 
@@ -57,11 +57,11 @@ namespace InteropTypes.Codecs
             {
                 if (isFirst)
                 {
-                    TestContext.WriteLine(string.Join(" ", state.Times.Select(item => $"{item.Key}={item.Value.num}/{item.Value.den}")));
+                    TestContext.Out.WriteLine(string.Join(" ", state.Times.Select(item => $"{item.Key}={item.Value.num}/{item.Value.den}")));
                     isFirst = false;
                 }                
 
-                TestContext.WriteLine(string.Join(" ", state.State));                
+                TestContext.Out.WriteLine(string.Join(" ", state.State));                
             }
         }
 

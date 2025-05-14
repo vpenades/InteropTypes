@@ -58,7 +58,7 @@ namespace InteropTypes.Codecs
 
             if (ctx == null) return;
 
-            ffmpeg.avcodec_close(ctx);
+            ffmpeg.avcodec_free_context(&ctx);
             ffmpeg.av_free(ctx);
         }
 

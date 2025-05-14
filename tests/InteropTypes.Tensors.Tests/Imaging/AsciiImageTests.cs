@@ -41,7 +41,7 @@ namespace InteropTypes.Tensors.Imaging
 
             foreach (var row in rows)
             {
-                TestContext.WriteLine(row);
+                TestContext.Out.WriteLine(row);
             }
 
         }
@@ -58,7 +58,7 @@ namespace InteropTypes.Tensors.Imaging
 
             foreach(var row in src.DebugBitmap.Rows)
             {
-                TestContext.WriteLine(row);
+                TestContext.Out.WriteLine(row);
             }           
         }
 

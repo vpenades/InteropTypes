@@ -67,7 +67,7 @@ namespace InteropTypes.Tensors
                 .FillPixels(src.AsBitmapSampler(Imaging.ColorEncoding.BGR), (xform, MultiplyAdd.Identity, useBilinear));
             time.Stop();
 
-            TestContext.WriteLine($"{time.Elapsed.TotalMilliseconds}");            
+            TestContext.Out.WriteLine($"{time.Elapsed.TotalMilliseconds}");            
 
             dst1.AttachToCurrentTest($"dog.xform.{useBilinear}.png");            
 
@@ -81,7 +81,7 @@ namespace InteropTypes.Tensors
             dst2.AsTensorBitmap<float>(Imaging.ColorEncoding.BGR)
                 .FillPixels(src.AsBitmapSampler(Imaging.ColorEncoding.BGR), (xform, MultiplyAdd.Identity, useBilinear));
             time.Stop();
-            TestContext.WriteLine($"{time.Elapsed.TotalMilliseconds}");
+            TestContext.Out.WriteLine($"{time.Elapsed.TotalMilliseconds}");
 
             Assert.That(dst2.GetChecksum(), Is.EqualTo(hashCodeResult2));
         }

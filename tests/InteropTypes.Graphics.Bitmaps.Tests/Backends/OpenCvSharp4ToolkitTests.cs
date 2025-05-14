@@ -43,18 +43,18 @@ namespace InteropTypes.Graphics.Backends
             var xform = System.Numerics.Matrix3x2.CreateScale(1.3f, 1.3f) * System.Numerics.Matrix3x2.CreateRotation(0.25f);
             xform.Translation = new System.Numerics.Vector2(5, 40);            
 
-            using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"OpenCV {t}")))
+            using (PerformanceBenchmark.Run(t => TestContext.Out.WriteLine($"OpenCV {t}")))
             {
-                using var bm = PerformanceBenchmark.Run(result => TestContext.WriteLine(result.TotalMilliseconds) );
+                using var bm = PerformanceBenchmark.Run(result => TestContext.Out.WriteLine(result.TotalMilliseconds) );
 
                 OpenCvSharp4Toolkit.WarpAffine(src, dst, xform);
             }
             dst.Save(new AttachmentInfo("result.opencv.jpg"));            
 
             dst.AsSpanBitmap().WritableBytes.Fill(0);
-            using (PerformanceBenchmark.Run(t => TestContext.WriteLine($"Soft {t}")))
+            using (PerformanceBenchmark.Run(t => TestContext.Out.WriteLine($"Soft {t}")))
             {
-                using var bm = PerformanceBenchmark.Run(result => TestContext.WriteLine(result.TotalMilliseconds));
+                using var bm = PerformanceBenchmark.Run(result => TestContext.Out.WriteLine(result.TotalMilliseconds));
 
                 dst.AsSpanBitmap().SetPixels(xform, src);
             }
@@ -78,7 +78,7 @@ namespace InteropTypes.Graphics.Backends
 
             foreach(var item in arucoContext.Markers)
             {
-                TestContext.WriteLine($"{item.Id} {item.A} {item.B} {item.C} {item.D}");
+                TestContext.Out.WriteLine($"{item.Id} {item.A} {item.B} {item.C} {item.D}");
             }
 
             bitmap

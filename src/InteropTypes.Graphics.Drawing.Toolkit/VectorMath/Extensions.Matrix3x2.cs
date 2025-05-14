@@ -48,8 +48,8 @@ namespace InteropTypes.Graphics.Drawing
 
         public static Matrix3x2 CreateInverseViewport2D(this (float width, float height) size)
         {
-            if (size.width <= 0) throw new ArgumentOutOfRangeException(nameof(size.width));
-            if (size.height <= 0) throw new ArgumentOutOfRangeException(nameof(size.height));
+            if (size.width <= 0) throw new ArgumentOutOfRangeException(nameof(size),"width");
+            if (size.height <= 0) throw new ArgumentOutOfRangeException(nameof(size), "height");
 
             Matrix3x2 result;
 

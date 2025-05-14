@@ -51,7 +51,8 @@ namespace InteropTypes.Codecs
             ffmpeg.av_packet_unref(_pPacket);
             ffmpeg.av_free(_pPacket);
 
-            ffmpeg.avcodec_close(_pCodecContext);
+            var pCodecContext = _pCodecContext;
+            ffmpeg.avcodec_free_context(&pCodecContext);
             var pFormatContext = _pFormatContext;
             ffmpeg.avformat_close_input(&pFormatContext);
         }
@@ -62,8 +63,8 @@ namespace InteropTypes.Codecs
 
         private bool _Disposed;
 
-        private readonly AVCodecContext* _pCodecContext;
-        private readonly AVFormatContext* _pFormatContext;
+        private AVCodecContext* _pCodecContext;
+        private AVFormatContext* _pFormatContext;
         private readonly int _streamIndex;
         private readonly AVFrame* _pFrame;
         private readonly AVFrame* _receivedFrame;

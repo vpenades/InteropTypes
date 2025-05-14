@@ -6,7 +6,7 @@ namespace InteropTypes.Graphics.Backends
 {
     using METADATAOPTIONS = FrameworkPropertyMetadataOptions;
 
-    internal struct PropertyFactory<TClass> where TClass:DependencyObject
+    internal readonly struct PropertyFactory<TClass> where TClass:DependencyObject
     {
         #region diagnostics
 

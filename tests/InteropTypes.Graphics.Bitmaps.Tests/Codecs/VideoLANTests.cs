@@ -25,13 +25,13 @@ namespace InteropTypes.Codecs
             
 
 
-            await codec.DecodeAsync(bmp => TestContext.WriteLine("Frame received"));
+            await codec.DecodeAsync(bmp => TestContext.Out.WriteLine("Frame received"));
             */
 
             /*
             foreach (var bitmap in codec.Decode())
             {
-                TestContext.WriteLine($"Frame {idx} received");
+                TestContext.Out.WriteLine($"Frame {idx} received");
 
                 // bitmap.AsSpanBitmap().AttachToCurrentTest($"frame{idx:D3}.jpg");
                 ++idx;

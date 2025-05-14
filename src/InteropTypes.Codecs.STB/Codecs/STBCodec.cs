@@ -65,7 +65,7 @@ namespace InteropTypes.Codecs
             catch(Exception ex)
             {
                 if (ex.Message == "unknown image type") return false;
-                else throw ex;
+                else throw;
             }
         }
 

@@ -24,7 +24,7 @@ namespace InteropTypes
             var wrapInfo = GetBitmapInfo(src.Info, src.RowBytes);            
 
             var wrapBytes = src.GetPixels();
-            if (wrapBytes == IntPtr.Zero) throw new ArgumentNullException();            
+            if (wrapBytes == IntPtr.Zero) throw new ArgumentNullException(nameof(src));            
 
             return new PointerBitmap(wrapBytes, wrapInfo);
         }

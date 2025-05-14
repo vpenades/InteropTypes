@@ -17,7 +17,7 @@ namespace InteropTypes.Graphics.Adapters
             _BitmapInfo = _Implementation.GetBitmapInfo(bmp.Info, bmp.RowBytes);
 
             var ptr = bmp.GetPixels();
-            if (ptr == IntPtr.Zero) throw new ArgumentNullException();
+            if (ptr == IntPtr.Zero) throw new ArgumentNullException(nameof(bmp));
 
             Initialize(new PointerBitmap(ptr, _BitmapInfo));
         }

@@ -26,19 +26,19 @@ namespace InteropTypes.IO
             {
                 if (entry.IsDirectory)
                 {
-                    Indent(entry.Depth); TestContext.WriteLine($"📁 {entry.Name}");
+                    Indent(entry.Depth); TestContext.Out.WriteLine($"📁 {entry.Name}");
                 }
 
                 else
                 {
                     var h256 = Crypto.Hash256.Sha256FromFile(entry);
-                    Indent(entry.Depth); TestContext.WriteLine($"🗎 {entry.Name} => {h256.ToHexString()}");
+                    Indent(entry.Depth); TestContext.Out.WriteLine($"🗎 {entry.Name} => {h256.ToHexString()}");
 
                     if (entry is IServiceProvider srv)
                     {
                         if (srv.GetService(typeof(JsonDocument)) is JsonDocument ppp)
                         {
-                            Indent(entry.Depth + 2); TestContext.WriteLine(ppp.RootElement);
+                            Indent(entry.Depth + 2); TestContext.Out.WriteLine(ppp.RootElement);
                         }
                     }
                 }

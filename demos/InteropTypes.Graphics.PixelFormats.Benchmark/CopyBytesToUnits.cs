@@ -117,7 +117,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
         public static void BytesToUnitsNaivePtr(ReadOnlySpan<byte> src, Span<float> dst)
         {
-            if (dst.Length < src.Length) throw new ArgumentException();
+            if (dst.Length < src.Length) throw new ArgumentException("Lengths mismatch", nameof(dst));
 
             ref byte sPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(src);
             ref float dPtr = ref System.Runtime.InteropServices.MemoryMarshal.GetReference(dst);

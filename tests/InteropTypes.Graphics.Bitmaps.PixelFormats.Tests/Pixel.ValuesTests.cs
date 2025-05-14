@@ -81,7 +81,7 @@ namespace InteropTypes.Graphics.Bitmaps
             var cv = pixVal[0].To<Pixel.BGRA32>();
             var f = PixelFormat.TryIdentifyFormat<TPixel>();
 
-            TestContext.WriteLine($"{cv.R} {cv.G} {cv.B} {cv.A}");
+            TestContext.Out.WriteLine($"{cv.R} {cv.G} {cv.B} {cv.A}");
 
             Assert.That(cv.R, Is.GreaterThan(cv.G));
             Assert.That(cv.G, Is.GreaterThan(cv.B));

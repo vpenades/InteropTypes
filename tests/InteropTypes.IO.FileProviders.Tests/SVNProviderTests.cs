@@ -40,7 +40,7 @@ namespace InteropTypes.IO
 
             using (var client = new SVNDisposableFileProvider("https://github.com/vpenades/InteropTypes.git/trunk/", rev))
             {
-                TestContext.WriteLine($"LastR:{client.LastChangeRevision} LastT:{client.LastChangeTime}");
+                TestContext.Out.WriteLine($"LastR:{client.LastChangeRevision} LastT:{client.LastChangeTime}");
 
                 var root = client.GetDirectoryContents(null);
 
@@ -74,12 +74,12 @@ namespace InteropTypes.IO
                 if (entry.IsDirectory)
                 {
                     var rev = SVNFileProvider.GetRevisionFrom(entry); // null
-                    TestContext.WriteLine($"{indent}📁 {entry.Name} T:{entry.LastModified}");
+                    TestContext.Out.WriteLine($"{indent}📁 {entry.Name} T:{entry.LastModified}");
                 }
                 else
                 {
                     var rev = SVNFileProvider.GetRevisionFrom(entry);
-                    TestContext.WriteLine($"{indent}🗎 {entry.Name} Len:{entry.Length} R:{rev.Revision} T:{entry.LastModified}");
+                    TestContext.Out.WriteLine($"{indent}🗎 {entry.Name} Len:{entry.Length} R:{rev.Revision} T:{entry.LastModified}");
 
                     continue;
 
@@ -87,7 +87,7 @@ namespace InteropTypes.IO
 
                     using var t = new System.IO.StreamReader(s);
                     var txt = t.ReadToEnd();
-                    TestContext.WriteLine(txt);
+                    TestContext.Out.WriteLine(txt);
                 }
             }
         }

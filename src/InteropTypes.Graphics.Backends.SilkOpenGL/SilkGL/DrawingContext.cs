@@ -15,7 +15,7 @@ namespace InteropTypes.Graphics.Backends.SilkGL
         void DrawTriangles(int start, int count);
     }
 
-    struct DrawingContext : IDrawingContext
+    readonly struct DrawingContext : IDrawingContext
     {
         #region lifecycle
 

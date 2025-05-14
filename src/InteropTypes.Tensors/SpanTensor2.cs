@@ -160,7 +160,7 @@ namespace InteropTypes.Tensors
     {
         public static void Transfer(ReadOnlySpanTensor2<float> src, SpanTensor2<float> dst, MultiplyAdd mad)
         {
-            if (src.Dimensions != dst.Dimensions) throw new ArgumentException();            
+            if (src.Dimensions != dst.Dimensions) throw new ArgumentException("Dimensions mismatch", nameof(dst));            
 
             switch (src.Dimensions.Dim1)
             {

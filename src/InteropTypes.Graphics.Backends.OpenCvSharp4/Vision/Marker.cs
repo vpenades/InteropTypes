@@ -19,7 +19,7 @@ namespace InteropTypes.Vision.Backends
         public Vector3 Rotation;
         public Vector3 Translation;
 
-        public Matrix4x4 Transform
+        public readonly Matrix4x4 Transform
         {
             get
             {

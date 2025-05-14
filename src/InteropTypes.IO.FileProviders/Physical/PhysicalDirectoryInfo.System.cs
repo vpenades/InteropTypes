@@ -51,9 +51,8 @@ namespace InteropTypes.IO
         /// <returns></returns>
         public static PhysicalDirectoryInfo GetEntryAssemblyDirectory()
         {
-            var path = System.Reflection.Assembly.GetEntryAssembly().Location;            
-            var finfo = new System.IO.FileInfo(path);
-            return new PhysicalDirectoryInfo(finfo.Directory);
+            var dinfo = new System.IO.DirectoryInfo(AppContext.BaseDirectory);
+            return new PhysicalDirectoryInfo(dinfo);
         }
     }
 }

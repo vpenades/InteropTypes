@@ -223,8 +223,8 @@ namespace InteropTypes.Graphics
             // http://werner-dittmann.blogspot.com/2016/03/solving-some-mysteries-about-androids.html
 
             if (src == null) throw new ArgumentNullException(nameof(src));
-            if (src.Format != ANDROIDGFX.ImageFormatType.Yuv420888) throw new ArgumentNullException(nameof(src.Format));
-            if (dst.PixelFormat != Pixel.BGR24.Format) throw new ArgumentNullException(nameof(dst.PixelFormat));
+            if (src.Format != ANDROIDGFX.ImageFormatType.Yuv420888) throw new ArgumentException("Invalid pixel format", nameof(src));
+            if (dst.PixelFormat != Pixel.BGR24.Format) throw new ArgumentException("Invalid pixel format", nameof(dst));
 
             var planes = src.GetPlanes();
 

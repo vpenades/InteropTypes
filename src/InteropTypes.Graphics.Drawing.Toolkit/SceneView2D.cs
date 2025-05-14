@@ -63,7 +63,7 @@ namespace InteropTypes.Graphics.Drawing
                     return;
                 }
 
-                if (!Matrix3x2.Invert(value.Value, out Matrix3x2 _)) throw new ArgumentException(nameof(value));
+                if (!Matrix3x2.Invert(value.Value, out Matrix3x2 _)) throw new ArgumentException("Invalid Matrix", nameof(value));
 
                 _CameraMatrix = value;
                 _ImmutableKey = null;

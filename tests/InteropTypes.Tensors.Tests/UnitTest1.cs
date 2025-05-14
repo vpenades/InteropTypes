@@ -46,7 +46,7 @@ namespace InteropTypes.Tensors
 
             foreach(var v in hexints)
             {
-                TestContext.WriteLine(v.ToString("x"));
+                TestContext.Out.WriteLine(v.ToString("x"));
             }
 
         }

@@ -24,7 +24,7 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             var mem = bmp.ToMemoryBitmap();
 
-            TestContext.WriteLine($"{filePath} {bmp.Info.ToDebuggerDisplayString()}");
+            TestContext.Out.WriteLine($"{filePath} {bmp.Info.ToDebuggerDisplayString()}");
 
 
             if (bmp.PixelFormat == Pixel.BGR96F.Format || bmp.PixelFormat == Pixel.RGB96F.Format)

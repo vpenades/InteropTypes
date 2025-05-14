@@ -48,8 +48,8 @@ namespace InteropTypes.Graphics.Bitmaps
                     Assert.That(mref, Is.LessThan(256));
                     Assert.That(dref, Is.LessThan(256));
 
-                    TestContext.WriteLine($"{i}x{j} = {mref}");
-                    TestContext.WriteLine($"{i}/{j} = {dref}");
+                    TestContext.Out.WriteLine($"{i}x{j} = {mref}");
+                    TestContext.Out.WriteLine($"{i}/{j} = {dref}");
 
                     // slow
                     var mval0 = (i * j) / 255;
@@ -140,7 +140,7 @@ namespace InteropTypes.Graphics.Bitmaps
 
                     // Assert.That(color, Is.EqualTo(kmul));
 
-                    if (kmul != color) TestContext.WriteLine($"{color},{alpha} => {kmul}");
+                    if (kmul != color) TestContext.Out.WriteLine($"{color},{alpha} => {kmul}");
                 }
             }
         }

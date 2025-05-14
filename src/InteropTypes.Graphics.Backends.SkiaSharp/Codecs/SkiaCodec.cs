@@ -102,8 +102,9 @@ namespace InteropTypes.Codecs
                 case CodecFormat.Pkm: return SkiaSharp.SKEncodedImageFormat.Pkm;
                 case CodecFormat.Png: return SkiaSharp.SKEncodedImageFormat.Png;
                 case CodecFormat.Wbmp: return SkiaSharp.SKEncodedImageFormat.Wbmp;
-                case CodecFormat.Webp: return SkiaSharp.SKEncodedImageFormat.Webp;
-                default: throw new ArgumentException();
+                case CodecFormat.WebpLossless: return SkiaSharp.SKEncodedImageFormat.Webp;
+                case CodecFormat.WebpLossy: return SkiaSharp.SKEncodedImageFormat.Webp;
+                default: throw new ArgumentException(xfmt.ToString());
             }            
         }
     }

@@ -114,7 +114,7 @@ namespace InteropTypes.Vision
 
         public static String GetSha256(this ArraySegment<Byte> array)
         {
-            using var calc = System.Security.Cryptography.SHA256.Create("SHA256");
+            using var calc = System.Security.Cryptography.SHA256.Create();
 
             var result = calc.ComputeHash(array.Array, array.Offset, array.Count);
 
@@ -123,7 +123,7 @@ namespace InteropTypes.Vision
 
         public static String GetSha256(this IEnumerable<ArraySegment<Byte>> arrays)
         {
-            using var calc = System.Security.Cryptography.SHA256.Create("SHA256");
+            using var calc = System.Security.Cryptography.SHA256.Create();
 
             using var m = new System.IO.MemoryStream();
 
