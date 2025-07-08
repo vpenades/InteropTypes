@@ -16,7 +16,7 @@
 
   <PropertyGroup>
     <!-- do not use versions over 8 because it's the max supported by Unity -->
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
