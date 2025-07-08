@@ -44,8 +44,8 @@
 
     <PackageVersion Include="NuGet.Configuration" Version="6.14.0" />
 
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20250430" />
-    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20250430" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20250708" />
+    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20250708" />
     
     <!-- Game Engines -->
 
