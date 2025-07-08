@@ -4,9 +4,7 @@ using System.Text;
 
 using InteropTypes.Graphics.Drawing;
 
-using Microsoft.Xna.Framework.Graphics;
 
-using XNACOLOR = Microsoft.Xna.Framework.Color;
 
 namespace InteropTypes.Graphics.Backends
 {

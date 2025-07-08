@@ -8,9 +8,6 @@ using System.Numerics;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Collections;
 
-using XY = System.Numerics.Vector2;
-using XYZ = System.Numerics.Vector3;
-using COLOR = System.Drawing.Color;
 
 using VERTEX = Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture;
 

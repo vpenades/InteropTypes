@@ -4,8 +4,6 @@ using System.Text;
 
 using InteropTypes.Graphics.Bitmaps;
 
-using Microsoft.Xna.Framework.Graphics;
-
 namespace InteropTypes.Graphics.Backends
 {
     internal class TextureCache

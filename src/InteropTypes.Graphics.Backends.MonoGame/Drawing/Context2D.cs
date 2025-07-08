@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Drawing.Transforms;
 
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
 namespace InteropTypes.Graphics.Backends
 {
     class MonoGameDrawing2D :

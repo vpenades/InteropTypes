@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Microsoft.Xna.Framework.Graphics;
-
 namespace InteropTypes.Graphics.Backends
 {
     [System.Diagnostics.DebuggerDisplay("{Source} {Attributes}")]

@@ -6,8 +6,6 @@ using System.Numerics;
 using InteropTypes.Graphics.Drawing;
 using InteropTypes.Graphics.Drawing.Transforms;
 
-using Microsoft.Xna.Framework.Graphics;
-
 namespace InteropTypes.Graphics.Backends
 {
     class MonoGameDrawing3D :

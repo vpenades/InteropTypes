@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using Microsoft.Xna.Framework.Graphics;
-
 using InteropTypes.Graphics.Drawing;
-
-using DRWCOLOR = System.Drawing.Color;
-using XNACOLOR = Microsoft.Xna.Framework.Color;
-using POINT3 = InteropTypes.Graphics.Drawing.Point3;
-
 
 namespace InteropTypes.Graphics.Backends
 {
@@ -18,15 +11,15 @@ namespace InteropTypes.Graphics.Backends
     {
         public static XNACOLOR ToXna(this ColorStyle c) { return new XNACOLOR(c.R, c.G, c.B, c.A); }
 
-        public static XNACOLOR ToXna(this DRWCOLOR c) { return new XNACOLOR(c.R, c.G, c.B, c.A); }
+        public static XNACOLOR ToXna(this COLOR c) { return new XNACOLOR(c.R, c.G, c.B, c.A); }
 
-        public static XNACOLOR ToXnaPremul(this DRWCOLOR c) { return XNACOLOR.FromNonPremultiplied(c.R, c.G, c.B, c.A); }
+        public static XNACOLOR ToXnaPremul(this COLOR c) { return XNACOLOR.FromNonPremultiplied(c.R, c.G, c.B, c.A); }
 
         public static XNACOLOR ToXnaPremul(this XNACOLOR c) { return XNACOLOR.FromNonPremultiplied(c.R, c.G, c.B, c.A); }
 
-        public static Microsoft.Xna.Framework.Matrix ToXna(this in Matrix3x2 m)
+        public static XNAMATRIX ToXna(this in Matrix3x2 m)
         {
-            return new Microsoft.Xna.Framework.Matrix
+            return new XNAMATRIX
                 (
                 m.M11, m.M12, 0, 0,
                 m.M21, m.M22, 0, 0,
@@ -34,9 +27,9 @@ namespace InteropTypes.Graphics.Backends
                 m.M31, m.M32, 0, 1);
         }
 
-        public static Microsoft.Xna.Framework.Matrix ToXNA(this in Matrix4x4 m)
+        public static XNAMATRIX ToXNA(this in Matrix4x4 m)
         {
-            return new Microsoft.Xna.Framework.Matrix
+            return new XNAMATRIX
                 (
                 m.M11, m.M12, m.M13, m.M14,
                 m.M21, m.M22, m.M23, m.M24,
@@ -45,26 +38,26 @@ namespace InteropTypes.Graphics.Backends
                 );
         }
 
-        public static Microsoft.Xna.Framework.Vector2 ToXna(this in Vector2 vector)
+        public static XNAV2 ToXna(this in XY value)
         {
-            return new Microsoft.Xna.Framework.Vector2(vector.X, vector.Y);
+            return new XNAV2(value.X, value.Y);
         }
 
-        public static Microsoft.Xna.Framework.Vector3 ToXna(this in Vector3 vector)
+        public static XNAV3 ToXna(this in XYZ value)
         {
-            return new Microsoft.Xna.Framework.Vector3(vector.X, vector.Y, vector.Z);
+            return new XNAV3(value.X, value.Y, value.Z);
         }
 
-        public static Microsoft.Xna.Framework.Vector3 ToXna(this in POINT3 vector)
+        public static XNAV3 ToXna(this in POINT3 value)
         {
-            return new Microsoft.Xna.Framework.Vector3(vector.X, vector.Y, vector.Z);
+            return new XNAV3(value.X, value.Y, value.Z);
         }
 
         public static Matrix3x2 CreateVirtualToPhysical(this GraphicsDevice device, (float width, float height) virtualSize, bool keepAspect)
         {
             var camera = CameraTransform2D.Create(Matrix3x2.Identity, virtualSize, keepAspect);
 
-            var physicalSize = new Vector2(device.Viewport.Width, device.Viewport.Height);
+            var physicalSize = new XY(device.Viewport.Width, device.Viewport.Height);
 
             return camera.CreateViewportMatrix(physicalSize);            
         }        
@@ -76,12 +69,12 @@ namespace InteropTypes.Graphics.Backends
             return (float)Math.Sqrt(area);
         }
 
-        public static Vector2 GetScale(this in Matrix3x2 matrix)
+        public static XY GetScale(this in Matrix3x2 matrix)
         {
-            var sx = matrix.M12 == 0 ? Math.Abs(matrix.M11) : new Vector2(matrix.M11, matrix.M12).Length();
-            var sy = matrix.M21 == 0 ? Math.Abs(matrix.M22) : new Vector2(matrix.M21, matrix.M22).Length();
+            var sx = matrix.M12 == 0 ? Math.Abs(matrix.M11) : new XY(matrix.M11, matrix.M12).Length();
+            var sy = matrix.M21 == 0 ? Math.Abs(matrix.M22) : new XY(matrix.M21, matrix.M22).Length();
             if (matrix.GetDeterminant() < 0) sy = -sy;
-            return new Vector2(sx, sy);
+            return new XY(sx, sy);
         }
 
         public static float GetRotation(this in Matrix3x2 matrix)
@@ -89,14 +82,14 @@ namespace InteropTypes.Graphics.Backends
             return (float)Math.Atan2(matrix.M12, matrix.M11);
         }
 
-        public static void Decompose(this Matrix3x2 matrix, out Vector2 scale, out float rotation, out Vector2 translation)
+        public static void Decompose(this Matrix3x2 matrix, out XY scale, out float rotation, out XY translation)
         {
             scale = matrix.GetScale();
             rotation = matrix.GetRotation();
             translation = matrix.Translation;
         }
 
-        public static Matrix3x2 WithScale(this Matrix3x2 matrix, Vector2 scale)
+        public static Matrix3x2 WithScale(this Matrix3x2 matrix, XY scale)
         {
             return (scale, matrix.GetRotation(), matrix.Translation).CreateMatrix3x2();
         }
@@ -106,7 +99,7 @@ namespace InteropTypes.Graphics.Backends
             return (matrix.GetScale(), radians, matrix.Translation).CreateMatrix3x2();
         }
 
-        public static Matrix3x2 CreateMatrix3x2(this (Vector2 Scale, float Radians, Vector2 Translation) terms)
+        public static Matrix3x2 CreateMatrix3x2(this (XY Scale, float Radians, XY Translation) terms)
         {
             var m = Matrix3x2.CreateRotation(terms.Radians);
             m.M11 *= terms.Scale.X;
