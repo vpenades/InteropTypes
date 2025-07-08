@@ -4,8 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using XY = System.Numerics.Vector2;
-using XYZ = System.Numerics.Vector3;
+
 
 namespace InteropTypes.Graphics.Drawing
 {

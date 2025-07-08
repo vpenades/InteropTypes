@@ -1,7 +1,5 @@
 ﻿using System;
 
-using GDICOLOR = System.Drawing.Color;
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-using VECTOR2 = System.Numerics.Vector2;
-using VECTOR3 = System.Numerics.Vector3;
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
@@ -30,7 +27,7 @@ namespace InteropTypes.Graphics.Drawing
         : IFormattable
         , IEnumerable<Single>
         , IEquatable<Point3>
-        , IEquatable<VECTOR3>
+        , IEquatable<XYZ>
         , IComparable<BoundingSphere>
     {
         #region diagnostics
@@ -50,7 +47,7 @@ namespace InteropTypes.Graphics.Drawing
         #region implicit
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Point3(VECTOR3 p)
+        public static implicit operator Point3(XYZ p)
         {
             #if NET5_0_OR_GREATER
             Unsafe.SkipInit<Point3>(out var pp);
@@ -120,7 +117,7 @@ namespace InteropTypes.Graphics.Drawing
 
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point3(VECTOR3 v) : this() { XYZ = v; }
+        public Point3(XYZ v) : this() { XYZ = v; }
 
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -157,19 +154,19 @@ namespace InteropTypes.Graphics.Drawing
         /// The X and Y component of the point.
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
-        public VECTOR2 XY;
+        public XY XY;
 
         /// <summary>
         /// The Y and Z components of the point.
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(4)]
-        public VECTOR2 YZ;        
+        public XY YZ;        
 
         /// <summary>
         /// The X, Y and Z components of the point.
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
-        public VECTOR3 XYZ;
+        public XYZ XYZ;
 
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public readonly void Deconstruct(out float x, out float y, out float z)
@@ -186,7 +183,7 @@ namespace InteropTypes.Graphics.Drawing
         public readonly override bool Equals(object obj)
         {
             if (obj is Point3 otherP) return this.XYZ == otherP.XYZ;
-            if (obj is VECTOR3 otherV) return this.XYZ == otherV;
+            if (obj is XYZ otherV) return this.XYZ == otherV;
             return false;
         }
 
@@ -194,7 +191,7 @@ namespace InteropTypes.Graphics.Drawing
         public readonly bool Equals(Point3 other) => AreEqual(this, other);
 
         /// <inheritdoc/>
-        public readonly bool Equals(VECTOR3 other) => AreEqual(this, other);
+        public readonly bool Equals(XYZ other) => AreEqual(this, other);
 
         /// <inheritdoc/>
         public static bool operator ==(in Point3 a, in Point3 b) => AreEqual(a, b);
@@ -203,41 +200,41 @@ namespace InteropTypes.Graphics.Drawing
         public static bool operator !=(in Point3 a, in Point3 b) => !AreEqual(a, b);
 
         /// <inheritdoc/>
-        public static bool operator ==(in Point3 a, in VECTOR3 b) => AreEqual(a, b);
+        public static bool operator ==(in Point3 a, in XYZ b) => AreEqual(a, b);
 
         /// <inheritdoc/>
-        public static bool operator !=(in Point3 a, in VECTOR3 b) => !AreEqual(a, b);
+        public static bool operator !=(in Point3 a, in XYZ b) => !AreEqual(a, b);
 
         public static bool AreEqual(in Point3 a, in Point3 b) { return a.XYZ == b.XYZ; }        
 
         public static bool AreEqual(in Point3 a, in Point3 b, float tolerance)
         {
-            return VECTOR3.Distance(a.XYZ, b.XYZ) <= tolerance;
+            return XYZ.Distance(a.XYZ, b.XYZ) <= tolerance;
         }
 
         #endregion
 
         #region properties
 
-        public static Point3 Zero => VECTOR3.Zero;
+        public static Point3 Zero => XYZ.Zero;
         public static Point3 Half => new Point3(0.5f, 0.5f, 0.5f);
-        public static Point3 One => VECTOR3.One;
-        public static Point3 UnitX => VECTOR3.UnitX;
-        public static Point3 UnitY => VECTOR3.UnitY;
-        public static Point3 UnitZ => VECTOR3.UnitZ;
+        public static Point3 One => XYZ.One;
+        public static Point3 UnitX => XYZ.UnitX;
+        public static Point3 UnitY => XYZ.UnitY;
+        public static Point3 UnitZ => XYZ.UnitZ;
 
         public readonly float Length => XYZ.Length();
 
         /// <summary>
         /// The X and Z components of the point.
         /// </summary>
-        public readonly VECTOR2 XZ => new VECTOR2(X, Z);
+        public readonly XY XZ => new XY(X, Z);
 
         public readonly int DominantAxis
         {
             get
             {
-                var t = VECTOR3.Abs(this.XYZ);
+                var t = XYZ.Abs(this.XYZ);
                 return t.X >= t.Y ? t.X >= t.Z ? 0 : 2 : t.Y >= t.Z ? 1 : 2;
             }
         }
@@ -248,31 +245,31 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator -(Point3 a) { return -a.XYZ; }
+        public static XYZ operator -(Point3 a) { return -a.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator *(Point3 a, float b) { return a.XYZ * b; }
+        public static XYZ operator *(Point3 a, float b) { return a.XYZ * b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator /(Point3 a, float b) { return a.XYZ / b; }
+        public static XYZ operator /(Point3 a, float b) { return a.XYZ / b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator *(Point3 a, Point3 b) { return a.XYZ * b.XYZ; }
+        public static XYZ operator *(Point3 a, Point3 b) { return a.XYZ * b.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator /(Point3 a, Point3 b) { return a.XYZ / b.XYZ; }
+        public static XYZ operator /(Point3 a, Point3 b) { return a.XYZ / b.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator +(Point3 a, Point3 b) { return a.XYZ + b.XYZ; }
+        public static XYZ operator +(Point3 a, Point3 b) { return a.XYZ + b.XYZ; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 operator -(Point3 a, Point3 b) { return a.XYZ - b.XYZ; }
+        public static XYZ operator -(Point3 a, Point3 b) { return a.XYZ - b.XYZ; }
 
         #endregion
 
@@ -282,15 +279,15 @@ namespace InteropTypes.Graphics.Drawing
         public static int GetDominantAxis(Point3 point) { return point.DominantAxis; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Lerp(Point3 a, Point3 b, float amount)
+        public static XYZ Lerp(Point3 a, Point3 b, float amount)
         {
-            return VECTOR3.Lerp(a.XYZ, b.XYZ, amount);
+            return XYZ.Lerp(a.XYZ, b.XYZ, amount);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR3 Cross(Point3 a, Point3 b, Point3 c)
+        public static XYZ Cross(Point3 a, Point3 b, Point3 c)
         {
-            return VECTOR3.Cross(b.XYZ - a.XYZ, c.XYZ - b.XYZ);
+            return XYZ.Cross(b.XYZ - a.XYZ, c.XYZ - b.XYZ);
         }
 
         /// <summary>
@@ -301,7 +298,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <returns>The angle, in radians.</returns>
         public static float AngleInRadians(Point3 a, Point3 b)
         {
-            var dot = VECTOR3.Dot(a.Normalized(), b.Normalized());
+            var dot = XYZ.Dot(a.Normalized(), b.Normalized());
             if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
@@ -309,24 +306,24 @@ namespace InteropTypes.Graphics.Drawing
             return MathF.Acos(dot);            
         }
 
-        public readonly VECTOR3 Normalized()
+        public readonly XYZ Normalized()
         {
-            return VECTOR3.Normalize(this.XYZ);
+            return XYZ.Normalize(this.XYZ);
         }
 
-        public readonly VECTOR3 Normalized(out float length)
+        public readonly XYZ Normalized(out float length)
         {
             length = this.XYZ.Length();
             return this.XYZ / length;
         }
 
-        public static VECTOR3 Normalize(Point3 value, out float length)
+        public static XYZ Normalize(Point3 value, out float length)
         {
             length = value.XYZ.Length();
             return value.XYZ / length;
         }
 
-        public readonly VECTOR3 WithLength(float len)
+        public readonly XYZ WithLength(float len)
         {
             len /= XYZ.Length();
             return XYZ * len;
@@ -347,7 +344,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </returns>
         public readonly int CompareTo(BoundingSphere other)
         {
-            return VECTOR3
+            return XYZ
                 .Distance(this.XYZ, other.Center)
                 .CompareTo(other.Radius);
         }
@@ -363,12 +360,12 @@ namespace InteropTypes.Graphics.Drawing
         public readonly void CopyTo(Span<Point3> dst) { dst[0] = this; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void CopyTo(Span<VECTOR3> dst) { dst[0] = this.XYZ; }        
+        public readonly void CopyTo(Span<XYZ> dst) { dst[0] = this.XYZ; }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Point3 Transform(Point3 p, in System.Numerics.Matrix4x4 xform)
         {
-            return VECTOR3.Transform(p.XYZ, xform);
+            return XYZ.Transform(p.XYZ, xform);
         }        
 
         #endregion
@@ -377,15 +374,15 @@ namespace InteropTypes.Graphics.Drawing
 
         #if NET6_0_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref VECTOR3 AsNumerics(ref Point3 point)
+        public static ref XYZ AsNumerics(ref Point3 point)
         {
-            return ref Unsafe.As<Point3, VECTOR3>(ref point);
+            return ref Unsafe.As<Point3, XYZ>(ref point);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref Point3 AsPoint(ref VECTOR3 point)
+        public static ref Point3 AsPoint(ref XYZ point)
         {
-            return ref Unsafe.As<VECTOR3, Point3>(ref point);
+            return ref Unsafe.As<XYZ, Point3>(ref point);
         }
         #endif
 

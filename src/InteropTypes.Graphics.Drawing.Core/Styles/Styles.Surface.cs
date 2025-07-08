@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using GDICOLOR = System.Drawing.Color;
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>

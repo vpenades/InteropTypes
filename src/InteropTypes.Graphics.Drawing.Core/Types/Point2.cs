@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-using VECTOR2 = System.Numerics.Vector2;
-using GDIPOINT = System.Drawing.Point;
-using GDIPOINTF = System.Drawing.PointF;
-using GDISIZE = System.Drawing.Size;
-using GDISIZEF = System.Drawing.SizeF;
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
@@ -34,7 +28,7 @@ namespace InteropTypes.Graphics.Drawing
         : IFormattable
         , IEnumerable<Single>
         , IEquatable<Point2>
-        , IEquatable<VECTOR2>
+        , IEquatable<XY>
         , IEquatable<GDIPOINTF>
         , IEquatable<GDISIZEF>        
     {
@@ -81,7 +75,7 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator Point2(VECTOR2 p)
+        public static implicit operator Point2(XY p)
         {
             #if NET5_0_OR_GREATER
             Unsafe.SkipInit<Point2>(out var pp);
@@ -158,7 +152,7 @@ namespace InteropTypes.Graphics.Drawing
 
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point2(VECTOR2 vector) : this() { XY = vector; }
+        public Point2(XY vector) : this() { XY = vector; }
 
         [System.Diagnostics.DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -206,7 +200,7 @@ namespace InteropTypes.Graphics.Drawing
         /// The X and Y components of the point.
         /// </summary>
         [System.Runtime.InteropServices.FieldOffset(0)]
-        public VECTOR2 XY;
+        public XY XY;
 
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public readonly void Deconstruct(out float x, out float y)
@@ -222,7 +216,7 @@ namespace InteropTypes.Graphics.Drawing
         public readonly override bool Equals(object obj)
         {
             if (obj is Point2 otherP) return this.XY == otherP.XY;
-            if (obj is VECTOR2 otherV) return this.XY == otherV;
+            if (obj is XY otherV) return this.XY == otherV;
             if (obj is GDIPOINTF otherGP) return AreEqual(this, otherGP);
             if (obj is GDISIZEF otherGS) return AreEqual(this, otherGS);            
             return false;
@@ -232,7 +226,7 @@ namespace InteropTypes.Graphics.Drawing
         public readonly bool Equals(Point2 other) => AreEqual(this, other);
 
         /// <inheritdoc/>
-        public readonly bool Equals(VECTOR2 other) => AreEqual(this, other);
+        public readonly bool Equals(XY other) => AreEqual(this, other);
 
         /// <inheritdoc/>
         public readonly bool Equals(GDIPOINTF other) => AreEqual(this, other);
@@ -247,34 +241,34 @@ namespace InteropTypes.Graphics.Drawing
         public static bool operator !=(in Point2 a, Point2 b) => !AreEqual(a, b);
 
         /// <inheritdoc/>
-        public static bool operator ==(in Point2 a, VECTOR2 b) => AreEqual(a, b);
+        public static bool operator ==(in Point2 a, XY b) => AreEqual(a, b);
 
         /// <inheritdoc/>
-        public static bool operator !=(in Point2 a, VECTOR2 b) => !AreEqual(a, b);
+        public static bool operator !=(in Point2 a, XY b) => !AreEqual(a, b);
 
         public static bool AreEqual(in Point2 a, in Point2 b) { return a.XY == b.XY; }        
 
         public static bool AreEqual(in Point2 a, in Point2 b, float tolerance)
         {
-            return VECTOR2.Distance(a.XY, b.XY) <= tolerance;
+            return XY.Distance(a.XY, b.XY) <= tolerance;
         }
 
         #endregion
 
         #region properties
 
-        public static Point2 Zero => VECTOR2.Zero;
+        public static Point2 Zero => XY.Zero;
         public static Point2 Half => new Point2(0.5f, 0.5f);
-        public static Point2 One => VECTOR2.One;
-        public static Point2 UnitX => VECTOR2.UnitX;
-        public static Point2 UnitY => VECTOR2.UnitY;
+        public static Point2 One => XY.One;
+        public static Point2 UnitX => XY.UnitX;
+        public static Point2 UnitY => XY.UnitY;
         public readonly float Length => XY.Length();
         
         public readonly int DominantAxis
         {
             get
             {
-                var t = VECTOR2.Abs(this.XY);
+                var t = XY.Abs(this.XY);
                 return t.X >= t.Y ? 0 : 1;
             }
         }
@@ -285,31 +279,31 @@ namespace InteropTypes.Graphics.Drawing
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator -(Point2 a) { return -a.XY; }
+        public static XY operator -(Point2 a) { return -a.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator *(Point2 a, float b) { return a.XY * b; }
+        public static XY operator *(Point2 a, float b) { return a.XY * b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator /(Point2 a, float b) { return a.XY / b; }
+        public static XY operator /(Point2 a, float b) { return a.XY / b; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator *(Point2 a, Point2 b) { return a.XY * b.XY; }
+        public static XY operator *(Point2 a, Point2 b) { return a.XY * b.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator /(Point2 a, Point2 b) { return a.XY / b.XY; }
+        public static XY operator /(Point2 a, Point2 b) { return a.XY / b.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator +(Point2 a, Point2 b) { return a.XY + b.XY; }
+        public static XY operator +(Point2 a, Point2 b) { return a.XY + b.XY; }
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 operator -(Point2 a, Point2 b) { return a.XY - b.XY; }
+        public static XY operator -(Point2 a, Point2 b) { return a.XY - b.XY; }
 
         #endregion
 
@@ -319,21 +313,21 @@ namespace InteropTypes.Graphics.Drawing
         public static int GetDominantAxis(Point2 point) { return point.DominantAxis; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Center(System.Drawing.Rectangle rect)
+        public static XY Center(System.Drawing.Rectangle rect)
         {
-            return new VECTOR2(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
+            return new XY(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Center(System.Drawing.RectangleF rect)
+        public static XY Center(System.Drawing.RectangleF rect)
         {
-            return new VECTOR2(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
+            return new XY(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Lerp(Point2 a, Point2 b, float amount)
+        public static XY Lerp(Point2 a, Point2 b, float amount)
         {
-            return VECTOR2.Lerp(a.XY, b.XY, amount);
+            return XY.Lerp(a.XY, b.XY, amount);
         }
 
         /// <summary>
@@ -344,7 +338,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <returns>The angle, in radians.</returns>
         public static float AngleInRadians(Point2 a, Point2 b)
         {
-            var dot = VECTOR2.Dot(a.Normalized(), b.Normalized());
+            var dot = XY.Dot(a.Normalized(), b.Normalized());
             if (float.IsNaN(dot)) return 0;
             dot = Math.Min(dot, 1);
             dot = Math.Max(dot, -1);
@@ -378,24 +372,24 @@ namespace InteropTypes.Graphics.Drawing
             return Cross(b-a, c-b);
         }
 
-        public readonly VECTOR2 Normalized()
+        public readonly XY Normalized()
         {
-            return VECTOR2.Normalize(this.XY);
+            return XY.Normalize(this.XY);
         }
 
-        public readonly VECTOR2 Normalized(out float length)
+        public readonly XY Normalized(out float length)
         {
             length = this.XY.Length();
             return this.XY / length;
         }
 
-        public static VECTOR2 Normalize(Point2 value, out float length)
+        public static XY Normalize(Point2 value, out float length)
         {
             length = value.XY.Length();
             return value.XY / length;
         }
 
-        public readonly VECTOR2 WithLength(float len)
+        public readonly XY WithLength(float len)
         {
             len /= XY.Length();
             return XY * len;
@@ -407,10 +401,10 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="a">The begin point of the segment.</param>
         /// <param name="b">The end point of the segment.</param>
         /// <returns>the point of the segment</returns>
-        public readonly VECTOR2 GetClosestSegmentPoint(Point2 a, Point2 b)
+        public readonly XY GetClosestSegmentPoint(Point2 a, Point2 b)
         {
             var v = b - a;
-            var u = VECTOR2.Dot(this.XY - a, v) / v.LengthSquared();
+            var u = XY.Dot(this.XY - a, v) / v.LengthSquared();
             
             u = Math.Clamp(u, 0, 1);            
 
@@ -430,27 +424,27 @@ namespace InteropTypes.Graphics.Drawing
         public readonly void CopyTo(Span<Point2> dst) { dst[0] = this; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void CopyTo(Span<VECTOR2> dst) { dst[0] = this.XY; }        
+        public readonly void CopyTo(Span<XY> dst) { dst[0] = this.XY; }        
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Transform(Point2 p, in System.Numerics.Matrix3x2 xform) { return VECTOR2.Transform(p.XY, xform); }
+        public static XY Transform(Point2 p, in System.Numerics.Matrix3x2 xform) { return XY.Transform(p.XY, xform); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Transform(float x, float y, in System.Numerics.Matrix3x2 xform) { return VECTOR2.Transform(new VECTOR2(x, y), xform); }        
+        public static XY Transform(float x, float y, in System.Numerics.Matrix3x2 xform) { return XY.Transform(new XY(x, y), xform); }
 
         #endregion
 
         #region conversions
 
-        #if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref VECTOR2 AsNumerics(ref Point2 point) { return ref Unsafe.As<Point2, VECTOR2>(ref point); }
+        public static ref XY AsNumerics(ref Point2 point) { return ref Unsafe.As<Point2, XY>(ref point); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref Point2 AsPoint(ref VECTOR2 point) { return ref Unsafe.As<VECTOR2, Point2>(ref point); }
+        public static ref Point2 AsPoint(ref XY point) { return ref Unsafe.As<XY, Point2>(ref point); }
 
-        #endif
+#endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly GDIPOINTF ToGDIPoint() { return new GDIPOINTF(X, Y); }

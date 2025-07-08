@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using ASSET = System.Object;
-using SCALAR = System.Single;
-using XFORM2 = System.Numerics.Matrix3x2;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
+
 
 namespace InteropTypes.Graphics.Drawing
 {

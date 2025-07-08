@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 using MEMMARSHALL = System.Runtime.InteropServices.MemoryMarshal;
 
-using VECTOR2 = System.Numerics.Vector2;
+
 
 
 namespace InteropTypes.Graphics.Drawing
@@ -49,40 +49,40 @@ namespace InteropTypes.Graphics.Drawing
         #region Centroid
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Centroid(Point2[] points) { return Centroid(points.AsSpan()); }
+        public static XY Centroid(Point2[] points) { return Centroid(points.AsSpan()); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Centroid(VECTOR2[] points) { return Centroid(points.AsSpan()); }
+        public static XY Centroid(XY[] points) { return Centroid(points.AsSpan()); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Centroid(ReadOnlySpan<Point2> points)
+        public static XY Centroid(ReadOnlySpan<Point2> points)
         {
-            if (points.Length == 0) return VECTOR2.Zero;
+            if (points.Length == 0) return XY.Zero;
 
-            var r = VECTOR2.Zero;
+            var r = XY.Zero;
             foreach (var p in points) { r += p.XY; }
             return r / points.Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Centroid(ReadOnlySpan<VECTOR2> points)
+        public static XY Centroid(ReadOnlySpan<XY> points)
         {
-            if (points.Length == 0) return VECTOR2.Zero;
+            if (points.Length == 0) return XY.Zero;
 
-            var r = VECTOR2.Zero;
+            var r = XY.Zero;
             foreach (var p in points) { r += p; }
             return r / points.Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Centroid(IEnumerable<Point2> points)
+        public static XY Centroid(IEnumerable<Point2> points)
         {
             var weight = 1;
-            return points.Aggregate(VECTOR2.Zero, (i, j) => { ++weight; return i + j.XY; }) / weight;
+            return points.Aggregate(XY.Zero, (i, j) => { ++weight; return i + j.XY; }) / weight;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VECTOR2 Centroid(IEnumerable<VECTOR2> points)
+        public static XY Centroid(IEnumerable<XY> points)
         {
             var weight = 1;
             return points.Aggregate((i, j) => { ++weight; return i + j; }) / weight;
@@ -130,10 +130,10 @@ namespace InteropTypes.Graphics.Drawing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<VECTOR2> AsNumerics(Span<Point2> points) { return MEMMARSHALL.Cast<Point2, VECTOR2>(points); }
+        public static Span<XY> AsNumerics(Span<Point2> points) { return MEMMARSHALL.Cast<Point2, XY>(points); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<VECTOR2> AsNumerics(ReadOnlySpan<Point2> points) { return MEMMARSHALL.Cast<Point2, VECTOR2>(points); }
+        public static ReadOnlySpan<XY> AsNumerics(ReadOnlySpan<Point2> points) { return MEMMARSHALL.Cast<Point2, XY>(points); }
 
         #endregion
 
@@ -146,7 +146,7 @@ namespace InteropTypes.Graphics.Drawing
 
             for (int i = 0; i < points.Length; ++i)
             {
-                v2[i] = VECTOR2.Transform(v2[i], xform);
+                v2[i] = XY.Transform(v2[i], xform);
             }
         }
 
@@ -157,7 +157,7 @@ namespace InteropTypes.Graphics.Drawing
 
             for (int i = 0; i < points.Length; ++i)
             {
-                v2[i] = VECTOR2.TransformNormal(v2[i], xform);
+                v2[i] = XY.TransformNormal(v2[i], xform);
             }
         }
 
@@ -173,7 +173,7 @@ namespace InteropTypes.Graphics.Drawing
 
             while (count-- > 0)
             {
-                dstv = VECTOR2.Transform(srcv, xform);
+                dstv = XY.Transform(srcv, xform);
                 dstv = ref Unsafe.Add(ref dstv, 1);
                 srcv = ref Unsafe.Add(ref srcv, 1);
             }
@@ -183,7 +183,7 @@ namespace InteropTypes.Graphics.Drawing
             var srcv = AsNumerics(src);
             var dstv = AsNumerics(dst);
 
-            for(int i=0; i < count; ++i) { dstv[i] = VECTOR2.Transform(srcv[i], xform); }
+            for(int i=0; i < count; ++i) { dstv[i] = XY.Transform(srcv[i], xform); }
 
             #endif
         }
@@ -200,7 +200,7 @@ namespace InteropTypes.Graphics.Drawing
 
             while (count-- > 0)
             {
-                dstv = VECTOR2.TransformNormal(srcv, xform);
+                dstv = XY.TransformNormal(srcv, xform);
                 dstv = ref Unsafe.Add(ref dstv, 1);
                 srcv = ref Unsafe.Add(ref srcv, 1);
             }
@@ -210,7 +210,7 @@ namespace InteropTypes.Graphics.Drawing
             var srcv = AsNumerics(src);
             var dstv = AsNumerics(dst);
 
-            for (int i = 0; i < count; ++i) { dstv[i] = VECTOR2.TransformNormal(srcv[i], xform); }
+            for (int i = 0; i < count; ++i) { dstv[i] = XY.TransformNormal(srcv[i], xform); }
 
             #endif
         }

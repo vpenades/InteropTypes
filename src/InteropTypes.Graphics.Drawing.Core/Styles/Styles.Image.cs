@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-using XY = System.Numerics.Vector2;
-using XYZ = System.Numerics.Vector3;
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>

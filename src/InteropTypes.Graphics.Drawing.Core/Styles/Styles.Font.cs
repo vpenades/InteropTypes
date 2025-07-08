@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
-using XY = System.Numerics.Vector2;
-using XFORM = System.Numerics.Matrix3x2;
-using System.Diagnostics.CodeAnalysis;
-
 namespace InteropTypes.Graphics.Drawing
 {
     /// <summary>
     /// Style used for font rendering.
     /// </summary>
     /// <remarks>
-    /// Style used by <see cref="ICanvas2D.DrawTextLine(in XFORM, string, float, FontStyle)"/>.
+    /// Style used by <see cref="ICanvas2D.DrawTextLine(in XFORM2, string, float, FontStyle)"/>.
     /// Use Fonts.HersheyFont.Simplex as default font
     /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Font} {Color} {Strength} {Alignment}")]
@@ -164,7 +159,7 @@ namespace InteropTypes.Graphics.Drawing
             return rect;
         }
 
-        public void DrawDecomposedTo(ICoreCanvas2D dc, in XFORM transform, string text, float size)
+        public void DrawDecomposedTo(ICoreCanvas2D dc, in XFORM2 transform, string text, float size)
         {
             if (size == 0) return;
             if (string.IsNullOrWhiteSpace(text)) return;
@@ -181,13 +176,13 @@ namespace InteropTypes.Graphics.Drawing
             if (size > 0)
             {
                 var scale = size / (float)font.Height;
-                xform = XFORM.CreateScale(scale) * xform;
+                xform = XFORM2.CreateScale(scale) * xform;
             }
 
             font.DrawTextLineTo(dc, xform, text, this.Color);
         }
 
-        private static XFORM _GetAlignmentTransform(XFORM xform, Fonts.FontAlignStyle align, ICoreCanvas2D dc)
+        private static XFORM2 _GetAlignmentTransform(XFORM2 xform, Fonts.FontAlignStyle align, ICoreCanvas2D dc)
         {
             float xflip = 1;
             float yflip = 1;            
@@ -209,18 +204,18 @@ namespace InteropTypes.Graphics.Drawing
                 if (axes.Y < 0) yflip *= -1;
             }
 
-            return XFORM.CreateScale(xflip, yflip) * xform;
+            return XFORM2.CreateScale(xflip, yflip) * xform;
         }
 
         private static XY _GetCanvasAxes(ICoreCanvas2D dc)
         {
             if (!(dc is IServiceProvider sprov)) return XY.One;
 
-            if (!(sprov.GetService(typeof(XFORM)) is XFORM canvasXform)) return XY.One;
+            if (!(sprov.GetService(typeof(XFORM2)) is XFORM2 canvasXform)) return XY.One;
             return _GetCanvasAxes(canvasXform);
         }
 
-        private static XY _GetCanvasAxes(XFORM canvasXform)
+        private static XY _GetCanvasAxes(XFORM2 canvasXform)
         {
             var o = XY.Transform(XY.Zero, canvasXform);
             var v = XY.Transform(XY.One, canvasXform);
