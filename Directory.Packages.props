@@ -25,13 +25,13 @@
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
 
-    <PackageVersion Include="System.Text.Json" Version="9.0.6" />
-    <PackageVersion Include="System.Drawing.Common" Version="9.0.6" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="9.0.6" />    
-    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="9.0.6" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.7" />
+    <PackageVersion Include="System.Drawing.Common" Version="9.0.7" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="9.0.7" />    
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="9.0.7" />
     
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="9.0.6" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.7" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.183" />
 
@@ -44,8 +44,8 @@
 
     <PackageVersion Include="NuGet.Configuration" Version="6.14.0" />
 
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20250708" />
-    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20250708" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20250711" />
+    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20250711" />
     
     <!-- Game Engines -->
 
