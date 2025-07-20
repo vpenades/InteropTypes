@@ -44,8 +44,8 @@
 
     <PackageVersion Include="NuGet.Configuration" Version="6.14.0" />
 
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20250711" />
-    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20250711" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20250716" />
+    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20250716" />
     
     <!-- Game Engines -->
 
@@ -84,7 +84,7 @@
 
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
 
-    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.4" />
+    <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.5" />
     
     <!-- Avalonia -->
 
