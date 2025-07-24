@@ -173,6 +173,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteropTypes.Graphics.Backe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{A42D9D85-1D5E-448E-8422-94110206B477}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestComponentsUnderAOT.App", "demos\TestComponentsUnderAOT.App\TestComponentsUnderAOT.App.csproj", "{D395C415-3444-44F2-A3AD-B52961538B30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -431,6 +433,10 @@ Global
 		{E3938175-E822-4EE4-9296-39752FE73D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3938175-E822-4EE4-9296-39752FE73D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3938175-E822-4EE4-9296-39752FE73D04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D395C415-3444-44F2-A3AD-B52961538B30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D395C415-3444-44F2-A3AD-B52961538B30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D395C415-3444-44F2-A3AD-B52961538B30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D395C415-3444-44F2-A3AD-B52961538B30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -499,6 +505,7 @@ Global
 		{709D0CC5-13F3-42A3-8279-43616B27A439} = {2169FAA9-43FF-4D3D-B487-3E93BBD7B2AF}
 		{E3938175-E822-4EE4-9296-39752FE73D04} = {8BAB1140-2A9B-450A-8B38-A1203E72F060}
 		{A42D9D85-1D5E-448E-8422-94110206B477} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
+		{D395C415-3444-44F2-A3AD-B52961538B30} = {B682D47D-DFCA-4CC7-B1F2-E934E69932E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7840461-4EA3-4893-BA13-B7AE37C61806}
