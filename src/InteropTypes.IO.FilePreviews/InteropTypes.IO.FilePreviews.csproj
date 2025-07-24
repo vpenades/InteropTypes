@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AdditionalFiles Remove="NativeMethods.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <SupportedPlatform Include="windows" />
   </ItemGroup>
 

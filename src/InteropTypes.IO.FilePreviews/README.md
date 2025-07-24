@@ -25,7 +25,9 @@ This library can be used to retrieve the operating system's file preview thumbna
 - [IUnknown COM struct doesn't generate a nested interface](https://github.com/microsoft/CsWin32/issues/724)
 - [AOT COM Interop requires ComWrapper instance registered for marshalling](https://github.com/dotnet/runtime/issues/115753)
 - [COM Wrappers](https://learn.microsoft.com/en-us/dotnet/standard/native-interop/tutorial-comwrappers)
-- [CsWin32 AOT support](https://github.com/microsoft/CsWin32/issues/1444)
+- [CsWin32 is not AOT ready](https://github.com/microsoft/CsWin32/issues/1273)
+- [CsWin32 AOT question](https://github.com/microsoft/CsWin32/issues/1444)
+
 	
 ## android
 
