@@ -7,22 +7,42 @@ using System.Runtime.Versioning;
 using Windows.Win32;
 
 using InteropTypes.Graphics;
-using InteropTypes.IO;
 
 namespace InteropTypes.Platforms.Win32
 {
     [SupportedOSPlatform("windows6.0.6000")]
     internal static class FilePreview_Win32_COM
     {
-        public static WindowsBitmap GetPreviewOrDefault(System.IO.FileInfo finfo)
+        public static System.IO.Stream GetStreamOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
         {
             try
             {
-                using (var bmp = GetThumbnail(finfo.FullName, 128, 128))
+                using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
                 {
                     if (bmp == null) return null;
 
-                    return bmp.GetBitmap(PixelFormat.Format24bppRgb);
+                    var mem = new System.IO.MemoryStream();
+
+                    bmp.Save(mem, ImageFormat.Bmp);
+
+                    return mem;
+                }
+            }
+            catch (COMException ex)
+            {
+                return null;
+            }
+        }
+
+        public static WindowsBitmap GetPreviewOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
+        {
+            try
+            {
+                using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
+                {
+                    if (bmp == null) return null;
+
+                    return bmp.GetWindowsBitmap(PixelFormat.Format24bppRgb);
                 }
             }
             catch (COMException ex)
@@ -38,19 +58,19 @@ namespace InteropTypes.Platforms.Win32
         /// <param name="width">image width</param>
         /// <param name="height">image height</param>
         /// <returns>the bitmap of the thumbnail, or null</returns>
-        public static Bitmap GetThumbnail(string filePath, int width, int height)
+        public static Bitmap GetThumbnail(string filePath, IO.FilePreviewOptions clientOptions = null)
         {
+            clientOptions ??= IO.FilePreviewOptions._Default;
+
             // get the file's image factory
             var factory = Windows.Win32.PInvoke.GetShellItemImageFactory(filePath);
             if (factory == null) return null;
 
-            var size = new Windows.Win32.Foundation.SIZE(width, height);            
+            var size = new Windows.Win32.Foundation.SIZE(clientOptions.Width, clientOptions.Height);
 
-            var flags
-                = Windows.Win32.UI.Shell.SIIGBF.SIIGBF_BIGGERSIZEOK
-                // | Windows.Win32.UI.Shell.SIIGBF.SIIGBF_RESIZETOFIT                
-                // | Windows.Win32.UI.Shell.SIIGBF.SIIGBF_THUMBNAILONLY // only if it has an actual thumbnail and not a generic extension image.
-                ;
+            Windows.Win32.UI.Shell.SIIGBF flags = default;
+            if (clientOptions.AllowBigger) flags |= Windows.Win32.UI.Shell.SIIGBF.SIIGBF_BIGGERSIZEOK;
+            if (clientOptions.CachedOnly) flags |= Windows.Win32.UI.Shell.SIIGBF.SIIGBF_THUMBNAILONLY;                
 
             using (var hbmp = factory.GetImage(size, flags))
             {

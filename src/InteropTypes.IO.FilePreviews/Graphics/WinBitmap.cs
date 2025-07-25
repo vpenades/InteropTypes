@@ -9,6 +9,11 @@ namespace InteropTypes.Graphics
     /// This is a special kind of bitmap that is stored in memory in a way that can be used to access the pixel data,
     /// or as a BMP file that can be opened as a Stream
     /// </summary>
+    /// <remarks>
+    /// Usage:<br/>
+    /// 1. Create a WindowsBitmap with the desired dimensions and BPP<br/>
+    /// 2. Fill Rows using UseRow
+    /// </remarks>
     [System.Diagnostics.DebuggerDisplay("{Width}x{Height}x{BytesPerPixel} ... {_Data.Length}")]
     public class WindowsBitmap
     {
@@ -80,10 +85,13 @@ namespace InteropTypes.Graphics
 
         public ReadOnlySpan<byte> GetRowSpan(int y)
         {
-            return GetRow(y);
+            return UseRow(y);
         }
 
-        public ArraySegment<byte> GetRow(int y)
+        [Obsolete("Use UseRow", true)]
+        public ArraySegment<byte> GetRow(int y) { return UseRow(y); }
+
+        public ArraySegment<byte> UseRow(int y)
         {
             var dib = GetDib();
 
@@ -93,10 +101,10 @@ namespace InteropTypes.Graphics
             }
 
             var w = dib.biWidth * dib.biBitCount / 8;
-            return GetPixelsData().Slice(_PadTo4(w) * y, w);
+            return _UsePixelsData().Slice(_PadTo4(w) * y, w);
         }
 
-        private ArraySegment<byte> GetPixelsData()
+        private ArraySegment<byte> _UsePixelsData()
         {
             var offset = (int)GetHeader().OffsetToPixels;
             var data = new ArraySegment<byte>(_Data);

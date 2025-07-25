@@ -17,7 +17,7 @@ namespace InteropTypes
         private void _Run()
         {
             TestFilePreview();
-        }
+        }        
 
         public void TestFilePreview()
         {

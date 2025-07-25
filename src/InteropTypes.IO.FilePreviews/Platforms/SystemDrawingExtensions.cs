@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Versioning;
 
 using InteropTypes.Graphics;
 
-namespace System.Drawing.Imaging
+namespace InteropTypes.Platforms
 {
     [SupportedOSPlatform("windows")]
-    internal static class DrawingExtensions
+    internal static class SystemDrawingExtensions
     {
         public static ArraySegment<byte> SavePngBytes(this Bitmap bitmap)
         {
@@ -24,7 +26,7 @@ namespace System.Drawing.Imaging
             }
         }
 
-        public static unsafe WindowsBitmap GetBitmap(this Bitmap bitmap, PixelFormat format)
+        public static unsafe WindowsBitmap GetWindowsBitmap(this Bitmap bitmap, PixelFormat format)
         {
             var fmt = format;
             if (fmt == PixelFormat.Undefined) fmt = bitmap.PixelFormat;
@@ -33,14 +35,14 @@ namespace System.Drawing.Imaging
 
             var bmpData = bitmap.LockBits(rect, ImageLockMode.ReadOnly, fmt);
 
-            var dstData = GetBitmap(bmpData);
+            var dstData = GetWindowsBitmap(bmpData);
 
             bitmap.UnlockBits(bmpData);
 
             return dstData;
         }
 
-        private static unsafe WindowsBitmap GetBitmap(BitmapData bmpData)
+        private static unsafe WindowsBitmap GetWindowsBitmap(BitmapData bmpData)
         {
             var bpp = Image.GetPixelFormatSize(bmpData.PixelFormat);
             var dstBitmap = new WindowsBitmap(bmpData.Width, bmpData.Height, bpp / 8);
@@ -48,7 +50,7 @@ namespace System.Drawing.Imaging
             for (int y = 0; y < bmpData.Height; y++)
             {
                 var srcRow = GetRow(bmpData, y);
-                var dstRow = dstBitmap.GetRow(y);
+                var dstRow = dstBitmap.UseRow(y);
                 var len = Math.Min(srcRow.Length, dstRow.Count);
                 srcRow.Slice(0, len).CopyTo(dstRow);
             }
@@ -56,7 +58,7 @@ namespace System.Drawing.Imaging
             return dstBitmap;
         }
 
-        private static unsafe Span<Byte> GetRow(BitmapData bmpData, int rowIdx)
+        private static unsafe Span<byte> GetRow(BitmapData bmpData, int rowIdx)
         {
             var srcPtr = bmpData.Scan0;
             srcPtr += bmpData.Stride * rowIdx;
@@ -68,7 +70,7 @@ namespace System.Drawing.Imaging
         /// </summary>
         /// <param name="bmpData"></param>
         /// <returns></returns>
-        private static unsafe Span<Byte> GetSpan(BitmapData bmpData)
+        private static unsafe Span<byte> GetSpan(BitmapData bmpData)
         {
             // var bpp = Image.GetPixelFormatSize(bmpData.PixelFormat);            
 

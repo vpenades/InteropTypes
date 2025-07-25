@@ -11,23 +11,22 @@ using InteropTypes.Graphics;
 using SHFILEATTRIBUTES = Windows.Win32.Storage.FileSystem.FILE_FLAGS_AND_ATTRIBUTES;
 using SHSHELLFLAGS = Windows.Win32.UI.Shell.SHGFI_FLAGS;
 
-
 namespace InteropTypes.Platforms.Win32
 {
     [SupportedOSPlatform("windows6.0.6000")]
     internal static class FilePreview_Win32_PInvoke
     {
-        public static WindowsBitmap GetPreviewOrDefault(System.IO.FileInfo finfo)
+        public static WindowsBitmap GetPreviewOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
         {
             using (var bmp = GetFilePreviewBitmap(finfo.FullName))
             {
                 if (bmp == null) return null;                
 
-                return bmp.GetBitmap(PixelFormat.Format32bppRgb);
+                return bmp.GetWindowsBitmap(clientOptions.GetPixelFormat());
             }
         }
         
-        public static System.Drawing.Bitmap GetFilePreviewBitmap(string filePath)
+        public static System.Drawing.Bitmap GetFilePreviewBitmap(string filePath, IO.FilePreviewOptions clientOptions = null)
         {
             var shinfo = new Windows.Win32.UI.Shell.SHFILEINFOW();
 
