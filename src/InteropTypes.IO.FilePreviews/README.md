@@ -4,6 +4,13 @@
 
 This library can be used to retrieve the operating system's file preview thumbnail.
 
+Current support:
+
+- Windows
+  - COM interface: it works on Net8.0 , but it fails to run if compiled in AOT
+  - WindowsRT APIs: requires the app to be net8.0-windows10.0.19041.0 to work.
+
+
 ### Thumbs.DB
 
 - [Windows_thumbnail_cache](https://en.wikipedia.org/wiki/Windows_thumbnail_cache)
