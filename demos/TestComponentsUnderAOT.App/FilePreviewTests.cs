@@ -16,6 +16,9 @@ namespace InteropTypes
 
         private void _Run()
         {
+            // TestReferenceGetIcon1();
+            // TestReferenceGetIcon2();
+            TestReferenceGetIcon3();
             TestFilePreview();
         }        
 
@@ -28,6 +31,41 @@ namespace InteropTypes
             var bmpPath = System.IO.Path.ChangeExtension(Environment.ProcessPath, ".bmp");
 
             bmp.Save(bmpPath);
+        }
+
+        public void TestReferenceGetIcon1()
+        {
+            var srcPath = System.IO.Path.Combine(AppContext.BaseDirectory, "shannon.jpg");
+            var dstPath = System.IO.Path.Combine(AppContext.BaseDirectory, "shannon.ico");
+
+            using var icon = ExtractIcon1.GetIcon(srcPath, false);
+
+            using (var s = System.IO.File.Create(dstPath))
+            {
+                icon.Save(s);
+            }            
+        }
+
+        public void TestReferenceGetIcon2()
+        {
+            var srcPath = System.IO.Path.Combine(AppContext.BaseDirectory, "shannon.jpg");
+            var dstPath = System.IO.Path.Combine(AppContext.BaseDirectory, "shannon.bmp");
+
+            using var sntb = new ShellThumbnail();
+
+            using var bmp = sntb.GetThumbnail(srcPath);
+
+            bmp.Save(dstPath);
+        }
+
+        public void TestReferenceGetIcon3()
+        {
+            var srcPath = System.IO.Path.Combine(AppContext.BaseDirectory, "shannon.jpg");
+            var dstPath = System.IO.Path.Combine(AppContext.BaseDirectory, "shannon2.bmp");
+
+            using var bmp = ShellThumbnail2.GetThumbnail(srcPath);
+
+            bmp.Save(dstPath);
         }
 
 
