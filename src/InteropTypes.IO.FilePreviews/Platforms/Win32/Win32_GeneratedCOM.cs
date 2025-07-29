@@ -1,9 +1,12 @@
 ﻿#if NET8_0_OR_GREATER
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 using System.Runtime.Versioning;
+
+using InteropTypes.Graphics;
 
 #nullable disable
 
@@ -11,9 +14,51 @@ using System.Runtime.Versioning;
 namespace InteropTypes.Platforms.Win32
 {
     [SupportedOSPlatform("windows6.0.6000")]
-    internal partial class FilePreview_GeneratedCOM
+    internal static partial class FilePreview_GeneratedCOM
     {
         // https://github.com/dotnet/runtime/issues/115753
+
+        #region public API
+
+        public static System.IO.Stream GetStreamOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
+        {
+            try
+            {
+                using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
+                {
+                    if (bmp == null) return null;
+
+                    var mem = new System.IO.MemoryStream();
+
+                    bmp.Save(mem, ImageFormat.Bmp);
+
+                    return mem;
+                }
+            }
+            catch (COMException ex)
+            {
+                return null;
+            }
+        }
+
+        public static WindowsBitmap GetPreviewOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
+        {
+            try
+            {
+                using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
+                {
+                    if (bmp == null) return null;
+
+                    return bmp.GetWindowsBitmap(PixelFormat.Format24bppRgb);
+                }
+            }
+            catch (COMException ex)
+            {
+                return null;
+            }
+        }
+
+        #endregion
 
         #region API
 
@@ -38,7 +83,7 @@ namespace InteropTypes.Platforms.Win32
 
             var bmp = Bitmap.FromHbitmap(hbitmap);
 
-            // Marshal.ReleaseComObject(ppv); // apparently not needed anymore?
+            // do we require to release ppv?            
 
             return bmp;
         }

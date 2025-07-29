@@ -1,21 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net8.0;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-windows10.0.19041.0</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PlatformTarget>x64</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Remove="NativeMethods.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <SupportedPlatform Include="windows" />
-  </ItemGroup>
-
+  
 
   <PropertyGroup>
     <Description>
@@ -23,12 +14,63 @@
     </Description>    
   </PropertyGroup>
 
+  <Choose>
+
+    <When Condition=" '$(TargetFramework)' != 'net8.0-windows10.0.19041.0' ">
+      <ItemGroup>
+        <Compile Remove="Platforms/UWP/*.cs" />
+        <None Include="Platforms/UWP/*.cs" />
+      </ItemGroup>
+    </When>
+
+    <When Condition=" '$(TargetFramework)' == 'net8.0-windows10.0.19041.0' ">
+      <ItemGroup>
+        <Compile Remove="Platforms/Win32/*.cs" />
+        <None Include="Platforms/Win32/*.cs" />
+      </ItemGroup>
+    </When>    
+
+    <When Condition=" '$(TargetFramework)' == 'net6.0' ">
+
+      <PropertyGroup>
+        <PlatformTarget>x64</PlatformTarget>
+      </PropertyGroup>
+
+      <ItemGroup>
+        <SupportedPlatform Include="windows" />
+      </ItemGroup>
+
+      <ItemGroup>
+        <PackageReference Include="System.Drawing.Common" />
+        <PackageReference Include="Microsoft.Windows.CsWin32">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+      </ItemGroup>
+
+    </When>
+
+    <When Condition=" '$(TargetFramework)' != 'net6.0' ">
+      <ItemGroup>
+        <Compile Remove="Platforms/Win32/Win32.cs" />
+        <Compile Remove="Platforms/Win32/Win32_COM.cs" />
+        <Compile Remove="Platforms/Win32/Win32_PInvoke.cs" />
+        <None Include="Platforms/Win32/Win32.cs" />
+        <None Include="Platforms/Win32/Win32_COM.cs" />
+        <None Include="Platforms/Win32/Win32_PInvoke.cs" />
+      </ItemGroup>
+    </When>
+    
+  </Choose>
+
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" />
-    <PackageReference Include="Microsoft.Windows.CsWin32">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <Compile Remove="Platforms\Win32\Win32.cs" />
+    <Compile Remove="Platforms\Win32\Win32_COM.cs" />
+    <Compile Remove="Platforms\Win32\Win32_PInvoke.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" />    
   </ItemGroup>	
 
 </Project>
