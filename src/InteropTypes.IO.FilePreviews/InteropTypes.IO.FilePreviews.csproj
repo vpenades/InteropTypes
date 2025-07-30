@@ -14,23 +14,28 @@
     </Description>    
   </PropertyGroup>
 
-  <Choose>
+  <ItemGroup>
+    <Compile Remove="Platforms\**\*.cs" />
+    <None Include="Platforms\**\*.cs" />
+    <Compile Include="Platforms\SystemDrawingExtensions.cs" />
+    <None Remove="Platforms\SystemDrawingExtensions.cs" />
+  </ItemGroup>
 
-    <When Condition=" '$(TargetFramework)' != 'net8.0-windows10.0.19041.0' ">
-      <ItemGroup>
-        <Compile Remove="Platforms/UWP/*.cs" />
-        <None Include="Platforms/UWP/*.cs" />
-      </ItemGroup>
-    </When>
+  <Choose>    
 
     <When Condition=" '$(TargetFramework)' == 'net8.0-windows10.0.19041.0' ">
       <ItemGroup>
-        <Compile Remove="Platforms/Win32/*.cs" />
-        <None Include="Platforms/Win32/*.cs" />
+        <Compile Include="Platforms/UWP/*.cs" />
+        <None Remove="Platforms/UWP/*.cs" />
       </ItemGroup>
     </When>    
 
     <When Condition=" '$(TargetFramework)' == 'net6.0' ">
+
+      <ItemGroup>
+        <Compile Include="Platforms/Win32/*.cs" />
+        <None Remove="Platforms/Win32/*.cs" />
+      </ItemGroup>
 
       <PropertyGroup>
         <PlatformTarget>x64</PlatformTarget>
@@ -51,23 +56,13 @@
     </When>
 
     <When Condition=" '$(TargetFramework)' != 'net6.0' ">
-      <ItemGroup>
-        <Compile Remove="Platforms/Win32/Win32.cs" />
-        <Compile Remove="Platforms/Win32/Win32_COM.cs" />
-        <Compile Remove="Platforms/Win32/Win32_PInvoke.cs" />
-        <None Include="Platforms/Win32/Win32.cs" />
-        <None Include="Platforms/Win32/Win32_COM.cs" />
-        <None Include="Platforms/Win32/Win32_PInvoke.cs" />
+      <ItemGroup>        
+        <Compile Include="Platforms/Win32/Win32_GeneratedCOM.cs" />
+        <None Remove="Platforms/Win32/Win32_GeneratedCOM.cs" />
       </ItemGroup>
     </When>
     
-  </Choose>
-
-  <ItemGroup>
-    <Compile Remove="Platforms\Win32\Win32.cs" />
-    <Compile Remove="Platforms\Win32\Win32_COM.cs" />
-    <Compile Remove="Platforms\Win32\Win32_PInvoke.cs" />
-  </ItemGroup>
+  </Choose>  
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" />    
