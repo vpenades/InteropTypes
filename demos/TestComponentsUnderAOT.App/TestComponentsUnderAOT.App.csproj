@@ -7,12 +7,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>      
 		<PublishAot>true</PublishAot>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\tests\Resources\shannon.jpg" Link="shannon.jpg" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\InteropTypes.IO.FilePreviews\InteropTypes.IO.FilePreviews.csproj" />

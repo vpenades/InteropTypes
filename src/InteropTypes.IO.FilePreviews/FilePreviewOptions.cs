@@ -12,7 +12,7 @@ namespace InteropTypes.IO
         internal static FilePreviewOptions _Default { get; } = new FilePreviewOptions();
 
         public bool AllowBigger { get; set; } = true;
-        public bool CachedOnly { get; set; } = true;
+        public bool CachedOnly { get; set; } = false;
 
         public bool PrefferTransparency { get; set; } = false;
 

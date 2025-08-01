@@ -27,6 +27,8 @@ Current support:
   - [forensics rust 1](https://github.com/berkus/thumbsdb)
   - [forensics rust 2](https://github.com/berkus/thumbsdbkit)
 
+  https://stackoverflow.com/questions/1439719/c-sharp-get-thumbnail-from-file-via-windows-api
+
 ## Windows COM support in AOT
 
 - [IUnknown COM struct doesn't generate a nested interface](https://github.com/microsoft/CsWin32/issues/724)
