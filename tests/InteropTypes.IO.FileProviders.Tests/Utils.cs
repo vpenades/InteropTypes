@@ -47,7 +47,7 @@ namespace InteropTypes.IO
 
         private static void Indent(int indent)
         {
-            for (int i = 0; i < indent; i++) TestContext.Write("  ");
+            for (int i = 0; i < indent; i++) TestContext.Out.Write("  ");
         }
     }
 }
