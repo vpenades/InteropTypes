@@ -142,7 +142,7 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the local transform associated to this image (Pivot, scale, mirroring).
         /// </summary>
         /// <returns>A transform matrix.</returns>
-        public readonly System.Numerics.Matrix3x2 GetTransform() { return Image.UseTransforms().GetImageMatrix(_Orientation); }
+        public readonly XFORM2 GetTransform() { return Image.UseTransforms().GetImageMatrix(_Orientation); }
 
         /// <summary>
         /// Gets the local transform associated to this image (Pivot, scale, mirroring).
@@ -150,7 +150,7 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="mirrorX">True to mirror horizontally.</param>
         /// <param name="mirrorY">True to mirror vertically.</param>
         /// <returns>A transform matrix.</returns>
-        public readonly System.Numerics.Matrix3x2 GetTransform(bool mirrorX, bool mirrorY)
+        public readonly XFORM2 GetTransform(bool mirrorX, bool mirrorY)
         {
             var o = _Orientation;
             o ^= mirrorX ? _ImageFlags.FlipHorizontal : _ImageFlags.None;
@@ -166,11 +166,11 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="xform">the transform to apply</param>
         /// <param name="premultiplyColor">true to pass the color as premultiplied</param>
         /// <param name="depthZ">the depth to set in the Position.Z of the vertices</param>
-        public readonly void TransformVertices(Span<Vertex3> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false, float depthZ = 1)
+        public readonly void FillVertices(Span<Vertex3> vertices, in XFORM2 xform, bool premultiplyColor = false, float depthZ = 1)
         {
             var c = premultiplyColor ? this.Color.ToPremul() : this.Color;
 
-            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c, depthZ);
+            Image.UseTransforms().FillVertices(vertices, xform, _Orientation, c, depthZ);
         }
 
         /// <summary>
@@ -179,11 +179,11 @@ namespace InteropTypes.Graphics.Drawing
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
         /// <param name="xform">the transform to apply</param>        
         /// <param name="premultiplyColor">true to pass the color as premultiplied</param>
-        public readonly void TransformVertices(Span<Vertex2> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false)
+        public readonly void FillVertices(Span<Vertex2> vertices, in XFORM2 xform, bool premultiplyColor = false)
         {
             var c = premultiplyColor ? this.Color.ToPremul() : this.Color;
 
-            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation, c);
+            Image.UseTransforms().FillVertices(vertices, xform, _Orientation, c);
         }
 
         /// <summary>
@@ -191,9 +191,9 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="vertices">The vertices to be initialized. It must have a length of 4</param>
         /// <param name="xform">the transform to apply</param>        
-        public readonly void TransformVertices(Span<XY> vertices, in System.Numerics.Matrix3x2 xform)
+        public readonly void FillVertices(Span<XY> vertices, in XFORM2 xform)
         {
-            Image.UseTransforms().TransformVertices(vertices, xform, _Orientation);
+            Image.UseTransforms().FillVertices(vertices, xform, _Orientation);
         }
 
         /// <summary>
@@ -201,10 +201,10 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>
         /// <param name="xform">transform</param>
         /// <returns>A bounding rectangle of the destination vertices</returns>
-        public readonly RectangleF GetVerticesBounds(in System.Numerics.Matrix3x2 xform)
+        public readonly RectangleF GetVerticesBounds(in XFORM2 xform)
         {
             Span<XY> vertices = stackalloc XY[4];
-            TransformVertices(vertices, in xform);
+            FillVertices(vertices, in xform);
 
             var min = XY.Min(vertices[0], vertices[1]);
             min = XY.Min(min, vertices[2]);

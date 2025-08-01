@@ -360,10 +360,10 @@ namespace InteropTypes.Graphics.Drawing
         /// Gets the region within the source image, defined by the UV0,UV1,UV2,V3 coordinates.
         /// </summary>
         /// <returns>A rectangle.</returns>
-        public System.Drawing.RectangleF GetSourceRectangle()        
+        public GDIRECTF GetSourceRectangle()        
         {
             var wh = _SourceUVMax - _SourceUVMin;
-            return new System.Drawing.RectangleF(_SourceUVMin.X, _SourceUVMin.Y, wh.X, wh.Y);
+            return new GDIRECTF(_SourceUVMin.X, _SourceUVMin.Y, wh.X, wh.Y);
         }
 
         internal _ImageSourceTransforms UseTransforms()
@@ -372,7 +372,7 @@ namespace InteropTypes.Graphics.Drawing
             return _Transforms;
         }
 
-        internal System.Numerics.Matrix3x2 _GetImageMatrix(bool mirrorX, bool mirrorY)
+        internal XFORM2 _GetImageMatrix(bool mirrorX, bool mirrorY)
         {
             var size = _SourceUVMax - _SourceUVMin;
 
@@ -381,16 +381,16 @@ namespace InteropTypes.Graphics.Drawing
 
             if (_PivotPrecedence) // flip before pivot
             {
-                var final = System.Numerics.Matrix3x2.CreateScale(size.X * sx, size.Y * sy);
+                var final = XFORM2.CreateScale(size.X * sx, size.Y * sy);
                 final.Translation += new XY(Math.Max(0, -final.M11), Math.Max(0, -final.M22));
                 final.Translation -= _Pivot * _OutputScale;
                 return final;
             }
             else // pivot before flip
             {
-                var final = System.Numerics.Matrix3x2.CreateScale(size);
+                var final = XFORM2.CreateScale(size);
                 final.Translation = -_Pivot;
-                final *= System.Numerics.Matrix3x2.CreateScale(sx, sy);
+                final *= XFORM2.CreateScale(sx, sy);
                 return final;
             }
         }
@@ -501,18 +501,18 @@ namespace InteropTypes.Graphics.Drawing
         private readonly XY _UV3; // Bottom left texture coordinate (normalized).
         
         /// Matrices baked from pivot, scale, and flip flags        
-        private readonly System.Numerics.Matrix3x2[] _Transforms = new System.Numerics.Matrix3x2[4];
+        private readonly XFORM2[] _Transforms = new XFORM2[4];
 
         #endregion
 
         #region API
 
-        public System.Numerics.Matrix3x2 GetImageMatrix(_ImageFlags orientation)
+        public XFORM2 GetImageMatrix(_ImageFlags orientation)
         {
             return _Transforms[(int)orientation];
         }        
         
-        public void TransformVertices(Span<Vertex3> vertices, System.Numerics.Matrix3x2 xform, _ImageFlags o, ColorStyle color, float depthZ = 1)
+        public void FillVertices(Span<Vertex3> vertices, XFORM2 xform, _ImageFlags o, ColorStyle color, float depthZ = 1)
         {
             var packed = color.PackedRGBA;
 
@@ -537,7 +537,7 @@ namespace InteropTypes.Graphics.Drawing
             vertices[3].TextureCoord = _UV3;
         }
         
-        public void TransformVertices(Span<Vertex2> vertices, System.Numerics.Matrix3x2 xform, _ImageFlags o, ColorStyle color)
+        public void FillVertices(Span<Vertex2> vertices, XFORM2 xform, _ImageFlags o, ColorStyle color)
         {
             var packed = color.PackedRGBA;
 
@@ -562,7 +562,7 @@ namespace InteropTypes.Graphics.Drawing
             vertices[3].TextureCoord = _UV3;
         }
         
-        public void TransformVertices(Span<XY> vertices, System.Numerics.Matrix3x2 xform, _ImageFlags o)
+        public void FillVertices(Span<XY> vertices, XFORM2 xform, _ImageFlags o)
         {
             xform = _Transforms[(int)o] * xform;
             var r0 = new XY(xform.M11, xform.M12);

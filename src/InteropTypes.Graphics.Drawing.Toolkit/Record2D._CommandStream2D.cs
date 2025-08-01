@@ -308,7 +308,7 @@ namespace InteropTypes.Graphics.Drawing
 
                 Span<XY> vertices = stackalloc XY[4];
 
-                style.TransformVertices(vertices, src.Transform);
+                style.FillVertices(vertices, src.Transform);
 
                 bounds.AddVertex(vertices[0], 0);
                 bounds.AddVertex(vertices[1], 0);

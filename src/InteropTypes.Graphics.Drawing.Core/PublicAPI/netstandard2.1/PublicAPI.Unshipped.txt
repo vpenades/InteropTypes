@@ -1,3 +1,7 @@
+abstract InteropTypes.Graphics.Drawing.Point2.Single2Converter<T>.Create(float x, float y) -> T
+abstract InteropTypes.Graphics.Drawing.Point2.Single2Converter<T>.Read(in T value) -> (float x, float y)
+abstract InteropTypes.Graphics.Drawing.Point3.Single3Converter<T>.Create(float x, float y, float z) -> T
+abstract InteropTypes.Graphics.Drawing.Point3.Single3Converter<T>.Read(in T value) -> (float x, float y, float z)
 const InteropTypes.Graphics.Drawing.GlobalStyle.COLOR = "Color" -> string
 const InteropTypes.Graphics.Drawing.GlobalStyle.FONT = "Font" -> string
 const InteropTypes.Graphics.Drawing.GlobalStyle.NAME = "Name" -> string
@@ -55,6 +59,9 @@ InteropTypes.Graphics.Drawing.CameraTransform3D.WithAxisMatrix(in System.Numeric
 InteropTypes.Graphics.Drawing.CameraTransform3D.WithPlanes(float nearPlane, float farPlane) -> InteropTypes.Graphics.Drawing.CameraTransform3D
 InteropTypes.Graphics.Drawing.CameraTransform3D.WithWorldMatrix(in System.Numerics.Matrix4x4 worldMatrix) -> InteropTypes.Graphics.Drawing.CameraTransform3D
 InteropTypes.Graphics.Drawing.CameraTransform3D.WorldMatrix -> System.Numerics.Matrix4x4
+InteropTypes.Graphics.Drawing.Canvas2DArgs
+InteropTypes.Graphics.Drawing.Canvas2DArgs.Canvas.get -> InteropTypes.Graphics.Drawing.ICanvas2D
+InteropTypes.Graphics.Drawing.Canvas2DArgs.Canvas2DArgs(InteropTypes.Graphics.Drawing.ICanvas2D canvas) -> void
 InteropTypes.Graphics.Drawing.ColorStyle
 InteropTypes.Graphics.Drawing.ColorStyle.ColorStyle() -> void
 InteropTypes.Graphics.Drawing.ColorStyle.ColorStyle(int color) -> void
@@ -67,6 +74,7 @@ InteropTypes.Graphics.Drawing.ColorStyle.Equals(InteropTypes.Graphics.Drawing.Co
 InteropTypes.Graphics.Drawing.ColorStyle.IsEmpty.get -> bool
 InteropTypes.Graphics.Drawing.ColorStyle.IsVisible.get -> bool
 InteropTypes.Graphics.Drawing.ColorStyle.Opaque.get -> InteropTypes.Graphics.Drawing.ColorStyle
+InteropTypes.Graphics.Drawing.ColorStyle.PackedRGBA.get -> uint
 InteropTypes.Graphics.Drawing.ColorStyle.ToGDI() -> System.Drawing.Color
 InteropTypes.Graphics.Drawing.ColorStyle.ToPremul() -> InteropTypes.Graphics.Drawing.ColorStyle
 InteropTypes.Graphics.Drawing.ColorStyle.ToString(string format, System.IFormatProvider formatProvider) -> string
@@ -87,6 +95,7 @@ InteropTypes.Graphics.Drawing.Fonts.IFont
 InteropTypes.Graphics.Drawing.Fonts.IFont.DrawTextLineTo(InteropTypes.Graphics.Drawing.ICoreCanvas2D target, System.Numerics.Matrix3x2 transform, string text, InteropTypes.Graphics.Drawing.ColorStyle tintColor) -> void
 InteropTypes.Graphics.Drawing.Fonts.IFont.Height.get -> int
 InteropTypes.Graphics.Drawing.Fonts.IFont.MeasureTextLine(string text) -> System.Drawing.RectangleF
+InteropTypes.Graphics.Drawing.Fonts.IFont.ToStyle() -> InteropTypes.Graphics.Drawing.FontStyle
 InteropTypes.Graphics.Drawing.FontStyle
 InteropTypes.Graphics.Drawing.FontStyle.DrawDecomposedTo(InteropTypes.Graphics.Drawing.ICoreCanvas2D dc, in System.Numerics.Matrix3x2 transform, string text, float size) -> void
 InteropTypes.Graphics.Drawing.FontStyle.Equals(InteropTypes.Graphics.Drawing.FontStyle other) -> bool
@@ -95,6 +104,7 @@ InteropTypes.Graphics.Drawing.FontStyle.FontStyle(InteropTypes.Graphics.Drawing.
 InteropTypes.Graphics.Drawing.FontStyle.FontStyle(InteropTypes.Graphics.Drawing.Fonts.IFont font, InteropTypes.Graphics.Drawing.ColorStyle color, float strength) -> void
 InteropTypes.Graphics.Drawing.FontStyle.FontStyle(InteropTypes.Graphics.Drawing.Fonts.IFont font, InteropTypes.Graphics.Drawing.ColorStyle color, float strength, InteropTypes.Graphics.Drawing.Fonts.FontAlignStyle align) -> void
 InteropTypes.Graphics.Drawing.FontStyle.IsVisible.get -> bool
+InteropTypes.Graphics.Drawing.FontStyle.MeasureTextLine(string text, float size) -> System.Drawing.RectangleF
 InteropTypes.Graphics.Drawing.FontStyle.TrySetDefaultFontTo(object target) -> bool
 InteropTypes.Graphics.Drawing.FontStyle.TrySetDefaultFontTo(ref InteropTypes.Graphics.Drawing.GlobalStyle target) -> bool
 InteropTypes.Graphics.Drawing.FontStyle.With(float strength) -> InteropTypes.Graphics.Drawing.FontStyle
@@ -141,6 +151,9 @@ InteropTypes.Graphics.Drawing.ImageSource.WithSource(object source, int width, i
 InteropTypes.Graphics.Drawing.ImageSource.WithSourceSize(int width, int height) -> InteropTypes.Graphics.Drawing.ImageSource
 InteropTypes.Graphics.Drawing.ImageStyle
 InteropTypes.Graphics.Drawing.ImageStyle.Equals(InteropTypes.Graphics.Drawing.ImageStyle other) -> bool
+InteropTypes.Graphics.Drawing.ImageStyle.FillVertices(System.Span<InteropTypes.Graphics.Drawing.Vertex2> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false) -> void
+InteropTypes.Graphics.Drawing.ImageStyle.FillVertices(System.Span<InteropTypes.Graphics.Drawing.Vertex3> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false, float depthZ = 1) -> void
+InteropTypes.Graphics.Drawing.ImageStyle.FillVertices(System.Span<System.Numerics.Vector2> vertices, in System.Numerics.Matrix3x2 xform) -> void
 InteropTypes.Graphics.Drawing.ImageStyle.Flags.get -> int
 InteropTypes.Graphics.Drawing.ImageStyle.FlipHorizontal.get -> bool
 InteropTypes.Graphics.Drawing.ImageStyle.FlipVertical.get -> bool
@@ -154,9 +167,6 @@ InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle(InteropTypes.Graphics.Drawin
 InteropTypes.Graphics.Drawing.ImageStyle.ImageStyle(InteropTypes.Graphics.Drawing.ImageSource bitmap, InteropTypes.Graphics.Drawing.ColorStyle color, int flags) -> void
 InteropTypes.Graphics.Drawing.ImageStyle.IsEmpty.get -> bool
 InteropTypes.Graphics.Drawing.ImageStyle.IsVisible.get -> bool
-InteropTypes.Graphics.Drawing.ImageStyle.TransformVertices(System.Span<InteropTypes.Graphics.Drawing.Vertex2> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false) -> void
-InteropTypes.Graphics.Drawing.ImageStyle.TransformVertices(System.Span<InteropTypes.Graphics.Drawing.Vertex3> vertices, in System.Numerics.Matrix3x2 xform, bool premultiplyColor = false, float depthZ = 1) -> void
-InteropTypes.Graphics.Drawing.ImageStyle.TransformVertices(System.Span<System.Numerics.Vector2> vertices, in System.Numerics.Matrix3x2 xform) -> void
 InteropTypes.Graphics.Drawing.ImageStyle.WithMirror(bool horizontal, bool vertical) -> InteropTypes.Graphics.Drawing.ImageStyle
 InteropTypes.Graphics.Drawing.ImageStyle.WithOpacity(float opacity) -> InteropTypes.Graphics.Drawing.ImageStyle
 InteropTypes.Graphics.Drawing.IMeshCanvas2D
@@ -245,6 +255,8 @@ InteropTypes.Graphics.Drawing.Point2.Equals(System.Drawing.SizeF other) -> bool
 InteropTypes.Graphics.Drawing.Point2.Equals(System.Numerics.Vector2 other) -> bool
 InteropTypes.Graphics.Drawing.Point2.GetClosestSegmentPoint(InteropTypes.Graphics.Drawing.Point2 a, InteropTypes.Graphics.Drawing.Point2 b) -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Point2.GetEnumerator() -> System.Collections.Generic.IEnumerator<float>
+InteropTypes.Graphics.Drawing.Point2.JsonConverter
+InteropTypes.Graphics.Drawing.Point2.JsonConverter.JsonConverter() -> void
 InteropTypes.Graphics.Drawing.Point2.Length.get -> float
 InteropTypes.Graphics.Drawing.Point2.Normalized() -> System.Numerics.Vector2
 InteropTypes.Graphics.Drawing.Point2.Normalized(out float length) -> System.Numerics.Vector2
@@ -256,6 +268,8 @@ InteropTypes.Graphics.Drawing.Point2.Point2(System.Drawing.PointF point) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(System.Numerics.Vector2 vector) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(System.Random rnd) -> void
 InteropTypes.Graphics.Drawing.Point2.Point2(System.ReadOnlySpan<float> span) -> void
+InteropTypes.Graphics.Drawing.Point2.Single2Converter<T>
+InteropTypes.Graphics.Drawing.Point2.Single2Converter<T>.Single2Converter() -> void
 InteropTypes.Graphics.Drawing.Point2.ToArray() -> float[]
 InteropTypes.Graphics.Drawing.Point2.ToGDIPoint() -> System.Drawing.PointF
 InteropTypes.Graphics.Drawing.Point2.ToGDISize() -> System.Drawing.SizeF
@@ -274,6 +288,8 @@ InteropTypes.Graphics.Drawing.Point3.DominantAxis.get -> int
 InteropTypes.Graphics.Drawing.Point3.Equals(InteropTypes.Graphics.Drawing.Point3 other) -> bool
 InteropTypes.Graphics.Drawing.Point3.Equals(System.Numerics.Vector3 other) -> bool
 InteropTypes.Graphics.Drawing.Point3.GetEnumerator() -> System.Collections.Generic.IEnumerator<float>
+InteropTypes.Graphics.Drawing.Point3.JsonConverter
+InteropTypes.Graphics.Drawing.Point3.JsonConverter.JsonConverter() -> void
 InteropTypes.Graphics.Drawing.Point3.Length.get -> float
 InteropTypes.Graphics.Drawing.Point3.Normalized() -> System.Numerics.Vector3
 InteropTypes.Graphics.Drawing.Point3.Normalized(out float length) -> System.Numerics.Vector3
@@ -283,6 +299,8 @@ InteropTypes.Graphics.Drawing.Point3.Point3(InteropTypes.Graphics.Drawing.Point2
 InteropTypes.Graphics.Drawing.Point3.Point3(System.Numerics.Vector3 v) -> void
 InteropTypes.Graphics.Drawing.Point3.Point3(System.Random rnd) -> void
 InteropTypes.Graphics.Drawing.Point3.Point3(System.ReadOnlySpan<float> span) -> void
+InteropTypes.Graphics.Drawing.Point3.Single3Converter<T>
+InteropTypes.Graphics.Drawing.Point3.Single3Converter<T>.Single3Converter() -> void
 InteropTypes.Graphics.Drawing.Point3.ToArray() -> float[]
 InteropTypes.Graphics.Drawing.Point3.ToString(string format, System.IFormatProvider formatProvider) -> string
 InteropTypes.Graphics.Drawing.Point3.WithLength(float len) -> System.Numerics.Vector3
@@ -307,6 +325,9 @@ InteropTypes.Graphics.Drawing.PolygonStyle.WithFill(InteropTypes.Graphics.Drawin
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(float ow) -> InteropTypes.Graphics.Drawing.PolygonStyle
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor) -> InteropTypes.Graphics.Drawing.PolygonStyle
 InteropTypes.Graphics.Drawing.PolygonStyle.WithOutline(InteropTypes.Graphics.Drawing.ColorStyle outlineColor, float ow) -> InteropTypes.Graphics.Drawing.PolygonStyle
+InteropTypes.Graphics.Drawing.Scene3DArgs
+InteropTypes.Graphics.Drawing.Scene3DArgs.Scene.get -> InteropTypes.Graphics.Drawing.IScene3D
+InteropTypes.Graphics.Drawing.Scene3DArgs.Scene3DArgs(InteropTypes.Graphics.Drawing.IScene3D scene) -> void
 InteropTypes.Graphics.Drawing.Segment2
 InteropTypes.Graphics.Drawing.Segment2.Deconstruct(out System.Numerics.Vector2 a, out System.Numerics.Vector2 b) -> void
 InteropTypes.Graphics.Drawing.Segment2.Direction.get -> System.Numerics.Vector2
@@ -392,9 +413,13 @@ override InteropTypes.Graphics.Drawing.OutlineFillStyle.Equals(object obj) -> bo
 override InteropTypes.Graphics.Drawing.OutlineFillStyle.GetHashCode() -> int
 override InteropTypes.Graphics.Drawing.Point2.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.Point2.GetHashCode() -> int
+override InteropTypes.Graphics.Drawing.Point2.Single2Converter<T>.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) -> T
+override InteropTypes.Graphics.Drawing.Point2.Single2Converter<T>.Write(System.Text.Json.Utf8JsonWriter writer, T value, System.Text.Json.JsonSerializerOptions options) -> void
 override InteropTypes.Graphics.Drawing.Point2.ToString() -> string
 override InteropTypes.Graphics.Drawing.Point3.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.Point3.GetHashCode() -> int
+override InteropTypes.Graphics.Drawing.Point3.Single3Converter<T>.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) -> T
+override InteropTypes.Graphics.Drawing.Point3.Single3Converter<T>.Write(System.Text.Json.Utf8JsonWriter writer, T value, System.Text.Json.JsonSerializerOptions options) -> void
 override InteropTypes.Graphics.Drawing.Point3.ToString() -> string
 override InteropTypes.Graphics.Drawing.PolygonStyle.Equals(object obj) -> bool
 override InteropTypes.Graphics.Drawing.PolygonStyle.GetHashCode() -> int
@@ -529,6 +554,9 @@ static InteropTypes.Graphics.Drawing.Point2.AreEqual(in InteropTypes.Graphics.Dr
 static InteropTypes.Graphics.Drawing.Point2.Array(params InteropTypes.Graphics.Drawing.Point2[] points) -> InteropTypes.Graphics.Drawing.Point2[]
 static InteropTypes.Graphics.Drawing.Point2.AsNumerics(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points) -> System.ReadOnlySpan<System.Numerics.Vector2>
 static InteropTypes.Graphics.Drawing.Point2.AsNumerics(System.Span<InteropTypes.Graphics.Drawing.Point2> points) -> System.Span<System.Numerics.Vector2>
+static InteropTypes.Graphics.Drawing.Point2.AsPoints<T>(System.Collections.Generic.List<T> points) -> System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2>
+static InteropTypes.Graphics.Drawing.Point2.AsPoints<T>(System.ReadOnlySpan<T> points) -> System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2>
+static InteropTypes.Graphics.Drawing.Point2.Center(System.Drawing.Rectangle rect) -> System.Numerics.Vector2
 static InteropTypes.Graphics.Drawing.Point2.Center(System.Drawing.RectangleF rect) -> System.Numerics.Vector2
 static InteropTypes.Graphics.Drawing.Point2.Centroid(InteropTypes.Graphics.Drawing.Point2[] points) -> System.Numerics.Vector2
 static InteropTypes.Graphics.Drawing.Point2.Centroid(System.Collections.Generic.IEnumerable<InteropTypes.Graphics.Drawing.Point2> points) -> System.Numerics.Vector2
@@ -541,6 +569,7 @@ static InteropTypes.Graphics.Drawing.Point2.Cross(InteropTypes.Graphics.Drawing.
 static InteropTypes.Graphics.Drawing.Point2.DebugAssertIsFinite(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point2> points) -> void
 static InteropTypes.Graphics.Drawing.Point2.FromRect(System.Span<InteropTypes.Graphics.Drawing.Point2> points, System.Drawing.RectangleF rect, bool closed = false) -> void
 static InteropTypes.Graphics.Drawing.Point2.GetDominantAxis(InteropTypes.Graphics.Drawing.Point2 point) -> int
+static InteropTypes.Graphics.Drawing.Point2.Half.get -> InteropTypes.Graphics.Drawing.Point2
 static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2((double X, double Y) p) -> InteropTypes.Graphics.Drawing.Point2
 static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2((float X, float Y) p) -> InteropTypes.Graphics.Drawing.Point2
 static InteropTypes.Graphics.Drawing.Point2.implicit operator InteropTypes.Graphics.Drawing.Point2(System.Drawing.Point p) -> InteropTypes.Graphics.Drawing.Point2
@@ -580,7 +609,10 @@ static InteropTypes.Graphics.Drawing.Point3.AreEqual(in InteropTypes.Graphics.Dr
 static InteropTypes.Graphics.Drawing.Point3.Array(params InteropTypes.Graphics.Drawing.Point3[] points) -> InteropTypes.Graphics.Drawing.Point3[]
 static InteropTypes.Graphics.Drawing.Point3.AsNumerics(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> points) -> System.ReadOnlySpan<System.Numerics.Vector3>
 static InteropTypes.Graphics.Drawing.Point3.AsNumerics(System.Span<InteropTypes.Graphics.Drawing.Point3> points) -> System.Span<System.Numerics.Vector3>
+static InteropTypes.Graphics.Drawing.Point3.AsPoints<T>(System.Collections.Generic.List<T> points) -> System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3>
+static InteropTypes.Graphics.Drawing.Point3.AsPoints<T>(System.ReadOnlySpan<T> points) -> System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3>
 static InteropTypes.Graphics.Drawing.Point3.Centroid(InteropTypes.Graphics.Drawing.Point3[] points) -> System.Numerics.Vector3
+static InteropTypes.Graphics.Drawing.Point3.Centroid(System.Collections.Generic.IEnumerable<InteropTypes.Graphics.Drawing.Point3> points) -> System.Numerics.Vector3
 static InteropTypes.Graphics.Drawing.Point3.Centroid(System.Collections.Generic.IEnumerable<System.Numerics.Vector3> points) -> System.Numerics.Vector3
 static InteropTypes.Graphics.Drawing.Point3.Centroid(System.Numerics.Vector3[] points) -> System.Numerics.Vector3
 static InteropTypes.Graphics.Drawing.Point3.Centroid(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> points) -> System.Numerics.Vector3

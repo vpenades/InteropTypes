@@ -66,6 +66,9 @@ namespace InteropTypes.Graphics.Drawing
         /// <summary>
         /// Draws/Fills a closed polygon.
         /// </summary>
+        /// <remarks>
+        /// The capacity of drawing non convex polygons depends on the backend.
+        /// </remarks>
         /// <param name="points">The vertices of the polygon.</param>
         /// <param name="style">The outline and fill style.</param>        
         void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle style);

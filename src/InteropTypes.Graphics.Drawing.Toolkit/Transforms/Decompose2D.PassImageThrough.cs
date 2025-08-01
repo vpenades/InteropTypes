@@ -113,7 +113,9 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
             {
-                _Check(); SetImage(null);
+                // Text can be drawn either as vectorial shapes or by using sprite sheets.
+
+                _Check();
 
                 if (_Backend != null) font.DrawDecomposedTo(_Backend, transform, text, size);
                 else font.DrawDecomposedTo(_Target, transform, text, size);

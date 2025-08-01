@@ -143,9 +143,9 @@ namespace InteropTypes.Graphics.Drawing
 
         #region drawing support
 
-        public System.Drawing.RectangleF MeasureTextLine(string text, float size)
+        public GDIRECTF MeasureTextLine(string text, float size)
         {
-            var rect = Font?.MeasureTextLine(text) ?? System.Drawing.RectangleF.Empty;
+            var rect = Font?.MeasureTextLine(text) ?? GDIRECTF.Empty;
 
             if (size <= 0) size = Font?.Height ?? 1;
 
