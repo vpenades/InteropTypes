@@ -3,6 +3,9 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
 
+using InteropTypes.Graphics.Backends.Bitmaps;
+using InteropTypes.Graphics.Bitmaps;
+
 namespace InteropTypes.Views;
 
 public partial class MainView : UserControl
@@ -18,8 +21,35 @@ public partial class MainView : UserControl
 
     private async void MainView_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        await _Sprites.RunDynamicsAsync().ConfigureAwait(false);
+        System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
+
+        await _Sprites.RunDynamicsAsync();        
     }
+
+    private void _AsyncUpdateBitmap()
+    {
+        var bmp = new MemoryBitmap(256, 256, Pixel.BGR24.Format);
+        var rnd = new Random();
+
+        while (true)
+        {
+            System.Threading.Thread.Sleep(1000 / 100);
+
+            if (bmp.TryGetBuffer(out var buffer))
+            {
+                var data = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(buffer.Array);
+
+                for (int i = 0; i < data.Length; ++i)
+                {
+                    data[i] = rnd.Next();
+                }
+            }
+
+            ClientBitmap.Update(bmp);
+        }
+    }
+
+    public AvaloniaBitmapSwapChain ClientBitmap { get; } = new AvaloniaBitmapSwapChain();
 
     private InteropTypes._Scene2D _Scene = new _Scene2D();
     private InteropTypes._Sprites2D _Sprites = new _Sprites2D();    

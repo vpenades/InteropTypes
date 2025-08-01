@@ -83,22 +83,17 @@ namespace InteropTypes.Graphics.Backends.WPF
         /// <param name="src"></param>
         public void Update(SpanBitmap src)
         {
-            if (!this.CheckAccess())
-            {
-                // Create an internal copy
-                if (!BackBuffer.TryEnqueue(src)) return;
+            if (this.CheckAccess()) { _UpdateDirect(src); return; }
+            
+            // Create an internal copy
+            if (!BackBuffer.TryEnqueue(src)) return;
 
-                // And invoke the update in the UI thread.
-                try { this.Dispatcher.Invoke(_UpdateFromBackBuffer); }
+            // And invoke the update in the UI thread.
+            try { this.Dispatcher.Invoke(_UpdateFromBackBuffer); }
 
-                // When the app closes and the Dispatcher has shut down any of these DispatcherOperations
-                // still in the queue are aborted and throw the TaskCanceledException.
-                catch (System.Threading.Tasks.TaskCanceledException) { }
-
-                return;
-            }            
-
-            _UpdateDirect(src);
+            // When the app closes and the Dispatcher has shut down any of these DispatcherOperations
+            // still in the queue are aborted and throw the TaskCanceledException.
+            catch (System.Threading.Tasks.TaskCanceledException) { }
         }
 
         private void _UpdateDirect(SpanBitmap src)

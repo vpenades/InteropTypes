@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Avalonia;
 using Avalonia.Platform;
 
 using InteropTypes.Graphics.Bitmaps;
 
 using AVABITMAP = Avalonia.Media.Imaging.Bitmap;
-using AVARWBITMAP = Avalonia.Media.Imaging.WriteableBitmap;
-
 using AVAPIXRECT = Avalonia.PixelRect;
 using AVAPIXSIZE = Avalonia.PixelSize;
+using AVARWBITMAP = Avalonia.Media.Imaging.WriteableBitmap;
 using AVAVECTOR2 = Avalonia.Vector;
 
 namespace InteropTypes.Graphics.Backends
@@ -72,6 +72,23 @@ namespace InteropTypes.Graphics.Backends
             {
                 return AsPointerBitmap(srcLock).AsSpanBitmap().ToMemoryBitmap();
             }
+        }
+
+        public static AVARWBITMAP ToAvaloniaBitmap(SpanBitmap src) // seems it works
+        {
+            var s = new AVAPIXSIZE(src.Width, src.Height);
+            var v = new AVAVECTOR2(96, 96);
+
+            var (c, a) = ToPixelFormat(src.PixelFormat, true);
+
+            // apparently it stores values in Rgba8888 anyway
+            if (c == Avalonia.Platform.PixelFormat.Bgra8888) c = Avalonia.Platform.PixelFormat.Rgba8888;
+
+            var dst = new AVARWBITMAP(s, v, c, a);
+
+            CopyPixels(src, dst);
+
+            return dst;
         }
 
         public static void CopyPixels(MemoryBitmap src, AVARWBITMAP dst)

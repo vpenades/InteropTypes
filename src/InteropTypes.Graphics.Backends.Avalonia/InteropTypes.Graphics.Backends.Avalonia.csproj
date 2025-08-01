@@ -15,6 +15,10 @@
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Bitmaps\Avalonia\" />
   </ItemGroup>  
 
 </Project>

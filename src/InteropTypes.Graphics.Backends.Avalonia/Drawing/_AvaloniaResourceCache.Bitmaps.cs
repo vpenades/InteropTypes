@@ -11,13 +11,13 @@ using WRITEABLEBITMAP = Avalonia.Media.Imaging.WriteableBitmap;
 
 namespace InteropTypes.Graphics.Backends
 {
-    using INTERPIXFMT = Bitmaps.PixelFormat;
+    using INTERPIXFMT = InteropTypes.Graphics.Bitmaps.PixelFormat;
     
     partial class _AvaloniaResourceCache
     {
         #region data
 
-        private static readonly INTERPIXFMT _BindablePixelFormat = Bitmaps.Pixel.BGRA32.Format;
+        private static readonly INTERPIXFMT _BindablePixelFormat = InteropTypes.Graphics.Bitmaps.Pixel.BGRA32.Format;
 
         private readonly Dictionary<Object, AVALONIABITMAP> _ImagesCache = new Dictionary<Object, AVALONIABITMAP>();
 
@@ -59,7 +59,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (!(image is WRITEABLEBITMAP dstWriteable)) return image;
 
-            if (imageKey is Bitmaps.BindableBitmap srcBindable)
+            if (imageKey is InteropTypes.Graphics.Bitmaps.BindableBitmap srcBindable)
             {
                 srcBindable.UpdateFromQueue(_BindablePixelFormat);
                 return _CreateFromSource(srcBindable, dstWriteable);
@@ -68,7 +68,7 @@ namespace InteropTypes.Graphics.Backends
             return image;
         }
 
-        private static AVALONIABITMAP _CreateFromSource(Bitmaps.SpanBitmap.ISource srcBindable, WRITEABLEBITMAP dstBmp = null)
+        private static AVALONIABITMAP _CreateFromSource(InteropTypes.Graphics.Bitmaps.SpanBitmap.ISource srcBindable, WRITEABLEBITMAP dstBmp = null)
         {
             if (dstBmp != null)
             {
@@ -81,7 +81,7 @@ namespace InteropTypes.Graphics.Backends
 
         private static AVALONIABITMAP _CreateDynamicBitmap(object imageKey)
         {
-            if (imageKey is Bitmaps.BindableBitmap srcBindable)
+            if (imageKey is InteropTypes.Graphics.Bitmaps.BindableBitmap srcBindable)
             {
                 srcBindable.UpdateFromQueue(_BindablePixelFormat);
                 return _CreateFromSource(srcBindable);
@@ -94,7 +94,7 @@ namespace InteropTypes.Graphics.Backends
         {
             if (imageKey is AVALONIABITMAP abitmap) return abitmap;
 
-            if (imageKey is Bitmaps.SpanBitmap.ISource ibmp)
+            if (imageKey is InteropTypes.Graphics.Bitmaps.SpanBitmap.ISource ibmp)
             {
                 return _CreateFromSource(ibmp);
             }

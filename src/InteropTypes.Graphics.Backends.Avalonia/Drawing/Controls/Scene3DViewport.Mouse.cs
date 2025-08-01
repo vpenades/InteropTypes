@@ -17,7 +17,7 @@ namespace InteropTypes.Graphics.Backends.Controls
     {
         #region data
 
-        private float _ZoomFactor = 0;
+        private float _ZoomFactor = 0;        
 
         private Avalonia.Point _LastMousePosition;
 

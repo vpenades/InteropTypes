@@ -5,11 +5,13 @@
              xmlns:vm="clr-namespace:InteropTypes.ViewModels"
              xmlns:l="clr-namespace:InteropTypes.Views"
              xmlns:interop="urn:InteropTypes"
+						 xmlns:bckavl="using:InteropTypes.Graphics.Backends.AVL"
              xmlns:demo="using:InteropTypes"
              xmlns:drawing="using:InteropTypes.Graphics.Backends.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="InteropTypes.Views.MainView"
-             x:DataType="demo:AppMVVM">
+             x:DataType="demo:AppMVVM"
+						 x:Name="mySelf">
 
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
@@ -48,6 +50,10 @@
       </drawing:Scene3DView>
       
     </TabItem>
+
+		<TabItem Header="bitmaps">
+			<Image Source="{Binding #mySelf.ClientBitmap.FrontBuffer}" />
+		</TabItem>
 
   </TabControl>
 

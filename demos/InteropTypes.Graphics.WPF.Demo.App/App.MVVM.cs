@@ -9,9 +9,6 @@ using InteropTypes.Graphics.Backends.WPF;
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
 
-using InteropTypes;
-using System.Windows.Input;
-
 namespace WPFDemo
 {
     internal class AppMVVM : InteropTypes.AppMVVM
