@@ -14,7 +14,7 @@ namespace InteropTypes.Vision
     /// <param name="data">The actual model bytecode.</param>
     /// <param name="settings">Image input settings.</param>
     /// <returns></returns>
-    public delegate IModelGraph ModelReadCallback(string name, Byte[] data, TensorImageSettings? settings);
+    public delegate IModelGraph ModelReadCallback(string name, Byte[] data, TensorImageSettings settings);
 
     /// <summary>
     /// Represents the instance of a DNN model in memory, created from ONNX, Caffee, TFLite, etc<br/>    
