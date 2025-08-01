@@ -22,6 +22,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         /// </remarks>
         int Height { get; }
 
-        void DrawTextLineTo(ICoreCanvas2D target, System.Numerics.Matrix3x2 transform, string text, ColorStyle tintColor);
+        void DrawTextLineTo(ICoreCanvas2D target, XFORM2 transform, string text, ColorStyle tintColor);        
+        public FontStyle ToStyle() { return (this, GDICOLOR.White); }        
     }
 }

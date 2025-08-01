@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
+using System.Text;
 using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Drawing;
 
+using COLOR = System.Drawing.Color;
 using XFORM = System.Numerics.Matrix3x2;
 using XY = System.Numerics.Vector2;
-using COLOR = System.Drawing.Color;
 
 namespace InteropTypes
 {
     public class _Sprites2D : GroupBox.Collection
     {
+        #region lifecycle
         protected override void Initialize()
         {
             Register(new _OpacityCatBox());
@@ -26,6 +30,8 @@ namespace InteropTypes
             Render(64, 64, DrawEmbedded);
             Render(120, 64, DrawHalfPixel);
             Render(50, 50, DrawMeshPrimitive);
+
+            Render(150,50, _DrawBitmapText);
         }
 
         public async Task RunDynamicsAsync()
@@ -39,6 +45,8 @@ namespace InteropTypes
             _NoiseBitmap.RunTask();
             _NoiseBitmap2.RunTask();
         }
+
+        #endregion
 
         #region data
 
@@ -66,6 +74,12 @@ namespace InteropTypes
 
         private InteropTypes.BindableNoiseTexture _NoiseBitmap = new BindableNoiseTexture(64,64);
         private InteropTypes.BindableNoiseTexture _NoiseBitmap2 = new BindableNoiseTexture(32, 32);
+
+        public static FontStyle NumbersFont => _NumbersFont._Default.ToStyle();
+
+        private static readonly ImageSource[] Numbers = ImageSource.CreateGrid(_GetImageReference("Numbers.png"), 10, 10, (64, 64), (32, 32))
+            .Select(item => item.WithMirror(false, false))
+            .ToArray();
 
         #endregion
 
@@ -145,6 +159,16 @@ namespace InteropTypes
             xformed?.DrawMeshPrimitive(vertices, new int[] { 0, 1, 2, 0, 2, 3 }, "Assets\\Tiles.png");
         }
 
+        private void _DrawBitmapText(ICanvas2D dc)
+        {
+            dc.DrawTextLine((5, 5), "0123456789", 5, NumbersFont);
+
+            dc.DrawTextLine(XFORM.CreateScale(2) * XFORM.CreateTranslation(5, 15), "0123456789", 5, NumbersFont);
+        }
+
+        #endregion
+
+        #region nested types
 
         class _MapRotationBox : GroupBox
         {
@@ -180,12 +204,12 @@ namespace InteropTypes
             {
                 var rgbScale = XFORM.CreateScale(0.25f);
 
-                for(int i=0; i < 3; ++i)
+                for (int i = 0; i < 3; ++i)
                 {
                     var c = COLOR.FromArgb(i == 0 ? 255 : 0, i == 1 ? 255 : 0, i == 2 ? 255 : 0);
 
                     dc.DrawCircle((10 + i * 40, 15), 30, (COLOR.Black, c, 2));
-                    dc.DrawImage(rgbScale * XFORM.CreateTranslation(10 + i * 40, 15), (_TinyCat, c));                    
+                    dc.DrawImage(rgbScale * XFORM.CreateTranslation(10 + i * 40, 15), (_TinyCat, c));
                 }
             }
         }
@@ -221,6 +245,58 @@ namespace InteropTypes
                 dc.DrawImage(XFORM.CreateTranslation(60, 220), (_Offset1, true, true));
                 dc.DrawImage(XFORM.CreateTranslation(60, 260), (_Offset1, false, true));
             }
+        }
+
+        public class _NumbersFont : InteropTypes.Graphics.Drawing.Fonts.IFont
+        {
+            public static InteropTypes.Graphics.Drawing.Fonts.IFont _Default { get; } = new _NumbersFont();
+
+            public RectangleF MeasureTextLine(string text)
+            {
+                float x = 0;
+
+                foreach (var c in text)
+                {
+                    if (!char.IsNumber(c)) continue;
+                    var idx = (int)c - (int)'0';
+
+                    x += _Width;
+                }
+
+                return new RectangleF(-16, -15, x, Height);
+            }
+
+            public void DrawTextLineTo(ICoreCanvas2D target, Matrix3x2 transform, string text, ColorStyle tintColor)
+            {
+                _PreviewRect(target, transform, text);
+
+                var delta = new XY(_Width, 0);
+                delta = XY.TransformNormal(delta, transform);
+
+                foreach (var c in text)
+                {
+                    if (!char.IsNumber(c)) continue;
+                    var idx = (int)c - (int)'0';
+
+                    target.DrawImage(transform, new ImageStyle(Numbers[idx], tintColor));
+
+                    transform.Translation = transform.Translation += delta;
+                }
+            }
+
+            [Conditional("DEBUG")]
+            private void _PreviewRect(ICoreCanvas2D target, Matrix3x2 transform, string text)
+            {
+                var rect = MeasureTextLine(text);
+                var rectPoints = new Point2[5];
+                InteropTypes.Graphics.Drawing.Point2.FromRect(rectPoints, rect, true);
+                Point2.Transform(rectPoints, transform);
+                target.DrawLines(rectPoints, 2, System.Drawing.Color.Red);
+            }
+
+            private const float _Width = 36;
+
+            public int Height => 30;
         }
 
         #endregion
