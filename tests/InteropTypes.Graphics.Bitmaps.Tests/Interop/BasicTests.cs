@@ -78,18 +78,19 @@ namespace InteropTypes.Graphics.Bitmaps
                     {
                         var p0 = new SkiaSharp.SKPoint(5, 120);
                         var p1 = new SkiaSharp.SKPoint(250, 120);
+                        
+                        using var skiaFont = new SkiaSharp.SKFont(SkiaSharp.SKTypeface.Default, 64);
 
                         using var skiaPaint = new SkiaSharp.SKPaint
                         {
-                            TextSize = 64.0f,
                             IsAntialias = true,
                             StrokeWidth = 20,
                             Color = new SkiaSharp.SKColor(0, 0, 255),
                             Style = SkiaSharp.SKPaintStyle.Fill
                         };
 
-                        canvas.DrawLine(p0, p1, skiaPaint);
-                        canvas.DrawText("SkiaSharp Text", new SkiaSharp.SKPoint(5, 200), skiaPaint);
+                        canvas.DrawLine(p0, p1, skiaPaint);                        
+                        canvas.DrawText("SkiaSharp Text", 5, 200, skiaFont, skiaPaint);
                     });
 
                 // cast to imagesharp Adapter to draw primitives

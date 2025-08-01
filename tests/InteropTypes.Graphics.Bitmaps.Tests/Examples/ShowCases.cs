@@ -58,9 +58,10 @@ namespace InteropTypes.Graphics.Bitmaps
                 var p0 = new SkiaSharp.SKPoint(5, 25);
                 var p1 = new SkiaSharp.SKPoint(45, 25);
 
+                using var skfont = new SkiaSharp.SKFont(SkiaSharp.SKTypeface.Default, 64);
+
                 using var skiaPaint = new SkiaSharp.SKPaint
                 {
-                    TextSize = 64.0f,
                     IsAntialias = true,
                     StrokeWidth = 20,
                     Color = new SkiaSharp.SKColor(0, 255, 0),
@@ -68,7 +69,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 };
 
                 proxy.Canvas.DrawLine(p0, p1, skiaPaint);
-                proxy.Canvas.DrawText("SkiaSharp", new SkiaSharp.SKPoint(5, 200), skiaPaint);
+                proxy.Canvas.DrawText("SkiaSharp", 5, 200, skfont, skiaPaint);
             }
 
             // Use Imagesharp to save to PNG
