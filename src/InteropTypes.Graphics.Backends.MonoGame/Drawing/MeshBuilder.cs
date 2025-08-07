@@ -129,7 +129,7 @@ namespace InteropTypes.Graphics.Backends
             for(int i=0; i <indices.Length; i++)
             {
                 var v = vertices[indices[i]];
-                vvv[i] = _Triangles.UseVertex(v.Position, _DepthZ, new Microsoft.Xna.Framework.Color(v.Color), v.TextureCoord);
+                vvv[i] = _Triangles.UseVertex(v.Position, _DepthZ, new XNACOLOR(v.Color), v.TextureCoord);
             }
 
             for(int i=0; i < vvv.Length; i+=3)
@@ -153,7 +153,7 @@ namespace InteropTypes.Graphics.Backends
 
         #region API
 
-        private void _DrawThinLine(Point3 a, Point3 b, Microsoft.Xna.Framework.Color color)
+        private void _DrawThinLine(Point3 a, Point3 b, XNACOLOR color)
         {
             // add vertices
 
@@ -177,7 +177,7 @@ namespace InteropTypes.Graphics.Backends
             _Lines.AddLine(aa, bb);
         }
 
-        private void _DrawConvexSurface(ReadOnlySpan<Point3> vertices, Microsoft.Xna.Framework.Color color, bool doubleSided)
+        private void _DrawConvexSurface(ReadOnlySpan<Point3> vertices, XNACOLOR color, bool doubleSided)
         {
             // add vertices
 
@@ -246,11 +246,11 @@ namespace InteropTypes.Graphics.Backends
 
         protected void AddIndex(int idx) { _Indices.Add(idx); }
 
-        public int UseVertex(XY position, float z, Microsoft.Xna.Framework.Color color, XY uv)
+        public int UseVertex(XY position, float z, XNACOLOR color, XY uv)
         {
             var v = new VERTEX
             {
-                Position = new Microsoft.Xna.Framework.Vector3(position.X, position.Y, z),
+                Position = new XNAV3(position.X, position.Y, z),
                 Color = color,
                 TextureCoordinate = uv.ToXna()
             };

@@ -61,7 +61,27 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             #endregion
 
-            #region API - ICanvas2D
+            #region API - ICoreCanvas
+
+            /// <inheritdoc/>
+            public void DrawImage(in Matrix3x2 transform, ImageStyle style)
+            {
+                _Check(); SetImage(style.Image);
+
+                _Target.DrawImage(transform, style);
+            }
+
+            /// <inheritdoc/>
+            public void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle fillColor)
+            {
+                _Check(); SetImage(null);
+
+                _Target.DrawConvexPolygon(points, fillColor);
+            }
+
+            #endregion
+
+            #region API - ICanvas
 
             /// <inheritdoc/>
             public virtual void DrawAsset(in Matrix3x2 transform, object asset)
@@ -70,45 +90,30 @@ namespace InteropTypes.Graphics.Drawing.Transforms
                 
                 // we need to redirect the call through ourselves so the SetImage method is properly called.
                 Decompose2D.DrawAsset(this, transform, asset);
-            }
-
-            /// <inheritdoc/>
-            public void DrawImage(in Matrix3x2 transform, ImageStyle style)
-            {
-                _Check(); SetImage(style.Image); _Target.DrawImage(transform, style);
-            }
-
-            /// <inheritdoc/>
-            public void DrawConvexPolygon(ReadOnlySpan<POINT2> points, ColorStyle fillColor)
-            {
-                _Check(); SetImage(null); _Target.DrawConvexPolygon(points, fillColor);
-            }            
+            }           
 
             /// <inheritdoc/>
             public void DrawEllipse(POINT2 center, float width, float height, OutlineFillStyle style)
             {
                 _Check(); SetImage(null);
-
-                if (_Backend != null) Decompose2D.DrawEllipse(_Backend, center, width, height, style);
-                else Decompose2D.DrawEllipse(_Target, center, width, height, style);
+                
+                Decompose2D.DrawEllipse(_Backend ?? _Target, center, width, height, style);
             }
 
             /// <inheritdoc/>
             public void DrawLines(ReadOnlySpan<POINT2> points, float diameter, LineStyle style)
             {
                 _Check(); SetImage(null);
-
-                if (_Backend != null) Decompose2D.DrawLines(_Backend, points, diameter, style);
-                else Decompose2D.DrawLines(_Target, points, diameter, style);
+                
+                Decompose2D.DrawLines(_Backend ?? _Target, points, diameter, style);
             }
 
             /// <inheritdoc/>
             public void DrawPolygon(ReadOnlySpan<POINT2> points, PolygonStyle style)
             {
                 _Check(); SetImage(null);
-
-                if (_Backend != null) Decompose2D.DrawPolygon(_Backend, points, style);
-                else Decompose2D.DrawPolygon(_Target, points, style);
+                
+                Decompose2D.DrawPolygon(_Backend ?? _Target, points, style);
             }
 
             public void DrawTextLine(in Matrix3x2 transform, string text, float size, FontStyle font)
@@ -117,8 +122,16 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
                 _Check();
 
-                if (_Backend != null) font.DrawDecomposedTo(_Backend, transform, text, size);
-                else font.DrawDecomposedTo(_Target, transform, text, size);
+                if (font.Font?.IsVectorial ?? true)
+                {
+                    SetImage(null);
+                    font.DrawDecomposedTo(_Backend ?? _Target, transform, text, size);
+                }
+                else
+                {
+                    // we need to redirect the call through ourselves so the SetImage method is properly called. (same issue as DrawAsset)
+                    font.DrawDecomposedTo(this, transform, text, size);
+                }                
             }
 
             #endregion

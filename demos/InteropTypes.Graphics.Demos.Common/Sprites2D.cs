@@ -249,6 +249,8 @@ namespace InteropTypes
 
         public class _NumbersFont : InteropTypes.Graphics.Drawing.Fonts.IFont
         {
+            public bool IsVectorial => false;
+
             public static InteropTypes.Graphics.Drawing.Fonts.IFont _Default { get; } = new _NumbersFont();
 
             public RectangleF MeasureTextLine(string text)

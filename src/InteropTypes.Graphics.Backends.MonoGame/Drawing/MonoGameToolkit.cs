@@ -8,31 +8,6 @@ using InteropTypes.Graphics.Drawing;
 
 namespace InteropTypes.Graphics.Backends
 {
-    public interface IMonoGameCanvas2D :
-        IRenderTargetInfo,
-        GlobalStyle.ISource,
-        IDisposableCanvas2D,
-        IMeshCanvas2D,
-        ITransformer2D,
-        IServiceProvider
-    {
-        void Begin(int virtualWidth, int virtualHeight, bool keepAspect);
-        void SetCamera(System.Numerics.Matrix3x2 camera);        
-        void End();
-    }
-
-    public interface IMonoGameScene3D :
-        IRenderTargetInfo,
-        GlobalStyle.ISource,
-        IDisposableScene3D,
-        // IMeshScene3D,
-        IServiceProvider
-    {
-        void Clear();
-        void SetCamera(CameraTransform3D camera);
-        void Render();
-    }
-
     public static partial class MonoGameToolkit
     {
         /// <summary>
@@ -70,7 +45,7 @@ namespace InteropTypes.Graphics.Backends
 
             switch (imageSource)
             {
-                case System.Drawing.Color gdicolor:
+                case COLOR gdicolor:
                     {
                         var tex = _CreateSolidTexture(gd, 16, 16, gdicolor.ToXna());
                         return (tex, attr);
@@ -82,12 +57,19 @@ namespace InteropTypes.Graphics.Backends
                         return (tex, attr);
                     }
 
+                case System.IO.FileInfo finfo:
+                    {
+                        var tex = _loadTexture(gd, finfo.OpenRead);
+                        if (tex != null) return (tex, attr);
+                        break;
+                    }
+
                 case Microsoft.Extensions.FileProviders.IFileInfo xinfo:
                     {
                         var tex = _loadTexture(gd, xinfo.CreateReadStream);
                         if (tex != null) return (tex, attr);
                         break;
-                    }
+                    }                
             }
 
             var texx = _loadTexture(gd, () => ImageSource.TryOpenRead(imageSource));
@@ -106,18 +88,20 @@ namespace InteropTypes.Graphics.Backends
             throw new NotImplementedException($"Unknown source: {imageSource}");
         }
 
-        private static Texture2D _loadTexture(GraphicsDevice gd, Func<System.IO.Stream> openDocFunc)
+        private static Texture2D _loadTexture(GraphicsDevice gd, Func<System.IO.Stream> openImageFunc)
         {
+            if (openImageFunc == null) return null;
+
             Texture2D tex;
 
-            using (var s = openDocFunc())
+            using (var s = openImageFunc.Invoke())
             {
                 if (s == null) return null;
 
                 tex = Texture2D.FromStream(gd, s);
             }
 
-            tex.PremultiplyAlpha();
+            tex.PremultiplyAlpha(); // NOTE: if it's a DDS texture we should not do this.
 
             return tex;
         }

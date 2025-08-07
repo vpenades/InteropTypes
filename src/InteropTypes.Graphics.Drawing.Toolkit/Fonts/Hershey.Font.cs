@@ -41,6 +41,8 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
         #region properties
 
+        public bool IsVectorial => true;
+
         public int Height => _UseSettings().height;
         private (int offset,int height) _UseSettings()
         {
@@ -188,7 +190,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             }
 
             offset += Vector3.TransformNormal(new Vector3(glyph.Right, 0, 0), xform);
-        }
+        }        
 
         #endregion
     }

@@ -39,6 +39,8 @@ namespace InteropTypes.Graphics.Backends
 
         #region API
 
+        public bool IsVectorial => false;
+
         public int Height => _Font.Height;
 
         public RectangleF MeasureTextLine(string text) { return _Font.Measure(text); }
@@ -50,7 +52,7 @@ namespace InteropTypes.Graphics.Backends
                 var glyph = _Glyphs[idx];
                 target.DrawImage(xform, (glyph, tintColor));
             }
-        }
+        }        
 
         #endregion
     }

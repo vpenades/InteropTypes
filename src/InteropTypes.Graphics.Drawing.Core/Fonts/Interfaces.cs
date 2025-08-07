@@ -6,6 +6,8 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 {
     public interface IFont
     {
+        public bool IsVectorial { get; }
+
         /// <summary>
         /// calculates the pixel size of the given text line when rendered.
         /// </summary>

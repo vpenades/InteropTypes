@@ -285,7 +285,7 @@ namespace InteropTypes.Graphics.Drawing.Transforms
             }
             else
             {
-                font.DrawDecomposedTo(_Target, transform, text, size);
+                font.DrawDecomposedTo(_Target, transform * _Transform.Forward, text, size);
             }            
         }
 
