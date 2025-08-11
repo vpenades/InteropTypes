@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Linq;
 
-using XYZ = System.Numerics.Vector3;
-using XFORM3 = System.Numerics.Matrix4x4;
-using POINT3 = InteropTypes.Graphics.Drawing.Point3;
-
-
 namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream3D_DebuggerProxy))]    

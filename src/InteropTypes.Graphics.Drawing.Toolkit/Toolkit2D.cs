@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
-using VECTOR2 = System.Numerics.Vector2;
-using BRECT = System.Drawing.RectangleF;
-
-using COLOR = System.Drawing.Color;
-
-using SCALAR = System.Single;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-using XFORM2 = System.Numerics.Matrix3x2;
-
-
 namespace InteropTypes.Graphics.Drawing
 {
     using PRIMITIVE2D = ICoreCanvas2D;
@@ -89,7 +79,7 @@ namespace InteropTypes.Graphics.Drawing
             return Transforms.Canvas2DTransform.Create(target, physicalSize, virtualSize, xform);
         }        
 
-        public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, BRECT virtualBounds)
+        public static CANVAS2DEX CreateTransformed(PRIMITIVE2D t, POINT2 physicalSize, GDIRECTF virtualBounds)
         {
             return Transforms.Canvas2DTransform.Create(t, physicalSize, virtualBounds);
         }
@@ -103,7 +93,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawAsset(transform, asset);
         }        
         
-        public static BRECT? GetAssetBoundingRect(Object asset)
+        public static GDIRECTF? GetAssetBoundingRect(Object asset)
         {            
             if (asset is Record2D model2D) return model2D.BoundingRect;
             if (asset is IDrawingBrush<CANVAS2DEX> drawable)
@@ -118,7 +108,7 @@ namespace InteropTypes.Graphics.Drawing
             return null;
         }
         
-        public static (VECTOR2 Center,Single Radius)? GetAssetBoundingCircle(Object asset)
+        public static (XY Center,Single Radius)? GetAssetBoundingCircle(Object asset)
         {
             if (asset is Record2D model2D) return model2D.BoundingCircle;
             if (asset is IDrawingBrush<CANVAS2DEX> drawable)
@@ -190,11 +180,11 @@ namespace InteropTypes.Graphics.Drawing
             var ab = b.XY - aa;            
 
             var imageXform = style.GetTransform();
-            var sx = new VECTOR2(imageXform.M11, imageXform.M12).Length();
-            var sy = new VECTOR2(imageXform.M21, imageXform.M22).Length();
+            var sx = new XY(imageXform.M11, imageXform.M12).Length();
+            var sy = new XY(imageXform.M21, imageXform.M22).Length();
             var sxx = sx + imageXform.M31 * 2; // subtract pivot "head" and "tail"
 
-            var s = new VECTOR2(ab.Length(), diameter) / new VECTOR2(sxx * sx, sy * sy);
+            var s = new XY(ab.Length(), diameter) / new XY(sxx * sx, sy * sy);
             var r = MathF.Atan2(ab.Y, ab.X);
             var xform = XFORM2.CreateScale(s) * imageXform * XFORM2.CreateRotation(r);
 
@@ -208,7 +198,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawEllipse(center, diameter, diameter, style);
         }
 
-        public static void DrawRectangle(this CANVAS2DEX dc, BRECT rect, in OutlineFillStyle style)
+        public static void DrawRectangle(this CANVAS2DEX dc, GDIRECTF rect, in OutlineFillStyle style)
         {
             dc.DrawRectangle(rect.Location, rect.Size, style);
         }
@@ -217,9 +207,9 @@ namespace InteropTypes.Graphics.Drawing
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
 
-            var scaleX = new VECTOR2(rect.M11, rect.M12);
-            var scaleY = new VECTOR2(rect.M21, rect.M22);
-            var origin = new VECTOR2(rect.M31, rect.M32);
+            var scaleX = new XY(rect.M11, rect.M12);
+            var scaleY = new XY(rect.M21, rect.M22);
+            var origin = new XY(rect.M31, rect.M32);
 
             vertices[0] = origin;
             vertices[1] = origin + scaleX;
@@ -229,7 +219,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawPolygon(vertices, style);
         }
 
-        public static void DrawRectangle(this CANVAS2DEX dc, XFORM2 xform, BRECT rect, in OutlineFillStyle style)
+        public static void DrawRectangle(this CANVAS2DEX dc, XFORM2 xform, GDIRECTF rect, in OutlineFillStyle style)
         {
             Span<POINT2> vertices = stackalloc POINT2[4];
             POINT2.FromRect(vertices, rect, false);
@@ -246,7 +236,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawPolygon(vertices, style);
         }
 
-        public static void DrawRectangle(this CANVAS2DEX dc, BRECT rect, in OutlineFillStyle style, float borderRadius, int arcVertexCount = 6)
+        public static void DrawRectangle(this CANVAS2DEX dc, GDIRECTF rect, in OutlineFillStyle style, float borderRadius, int arcVertexCount = 6)
         {
             dc.DrawRectangle(rect.Location, rect.Size, style, borderRadius, arcVertexCount);
         }
@@ -284,7 +274,7 @@ namespace InteropTypes.Graphics.Drawing
             if (dc.TryGetBackendViewportBounds(out var screenBounds))
             {
                 var screenXform = XFORM2.CreateScale(screenBounds.Width, screenBounds.Height);
-                screenXform.Translation = new VECTOR2(screenBounds.X, screenBounds.Y);
+                screenXform.Translation = new XY(screenBounds.X, screenBounds.Y);
 
                 XFORM2.Invert(style.GetTransform(false, vflip), out var imageXform);
 

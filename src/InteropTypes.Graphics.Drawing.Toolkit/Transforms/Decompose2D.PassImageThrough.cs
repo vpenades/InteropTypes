@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose2D

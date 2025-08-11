@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using XY = System.Numerics.Vector2;
-using XYZ = System.Numerics.Vector3;
 using QROT = System.Numerics.Quaternion;
 
 namespace InteropTypes.Graphics.Drawing

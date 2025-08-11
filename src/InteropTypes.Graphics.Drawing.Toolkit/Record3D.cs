@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-using XYZ = System.Numerics.Vector3;
 using BBOX = System.Numerics.Matrix3x2; // Column 0 is Min, Column 1 is Max
 
 namespace InteropTypes.Graphics.Drawing

@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using SCALAR = System.Single;
-using POINT3 = InteropTypes.Graphics.Drawing.Point3;
-using VECTOR3 = System.Numerics.Vector3;
-
 namespace InteropTypes.Graphics.Drawing.Parametric
 {
     partial class ShapeFactory3D
@@ -15,9 +11,9 @@ namespace InteropTypes.Graphics.Drawing.Parametric
         {
             #region data
 
-            public VECTOR3 Point;
-            public VECTOR3 Direction;
-            public VECTOR3 Axis;
+            public XYZ Point;
+            public XYZ Direction;
+            public XYZ Axis;
             public float Angle;
             public float Diameter;
 
@@ -62,68 +58,68 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
             #region core
 
-            private static void _Fill(Span<PointNode> nodes, ReadOnlySpan<VECTOR3> points, float diameter, bool closed)
+            private static void _Fill(Span<PointNode> nodes, ReadOnlySpan<XYZ> points, float diameter, bool closed)
             {
                 System.Diagnostics.Debug.Assert(points.Length > 1);
                 System.Diagnostics.Debug.Assert(points[0] != points[points.Length-1]);
 
-                var joinPoint = closed ? VECTOR3.Normalize(points[points.Length - 1] - points[0]) : VECTOR3.Zero;
+                var joinPoint = closed ? XYZ.Normalize(points[points.Length - 1] - points[0]) : XYZ.Zero;
 
                 for (int i = 0; i < nodes.Length; i++)
                 {
                     nodes[i].Point = points[i];
                     nodes[i].Diameter = diameter;
 
-                    var prevDir = i > 0 ? VECTOR3.Normalize(points[i - 1] - points[i]) : joinPoint;
-                    var nextDir = i < points.Length - 1 ? VECTOR3.Normalize(points[i] - points[i + 1]) : joinPoint;
+                    var prevDir = i > 0 ? XYZ.Normalize(points[i - 1] - points[i]) : joinPoint;
+                    var nextDir = i < points.Length - 1 ? XYZ.Normalize(points[i] - points[i + 1]) : joinPoint;
                     
                     var angle = POINT3.AngleInRadians(prevDir, nextDir);
                     nodes[i].Angle = float.IsNaN(angle) ? 0 : angle;
-                    nodes[i].Direction = -VECTOR3.Normalize(prevDir + nextDir);
-                    nodes[i].Axis = VECTOR3.Normalize(VECTOR3.Cross(prevDir, nextDir));
+                    nodes[i].Direction = -XYZ.Normalize(prevDir + nextDir);
+                    nodes[i].Axis = XYZ.Normalize(XYZ.Cross(prevDir, nextDir));
 
-                    if (float.IsNaN(nodes[i].Axis.X)) nodes[i].Axis = VECTOR3.Zero;
+                    if (float.IsNaN(nodes[i].Axis.X)) nodes[i].Axis = XYZ.Zero;
                 }
             }           
 
-            private static VECTOR3 _GetMainAxis(ReadOnlySpan<PointNode> nodes)
+            private static XYZ _GetMainAxis(ReadOnlySpan<PointNode> nodes)
             {
-                if (nodes.Length < 2) return VECTOR3.UnitX;
+                if (nodes.Length < 2) return XYZ.UnitX;
                 if (nodes.Length == 2)
                 {                    
                     var d = new POINT3(nodes[1].Point - nodes[0].Point);
 
                     // calculate a vector perpendicular to D
-                    var a = VECTOR3.Cross(d.XYZ, d.DominantAxis == 0 ? VECTOR3.UnitY : VECTOR3.UnitX);
+                    var a = XYZ.Cross(d.XYZ, d.DominantAxis == 0 ? XYZ.UnitY : XYZ.UnitX);
 
-                    System.Diagnostics.Debug.Assert(a != VECTOR3.Zero);
+                    System.Diagnostics.Debug.Assert(a != XYZ.Zero);
 
                     return a;
                 }
 
-                var axis = VECTOR3.Zero;
+                var axis = XYZ.Zero;
 
                 for (int i = 2; i < nodes.Length; i++)
                 {
                     var ab = nodes[i - 2].Point - nodes[i - 1].Point;
                     var ac = nodes[i - 1].Point - nodes[i - 0].Point;
-                    axis += VECTOR3.Cross(ab, ac);
+                    axis += XYZ.Cross(ab, ac);
                 }
 
-                return VECTOR3.Normalize(axis);
+                return XYZ.Normalize(axis);
             }
 
 
-            private readonly void _FillSection(Span<POINT3> points, int divisions, VECTOR3 mainAxis)
+            private readonly void _FillSection(Span<POINT3> points, int divisions, XYZ mainAxis)
             {
                 var r = _AdjustNGonRadius(Diameter / 2, divisions);
 
                 var nz = Direction;                
-                var ny = VECTOR3.Cross(nz, mainAxis);
-                var nx = VECTOR3.Cross(ny, nz);                
+                var ny = XYZ.Cross(nz, mainAxis);
+                var nx = XYZ.Cross(ny, nz);                
 
-                nx = VECTOR3.Normalize(nx);
-                ny = VECTOR3.Normalize(ny);
+                nx = XYZ.Normalize(nx);
+                ny = XYZ.Normalize(ny);
 
                 var nt = this.GetScale(4);
 
@@ -139,7 +135,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 POINT3.DebugAssertIsFinite(points);
             }
 
-            private static VECTOR3 _Extrude(ICoreScene3D dc, ReadOnlySpan<PointNode> nodes, bool closed, int divisions, ColorStyle color, bool flipFaces)
+            private static XYZ _Extrude(ICoreScene3D dc, ReadOnlySpan<PointNode> nodes, bool closed, int divisions, ColorStyle color, bool flipFaces)
             {
                 Span<POINT3> aa = stackalloc POINT3[divisions];
                 Span<POINT3> bb = stackalloc POINT3[divisions];
@@ -192,8 +188,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
                             var i0 = corners[i].XYZ;
                             var j0 = corners[j].XYZ;
-                            var i1 = VECTOR3.Lerp(Point, i0 + axis, 0.7f);
-                            var j1 = VECTOR3.Lerp(Point, j0 + axis, 0.7f);
+                            var i1 = XYZ.Lerp(Point, i0 + axis, 0.7f);
+                            var j1 = XYZ.Lerp(Point, j0 + axis, 0.7f);
 
                             dc.DrawConvexSurface(POINT3.Array(i0, j0, j1, i1), fillColor);
                             dc.DrawConvexSurface(POINT3.Array(Point + axis, i1, j1), fillColor);

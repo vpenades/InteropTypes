@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using VECTOR2 = System.Numerics.Vector2;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-using XFORM2 = System.Numerics.Matrix3x2;
-
 namespace InteropTypes.Graphics.Drawing
 {
     using PRIMITIVE2D = ICoreCanvas2D;    
@@ -61,12 +57,12 @@ namespace InteropTypes.Graphics.Drawing
             if (dc is ITransformer2D xform)
             {
                 Span<POINT2> points = stackalloc POINT2[1];
-                points[0] = VECTOR2.One;
+                points[0] = XY.One;
                 xform.TransformNormalsForward(points);
 
                 var dir = points[0].XY;
 
-                dir *= new VECTOR2(1, -1); // We reverse the vertical axis so it makes sense from screen POV.
+                dir *= new XY(1, -1); // We reverse the vertical axis so it makes sense from screen POV.
 
                 quadrant = _GetQuadrant(dir);
 
@@ -79,7 +75,7 @@ namespace InteropTypes.Graphics.Drawing
             }
         }        
 
-        private static Quadrant _GetQuadrant(in VECTOR2 direction)
+        private static Quadrant _GetQuadrant(in XY direction)
         {
             var q = Quadrant.Origin;
             if (direction.X < 0) q |= Quadrant.Left;

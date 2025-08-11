@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using ASSET = System.Object;
-using SCALAR = System.Single;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
     /// <summary>

@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
-using VECTOR2 = System.Numerics.Vector2;
-using VECTOR3 = System.Numerics.Vector3;
+
+
 using VECTOR4 = System.Numerics.Vector4;
 
-using POINT3 = InteropTypes.Graphics.Drawing.Point3;
-
-using XFORM2 = System.Numerics.Matrix3x2;
 using XFORM4 = System.Numerics.Matrix4x4;
 
 using BBOX = System.Numerics.Matrix3x2; // Column 0 is Min, Column 1 is Max
@@ -157,7 +153,7 @@ namespace InteropTypes.Graphics.Drawing
 
         #region drawing        
 
-        public static (VECTOR3 Min, VECTOR3 Max)? GetAssetBoundingMinMax(Object asset)
+        public static (XYZ Min, XYZ Max)? GetAssetBoundingMinMax(Object asset)
         {
             if (asset is Record3D model3D) return model3D.BoundingBox;
             if (asset is IDrawingBrush<IScene3D> drawable)
@@ -211,9 +207,9 @@ namespace InteropTypes.Graphics.Drawing
         {
             var center = pivot.Translation;
 
-            var xxx = VECTOR3.TransformNormal(VECTOR3.UnitX, pivot).Normalized();
-            var yyy = VECTOR3.TransformNormal(VECTOR3.UnitY, pivot).Normalized();
-            var zzz = VECTOR3.TransformNormal(VECTOR3.UnitZ, pivot).Normalized();
+            var xxx = XYZ.TransformNormal(XYZ.UnitX, pivot).Normalized();
+            var yyy = XYZ.TransformNormal(XYZ.UnitY, pivot).Normalized();
+            var zzz = XYZ.TransformNormal(XYZ.UnitZ, pivot).Normalized();
 
             var colorX = COLOR.Red;
             var colorY = COLOR.Green;
@@ -299,22 +295,22 @@ namespace InteropTypes.Graphics.Drawing
             if (pivot.GetDeterminant() == 0) return;
 
             var style = (COLOR.Gray, COLOR.Black, cameraSize * 0.05f);
-            var center = VECTOR3.Transform(VECTOR3.Zero, pivot);
-            var back = VECTOR3.Transform(VECTOR3.UnitZ * cameraSize, pivot);
-            var roll1 = VECTOR3.Transform(new VECTOR3(0, 0.7f, 0.3f) * cameraSize, pivot);
-            var roll2 = VECTOR3.Transform(new VECTOR3(0, 0.7f, 0.9f) * cameraSize, pivot);
+            var center = XYZ.Transform(XYZ.Zero, pivot);
+            var back = XYZ.Transform(XYZ.UnitZ * cameraSize, pivot);
+            var roll1 = XYZ.Transform(new XYZ(0, 0.7f, 0.3f) * cameraSize, pivot);
+            var roll2 = XYZ.Transform(new XYZ(0, 0.7f, 0.9f) * cameraSize, pivot);
 
             dc.DrawSphere(center, cameraSize * 0.35f, COLOR.Black); // lens
 
-            dc.DrawSegment(VECTOR3.Lerp(back, center, 0.7f), center, cameraSize * 0.5f, style); // objective
-            dc.DrawSegment(back, VECTOR3.Lerp(back, center, 0.7f), cameraSize * 0.8f, style); // body
+            dc.DrawSegment(XYZ.Lerp(back, center, 0.7f), center, cameraSize * 0.5f, style); // objective
+            dc.DrawSegment(back, XYZ.Lerp(back, center, 0.7f), cameraSize * 0.8f, style); // body
             dc.DrawSphere(roll1, 0.45f * cameraSize, style);
             dc.DrawSphere(roll2, 0.45f * cameraSize, style);
 
 
-            var xxx = VECTOR3.TransformNormal(VECTOR3.UnitX, pivot).Normalized() * cameraSize;
-            var yyy = VECTOR3.TransformNormal(VECTOR3.UnitY, pivot).Normalized() * cameraSize;
-            var zzz = VECTOR3.TransformNormal(VECTOR3.UnitZ, pivot).Normalized() * cameraSize;
+            var xxx = XYZ.TransformNormal(XYZ.UnitX, pivot).Normalized() * cameraSize;
+            var yyy = XYZ.TransformNormal(XYZ.UnitY, pivot).Normalized() * cameraSize;
+            var zzz = XYZ.TransformNormal(XYZ.UnitZ, pivot).Normalized() * cameraSize;
 
             var colorX = COLOR.Red;
             var colorY = COLOR.Green;
@@ -329,10 +325,10 @@ namespace InteropTypes.Graphics.Drawing
         {
             XFORM4.Invert(projection, out XFORM4 ip);
 
-            var a = new VECTOR3(-1, -1, 1) * depth;
-            var b = new VECTOR3(+1, -1, 1) * depth;
-            var c = new VECTOR3(+1, +1, 1) * depth;
-            var d = new VECTOR3(-1, +1, 1) * depth;
+            var a = new XYZ(-1, -1, 1) * depth;
+            var b = new XYZ(+1, -1, 1) * depth;
+            var c = new XYZ(+1, +1, 1) * depth;
+            var d = new XYZ(-1, +1, 1) * depth;
 
             var aa = VECTOR4.Transform(a, ip);
             var bb = VECTOR4.Transform(b, ip);
@@ -344,10 +340,10 @@ namespace InteropTypes.Graphics.Drawing
             c = cc.SelectXYZ() / cc.W;
             d = dd.SelectXYZ() / dd.W;
 
-            a = VECTOR3.Transform(a, pivot);
-            b = VECTOR3.Transform(b, pivot);
-            c = VECTOR3.Transform(c, pivot);
-            d = VECTOR3.Transform(d, pivot);
+            a = XYZ.Transform(a, pivot);
+            b = XYZ.Transform(b, pivot);
+            c = XYZ.Transform(c, pivot);
+            d = XYZ.Transform(d, pivot);
 
             dc.DrawSegment(a, b, diameter, brush);
             dc.DrawSegment(b, c, diameter, brush);
@@ -359,24 +355,24 @@ namespace InteropTypes.Graphics.Drawing
         {
             XFORM4.Invert(projection, out XFORM4 ip);
 
-            var a = new VECTOR3(-1, -1, 0);
-            var b = new VECTOR3(+1, -1, 0);
-            var c = new VECTOR3(+1, +1, 0);
-            var d = new VECTOR3(-1, +1, 0);
+            var a = new XYZ(-1, -1, 0);
+            var b = new XYZ(+1, -1, 0);
+            var c = new XYZ(+1, +1, 0);
+            var d = new XYZ(-1, +1, 0);
 
             // to camera space
 
-            a = VECTOR3.Transform(a, ip);
-            b = VECTOR3.Transform(b, ip);
-            c = VECTOR3.Transform(c, ip);
-            d = VECTOR3.Transform(d, ip);
+            a = XYZ.Transform(a, ip);
+            b = XYZ.Transform(b, ip);
+            c = XYZ.Transform(c, ip);
+            d = XYZ.Transform(d, ip);
 
             // to world space            
 
-            a = VECTOR3.Transform(a, pivot);
-            b = VECTOR3.Transform(b, pivot);
-            c = VECTOR3.Transform(c, pivot);
-            d = VECTOR3.Transform(d, pivot);
+            a = XYZ.Transform(a, pivot);
+            b = XYZ.Transform(b, pivot);
+            c = XYZ.Transform(c, pivot);
+            d = XYZ.Transform(d, pivot);
 
             dc.DrawSegment(a, b, diameter, brush);
             dc.DrawSegment(b, c, diameter, brush);
@@ -386,15 +382,15 @@ namespace InteropTypes.Graphics.Drawing
         
         public static void DrawFloorXZ(this IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)
         {
-            _DrawFloor(dc, origin, size, divisions, oddStyle, evenStyle, (x, z) => new VECTOR3(x, 0, z));
+            _DrawFloor(dc, origin, size, divisions, oddStyle, evenStyle, (x, z) => new XYZ(x, 0, z));
         }
 
         public static void DrawFloorXY(this IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle)
         {
-            _DrawFloor(dc, origin, size, divisions, oddStyle, evenStyle, (x, y) => new VECTOR3(x, y, 0));
+            _DrawFloor(dc, origin, size, divisions, oddStyle, evenStyle, (x, y) => new XYZ(x, y, 0));
         }
 
-        private static void _DrawFloor(IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle, Func<float, float, VECTOR3> axisFunc)
+        private static void _DrawFloor(IScene3D dc, POINT3 origin, Point2 size, int divisions, OutlineFillStyle oddStyle, OutlineFillStyle evenStyle, Func<float, float, XYZ> axisFunc)
         {
             var xdivisions = divisions;
             var ydivisions = divisions;

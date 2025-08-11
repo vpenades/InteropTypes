@@ -2,26 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 
-using BRECT = System.Drawing.RectangleF;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-
-
 namespace InteropTypes.Graphics.Drawing
 {
     using PRIMITIVE2D = ICoreCanvas2D;    
 
     partial class DrawingToolkit
     {
-        public static BRECT GetBackendViewportBoundsOrDefault(this PRIMITIVE2D dc)
+        public static GDIRECTF GetBackendViewportBoundsOrDefault(this PRIMITIVE2D dc)
         {
             if (TryGetBackendViewportBounds(dc, out var viewport)) return viewport;
 
             throw new ArgumentException($"Backend must implement interface {nameof(IRenderTargetInfo)}", nameof(dc));
         }
 
-        public static bool TryGetBackendViewportBounds(this PRIMITIVE2D dc, out BRECT bounds)
+        public static bool TryGetBackendViewportBounds(this PRIMITIVE2D dc, out GDIRECTF bounds)
         {
-            bounds = BRECT.Empty;
+            bounds = GDIRECTF.Empty;
 
             if (!(dc is IServiceProvider srv)) return false;
             if (!(srv.GetService(typeof(IRenderTargetInfo)) is IRenderTargetInfo vinfo)) return false;
@@ -41,8 +37,8 @@ namespace InteropTypes.Graphics.Drawing
 
             foreach (var p in points)
             {
-                var other = new BRECT(p.X, p.Y, 0, 0);
-                bounds = first ? other : BRECT.Union(bounds, other);
+                var other = new GDIRECTF(p.X, p.Y, 0, 0);
+                bounds = first ? other : GDIRECTF.Union(bounds, other);
                 first = false;
             }
 

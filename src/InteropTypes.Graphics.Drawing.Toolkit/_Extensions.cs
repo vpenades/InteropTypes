@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-using XY = System.Numerics.Vector2;
-using XYZ = System.Numerics.Vector3;
-using XYZW = System.Numerics.Vector4;
-using PLANE = System.Numerics.Plane;
-using COLOR = System.Drawing.Color;
-
-
 namespace InteropTypes.Graphics.Drawing
 {
     [System.ComponentModel.Browsable(false)]

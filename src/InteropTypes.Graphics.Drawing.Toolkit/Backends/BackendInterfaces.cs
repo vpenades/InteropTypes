@@ -4,9 +4,6 @@ using System.Text;
 
 using InteropTypes.Graphics.Drawing;
 
-using SCALAR = System.Single;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-
 namespace InteropTypes.Graphics.Backends
 {
     /// <summary>

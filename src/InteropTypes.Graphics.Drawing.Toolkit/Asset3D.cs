@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using COLOR = System.Drawing.Color;
-
 namespace InteropTypes.Graphics.Drawing
 {
     public abstract class Asset3D : IDrawingBrush<IScene3D>

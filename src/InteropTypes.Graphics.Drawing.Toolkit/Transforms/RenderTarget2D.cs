@@ -4,8 +4,8 @@ using System.Text;
 using System.Linq;
 using System.Numerics;
 
-using XYZ = System.Numerics.Vector3;
-using PLANE = System.Numerics.Plane;
+
+
 
 namespace InteropTypes.Graphics.Drawing.Transforms
 {

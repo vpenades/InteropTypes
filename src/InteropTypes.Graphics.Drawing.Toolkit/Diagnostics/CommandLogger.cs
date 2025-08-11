@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Numerics;
 using System.Text;
 
-using InteropTypes.Graphics.Drawing;
-
 namespace InteropTypes.Graphics.Drawing.Diagnostics
 {
     public abstract class CommandLogger : ICanvas2D, IScene3D

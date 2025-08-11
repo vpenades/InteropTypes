@@ -4,11 +4,6 @@ using System.Numerics;
 using System.Text;
 using System.Drawing;
 
-using ASSET = System.Object;
-using SCALAR = System.Single;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-using VECTOR2 = System.Numerics.Vector2;
-
 namespace InteropTypes.Graphics.Drawing.Transforms
 {
     partial struct Decompose2D
@@ -172,10 +167,10 @@ namespace InteropTypes.Graphics.Drawing.Transforms
 
             if (delta.LengthSquared() <= 0.0000001f)
             {
-                delta = delta == VECTOR2.Zero ? VECTOR2.UnitX : delta * 100000f;
+                delta = delta == XY.Zero ? XY.UnitX : delta * 100000f;
             }
 
-            delta = VECTOR2.Normalize(delta);
+            delta = XY.Normalize(delta);
 
             Parametric.ShapeFactory2D.FillLineCapVertices(vertices, 0, aa, delta, diameter, startCapStyle);
             Parametric.ShapeFactory2D.FillLineCapVertices(vertices, startCapCount, bb, -delta, diameter, endCapStyle);

@@ -1,7 +1,5 @@
 ﻿using System;
 
-using XYZ = System.Numerics.Vector3;
-
 namespace InteropTypes.Graphics.Drawing.Parametric
 {
     partial class ShapeFactory3D

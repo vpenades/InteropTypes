@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using XY = System.Numerics.Vector2;
-using XFORM2 = System.Numerics.Matrix3x2;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-
 namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_CommandStream2D_DebuggerProxy))]

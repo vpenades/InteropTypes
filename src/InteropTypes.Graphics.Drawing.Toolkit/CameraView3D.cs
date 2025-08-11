@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-using XYZ = System.Numerics.Vector3;
 using BBOX = System.Numerics.Matrix3x2;
-using COLOR = System.Drawing.Color;
 
 namespace InteropTypes.Graphics.Drawing
 {

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-using XY = System.Numerics.Vector2;
-using RECT = System.Drawing.RectangleF;
-
 namespace InteropTypes.Graphics.Drawing
 {
     [System.Diagnostics.DebuggerTypeProxy(typeof(_Model2DProxy))]
@@ -63,7 +60,7 @@ namespace InteropTypes.Graphics.Drawing
             }
         }
 
-        public RECT BoundingRect => BoundingBox.MinMaxToRectF();
+        public GDIRECTF BoundingRect => BoundingBox.MinMaxToRectF();
 
         public (XY Min, XY Max) BoundingBox
         {

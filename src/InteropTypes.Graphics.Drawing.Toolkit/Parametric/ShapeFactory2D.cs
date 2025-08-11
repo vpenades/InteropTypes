@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
-using VECTOR2 = System.Numerics.Vector2;
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-using XFORM2 = System.Numerics.Matrix3x2;
 
 namespace InteropTypes.Graphics.Drawing.Parametric
 {
@@ -43,9 +41,9 @@ namespace InteropTypes.Graphics.Drawing.Parametric
 
         public static void FillRectangleVertices(this Span<POINT2> vertices, XFORM2 rect, float borderRadius, int arcVertexCount = 6)
         {
-            var scaleX = new VECTOR2(rect.M11, rect.M12);
-            var scaleY = new VECTOR2(rect.M21, rect.M22);
-            var origin = new VECTOR2(rect.M31, rect.M32);
+            var scaleX = new XY(rect.M11, rect.M12);
+            var scaleY = new XY(rect.M21, rect.M22);
+            var origin = new XY(rect.M31, rect.M32);
 
             if (vertices.Length == 4)
             {
@@ -59,9 +57,9 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             int idx = 0;
 
             var sizeX = scaleX.Length();
-            var axisX = VECTOR2.Normalize(scaleX);
+            var axisX = XY.Normalize(scaleX);
             var sizeY = scaleY.Length();
-            var axisY = VECTOR2.Normalize(scaleY);
+            var axisY = XY.Normalize(scaleY);
 
             throw new NotImplementedException();
 
@@ -81,7 +79,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             vertices[idx++] = origin + new POINT2(sizeX, sizeY - borderRadius);
 
             // bottom right
-            center = origin + new VECTOR2(sizeX - borderRadius, sizeY - borderRadius);
+            center = origin + new XY(sizeX - borderRadius, sizeY - borderRadius);
             foreach (var p in _GetRectangleCornerVertices(arcVertexCount, 0, -PI * 0.5f))
             {
                 vertices[idx++] = center + p * borderRadius;
@@ -92,7 +90,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             vertices[idx++] = origin + new POINT2(borderRadius, sizeY);
 
             // bottom left
-            center = origin + new VECTOR2(borderRadius, sizeY - borderRadius);
+            center = origin + new XY(borderRadius, sizeY - borderRadius);
             foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -PI * 0.5f, -PI))
             {
                 vertices[idx++] = center + p * borderRadius;
@@ -103,7 +101,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             vertices[idx++] = origin + new POINT2(0, borderRadius);
 
             // top left
-            center = origin + new VECTOR2(borderRadius, borderRadius);
+            center = origin + new XY(borderRadius, borderRadius);
             foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -PI, -PI * 1.5f))
             {
                 vertices[idx++] = center + p * borderRadius;
@@ -150,7 +148,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             vertices[idx++] = origin + new POINT2(borderRadius, size.Y);
 
             // bottom left
-            center = origin + new VECTOR2(borderRadius, size.Y - borderRadius);
+            center = origin + new XY(borderRadius, size.Y - borderRadius);
             foreach (var p in _GetRectangleCornerVertices(arcVertexCount, -PI * 0.5f, -PI))
             {
                 vertices[idx++] = center + p * borderRadius;
@@ -168,7 +166,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             }
         }
 
-        private static IEnumerable<VECTOR2> _GetRectangleCornerVertices(int count, float rad0, float rad1)
+        private static IEnumerable<XY> _GetRectangleCornerVertices(int count, float rad0, float rad1)
         {
             for (int i = 1; i < count; ++i)
             {
@@ -178,7 +176,7 @@ namespace InteropTypes.Graphics.Drawing.Parametric
                 var x = MathF.Cos(radians);
                 var y = -MathF.Sin(radians);                
 
-                yield return new VECTOR2(x, y);
+                yield return new XY(x, y);
             }
         }
 
@@ -246,8 +244,8 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             var aa = a.XY;
             var bb = b.XY;
 
-            var axisX = VECTOR2.Normalize(bb - aa) * diameter * 0.25f;
-            var axisY = new VECTOR2(axisX.Y, -axisX.X);
+            var axisX = XY.Normalize(bb - aa) * diameter * 0.25f;
+            var axisY = new XY(axisX.Y, -axisX.X);
 
             dst[0] = aa - axisY;
             dst[1] = aa + axisY;
@@ -270,9 +268,9 @@ namespace InteropTypes.Graphics.Drawing.Parametric
             }
         }
 
-        public static void FillLineCapVertices(Span<POINT2> dst, int dstIdx, VECTOR2 p, VECTOR2 axisX, float diameter, LineCapStyle style)
+        public static void FillLineCapVertices(Span<POINT2> dst, int dstIdx, XY p, XY axisX, float diameter, LineCapStyle style)
         {
-            var axisY = new VECTOR2(axisX.Y, -axisX.X);
+            var axisY = new XY(axisX.Y, -axisX.X);
 
             var radius = diameter * 0.5f;
 

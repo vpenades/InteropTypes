@@ -1,8 +1,5 @@
 ﻿using System;
 
-using POINT2 = InteropTypes.Graphics.Drawing.Point2;
-using XFORM2 = System.Numerics.Matrix3x2;
-
 namespace InteropTypes.Graphics.Drawing
 {
     partial class DrawingToolkit
@@ -14,7 +11,7 @@ namespace InteropTypes.Graphics.Drawing
             dc.DrawTextLine(xform, text, size, style);
         }
 
-        public static void DrawTextLine(this IScene3D dc, System.Numerics.Matrix4x4 xform, String text, ColorStyle color)
+        public static void DrawTextLine(this IScene3D dc, XFORM3 xform, String text, ColorStyle color)
         {
             Fonts.FontDrawing.DrawTextAsLines(dc, xform, text, color);
         }
