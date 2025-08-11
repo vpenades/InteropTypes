@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Drawing.Fonts;
 
 using COLOR = System.Drawing.Color;
 using XFORM = System.Numerics.Matrix3x2;
@@ -60,6 +61,8 @@ namespace InteropTypes
             return (typeof(_Scene2D).Assembly, name);
             #endif
 
+            name = System.IO.Path.Combine(AppContext.BaseDirectory, name);
+
             return name;
         }
 
@@ -75,11 +78,11 @@ namespace InteropTypes
         private InteropTypes.BindableNoiseTexture _NoiseBitmap = new BindableNoiseTexture(64,64);
         private InteropTypes.BindableNoiseTexture _NoiseBitmap2 = new BindableNoiseTexture(32, 32);
 
-        public static FontStyle NumbersFont => _NumbersFont._Default.ToStyle();
+        public static readonly FontStyle NumbersFont = _NumbersFont._Default.ToStyle();
 
-        private static readonly ImageSource[] Numbers = ImageSource.CreateGrid(_GetImageReference("Numbers.png"), 10, 10, (64, 64), (32, 32))
-            .Select(item => item.WithMirror(false, false))
-            .ToArray();
+        private static readonly ImageSource[] Numbers = ImageSource.CreateGrid(_GetImageReference("Numbers.png"), 10, 10, (64, 64), (32, 32)).ToArray();
+
+        private static readonly IFont Canada1500Font = AngelCodeFont.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets\\Canada1500-standard.fnt"));
 
         #endregion
 
@@ -161,9 +164,11 @@ namespace InteropTypes
 
         private void _DrawBitmapText(ICanvas2D dc)
         {
-            dc.DrawTextLine((5, 5), "0123456789", 5, NumbersFont);
+            dc.DrawTextLine((5, 5), "0123456789", 5, NumbersFont.With(FontAlignStyle.FlipAuto));
 
-            dc.DrawTextLine(XFORM.CreateScale(2) * XFORM.CreateTranslation(5, 15), "0123456789", 5, NumbersFont);
+            dc.DrawTextLine(XFORM.CreateScale(2) * XFORM.CreateTranslation(5, 15), "0123456789", 5, NumbersFont.With(FontAlignStyle.FlipAuto));
+
+            dc.DrawTextLine((5, 50), "Hello World", 30, Canada1500Font.ToStyle().With(FontAlignStyle.FlipAuto | FontAlignStyle.Center));
         }
 
         #endregion
