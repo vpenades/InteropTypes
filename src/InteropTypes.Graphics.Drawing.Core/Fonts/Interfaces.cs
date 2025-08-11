@@ -6,7 +6,28 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 {
     public interface IFont
     {
-        public bool IsVectorial { get; }
+        /// <summary>
+        /// Must return true if it renders the font using vectorial primitives, and false if it renders the fonts using bitmaps.
+        /// </summary>
+        bool IsVectorial { get; }
+
+        GDIRECTF MeasureTextLine(string text, float size)
+        {
+            var rect = MeasureTextLine(text);
+
+            var h = Math.Max(1, this.Height);
+
+            if (size <= 0) size = h;
+
+            var scale = size / h;
+
+            rect.X *= scale;
+            rect.Y *= scale;
+            rect.Width *= scale;
+            rect.Height *= scale;
+
+            return rect;
+        }
 
         /// <summary>
         /// calculates the pixel size of the given text line when rendered.

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using System.Xml.Linq;
 
 namespace InteropTypes.Graphics.Drawing
 {
@@ -145,18 +146,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public GDIRECTF MeasureTextLine(string text, float size)
         {
-            var rect = Font?.MeasureTextLine(text) ?? GDIRECTF.Empty;
-
-            if (size <= 0) size = Font?.Height ?? 1;
-
-            var scale = size / (Font?.Height ?? 1);
-
-            rect.X *= scale;
-            rect.Y *= scale;
-            rect.Width *= scale;
-            rect.Height *= scale;
-
-            return rect;
+            return Font?.MeasureTextLine(text,size) ?? GDIRECTF.Empty;
         }
 
         public void DrawDecomposedTo(ICoreCanvas2D dc, in XFORM2 transform, string text, float size)
@@ -165,9 +155,9 @@ namespace InteropTypes.Graphics.Drawing
             if (string.IsNullOrWhiteSpace(text)) return;
 
             var font = this.Font ?? TryGetDefaultFontFrom(dc).Font;
-            if (font == null) return;            
+            if (font == null) return;
 
-            // alignment transform
+            // alignment transform            
 
             var xform = _GetAlignmentTransform(transform, this.Alignment, dc);
 
@@ -177,6 +167,22 @@ namespace InteropTypes.Graphics.Drawing
             {
                 var scale = size / (float)font.Height;
                 xform = XFORM2.CreateScale(scale) * xform;
+            }
+
+            // docking
+
+            if (this.Alignment.HasFlag(Fonts.FontAlignStyle.DockBottom) || this.Alignment.HasFlag(Fonts.FontAlignStyle.DockRight))
+            {
+                var rect = Font?.MeasureTextLine(text) ?? GDIRECTF.Empty;
+                var delta = XY.Zero;
+
+                if (this.Alignment.HasFlag(Fonts.FontAlignStyle.CenterHorizontal)) delta.X = -rect.Width / 2;
+                else if (this.Alignment.HasFlag(Fonts.FontAlignStyle.DockRight)) delta.X = -rect.Width;
+
+                if (this.Alignment.HasFlag(Fonts.FontAlignStyle.CenterVertical)) delta.Y = -rect.Height / 2;
+                else if (this.Alignment.HasFlag(Fonts.FontAlignStyle.DockBottom)) delta.Y = -rect.Height;
+
+                xform.Translation += XY.TransformNormal(delta, xform);
             }
 
             font.DrawTextLineTo(dc, xform, text, this.Color);
@@ -190,7 +196,10 @@ namespace InteropTypes.Graphics.Drawing
             // if alignment is Auto, let's try to take it from the global style
             if (align.HasFlag(Fonts.FontAlignStyle.FlipAuto))
             {
-                align = TryGetDefaultFontFrom(dc).Alignment;
+                // clear flip mode
+                align ^= align & Fonts.FontAlignStyle.FlipMask;
+                // set flip mode from backend
+                align |= TryGetDefaultFontFrom(dc).Alignment;
             }
 
             if (align.HasFlag(Fonts.FontAlignStyle.FlipHorizontal)) { xflip = -1; }
