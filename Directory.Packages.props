@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AvaloniaVersion>11.3.2</AvaloniaVersion>
+    <AvaloniaVersion>11.3.3</AvaloniaVersion>
   </PropertyGroup>
   
   <ItemGroup>
@@ -25,13 +25,13 @@
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
 
-    <PackageVersion Include="System.Text.Json" Version="9.0.7" />
-    <PackageVersion Include="System.Drawing.Common" Version="9.0.7" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="9.0.7" />    
-    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="9.0.7" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.8" />
+    <PackageVersion Include="System.Drawing.Common" Version="9.0.8" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="9.0.8" />    
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="9.0.8" />
     
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="9.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.8" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.183" />
 
@@ -129,9 +129,9 @@
 
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
     
-    <PackageVersion Include="NUnit" Version="4.3.2" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.9.2" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="5.0.0" />
+    <PackageVersion Include="NUnit" Version="4.4.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.10.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="5.1.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     
@@ -155,7 +155,7 @@
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
     <PackageVersion Update="System.Text.Json" Version="8.0.6" />
-    <PackageVersion Update="System.Drawing.Common" Version="8.0.18" />
+    <PackageVersion Update="System.Drawing.Common" Version="8.0.19" />
     <PackageVersion Update="System.Numerics.Tensors" Version="8.0.0" />
     <PackageVersion Update="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
     <PackageVersion Update="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
