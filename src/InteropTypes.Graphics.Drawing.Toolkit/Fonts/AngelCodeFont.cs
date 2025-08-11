@@ -15,29 +15,29 @@ namespace InteropTypes.Graphics.Drawing.Fonts
     {
         #region lifecycle
 
-        public static AngelCodeFont Load(string filePath)
+        public static AngelCodeFont Load(string filePath, bool verticalFlip = false)
         {
             var finfo = new System.IO.FileInfo(filePath);
-            return Load(finfo);
+            return Load(finfo, verticalFlip);
         }
 
-        public static AngelCodeFont Load(System.IO.FileInfo finfo)
+        public static AngelCodeFont Load(System.IO.FileInfo finfo, bool verticalFlip = false)
         {
             var lines = System.IO.File.ReadAllLines(finfo.FullName);
 
             var dir = finfo.Directory.FullName;
 
-            return Parse(lines, fn => new System.IO.FileInfo(System.IO.Path.Combine(dir,fn)) );
+            return Parse(lines, fn => new System.IO.FileInfo(System.IO.Path.Combine(dir,fn)), verticalFlip);
         }
 
-        private static AngelCodeFont Parse(string[] lines, FONTIMAGEEVALUATOR imageEvaluator)
+        private static AngelCodeFont Parse(string[] lines, FONTIMAGEEVALUATOR imageEvaluator, bool verticalFlip = false)
         {
             var font = AngelCodeFontDOM.BMFontTextLinesParser.Parse(lines);            
 
-            return new AngelCodeFont(font, imageEvaluator);
+            return new AngelCodeFont(font, imageEvaluator, verticalFlip);
         }
 
-        private AngelCodeFont(AngelCodeFontDOM.BMFont font, FONTIMAGEEVALUATOR imageEvaluator)
+        private AngelCodeFont(AngelCodeFontDOM.BMFont font, FONTIMAGEEVALUATOR imageEvaluator, bool verticalFlip = false)
         {            
             _Font = font;
 
@@ -52,7 +52,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
             foreach(var glyph in _Font.Chars)
             {
-                _Characters[(Char)glyph.Id] = new _DeviceCharacter(glyph, font, _cachedEvaluator);
+                _Characters[(Char)glyph.Id] = new _DeviceCharacter(glyph, font, _cachedEvaluator, verticalFlip);
             }
         }
 
@@ -146,20 +146,20 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         {
             var origin = transform.Translation;
             
-            _DrawRect(target, transform, MeasureTextLine(text), System.Drawing.Color.Red);
+            _DrawRect(target, transform, MeasureTextLine(text), COLOR.Red);
 
             if (singleGlyph)
             {
                 foreach (var gr in MeasureTextGlyphs(text))
                 {
-                    _DrawRect(target, transform, gr, System.Drawing.Color.Green);
+                    _DrawRect(target, transform, gr, COLOR.Green);
                 }
             }
 
-            target.DrawEllipse(origin, 3, 3, System.Drawing.Color.Blue);
+            target.DrawEllipse(origin, 3, 3, COLOR.Blue);
         }
 
-        private static void _DrawRect(ICoreCanvas2D target, Matrix3x2 transform, RectangleF rect, System.Drawing.Color color)
+        private static void _DrawRect(ICoreCanvas2D target, Matrix3x2 transform, RectangleF rect, COLOR color)
         {
             var rectPoints = new Point2[5];
             InteropTypes.Graphics.Drawing.Point2.FromRect(rectPoints, rect, true);
@@ -174,7 +174,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         class _DeviceCharacter
         {
             #region lifecycle
-            public _DeviceCharacter(AngelCodeFontDOM.BMCharacter glyph, AngelCodeFontDOM.BMFont font, FONTIMAGEEVALUATOR imageEvaluator)
+            public _DeviceCharacter(AngelCodeFontDOM.BMCharacter glyph, AngelCodeFontDOM.BMFont font, FONTIMAGEEVALUATOR imageEvaluator, bool verticalFlip = false)
             {
                 _Glyph = glyph;
 
@@ -185,7 +185,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
                 if (glyph.Id > 32 && glyph.Width > 0 && glyph.Height > 0)
                 {
-                    _Img = ImageSource.Create(imageRef, (glyph.X, glyph.Y), (glyph.Width, glyph.Height), (-glyph.XOffset, -glyph.YOffset + font.Common.Base), false, false, false);
+                    _Img = ImageSource.Create(imageRef, (glyph.X, glyph.Y), (glyph.Width, glyph.Height), (-glyph.XOffset, -glyph.YOffset + font.Common.Base), false, false, verticalFlip);
 
                     if (!_Img.IsVisible) _Img = null;
                 }
