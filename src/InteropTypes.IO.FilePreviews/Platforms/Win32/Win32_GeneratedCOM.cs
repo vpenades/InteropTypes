@@ -13,6 +13,9 @@ using InteropTypes.Graphics;
 
 namespace InteropTypes.Platforms.Win32
 {
+    /// <summary>
+    /// uses the new Net8 Generated COM bindings.
+    /// </summary>
     [SupportedOSPlatform("windows6.0.6000")]
     internal static partial class FilePreview_GeneratedCOM
     {
@@ -20,11 +23,11 @@ namespace InteropTypes.Platforms.Win32
 
         #region public API
 
-        public static System.IO.Stream GetStreamOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
+        public static System.IO.Stream GetStreamOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
             try
             {
-                using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
+                using (var bmp = GetNativeBmpOrNull(finfo.FullName, clientOptions))
                 {
                     if (bmp == null) return null;
 
@@ -41,28 +44,24 @@ namespace InteropTypes.Platforms.Win32
             }
         }
 
-        public static WindowsBitmap GetPreviewOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
+        public static WindowsBitmap GetManagedBmpOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
             try
             {
-                using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
+                using (var bmp = GetNativeBmpOrNull(finfo.FullName, clientOptions))
                 {
                     if (bmp == null) return null;
 
-                    return bmp.GetWindowsBitmap(PixelFormat.Format24bppRgb);
+                    return bmp.GetWindowsBitmap(clientOptions?.GetPixelFormat() ?? PixelFormat.Format24bppRgb);
                 }
             }
             catch (COMException ex)
             {
                 return null;
             }
-        }
+        }        
 
-        #endregion
-
-        #region API
-
-        public static Bitmap GetThumbnail(string path, IO.FilePreviewOptions clientOptions = null)
+        public static Bitmap GetNativeBmpOrNull(string path, IO.FilePreviewOptions clientOptions = null)
         {
             clientOptions ??= IO.FilePreviewOptions._Default;            
 

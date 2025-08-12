@@ -10,10 +10,15 @@ using InteropTypes.Graphics;
 
 namespace InteropTypes.Platforms.Win32
 {
+    // https://github.com/microsoft/CsWin32/issues/1444
+    // https://github.com/microsoft/CsWin32/issues/1422
+    // https://github.com/microsoft/CsWin32/issues/882  < AnyCPU
+
+
     [SupportedOSPlatform("windows6.0.6000")]
     internal static class FilePreview_Win32_COM
     {
-        public static System.IO.Stream GetStreamOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
+        public static System.IO.Stream GetStreamOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
             try
             {
@@ -34,7 +39,7 @@ namespace InteropTypes.Platforms.Win32
             }
         }
 
-        public static WindowsBitmap GetPreviewOrDefault(System.IO.FileInfo finfo, IO.FilePreviewOptions clientOptions = null)
+        public static WindowsBitmap GetManagedBmpOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
             try
             {
@@ -58,7 +63,7 @@ namespace InteropTypes.Platforms.Win32
         /// <param name="width">image width</param>
         /// <param name="height">image height</param>
         /// <returns>the bitmap of the thumbnail, or null</returns>
-        public static Bitmap GetThumbnail(string filePath, IO.FilePreviewOptions clientOptions = null)
+        public static Bitmap GetNativeBmpOrNull(string filePath, IO.FilePreviewOptions clientOptions = null)
         {
             clientOptions ??= IO.FilePreviewOptions._Default;
 

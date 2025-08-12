@@ -24,7 +24,17 @@ namespace InteropTypes.IO
             Assert.That(bmp.Width, Is.GreaterThan(0));
             Assert.That(bmp.Height, Is.GreaterThan(0));
 
-            AttachmentInfo.From($"{fileName}-prv.bmp").WriteObject(f=> bmp.Save(f));
+            AttachmentInfo.From($"{fileName}-prv.bmp").WriteObject(bmp.Save);
+
+            var cfg = new FilePreviewOptions();
+            cfg.ExtensionAssociatedIcon = true;
+            var ico = FilePreviewFactory.GetPreviewOrDefault(res, cfg);
+
+            Assert.That(ico, Is.Not.Null);
+            Assert.That(ico.Width, Is.GreaterThan(0));
+            Assert.That(ico.Height, Is.GreaterThan(0));
+
+            AttachmentInfo.From($"{fileName}-ico.bmp").WriteObject(ico.Save);
         }
     }
 }

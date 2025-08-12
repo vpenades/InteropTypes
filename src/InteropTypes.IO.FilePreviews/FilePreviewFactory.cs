@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,11 @@ namespace InteropTypes.IO
     public static class FilePreviewFactory
     {
         [return: MaybeNull]
-        public static async Task<System.IO.Stream> GetStreamOrDefaultAsync([MaybeNull] System.IO.FileInfo finfo, FilePreviewOptions options = null)
+        public static async Task<System.IO.Stream> GetStreamOrDefaultAsync(FILEINFO finfo, FilePreviewOptions options = null)
         {
-            if (finfo == null || !finfo.Exists) return null;
+            if (finfo == null || !finfo.Exists) return null;            
+
+            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options)) return await Task.Run(() => GetStreamOrDefault(finfo, options)).ConfigureAwait(true);
 
             #if WINDOWS10_0_19041_0_OR_GREATER
             return await Platforms.UWP.WindowsThumbnailService.GetThumbnailStreamAsync(finfo, options).ConfigureAwait(true);
@@ -28,9 +31,11 @@ namespace InteropTypes.IO
         }
 
         [return: MaybeNull]
-        public static System.IO.Stream GetStreamOrDefault([MaybeNull] System.IO.FileInfo finfo, FilePreviewOptions options = null)
+        public static System.IO.Stream GetStreamOrDefault(FILEINFO finfo, FilePreviewOptions options = null)
         {
             if (finfo == null || !finfo.Exists) return null;
+
+            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options) && OperatingSystem.IsWindowsVersionAtLeast(6, 1)) return Platforms.Win32.IconExtractor.GetStreamOrDefault(finfo, options);
 
             #if WINDOWS10_0_19041_0_OR_GREATER
 
@@ -40,8 +45,8 @@ namespace InteropTypes.IO
 
             if (OperatingSystem.IsWindowsVersionAtLeast(6, 0, 6000))
             {
-                return Platforms.Win32.FilePreview_GeneratedCOM.GetStreamOrDefault(finfo, options);
-            }
+                return Platforms.Win32.FilePreview_GeneratedCOM.GetStreamOrNull(finfo, options);
+            }            
 
             #elif NET6_0
 
@@ -50,15 +55,17 @@ namespace InteropTypes.IO
                 return Platforms.Win32.FilePreview_Win32_COM.GetStreamOrDefault(finfo, options);
             }
 
-            #endif
+            #endif            
 
             return null;
         }
 
         [return: MaybeNull]
-        public static async Task<WindowsBitmap> GetPreviewOrDefaultAsync([MaybeNull] System.IO.FileInfo finfo, FilePreviewOptions options = null)
+        public static async Task<WindowsBitmap> GetPreviewOrDefaultAsync(FILEINFO finfo, FilePreviewOptions options = null)
         {
             if (finfo == null || !finfo.Exists) return null;
+
+            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options)) return await Task.Run(() => GetPreviewOrDefault(finfo, options)).ConfigureAwait(true);
             
             #if WINDOWS10_0_19041_0_OR_GREATER
 
@@ -75,9 +82,11 @@ namespace InteropTypes.IO
         }        
 
         [return: MaybeNull]
-        public static WindowsBitmap GetPreviewOrDefault([MaybeNull] System.IO.FileInfo finfo, FilePreviewOptions options = null)
+        public static WindowsBitmap GetPreviewOrDefault(FILEINFO finfo, FilePreviewOptions options = null)
         {
             if (finfo == null || !finfo.Exists) return null;
+
+            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options) && OperatingSystem.IsWindowsVersionAtLeast(6, 1)) return Platforms.Win32.IconExtractor.GetManagedBmpOrNull(finfo, options);
 
             #if WINDOWS10_0_19041_0_OR_GREATER
 
@@ -87,7 +96,7 @@ namespace InteropTypes.IO
 
             if (OperatingSystem.IsWindowsVersionAtLeast(6, 0, 6000))
             {
-                return Platforms.Win32.FilePreview_GeneratedCOM.GetPreviewOrDefault(finfo, options);
+                return Platforms.Win32.FilePreview_GeneratedCOM.GetManagedBmpOrNull(finfo, options);
             }
 
             #elif NET6_0

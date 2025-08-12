@@ -19,6 +19,8 @@
     <None Include="Platforms\**\*.cs" />
     <Compile Include="Platforms\SystemDrawingExtensions.cs" />
     <None Remove="Platforms\SystemDrawingExtensions.cs" />
+		<Compile Include="Platforms\Win32\Win32_IconExtractor.cs" />
+		<None Remove="Platforms\Win32\Win32_IconExtractor.cs" />
   </ItemGroup>
 
   <Choose>    
