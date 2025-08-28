@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AvaloniaVersion>11.3.3</AvaloniaVersion>
+    <AvaloniaVersion>11.3.4</AvaloniaVersion>
   </PropertyGroup>
   
   <ItemGroup>
@@ -37,10 +37,10 @@
 
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.31.1" />
+    <PackageVersion Include="Google.Protobuf" Version="3.32.0" />
 
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.16" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17" />
 
     <PackageVersion Include="NuGet.Configuration" Version="6.14.0" />
 
@@ -115,7 +115,7 @@
     
     <!-- Machine Learning -->
 
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.22.1" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.22.2" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.22.1" />
     
     <PackageVersion Include="OpenCvSharp4" Version="4.11.0.20250507" />
