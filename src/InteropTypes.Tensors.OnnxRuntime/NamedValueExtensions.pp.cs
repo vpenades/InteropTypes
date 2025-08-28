@@ -6,10 +6,10 @@ using System;
 using System.Linq;
 using System.Numerics;
 
-using ONNX = Microsoft.ML.OnnxRuntime;
-using ONNXTENSORS = Microsoft.ML.OnnxRuntime.Tensors;
+using __ONNX = Microsoft.ML.OnnxRuntime;
+using __ONNXTENSORS = Microsoft.ML.OnnxRuntime.Tensors;
 
-using NAMEDVALUE = Microsoft.ML.OnnxRuntime.NamedOnnxValue;
+using __NAMEDVALUE = Microsoft.ML.OnnxRuntime.NamedOnnxValue;
 
 #if INTEROPTYPES_USEINTEROPNAMESPACE
 namespace InteropTypes.Tensors
@@ -21,44 +21,44 @@ namespace $rootnamespace$
 {
     static partial class InteropTensorsForOnnxRuntime
     {
-        public static Type GetElementType(this ONNXTENSORS.TensorElementType etype)
+        public static Type GetElementType(this __ONNXTENSORS.TensorElementType etype)
         {
             switch (etype)
             {
-                case ONNXTENSORS.TensorElementType.Bool: return typeof(Boolean);
+                case __ONNXTENSORS.TensorElementType.Bool: return typeof(Boolean);
 
-                case ONNXTENSORS.TensorElementType.Int8: return typeof(SByte);
-                case ONNXTENSORS.TensorElementType.UInt8: return typeof(Byte);
+                case __ONNXTENSORS.TensorElementType.Int8: return typeof(SByte);
+                case __ONNXTENSORS.TensorElementType.UInt8: return typeof(Byte);
 
-                case ONNXTENSORS.TensorElementType.Int16: return typeof(Int16);
-                case ONNXTENSORS.TensorElementType.UInt16: return typeof(UInt16);
+                case __ONNXTENSORS.TensorElementType.Int16: return typeof(Int16);
+                case __ONNXTENSORS.TensorElementType.UInt16: return typeof(UInt16);
 
-                case ONNXTENSORS.TensorElementType.Int32: return typeof(Int32);
-                case ONNXTENSORS.TensorElementType.UInt32: return typeof(UInt32);
+                case __ONNXTENSORS.TensorElementType.Int32: return typeof(Int32);
+                case __ONNXTENSORS.TensorElementType.UInt32: return typeof(UInt32);
 
-                case ONNXTENSORS.TensorElementType.Int64: return typeof(Int64);
-                case ONNXTENSORS.TensorElementType.UInt64: return typeof(UInt64);
+                case __ONNXTENSORS.TensorElementType.Int64: return typeof(Int64);
+                case __ONNXTENSORS.TensorElementType.UInt64: return typeof(UInt64);
 
-                case ONNXTENSORS.TensorElementType.Float16: return typeof(Half);
-                case ONNXTENSORS.TensorElementType.Float: return typeof(Single);
-                case ONNXTENSORS.TensorElementType.Double: return typeof(Double);
+                case __ONNXTENSORS.TensorElementType.Float16: return typeof(Half);
+                case __ONNXTENSORS.TensorElementType.Float: return typeof(Single);
+                case __ONNXTENSORS.TensorElementType.Double: return typeof(Double);
 
-                case ONNXTENSORS.TensorElementType.String: return typeof(String);
+                case __ONNXTENSORS.TensorElementType.String: return typeof(String);
 
-                case ONNXTENSORS.TensorElementType.Complex64: return typeof(Complex); //  needs checking
+                case __ONNXTENSORS.TensorElementType.Complex64: return typeof(Complex); //  needs checking
 
                 default: throw new NotImplementedException(etype.ToString());
             }
         }
 
-        public static ONNXTENSORS.DenseTensor<T> AsDenseTensor<T>(this NAMEDVALUE nvalue)
+        public static __ONNXTENSORS.DenseTensor<T> AsDenseTensor<T>(this __NAMEDVALUE nvalue)
         {
-            if (nvalue.Value is ONNXTENSORS.DenseTensor<T> dtensor) return dtensor;
+            if (nvalue.Value is __ONNXTENSORS.DenseTensor<T> dtensor) return dtensor;
 
             return nvalue.AsTensor<T>().ToDenseTensor();
         }
 
-        public static NAMEDVALUE CreateNamedTensor(this ONNX.NodeMetadata metadata, string name, ReadOnlySpan<int> dimensions)
+        public static __NAMEDVALUE CreateNamedTensor(this __ONNX.NodeMetadata metadata, string name, ReadOnlySpan<int> dimensions)
         {
             if (dimensions.IsEmpty)
             {
@@ -75,24 +75,24 @@ namespace $rootnamespace$
                 }
             }
 
-            if (metadata.ElementType == typeof(Boolean)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Boolean>(dimensions));
-            if (metadata.ElementType == typeof(Char)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Char>(dimensions));
+            if (metadata.ElementType == typeof(Boolean)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Boolean>(dimensions));
+            if (metadata.ElementType == typeof(Char)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Char>(dimensions));
 
-            if (metadata.ElementType == typeof(SByte)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<SByte>(dimensions));
-            if (metadata.ElementType == typeof(Byte)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Byte>(dimensions));
+            if (metadata.ElementType == typeof(SByte)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<SByte>(dimensions));
+            if (metadata.ElementType == typeof(Byte)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Byte>(dimensions));
 
-            if (metadata.ElementType == typeof(Int16)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Int16>(dimensions));
-            if (metadata.ElementType == typeof(UInt16)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<UInt16>(dimensions));
+            if (metadata.ElementType == typeof(Int16)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Int16>(dimensions));
+            if (metadata.ElementType == typeof(UInt16)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<UInt16>(dimensions));
 
-            if (metadata.ElementType == typeof(Int32)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Int32>(dimensions));
-            if (metadata.ElementType == typeof(UInt32)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<UInt32>(dimensions));
+            if (metadata.ElementType == typeof(Int32)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Int32>(dimensions));
+            if (metadata.ElementType == typeof(UInt32)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<UInt32>(dimensions));
 
-            if (metadata.ElementType == typeof(Int64)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Int64>(dimensions));
-            if (metadata.ElementType == typeof(UInt64)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<UInt64>(dimensions));
+            if (metadata.ElementType == typeof(Int64)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Int64>(dimensions));
+            if (metadata.ElementType == typeof(UInt64)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<UInt64>(dimensions));
 
-            if (metadata.ElementType == typeof(Half)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Half>(dimensions));
-            if (metadata.ElementType == typeof(Single)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Single>(dimensions));
-            if (metadata.ElementType == typeof(Double)) return NAMEDVALUE.CreateFromTensor(name, new ONNXTENSORS.DenseTensor<Double>(dimensions));
+            if (metadata.ElementType == typeof(Half)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Half>(dimensions));
+            if (metadata.ElementType == typeof(Single)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Single>(dimensions));
+            if (metadata.ElementType == typeof(Double)) return __NAMEDVALUE.CreateFromTensor(name, new __ONNXTENSORS.DenseTensor<Double>(dimensions));
 
             throw new NotImplementedException();
         }

@@ -10,7 +10,9 @@ using SixLabors.ImageSharp.Advanced;
 using InteropTypes.Tensors;
 using InteropTypes.Tensors.Imaging;
 
-using SIXLABORSPIXFMT = SixLabors.ImageSharp.PixelFormats;
+#nullable disable
+
+using __SIXLABORSPIXFMT = SixLabors.ImageSharp.PixelFormats;
 
 #if INTEROPTYPES_USEINTEROPNAMESPACE
 namespace InteropTypes.Tensors
@@ -30,18 +32,18 @@ namespace $rootnamespace$
             switch(srcImage)
             {
                 case null: return null;
-                case Image<SIXLABORSPIXFMT.Rgb24> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Rgb24, TDstElement>(typedImage);
-                case Image<SIXLABORSPIXFMT.Bgr24> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Bgr24, TDstElement>(typedImage);
-                case Image<SIXLABORSPIXFMT.Rgba32> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Rgba32, TDstElement>(typedImage);
-                case Image<SIXLABORSPIXFMT.Bgra32> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Bgra32, TDstElement>(typedImage);
-                case Image<SIXLABORSPIXFMT.Argb32> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.Argb32, TDstElement>(typedImage);
-                case Image<SIXLABORSPIXFMT.RgbaVector> typedImage: return CreateTensorBitmapFactory<SIXLABORSPIXFMT.RgbaVector, TDstElement>(typedImage);
+                case Image<__SIXLABORSPIXFMT.Rgb24> typedImage: return CreateTensorBitmapFactory<__SIXLABORSPIXFMT.Rgb24, TDstElement>(typedImage);
+                case Image<__SIXLABORSPIXFMT.Bgr24> typedImage: return CreateTensorBitmapFactory<__SIXLABORSPIXFMT.Bgr24, TDstElement>(typedImage);
+                case Image<__SIXLABORSPIXFMT.Rgba32> typedImage: return CreateTensorBitmapFactory<__SIXLABORSPIXFMT.Rgba32, TDstElement>(typedImage);
+                case Image<__SIXLABORSPIXFMT.Bgra32> typedImage: return CreateTensorBitmapFactory<__SIXLABORSPIXFMT.Bgra32, TDstElement>(typedImage);
+                case Image<__SIXLABORSPIXFMT.Argb32> typedImage: return CreateTensorBitmapFactory<__SIXLABORSPIXFMT.Argb32, TDstElement>(typedImage);
+                case Image<__SIXLABORSPIXFMT.RgbaVector> typedImage: return CreateTensorBitmapFactory<__SIXLABORSPIXFMT.RgbaVector, TDstElement>(typedImage);
                 default: throw new NotImplementedException(srcImage.GetType().Name);
             }            
         }
 
         public static TensorBitmap<TDstElement>.IFactory CreateTensorBitmapFactory<TSrcPixel, TDstElement>(this Image<TSrcPixel> srcImage)
-            where TSrcPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TSrcPixel>
+            where TSrcPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TSrcPixel>
             where TDstElement : unmanaged, IConvertible
         {
             if (srcImage == null) return null;
@@ -58,7 +60,7 @@ namespace $rootnamespace$
         sealed class _TensorBitmapFactory<TSrcPixel>
             : TensorBitmap<Byte>.IFactory
             , TensorBitmap<float>.IFactory
-            where TSrcPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TSrcPixel>
+            where TSrcPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TSrcPixel>
         {
             #region lifecycle
             public _TensorBitmapFactory(Image<TSrcPixel> source)
@@ -69,11 +71,11 @@ namespace $rootnamespace$
 
             internal static ColorEncoding _GetColorEncoding<TPixel>()
             {
-                if (typeof(TPixel) == typeof(SIXLABORSPIXFMT.Rgb24)) return ColorEncoding.RGB;
-                if (typeof(TPixel) == typeof(SIXLABORSPIXFMT.Bgr24)) return ColorEncoding.BGR;
-                if (typeof(TPixel) == typeof(SIXLABORSPIXFMT.Argb32)) return ColorEncoding.ARGB;
-                if (typeof(TPixel) == typeof(SIXLABORSPIXFMT.Bgra32)) return ColorEncoding.BGRA;
-                if (typeof(TPixel) == typeof(SIXLABORSPIXFMT.Rgba32)) return ColorEncoding.RGBA;
+                if (typeof(TPixel) == typeof(__SIXLABORSPIXFMT.Rgb24)) return ColorEncoding.RGB;
+                if (typeof(TPixel) == typeof(__SIXLABORSPIXFMT.Bgr24)) return ColorEncoding.BGR;
+                if (typeof(TPixel) == typeof(__SIXLABORSPIXFMT.Argb32)) return ColorEncoding.ARGB;
+                if (typeof(TPixel) == typeof(__SIXLABORSPIXFMT.Bgra32)) return ColorEncoding.BGRA;
+                if (typeof(TPixel) == typeof(__SIXLABORSPIXFMT.Rgba32)) return ColorEncoding.RGBA;
                 throw new NotImplementedException($"{typeof(TPixel).Name} not supported");
             }
 
@@ -214,7 +216,7 @@ namespace $rootnamespace$
         }
 
         sealed class _WrappedImage<TSrcPixel> : _ISourceImage
-            where TSrcPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TSrcPixel>
+            where TSrcPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TSrcPixel>
         {
             #region lifecycle
             public _WrappedImage(Image<TSrcPixel> src) { _Source = src; }
@@ -249,7 +251,7 @@ namespace $rootnamespace$
         }
 
         sealed class _DerivedImage<TSrcPixel> : _ISourceImage
-            where TSrcPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TSrcPixel>
+            where TSrcPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TSrcPixel>
         {
             #region lifecycle
             public _DerivedImage(int w, int h)

@@ -6,15 +6,17 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 
-using SIZE = System.Drawing.Size;
-using RECT = System.Drawing.Rectangle;
+#nullable disable
 
-using XY = System.Numerics.Vector2;
-using XYZW = System.Numerics.Vector4;
-using XFORM = System.Numerics.Matrix3x2;
+using __SIZE = System.Drawing.Size;
+using __RECT = System.Drawing.Rectangle;
 
-using SIXLABORS = SixLabors.ImageSharp;
-using SIXLABORSPIXFMT = SixLabors.ImageSharp.PixelFormats;
+using __XY = System.Numerics.Vector2;
+using __XYZW = System.Numerics.Vector4;
+using __XFORM = System.Numerics.Matrix3x2;
+
+using __SIXLABORS = SixLabors.ImageSharp;
+using __SIXLABORSPIXFMT = SixLabors.ImageSharp.PixelFormats;
 
 #if INTEROPTYPES_USEINTEROPNAMESPACE
 namespace InteropTypes.Tensors
@@ -26,12 +28,12 @@ namespace $rootnamespace$
 {
     internal static partial class InteropTensorsForImageSharp
     {
-        private static SIXLABORS.Image<TPixel> _CloneCropped<TPixel>(this SIXLABORS.Image<TPixel> src, RECT srcRect)
-            where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
+        private static __SIXLABORS.Image<TPixel> _CloneCropped<TPixel>(this __SIXLABORS.Image<TPixel> src, __RECT srcRect)
+            where TPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TPixel>
         {
-            var dst = new SIXLABORS.Image<TPixel>(srcRect.Width, srcRect.Height);
+            var dst = new __SIXLABORS.Image<TPixel>(srcRect.Width, srcRect.Height);
 
-            var p = new SIXLABORS.Point(-srcRect.X, -srcRect.Y);
+            var p = new __SIXLABORS.Point(-srcRect.X, -srcRect.Y);
             dst.Mutate(dc => dc.DrawImage(src, p, 1));
             return dst;
 
@@ -40,21 +42,21 @@ namespace $rootnamespace$
             // return src.Clone(dc => dc.Crop(xRect));
         }
 
-        private static SIXLABORS.Image<TPixel> _CloneTransformed<TPixel>(this SIXLABORS.Image<TPixel> src, SIZE dstSize, XFORM xform, IResampler sampler = null)
-            where TPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TPixel>
+        private static __SIXLABORS.Image<TPixel> _CloneTransformed<TPixel>(this __SIXLABORS.Image<TPixel> src, __SIZE dstSize, __XFORM xform, IResampler sampler = null)
+            where TPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TPixel>
         {            
-            var srcRect = new SIXLABORS.Rectangle(0, 0, src.Width, src.Height);
+            var srcRect = new __SIXLABORS.Rectangle(0, 0, src.Width, src.Height);
             var xform4 = new System.Numerics.Matrix4x4(xform);
-            var dstSiz = new SIXLABORS.Size(dstSize.Width, dstSize.Height);
+            var dstSiz = new __SIXLABORS.Size(dstSize.Width, dstSize.Height);
 
             sampler ??= KnownResamplers.Bicubic;
 
             return src.Clone(dc => dc.Transform(srcRect, xform4, dstSiz, sampler));
         }       
         
-        private static void _DrawSpriteTo<TDstPixel, TSrcPixel>(this SIXLABORS.Image<TDstPixel> target, XFORM spriteTransform, SIXLABORS.Image<TSrcPixel> sprite)
-            where TDstPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TDstPixel>
-            where TSrcPixel : unmanaged, SIXLABORSPIXFMT.IPixel<TSrcPixel>
+        private static void _DrawSpriteTo<TDstPixel, TSrcPixel>(this __SIXLABORS.Image<TDstPixel> target, __XFORM spriteTransform, __SIXLABORS.Image<TSrcPixel> sprite)
+            where TDstPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TDstPixel>
+            where TSrcPixel : unmanaged, __SIXLABORSPIXFMT.IPixel<TSrcPixel>
         {
 
             if (spriteTransform.M11 == 1 && spriteTransform.M12 == 0 && spriteTransform.M21 == 0 && spriteTransform.M22 == 1) // translation only
@@ -62,7 +64,7 @@ namespace $rootnamespace$
                 var x = (int)MathF.Round(spriteTransform.M31);
                 var y = (int)MathF.Round(spriteTransform.M32);
 
-                target.Mutate(dc => dc.DrawImage(sprite, new SIXLABORS.Point(x,y),1));
+                target.Mutate(dc => dc.DrawImage(sprite, new __SIXLABORS.Point(x,y),1));
                 return;
             }
 
@@ -88,14 +90,14 @@ namespace $rootnamespace$
             // works for fonts and shapes, but NOT for images
             // target.Mutate(ctx => ctx.SetDrawingTransform(spriteTransform).DrawImage(sprite, 1));
 
-            XFORM.Invert(spriteTransform, out var inverseTransform);
+            __XFORM.Invert(spriteTransform, out var inverseTransform);
 
-            void _process(Span<XYZW> dstSpan, SIXLABORS.Point value)
+            void _process(Span<__XYZW> dstSpan, __SIXLABORS.Point value)
             {
                 for (int i = 0; i < dstSpan.Length; i++)
                 {
-                    var v = new XY(i, value.Y);
-                    v = XY.Transform(v, inverseTransform);
+                    var v = new __XY(i, value.Y);
+                    v = __XY.Transform(v, inverseTransform);
 
                     var xx = Math.Clamp((int)v.X, 0, sprite.Width - 1);
                     var yy = Math.Clamp((int)v.Y, 0, sprite.Height - 1);

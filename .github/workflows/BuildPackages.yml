@@ -64,7 +64,7 @@ jobs:
       run: dotnet pack src/build.sln -c Release --no-build --output .
 
     - name: Pack sources
-      run: dotnet PackAsSourcesNuget src/build.sln --output . --append-sources-suffix true --version-suffix ${{env.VERSIONSUFFIXSHORT}}
+      run: dotnet PackAsSourcesNuget src/build.sln --output . --append-sources-suffix --version-suffix ${{env.VERSIONSUFFIXSHORT}}
 
     - name: Archive nuget packages
       uses: actions/upload-artifact@v4
