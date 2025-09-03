@@ -28,7 +28,12 @@ namespace InteropTypes.Graphics.Backends
                 return mgsa;
             }
 
-            // at this point, source must be: String or System.IO.FileInfo or Func<System.IO.Stream> or (Assembly,string)
+            // at this point, source must be:
+            // - String
+            // - System.IO.FileInfo
+            // - Microsoft.Extensions.FileProviders.IFileInfo
+            // - Func<System.IO.Stream>
+            // - (Assembly,string)
 
             return new MonoGameSpriteTexture(source, sampler ?? SamplerState.LinearClamp, textureBleed);
         }
@@ -57,22 +62,29 @@ namespace InteropTypes.Graphics.Backends
                         return (tex, attr);
                     }
 
+                case Func<System.IO.Stream> reader:
+                    {
+                        var tex = _LoadTexture(gd, reader);
+                        if (tex != null) return (tex, attr);
+                        break;
+                    }
+
                 case System.IO.FileInfo finfo:
                     {
-                        var tex = _loadTexture(gd, finfo.OpenRead);
+                        var tex = _LoadTexture(gd, finfo.OpenRead);
                         if (tex != null) return (tex, attr);
                         break;
                     }
 
                 case Microsoft.Extensions.FileProviders.IFileInfo xinfo:
                     {
-                        var tex = _loadTexture(gd, xinfo.CreateReadStream);
+                        var tex = _LoadTexture(gd, xinfo.CreateReadStream);
                         if (tex != null) return (tex, attr);
                         break;
                     }                
             }
 
-            var texx = _loadTexture(gd, () => ImageSource.TryOpenRead(imageSource));
+            var texx = _LoadTexture(gd, () => ImageSource.TryOpenRead(imageSource));
             if (texx != null) return (texx, attr);
 
             // interfaces must be checked at the very end because they're fallbacks
@@ -88,7 +100,7 @@ namespace InteropTypes.Graphics.Backends
             throw new NotImplementedException($"Unknown source: {imageSource}");
         }
 
-        private static Texture2D _loadTexture(GraphicsDevice gd, Func<System.IO.Stream> openImageFunc)
+        private static Texture2D _LoadTexture(GraphicsDevice gd, Func<System.IO.Stream> openImageFunc)
         {
             if (openImageFunc == null) return null;
 
@@ -98,15 +110,16 @@ namespace InteropTypes.Graphics.Backends
             {
                 if (s == null) return null;
 
-                tex = Texture2D.FromStream(gd, s);
-            }
-
-            tex.PremultiplyAlpha(); // NOTE: if it's a DDS texture we should not do this.
+                #if NET
+                tex = Texture2D.FromStream(gd, s, DefaultColorProcessors.PremultiplyAlpha);
+                #else
+                tex = Texture2D.FromStream(gd, s); // defaults to DefaultColorProcessors.ZeroTransparentPixels
+                tex.PremultiplyAlpha(); // NOTE: if it's a DDS texture we should not do this.
+                #endif                
+            }            
 
             return tex;
-        }
-
-        
+        }        
 
         internal static Texture2D _CreateSolidTexture(GraphicsDevice gd, int width, int height, XNACOLOR fillColor)
         {

@@ -33,21 +33,19 @@
     <Content Include="..\..\tests\Shared\Assets\*.png" LinkBase="Assets" CopyToOutputDirectory="PreserveNewest" />    
   </ItemGroup>  
   
-  <!--
+  
   <ItemGroup>    
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
-  -->
+  
   
   <ItemGroup>
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" />
-    <!--
-    <PackageReference Include="MonoGame.Content.Builder.Task" />
-    -->
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />  
+    <PackageReference Include="MonoGame.Content.Builder.Task" />  
   </ItemGroup>
   
   <ItemGroup>
