@@ -110,12 +110,13 @@ namespace InteropTypes.Graphics.Backends
             {
                 if (s == null) return null;
 
-                #if NET
-                tex = Texture2D.FromStream(gd, s, DefaultColorProcessors.PremultiplyAlpha);
-                #else
+                // Notice that Texture2D.FromStream has this:
+                //    Texture2D.FromStream(gd, s, DefaultColorProcessors.PremultiplyAlpha);
+                // But looking at the code, it blindly assumes the data is of type RGBA, so it will
+                // mess with any other data type like LA16 used by the fonts.
+
                 tex = Texture2D.FromStream(gd, s); // defaults to DefaultColorProcessors.ZeroTransparentPixels
-                tex.PremultiplyAlpha(); // NOTE: if it's a DDS texture we should not do this.
-                #endif                
+                tex.PremultiplyAlpha(); // NOTE: if it's a DDS texture we should not do this.                
             }            
 
             return tex;
