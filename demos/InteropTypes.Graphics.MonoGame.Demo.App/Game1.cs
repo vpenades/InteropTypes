@@ -35,14 +35,16 @@ namespace MonoGameDemo
             base.Initialize();
 
             _Sprites.RunDynamicsThread();
-        }
+        }        
 
         #endregion
 
         #region data
 
         private readonly GraphicsDeviceManager _Graphics;
+        private SpriteFont _Arial64;
 
+        private SpriteBatch _SpriteBatch;
         private IMonoGameCanvas2D _Drawing2D;
         private IMonoGameScene3D _Drawing3D;
 
@@ -55,8 +57,11 @@ namespace MonoGameDemo
 
         protected override void LoadContent()
         {
+            _SpriteBatch = new SpriteBatch(this._Graphics.GraphicsDevice);
             _Drawing2D = MonoGameToolkit.CreateCanvas2D(this.GraphicsDevice);
             _Drawing3D = MonoGameToolkit.CreateScene3D(this.GraphicsDevice);
+
+            _Arial64 = this.Content.Load<SpriteFont>("Arial64");
         }
 
         #endregion
@@ -111,7 +116,11 @@ namespace MonoGameDemo
 
             _Drawing3D.Clear();
             _DrawScene3D();
-            _Drawing3D.Render();
+            _Drawing3D.Render();            
+
+            _SpriteBatch.Begin();
+            _SpriteBatch.DrawString(_Arial64, "Native Text", new System.Numerics.Vector2(5, 5), Microsoft.Xna.Framework.Color.Yellow);
+            _SpriteBatch.End();
         }        
 
         private void _DrawCanvas2D()
