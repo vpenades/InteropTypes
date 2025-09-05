@@ -179,8 +179,10 @@ InteropTypes.Graphics.Drawing.IPseudoImmutable.ImmutableKey.get -> object
 InteropTypes.Graphics.Drawing.IRenderTargetInfo
 InteropTypes.Graphics.Drawing.IRenderTargetInfo.DotsPerInchX.get -> float
 InteropTypes.Graphics.Drawing.IRenderTargetInfo.DotsPerInchY.get -> float
+InteropTypes.Graphics.Drawing.IRenderTargetInfo.GetRenderTargetInfoOrDefault<T>(T canvas) -> InteropTypes.Graphics.Drawing.IRenderTargetInfo
 InteropTypes.Graphics.Drawing.IRenderTargetInfo.PixelsHeight.get -> int
 InteropTypes.Graphics.Drawing.IRenderTargetInfo.PixelsWidth.get -> int
+InteropTypes.Graphics.Drawing.IRenderTargetInfo.TryGetBackendViewportBounds<T>(T dc, out System.Drawing.RectangleF bounds) -> bool
 InteropTypes.Graphics.Drawing.IScene3D
 InteropTypes.Graphics.Drawing.IScene3D.DrawAsset(in System.Numerics.Matrix4x4 transform, object asset) -> void
 InteropTypes.Graphics.Drawing.IScene3D.DrawSegments(System.ReadOnlySpan<InteropTypes.Graphics.Drawing.Point3> vertices, float diameter, InteropTypes.Graphics.Drawing.LineStyle style) -> void

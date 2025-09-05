@@ -13,6 +13,16 @@ namespace InteropTypes.Graphics.Drawing
     /// </remarks>
     public interface ITransformer2D
     {
+        public static ITransformer2D GetTransformer2DOrDefault(ICanvas2D canvas)
+        {
+            switch (canvas)
+            {
+                case ITransformer2D rti: return rti;
+                case IServiceProvider srv: return srv.GetService(typeof(ITransformer2D)) as ITransformer2D;
+                default: return null;
+            }
+        }
+
         /// <summary>
         /// Transforms the given points from virtual space to screen space.
         /// </summary>
