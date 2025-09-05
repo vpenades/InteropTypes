@@ -169,9 +169,9 @@ namespace InteropTypes.Graphics.Drawing
                 xform = XFORM2.CreateScale(scale) * xform;
             }
 
-            // docking
+            // docking            
 
-            if (this.Alignment.HasFlag(Fonts.FontAlignStyle.DockBottom) || this.Alignment.HasFlag(Fonts.FontAlignStyle.DockRight))
+            if ((this.Alignment & Fonts.FontAlignStyle.AlignmentMask) != Fonts.FontAlignStyle.None)
             {
                 var rect = Font?.MeasureTextLine(text) ?? GDIRECTF.Empty;
                 var delta = XY.Zero;

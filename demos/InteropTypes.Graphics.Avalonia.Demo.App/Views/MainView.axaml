@@ -11,13 +11,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="InteropTypes.Views.MainView"
              x:DataType="demo:AppMVVM"
-						 x:Name="mySelf">
-
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainViewModel />
-  </Design.DataContext>
+						 x:Name="mySelf">  
 
   <TabControl>
 
@@ -38,6 +32,17 @@
     <TabItem Header="Sprites 2D">
       <drawing:Canvas2DView Canvas="{Binding Canvas2}" />
     </TabItem>
+
+		<TabItem Header="Font Drawing">
+			<StackPanel>
+				<HeaderedContentControl Header="Avalonia" Background="LightGray"  Margin="4">
+					<ItemsControl ItemsSource="{Binding FontsCanvas.ReferenceTexts}" TextElement.FontSize="30" />
+				</HeaderedContentControl>
+				<HeaderedContentControl Header="Interop" MinWidth="300" MinHeight="200" Background="LightGray" Margin="4">
+					<drawing:Canvas2DView Canvas="{Binding FontsCanvas}" />
+				</HeaderedContentControl>
+			</StackPanel>			
+		</TabItem>
 
     <TabItem Header="Scene 3D">
 

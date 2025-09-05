@@ -1,0 +1,4 @@
+
+Credits to Faiad Sufyan: https://github.com/fsufyan/BidiSharp
+
+Also, microsoft has an internal reference Bidi class: https://www.dotnetframework.org/default.aspx/DotNET/DotNET/8@0/untmp/WIN_WINDOWS/lh_tools_devdiv_wpf/Windows/wcp/Core/MS/Internal/TextFormatting/Bidi@cs/1/Bidi@cs

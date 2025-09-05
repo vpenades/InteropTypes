@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.ConstrainedExecution;
+
+using BidiSharp;
 
 using FONTIMAGEEVALUATOR = System.Func<string, object>;
 
@@ -52,7 +55,16 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
             foreach(var glyph in _Font.Chars)
             {
-                _Characters[(Char)glyph.Id] = new _DeviceCharacter(glyph, font, _cachedEvaluator, verticalFlip);
+                var ch = (Char)glyph.Id;
+                _Characters[ch] = new _DeviceCharacter(glyph, font, _cachedEvaluator, verticalFlip);
+
+                // retrieve replacements for ligatures we have in our font.
+                // NOTE: there's no point in adding a ligature replacement for a ligature character that is not available in this font.
+                var cht = ch.ToString();
+                foreach (var pair in Ligatures.GetArabPairs(ch))
+                {
+                    _SupportedLigatures[pair] = cht;
+                }
             }
         }
 
@@ -64,7 +76,9 @@ namespace InteropTypes.Graphics.Drawing.Fonts
 
         private readonly Dictionary<string, object> _PagesCache = new Dictionary<string, object>();
 
-        private readonly Dictionary<Char, _DeviceCharacter> _Characters = new Dictionary<char, _DeviceCharacter>();
+        private readonly Dictionary<Char, _DeviceCharacter> _Characters = new Dictionary<char, _DeviceCharacter>();        
+
+        private readonly Dictionary<string,string> _SupportedLigatures = new Dictionary<string, string>();
 
         #endregion
 
@@ -77,26 +91,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         #endregion
 
         #region API
-        public IEnumerable<RectangleF> MeasureTextGlyphs(string text)
-        {
-            XY cur = new XY(0,0);            
-
-            char prevc = default;
-
-            foreach (var c in text)
-            {
-                if (!_Characters.TryGetValue(c, out var cc)) continue;
-
-                if (c > 32)
-                {
-                    var gr = cc.GetGlyphRect(cur);
-                    if (!gr.IsEmpty) yield return gr;
-                }
-
-                cur.X += cc.GetAdvanceX(prevc);
-                prevc = c;
-            }
-        }
+        
 
         public RectangleF MeasureTextLine(string text)
         {
@@ -112,14 +107,11 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             return rect;
         }
 
-        public void DrawTextLineTo(ICoreCanvas2D target, Matrix3x2 transform, string text, ColorStyle tintColor)
+        public IEnumerable<RectangleF> MeasureTextGlyphs(string text)
         {
-            #if DEBUG
-            var previewXform = transform;
-            #endif
+            text = _PrepareText(text);
 
-            var delta = new XY(0, 0);            
-            transform.Translation += XY.TransformNormal(delta, transform);
+            XY cur = new XY(0, 0);
 
             char prevc = default;
 
@@ -127,13 +119,52 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             {
                 if (!_Characters.TryGetValue(c, out var cc)) continue;
 
-                cc.Draw(target, transform, tintColor);
+                if (c > 32)
+                {
+                    var gr = cc.GetGlyphRect(cur);
+                    if (!gr.IsEmpty) yield return gr;
+                }
+                else
+                {
+                    if (c == '\n') cur = new XY(0, cur.Y + Height);
+                }
+
+                cur.X += cc.GetAdvanceX(prevc);
+                prevc = c;
+            }
+        }
+
+        public void DrawTextLineTo(ICoreCanvas2D target, Matrix3x2 transform, string text, ColorStyle tintColor)
+        {
+            #if DEBUG
+            var previewXform = transform;
+            #endif
+
+            text = _PrepareText(text);            
+
+            char prevc = default;
+
+            var cursor = transform;
+
+            foreach (var c in text)
+            {
+                if (c == '\n')
+                {
+                    if (c == '\n')
+                    {
+                        transform.Translation += XY.TransformNormal(new XY(0, Height), transform);
+                        cursor = transform;
+                    }
+                }
+
+                if (!_Characters.TryGetValue(c, out var cc)) continue;
+
+                cc.Draw(target, cursor, tintColor);
 
                 var adv = cc.GetAdvanceX(prevc);
                 prevc = c;
-
-                delta = new XY(adv, 0);
-                transform.Translation += XY.TransformNormal(delta, transform);
+                
+                cursor.Translation += XY.TransformNormal(new XY(adv, 0), transform);
             }
 
             #if DEBUG
@@ -166,6 +197,17 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             Point2.Transform(rectPoints, transform);
             target.DrawLines(rectPoints, 2f, color.WithOpacity(0.25f));
         }
+
+
+        private string _PrepareText(string text)
+        {
+            foreach (var kvp in _SupportedLigatures)
+            {
+                text = text.Replace(kvp.Key, kvp.Value);
+            }
+
+            return Bidi.LogicalToVisual(text);
+        }    
 
         #endregion
 
@@ -249,6 +291,10 @@ namespace InteropTypes.Graphics.Drawing.Fonts
             public int GetAdvanceX(char prevChar)
             {
                 var x = _Glyph.XAdvance;
+
+                var cat = char.GetUnicodeCategory(prevChar);
+                
+
                 if (_Kerning == null || prevChar == 0) return x;
 
                 if (_Kerning.TryGetValue(prevChar, out var kerning))

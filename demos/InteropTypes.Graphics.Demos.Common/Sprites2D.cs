@@ -32,7 +32,7 @@ namespace InteropTypes
             Render(120, 64, DrawHalfPixel);
             Render(50, 50, DrawMeshPrimitive);
 
-            Render(150,50, _DrawBitmapText);
+            Render(150,150, _DrawBitmapText);
         }
 
         public async Task RunDynamicsAsync()
@@ -82,7 +82,9 @@ namespace InteropTypes
 
         private static readonly ImageSource[] Numbers = ImageSource.CreateGrid(_GetImageReference("Numbers.png"), 10, 10, (64, 64), (32, 32)).ToArray();
 
-        private static readonly IFont Canada1500Font = AngelCodeFont.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets\\Canada1500-standard.fnt"));
+        private static readonly IFont Canada1500Font = AngelCodeFont.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets\\Fonts\\Canada1500-standard.fnt"));
+
+        private static readonly IFont Arial64Font = AngelCodeFont.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets\\Fonts\\Arial_64_LCA.fnt"));
 
         #endregion
 
@@ -168,7 +170,19 @@ namespace InteropTypes
 
             dc.DrawTextLine(XFORM.CreateScale(2) * XFORM.CreateTranslation(5, 15), "0123456789", 5, NumbersFont.With(FontAlignStyle.FlipAuto));
 
-            dc.DrawTextLine((5, 50), "Hello World", 30, Canada1500Font.ToStyle().With(FontAlignStyle.FlipAuto | FontAlignStyle.Center));
+            var idx = DateTime.Now.Second / 30;
+
+            switch(idx)
+            {
+                case 0:
+                    dc.DrawTextLine((5, 50), "Hello World", 30, Arial64Font.ToStyle().With(FontAlignStyle.FlipAuto)); break;
+                case 1:
+                    dc.DrawTextLine((5, 50), "مرحبا بالعالم", 30, Arial64Font.ToStyle().With(FontAlignStyle.FlipAuto)); break;
+            }
+
+            dc.DrawTextLine((145, 80), "Hello World", 30, Arial64Font.ToStyle().With(FontAlignStyle.FlipAuto| FontAlignStyle.DockRight));
+
+            dc.DrawTextLine((75, 110), "Hello World", 30, Arial64Font.ToStyle().With(FontAlignStyle.FlipAuto | FontAlignStyle.CenterHorizontal));
         }
 
         #endregion

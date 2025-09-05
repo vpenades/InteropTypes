@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 using InteropTypes.Graphics.Bitmaps;
 using InteropTypes.Graphics.Drawing;
+using InteropTypes.Graphics.Drawing.Fonts;
 
 namespace InteropTypes
 {
@@ -59,6 +60,8 @@ namespace InteropTypes
 
         public IDrawingBrush<ICanvas2D> Canvas2 { get; } = new AdvancedScene2D();
 
+        public FontsCanvas2D FontsCanvas { get; } = new FontsCanvas2D();
+
         public BindableCanvas2D Canvas3 { get; protected set; }       
     }
 
@@ -110,7 +113,30 @@ namespace InteropTypes
         }
     }
 
-    
+    public class FontsCanvas2D() : IDrawingBrush<ICanvas2D>
+    {
+        private static readonly IFont Arial64Font = AngelCodeFont.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets\\Fonts\\Arial_64_LCA.fnt"));
+
+        public IEnumerable<string> ReferenceTexts
+        {
+            get
+            {
+                yield return "Hello World";
+                yield return "مرحبا بالعالم";
+                yield return "لا";
+            }
+        }
+
+        public void DrawTo(ICanvas2D dc)
+        {
+            int y = 25;
+            foreach(var txt in ReferenceTexts)
+            {
+                dc.DrawTextLine((5, y), txt, 30, Arial64Font.ToStyle());
+                y += 35;
+            }
+        }
+    }    
 
     public class Cube : IDrawingBrush<IScene3D>
     {

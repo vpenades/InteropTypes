@@ -45,6 +45,16 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         /// </remarks>
         int Height { get; }
 
+        /// <summary>
+        /// Draws a text to the given location.
+        /// </summary>
+        /// <param name="target">render target surface</param>
+        /// <param name="transform">text location transform</param>
+        /// <param name="text">text to render</param>
+        /// <param name="tintColor">text colo</param>
+        /// <remarks>
+        /// to use text alignment, use <see cref="FontStyle.DrawDecomposedTo(ICoreCanvas2D, in System.Numerics.Matrix3x2, string, float)"/>
+        /// </remarks>
         void DrawTextLineTo(ICoreCanvas2D target, XFORM2 transform, string text, ColorStyle tintColor);        
         public FontStyle ToStyle() { return (this, GDICOLOR.White); }        
     }

@@ -30,6 +30,7 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         DockRight = 16,
         CenterVertical = 32,
         DockBottom = 64,        
-        Center = CenterHorizontal | CenterVertical
+        Center = CenterHorizontal | CenterVertical,
+        AlignmentMask = CenterHorizontal | CenterVertical | DockRight | DockBottom
     }
 }
