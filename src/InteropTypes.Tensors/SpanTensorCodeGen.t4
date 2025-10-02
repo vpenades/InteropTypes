@@ -58,6 +58,18 @@ public class SpanTensorCodeGen
 		return lines;
 	}
 
+	public IEnumerable<string> WriteContructorsFromSystem()	
+	{
+		yield return "#if NET8_0_OR_GREATER";
+		yield return "#pragma warning disable SYSLIB5001";
+		yield return $"public static {ClassName}<T> From(System.Numerics.Tensors.TensorSpan<T> other)";
+				yield return "{";
+				yield return "throw new NotImplementedException();";
+				yield return "}";
+		yield return "#pragma warning disable SYSLIB5001";
+		yield return "#endif";
+	}
+
 	public IEnumerable<string> WriteImplicitConstructor()
 	{
 		yield return $"public static implicit operator {ClassName}<T>({WriteableClassName}<T> other) {{ return new {ClassName}<T>(other); }}";

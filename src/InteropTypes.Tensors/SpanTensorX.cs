@@ -79,6 +79,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor1<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -281,6 +290,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor2<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -613,6 +631,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor3<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -945,6 +972,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor4<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -1277,6 +1313,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor5<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -1609,6 +1654,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor6<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -1941,6 +1995,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor7<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -2254,6 +2317,15 @@ namespace InteropTypes.Tensors
             _Buffer = new Span<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static SpanTensor8<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -2574,6 +2646,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor1<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -2782,6 +2863,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor2<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -3122,6 +3212,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor3<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -3462,6 +3561,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor4<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -3802,6 +3910,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor5<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -4142,6 +4259,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor6<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -4482,6 +4608,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor7<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        
@@ -4803,6 +4938,15 @@ namespace InteropTypes.Tensors
             _Buffer = new ReadOnlySpan<T>(data.ToPointer(), _Dimensions.StepSize);
         }
 
+        #if NET8_0_OR_GREATER
+        #pragma warning disable SYSLIB5001
+        public static ReadOnlySpanTensor8<T> From(System.Numerics.Tensors.TensorSpan<T> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        #pragma warning disable SYSLIB5001
+        #endif
         #endregion
 
         #region data        

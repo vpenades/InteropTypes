@@ -80,6 +80,7 @@ namespace InteropTypes.Tensors
         ClearIndent();
         PushIndent("        ");
         _WriteLines(context.WriteContructors());
+        _WriteLines(context.WriteContructorsFromSystem());
         PopIndent();
 
         #>

@@ -14,17 +14,20 @@ namespace InteropTypes.IO
         [return: MaybeNull]
         public static async Task<System.IO.Stream> GetStreamOrDefaultAsync(FILEINFO finfo, FilePreviewOptions options = null)
         {
-            if (finfo == null || !finfo.Exists) return null;            
+            if (finfo == null || !finfo.Exists) return null;
 
-            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options)) return await Task.Run(() => GetStreamOrDefault(finfo, options)).ConfigureAwait(true);
+            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options))
+            {
+                return await FilePreviewOptions._ThrottleAsync(options, () => GetStreamOrDefault(finfo, options));
+            }
 
             #if WINDOWS10_0_19041_0_OR_GREATER
-            return await Platforms.UWP.WindowsThumbnailService.GetThumbnailStreamAsync(finfo, options).ConfigureAwait(true);
+            return await Platforms.UWP.WindowsThumbnailService.GetThumbnailStreamAsync(finfo, options);
             #endif
 
             if (OperatingSystem.IsWindowsVersionAtLeast(6, 0, 6000))
             {
-                return await Task.Run(() => GetStreamOrDefault(finfo, options)).ConfigureAwait(true);
+                return await FilePreviewOptions._ThrottleAsync(options, () => GetStreamOrDefault(finfo, options));
             }
 
             return null;
@@ -65,17 +68,20 @@ namespace InteropTypes.IO
         {
             if (finfo == null || !finfo.Exists) return null;
 
-            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options)) return await Task.Run(() => GetPreviewOrDefault(finfo, options)).ConfigureAwait(true);
+            if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options))
+            {
+                return await FilePreviewOptions._ThrottleAsync(options, () => GetPreviewOrDefault(finfo, options));
+            }
             
             #if WINDOWS10_0_19041_0_OR_GREATER
 
-            return await Platforms.UWP.WindowsThumbnailService.GetThumbnailAsync(finfo, options).ConfigureAwait(true);
+            return await Platforms.UWP.WindowsThumbnailService.GetThumbnailAsync(finfo, options);
 
             #endif
 
             if (OperatingSystem.IsWindowsVersionAtLeast(6, 0, 6000))
             {
-                return await Task.Run(() => GetPreviewOrDefault(finfo, options)).ConfigureAwait(true);
+                return await FilePreviewOptions._ThrottleAsync(options, () => GetPreviewOrDefault(finfo, options));
             }
 
             return null;
