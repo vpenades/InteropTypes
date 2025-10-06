@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AvaloniaVersion>11.3.6</AvaloniaVersion>
+    <AvaloniaVersion>11.3.7</AvaloniaVersion>
   </PropertyGroup>
   
   <ItemGroup>
@@ -78,7 +78,7 @@
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />    
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
 
-    <PackageVersion Include="SkiaSharp" Version="3.119.0" />
+    <PackageVersion Include="SkiaSharp" Version="3.119.1" />
 
     <PackageVersion Include="SvgNet" Version="3.5.0" />
 
@@ -115,8 +115,8 @@
     
     <!-- Machine Learning -->
 
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.22.2" />
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.22.1" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.23.0" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.23.0" />
     
     <PackageVersion Include="OpenCvSharp4" Version="4.11.0.20250507" />
     <PackageVersion Include="OpenCvSharp4.Windows" Version="4.11.0.20250507" />
@@ -132,7 +132,7 @@
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.10.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.1.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />
@@ -140,7 +140,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
     
 
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.2" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.4" />
 
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     
