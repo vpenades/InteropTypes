@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>InteropTypes</RootNamespace>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsTestProject>true</IsTestProject>		
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\InteropTypes.Memory\InteropTypes.Memory.csproj" />
+  </ItemGroup>
+
+</Project>
