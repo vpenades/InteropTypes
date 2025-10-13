@@ -146,7 +146,7 @@ namespace InteropTypes.Graphics.Drawing
 
         public GDIRECTF MeasureTextLine(string text, float size)
         {
-            return Font?.MeasureTextLine(text,size) ?? GDIRECTF.Empty;
+            return Font?.MeasureTextLine(text, size) ?? GDIRECTF.Empty;
         }
 
         public void DrawDecomposedTo(ICoreCanvas2D dc, in XFORM2 transform, string text, float size)
@@ -163,7 +163,7 @@ namespace InteropTypes.Graphics.Drawing
 
             // size transform
 
-            if (size > 0)
+            if (size >= 0)
             {
                 var scale = size / (float)font.Height;
                 xform = XFORM2.CreateScale(scale) * xform;

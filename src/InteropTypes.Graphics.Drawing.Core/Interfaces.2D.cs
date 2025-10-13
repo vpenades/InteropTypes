@@ -95,7 +95,7 @@ namespace InteropTypes.Graphics.Drawing
         /// </summary>        
         /// <param name="transform">the location of the top-left corner of the text line</param>
         /// <param name="text">the text to draw</param>
-        /// <param name="size">the vertical size of the text</param>
+        /// <param name="size">The text size. If negative it will use <see cref="Fonts.IFont.Height"/>.</param>
         /// <param name="font">the font</param>
         void DrawTextLine(in XFORM2 transform, string text, float size, FontStyle font);
     }    

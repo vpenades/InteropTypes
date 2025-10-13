@@ -11,15 +11,19 @@ namespace InteropTypes.Graphics.Drawing.Fonts
         /// </summary>
         bool IsVectorial { get; }
 
+        /// <summary>
+        /// returs a rectangle that fits the given text with the given size
+        /// </summary>
+        /// <param name="text">the text line to measure.</param>
+        /// <param name="size">The text size. If negative it will use <see cref="Height"/>.</param>
+        /// <returns></returns>
         GDIRECTF MeasureTextLine(string text, float size)
         {
             var rect = MeasureTextLine(text);
 
-            var h = Math.Max(1, this.Height);
-
-            if (size <= 0) size = h;
-
-            var scale = size / h;
+            float scale = size < 0
+                ? 1
+                : size / Math.Max(1, this.Height);
 
             rect.X *= scale;
             rect.Y *= scale;
