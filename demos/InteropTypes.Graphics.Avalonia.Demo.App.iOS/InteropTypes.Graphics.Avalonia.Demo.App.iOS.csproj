@@ -1,18 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0-ios</TargetFramework>
-    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
-    <ProvisioningType>manual</ProvisioningType>
-    <Nullable>enable</Nullable>
-    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
 
-    <RootNamespace>InteropTypes</RootNamespace>
-    
-    <!-- These properties need to be set in order to run on a real iDevice -->
-    <!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
-    <!--<CodesignKey></CodesignKey>-->
-  </PropertyGroup>
+	<PropertyGroup>
+		<RootNamespace>InteropTypes</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0-ios</TargetFramework>
+		<SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<!-- https://learn.microsoft.com/en-us/dotnet/maui/ios/deployment/publish-app-store?view=net-maui-9.0 -->
+
+	<PropertyGroup>
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia.iOS" />
