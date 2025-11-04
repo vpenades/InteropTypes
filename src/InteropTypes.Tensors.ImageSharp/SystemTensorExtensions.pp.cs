@@ -46,7 +46,7 @@ namespace $rootnamespace$
                 
 
                 // var srcRow = src.DangerousGetPixelRowMemory(y).Span;
-                // var dstRow = dst.Slice(y);
+                // var dstRow = dst.Slice(y); // System.Runtime.InteropServices.TensorMarshall
             }
         }
 
