@@ -131,7 +131,7 @@ namespace InteropTypes.Graphics.Backends.Codecs
 
                 times["time_base"] = vsd.TimeBase;
                 times["frame_rate"] = vsd.FrameRate;
-                state["ticks_per_frame"] = vsd.TicksPerFrame;
+                // state["ticks_per_frame"] = vsd.TicksPerFrame;
 
                 var context = new VideoFrameMetadata(info, state, times);
 
