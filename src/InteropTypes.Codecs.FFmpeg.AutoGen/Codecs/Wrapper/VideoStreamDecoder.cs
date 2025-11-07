@@ -95,14 +95,7 @@ namespace InteropTypes.Codecs
         ///   the decoder may export it here. { 0, 1} when unknown.<br/>
         /// - Encoding: May be used to signal the framerate of CFR content to an encoder.
         /// </summary>
-        public AVRational FrameRate => _pCodecContext->framerate;        
-
-        /// <summary>
-        /// For some codecs, the time base is closer to the field rate than the frame rate.
-        /// Most notably, H.264 and MPEG-2 specify <see cref="TimeBase"/> as half of frame duration if
-        /// no telecine is used ...
-        /// </summary>
-        public int TicksPerFrame => _pCodecContext->ticks_per_frame;
+        public AVRational FrameRate => _pCodecContext->framerate;
 
         public double VideoDuration
         {
