@@ -106,7 +106,7 @@
     
     <!-- Video Libraries -->
 
-    <PackageVersion Include="FFmpeg.AutoGen" Version="7.1.1" />
+    <PackageVersion Include="FFmpeg.AutoGen" Version="8.0.0" />
     <PackageVersion Include="FFMpegCore" Version="5.4.0" />
     <PackageVersion Include="FFMpegCore.Extensions.System.Drawing.Common" Version="5.0.3" />
     <PackageVersion Include="LibVLCSharp" Version="3.9.4" />
@@ -140,7 +140,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
     
 
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.5" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.6" />
 
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     
