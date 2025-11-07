@@ -17,6 +17,8 @@ namespace InteropTypes.Codecs
     {
         #region lifecycle
 
+        private const int SWS_FAST_BILINEAR = 0x1;
+
         public VideoFrameConverter(Size srcSize, AVPixelFormat srcPixelFormat, Size dstSize, AVPixelFormat dstPixelFormat)
         {
             _SrcSize = srcSize;
@@ -24,13 +26,15 @@ namespace InteropTypes.Codecs
             _DstSize = dstSize;
             _DstFmt = dstPixelFormat;
 
+            var flags = SWS_FAST_BILINEAR; //  ffmpeg.SWS_FAST_BILINEAR;
+
             _pConvertContext = ffmpeg.sws_getContext(srcSize.Width,
                 srcSize.Height,
                 srcPixelFormat,
                 dstSize.Width,
                 dstSize.Height,
                 dstPixelFormat,
-                ffmpeg.SWS_FAST_BILINEAR,
+                flags,
                 null,
                 null,
                 null);
