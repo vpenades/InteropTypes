@@ -6,8 +6,11 @@
   <!-- Configuration =================================================================================== -->
 
   <PropertyGroup>
+		<!--
     <LangVersion>8.0</LangVersion>
+		-->
     <IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup>
