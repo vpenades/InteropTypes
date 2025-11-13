@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0;net8.0-android;net9.0-ios</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net10.0-android;net10.0-ios</TargetFrameworks>
     <RootNamespace>InteropTypes</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -12,12 +12,12 @@
   </ItemGroup>
   -->  
   
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0-android' ">    
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net10.0-android' ">    
     <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
     <AvaloniaContent Include="Assets\**\*" />
   </ItemGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0-android' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0-android' ">
     <EmbeddedResource Include="Assets\**" />
   </ItemGroup>
   
