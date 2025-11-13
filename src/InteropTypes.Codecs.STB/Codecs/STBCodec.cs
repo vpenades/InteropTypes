@@ -138,7 +138,7 @@ namespace InteropTypes.Codecs
             rinfo = new BitmapInfo(bmp.Width, bmp.Height, rfmt);
             rdata = new Byte[rinfo.BitmapByteSize];
 
-            new SpanBitmap(rdata, rinfo).SetPixels(0, 0, bmp);
+            new SpanBitmap(rdata.AsSpan(), rinfo).SetPixels(0, 0, bmp);
 
             return true;
         }

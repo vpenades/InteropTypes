@@ -49,7 +49,7 @@ namespace InteropTypes.Memory
             _Buffer = new LBAITEM[capacity];
             _ByteLen = array.Length;
 
-            var dst = System.Runtime.InteropServices.MemoryMarshal.Cast<LBAITEM, byte>(_Buffer);
+            var dst = System.Runtime.InteropServices.MemoryMarshal.Cast<LBAITEM, byte>(_Buffer.AsSpan());
             array.AsSpan().CopyTo(dst);
         }
 

@@ -15,7 +15,7 @@ namespace InteropTypes.IO
 
         public FileInfoServices(System.IO.DirectoryInfo dinfo,params string[] filePath)
         {            
-            _Finfo = dinfo.DefineFile(filePath);
+            _Finfo = dinfo.DefineFileInfo(filePath);
         }
 
         public FileInfoServices(string filePath)

@@ -54,6 +54,14 @@ namespace InteropTypes.Graphics.Bitmaps
             _Writable = null;
         }
 
+        public SpanBitmap(Byte[] data, int width, int height, int stepByteSize = 0)
+           : this(data.AsSpan(), width, height, PixelFormat.TryIdentifyFormat<TPixel>(), stepByteSize)
+        { }
+
+        public SpanBitmap(ArraySegment<Byte> data, int width, int height, int stepByteSize = 0)
+           : this(data.AsSpan(), width, height, PixelFormat.TryIdentifyFormat<TPixel>(), stepByteSize)
+        { }
+
         public SpanBitmap(Span<Byte> data, int width, int height, int stepByteSize = 0)
            : this(data, width, height, PixelFormat.TryIdentifyFormat<TPixel>(), stepByteSize)
         { }

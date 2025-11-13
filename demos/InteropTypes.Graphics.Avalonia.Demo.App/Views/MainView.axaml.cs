@@ -37,7 +37,7 @@ public partial class MainView : UserControl
 
             if (bmp.TryGetBuffer(out var buffer))
             {
-                var data = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(buffer.Array);
+                var data = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, int>(buffer.Array.AsSpan());
 
                 for (int i = 0; i < data.Length; ++i)
                 {

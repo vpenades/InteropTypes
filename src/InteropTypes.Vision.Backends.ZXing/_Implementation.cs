@@ -40,7 +40,7 @@ namespace InteropTypes.Vision
             var tmpInfo = new BitmapInfo(src.Size, src.PixelFormat);
             Array.Resize(ref persistentBuffer, tmpInfo.BitmapByteSize);
 
-            new SpanBitmap(persistentBuffer, tmpInfo).SetPixels(0, 0, src);
+            new SpanBitmap(persistentBuffer.AsSpan(), tmpInfo).SetPixels(0, 0, src);
 
             // ZXing.LuminanceSource
             // ZXing.PlanarYUVLuminanceSource            

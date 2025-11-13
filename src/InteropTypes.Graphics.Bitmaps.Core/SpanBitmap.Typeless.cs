@@ -38,6 +38,18 @@ namespace InteropTypes.Graphics.Bitmaps
             _Writable = isReadOnly ? null : span;
         }
 
+        public SpanBitmap(Byte[] data, BitmapInfo info)
+        {
+            _Info = info;
+            _Readable = _Writable = data.AsSpan().Slice(0, _Info.BitmapByteSize);
+        }
+
+        public SpanBitmap(ArraySegment<Byte> data, BitmapInfo info)
+        {
+            _Info = info;
+            _Readable = _Writable = data.AsSpan().Slice(0, _Info.BitmapByteSize);
+        }
+
         public SpanBitmap(Span<Byte> data, BitmapInfo info)
         {
             _Info = info;
@@ -68,7 +80,7 @@ namespace InteropTypes.Graphics.Bitmaps
         {            
             if (recyclableBuffer == null || recyclableBuffer.Length < this.Info.BitmapByteSize) recyclableBuffer = new byte[this.Info.BitmapByteSize];
 
-            var other = new SpanBitmap(recyclableBuffer, this.Info);
+            var other = new SpanBitmap(recyclableBuffer.AsSpan(), this.Info);
 
             other.SetPixels(0, 0, this);
 
@@ -472,7 +484,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 refreshed = true;
             }
 
-            new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
+            new SpanBitmap(otherData.AsSpan(), otherInfo).SetPixels(0, 0, this);
 
             return refreshed;
         }

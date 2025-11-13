@@ -85,7 +85,7 @@ namespace InteropTypes
         public static SpanBitmap AsSpanBitmap(STBREAD.ImageResult image)
         {
             var binfo = GetBitmapInfo(image);
-            return new SpanBitmap(image.Data, binfo);
+            return new SpanBitmap(image.Data.AsSpan(), binfo);
         }
 
         public static MemoryBitmap AsMemoryBitmap(STBREAD.ImageResult image)

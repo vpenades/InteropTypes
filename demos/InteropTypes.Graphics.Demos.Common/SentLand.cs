@@ -603,7 +603,7 @@ namespace InteropTypes
                 }
 
                 // Results are in reverse order due to backwards 6502 iteration loop.
-                height_indices = height_indices.Reverse().ToArray();
+                height_indices.Reverse();
 
                 // Mask above number of entries to limit random scope.
                 int idx_mask = 0xFF >> format(height_indices.Length, "08b").IndexOf('1');

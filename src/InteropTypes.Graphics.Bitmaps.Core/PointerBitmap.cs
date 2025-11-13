@@ -227,7 +227,7 @@ namespace InteropTypes.Graphics.Bitmaps
                 refreshed = true;
             }
 
-            new SpanBitmap(otherData, otherInfo).SetPixels(0, 0, this);
+            new SpanBitmap(otherData.AsSpan(), otherInfo).SetPixels(0, 0, this);
 
             return refreshed;
         }        

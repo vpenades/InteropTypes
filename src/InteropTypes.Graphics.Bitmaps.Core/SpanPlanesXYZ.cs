@@ -34,9 +34,9 @@ namespace InteropTypes.Graphics.Bitmaps
         {
             if (format.ByteCount != sizeof(TComponent) * 3) throw new Diagnostics.PixelFormatNotSupportedException(format);
 
-            var dataX = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height]);
-            var dataY = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height]);
-            var dataZ = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height]);
+            var dataX = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height].AsSpan());
+            var dataY = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height].AsSpan());
+            var dataZ = System.Runtime.InteropServices.MemoryMarshal.Cast<TComponent, byte>(new TComponent[width * height].AsSpan());
 
             X = new SpanBitmap<TComponent>(dataX, width, height);
             Y = new SpanBitmap<TComponent>(dataY, width, height);

@@ -15,18 +15,14 @@ namespace InteropTypes.Codecs
     /// </summary>
     public sealed unsafe class VideoFrameConverter : IDisposable
     {
-        #region lifecycle
-
-        private const int SWS_FAST_BILINEAR = 0x1;
+        #region lifecycle        
 
         public VideoFrameConverter(Size srcSize, AVPixelFormat srcPixelFormat, Size dstSize, AVPixelFormat dstPixelFormat)
         {
             _SrcSize = srcSize;
 
             _DstSize = dstSize;
-            _DstFmt = dstPixelFormat;
-
-            var flags = SWS_FAST_BILINEAR; //  ffmpeg.SWS_FAST_BILINEAR;
+            _DstFmt = dstPixelFormat;            
 
             _pConvertContext = ffmpeg.sws_getContext(srcSize.Width,
                 srcSize.Height,
@@ -34,7 +30,7 @@ namespace InteropTypes.Codecs
                 dstSize.Width,
                 dstSize.Height,
                 dstPixelFormat,
-                flags,
+                (int)SwsFlags.SWS_FAST_BILINEAR,
                 null,
                 null,
                 null);
