@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 using Avalonia;
 using Avalonia.Browser;
-using Avalonia.ReactiveUI;
 
 using InteropTypes;
 

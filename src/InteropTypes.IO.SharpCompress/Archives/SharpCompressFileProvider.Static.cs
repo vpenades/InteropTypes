@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.FileProviders;
 
@@ -159,11 +161,18 @@ namespace InteropTypes.IO.Archives
                 return _Reader.OpenEntryStream();
             }
 
+            public async Task<Stream> OpenEntryStreamAsync(CancellationToken cancellationToken = default)
+            {
+                return await _Reader.OpenEntryStreamAsync(cancellationToken);
+            }
+
             #endregion
         }
 
         class _ReaderArchive : IReader
         {
+            #region lifecycle
+
             public _ReaderArchive(IArchive archive)
             {
                 _Archive = archive;
@@ -176,8 +185,16 @@ namespace InteropTypes.IO.Archives
                 Entry = null;
             }
 
+            #endregion
+
+            #region data
+
             private readonly IArchive _Archive;
             private IEnumerator<IArchiveEntry> _EntryEnumerator;
+
+            #endregion
+
+            #region properties
 
             public ArchiveType ArchiveType => throw new NotImplementedException();
 
@@ -185,11 +202,21 @@ namespace InteropTypes.IO.Archives
 
             public bool Cancelled { get; private set; }
 
+            #endregion
+
+            #region API
+
             public event EventHandler<ReaderExtractionEventArgs<IEntry>> EntryExtractionProgress;
             public event EventHandler<CompressedBytesReadEventArgs> CompressedBytesRead;
             public event EventHandler<FilePartExtractionBeginEventArgs> FilePartExtractionBegin;
 
             public void Cancel() { Cancelled = true; }
+
+            public async Task<bool> MoveToNextEntryAsync(CancellationToken cancellationToken = default)
+            {
+                if (cancellationToken.IsCancellationRequested) return false;
+                return await Task.FromResult(MoveToNextEntry());
+            }
 
             public bool MoveToNextEntry()
             {
@@ -202,6 +229,14 @@ namespace InteropTypes.IO.Archives
                 if (r) Entry = _EntryEnumerator.Current;
 
                 return r;
+            }            
+
+            public void WriteEntryTo(Stream writableStream)
+            {
+                using (var s = OpenEntryStream())
+                {
+                    s.CopyTo(writableStream);
+                }
             }
 
             public EntryStream OpenEntryStream()
@@ -216,13 +251,29 @@ namespace InteropTypes.IO.Archives
                 throw new NotSupportedException();
             }
 
-            public void WriteEntryTo(Stream writableStream)
+            public async Task WriteEntryToAsync(Stream writableStream, CancellationToken cancellationToken = default)
             {
-                using (var s = OpenEntryStream())
+                using (var s = await OpenEntryStreamAsync())
                 {
-                    s.CopyTo(writableStream);
+                    await s.CopyToAsync(writableStream, cancellationToken);
                 }
             }
+
+            public async Task<EntryStream> OpenEntryStreamAsync(CancellationToken cancellationToken = default)
+            {
+                if (Entry is IArchiveEntry archEntry)
+                {
+                    var s = await archEntry.OpenEntryStreamAsync(cancellationToken);
+                    // return new EntryStream(this, s);  // we could use reflection but....
+                    throw new NotImplementedException();
+                }
+
+                throw new NotSupportedException();
+            }
+
+
+
+            #endregion
         }
     }
 }

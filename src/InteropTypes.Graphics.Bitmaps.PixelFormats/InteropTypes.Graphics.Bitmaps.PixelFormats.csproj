@@ -33,10 +33,11 @@
     <InternalsVisibleTo Include="InteropTypes.Graphics.Bitmaps.PixelFormats.Benchmark" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">
-    <PackageReference Include="System.Memory" />
-    <PackageReference Include="Ultz.Bcl.Half.Fallback" />
+	
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'">		
+    <PackageReference Include="Ultz.Bcl.Half.Fallback" />		
   </ItemGroup>
+	
 
   <ItemGroup>
     <None Include="..\Shared\CodeGenUtils.t4" Link="CodeGenUtils.t4" />

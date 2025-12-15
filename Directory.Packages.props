@@ -19,22 +19,23 @@
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.0" />
-    <PackageVersion Include="System.Drawing.Common" Version="10.0.0" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.0" />
-    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.1" />
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.1" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.1" />
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.1" />
+		<PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.1" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.248" />
+    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.264" />
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.33.1" />
+    <PackageVersion Include="Google.Protobuf" Version="3.33.2" />
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17" />
-    <PackageVersion Include="NuGet.Configuration" Version="7.0.0" />
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20251113" />
-    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20251113" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0" />
+    <PackageVersion Include="NuGet.Configuration" Version="7.0.1" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20251121" />
+    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20251121" />
     <!-- Game Engines -->
     <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     <PackageVersion Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
@@ -71,13 +72,13 @@
     <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.ReactiveUI" Version="11.2.8" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.3.8" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <!-- Video Libraries -->
     <PackageVersion Include="FFmpeg.AutoGen" Version="8.0.0" />
     <PackageVersion Include="FFMpegCore" Version="5.4.0" />
     <PackageVersion Include="FFMpegCore.Extensions.System.Drawing.Common" Version="5.0.3" />
-    <PackageVersion Include="LibVLCSharp" Version="3.9.4" />
+    <PackageVersion Include="LibVLCSharp" Version="3.9.5" />
     <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
     <PackageVersion Include="SharpAvi" Version="3.0.1" />
     <!-- Machine Learning -->
@@ -92,21 +93,21 @@
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="6.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.100" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.101" />
     <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.7" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     <!-- Other -->
-    <PackageVersion Include="SharpCompress" Version="0.41.0" />
+    <PackageVersion Include="SharpCompress" Version="0.42.1" />
     <PackageVersion Include="SharpSvn" Version="1.14005.366" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
     <PackageVersion Update="System.Text.Json" Version="8.0.6" />
-    <PackageVersion Update="System.Drawing.Common" Version="8.0.19" />
+    <PackageVersion Update="System.Drawing.Common" Version="8.0.22" />
     <PackageVersion Update="System.Numerics.Tensors" Version="8.0.0" />
     <PackageVersion Update="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
     <PackageVersion Update="Microsoft.Extensions.FileProviders.Abstractions" Version="8.0.0" />
@@ -117,7 +118,7 @@
     <PackageVersion Update="SvgNet" Version="3.3.8" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageVersion Update="SixLabors.ImageSharp" Version="2.1.11" />
+    <PackageVersion Update="SixLabors.ImageSharp" Version="2.1.13" />
     <PackageVersion Update="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
