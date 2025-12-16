@@ -11,14 +11,14 @@ echo Building 1.0.0-%VERSIONSUFFIX%
 
 :: ============================================= DOTNET builder
 
-dotnet build -restore:true -c:Release --version-suffix %VERSIONSUFFIX% ..\InteropTypes.sln
-dotnet pack -c:Release --version-suffix %VERSIONSUFFIX% ..\InteropTypes.sln
+dotnet build -restore:true -c:Release --version-suffix %VERSIONSUFFIX% ..\InteropTypes.slnx
+dotnet pack -c:Release --version-suffix %VERSIONSUFFIX% ..\InteropTypes.slnx
 
 :: ============================================= MSBUILD builder
 
 rem set MSBUILDPROPERTIES=Configuration=Release;VersionSuffix=%VERSIONSUFFIX%
-rem msbuild -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
-rem msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.sln
+rem msbuild -p:%MSBUILDPROPERTIES% ..\InteropTypes.slnx
+rem msbuild -t:pack -p:%MSBUILDPROPERTIES% ..\InteropTypes.slnx
 
 :: ============================================= Copy output
 

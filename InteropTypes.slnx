@@ -1,0 +1,117 @@
+<Solution>
+  <Folder Name="/Backends/">
+    <Project Path="src/InteropTypes.Graphics.Backends.Android/InteropTypes.Graphics.Backends.Android.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.Avalonia/InteropTypes.Graphics.Backends.Avalonia.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.GDI/InteropTypes.Graphics.Backends.GDI.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.GLTF/InteropTypes.Graphics.Backends.GLTF.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.ImageSharp/InteropTypes.Graphics.Backends.ImageSharp.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.MagicScaler/InteropTypes.Graphics.Backends.MagicScaler.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.MonoGame/InteropTypes.Graphics.Backends.MonoGame.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.OpenCvSharp4/InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.Plotly/InteropTypes.Graphics.Backends.Plotly.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.SilkOpenGL/InteropTypes.Graphics.Backends.SilkOpenGL.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.SkiaSharp/InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.SpanBitmap/InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.SVG/InteropTypes.Graphics.Backends.SVG.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.Win10/InteropTypes.Graphics.Backends.Win10.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.WPF/InteropTypes.Graphics.Backends.WPF.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Backends.ZXing/InteropTypes.Graphics.Backends.ZXing.csproj" />
+  </Folder>
+  <Folder Name="/Bitmaps/">
+    <Project Path="demos/InteropTypes.Graphics.PixelFormats.Benchmark/InteropTypes.Graphics.Bitmaps.PixelFormats.Benchmark.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Bitmaps.Core/InteropTypes.Graphics.Bitmaps.Core.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Bitmaps.PixelFormats/InteropTypes.Graphics.Bitmaps.PixelFormats.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Bitmaps.Toolkit/InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
+    <Project Path="tests/InteropTypes.Graphics.Bitmaps.PixelFormats.Tests/InteropTypes.Graphics.Bitmaps.PixelFormats.Tests.csproj" />
+    <Project Path="tests/InteropTypes.Graphics.Bitmaps.Tests/InteropTypes.Graphics.Bitmaps.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Codecs/">
+    <Project Path="src/InteropTypes.Codecs.FFmpeg.AutoGen/InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />
+    <Project Path="src/InteropTypes.Codecs.FFMpegCore/InteropTypes.Codecs.FFMpegCore.csproj" />
+    <Project Path="src/InteropTypes.Codecs.MJPEG/InteropTypes.Codecs.MJPEG.csproj" />
+    <Project Path="src/InteropTypes.Codecs.STB/InteropTypes.Codecs.STB.csproj" />
+    <Project Path="src/InteropTypes.Codecs.VideoLAN/InteropTypes.Codecs.VideoLAN.csproj" />
+    <Project Path="tests/InteropTypes.Codecs.FFmpeg.AutoGen.Tests/InteropTypes.Codecs.FFmpeg.AutoGen.Tests.csproj" />
+    <Project Path="tests/InteropTypes.Codecs.FFMpeg.Core.Tests/InteropTypes.Codecs.FFMpegCore.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Demos/">
+    <File Path="demos/Directory.Build.props" />
+    <Project Path="demos/InteropTypes.Graphics.Avalonia.Demo.App/InteropTypes.Graphics.Avalonia.Demo.App.csproj" />
+    <Project Path="demos/InteropTypes.Graphics.Demos.Common/InteropTypes.Graphics.Demos.Common.csproj" />
+    <Project Path="demos/InteropTypes.Graphics.MonoGame.Demo.App/InteropTypes.Graphics.MonoGame.Demo.App.csproj" />
+    <Project Path="demos/InteropTypes.Graphics.SilkOpenGL.Demo.App/InteropTypes.Graphics.SilkOpenGL.Demo.App.csproj" />
+    <Project Path="demos/InteropTypes.Graphics.WPF.Demo.App/InteropTypes.Graphics.WPF.Demo.App.csproj" />
+    <Project Path="demos/TestComponentsUnderAOT.App/TestComponentsUnderAOT.App.csproj" />
+  </Folder>
+  <Folder Name="/Demos/Platforms/">
+    <Project Path="demos/InteropTypes.Graphics.Avalonia.Demo.App.Android/InteropTypes.Graphics.Avalonia.Demo.App.Android.csproj">
+      <Deploy />
+    </Project>
+    <Project Path="demos/InteropTypes.Graphics.Avalonia.Demo.App.Browser/InteropTypes.Graphics.Avalonia.Demo.App.Browser.csproj" />
+    <Project Path="demos/InteropTypes.Graphics.Avalonia.Demo.App.Desktop/InteropTypes.Graphics.Avalonia.Demo.App.Desktop.csproj" />
+    <Project Path="demos/InteropTypes.Graphics.Avalonia.Demo.App.iOS/InteropTypes.Graphics.Avalonia.Demo.App.iOS.csproj">
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/Drawing/">
+    <Project Path="src/InteropTypes.Graphics.Drawing.Core/InteropTypes.Graphics.Drawing.Core.csproj" />
+    <Project Path="src/InteropTypes.Graphics.Drawing.Toolkit/InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+    <Project Path="tests/InteropTypes.Graphics.Drawing.Core.Tests/InteropTypes.Graphics.Drawing.Core.Tests.csproj" />
+    <Project Path="tests/InteropTypes.Graphics.Drawing.Tests/InteropTypes.Graphics.Drawing.Toolkit.Tests.csproj" />
+  </Folder>
+  <Folder Name="/IO/">
+    <Project Path="src/InteropTypes.IO.FilePreviews/InteropTypes.IO.FilePreviews.csproj" />
+    <Project Path="src/InteropTypes.IO.FileProviders.Avalonia/InteropTypes.IO.FileProviders.Avalonia.csproj" />
+    <Project Path="src/InteropTypes.IO.FileProviders.SVN/InteropTypes.IO.FileProviders.SVN.csproj" />
+    <Project Path="src/InteropTypes.IO.FileProviders/InteropTypes.IO.FileProviders.csproj" />
+    <Project Path="src/InteropTypes.IO.SharpCompress/InteropTypes.IO.SharpCompress.csproj" />
+    <Project Path="src/InteropTypes.IO.Streams/InteropTypes.IO.Streams.csproj" />
+    <Project Path="tests/InteropTypes.IO.FileProviders.Tests/InteropTypes.IO.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Misc/">
+    <Project Path="src/InteropTypes.Crypto/InteropTypes.Crypto.csproj" />
+    <Project Path="src/InteropTypes.Memory/InteropTypes.Memory.csproj" />
+    <Project Path="tests/InteropTypes.Crypto.Tests/InteropTypes.Crypto.Tests.csproj" />
+    <Project Path="tests/InteropTypes.Memory.Tests/InteropTypes.Memory.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Proto/">
+    <Project Path="proto/InteropTypes.Proto.Drawing.Primitives/InteropTypes.Proto.Drawing.Primitives.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/BuildPackages.yml" />
+    <File Path=".github/workflows/PublishAllPackagesToNuget.yml" />
+    <File Path=".github/workflows/PublishSourcePackagesToNuget.yml" />
+    <File Path="Directory.Packages.props" />
+    <File Path="Project Hierarchy.dgml" />
+    <File Path="README.md" />
+    <File Path="src/ApiChangeAnalyzer.props" />
+    <File Path="src/build-preview.cmd" />
+    <File Path="src/Shared/Encoded7BitInt32.cs" />
+  </Folder>
+  <Folder Name="/Source/">
+    <File Path="src/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests/Interop.MathF.Source.Tests/Interop.MathF.Source.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Vision/">
+    <Project Path="src/InteropTypes.Tensors.ImageSharp/InteropTypes.Tensors.ImageSharp.csproj" />
+    <Project Path="src/InteropTypes.Tensors.OnnxRuntime/InteropTypes.Tensors.OnnxRuntime.csproj" />
+    <Project Path="src/InteropTypes.Tensors/InteropTypes.Tensors.csproj" />
+    <Project Path="src/InteropTypes.Vision.Backends.OnnxRuntime/InteropTypes.Vision.Backends.OnnxRuntime.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/InteropTypes.Vision.Backends.ZXing/InteropTypes.Vision.Backends.ZXing.csproj" />
+    <Project Path="src/InteropTypes.Vision.Core/InteropTypes.Vision.Core.csproj" />
+    <Project Path="tests/InteropTypes.Tensors.Tests/InteropTypes.Tensors.Tests.csproj" />
+    <Project Path="tests/InteropTypes.Vision.Tests/InteropTypes.Vision.Tests.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Properties Name="SubversionScc">
+    <Property Name="Manager" Value="AnkhSVN - Subversion Support for Visual Studio" />
+    <Property Name="Svn-Managed" Value="True" />
+  </Properties>
+</Solution>
