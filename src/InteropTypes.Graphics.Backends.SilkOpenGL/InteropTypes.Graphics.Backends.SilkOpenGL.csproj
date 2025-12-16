@@ -10,6 +10,11 @@
     <PackageReference Include="Silk.NET.OpenGL" />
   </ItemGroup>
 
+  <!-- include explicitly to use 8.0.6 instead of 8.0.0 to avoid vulnerabilites -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Core\InteropTypes.Graphics.Bitmaps.Core.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />

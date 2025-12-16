@@ -21,7 +21,7 @@ public partial class MainView : UserControl
 
     private async void MainView_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
+        await System.Threading.Tasks.Task.Run(_AsyncUpdateBitmap);
 
         await _Sprites.RunDynamicsAsync();        
     }
