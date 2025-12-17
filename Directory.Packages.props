@@ -34,8 +34,8 @@
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0" />
     <PackageVersion Include="NuGet.Configuration" Version="7.0.1" />
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20251121" />
-    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20251121" />
+    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20251216" />
+    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20251216" />
     <!-- Game Engines -->
     <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     <PackageVersion Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
