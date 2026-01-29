@@ -196,28 +196,30 @@ namespace InteropTypes.IO.Archives
 
             #region properties
 
+            /// <inheritdoc/>
             public ArchiveType ArchiveType => throw new NotImplementedException();
 
+            /// <inheritdoc/>
             public IEntry Entry { get; private set; }
 
+            /// <inheritdoc/>
             public bool Cancelled { get; private set; }
 
             #endregion
 
-            #region API
+            #region API            
 
-            public event EventHandler<ReaderExtractionEventArgs<IEntry>> EntryExtractionProgress;
-            public event EventHandler<CompressedBytesReadEventArgs> CompressedBytesRead;
-            public event EventHandler<FilePartExtractionBeginEventArgs> FilePartExtractionBegin;
-
+            /// <inheritdoc/>
             public void Cancel() { Cancelled = true; }
 
+            /// <inheritdoc/>
             public async Task<bool> MoveToNextEntryAsync(CancellationToken cancellationToken = default)
             {
                 if (cancellationToken.IsCancellationRequested) return false;
                 return await Task.FromResult(MoveToNextEntry());
             }
 
+            /// <inheritdoc/>
             public bool MoveToNextEntry()
             {
                 if (Cancelled) return false;
@@ -229,49 +231,55 @@ namespace InteropTypes.IO.Archives
                 if (r) Entry = _EntryEnumerator.Current;
 
                 return r;
-            }            
-
-            public void WriteEntryTo(Stream writableStream)
-            {
-                using (var s = OpenEntryStream())
-                {
-                    s.CopyTo(writableStream);
-                }
             }
 
-            public EntryStream OpenEntryStream()
-            {
-                if (Entry is IArchiveEntry archEntry)
-                {
-                    var s = archEntry.OpenEntryStream();
-                    // return new EntryStream(this, s);  // we could use reflection but....
-                    throw new NotImplementedException();
-                }
-
-                throw new NotSupportedException();
-            }
-
-            public async Task WriteEntryToAsync(Stream writableStream, CancellationToken cancellationToken = default)
-            {
-                using (var s = await OpenEntryStreamAsync())
-                {
-                    await s.CopyToAsync(writableStream, cancellationToken);
-                }
-            }
-
+            /// <inheritdoc/>
             public async Task<EntryStream> OpenEntryStreamAsync(CancellationToken cancellationToken = default)
             {
                 if (Entry is IArchiveEntry archEntry)
                 {
                     var s = await archEntry.OpenEntryStreamAsync(cancellationToken);
-                    // return new EntryStream(this, s);  // we could use reflection but....
+                    if (s is EntryStream es) return es;
+                    
                     throw new NotImplementedException();
                 }
 
                 throw new NotSupportedException();
             }
 
+            /// <inheritdoc/>
+            public EntryStream OpenEntryStream()
+            {
+                if (Entry is IArchiveEntry archEntry)
+                {
+                    var s = archEntry.OpenEntryStream();
+                    if (s is EntryStream es) return es;
+                    
+                    throw new NotImplementedException();
+                }
 
+                throw new NotSupportedException();
+            }
+
+            /// <inheritdoc/>
+            public async Task WriteEntryToAsync(Stream writableStream, CancellationToken cancellationToken = default)
+            {
+                using (var s = await OpenEntryStreamAsync(cancellationToken))
+                {
+                    await s.CopyToAsync(writableStream, cancellationToken);
+                }
+            }
+
+            /// <inheritdoc/>
+            public void WriteEntryTo(Stream writableStream)
+            {
+                if (Cancelled) return;
+
+                using (var s = OpenEntryStream())
+                {
+                    s.CopyTo(writableStream);
+                }
+            }            
 
             #endregion
         }

@@ -49,7 +49,7 @@ namespace InteropTypes.IO.Archives
             return new SharpCompressFileProvider(archive, leaveArchiveOpen, accessor, path);
         }
 
-        protected SharpCompressFileProvider(IArchive archive, bool leaveArchiveOpen, Primitives.IArchiveAccessor<IArchiveEntry> accessor, string path)
+        private SharpCompressFileProvider(IArchive archive, bool leaveArchiveOpen, Primitives.IArchiveAccessor<IArchiveEntry> accessor, string path)
             : base(accessor)
         {
             _Archive = archive;

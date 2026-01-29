@@ -27,7 +27,7 @@
       ]
     },
     "SourceNugetPackageBuilder.Tool": {
-      "version": "1.0.0-pre-20251216-211057",
+      "version": "1.0.0-pre-20260127-160530",
       "commands": [
         "PackAsSourcesNuget"
       ]

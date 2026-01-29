@@ -11,28 +11,28 @@
     -->
   </PropertyGroup>
   <PropertyGroup>
-    <AvaloniaVersion>11.3.10</AvaloniaVersion>
+    <AvaloniaVersion>11.3.11</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- System -->
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260101001" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.1" />
-    <PackageVersion Include="System.Drawing.Common" Version="10.0.1" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.1" />
-    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.1" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.2" />
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.2" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.2" />
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.2" />
 		<PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.2" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.264" />
+    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.269" />
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.33.2" />
+    <PackageVersion Include="Google.Protobuf" Version="3.33.4" />
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.1" />
     <PackageVersion Include="NuGet.Configuration" Version="7.0.1" />
     <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20251216" />
     <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20251216" />
@@ -46,9 +46,9 @@
     <PackageVersion Include="ShaderGen" Version="1.2.0-beta3" />
     <PackageVersion Include="ShaderGen.Build" Version="1.2.0-beta3" />
     <PackageVersion Include="ShaderGen.Primitives" Version="1.2.0-beta3" />
-    <PackageVersion Include="Silk.NET.Input" Version="2.22.0" />
-    <PackageVersion Include="Silk.NET.OpenGL" Version="2.22.0" />
-    <PackageVersion Include="Silk.NET.Windowing" Version="2.22.0" />
+    <PackageVersion Include="Silk.NET.Input" Version="2.23.0" />
+    <PackageVersion Include="Silk.NET.OpenGL" Version="2.23.0" />
+    <PackageVersion Include="Silk.NET.Windowing" Version="2.23.0" />
     <!-- Graphics Libraries -->
     <PackageVersion Include="Prism.Wpf" Version="9.0.537" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
@@ -78,7 +78,7 @@
     <PackageVersion Include="FFMpegCore" Version="5.4.0" />
     <PackageVersion Include="FFMpegCore.Extensions.System.Drawing.Common" Version="5.0.3" />
     <PackageVersion Include="LibVLCSharp" Version="3.9.5" />
-    <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
+    <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.23" />
     <PackageVersion Include="SharpAvi" Version="3.0.1" />
     <!-- Machine Learning -->
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.23.2" />
@@ -92,16 +92,16 @@
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="6.0.1" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="6.1.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.101" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.102" />
     <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     <!-- Other -->
-    <PackageVersion Include="SharpCompress" Version="0.43.0" />
+    <PackageVersion Include="SharpCompress" Version="1.0.0" />
     <PackageVersion Include="SharpSvn" Version="1.14005.366" />
   </ItemGroup>
   
