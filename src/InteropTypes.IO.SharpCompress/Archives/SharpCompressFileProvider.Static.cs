@@ -9,7 +9,7 @@ using Microsoft.Extensions.FileProviders;
 
 using SharpCompress.Archives;
 using SharpCompress.Common;
-
+using SharpCompress.Common.Options;
 using SharpCompress.Readers;
 
 namespace InteropTypes.IO.Archives
@@ -77,7 +77,7 @@ namespace InteropTypes.IO.Archives
         }
 
         [System.Diagnostics.DebuggerDisplay("{Key}")]
-        struct _ReaderEntry : IArchiveEntry, IDisposable, IFileInfo
+        struct _ReaderEntry : IArchiveEntry, IFileInfo, IDisposable
         {
             #region constructor
 
@@ -104,67 +104,73 @@ namespace InteropTypes.IO.Archives
 
             #region properties
 
-            public IArchive Archive => _Archive;
+            public readonly IArchive Archive => _Archive;
 
-            public string Key => _Reader.Entry.Key;
+            public readonly IReaderOptions Options => _Archive.ReaderOptions;
 
-            public bool IsDirectory => _Reader.Entry.IsDirectory;
+            public readonly string Key => _Reader.Entry.Key;
 
-            public bool IsComplete => throw new NotImplementedException();
+            public readonly bool IsDirectory => _Reader.Entry.IsDirectory;
 
-            public bool IsEncrypted => _Reader.Entry.IsEncrypted;
-            public long Size => _Reader.Entry.Size;
-            public long CompressedSize => _Reader.Entry.CompressedSize;
-            public CompressionType CompressionType => _Reader.Entry.CompressionType;
+            public readonly bool IsComplete => throw new NotImplementedException();
 
-            public DateTime? ArchivedTime => _Reader.Entry.ArchivedTime;
-            public DateTime? CreatedTime => _Reader.Entry.CreatedTime;
-            public DateTime? LastAccessedTime => _Reader.Entry.LastAccessedTime;
-            public DateTime? LastModifiedTime => _Reader.Entry.LastModifiedTime;
+            public readonly bool IsEncrypted => _Reader.Entry.IsEncrypted;
+            public readonly long Size => _Reader.Entry.Size;
+            public readonly long CompressedSize => _Reader.Entry.CompressedSize;
+            public readonly CompressionType CompressionType => _Reader.Entry.CompressionType;
 
+            public readonly DateTime? ArchivedTime => _Reader.Entry.ArchivedTime;
+            public readonly DateTime? CreatedTime => _Reader.Entry.CreatedTime;
+            public readonly DateTime? LastAccessedTime => _Reader.Entry.LastAccessedTime;
+            public readonly DateTime? LastModifiedTime => _Reader.Entry.LastModifiedTime;
 
+            public readonly long Crc => _Reader.Entry.Crc;
 
-            public long Crc => _Reader.Entry.Crc;
-
-            public string LinkTarget => _Reader.Entry.LinkTarget;
-            public bool IsSplitAfter => _Reader.Entry.IsSplitAfter;
-            public bool IsSolid => _Reader.Entry.IsSolid;
-            public int VolumeIndexFirst => _Reader.Entry.VolumeIndexFirst;
-            public int VolumeIndexLast => _Reader.Entry.VolumeIndexLast;
-            public int? Attrib => _Reader.Entry.Attrib;            
+            public readonly string LinkTarget => _Reader.Entry.LinkTarget;
+            public readonly bool IsSplitAfter => _Reader.Entry.IsSplitAfter;
+            public readonly bool IsSolid => _Reader.Entry.IsSolid;
+            public readonly int VolumeIndexFirst => _Reader.Entry.VolumeIndexFirst;
+            public readonly int VolumeIndexLast => _Reader.Entry.VolumeIndexLast;
+            public readonly int? Attrib => _Reader.Entry.Attrib;            
 
             #endregion
 
             #region API
 
-            public Stream OpenEntryStream()
+            public readonly Stream OpenEntryStream()
             {
+                if (IsDirectory) throw new InvalidOperationException("directory");
+
                 return _Reader.OpenEntryStream();
+            }
+
+            public readonly async ValueTask<Stream> OpenEntryStreamAsync(CancellationToken cancellationToken)
+            {
+                if (IsDirectory) throw new InvalidOperationException("directory");
+
+                return await Task.FromResult(_Reader.OpenEntryStream());
             }
 
             #endregion
 
-            #region IFileInfo
+            #region IFileInfo            
 
-            bool IFileInfo.Exists => true;
+            readonly bool IFileInfo.Exists => true;
 
-            long IFileInfo.Length => this.Size;
+            readonly long IFileInfo.Length => this.Size;
 
-            string IFileInfo.PhysicalPath => null;
+            readonly string IFileInfo.PhysicalPath => null;
 
-            string IFileInfo.Name => System.IO.Path.GetFileName(Key);
+            readonly string IFileInfo.Name => System.IO.Path.GetFileName(Key);
 
-            DateTimeOffset IFileInfo.LastModified => this.LastModifiedTime ?? DateTime.MinValue;
+            readonly DateTimeOffset IFileInfo.LastModified => this.LastModifiedTime ?? DateTime.MinValue;
 
-            Stream IFileInfo.CreateReadStream()
+            readonly Stream IFileInfo.CreateReadStream()
             {
+                if (IsDirectory) throw new InvalidOperationException("directory");
+
                 return _Reader.OpenEntryStream();
-            }
-
-            public async Task<Stream> OpenEntryStreamAsync(CancellationToken cancellationToken = default)
-            {
-                return await _Reader.OpenEntryStreamAsync(cancellationToken);
-            }
+            }            
 
             #endregion
         }

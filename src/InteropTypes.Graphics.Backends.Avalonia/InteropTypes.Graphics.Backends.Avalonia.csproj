@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net8.0;net10.0</TargetFrameworks>    
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>    
     <RootNamespace>InteropTypes.Graphics.Backends</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
   </PropertyGroup>
 
   <ItemGroup>

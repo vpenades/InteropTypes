@@ -2,8 +2,6 @@
 
 using Avalonia;
 
-using ReactiveUI.Avalonia;
-
 namespace InteropTypes;
 
 // https://www.theimpostersyndrome.dev/posts/macospackaging/
@@ -22,6 +20,5 @@ class Program
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace()
-            .UseReactiveUI();
+            .LogToTrace();
 }

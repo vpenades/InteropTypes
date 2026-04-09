@@ -3,8 +3,6 @@ using Avalonia.iOS;
 
 using Foundation;
 
-using ReactiveUI.Avalonia;
-
 namespace InteropTypes;
 
 // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -16,7 +14,6 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
         return base.CustomizeAppBuilder(builder)
-            .WithInterFont()
-            .UseReactiveUI();
+            .WithInterFont();
     }
 }

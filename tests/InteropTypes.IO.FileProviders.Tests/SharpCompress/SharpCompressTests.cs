@@ -17,7 +17,7 @@ namespace InteropTypes.IO.Archives
         {
             var path = ResourceInfo.From("test.cbz");
 
-            using var archive = SharpCompress.Archives.ArchiveFactory.Open(path.File);            
+            using var archive = SharpCompress.Archives.ArchiveFactory.OpenArchive(path.File);            
 
             var firstEntry = archive.Entries.FirstOrDefault(item => !item.IsDirectory);
 

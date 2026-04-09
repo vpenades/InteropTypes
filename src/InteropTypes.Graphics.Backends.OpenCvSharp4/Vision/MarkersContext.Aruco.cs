@@ -33,7 +33,7 @@ namespace InteropTypes.Vision.Backends
             public ArucoEstimator(bool horizontalMirror = false)
             {
                 _HorizontalMirror = horizontalMirror;
-                _MarkersDict = ARUCO.CvAruco.GetPredefinedDictionary(ARUCO.PredefinedDictionaryName.Dict4X4_100);
+                _MarkersDict = ARUCO.CvAruco.GetPredefinedDictionary(ARUCO.PredefinedDictionaryType.Dict4X4_100);
             }
 
             public void Dispose()

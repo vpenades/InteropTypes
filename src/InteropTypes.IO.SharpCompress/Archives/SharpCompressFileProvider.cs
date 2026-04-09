@@ -19,7 +19,7 @@ namespace InteropTypes.IO.Archives
         {
             try
             {
-                var f = ArchiveFactory.Open(stream);
+                var f = ArchiveFactory.OpenArchive(stream);
                 if (f == null) return null;
 
                 return Create(f, false, "<stream>");
@@ -31,7 +31,7 @@ namespace InteropTypes.IO.Archives
         {
             try
             {
-                var f = ArchiveFactory.Open(path);
+                var f = ArchiveFactory.OpenArchive(path);
                 if (f == null) return null;
 
                 return Create(f, false, path);

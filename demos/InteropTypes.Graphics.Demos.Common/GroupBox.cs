@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,8 +7,6 @@ using InteropTypes.Graphics.Drawing;
 
 using XFORM = System.Numerics.Matrix3x2;
 using COLOR = System.Drawing.Color;
-using Avalonia.Metadata;
-using System.Linq;
 
 namespace InteropTypes
 {

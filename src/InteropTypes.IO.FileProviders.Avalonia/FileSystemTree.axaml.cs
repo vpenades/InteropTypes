@@ -1,17 +1,17 @@
-using System.IO;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Metadata;
 
-
-using Avalonia.Controls;
+using Microsoft.Extensions.FileProviders;
 
 using DIRECTORYINFO = InteropTypes.IO.PhysicalDirectoryInfo;
-using Microsoft.Extensions.FileProviders;
-using System;
-using Avalonia.Data;
 
 namespace InteropTypes.IO
 {
@@ -29,7 +29,7 @@ namespace InteropTypes.IO
 
         public DIRECTORYINFO CurrentDirectory
         {
-            get { return _CurrentDir; }
+            get => _CurrentDir;
             set
             {
                 if (SetAndRaise(CurrentDirectoryProperty, ref _CurrentDir, value))
@@ -42,12 +42,17 @@ namespace InteropTypes.IO
 
     // https://stackoverflow.com/questions/74003533/avalonia-treeview-template-selector
 
-    class FileOrFoderTemplateSelector : ITreeDataTemplate
+    // example of new TreeDataTemplate: https://github.com/AvaloniaUI/Avalonia/blob/master/src/Markup/Avalonia.Markup.Xaml/Templates/TreeDataTemplate.cs
+
+    class FileOrFoderTemplateSelector : Avalonia.Controls.Templates.ITreeDataTemplate
     {
         public bool SupportsRecycling => false;
 
         [Content]
-        public Dictionary<string, ITreeDataTemplate> Templates { get; } = new Dictionary<string, ITreeDataTemplate>();        
+        public Dictionary<string, ITreeDataTemplate> Templates { get; } = new Dictionary<string, ITreeDataTemplate>();
+
+        [AssignBinding]
+        public BindingBase ItemsSource { get; set; }
 
         public bool Match(object data)
         {
@@ -64,20 +69,18 @@ namespace InteropTypes.IO
             }
 
             throw new NotImplementedException();
-        }
+        }        
 
-        public InstancedBinding ItemsSelector(object data)
+        public IDisposable BindChildren(AvaloniaObject target, AvaloniaProperty targetProperty, object item)
         {
-            if (data is IFileInfo xinfo)
-            {
-                if (!xinfo.IsDirectory) return null;
-
-                var key = xinfo.IsDirectory ? "Folder" : "File";
-
-                return Templates[key].ItemsSelector(data);
-            }
-
-            throw new NotImplementedException();
+            return ItemsSource is not null
+                ? target.Bind(targetProperty, ItemsSource)
+                : new _Empty();
         }
+
+        private readonly struct _Empty : IDisposable
+        {
+            public void Dispose() { }
+        }        
     }
 }

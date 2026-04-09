@@ -23,10 +23,12 @@
     </TabItem>
 
     <TabItem Header="File System">
-      <StackPanel>
-        <interop:FolderNavBar x:Name="myNavBar" />
-        <interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
-      </StackPanel>
+        <ScrollViewer>
+          <StackPanel>
+            <interop:FolderNavBar x:Name="myNavBar" />
+            <interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
+          </StackPanel>
+        </ScrollViewer>
     </TabItem>
 
     <TabItem Header="Sprites 2D">

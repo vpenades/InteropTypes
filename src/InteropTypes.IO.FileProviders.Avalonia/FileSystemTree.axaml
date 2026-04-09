@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:InteropTypes.IO"
+             xmlns:msfp="using:Microsoft.Extensions.FileProviders"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="InteropTypes.IO.FileSystemTree">
 
@@ -20,14 +21,14 @@
     <TreeView.ItemTemplate>      
       <local:FileOrFoderTemplateSelector>        
         
-        <TreeDataTemplate x:Key="Folder" ItemsSource="{Binding}">          
+        <TreeDataTemplate x:Key="Folder" ItemsSource="{Binding}" x:DataType="msfp:IFileInfo">          
           <WrapPanel>
             <TextBlock Text="📁"/>
             <TextBlock Text="{Binding Name}"/>
           </WrapPanel>          
         </TreeDataTemplate>
         
-        <TreeDataTemplate x:Key="File">
+        <TreeDataTemplate x:Key="File" x:DataType="msfp:IFileInfo">
           <TextBlock Text="{Binding Name}"/>
         </TreeDataTemplate>
         
