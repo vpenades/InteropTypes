@@ -5,13 +5,13 @@
              xmlns:vm="clr-namespace:InteropTypes.ViewModels"
              xmlns:l="clr-namespace:InteropTypes.Views"
              xmlns:interop="urn:InteropTypes"
-						 xmlns:bckavl="using:InteropTypes.Graphics.Backends.AVL"
+             xmlns:bckavl="using:InteropTypes.Graphics.Backends.AVL"
              xmlns:demo="using:InteropTypes"
              xmlns:drawing="using:InteropTypes.Graphics.Backends.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="InteropTypes.Views.MainView"
              x:DataType="demo:AppMVVM"
-						 x:Name="mySelf">  
+             x:Name="mySelf">  
 
   <TabControl>
 
@@ -32,7 +32,7 @@
     </TabItem>
 
     <TabItem Header="Sprites 2D">
-      <drawing:Canvas2DView Canvas="{Binding Canvas2}" />
+        <ContentControl Content="{Binding Canvas2}" />
     </TabItem>
 
 		<TabItem Header="Font Drawing">
@@ -41,7 +41,7 @@
 					<ItemsControl ItemsSource="{Binding FontsCanvas.ReferenceTexts}" TextElement.FontSize="30" />
 				</HeaderedContentControl>
 				<HeaderedContentControl Header="Interop" MinWidth="300" MinHeight="200" Background="LightGray" Margin="4">
-					<drawing:Canvas2DView Canvas="{Binding FontsCanvas}" />
+                    <ContentControl Content="{Binding FontsCanvas}" />
 				</HeaderedContentControl>
 			</StackPanel>			
 		</TabItem>
@@ -59,7 +59,7 @@
     </TabItem>
 
 		<TabItem Header="bitmaps">
-			<Image Source="{Binding #mySelf.ClientBitmap.FrontBuffer}" />
+            <ContentControl Content="{Binding #mySelf.ClientBitmap}" />
 		</TabItem>
 
   </TabControl>

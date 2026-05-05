@@ -1,8 +1,13 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:igfx="using:InteropTypes.Graphics"
              x:Class="InteropTypes.App"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+		<igfx:AvaloniaDataTemplates />
+    </Application.DataTemplates>             
 
     <Application.Styles>
         <FluentTheme />

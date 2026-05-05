@@ -6,17 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Data.Converters;
 
+using InteropTypes.Graphics.Backends.Bitmaps;
 using InteropTypes.Graphics.Bitmaps;
 
 namespace InteropTypes.Graphics.Backends
 {
     public class AvaloniaBitmapConverter : IValueConverter
     {
+        public static IValueConverter Default { get; } = new AvaloniaBitmapConverter();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType == typeof(Avalonia.Media.IImage) && value is MemoryBitmap src)
+            if (!targetType.IsAssignableTo(typeof(Avalonia.Media.IImage))) return value;
+
+            switch(value)
             {
-                return _Implementation.CreateAvaloniaBitmap(src.AsSpanBitmap());
+                case MemoryBitmap mbmp: return _Implementation.CreateAvaloniaBitmap(mbmp.AsSpanBitmap());
+                case AvaloniaBitmapSwapChain chain: return chain.FrontBuffer;
             }
 
             return value;
