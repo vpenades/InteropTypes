@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net6.0;net10.0-android;net10.0-ios</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net8.0;net10.0-android;net10.0-ios</TargetFrameworks>
     <RootNamespace>InteropTypes</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>

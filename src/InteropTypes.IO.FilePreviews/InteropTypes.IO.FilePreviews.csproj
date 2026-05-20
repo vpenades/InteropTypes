@@ -3,15 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net8.0-windows10.0.19041.0</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>    
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  
+
 
   <PropertyGroup>
     <Description>
       provides access to image previews of system files.
-    </Description>    
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,19 +19,25 @@
     <None Include="Platforms\**\*.cs" />
     <Compile Include="Platforms\SystemDrawingExtensions.cs" />
     <None Remove="Platforms\SystemDrawingExtensions.cs" />
-		<Compile Include="Platforms\Win32\Win32_IconExtractor.cs" />
-		<None Remove="Platforms\Win32\Win32_IconExtractor.cs" />
+    <Compile Include="Platforms\Win32\Win32_IconExtractor.cs" />
+    <None Remove="Platforms\Win32\Win32_IconExtractor.cs" />
   </ItemGroup>
 
-  <Choose>    
+  <ItemGroup>
+    <Compile Include="Platforms/Win32/Win32_GeneratedCOM.cs" />
+    <None Remove="Platforms/Win32/Win32_GeneratedCOM.cs" />
+  </ItemGroup>
+
+  <Choose>
 
     <When Condition=" '$(TargetFramework)' == 'net8.0-windows10.0.19041.0' ">
       <ItemGroup>
         <Compile Include="Platforms/UWP/*.cs" />
         <None Remove="Platforms/UWP/*.cs" />
       </ItemGroup>
-    </When>    
+    </When>
 
+    <!-- legacy -->
     <When Condition=" '$(TargetFramework)' == 'net6.0' ">
 
       <ItemGroup>
@@ -57,17 +63,10 @@
 
     </When>
 
-    <When Condition=" '$(TargetFramework)' != 'net6.0' ">
-      <ItemGroup>        
-        <Compile Include="Platforms/Win32/Win32_GeneratedCOM.cs" />
-        <None Remove="Platforms/Win32/Win32_GeneratedCOM.cs" />
-      </ItemGroup>
-    </When>
-    
-  </Choose>  
+  </Choose>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" />    
-  </ItemGroup>	
+    <PackageReference Include="System.Drawing.Common" />
+  </ItemGroup>
 
 </Project>
