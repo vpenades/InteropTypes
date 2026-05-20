@@ -11,7 +11,7 @@
     -->
   </PropertyGroup>
   <PropertyGroup>
-    <AvaloniaVersion>12.0.2</AvaloniaVersion>
+    <AvaloniaVersion>12.0.3</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- System -->
@@ -19,21 +19,21 @@
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.0.1" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.7" />
-    <PackageVersion Include="System.Drawing.Common" Version="10.0.7" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.7" />
-    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.7" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.8" />
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.8" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.8" />
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.8" />
 		<PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.8" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.275" />
     <PackageVersion Include="Ultz.Bcl.Half.Fallback" Version="1.0.0" />
     <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.34.1" />
+    <PackageVersion Include="Google.Protobuf" Version="3.35.0" />
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.2" />
-    <PackageVersion Include="NuGet.Configuration" Version="7.3.1" />
+    <PackageVersion Include="NuGet.Configuration" Version="7.6.0" />
     <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20251216" />
     <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20251216" />
     <!-- Game Engines -->
@@ -51,14 +51,12 @@
     <PackageVersion Include="Silk.NET.Windowing" Version="2.23.0" />
     <!-- Graphics Libraries -->
     <PackageVersion Include="Prism.Wpf" Version="9.0.537" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
-    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
     <PackageVersion Include="PhotoSauce.MagicScaler" Version="0.15.0" />
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
     <PackageVersion Include="SkiaSharp" Version="3.119.2" />
-    <PackageVersion Include="SvgNet" Version="3.5.4" />
+    <PackageVersion Include="SvgNet" Version="3.5.6" />
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
     <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.6" />
     <!-- Avalonia -->
@@ -79,7 +77,7 @@
     <PackageVersion Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
     <PackageVersion Include="SharpAvi" Version="3.0.1" />
     <!-- Machine Learning -->
-    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.25.1" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.26.0" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" />
     <PackageVersion Include="OpenCvSharp4" Version="4.13.0.20260427" />
     <PackageVersion Include="OpenCvSharp4.Windows" Version="4.13.0.20260302" />
@@ -88,20 +86,26 @@
     <PackageVersion Include="TestAttachments.NUnit" Version="4.0.0-Preview-20251201-2057" />
     <PackageVersion Include="TestImages.ImageSharp" Version="4.0.0-Preview-20251201-2057" />
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
-    <PackageVersion Include="NUnit" Version="4.6.0" />
+    <PackageVersion Include="NUnit" Version="4.6.1" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.13.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
-    <PackageVersion Include="coverlet.collector" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.203" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.300" />
     <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
     <!-- Other -->
-    <PackageVersion Include="SharpCompress" Version="0.47.4" />
+    <PackageVersion Include="SharpCompress" Version="0.48.1" />
     <PackageVersion Include="SharpSvn" Version="1.14005.390" />
-  </ItemGroup>  
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- SixLabors 4.0.0 requires acquiring a license from the website that needs to be included in the project -->
+    <PackageVersion Include="SixLabors.ImageSharp" Version="[3.1.12]" />
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="[2.1.7]" />
+  </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageVersion Update="SixLabors.ImageSharp" Version="2.1.13" />
