@@ -17,8 +17,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 
-using InteropTypes.Graphics;
-using InteropTypes.IO;
+using InteropTypes.IO.Mvvm;
 
 using AVLIMAGE = Avalonia.Media.IImage;
 using XFILE = Microsoft.Extensions.FileProviders.IFileInfo;
@@ -28,7 +27,7 @@ namespace InteropTypes.IO.Controls
     /// <summary>
     /// An avalonia control that takes a <see cref="System.IO.FileInfo"/> or <see cref="XFILE"/> and displays it as an image thumbnail
     /// </summary>
-    public class FileThumbnailBox : TemplatedControl , IFileThumbnailBitmap
+    public class FileThumbnailBox : TemplatedControl , IFileThumbnailClient<AVLIMAGE>
     {
         #region lifecycle
         public FileThumbnailBox()
@@ -84,7 +83,7 @@ namespace InteropTypes.IO.Controls
         private Image _Image;        
         private Visual _Wait;
 
-        public static IFileThumbnailFactory ThumbnailFactory { get; set; } = new _QueuedThumbnailFactory(new _FileThumbnailFactory());
+        public static IFileThumbnailServer<AVLIMAGE> ThumbnailFactory { get; set; } = _FileThumbnailFactory.Create().WrapWithQueue();
 
         #endregion
 
@@ -137,12 +136,12 @@ namespace InteropTypes.IO.Controls
 
         #region API        
 
-        XFILE IFileThumbnailBitmap.GetSource()
+        XFILE IFileThumbnailClient<AVLIMAGE>.GetSource()
         {
             return Source;
         }
 
-        void IFileThumbnailBitmap.SetBitmap(AVLIMAGE image)
+        void IFileThumbnailClient<AVLIMAGE>.SetImage(AVLIMAGE image)
         {
             _SetThumbnail(image);
         }
@@ -165,7 +164,7 @@ namespace InteropTypes.IO.Controls
 
             async Task _work()
             {
-                await ThumbnailFactory?.LoadAndAssignThumbnailAsync(this);
+                await ThumbnailFactory?.LoadAndAssignImageAsync(this);
             }
 
             Task.Run(_work);
@@ -224,204 +223,5 @@ namespace InteropTypes.IO.Controls
     }
 
 
-    public interface IFileThumbnailBitmap
-    {
-        XFILE GetSource();
-        void SetBitmap(AVLIMAGE image);
-    }
-
-    public interface IFileThumbnailFactory
-    {
-        public Task<bool> LoadAndAssignThumbnailAsync(IFileThumbnailBitmap item);
-    }
-
-    class _SemaphoreThumbnailFactory : IFileThumbnailFactory
-    {
-        public _SemaphoreThumbnailFactory(IFileThumbnailFactory baseFactory)
-        {
-            _BaseFactory = baseFactory;
-        }
-
-        private readonly IFileThumbnailFactory _BaseFactory;
-
-        private static readonly SemaphoreSlim _Throttle = new SemaphoreSlim(1, 1);        
-
-        public async Task<bool> LoadAndAssignThumbnailAsync(IFileThumbnailBitmap item)
-        {
-            try
-            {
-                await _Throttle.WaitAsync();
-                return await _BaseFactory.LoadAndAssignThumbnailAsync(item);
-            }
-            finally
-            {
-                _Throttle.Release();
-            }
-        }
-    }
-
-
-    class _QueuedThumbnailFactory: IFileThumbnailFactory
-    {
-        #region lifecycle
-        public _QueuedThumbnailFactory(IFileThumbnailFactory baseFactory)
-        {
-            _BaseFactory = baseFactory;
-        }
-
-        #endregion
-
-        #region data
-
-        private readonly IFileThumbnailFactory _BaseFactory;
-        private readonly ConcurrentQueue<IFileThumbnailBitmap> jobs = new ConcurrentQueue<IFileThumbnailBitmap>();
-        private readonly object lockObj = new object();
-
-        private Task? workerTask;
-        private CancellationTokenSource? cts;
-
-        #endregion
-
-        #region API
-
-        public async Task<bool> LoadAndAssignThumbnailAsync(IFileThumbnailBitmap item)
-        {            
-            EnqueueAndRun(item);
-
-            return true;
-        }
-
-        private void EnqueueAndRun(IFileThumbnailBitmap job)
-        {
-            jobs.Enqueue(job);
-
-            lock (lockObj)
-            {
-                // Start worker if not already running
-                if (workerTask == null || workerTask.IsCompleted)
-                {
-                    cts?.Dispose();
-                    cts = new CancellationTokenSource();
-                    workerTask = ProcessJobsAsync(cts.Token);
-                }
-            }
-        }
-
-        private async Task ProcessJobsAsync(CancellationToken cancellationToken)
-        {
-            bool firstTry = true;
-
-            try
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    if (jobs.TryDequeue(out var job))
-                    {                        
-                        await _BaseFactory.LoadAndAssignThumbnailAsync(job);
-                        firstTry = true;
-                    }
-                    else
-                    {
-                        // No jobs left, wait a bit before checking again
-                        if (firstTry) await Task.Delay(100, cancellationToken);
-                        else break;
-
-                        firstTry = false;
-                    }
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                // Expected when cancellation is requested
-            }
-        }
-
-        #endregion        
-    }
-
-
-    class _FileThumbnailFactory : _FileThumbnailFallbackFactory
-    {
-        // a stategy would be to request
-
-        public FilePreviewOptions Options { get; set; }
-
-        public override async Task<bool> LoadAndAssignThumbnailAsync(IFileThumbnailBitmap item)
-        {
-            ArgumentNullException.ThrowIfNull(item);            
-
-            var info = item.GetSource();
-            if (info == null) return false;
-            
-            if (!string.IsNullOrWhiteSpace(info.PhysicalPath))
-            {
-                switch (info.IsDirectory)
-                {
-                    case false: item.SetBitmap(GetThumbnail(new System.IO.FileInfo(info.PhysicalPath))); return true;
-                    case true: item.SetBitmap(GetThumbnail(new System.IO.DirectoryInfo(info.PhysicalPath))); return true;
-                }
-            }
-
-            return await base.LoadAndAssignThumbnailAsync(item);
-        }
-
-        public AVLIMAGE GetThumbnail(System.IO.FileSystemInfo info)
-        {
-            if (info is not System.IO.FileInfo finfo) return null;
-
-            var bmp = FilePreviewFactory.GetPreviewOrDefault(finfo, Options);
-            if (bmp == null) return null;
-
-            return ConvertToBitmap(bmp);
-        }
-
-        private static Avalonia.Media.Imaging.Bitmap ConvertToBitmap(WindowsBitmap srcBmp)
-        {
-            if (srcBmp == null) return null;
-
-            using (var m = srcBmp.OpenRead())
-            {
-                if (m == null) return null;
-                var avlbmp = new Avalonia.Media.Imaging.Bitmap(m);
-
-                if (avlbmp.PixelSize.Width != srcBmp.Width || avlbmp.PixelSize.Height != srcBmp.Height)
-                {
-                    avlbmp.Dispose();
-                    return null;
-                }                
-
-                return avlbmp;
-            }
-        }        
-    }
-
-
-    class _FileThumbnailFallbackFactory : IFileThumbnailFactory
-    {
-        public virtual async Task<bool> LoadAndAssignThumbnailAsync(IFileThumbnailBitmap item)
-        {
-            ArgumentNullException.ThrowIfNull(item);
-
-            var info = item.GetSource();
-            if (info == null) return false;
-            if (info.IsDirectory) return false;
-
-            // ToDo: exit if is not image            
-
-            try
-            {
-                using var s = info.CreateReadStream();
-                if (s == null) return false;
-                var img = Avalonia.Media.Imaging.Bitmap.DecodeToHeight(s, 256);
-                item.SetBitmap(img);
-                
-            }
-            catch (NullReferenceException) // this is the exception produced by DecodeToHeight when it does not have a codec
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
+    
 }

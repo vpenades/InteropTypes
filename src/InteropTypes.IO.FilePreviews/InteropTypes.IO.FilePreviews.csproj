@@ -67,6 +67,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
   </ItemGroup>
 
 </Project>

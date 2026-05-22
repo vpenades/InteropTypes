@@ -7,8 +7,22 @@
              x:Class="InteropTypes.IO.Controls.FileThumbnailToolTip">
   
     <StackPanel DataContext="{Binding $parent[thumb:FileThumbnailBox]}" >
-		<Image Source="{Binding Bitmap}" Stretch="Uniform" MaxWidth="800" MaxHeight="600" />        
+
         <TextBlock TextWrapping="Wrap" Text="{Binding Source.Name}" HorizontalAlignment="Center" />
+
+		<Image Source="{Binding Bitmap}" Stretch="Uniform" MaxWidth="800" MaxHeight="600" />
+
+        <!-- we need to report the actual image size, not the size of the thumbnail!!!!!
+        <TextBlock HorizontalAlignment="Center">
+			<TextBlock.Text>
+				<MultiBinding StringFormat="{}{0}x{1}">
+                    <Binding Path="Bitmap.Size.Width" />
+                    <Binding Path="Bitmap.Size.Height" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        -->
+        
     </StackPanel>
 
 </UserControl>
