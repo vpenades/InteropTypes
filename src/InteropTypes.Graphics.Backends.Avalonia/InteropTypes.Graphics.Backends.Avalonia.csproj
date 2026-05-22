@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\InteropTypes.Graphics.Bitmaps.Toolkit\InteropTypes.Graphics.Bitmaps.Toolkit.csproj" />
     <ProjectReference Include="..\InteropTypes.Graphics.Drawing.Toolkit\InteropTypes.Graphics.Drawing.Toolkit.csproj" />
+    <ProjectReference Include="..\InteropTypes.IO.FilePreviews\InteropTypes.IO.FilePreviews.csproj" />
   </ItemGroup>  
 
 </Project>

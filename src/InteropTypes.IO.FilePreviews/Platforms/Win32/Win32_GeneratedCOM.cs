@@ -72,15 +72,17 @@ namespace InteropTypes.Platforms.Win32
             if (ppv == null) return null;
 
             var flags = SIIGBF.SIIGBF_RESIZETOFIT;
-
-            if (clientOptions.CachedOnly) flags |= SIIGBF.SIIGBF_INCACHEONLY;
+            if (clientOptions.IconOnly) flags |= SIIGBF.SIIGBF_ICONONLY;
+            if (clientOptions.CachedOnly) flags |= SIIGBF.SIIGBF_INCACHEONLY;            
+            if (clientOptions.ThumbnailOnly) flags |= SIIGBF.SIIGBF_THUMBNAILONLY;
             if (clientOptions.AllowBigger) flags |= SIIGBF.SIIGBF_BIGGERSIZEOK;
+            
 
             ppv.GetImage(new SIZE(clientOptions.Width, clientOptions.Height), flags, out var hbitmap);
 
             if (hbitmap == 0L || hbitmap == -1L) return null;
 
-            var bmp = Bitmap.FromHbitmap(hbitmap);
+            var bmp = Image.FromHbitmap(hbitmap);
 
             // do we require to release ppv?            
 
@@ -110,9 +112,12 @@ namespace InteropTypes.Platforms.Win32
             SIIGBF_RESIZETOFIT = 0x00,
             SIIGBF_BIGGERSIZEOK = 0x01,
             SIIGBF_MEMORYONLY = 0x02,
-            SIIGBF_ICONONLY = 0x04,
-            SIIGBF_THUMBNAILONLY = 0x08,
-            SIIGBF_INCACHEONLY = 0x10,
+            SIIGBF_ICONONLY = 0x04,         // Only use cached thumbnails
+            SIIGBF_THUMBNAILONLY = 0x08,    // Use icon if thumbnail unavailable
+            SIIGBF_INCACHEONLY = 0x10,      // Critical for bulk operations
+            SIIGBF_CROPTOSQUARE = 0x20,
+            SIIGBF_WIDETHUMBNAILS = 0x40,
+            SIIGBF_SCALEUP = 0x100,
         }
 
         // [ComImport]

@@ -44,6 +44,8 @@ namespace InteropTypes.IO
 
         public bool AllowBigger { get; set; } = true;
         public bool CachedOnly { get; set; } = false;
+        public bool IconOnly { get; set; } = false;
+        public bool ThumbnailOnly { get; set; } = false;
 
         public bool PrefferTransparency { get; set; } = false;
 

@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:thumb="using:InteropTypes.IO.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="InteropTypes.IO.Controls.FileThumbnailToolTip">
+  
+    <StackPanel DataContext="{Binding $parent[thumb:FileThumbnailBox]}" >
+		<Image Source="{Binding Bitmap}" Stretch="Uniform" MaxWidth="800" MaxHeight="600" />        
+        <TextBlock TextWrapping="Wrap" Text="{Binding Source.Name}" HorizontalAlignment="Center" />
+    </StackPanel>
+
+</UserControl>

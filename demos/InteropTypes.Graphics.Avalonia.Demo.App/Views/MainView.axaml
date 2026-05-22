@@ -1,67 +1,96 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:InteropTypes.ViewModels"
-             xmlns:l="clr-namespace:InteropTypes.Views"
-             xmlns:interop="urn:InteropTypes"
-             xmlns:bckavl="using:InteropTypes.Graphics.Backends.AVL"
-             xmlns:demo="using:InteropTypes"
-             xmlns:drawing="using:InteropTypes.Graphics.Backends.Controls"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="InteropTypes.Views.MainView"
-             x:DataType="demo:AppMVVM"
-             x:Name="mySelf">  
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:sysio="using:System.IO"
+			 xmlns:vm="clr-namespace:InteropTypes.ViewModels"
+			 xmlns:l="clr-namespace:InteropTypes.Views"
+			 xmlns:interop="urn:InteropTypes"
+			 xmlns:bckavl="using:InteropTypes.Graphics.Backends.AVL"
+			 xmlns:thumb="using:InteropTypes.IO.Controls"
+			 xmlns:demo="using:InteropTypes"
+			 xmlns:drawing="using:InteropTypes.Graphics.Backends.Controls"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="InteropTypes.Views.MainView"
+			 x:DataType="demo:AppMVVM"
+			 x:Name="mySelf">
 
-  <TabControl>
+			 <TabControl>
 
-    <TabItem Header="Avalonia Controls">
-      <StackPanel>
-        <Button Content="Hello World" HorizontalAlignment="Center" />
-        <ProgressBar Width="100" Height="10" />
-      </StackPanel>
-    </TabItem>
+				 <TabItem Header="Avalonia Controls">
+					 <StackPanel>
+						 <Button Content="Hello World" HorizontalAlignment="Center" />
+						 <ProgressBar Width="100" Height="10" />
+					 </StackPanel>
+				 </TabItem>
 
-    <TabItem Header="File System">
-        <ScrollViewer>
-          <StackPanel>
-            <interop:FolderNavBar x:Name="myNavBar" />
-            <interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
-          </StackPanel>
-        </ScrollViewer>
-    </TabItem>
+				 <TabItem Header="File System">
+					 <ScrollViewer>
+						 <StackPanel>
+							 <interop:FolderNavBar x:Name="myNavBar" />
+							 <interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
+						 </StackPanel>
+					 </ScrollViewer>
+				 </TabItem>
 
-    <TabItem Header="Sprites 2D">
-        <ContentControl Content="{Binding Canvas2}" />
-    </TabItem>
+				 <TabItem Header="File Thumbnails">
+					 <StackPanel>						 
 
-		<TabItem Header="Font Drawing">
-			<StackPanel>
-				<HeaderedContentControl Header="Avalonia" Background="LightGray"  Margin="4">
-					<ItemsControl ItemsSource="{Binding FontsCanvas.ReferenceTexts}" TextElement.FontSize="30" />
-				</HeaderedContentControl>
-				<HeaderedContentControl Header="Interop" MinWidth="300" MinHeight="200" Background="LightGray" Margin="4">
-                    <ContentControl Content="{Binding FontsCanvas}" />
-				</HeaderedContentControl>
-			</StackPanel>			
-		</TabItem>
+						 <Button Content="Browse Directory..." Click="_OnClick_PickDirectory" />
 
-    <TabItem Header="Scene 3D">
+							 <ItemsControl  x:Name="myDirectoryFiles" >
+								 <ItemsControl.ItemTemplate>
+									 <DataTemplate x:DataType="sysio:FileSystemInfo">
+										 <thumb:FileThumbnailBox FileSystemSource="{Binding}" />
+									 </DataTemplate>
+								 </ItemsControl.ItemTemplate>
+								 <ItemsControl.ItemsPanel>
+									 <ItemsPanelTemplate>										 
+										 <!-- https://github.com/AvaloniaUI/Avalonia/issues/18798 -->
+										 <!-- https://github.com/AvaloniaUI/Avalonia/discussions/16829 -->
+										 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater?tab=readme-ov-file#current-status -->
+										 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater/issues/29 -->
+										 
+										 <WrapPanel ItemWidth="64" ItemHeight="64" Orientation="Horizontal" />										 
 
-      <drawing:Scene3DView Scene="{Binding Rockets}" >
-        <drawing:Scene3DView.ViewportTemplate>
-          <drawing:Scene3DViewportTemplate>
-            <demo:CustomCamera3DPanel UpDirectionIsZ="true" FrameRate="30" />
-          </drawing:Scene3DViewportTemplate>
-        </drawing:Scene3DView.ViewportTemplate>
-      </drawing:Scene3DView>
-      
-    </TabItem>
+									 </ItemsPanelTemplate>
+								 </ItemsControl.ItemsPanel>								 
+							 </ItemsControl>
+						 
+					 </StackPanel>
+				 </TabItem>
 
-		<TabItem Header="bitmaps">
-            <ContentControl Content="{Binding #mySelf.ClientBitmap}" />
-		</TabItem>
+				 <TabItem Header="Sprites 2D">
+					 <ContentControl Content="{Binding Canvas2}" />
+				 </TabItem>
 
-  </TabControl>
+				 <TabItem Header="Font Drawing">
+					 <StackPanel>
+						 <HeaderedContentControl Header="Avalonia" Background="LightGray"  Margin="4">
+							 <ItemsControl ItemsSource="{Binding FontsCanvas.ReferenceTexts}" TextElement.FontSize="30" />
+						 </HeaderedContentControl>
+						 <HeaderedContentControl Header="Interop" MinWidth="300" MinHeight="200" Background="LightGray" Margin="4">
+							 <ContentControl Content="{Binding FontsCanvas}" />
+						 </HeaderedContentControl>
+					 </StackPanel>
+			 </TabItem>
+
+				 <TabItem Header="Scene 3D">
+
+					 <drawing:Scene3DView Scene="{Binding Rockets}" >
+						 <drawing:Scene3DView.ViewportTemplate>
+							 <drawing:Scene3DViewportTemplate>
+								 <demo:CustomCamera3DPanel UpDirectionIsZ="true" FrameRate="30" />
+							 </drawing:Scene3DViewportTemplate>
+						 </drawing:Scene3DView.ViewportTemplate>
+					 </drawing:Scene3DView>
+
+				 </TabItem>
+
+				 <TabItem Header="bitmaps">
+					 <ContentControl Content="{Binding #mySelf.ClientBitmap}" />
+				 </TabItem>
+
+			 </TabControl>
 
 </UserControl>
