@@ -47,7 +47,7 @@ namespace InteropTypes.IO
         public bool IconOnly { get; set; } = false;
         public bool ThumbnailOnly { get; set; } = false;
 
-        public bool PrefferTransparency { get; set; } = false;
+        public bool PrefferTransparency { get; set; } = true;
 
         public int Width { get; set; } = 128;
 

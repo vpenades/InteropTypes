@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -51,13 +52,57 @@ namespace InteropTypes.IO.Controls
             if (info is not System.IO.FileInfo finfo) return null;
 
             var bmp = FilePreviewFactory.GetPreviewOrDefault(finfo, Options);
-            if (bmp == null) return null;
+            if (bmp == null) return null;            
 
             return ConvertToBitmap(bmp);
         }
 
+        public static unsafe Avalonia.Media.Imaging.Bitmap ConvertToBitmapWithAlpha(WindowsBitmap srcBmp)
+        {
+            if (srcBmp == null) return null;
+
+            Avalonia.Platform.PixelFormat colorFmt = default;
+            Avalonia.Platform.AlphaFormat alphaFmt = default;
+
+            switch(srcBmp.BytesPerPixel)
+            {
+                case 3:
+                    colorFmt = Avalonia.Platform.PixelFormat.Rgb32;
+                    alphaFmt = Avalonia.Platform.AlphaFormat.Opaque;
+                    break;
+
+                case 4:
+                    colorFmt = Avalonia.Platform.PixelFormat.Rgba8888;
+                    alphaFmt = Avalonia.Platform.AlphaFormat.Unpremul;
+                    break;
+
+                default:
+                    return ConvertToBitmap(srcBmp);
+            }
+
+            // https://github.com/AvaloniaUI/Avalonia/discussions/5908#discussioncomment-806242
+
+            Avalonia.Media.Imaging.Bitmap dstBmp = null;            
+
+            srcBmp.LockBits((ptr, len) =>
+            {
+                dstBmp = new Avalonia.Media.Imaging.Bitmap
+                    (
+                    colorFmt,
+                    alphaFmt,
+                    ptr,
+                    new Avalonia.PixelSize(srcBmp.Width, srcBmp.Height),
+                    new Avalonia.Vector(96, 96),
+                    srcBmp.Stride);
+            });
+
+            return dstBmp;
+        }
+
         private static Avalonia.Media.Imaging.Bitmap ConvertToBitmap(WindowsBitmap srcBmp)
         {
+            // https://github.com/AvaloniaUI/Avalonia/discussions/6390
+
             if (srcBmp == null) return null;
 
             using (var m = srcBmp.OpenRead())
@@ -73,7 +118,7 @@ namespace InteropTypes.IO.Controls
 
                 return avlbmp;
             }
-        }
+        }        
     }
 
 

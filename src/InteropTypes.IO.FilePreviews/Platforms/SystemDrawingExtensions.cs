@@ -26,7 +26,7 @@ namespace InteropTypes.Platforms
             }
         }
 
-        public static unsafe WindowsBitmap GetWindowsBitmap(this Bitmap bitmap, PixelFormat format)
+        public static WindowsBitmap GetWindowsBitmap(this Bitmap bitmap, PixelFormat format)
         {
             var fmt = format;
             if (fmt == PixelFormat.Undefined) fmt = bitmap.PixelFormat;
@@ -42,27 +42,33 @@ namespace InteropTypes.Platforms
             return dstData;
         }
 
-        private static unsafe WindowsBitmap GetWindowsBitmap(BitmapData bmpData)
+        private static WindowsBitmap GetWindowsBitmap(BitmapData bmpData)
         {
             var bpp = Image.GetPixelFormatSize(bmpData.PixelFormat);
             var dstBitmap = new WindowsBitmap(bmpData.Width, bmpData.Height, bpp / 8);
 
+            var dataLen = bpp * bmpData.Width / 8;
+
             for (int y = 0; y < bmpData.Height; y++)
             {
-                var srcRow = GetRow(bmpData, y);
-                var dstRow = dstBitmap.UseRow(y);
-                var len = Math.Min(srcRow.Length, dstRow.Count);
-                srcRow.Slice(0, len).CopyTo(dstRow);
+                var srcRow = UseScanLine(bmpData, y, dataLen);
+                var dstRow = dstBitmap.UseRowSpan(y);                
+                srcRow.Slice(0, dstRow.Length).CopyTo(dstRow);
             }
 
             return dstBitmap;
         }
-
-        private static unsafe Span<byte> GetRow(BitmapData bmpData, int rowIdx)
+        
+        private static unsafe Span<byte> UseScanLine(BitmapData bmpData, int scanIndex, int dataLen)
         {
+            // stride can be negative, which means Scan0 is actually stored at the
+            // end of the data and runs in reverse.
+
+            dataLen = Math.Min(dataLen, Math.Abs(bmpData.Stride));
+
             var srcPtr = bmpData.Scan0;
-            srcPtr += bmpData.Stride * rowIdx;
-            return new Span<byte>(srcPtr.ToPointer(), Math.Abs(bmpData.Stride));
+            srcPtr += bmpData.Stride * scanIndex;
+            return new Span<byte>(srcPtr.ToPointer(), dataLen);
         }
 
         /// <summary>

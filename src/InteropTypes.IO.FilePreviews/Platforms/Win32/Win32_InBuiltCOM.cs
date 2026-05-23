@@ -15,11 +15,16 @@ namespace InteropTypes.Platforms.Win32
     // https://github.com/microsoft/CsWin32/issues/882  < AnyCPU
 
 
+    /// <summary>
+    /// uses the legacy Net6 COM bindings. (Deprecated in favour of generated COM bindings)
+    /// </summary>
     [SupportedOSPlatform("windows6.0.6000")]
     internal static class FilePreview_Win32_COM
     {
         public static System.IO.Stream GetStreamOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
+            clientOptions ??= IO.FilePreviewOptions._Default;
+
             try
             {
                 using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
@@ -41,13 +46,15 @@ namespace InteropTypes.Platforms.Win32
 
         public static WindowsBitmap GetManagedBmpOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
+            clientOptions ??= IO.FilePreviewOptions._Default;
+
             try
             {
                 using (var bmp = GetThumbnail(finfo.FullName, clientOptions))
                 {
                     if (bmp == null) return null;
 
-                    return bmp.GetWindowsBitmap(PixelFormat.Format24bppRgb);
+                    return bmp.GetWindowsBitmap(clientOptions.GetPixelFormat());
                 }
             }
             catch (COMException ex)

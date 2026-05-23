@@ -25,6 +25,8 @@ namespace InteropTypes.Platforms.Win32
 
         public static System.IO.Stream GetStreamOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
+            clientOptions ??= IO.FilePreviewOptions._Default;
+
             try
             {
                 using (var bmp = GetNativeBmpOrNull(finfo.FullName, clientOptions))
@@ -34,6 +36,7 @@ namespace InteropTypes.Platforms.Win32
                     var mem = new System.IO.MemoryStream();
 
                     bmp.Save(mem, ImageFormat.Bmp);
+                    mem.Position = 0;
 
                     return mem;
                 }
@@ -46,13 +49,15 @@ namespace InteropTypes.Platforms.Win32
 
         public static WindowsBitmap GetManagedBmpOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
+            clientOptions ??= IO.FilePreviewOptions._Default;
+
             try
             {
                 using (var bmp = GetNativeBmpOrNull(finfo.FullName, clientOptions))
                 {
                     if (bmp == null) return null;
 
-                    return bmp.GetWindowsBitmap(clientOptions?.GetPixelFormat() ?? PixelFormat.Format24bppRgb);
+                    return bmp.GetWindowsBitmap(clientOptions.GetPixelFormat());
                 }
             }
             catch (COMException ex)
@@ -75,8 +80,7 @@ namespace InteropTypes.Platforms.Win32
             if (clientOptions.IconOnly) flags |= SIIGBF.SIIGBF_ICONONLY;
             if (clientOptions.CachedOnly) flags |= SIIGBF.SIIGBF_INCACHEONLY;            
             if (clientOptions.ThumbnailOnly) flags |= SIIGBF.SIIGBF_THUMBNAILONLY;
-            if (clientOptions.AllowBigger) flags |= SIIGBF.SIIGBF_BIGGERSIZEOK;
-            
+            if (clientOptions.AllowBigger) flags |= SIIGBF.SIIGBF_BIGGERSIZEOK;            
 
             ppv.GetImage(new SIZE(clientOptions.Width, clientOptions.Height), flags, out var hbitmap);
 
@@ -111,7 +115,7 @@ namespace InteropTypes.Platforms.Win32
         {
             SIIGBF_RESIZETOFIT = 0x00,
             SIIGBF_BIGGERSIZEOK = 0x01,
-            SIIGBF_MEMORYONLY = 0x02,
+            SIIGBF_MEMORYONLY = 0x02,       // Only if already in RAM (do not access disk)
             SIIGBF_ICONONLY = 0x04,         // Only use cached thumbnails
             SIIGBF_THUMBNAILONLY = 0x08,    // Use icon if thumbnail unavailable
             SIIGBF_INCACHEONLY = 0x10,      // Critical for bulk operations
@@ -120,7 +124,7 @@ namespace InteropTypes.Platforms.Win32
             SIIGBF_SCALEUP = 0x100,
         }
 
-        // [ComImport]
+        
         [GeneratedComInterface]
         [Guid("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
         public partial interface IShellItemImageFactory

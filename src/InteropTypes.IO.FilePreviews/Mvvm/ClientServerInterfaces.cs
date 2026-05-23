@@ -142,6 +142,10 @@ namespace InteropTypes.IO.Mvvm
                 {
                     if (jobs.TryDequeue(out var job))
                     {
+                        #if DEBUG
+                        await Task.Delay(20);
+                        #endif
+
                         await _BaseFactory.LoadAndAssignImageAsync(job);
                         firstTry = true;
                     }
