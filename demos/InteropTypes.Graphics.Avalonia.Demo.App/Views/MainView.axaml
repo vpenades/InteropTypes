@@ -34,30 +34,30 @@
 				 </TabItem>
 
 				 <TabItem Header="File Thumbnails">
-					 <StackPanel>						 
+					 <Grid RowDefinitions="auto *">						 
 
 						 <Button Content="Browse Directory..." Click="_OnClick_PickDirectory" />
 
-							 <ItemsControl  x:Name="myDirectoryFiles" >
-								 <ItemsControl.ItemTemplate>
+						 <!-- https://github.com/AvaloniaUI/Avalonia/issues/18798 -->
+						 <!-- https://github.com/AvaloniaUI/Avalonia/discussions/16829 -->
+						 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater?tab=readme-ov-file#current-status -->
+						 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater/issues/29 -->
+
+						 <ScrollViewer Grid.Row="1">
+							 <ItemsRepeater  x:Name="myDirectoryFiles">
+								 <ItemsRepeater.Layout>
+									 <UniformGridLayout MinItemWidth="64" MinItemHeight="64"
+																 MinColumnSpacing="2" MinRowSpacing="2" />
+								 </ItemsRepeater.Layout>
+								 <ItemsRepeater.ItemTemplate>
 									 <DataTemplate x:DataType="sysio:FileSystemInfo">
 										 <thumb:FileThumbnailBox FileSystemSource="{Binding}" />
 									 </DataTemplate>
-								 </ItemsControl.ItemTemplate>
-								 <ItemsControl.ItemsPanel>
-									 <ItemsPanelTemplate>										 
-										 <!-- https://github.com/AvaloniaUI/Avalonia/issues/18798 -->
-										 <!-- https://github.com/AvaloniaUI/Avalonia/discussions/16829 -->
-										 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater?tab=readme-ov-file#current-status -->
-										 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater/issues/29 -->
-										 
-										 <WrapPanel ItemWidth="64" ItemHeight="64" Orientation="Horizontal" />										 
-
-									 </ItemsPanelTemplate>
-								 </ItemsControl.ItemsPanel>								 
-							 </ItemsControl>
+								 </ItemsRepeater.ItemTemplate>
+							 </ItemsRepeater>
+						 </ScrollViewer>
 						 
-					 </StackPanel>
+					 </Grid>
 				 </TabItem>
 
 				 <TabItem Header="Sprites 2D">

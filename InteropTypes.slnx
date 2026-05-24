@@ -67,6 +67,7 @@
     <Project Path="src/InteropTypes.IO.SharpCompress/InteropTypes.IO.SharpCompress.csproj" />
     <Project Path="src/InteropTypes.IO.Streams/InteropTypes.IO.Streams.csproj" />
     <Project Path="tests/InteropTypes.IO.FileProviders.Tests/InteropTypes.IO.Tests.csproj" />
+    <Project Path="tests2/InteropTypes.IO.FilePreviews.Tests/InteropTypes.IO.FilePreviews.Tests.csproj" />
   </Folder>
   <Folder Name="/Misc/">
     <Project Path="src/InteropTypes.Crypto/InteropTypes.Crypto.csproj" />

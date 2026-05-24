@@ -57,49 +57,73 @@ namespace InteropTypes.IO.Controls
             return ConvertToBitmap(bmp);
         }
 
-        public static unsafe Avalonia.Media.Imaging.Bitmap ConvertToBitmapWithAlpha(WindowsBitmap srcBmp)
+        public static unsafe Avalonia.Media.Imaging.Bitmap ConvertToBitmap(WindowsBitmap srcBmp)
         {
-            if (srcBmp == null) return null;
-
-            Avalonia.Platform.PixelFormat colorFmt = default;
-            Avalonia.Platform.AlphaFormat alphaFmt = default;
-
-            switch(srcBmp.BytesPerPixel)
-            {
-                case 3:
-                    colorFmt = Avalonia.Platform.PixelFormat.Rgb32;
-                    alphaFmt = Avalonia.Platform.AlphaFormat.Opaque;
-                    break;
-
-                case 4:
-                    colorFmt = Avalonia.Platform.PixelFormat.Rgba8888;
-                    alphaFmt = Avalonia.Platform.AlphaFormat.Unpremul;
-                    break;
-
-                default:
-                    return ConvertToBitmap(srcBmp);
-            }
+            if (srcBmp == null) return null;            
 
             // https://github.com/AvaloniaUI/Avalonia/discussions/5908#discussioncomment-806242
+            
+            // 1. it the source embeds a PNG or JPEG, use it straight away
 
-            Avalonia.Media.Imaging.Bitmap dstBmp = null;            
-
-            srcBmp.LockBits((ptr, len) =>
+            if (srcBmp.TryGetEmbeddedImage(out var embeddedImg))
             {
-                dstBmp = new Avalonia.Media.Imaging.Bitmap
-                    (
-                    colorFmt,
-                    alphaFmt,
-                    ptr,
-                    new Avalonia.PixelSize(srcBmp.Width, srcBmp.Height),
-                    new Avalonia.Vector(96, 96),
-                    srcBmp.Stride);
-            });
+                using(var m = new System.IO.MemoryStream(embeddedImg.Array, embeddedImg.Offset, embeddedImg.Count, false))
+                {
+                    return new Avalonia.Media.Imaging.Bitmap(m);
+                }
+            }
 
-            return dstBmp;
+            // 2. try access the pixel buffer
+
+            Avalonia.Media.Imaging.Bitmap copyRawPixels(WindowsBitmapPixels srcPixels)
+            {
+                Avalonia.Platform.PixelFormat colorFmt = default;
+                Avalonia.Platform.AlphaFormat alphaFmt = default;
+
+                switch (srcBmp.BytesPerPixel)
+                {
+                    case 3:
+                        colorFmt = Avalonia.Platform.PixelFormat.Rgb32;
+                        alphaFmt = Avalonia.Platform.AlphaFormat.Opaque;
+                        break;
+
+                    case 4:
+                        colorFmt = Avalonia.Platform.PixelFormat.Bgra8888;
+                        alphaFmt = Avalonia.Platform.AlphaFormat.Unpremul;
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
+
+                var srcSize = new Avalonia.PixelSize(srcPixels.Width, srcPixels.Height);
+                var srcStride = srcPixels.Stride;
+
+                Avalonia.Media.Imaging.Bitmap dstBmp = null;
+
+                srcPixels.LockBits((ptr, len) =>
+                {
+                    dstBmp = new Avalonia.Media.Imaging.Bitmap
+                        (
+                        colorFmt,
+                        alphaFmt,
+                        ptr,
+                        srcSize,
+                        new Avalonia.Vector(96, 96),
+                        srcStride);
+                });
+
+                return dstBmp;
+            }
+
+            if (srcBmp.TryConvertPixels(copyRawPixels, out var dstBmp)) return dstBmp;
+
+            // 3. fallback to read the stream directly
+
+            return ConvertToBitmapFallback(srcBmp);
         }
 
-        private static Avalonia.Media.Imaging.Bitmap ConvertToBitmap(WindowsBitmap srcBmp)
+        private static Avalonia.Media.Imaging.Bitmap ConvertToBitmapFallback(WindowsBitmap srcBmp)
         {
             // https://github.com/AvaloniaUI/Avalonia/discussions/6390
 

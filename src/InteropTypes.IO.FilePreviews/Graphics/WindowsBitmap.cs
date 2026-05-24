@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace InteropTypes.Graphics
 {
+    // rename to ManagedBitmap
+
+
     /// <summary>
     /// This is a special kind of bitmap that is stored in memory in a way that can be used to access the pixel data,
     /// or as a BMP file that can be opened as a Stream
@@ -15,7 +19,7 @@ namespace InteropTypes.Graphics
     /// 1. Create a WindowsBitmap with the desired dimensions and BPP<br/>
     /// 2. Fill Rows using UseRow
     /// </remarks>
-    [System.Diagnostics.DebuggerDisplay("{Width}x{Height}x{BytesPerPixel} ... {_Data.Length}")]
+    [System.Diagnostics.DebuggerDisplay("{Width}x{Height}x{BytesPerPixel} {Compression} ... {_Data.Length}")]
     public class WindowsBitmap
     {
         #region lifecycle
@@ -26,14 +30,11 @@ namespace InteropTypes.Graphics
 
         private static byte[] InitHeader(int width, int height, int bytesPerPixel)
         {
-            var stride = _PadTo4(width * bytesPerPixel);
-
-            var compression = WindowsBitmapCompression.BI_RGB;
-            // var compression = bytesPerPixel == 3 ? WindowsBitmapCompression.BI_RGB : WindowsBitmapCompression.BI_ALPHABITFIELDS;
+            var compression = WindowsBitmapCompression.BI_RGB;            
 
             var hdrSize = BITMAPHEADER.GetSize() + BITMAPINFOHEADER.GetSize();
-            
-            switch(compression)
+
+            switch (compression)
             {
                 case WindowsBitmapCompression.BI_RGB: break;
                 case WindowsBitmapCompression.BI_BITFIELDS: hdrSize += BITMAPCOLORBITSMASK.GetSize(); break;
@@ -41,18 +42,7 @@ namespace InteropTypes.Graphics
                 default:  throw new NotImplementedException();
             }
 
-            var imgSize = stride * Math.Abs(height);
-            var length = hdrSize + imgSize;
-
-            var bmph = new BITMAPHEADER
-            {
-                Header0 = 0x42, // B
-                Header1 = 0x4D, // M
-                Size = (uint)length,
-                Reserved0 = 0,
-                Reserved1 = 0,
-                OffsetToPixels = (uint)hdrSize,
-            };
+            var imgSize = WindowsBitmapPixels.CalcBufferSize(width,height,bytesPerPixel);            
 
             var bih = new BITMAPINFOHEADER
             {
@@ -67,9 +57,20 @@ namespace InteropTypes.Graphics
                 biYPelsPerMeter = 0x2E23,
                 biClrUsed = 0,
                 biClrImportant = 0
-            };            
+            };
+            
+            var totalLength = hdrSize + imgSize;
+            var bmph = new BITMAPHEADER
+            {
+                Header0 = 0x42, // B
+                Header1 = 0x4D, // M
+                Size = (uint)totalLength,
+                Reserved0 = 0,
+                Reserved1 = 0,
+                OffsetToPixels = (uint)hdrSize,
+            };
 
-            var bytes = new byte[length];
+            var bytes = new byte[totalLength];
             var writer = bytes.AsSpan();
             bmph.CopyTo(writer); writer = writer.Slice(BITMAPHEADER.GetSize());
             bih.CopyTo(writer); writer = writer.Slice(BITMAPINFOHEADER.GetSize());
@@ -103,49 +104,87 @@ namespace InteropTypes.Graphics
 
         public int Width => GetDib().biWidth;
         public int Height => Math.Abs( GetDib().biHeight );
-        public bool IsTopBottom => GetDib().biHeight < 0;
         public int BytesPerPixel => GetDib().biBitCount / 8;
-        public int Stride => _PadTo4(Width * BytesPerPixel);
+
+        internal WindowsBitmapCompression Compression => (WindowsBitmapCompression)GetDib().biCompression;
 
         #endregion
 
         #region API
-        
-        public unsafe void LockBits(Action<IntPtr, int> pixelData)
-        {
-            var span = _UsePixelsData();
 
-            fixed (byte* pointer = span)
-            {                
-                IntPtr intPtr = (IntPtr)pointer;
-                pixelData.Invoke(intPtr, span.Length);
-            }
+        public int GetValueHashCode()
+        {
+            if (_Data == null || _Data.Length == 0) return 0;
+            return _Data.Aggregate(0, (h, b) => h = (h * 17) ^ b.GetHashCode());
         }
 
-        public ReadOnlySpan<byte> GetRowSpan(int y)
+        /// <summary>
+        /// Checks if the contents represent a JPG or PNG and returns an array representing the encoded image.
+        /// </summary>
+        /// <param name="embeddedImage">An array representing an encoded image.</param>
+        /// <returns>true if the contents is a JPG or PNG image.</returns>
+        public bool TryGetEmbeddedImage(out ArraySegment<byte> embeddedImage)
         {
-            return UseRowSpan(y);
-        }        
+            var dib = GetDib();            
 
-        public Span<byte> UseRowSpan(int y)
+            switch ((WindowsBitmapCompression)dib.biCompression)
+            {
+                case WindowsBitmapCompression.BI_JPEG: break;
+                case WindowsBitmapCompression.BI_PNG: break;                
+                default:
+                    embeddedImage = ArraySegment<byte>.Empty;
+                    return false;
+            }
+
+            var imageOffset = (int)GetHeader().OffsetToPixels;
+            embeddedImage = new ArraySegment<byte>(_Data).Slice(imageOffset);
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if the contents represents a raw, uncompressed pixel buffer and calls a delegate with the pixels accessor
+        /// </summary>
+        /// <param name="readPixelsAction">A delegate that performs operations over the pixels of the raw buffer</param>
+        /// <returns>true if success</returns>
+        public bool TryGetPixels(WindowsBitmapPixels.GetPixelsDelegate readPixelsAction)
         {
             var dib = GetDib();
 
-            if (dib.biHeight > 0)
-            {
-                y = dib.biHeight - y - 1;
-            }
+            if (!WindowsBitmapPixels.IsCompatible((WindowsBitmapCompression)dib.biCompression)) return false;
 
-            var w = dib.biWidth * dib.biBitCount / 8;
-            return _UsePixelsData().Slice(_PadTo4(w) * y, w);
+            var pixelsOffset = (int)GetHeader().OffsetToPixels;
+            var pixelsSpan = _Data.AsSpan(pixelsOffset);
+
+            var api = new WindowsBitmapPixels(dib, pixelsSpan);
+
+            readPixelsAction(api);
+
+            return true;
         }
 
-        private Span<byte> _UsePixelsData()
+        /// <summary>
+        /// Checks if the contents represents a raw, uncompressed pixel buffer and calls a delegate that converts the pixels to another type.
+        /// </summary>
+        /// <typeparam name="TResult">The result type from the pixels conversion.</typeparam>
+        /// <param name="convertPixelsFunction">A delegate that converts the pixels to another type.</param>
+        /// <param name="result">The resulting value.</param>
+        /// <returns>true if success</returns>
+        public bool TryConvertPixels<TResult>(WindowsBitmapPixels.ConvertPixelsDelegate<TResult> convertPixelsFunction, out TResult result)
         {
-            var data = _Data.AsSpan();
-            var offset = (int)GetHeader().OffsetToPixels;            
-            return data.Slice(offset);
-        }
+            result = default;
+
+            var dib = GetDib();
+
+            if (!WindowsBitmapPixels.IsCompatible((WindowsBitmapCompression)dib.biCompression)) return false;
+
+            var pixelsOffset = (int)GetHeader().OffsetToPixels;
+            var pixelsSpan = _Data.AsSpan(pixelsOffset);
+
+            var api = new WindowsBitmapPixels(dib, pixelsSpan);
+
+            result = convertPixelsFunction(api);
+            return true;
+        }        
 
         private static int _PadTo4(int width)
         {
@@ -208,6 +247,111 @@ namespace InteropTypes.Graphics
 
         #endregion
     }
+
+    
+
+    [System.Diagnostics.DebuggerDisplay("{Width}x{Height}x{BytesPerPixel}")]
+    public readonly ref struct WindowsBitmapPixels
+    {
+        #region delegates
+
+        public delegate void GetPixelsDelegate(WindowsBitmapPixels pixels);
+
+        public delegate TResult ConvertPixelsDelegate<TResult>(WindowsBitmapPixels pixels);
+
+        #endregion
+
+        #region lifecycle
+
+        internal static int CalcBufferSize(int width, int height, int bytesPerPixel)
+        {
+            return _PadTo4(width * bytesPerPixel) * height;
+        }
+
+        internal static bool IsCompatible(WindowsBitmapCompression cmp)
+        {
+            switch (cmp)
+            {
+                case WindowsBitmapCompression.BI_RGB: break;
+                case WindowsBitmapCompression.BI_CMYK: break;
+                case WindowsBitmapCompression.BI_BITFIELDS: break;
+                case WindowsBitmapCompression.BI_ALPHABITFIELDS: break;
+                default: return false;
+            }
+
+            return true;
+        }
+
+        internal WindowsBitmapPixels(BITMAPINFOHEADER hdr, Span<Byte> pixelBuffer)
+        {
+            Width = (int)hdr.biWidth;
+            _SignedHeight = hdr.biHeight;
+            Height = Math.Abs(_SignedHeight);
+
+            BytesPerPixel = hdr.biBitCount / 8;
+            _PixelBuffer = pixelBuffer;
+
+            _ScanByteLength = Width * BytesPerPixel;
+
+            Stride = _PadTo4(_ScanByteLength);
+        }
+
+        private static int _PadTo4(int width)
+        {
+            int remainder = width % 4;
+            return remainder == 0
+                ? width
+                : width + (4 - remainder);
+        }
+
+        #endregion
+
+        #region data
+
+        private readonly Span<Byte> _PixelBuffer;
+
+        /// <summary>
+        /// If negative it means the buffer is a bottom-to-top buffer
+        /// </summary>
+        private readonly int _SignedHeight;
+
+        public int Width { get; }
+        public int Height { get; }
+        public int BytesPerPixel { get; }
+        public int Stride { get; }
+
+        public readonly int _ScanByteLength;
+
+        #endregion
+
+        #region API
+
+        public unsafe void LockBits(Action<IntPtr, int> pixelData)
+        {
+            fixed (byte* pointer = _PixelBuffer)
+            {
+                IntPtr intPtr = (IntPtr)pointer;
+                pixelData.Invoke(intPtr, _PixelBuffer.Length);
+            }
+        }
+
+        public ReadOnlySpan<byte> GetRowSpan(int y)
+        {
+            return UseRowSpan(y);
+        }
+
+        public Span<byte> UseRowSpan(int y)
+        {
+            if (_SignedHeight > 0)
+            {
+                y = _SignedHeight - y - 1;
+            }            
+            return _PixelBuffer.Slice(Stride * y, _ScanByteLength);
+        }
+
+        #endregion
+    }
+
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     struct BITMAPHEADER

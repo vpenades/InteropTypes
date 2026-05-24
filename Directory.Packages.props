@@ -10,9 +10,20 @@
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>    
     -->
   </PropertyGroup>
-  <PropertyGroup>
-    <AvaloniaVersion>12.0.3</AvaloniaVersion>
-  </PropertyGroup>
+
+	<ItemGroup>		
+		<PackageVersion Include="Avalonia" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.Themes.Fluent" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.Fonts.Inter" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.Headless.NUnit" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.Desktop" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.Android" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.Browser" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.iOS" Version="12.0.3" />
+		<PackageVersion Include="Avalonia.Controls.ItemsRepeater" Version="12.0.0" />
+		<PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+	</ItemGroup>
+	
   <ItemGroup>
     <!-- System -->
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
@@ -59,16 +70,7 @@
     <PackageVersion Include="SvgNet" Version="3.5.6" />
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
     <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.6" />
-    <!-- Avalonia -->
-    <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />    
-    <PackageVersion Include="Avalonia.Headless.NUnit" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    
     <!-- Video Libraries -->
     <PackageVersion Include="FFmpeg.AutoGen" Version="8.1.0" />
     <PackageVersion Include="FFMpegCore" Version="5.4.0" />
@@ -81,25 +83,29 @@
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" />
     <PackageVersion Include="OpenCvSharp4" Version="4.13.0.20260427" />
     <PackageVersion Include="OpenCvSharp4.Windows" Version="4.13.0.20260302" />
-    <PackageVersion Include="ZXing.Net" Version="0.16.11" />
-    <!-- unit Testing -->
-    <PackageVersion Include="TestAttachments.NUnit" Version="4.0.0-Preview-20251201-2057" />
-    <PackageVersion Include="TestImages.ImageSharp" Version="4.0.0-Preview-20251201-2057" />
-    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
-    <PackageVersion Include="NUnit" Version="4.6.1" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.13.0" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
-    <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.300" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageVersion Include="nunit.xamarin" Version="3.6.1" />
+    <PackageVersion Include="ZXing.Net" Version="0.16.11" />    
     <!-- Other -->
     <PackageVersion Include="SharpCompress" Version="0.48.1" />
     <PackageVersion Include="SharpSvn" Version="1.14005.390" />
   </ItemGroup>
+
+	<ItemGroup>
+		<!-- unit Testing -->
+		<PackageVersion Include="TUnit" Version="1.45.29" />
+		<PackageVersion Include="TestAttachments.NUnit" Version="4.0.0-Preview-20251201-2057" />
+		<PackageVersion Include="TestImages.ImageSharp" Version="4.0.0-Preview-20251201-2057" />
+		<PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
+		<PackageVersion Include="NUnit" Version="4.6.1" />
+		<PackageVersion Include="NUnit.Analyzers" Version="4.13.0" />
+		<PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+		<PackageVersion Include="coverlet.collector" Version="10.0.1" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.300" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
+		<PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
+		<PackageVersion Include="nunit.xamarin" Version="3.6.1" />
+	</ItemGroup>
 
   <ItemGroup>
     <!-- SixLabors 4.0.0 requires acquiring a license from the website that needs to be included in the project -->

@@ -20,13 +20,15 @@ namespace InteropTypes.Platforms.Win32
 
         public static WindowsBitmap GetManagedBmpOrNull(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
+            clientOptions ??= IO.FilePreviewOptions._Default;
+
             try
             {
                 using (var bmp = GetNativeBmpOrNull(finfo, true))
                 {
                     if (bmp == null) return null;
 
-                    return bmp.GetWindowsBitmap(clientOptions?.GetPixelFormat() ?? PixelFormat.Format24bppRgb);
+                    return bmp.GetWindowsBitmap(clientOptions.GetPixelFormat());
                 }
             }
             catch (Exception ex)
@@ -37,6 +39,8 @@ namespace InteropTypes.Platforms.Win32
 
         public static System.IO.Stream GetStreamOrDefault(FILEINFO finfo, IO.FilePreviewOptions clientOptions = null)
         {
+            clientOptions ??= IO.FilePreviewOptions._Default;
+
             try
             {
                 using (var bmp = GetNativeBmpOrNull(finfo, true))

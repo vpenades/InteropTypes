@@ -97,7 +97,7 @@ public partial class MainView : UserControl
 
         void work()
         {
-            var files = dir.GetFiles();
+            var files = dir.GetFileSystemInfos();
             Avalonia.Threading.Dispatcher.UIThread.Post(() => { myDirectoryFiles.ItemsSource = files; btn.IsEnabled = true; });
         }
         

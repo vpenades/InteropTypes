@@ -83,7 +83,7 @@ namespace InteropTypes.IO.Controls
         private Image _Image;        
         private Visual _Wait;
 
-        public static IFileThumbnailServer<AVLIMAGE> ThumbnailFactory { get; set; } = _FileThumbnailFactory.Create().WrapWithQueue();
+        public static IFileThumbnailServer<AVLIMAGE> ThumbnailFactory { get; set; } = _FileThumbnailFactory.Create().WrapWithSemaphore();
 
         #endregion
 

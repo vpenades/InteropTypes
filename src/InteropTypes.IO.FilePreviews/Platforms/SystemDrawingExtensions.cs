@@ -49,12 +49,15 @@ namespace InteropTypes.Platforms
 
             var dataLen = bpp * bmpData.Width / 8;
 
-            for (int y = 0; y < bmpData.Height; y++)
+            dstBitmap.TryGetPixels(dstPixels =>
             {
-                var srcRow = UseScanLine(bmpData, y, dataLen);
-                var dstRow = dstBitmap.UseRowSpan(y);                
-                srcRow.Slice(0, dstRow.Length).CopyTo(dstRow);
-            }
+                for (int y = 0; y < bmpData.Height; y++)
+                {
+                    var srcRow = UseScanLine(bmpData, y, dataLen);
+                    var dstRow = dstPixels.UseRowSpan(y);
+                    srcRow.Slice(0, dstRow.Length).CopyTo(dstRow);
+                }
+            });
 
             return dstBitmap;
         }
