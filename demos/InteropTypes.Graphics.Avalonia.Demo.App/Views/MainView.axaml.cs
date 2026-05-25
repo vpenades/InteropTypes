@@ -8,6 +8,7 @@ using Avalonia.Threading;
 
 using InteropTypes.Graphics.Backends.Bitmaps;
 using InteropTypes.Graphics.Bitmaps;
+using InteropTypes.IO.Controls;
 
 namespace InteropTypes.Views;
 
@@ -82,7 +83,7 @@ public partial class MainView : UserControl
         });
 
         if (folders.Count != 1) return;
-        
+
         // Obtener el objeto de la carpeta
         var folder = folders[0];
 
@@ -100,7 +101,18 @@ public partial class MainView : UserControl
             var files = dir.GetFileSystemInfos();
             Avalonia.Threading.Dispatcher.UIThread.Post(() => { myDirectoryFiles.ItemsSource = files; btn.IsEnabled = true; });
         }
-        
+
         await Task.Run(work);
+    }
+
+    private void FileThumbnailBox_DoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    {
+        if (sender is FileThumbnailBox ftbox)
+        {
+            var fs = ftbox.FileSystemSource;
+            var psi = new System.Diagnostics.ProcessStartInfo(fs.FullName);
+            psi.UseShellExecute = true;
+            System.Diagnostics.Process.Start(psi);
+        }
     }
 }

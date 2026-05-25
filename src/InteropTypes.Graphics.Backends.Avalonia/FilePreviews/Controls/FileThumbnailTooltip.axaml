@@ -10,18 +10,15 @@
 
         <TextBlock TextWrapping="Wrap" Text="{Binding Source.Name}" HorizontalAlignment="Center" />
 
-		<Image Source="{Binding Bitmap}" Stretch="Uniform" MaxWidth="800" MaxHeight="600" />
-
-        <!-- we need to report the actual image size, not the size of the thumbnail!!!!!
+		<Image Source="{Binding Image}" Stretch="Uniform" MaxWidth="800" MaxHeight="600" />
+        
         <TextBlock HorizontalAlignment="Center">
 			<TextBlock.Text>
-				<MultiBinding StringFormat="{}{0}x{1}">
-                    <Binding Path="Bitmap.Size.Width" />
-                    <Binding Path="Bitmap.Size.Height" />
+				<MultiBinding StringFormat="{} Length: {0}">
+                    <Binding Path="Source.Length" />                    
                 </MultiBinding>
             </TextBlock.Text>
-        </TextBlock>
-        -->
+        </TextBlock>        
         
     </StackPanel>
 

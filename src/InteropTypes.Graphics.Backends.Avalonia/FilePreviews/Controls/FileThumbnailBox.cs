@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace InteropTypes.IO.Controls
         #region lifecycle
         public FileThumbnailBox()
         {
-            this.Template = new FuncControlTemplate<FileThumbnailBox>(_BuidControl);
+            this.Template = new FuncControlTemplate<FileThumbnailBox>(_BuidControl);            
         }        
 
         private static Panel _BuidControl(FileThumbnailBox target, INameScope scope)
@@ -50,7 +51,7 @@ namespace InteropTypes.IO.Controls
             wait.HorizontalAlignment = HorizontalAlignment.Center;
             wait.VerticalAlignment = VerticalAlignment.Center;
             // wait IsVisible can bind to image.IsVisible here
-            scope.Register("PART_Wait", wait);
+            scope.Register("PART_Loading", wait);
 
             var panel = new Panel();
             panel.Children.Add(image);
@@ -63,25 +64,18 @@ namespace InteropTypes.IO.Controls
         {
             base.OnApplyTemplate(e);
 
-            _Image = e.NameScope.Get<Image>("PART_Thumbnail");
-            _Wait = e.NameScope.Get<Visual>("PART_Wait");
+            _ThumbnailView = e.NameScope.Get<Image>("PART_Thumbnail");
+            _LoadingView = e.NameScope.Get<Visual>("PART_Loading");
 
-            _UpdateBitmap(Source);
-        }
-
-        protected override void OnLoaded(RoutedEventArgs e)
-        {
-            base.OnLoaded(e);
-
-            _UpdateBitmap(Source);
-        }
+            _UpdateView();
+        }        
 
         #endregion
 
         #region data
 
-        private Image _Image;        
-        private Visual _Wait;
+        private Image _ThumbnailView;        
+        private Visual _LoadingView;
 
         public static IFileThumbnailServer<AVLIMAGE> ThumbnailFactory { get; set; } = _FileThumbnailFactory.Create().WrapWithSemaphore();
 
@@ -116,51 +110,47 @@ namespace InteropTypes.IO.Controls
             get => _Source;
             set
             {
-                if (!this.SetAndRaise(SourceProperty, ref _Source, value)) return;                
-                _UpdateBitmap(_Source);
+                if (!this.SetAndRaise(SourceProperty, ref _Source, value)) return;
+
+                // Collection virtualization reuses containers,
+                // so we must clear the cached image if datacontext changed.
+                Image = null;
+
+                // trigger image update, may request a thumbnail from windows cache or load the file itself if required.
+                _UpdateImage();
             }
         }
 
-        public static readonly DirectProperty<FileThumbnailBox, AVLIMAGE> BitmapProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, AVLIMAGE>(nameof(Bitmap), c => c.Bitmap);
+        public static readonly DirectProperty<FileThumbnailBox, AVLIMAGE> ImageProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, AVLIMAGE>(nameof(Image), c => c.Image);
 
-        private AVLIMAGE _Bitmap;
+        private AVLIMAGE _Image;
 
-        public AVLIMAGE Bitmap
+        public AVLIMAGE Image
         {
-            get => _Bitmap;
-            private set => this.SetAndRaise(BitmapProperty, ref _Bitmap, value);
-        }
+            get => _Image;
+            private set
+            {
+                if (this.SetAndRaise(ImageProperty, ref _Image, value))
+                {
+                    _UpdateView();
+                }
+            }
+        }        
 
         #endregion
 
         #region API        
 
-        XFILE IFileThumbnailClient<AVLIMAGE>.GetSource()
+        private void _UpdateImage()
         {
-            return Source;
-        }
+            // factory not set
+            if (ThumbnailFactory == null) return;
 
-        void IFileThumbnailClient<AVLIMAGE>.SetImage(AVLIMAGE image)
-        {
-            _SetThumbnail(image);
-        }
+            // processing
 
-        private void _UpdateBitmap(XFILE src)
-        {
-            if (_Image == null) return;
-
-            if (!this.IsLoaded) return;
-
-            if (src == null)
-            {                
-                _Image.IsVisible = false;
-                _Image.Source = null;
-                _Wait.IsVisible = true;
-                return;
-            }
-
-            if (_Bitmap != null) { _SetThumbnail(_Bitmap); return; }
+            if (_Source == null) { this.Image = null; return; }
+            if (_Image != null) return;
 
             async Task _work()
             {
@@ -168,20 +158,29 @@ namespace InteropTypes.IO.Controls
             }
 
             Task.Run(_work);
-        }        
+        }
+        
+        XFILE IFileThumbnailClient<AVLIMAGE>.GetSource()
+        {
+            return Source;
+        }
 
-        private void _SetThumbnail(AVLIMAGE image)
+        void IFileThumbnailClient<AVLIMAGE>.SetImage(AVLIMAGE image)
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-            {                
-                _Image.Source = image;
-                _Image.IsVisible = image != null;
-                _Wait.IsVisible = !_Image.IsVisible;
-                Bitmap = image;
+            {
+                Image = image;
             });
         }
 
-        
+        private void _UpdateView()
+        {
+            if (_ThumbnailView == null) return;
+
+            _ThumbnailView.Source = _Image;
+            _ThumbnailView.IsVisible = _Image != null;
+            if (_LoadingView != null) _LoadingView.IsVisible = _Image == null;
+        }
 
         #endregion
     }
@@ -189,6 +188,8 @@ namespace InteropTypes.IO.Controls
     [System.Diagnostics.DebuggerDisplay("{PhysicalPath}")]
     record _FileSystemItem : XFILE
     {
+        #region lifecycle
+
         public static _FileSystemItem Create(FileSystemInfo file)
         {
             if (file == null) return null;
@@ -197,31 +198,43 @@ namespace InteropTypes.IO.Controls
 
         private _FileSystemItem(FileSystemInfo file)
         {
-            _File = file;
+            _Entry = file;
         }
 
-        private readonly System.IO.FileSystemInfo _File;        
+        #endregion
+
+        #region data
+
+        private readonly System.IO.FileSystemInfo _Entry;
+
+        #endregion
+
+        #region properties
+
+        public bool Exists => _Entry.Exists;
+
+        public long Length => _Entry is System.IO.FileInfo finfo ? finfo.Length : throw new NotImplementedException();
+
+        public string PhysicalPath => _Entry.FullName;
+
+        public string Name => _Entry.Name;
+
+        public DateTimeOffset LastModified => _Entry.LastWriteTime;
+
+        public bool IsDirectory => _Entry is not System.IO.FileInfo;
+
+        #endregion
+
+        #region API
 
         public Stream CreateReadStream()
         {
-            return _File is System.IO.FileInfo finfo
+            return _Entry is System.IO.FileInfo finfo
                 ? finfo.OpenRead()
                 : throw new NotImplementedException();
         }
 
-        public bool Exists => _File.Exists;
-
-        public long Length => throw new NotImplementedException();
-
-        public string PhysicalPath => _File.FullName;
-
-        public string Name => _File.Name;
-
-        public DateTimeOffset LastModified => _File.LastWriteTime;
-
-        public bool IsDirectory => _File is System.IO.DirectoryInfo;
+        #endregion
     }
 
-
-    
 }

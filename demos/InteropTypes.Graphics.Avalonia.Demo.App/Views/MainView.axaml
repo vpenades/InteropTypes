@@ -46,12 +46,11 @@
 						 <ScrollViewer Grid.Row="1">
 							 <ItemsRepeater  x:Name="myDirectoryFiles">
 								 <ItemsRepeater.Layout>
-									 <UniformGridLayout MinItemWidth="64" MinItemHeight="64"
-																 MinColumnSpacing="2" MinRowSpacing="2" />
+									 <UniformGridLayout MinItemWidth="64" MinItemHeight="64" MinColumnSpacing="2" MinRowSpacing="2" />
 								 </ItemsRepeater.Layout>
 								 <ItemsRepeater.ItemTemplate>
 									 <DataTemplate x:DataType="sysio:FileSystemInfo">
-										 <thumb:FileThumbnailBox FileSystemSource="{Binding}" />
+										 <thumb:FileThumbnailBox FileSystemSource="{Binding}" DoubleTapped="FileThumbnailBox_DoubleTapped" />
 									 </DataTemplate>
 								 </ItemsRepeater.ItemTemplate>
 							 </ItemsRepeater>
