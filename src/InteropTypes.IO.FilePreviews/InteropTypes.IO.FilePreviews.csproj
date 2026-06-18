@@ -68,6 +68,7 @@
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
+		<PackageReference Include="System.Numerics.Tensors" />
   </ItemGroup>
 
 </Project>

@@ -326,6 +326,23 @@ namespace InteropTypes.Graphics
 
         #region API
 
+        public System.Numerics.Tensors.TensorSpan<byte> AsTensorSpan()
+        {
+            var bhwc = new nint[4];
+            bhwc[3] = this.BytesPerPixel;
+            bhwc[2] = this.Width;
+            bhwc[1] = this.Height;
+            bhwc[0] = 1;            
+
+            var strides = new nint[4];
+            bhwc[3] = this.BytesPerPixel;
+            bhwc[2] = this.Stride;
+            bhwc[1] = bhwc[2] * this.Height;
+            bhwc[0] = bhwc[1] * 1;
+
+            return new System.Numerics.Tensors.TensorSpan<byte>(_PixelBuffer, bhwc, strides);
+        }
+
         public unsafe void LockBits(Action<IntPtr, int> pixelData)
         {
             fixed (byte* pointer = _PixelBuffer)
