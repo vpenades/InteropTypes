@@ -202,8 +202,7 @@ namespace InteropTypes.IO.Archives
 
             #region properties
 
-            /// <inheritdoc/>
-            public ArchiveType ArchiveType => throw new NotImplementedException();
+            public ArchiveType Type => _Archive.Type;            
 
             /// <inheritdoc/>
             public IEntry Entry { get; private set; }

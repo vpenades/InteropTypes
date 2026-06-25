@@ -18,6 +18,8 @@ using ARUCO = OpenCvSharp.Aruco;
 using CVMATRIX = OpenCvSharp.Mat;
 using CVDEPTHTYPE = OpenCvSharp.MatType;
 
+using OpenCvSharp.Aruco;
+
 namespace InteropTypes.Vision.Backends
 {
     partial class MarkersContext
@@ -34,22 +36,29 @@ namespace InteropTypes.Vision.Backends
             {
                 _HorizontalMirror = horizontalMirror;
                 _MarkersDict = ARUCO.CvAruco.GetPredefinedDictionary(ARUCO.PredefinedDictionaryType.Dict4X4_100);
+
+                var detectParameters = new ARUCO.DetectorParameters();
+                var refineParameters = new ARUCO.RefineParameters();
+                _Detector = new ArucoDetector(_MarkersDict, detectParameters, refineParameters);                
             }
 
             public void Dispose()
             {
                 System.Threading.Interlocked.Exchange(ref _CameraTransform, null)?.Dispose();
                 System.Threading.Interlocked.Exchange(ref _CameraDistortion, null)?.Dispose();
+                System.Threading.Interlocked.Exchange(ref _Detector, null)?.Dispose();                
+                System.Threading.Interlocked.Exchange(ref _MarkersDict, null)?.Dispose();
             }
 
             #endregion
 
             #region data
 
-            private readonly ARUCO.Dictionary _MarkersDict;
             private int _MarkersLength = 80;
 
-            private ARUCO.DetectorParameters _Parameters = new ARUCO.DetectorParameters();
+            private ARUCO.Dictionary _MarkersDict;            
+
+            private ArucoDetector _Detector;            
 
             private bool _HorizontalMirror;
 
@@ -128,17 +137,17 @@ namespace InteropTypes.Vision.Backends
 
                 int[] ids; // name/id of the detected markers
                 OpenCvSharp.Point2f[][] corners; // corners of the detected marker
-                OpenCvSharp.Point2f[][] rejected; // rejected contours
+                OpenCvSharp.Point2f[][] rejected; // rejected contours                
 
                 if (_HorizontalMirror)
                 {
                     using var mirror = new CVMATRIX();
                     OPENCV2.Flip(src, mirror, OpenCvSharp.FlipMode.X);
-                    ARUCO.CvAruco.DetectMarkers(mirror, _MarkersDict, out corners, out ids, _Parameters, out rejected);
+                    _Detector.DetectMarkers(mirror, out corners, out ids, out rejected);
                 }
                 else
                 {
-                    ARUCO.CvAruco.DetectMarkers(src, _MarkersDict, out corners, out ids, _Parameters, out rejected);
+                    _Detector.DetectMarkers(src, out corners, out ids, out rejected);
                 }
 
                 var count = Math.Min(ids.Length, corners.Length);
@@ -153,7 +162,11 @@ namespace InteropTypes.Vision.Backends
 
                 if (_CameraTransform != null && _CameraDistortion != null)
                 {
-                    ARUCO.CvAruco.EstimatePoseSingleMarkers(corners, _MarkersLength, _CameraTransform, _CameraDistortion, rvecs, tvecs);
+                    throw new NotImplementedException();
+
+                    // CvAruco.EstimatePoseSingleMarkers(corners, _MarkersLength, _CameraTransform, _CameraDistortion, rvecs, tvecs);
+                    // replaced by:
+                    // OPENCV2.SolvePnP(...)
 
                     var x = _CameraTransform.AsSpanTensor2<Double>().Span;
 
