@@ -94,7 +94,7 @@ namespace InteropTypes.Graphics.Backends.Bitmaps
         /// <param name="src"></param>
         public void Update(SpanBitmap src)
         {
-            if (Avalonia.Threading.Dispatcher.UIThread.CheckAccess())
+            if (Avalonia.Threading.Dispatcher.CurrentDispatcher.CheckAccess())
             {
                 _UpdateDirect(src);
                 return;
@@ -113,7 +113,7 @@ namespace InteropTypes.Graphics.Backends.Bitmaps
 
         private void _UpdateFromBackBuffer()
         {
-            Avalonia.Threading.Dispatcher.UIThread.VerifyAccess();
+            Avalonia.Threading.Dispatcher.CurrentDispatcher.VerifyAccess();
 
             void _OnBmpRead(MemoryBitmap bmp)
             {                
@@ -127,7 +127,7 @@ namespace InteropTypes.Graphics.Backends.Bitmaps
 
         private void _UpdateDirect(SpanBitmap src)
         {
-            Avalonia.Threading.Dispatcher.UIThread.VerifyAccess();            
+            Avalonia.Threading.Dispatcher.CurrentDispatcher.VerifyAccess();            
 
             _Swap = !_Swap;
 

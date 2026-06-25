@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -25,16 +27,18 @@ using XFILE = Microsoft.Extensions.FileProviders.IFileInfo;
 
 namespace InteropTypes.IO.Controls
 {
+    using BMPSERVER = IFileThumbnailServer<AVLIMAGE>;
+
     /// <summary>
     /// An avalonia control that takes a <see cref="System.IO.FileInfo"/> or <see cref="XFILE"/> and displays it as an image thumbnail
-    /// </summary>
+    /// </summary>    
     public class FileThumbnailBox : TemplatedControl , IFileThumbnailClient<AVLIMAGE>
     {
         #region lifecycle
         public FileThumbnailBox()
         {
             this.Template = new FuncControlTemplate<FileThumbnailBox>(_BuidControl);            
-        }        
+        }
 
         private static Panel _BuidControl(FileThumbnailBox target, INameScope scope)
         {
@@ -68,27 +72,51 @@ namespace InteropTypes.IO.Controls
             _LoadingView = e.NameScope.Get<Visual>("PART_Loading");
 
             _UpdateView();
-        }        
+        }
 
-        #endregion
+        private void _UpdateView()
+        {
+            if (_ThumbnailView == null) return;
 
-        #region data
+            var image = _Thumbnail;
 
-        private Image _ThumbnailView;        
+            _ThumbnailView.Source = image;
+            _ThumbnailView.IsVisible = image != null;
+            if (_LoadingView != null) _LoadingView.IsVisible = image == null;
+        }
+
+        private Image _ThumbnailView;
         private Visual _LoadingView;
 
-        public static IFileThumbnailServer<AVLIMAGE> ThumbnailFactory { get; set; } = _FileThumbnailFactory.Create().WrapWithSemaphore();
-
         #endregion
 
-        #region properties
-
-        public static readonly DirectProperty<FileThumbnailBox, System.IO.FileSystemInfo> FileSystemSourceProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, System.IO.FileSystemInfo>(nameof(FileSystemSource), c => c.FileSystemSource, (c, v) => c.FileSystemSource = v);
-
+        #region data        
 
         private System.IO.FileSystemInfo _FileSystemSource;
+        private XFILE _FileSource;        
 
+        private BMPSERVER _ThumbnailFactory = _FileThumbnailFactory.Create().WrapWithSemaphore();
+        private AVLIMAGE _Thumbnail;
+        private ICommand _ThumbnailChangedCommand;
+
+        private Func<XFILE, Object> _PreviewContentEvaluator;
+
+        private Func<XFILE, Object> _PreviewInfoEvaluator;
+        private Lazy<Object> _EvaluatedPreviewInfo;
+
+        #endregion        
+
+        #region properties        
+
+        public static readonly DirectProperty<FileThumbnailBox, System.IO.FileSystemInfo> FileSystemSourceProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, System.IO.FileSystemInfo>(nameof(FileSystemSource), c => c.FileSystemSource, (c, v) => c.FileSystemSource = v);        
+
+        /// <summary>
+        /// Gets or sets the source object from where the thumbnail will be retrieved
+        /// </summary>
+        /// <remarks>
+        /// Changing this source will trigger an asynchronous operation that will update <see cref="Thumbnail"/>
+        /// </remarks>
         public System.IO.FileSystemInfo FileSystemSource
         {
             get => _FileSystemSource;
@@ -96,65 +124,140 @@ namespace InteropTypes.IO.Controls
             {
                 if (!this.SetAndRaise(FileSystemSourceProperty, ref _FileSystemSource, value)) return;
 
-                Source = _FileSystemItem.Create(_FileSystemSource);
+                FileSource = _FileSystemItem.Create(_FileSystemSource);
             }
         }
 
-        public static readonly DirectProperty<FileThumbnailBox, XFILE> SourceProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, XFILE>(nameof(Source), c => c.Source, (c, v) => c.Source = v);
+        public static readonly DirectProperty<FileThumbnailBox, XFILE> FileSourceProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, XFILE>(nameof(FileSource), c => c.FileSource, (c, v) => c.FileSource = v);        
 
-        private XFILE _Source;
-
-        public XFILE Source
+        /// <summary>
+        /// Gets or sets the source object from where the thumbnail will be retrieved
+        /// </summary>
+        /// <remarks>
+        /// Changing this source will trigger an asynchronous operation that will update <see cref="Thumbnail"/>
+        /// </remarks>
+        public XFILE FileSource
         {
-            get => _Source;
+            get => _FileSource;
             set
             {
-                if (!this.SetAndRaise(SourceProperty, ref _Source, value)) return;
+                if (!this.SetAndRaise(FileSourceProperty, ref _FileSource, value)) return;
+
+                _EvaluatedPreviewInfo = new Lazy<object>(EvaluatePreviewInfo);
 
                 // Collection virtualization reuses containers,
                 // so we must clear the cached image if datacontext changed.
-                Image = null;
+                Thumbnail = null;
 
                 // trigger image update, may request a thumbnail from windows cache or load the file itself if required.
                 _UpdateImage();
             }
         }
 
-        public static readonly DirectProperty<FileThumbnailBox, AVLIMAGE> ImageProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, AVLIMAGE>(nameof(Image), c => c.Image);
+        
 
-        private AVLIMAGE _Image;
+        public static readonly DirectProperty<FileThumbnailBox, BMPSERVER> FileThumbnailFactoryProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, BMPSERVER>(nameof(FileThumbnailFactory), c => c.FileThumbnailFactory, (c, v) => c.FileThumbnailFactory = v);
 
-        public AVLIMAGE Image
+        /// <summary>
+        /// When set, it overrides <see cref="_DefaultImageFactory"/>
+        /// </summary>
+        public BMPSERVER FileThumbnailFactory
         {
-            get => _Image;
+            get => _ThumbnailFactory;
+            set
+            {
+                if (this.SetAndRaise(FileThumbnailFactoryProperty, ref _ThumbnailFactory, value))
+                {
+                    _UpdateImage();
+                }
+            }
+        }
+
+        public static readonly DirectProperty<FileThumbnailBox, AVLIMAGE> ThumbnailProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, AVLIMAGE>(nameof(Thumbnail), c => c.Thumbnail);        
+
+        /// <summary>
+        /// Gets the image currently set as the thumbnail
+        /// </summary>
+        public AVLIMAGE Thumbnail
+        {
+            get => _Thumbnail;
             private set
             {
-                if (this.SetAndRaise(ImageProperty, ref _Image, value))
+                if (this.SetAndRaise(ThumbnailProperty, ref _Thumbnail, value))
                 {
                     _UpdateView();
                 }
             }
-        }        
+        }
+
+        public static readonly DirectProperty<FileThumbnailBox, ICommand> ThumbnailChangedCommandProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, ICommand>(nameof(ThumbnailChangedCommand), c => c.ThumbnailChangedCommand, (c,v) => c.ThumbnailChangedCommand = v);        
+
+        /// <summary>
+        /// A command that is automatically executed when <see cref="Thumbnail"/> changes.
+        /// </summary>
+        /// <remarks>
+        /// this can be used to brifly call the MVVM to let it analyze the bitmap. ToDo: Do not pass a AVLBITMAP, but a ITensorBitmapSource
+        /// </remarks>
+        public ICommand ThumbnailChangedCommand
+        {
+            get => _ThumbnailChangedCommand;
+            set
+            {
+                if (this.SetAndRaise(ThumbnailChangedCommandProperty, ref _ThumbnailChangedCommand, value))
+                {
+                    RaiseImageChanged(_Thumbnail);
+                }
+            }
+        }
+
+        public static readonly DirectProperty<FileThumbnailBox, Func<XFILE, Object>> PreviewContentEvaluatorProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, Func<XFILE, Object>>(nameof(PreviewContentEvaluator), c => c.PreviewContentEvaluator, (c, v) => c.PreviewContentEvaluator = v);
+
+        /// <summary>
+        /// Sets the content info evaluator lambda that will be called when hovering the cursor over the thumbnail for extra information.
+        /// </summary>
+        public Func<XFILE, Object> PreviewContentEvaluator
+        {
+            get => _PreviewInfoEvaluator;
+            set => SetAndRaise(PreviewContentEvaluatorProperty, ref _PreviewContentEvaluator, value);
+        }
+
+        public static readonly DirectProperty<FileThumbnailBox, Func<XFILE, Object>> PreviewInfoEvaluatorProperty
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, Func<XFILE, Object>>(nameof(PreviewInfoEvaluator), c => c.PreviewInfoEvaluator, (c, v) => c.PreviewInfoEvaluator = v);
+
+        /// <summary>
+        /// Sets the file info evaluator lambda that will be called when hovering the cursor over the thumbnail for extra information.
+        /// </summary>
+        public Func<XFILE, Object> PreviewInfoEvaluator
+        {
+            get => _PreviewInfoEvaluator;
+            set => SetAndRaise(PreviewInfoEvaluatorProperty, ref _PreviewInfoEvaluator, value);
+        }
 
         #endregion
 
-        #region API        
+        #region API - Image        
 
         private void _UpdateImage()
         {
-            // factory not set
-            if (ThumbnailFactory == null) return;
+            // defaults
 
-            // processing
+            if (_Thumbnail != null) return;            
 
-            if (_Source == null) { this.Image = null; return; }
-            if (_Image != null) return;
+            if (_FileSource == null) { this.Thumbnail = null; return; }
+
+            // find factory
+
+            var factory = _ThumbnailFactory;
+            if (factory == null) return;            
 
             async Task _work()
             {
-                await ThumbnailFactory?.LoadAndAssignImageAsync(this);
+                await factory?.UpdateClientAsync(this);
             }
 
             Task.Run(_work);
@@ -162,24 +265,69 @@ namespace InteropTypes.IO.Controls
         
         XFILE IFileThumbnailClient<AVLIMAGE>.GetSource()
         {
-            return Source;
+            return FileSource;
         }
 
         void IFileThumbnailClient<AVLIMAGE>.SetImage(AVLIMAGE image)
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
-                Image = image;
+                Thumbnail = image;
+                RaiseImageChanged(image);
             });
         }
 
-        private void _UpdateView()
+        protected virtual void RaiseImageChanged(AVLIMAGE image)
         {
-            if (_ThumbnailView == null) return;
+            var cmd = ThumbnailChangedCommand;
+            if (cmd == null) return;
 
-            _ThumbnailView.Source = _Image;
-            _ThumbnailView.IsVisible = _Image != null;
-            if (_LoadingView != null) _LoadingView.IsVisible = _Image == null;
+            if (cmd.CanExecute(image)) cmd.Execute(image);
+        }
+
+        #endregion
+
+        #region API - Preview
+        [Bindable(true)]
+        internal Object EvaluatedPreviewContent => EvaluatePreviewContent();
+
+        protected virtual Object EvaluatePreviewContent()
+        {
+            var f = _FileSource;            
+
+            if (f != null)
+            {
+                var eval = _PreviewContentEvaluator;
+                var content = eval?.Invoke(f);
+                if (content != null) return content;
+
+                if (f.Name.EndsWith(".txt"))
+                {
+                    using(var s = f.CreateReadStream())
+                    {
+                        using var ss = new System.IO.StreamReader(s);
+                        return ss.ReadToEnd();
+                    }
+                }
+            }
+
+            return this.Thumbnail;
+        }
+
+        [Bindable(true)]
+        internal Object EvaluatedPreviewInfo => _EvaluatedPreviewInfo?.Value ?? null;        
+
+        protected virtual Object EvaluatePreviewInfo()
+        {
+            var f = FileSource;
+            if (f == null) return null;
+
+            var def = $"Length: {f.Length}";
+
+            var eval = _PreviewInfoEvaluator;
+            if (eval != null) return eval(f) ?? def;
+
+            return def;
         }
 
         #endregion

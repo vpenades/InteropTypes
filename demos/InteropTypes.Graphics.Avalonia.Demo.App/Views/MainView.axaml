@@ -15,81 +15,63 @@
 			 x:DataType="demo:AppMVVM"
 			 x:Name="mySelf">
 
-			 <TabControl>
+	<UserControl.Resources>
+		<thumb:FileThumbnailCache x:Key="myThumbnailsCache" />
+	</UserControl.Resources>
 
-				 <TabItem Header="Avalonia Controls">
-					 <StackPanel>
-						 <Button Content="Hello World" HorizontalAlignment="Center" />
-						 <ProgressBar Width="100" Height="10" />
-					 </StackPanel>
-				 </TabItem>
+		<TabControl>
 
-				 <TabItem Header="File System">
-					 <ScrollViewer>
-						 <StackPanel>
-							 <interop:FolderNavBar x:Name="myNavBar" />
-							 <interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
-						 </StackPanel>
-					 </ScrollViewer>
-				 </TabItem>
+			<TabItem Header="Avalonia Controls">
+				<StackPanel>
+					<Button Content="Hello World" HorizontalAlignment="Center" />
+					<ProgressBar Width="100" Height="10" />
+				</StackPanel>
+			</TabItem>
 
-				 <TabItem Header="File Thumbnails">
-					 <Grid RowDefinitions="auto *">						 
+			<TabItem Header="File System">
+				<ScrollViewer>
+					<StackPanel>
+						<interop:FolderNavBar x:Name="myNavBar" />
+						<interop:FileSystemTree CurrentDirectory="{Binding #myNavBar.CurrentDirectory}" />
+					</StackPanel>
+				</ScrollViewer>
+			</TabItem>
 
-						 <Button Content="Browse Directory..." Click="_OnClick_PickDirectory" />
+			<TabItem Header="File Thumbnails">
+				<l:ThumbnailsDemoView />
+			</TabItem>
 
-						 <!-- https://github.com/AvaloniaUI/Avalonia/issues/18798 -->
-						 <!-- https://github.com/AvaloniaUI/Avalonia/discussions/16829 -->
-						 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater?tab=readme-ov-file#current-status -->
-						 <!-- https://github.com/AvaloniaUI/Avalonia.Controls.ItemsRepeater/issues/29 -->
+			<TabItem Header="Sprites 2D">
+				<ContentControl Content="{Binding Canvas2}" />
+			</TabItem>
 
-						 <ScrollViewer Grid.Row="1">
-							 <ItemsRepeater  x:Name="myDirectoryFiles">
-								 <ItemsRepeater.Layout>
-									 <UniformGridLayout MinItemWidth="64" MinItemHeight="64" MinColumnSpacing="2" MinRowSpacing="2" />
-								 </ItemsRepeater.Layout>
-								 <ItemsRepeater.ItemTemplate>
-									 <DataTemplate x:DataType="sysio:FileSystemInfo">
-										 <thumb:FileThumbnailBox FileSystemSource="{Binding}" DoubleTapped="FileThumbnailBox_DoubleTapped" />
-									 </DataTemplate>
-								 </ItemsRepeater.ItemTemplate>
-							 </ItemsRepeater>
-						 </ScrollViewer>
-						 
-					 </Grid>
-				 </TabItem>
+			<TabItem Header="Font Drawing">
+				<StackPanel>
+					<HeaderedContentControl Header="Avalonia" Background="LightGray"  Margin="4">
+						<ItemsControl ItemsSource="{Binding FontsCanvas.ReferenceTexts}" TextElement.FontSize="30" />
+					</HeaderedContentControl>
+					<HeaderedContentControl Header="Interop" MinWidth="300" MinHeight="200" Background="LightGray" Margin="4">
+						<ContentControl Content="{Binding FontsCanvas}" />
+					</HeaderedContentControl>
+				</StackPanel>
+		</TabItem>
 
-				 <TabItem Header="Sprites 2D">
-					 <ContentControl Content="{Binding Canvas2}" />
-				 </TabItem>
+			<TabItem Header="Scene 3D">
 
-				 <TabItem Header="Font Drawing">
-					 <StackPanel>
-						 <HeaderedContentControl Header="Avalonia" Background="LightGray"  Margin="4">
-							 <ItemsControl ItemsSource="{Binding FontsCanvas.ReferenceTexts}" TextElement.FontSize="30" />
-						 </HeaderedContentControl>
-						 <HeaderedContentControl Header="Interop" MinWidth="300" MinHeight="200" Background="LightGray" Margin="4">
-							 <ContentControl Content="{Binding FontsCanvas}" />
-						 </HeaderedContentControl>
-					 </StackPanel>
-			 </TabItem>
+				<drawing:Scene3DView Scene="{Binding Rockets}" >
+					<drawing:Scene3DView.ViewportTemplate>
+						<drawing:Scene3DViewportTemplate>
+							<demo:CustomCamera3DPanel UpDirectionIsZ="true" FrameRate="30" />
+						</drawing:Scene3DViewportTemplate>
+					</drawing:Scene3DView.ViewportTemplate>
+				</drawing:Scene3DView>
 
-				 <TabItem Header="Scene 3D">
+			</TabItem>
 
-					 <drawing:Scene3DView Scene="{Binding Rockets}" >
-						 <drawing:Scene3DView.ViewportTemplate>
-							 <drawing:Scene3DViewportTemplate>
-								 <demo:CustomCamera3DPanel UpDirectionIsZ="true" FrameRate="30" />
-							 </drawing:Scene3DViewportTemplate>
-						 </drawing:Scene3DView.ViewportTemplate>
-					 </drawing:Scene3DView>
+			<TabItem Header="bitmaps">
+				<ContentControl Content="{Binding #mySelf.ClientBitmap}" />
+			</TabItem>
 
-				 </TabItem>
-
-				 <TabItem Header="bitmaps">
-					 <ContentControl Content="{Binding #mySelf.ClientBitmap}" />
-				 </TabItem>
-
-			 </TabControl>
+		</TabControl>
 
 </UserControl>

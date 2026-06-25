@@ -2,24 +2,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sys="using:System"
+             xmlns:media="using:Avalonia.Media"             
              xmlns:thumb="using:InteropTypes.IO.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="InteropTypes.IO.Controls.FileThumbnailToolTip">
+
+    <UserControl.DataTemplates>
+
+        <DataTemplate x:DataType="media:IImage">
+			<Image Source="{Binding}" Stretch="Uniform" MaxWidth="800" MaxHeight="600" />
+        </DataTemplate>
+
+        <DataTemplate x:DataType="sys:String">
+			<TextBlock Text="{Binding}" MaxWidth="800" MaxHeight="600" FontSize="9" TextWrapping="Wrap" UseLayoutRounding="True" />
+        </DataTemplate>
+		
+    </UserControl.DataTemplates>    
   
     <StackPanel DataContext="{Binding $parent[thumb:FileThumbnailBox]}" >
-
-        <TextBlock TextWrapping="Wrap" Text="{Binding Source.Name}" HorizontalAlignment="Center" />
-
-		<Image Source="{Binding Image}" Stretch="Uniform" MaxWidth="800" MaxHeight="600" />
-        
-        <TextBlock HorizontalAlignment="Center">
-			<TextBlock.Text>
-				<MultiBinding StringFormat="{} Length: {0}">
-                    <Binding Path="Source.Length" />                    
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>        
-        
+        <TextBlock TextWrapping="Wrap" Text="{Binding FileSource.Name}" HorizontalAlignment="Center" />
+        <ContentControl Content="{Binding EvaluatedPreviewContent}" HorizontalAlignment="Center" />
+        <ContentControl Content="{Binding EvaluatedPreviewInfo}" HorizontalAlignment="Center" />        
     </StackPanel>
 
 </UserControl>

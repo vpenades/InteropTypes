@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,7 @@ using XFILE = Microsoft.Extensions.FileProviders.IFileInfo;
 namespace InteropTypes.IO.Mvvm
 {
     /// <summary>
-    /// Implemented by the UI control or the ViewModel.
+    /// Represents a UI view control over a "file" objects and accepts setting its image asynchronously.
     /// </summary>
     /// <typeparam name="TImage">The UI framwork image</typeparam>
     public interface IFileThumbnailClient<TImage>
@@ -25,6 +27,9 @@ namespace InteropTypes.IO.Mvvm
         /// <summary>
         /// Sets the image associated to the file to the client.
         /// </summary>
+        /// <remarks>
+        /// The implementation must be aware that this might be called by the thread other than the UI
+        /// </remarks>
         /// <param name="image">the image</param>
         void SetImage(TImage image);
     }
@@ -35,23 +40,37 @@ namespace InteropTypes.IO.Mvvm
     /// <typeparam name="TImage"></typeparam>
     public interface IFileThumbnailServer<TImage>
     {
+        public IFileThumbnailServer<TImage> WrapWithCache()
+        {
+            return this is FileThumbnailServerCache<TImage> wrapped
+                ? wrapped
+                : new FileThumbnailServerCache<TImage>(this);
+        }
+
         public IFileThumbnailServer<TImage> WrapWithSemaphore()
         {
-            return new _SemaphoreThumbnailFactory<TImage>(this);
+            return this is _SemaphoreThumbnailFactory<TImage> wrapped
+                ? wrapped
+                : new _SemaphoreThumbnailFactory<TImage>(this);
         }
 
         public IFileThumbnailServer<TImage> WrapWithQueue()
         {
-            return new _QueuedThumbnailFactory<TImage>(this);
+            return this is _QueuedThumbnailFactory<TImage> wrapped
+                ? wrapped
+                : new _QueuedThumbnailFactory<TImage>(this);
         }
 
         /// <summary>
-        /// Loads the image declared by the client and sets it back
+        /// Loads the image requested by the client and sets it back to the client.
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public Task<bool> LoadAndAssignImageAsync(IFileThumbnailClient<TImage> item);
+        /// <param name="item">The UI control implementing <see cref="IFileThumbnailClient{TImage}"/></param>
+        /// <returns>true on success</returns>
+        public Task<bool> UpdateClientAsync(IFileThumbnailClient<TImage> item);
     }
+
+
+    
 
     /// <summary>
     /// A bulk image loading with a simple semaphoreslim throttle.
@@ -59,27 +78,38 @@ namespace InteropTypes.IO.Mvvm
     /// <typeparam name="TImage"></typeparam>
     class _SemaphoreThumbnailFactory<TImage> : IFileThumbnailServer<TImage>
     {
+        #region lifecycle
         public _SemaphoreThumbnailFactory(IFileThumbnailServer<TImage> baseFactory)
         {
             _BaseFactory = baseFactory;
         }
 
+        #endregion
+
+        #region data
+
         private readonly IFileThumbnailServer<TImage> _BaseFactory;
 
         private static readonly SemaphoreSlim _Throttle = new SemaphoreSlim(1, 1);
 
-        public async Task<bool> LoadAndAssignImageAsync(IFileThumbnailClient<TImage> item)
+        #endregion
+
+        #region API
+
+        public async Task<bool> UpdateClientAsync(IFileThumbnailClient<TImage> item)
         {
             try
             {
                 await _Throttle.WaitAsync();
-                return await _BaseFactory.LoadAndAssignImageAsync(item);
+                return await _BaseFactory.UpdateClientAsync(item);
             }
             finally
             {
                 _Throttle.Release();
             }
         }
+
+        #endregion
     }
 
     /// <summary>
@@ -99,17 +129,17 @@ namespace InteropTypes.IO.Mvvm
         #region data
 
         private readonly IFileThumbnailServer<TImage> _BaseFactory;
-        private readonly ConcurrentQueue<IFileThumbnailClient<TImage>> jobs = new ConcurrentQueue<IFileThumbnailClient<TImage>>();
-        private readonly object lockObj = new object();
+        private readonly ConcurrentQueue<IFileThumbnailClient<TImage>> _Jobs = new ConcurrentQueue<IFileThumbnailClient<TImage>>();
+        private readonly object _Mutex = new object();
 
-        private Task? workerTask;
-        private CancellationTokenSource? cts;
+        private Task _WorkerTask;
+        private CancellationTokenSource _CancelToken;
 
         #endregion
 
         #region API
 
-        public async Task<bool> LoadAndAssignImageAsync(IFileThumbnailClient<TImage> item)
+        public async Task<bool> UpdateClientAsync(IFileThumbnailClient<TImage> item)
         {
             EnqueueAndRun(item);
 
@@ -118,16 +148,16 @@ namespace InteropTypes.IO.Mvvm
 
         private void EnqueueAndRun(IFileThumbnailClient<TImage> job)
         {
-            jobs.Enqueue(job);
+            _Jobs.Enqueue(job);
 
-            lock (lockObj)
+            lock (_Mutex)
             {
                 // Start worker if not already running
-                if (workerTask == null || workerTask.IsCompleted)
+                if (_WorkerTask == null || _WorkerTask.IsCompleted)
                 {
-                    cts?.Dispose();
-                    cts = new CancellationTokenSource();
-                    workerTask = ProcessJobsAsync(cts.Token);
+                    _CancelToken?.Dispose();
+                    _CancelToken = new CancellationTokenSource();
+                    _WorkerTask = ProcessJobsAsync(_CancelToken.Token);
                 }
             }
         }
@@ -140,13 +170,13 @@ namespace InteropTypes.IO.Mvvm
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    if (jobs.TryDequeue(out var job))
+                    if (_Jobs.TryDequeue(out var job))
                     {
                         #if DEBUG
                         await Task.Delay(20);
                         #endif
 
-                        await _BaseFactory.LoadAndAssignImageAsync(job);
+                        await _BaseFactory.UpdateClientAsync(job);
                         firstTry = true;
                     }
                     else

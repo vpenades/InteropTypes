@@ -11,6 +11,7 @@ using InteropTypes.Graphics;
 using InteropTypes.IO.Mvvm;
 
 using AVLIMAGE = Avalonia.Media.IImage;
+using AVLBITMAP = Avalonia.Media.Imaging.Bitmap;
 
 namespace InteropTypes.IO.Controls
 {
@@ -19,8 +20,6 @@ namespace InteropTypes.IO.Controls
     /// </summary>
     class _FileThumbnailFactory : _FileThumbnailFallbackFactory
     {
-        // a stategy would be to request
-
         public static IFileThumbnailServer<AVLIMAGE> Create()
         {
             return new _FileThumbnailFactory();
@@ -28,7 +27,7 @@ namespace InteropTypes.IO.Controls
 
         public FilePreviewOptions Options { get; set; }
 
-        public override async Task<bool> LoadAndAssignImageAsync(IFileThumbnailClient<AVLIMAGE> item)
+        public override async Task<bool> UpdateClientAsync(IFileThumbnailClient<AVLIMAGE> item)
         {
             ArgumentNullException.ThrowIfNull(item);
 
@@ -39,12 +38,19 @@ namespace InteropTypes.IO.Controls
             {
                 switch (info.IsDirectory)
                 {
-                    case false: item.SetImage(GetThumbnail(new System.IO.FileInfo(info.PhysicalPath))); return true;
-                    case true: item.SetImage(GetThumbnail(new System.IO.DirectoryInfo(info.PhysicalPath))); return true;
+                    case false:
+                        var img = GetThumbnail(new System.IO.FileInfo(info.PhysicalPath));                        
+                        item.SetImage(img);
+                        return true;
+
+                    case true:
+                        img = GetThumbnail(new System.IO.DirectoryInfo(info.PhysicalPath));                        
+                        item.SetImage(img);
+                        return true;
                 }
             }
 
-            return await base.LoadAndAssignImageAsync(item);
+            return await base.UpdateClientAsync(item);
         }
 
         public AVLIMAGE GetThumbnail(System.IO.FileSystemInfo info)
@@ -57,7 +63,7 @@ namespace InteropTypes.IO.Controls
             return ConvertToBitmap(bmp);
         }
 
-        public static unsafe Avalonia.Media.Imaging.Bitmap ConvertToBitmap(WindowsBitmap srcBmp)
+        public static AVLBITMAP ConvertToBitmap(WindowsBitmap srcBmp)
         {
             if (srcBmp == null) return null;            
 
@@ -75,7 +81,7 @@ namespace InteropTypes.IO.Controls
 
             // 2. try access the pixel buffer
 
-            Avalonia.Media.Imaging.Bitmap copyRawPixels(WindowsBitmapPixels srcPixels)
+            AVLBITMAP copyRawPixels(WindowsBitmapPixels srcPixels)
             {
                 Avalonia.Platform.PixelFormat colorFmt = default;
                 Avalonia.Platform.AlphaFormat alphaFmt = default;
@@ -123,7 +129,7 @@ namespace InteropTypes.IO.Controls
             return ConvertToBitmapFallback(srcBmp);
         }
 
-        private static Avalonia.Media.Imaging.Bitmap ConvertToBitmapFallback(WindowsBitmap srcBmp)
+        private static AVLBITMAP ConvertToBitmapFallback(WindowsBitmap srcBmp)
         {
             // https://github.com/AvaloniaUI/Avalonia/discussions/6390
 
@@ -132,7 +138,7 @@ namespace InteropTypes.IO.Controls
             using (var m = srcBmp.OpenRead())
             {
                 if (m == null) return null;
-                var avlbmp = new Avalonia.Media.Imaging.Bitmap(m);
+                var avlbmp = new AVLBITMAP(m);
 
                 if (avlbmp.PixelSize.Width != srcBmp.Width || avlbmp.PixelSize.Height != srcBmp.Height)
                 {
@@ -149,9 +155,12 @@ namespace InteropTypes.IO.Controls
     /// <summary>
     /// An image loader that simply loads images
     /// </summary>
+    /// <remarks>
+    /// Derived by: <see cref="_FileThumbnailFactory"/>
+    /// </remarks>
     class _FileThumbnailFallbackFactory : IFileThumbnailServer<AVLIMAGE>
     {
-        public virtual async Task<bool> LoadAndAssignImageAsync(IFileThumbnailClient<AVLIMAGE> item)
+        public virtual async Task<bool> UpdateClientAsync(IFileThumbnailClient<AVLIMAGE> item)
         {
             ArgumentNullException.ThrowIfNull(item);
 
@@ -165,7 +174,7 @@ namespace InteropTypes.IO.Controls
             {
                 using var s = info.CreateReadStream();
                 if (s == null) return false;
-                var img = Avalonia.Media.Imaging.Bitmap.DecodeToHeight(s, 256);
+                var img = AVLBITMAP.DecodeToHeight(s, 256);
                 item.SetImage(img);
 
             }
