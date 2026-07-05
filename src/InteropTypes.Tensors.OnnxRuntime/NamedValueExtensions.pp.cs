@@ -21,6 +21,10 @@ namespace $rootnamespace$
 {
     static partial class InteropTensorsForOnnxRuntime
     {
+        #if NET9_0_OR_GREATER
+        [System.Runtime.CompilerServices.OverloadResolutionPriority(-100)]
+        #endif
+        [Obsolete("Use CodeSugar variant")]
         public static Type GetElementType(this __ONNXTENSORS.TensorElementType etype)
         {
             switch (etype)
@@ -51,6 +55,7 @@ namespace $rootnamespace$
             }
         }
 
+        [Obsolete("Use CodeSugar.Numerics AsOnnxDenseTensor")]
         public static __ONNXTENSORS.DenseTensor<T> AsDenseTensor<T>(this __NAMEDVALUE nvalue)
         {
             if (nvalue.Value is __ONNXTENSORS.DenseTensor<T> dtensor) return dtensor;
@@ -58,6 +63,7 @@ namespace $rootnamespace$
             return nvalue.AsTensor<T>().ToDenseTensor();
         }
 
+        [Obsolete("Use CodeSugar.Numerics CreateNamedOnnxValue")]
         public static __NAMEDVALUE CreateNamedTensor(this __ONNX.NodeMetadata metadata, string name, ReadOnlySpan<int> dimensions)
         {
             if (dimensions.IsEmpty)

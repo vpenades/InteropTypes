@@ -45,7 +45,8 @@
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SkiaSharp\InteropTypes.Graphics.Backends.SkiaSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.ImageSharp\InteropTypes.Graphics.Backends.ImageSharp.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.SpanBitmap\InteropTypes.Graphics.Backends.SpanBitmap.csproj" />
-    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />    
+    <ProjectReference Include="..\..\src\InteropTypes.Graphics.Backends.OpenCvSharp4\InteropTypes.Graphics.Backends.OpenCvSharp4.csproj" />
+    <ProjectReference Include="..\..\src\InteropTypes.TensorBitmaps\InteropTypes.TensorBitmaps.csproj" />    
     
     <ProjectReference Include="..\..\src\InteropTypes.Vision.Core\InteropTypes.Vision.Core.csproj" />
     <ProjectReference Include="..\..\src\InteropTypes.Vision.Backends.ZXing\InteropTypes.Vision.Backends.ZXing.csproj" />    
