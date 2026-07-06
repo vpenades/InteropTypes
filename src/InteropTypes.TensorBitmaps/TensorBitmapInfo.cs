@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace InteropTypes.TensorBitmaps
 {
+    /// <summary>
+    /// Represents the internal Bitmap's "Shape"
+    /// </summary>
+    [System.Diagnostics.DebuggerDisplay("TensorBitmap {Width}x{Height}")]
     internal readonly struct _TensorBitmapInfo
     {
         public _TensorBitmapInfo(ReadOnlySpan<nint> lengths)

@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace InteropTypes.TensorBitmaps
 {
+    /// <summary>
+    /// A bitmap backed by a <see cref="TensorSpan{TElement}"/>
+    /// </summary>
+    /// <typeparam name="TElement">The type of the backing tensor</typeparam>
+    /// <typeparam name="TPixel">The type of the bitmap's pixel</typeparam>
+    [System.Diagnostics.DebuggerDisplay("TensorBitmap {Width}x{Height}")]
     public readonly ref struct TensorSpanBitmap<TElement, TPixel>
         where TElement : unmanaged
         where TPixel : unmanaged

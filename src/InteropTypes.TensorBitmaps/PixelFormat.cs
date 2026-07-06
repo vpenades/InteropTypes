@@ -8,20 +8,19 @@ namespace InteropTypes.TensorBitmaps
 {
     public record TensorPixelComponent
     {
-        public static TensorPixelComponent Red255 = new TensorPixelComponent("Red", true, 0, 255);
-        public static TensorPixelComponent Green255 = new TensorPixelComponent("Green", true, 0, 255);
-        public static TensorPixelComponent Blue255 = new TensorPixelComponent("Blue", true, 0, 255);
-        public static TensorPixelComponent Alpha255 = new TensorPixelComponent("Alpha", true, 0, 255);
+        public static TensorPixelComponent Red255 = new TensorPixelComponent("Red", 0, 255);
+        public static TensorPixelComponent Green255 = new TensorPixelComponent("Green", 0, 255);
+        public static TensorPixelComponent Blue255 = new TensorPixelComponent("Blue", 0, 255);
+        public static TensorPixelComponent Alpha255 = new TensorPixelComponent("Alpha", 0, 255);
 
-        public static TensorPixelComponent RedScalar = new TensorPixelComponent("Red", false, 0, 1);
-        public static TensorPixelComponent GreenScalar = new TensorPixelComponent("Green", false, 0, 1);
-        public static TensorPixelComponent BlueScalar = new TensorPixelComponent("Blue", false, 0, 1);
-        public static TensorPixelComponent AlphaScalar = new TensorPixelComponent("Alpha", false, 0, 1);
+        public static TensorPixelComponent RedScalar = new TensorPixelComponent("Red", 0, 1);
+        public static TensorPixelComponent GreenScalar = new TensorPixelComponent("Green", 0, 1);
+        public static TensorPixelComponent BlueScalar = new TensorPixelComponent("Blue", 0, 1);
+        public static TensorPixelComponent AlphaScalar = new TensorPixelComponent("Alpha", 0, 1);
 
-        public TensorPixelComponent(string semantic, bool isInteger, float minValue, float maxValue)
+        public TensorPixelComponent(string semantic, float minValue, float maxValue)
         {
-            Semantic = semantic;
-            IsInteger = isInteger;
+            Semantic = semantic;            
             MinValue = minValue;
             MaxValue = maxValue;
         }
@@ -29,8 +28,7 @@ namespace InteropTypes.TensorBitmaps
         /// <summary>
         /// Red, Green, Blue, Alpha, PremulAlpha, Luminance, etc
         /// </summary>
-        public string Semantic { get; }
-        public bool IsInteger { get; }
+        public string Semantic { get; }        
 
         /// <summary>
         /// the minimum value expected to be found in this component
@@ -66,22 +64,22 @@ namespace InteropTypes.TensorBitmaps
 
         public TensorPixelFormat(TensorPixelComponent x)
         {
-            Components = new TensorPixelComponent[] { x };
+            Components = [x];
         }
 
         public TensorPixelFormat(TensorPixelComponent x, TensorPixelComponent y)
         {
-            Components = new TensorPixelComponent[] { x, y };
+            Components = [x, y];
         }
 
         public TensorPixelFormat(TensorPixelComponent x, TensorPixelComponent y, TensorPixelComponent z)
         {
-            Components = new TensorPixelComponent[] {x, y, z };
+            Components = [x, y, z];
         }
 
         public TensorPixelFormat(TensorPixelComponent x, TensorPixelComponent y, TensorPixelComponent z, TensorPixelComponent w)
         {
-            Components = new TensorPixelComponent[] { x, y, z, w};
+            Components = [x, y, z, w];
         }
 
         public IReadOnlyList<TensorPixelComponent> Components { get; }
