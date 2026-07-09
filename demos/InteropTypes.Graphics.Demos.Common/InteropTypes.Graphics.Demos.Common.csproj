@@ -38,8 +38,4 @@
     <PackageReference Include="Avalonia" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Remove="ErrorProne.NET.Structs" />
-  </ItemGroup>  
-
 </Project>
