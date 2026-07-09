@@ -25,6 +25,12 @@
     <Project Path="tests/InteropTypes.Graphics.Bitmaps.PixelFormats.Tests/InteropTypes.Graphics.Bitmaps.PixelFormats.Tests.csproj" />
     <Project Path="tests/InteropTypes.Graphics.Bitmaps.Tests/InteropTypes.Graphics.Bitmaps.Tests.csproj" />
   </Folder>
+  <Folder Name="/Build/">
+    <File Path=".github/workflows/BuildPackages.yml" />
+    <File Path=".github/workflows/PublishAllPackagesToNuget.yml" />
+    <File Path=".github/workflows/PublishSourcePackagesToNuget.yml" />
+    <File Path="src/build-preview.cmd" />
+  </Folder>
   <Folder Name="/Codecs/">
     <Project Path="src/InteropTypes.Codecs.FFmpeg.AutoGen/InteropTypes.Codecs.FFmpeg.AutoGen.csproj" />
     <Project Path="src/InteropTypes.Codecs.FFMpegCore/InteropTypes.Codecs.FFMpegCore.csproj" />
@@ -80,14 +86,10 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
-    <File Path=".github/workflows/BuildPackages.yml" />
-    <File Path=".github/workflows/PublishAllPackagesToNuget.yml" />
-    <File Path=".github/workflows/PublishSourcePackagesToNuget.yml" />
     <File Path="Directory.Packages.props" />
     <File Path="Project Hierarchy.dgml" />
     <File Path="README.md" />
     <File Path="src/ApiChangeAnalyzer.props" />
-    <File Path="src/build-preview.cmd" />
     <File Path="src/Shared/Encoded7BitInt32.cs" />
   </Folder>
   <Folder Name="/Source/">
@@ -98,7 +100,6 @@
     <Project Path="tests/Interop.MathF.Source.Tests/Interop.MathF.Source.Tests.csproj" />
   </Folder>
   <Folder Name="/Vision/">
-    <Project Path="src/InteropTypes.TensorBitmaps/InteropTypes.TensorBitmaps.csproj" Id="4525db98-8733-44b3-965b-a3809265a9a5" />
     <Project Path="src/InteropTypes.Tensors.ImageSharp/InteropTypes.Tensors.ImageSharp.csproj" />
     <Project Path="src/InteropTypes.Tensors.OnnxRuntime/InteropTypes.Tensors.OnnxRuntime.csproj" />
     <Project Path="src/InteropTypes.Tensors/InteropTypes.Tensors.csproj" />

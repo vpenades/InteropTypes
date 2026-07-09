@@ -13,7 +13,7 @@
   -->
 
   <ItemGroup>
-    <PackageReference Include="CodeSugar.Sys.IO.Sources" />
+		<PackageReference Include="CodeSugar.IO.SourceGenerator" PrivateAssets="all" />
     <PackageReference Include="MathNet.Numerics" />
   </ItemGroup>
 

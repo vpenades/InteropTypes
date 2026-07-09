@@ -12,21 +12,21 @@
   </PropertyGroup>
 
 	<ItemGroup>		
-		<PackageVersion Include="Avalonia" Version="12.0.5" />
-		<PackageVersion Include="Avalonia.Themes.Fluent" Version="12.0.5" />
-		<PackageVersion Include="Avalonia.Fonts.Inter" Version="12.0.5" />
-		<PackageVersion Include="Avalonia.Headless.NUnit" Version="12.0.5" />
-		<PackageVersion Include="Avalonia.Desktop" Version="12.0.5" />
-		<PackageVersion Include="Avalonia.Android" Version="12.0.5" />
-		<PackageVersion Include="Avalonia.Browser" Version="12.0.5" />
-		<PackageVersion Include="Avalonia.iOS" Version="12.0.5" />
+		<PackageVersion Include="Avalonia" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Headless.NUnit" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Desktop" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Android" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.Browser" Version="12.1.0" />
+		<PackageVersion Include="Avalonia.iOS" Version="12.1.0" />
 		<PackageVersion Include="Avalonia.Controls.ItemsRepeater" Version="12.0.0" />
 		<PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 	</ItemGroup>
 	
   <ItemGroup>
     <!-- System -->
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.2.0" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
@@ -44,9 +44,12 @@
     <PackageVersion Include="Google.Protobuf" Version="3.35.1" />
     <PackageVersion Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.2" />
-    <PackageVersion Include="NuGet.Configuration" Version="7.6.0" />
-    <PackageVersion Include="CodeSugar.Sys.IO.Sources" Version="1.0.0-prv-20251216" />
-    <PackageVersion Include="CodeSugar.Tensors.Sources" Version="1.0.0-prv-20251216" />
+    <PackageVersion Include="NuGet.Configuration" Version="7.6.0" />    
+
+		<PackageVersion Include="CodeSugar.Imaging.SourceGenerator" Version="1.0.0-prv-20260709-155216" />
+		<PackageVersion Include="CodeSugar.Numerics.SourceGenerator" Version="1.0.0-prv-20260709-155216" />
+		<PackageVersion Include="CodeSugar.IO.SourceGenerator" Version="1.0.0-prv-20260709-155216" />
+		
     <!-- Game Engines -->
     <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     <PackageVersion Include="MonoGame.Content.Builder.Task" Version="3.8.4.1" />
@@ -66,7 +69,7 @@
     <PackageVersion Include="StbDxtSharp" Version="1.10.3" />
     <PackageVersion Include="SafeStbImageSharp" Version="2.22.4" />
     <PackageVersion Include="StbImageWriteSharp" Version="1.16.7" />
-    <PackageVersion Include="SkiaSharp" Version="4.148.0" />
+    <PackageVersion Include="SkiaSharp" Version="4.150.0" />
     <PackageVersion Include="SvgNet" Version="3.5.6" />
     <PackageVersion Include="Plotly.Sharp" Version="0.0.8196" />
     <PackageVersion Include="SharpGLTF.Toolkit" Version="1.0.6" />
@@ -81,8 +84,8 @@
     <!-- Machine Learning -->
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.27.0" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.24.4" />
-    <PackageVersion Include="OpenCvSharp4" Version="4.13.0.20260602" />
-    <PackageVersion Include="OpenCvSharp4.Windows" Version="4.13.0.20260602" />
+    <PackageVersion Include="OpenCvSharp4" Version="4.13.0.20260627" />
+    <PackageVersion Include="OpenCvSharp4.Windows" Version="4.13.0.20260627" />
     <PackageVersion Include="ZXing.Net" Version="0.16.11" />    
     <!-- Other -->
     <PackageVersion Include="SharpCompress" Version="0.49.1" />
@@ -91,17 +94,17 @@
 
 	<ItemGroup>
 		<!-- unit Testing -->
-		<PackageVersion Include="TUnit" Version="1.45.29" />
+		<PackageVersion Include="TUnit" Version="1.58.0" />
 		<PackageVersion Include="TestAttachments.NUnit" Version="4.0.0-Preview-20251201-2057" />
 		<PackageVersion Include="TestImages.ImageSharp" Version="4.0.0-Preview-20251201-2057" />
 		<PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1" />
 		<PackageVersion Include="NUnit" Version="4.6.1" />
-		<PackageVersion Include="NUnit.Analyzers" Version="4.13.0" />
+		<PackageVersion Include="NUnit.Analyzers" Version="4.14.0" />
 		<PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
-		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
 		<PackageVersion Include="coverlet.collector" Version="10.0.1" />
-		<PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.300" />
-		<PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.301" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" />
 		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.NUnit" Version="1.1.2" />
 		<PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
 		<PackageVersion Include="nunit.xamarin" Version="3.6.1" />
