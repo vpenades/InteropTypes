@@ -26,7 +26,6 @@
   <Project Path="InteropTypes.IO.FileProviders/InteropTypes.IO.FileProviders.csproj" />
   <Project Path="InteropTypes.IO.SharpCompress/InteropTypes.IO.SharpCompress.csproj" />
   <Project Path="InteropTypes.IO.Streams/InteropTypes.IO.Streams.csproj" />
-  <Project Path="InteropTypes.TensorBitmaps/InteropTypes.TensorBitmaps.csproj" />
   <Project Path="InteropTypes.Tensors.ImageSharp/InteropTypes.Tensors.ImageSharp.csproj" />
   <Project Path="InteropTypes.Tensors.OnnxRuntime/InteropTypes.Tensors.OnnxRuntime.csproj" />
   <Project Path="InteropTypes.Tensors/InteropTypes.Tensors.csproj" />
