@@ -45,19 +45,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>   
     
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net6.0-windows'">
-    
-    <!-- Optimization analysis only makes sense on platforms that will be actually ran -->
-
-    <!-- https://devblogs.microsoft.com/premier-developer/avoiding-struct-and-readonly-reference-performance-pitfalls-with-errorprone-net/ -->
-    <PackageReference Include="ErrorProne.NET.Structs" >
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    
-  </ItemGroup>
+  </ItemGroup>  
   
   <!-- Packaging =================================================================================== -->
 
