@@ -37,17 +37,14 @@ namespace InteropTypes.Crypto
              * NOTE: conf-encrypt has not been updated and requires NET5 runtime
              */
 
-            // handles decrypting non clear text passwords
-            var packageCredentials = new NuGet.Configuration.PackageSourceCredential
-                (
-                packageSourceName,
-                credentials.Username,
-                credentials.Password,
-                credentials.IsPasswordClearText,
-                credentials.ValidAuthenticationTypes
-                );
-
-            return new System.Net.NetworkCredential(packageCredentials.Username, packageCredentials.Password);
+            if (credentials.IsPasswordClearText)
+            {
+                return new System.Net.NetworkCredential(credentials.Username, credentials.Password);
+            }
+            else
+            {
+                throw new NotSupportedException("Newer nuget framework versions disallow reading non clear passwords");
+            }            
         }
 
 
