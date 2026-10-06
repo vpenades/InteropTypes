@@ -13,12 +13,8 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
-using Avalonia.Data;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Media;
 
 using InteropTypes.IO.Mvvm;
 
@@ -40,13 +36,21 @@ namespace InteropTypes.IO.Controls
             this.Template = new FuncControlTemplate<FileThumbnailBox>(_BuidControl);            
         }
 
+        #endregion
+
+        #region template view
+
         private static Panel _BuidControl(FileThumbnailBox target, INameScope scope)
         {
             var image = new Image();
             image.Stretch = Avalonia.Media.Stretch.Uniform;
             image.IsVisible = false;
             scope.Register("PART_Thumbnail", image);
-            ToolTip.SetTip(image, new FileThumbnailToolTip());
+
+            var toolTip = new FileThumbnailToolTip();
+            ToolTip.SetPlacement(image, PlacementMode.RightEdgeAlignedTop); // this is to prevent the tooltip to break the scrolling flow
+
+            ToolTip.SetTip(image, toolTip);            
 
             var wait = new WaitIcon();
             wait.MaxWidth = 40;
@@ -59,7 +63,7 @@ namespace InteropTypes.IO.Controls
 
             var panel = new Panel();
             panel.Children.Add(image);
-            panel.Children.Add(wait);            
+            panel.Children.Add(wait);
 
             return panel;
         }
@@ -76,13 +80,16 @@ namespace InteropTypes.IO.Controls
 
         private void _UpdateView()
         {
-            if (_ThumbnailView == null) return;
+            var tv = _ThumbnailView;
+            var lv = _LoadingView;
+
+            if (tv == null || lv == null) return;
 
             var image = _Thumbnail;
 
-            _ThumbnailView.Source = image;
-            _ThumbnailView.IsVisible = image != null;
-            if (_LoadingView != null) _LoadingView.IsVisible = image == null;
+            tv.Source = image;
+            tv.IsVisible = image != null;
+            lv.IsVisible = image == null;
         }
 
         private Image _ThumbnailView;
@@ -93,16 +100,14 @@ namespace InteropTypes.IO.Controls
         #region data        
 
         private System.IO.FileSystemInfo _FileSystemSource;
-        private XFILE _FileSource;        
+        private XFILE _FileSource;
 
-        private BMPSERVER _ThumbnailFactory = _FileThumbnailFactory.Create().WrapWithSemaphore();
+        private static readonly BMPSERVER _DefaultThumbnailFactory = _FileThumbnailFactory.Create().WrapWithSemaphore();        
         private AVLIMAGE _Thumbnail;
         private ICommand _ThumbnailChangedCommand;
 
-        private Func<XFILE, Object> _PreviewContentEvaluator;
-
-        private Func<XFILE, Object> _PreviewInfoEvaluator;
-        private Lazy<Object> _EvaluatedPreviewInfo;
+        
+        private Lazy<Object> _PreviewEvaluatedInfo;
 
         #endregion        
 
@@ -144,7 +149,7 @@ namespace InteropTypes.IO.Controls
             {
                 if (!this.SetAndRaise(FileSourceProperty, ref _FileSource, value)) return;
 
-                _EvaluatedPreviewInfo = new Lazy<object>(EvaluatePreviewInfo);
+                _PreviewEvaluatedInfo = new Lazy<object>(EvaluatePreviewInfo);
 
                 // Collection virtualization reuses containers,
                 // so we must clear the cached image if datacontext changed.
@@ -153,34 +158,17 @@ namespace InteropTypes.IO.Controls
                 // trigger image update, may request a thumbnail from windows cache or load the file itself if required.
                 _UpdateImage();
             }
-        }
-
-        
-
-        public static readonly DirectProperty<FileThumbnailBox, BMPSERVER> FileThumbnailFactoryProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, BMPSERVER>(nameof(FileThumbnailFactory), c => c.FileThumbnailFactory, (c, v) => c.FileThumbnailFactory = v);
-
-        /// <summary>
-        /// When set, it overrides <see cref="_DefaultImageFactory"/>
-        /// </summary>
-        public BMPSERVER FileThumbnailFactory
-        {
-            get => _ThumbnailFactory;
-            set
-            {
-                if (this.SetAndRaise(FileThumbnailFactoryProperty, ref _ThumbnailFactory, value))
-                {
-                    _UpdateImage();
-                }
-            }
-        }
+        }        
 
         public static readonly DirectProperty<FileThumbnailBox, AVLIMAGE> ThumbnailProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, AVLIMAGE>(nameof(Thumbnail), c => c.Thumbnail);        
+            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, AVLIMAGE>(nameof(Thumbnail), c => c.Thumbnail);
 
         /// <summary>
         /// Gets the image currently set as the thumbnail
         /// </summary>
+        /// <remarks>
+        /// This is updated by <see cref="BMPSERVER.UpdateClientAsync(IFileThumbnailClient{AVLIMAGE})"/>
+        /// </remarks>
         public AVLIMAGE Thumbnail
         {
             get => _Thumbnail;
@@ -212,31 +200,37 @@ namespace InteropTypes.IO.Controls
                     RaiseImageChanged(_Thumbnail);
                 }
             }
-        }
+        }        
 
-        public static readonly DirectProperty<FileThumbnailBox, Func<XFILE, Object>> PreviewContentEvaluatorProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, Func<XFILE, Object>>(nameof(PreviewContentEvaluator), c => c.PreviewContentEvaluator, (c, v) => c.PreviewContentEvaluator = v);
+        #endregion
 
-        /// <summary>
-        /// Sets the content info evaluator lambda that will be called when hovering the cursor over the thumbnail for extra information.
-        /// </summary>
-        public Func<XFILE, Object> PreviewContentEvaluator
-        {
-            get => _PreviewInfoEvaluator;
-            set => SetAndRaise(PreviewContentEvaluatorProperty, ref _PreviewContentEvaluator, value);
-        }
+        #region attached properties
 
-        public static readonly DirectProperty<FileThumbnailBox, Func<XFILE, Object>> PreviewInfoEvaluatorProperty
-            = AvaloniaProperty.RegisterDirect<FileThumbnailBox, Func<XFILE, Object>>(nameof(PreviewInfoEvaluator), c => c.PreviewInfoEvaluator, (c, v) => c.PreviewInfoEvaluator = v);
+        public static readonly AttachedProperty<BMPSERVER> FileThumbnailFactoryProperty
+            = AvaloniaProperty.RegisterAttached<FileThumbnailBox, Control, BMPSERVER>("FileThumbnailFactory", null, inherits: true);
+        public static BMPSERVER GetFileThumbnailFactory(Control element) { return element.GetValue(FileThumbnailFactoryProperty); }
+        public static void SetFileThumbnailFactory(Control element, BMPSERVER server) { element.SetValue(FileThumbnailFactoryProperty, server); }
 
-        /// <summary>
-        /// Sets the file info evaluator lambda that will be called when hovering the cursor over the thumbnail for extra information.
-        /// </summary>
-        public Func<XFILE, Object> PreviewInfoEvaluator
-        {
-            get => _PreviewInfoEvaluator;
-            set => SetAndRaise(PreviewInfoEvaluatorProperty, ref _PreviewInfoEvaluator, value);
-        }
+
+
+        public static readonly AttachedProperty<bool> EnablePreviewPopupProperty
+            = AvaloniaProperty.RegisterAttached<FileThumbnailBox, Control, bool>("EnablePreviewPopup", true, inherits: true);
+        public static bool GetEnablePreviewPopup(Control element) { return element.GetValue(EnablePreviewPopupProperty); }
+        public static void SetEnablePreviewPopup(Control element, bool enabled) { element.SetValue(EnablePreviewPopupProperty, enabled); }
+
+
+
+        public static readonly AttachedProperty<Func<XFILE, Object>> PreviewContentEvaluatorProperty
+            = AvaloniaProperty.RegisterAttached<FileThumbnailBox, Control, Func<XFILE, Object>>("PreviewContentEvaluator", null, inherits: true);
+        public static Func<XFILE, Object> GetPreviewContentEvaluator(Control element) { return element.GetValue(PreviewContentEvaluatorProperty); }
+        public static void SetPreviewContentEvaluator(Control element, Func<XFILE, Object> value) { element.SetValue(PreviewContentEvaluatorProperty, value); }
+
+
+
+        public static readonly AttachedProperty<Func<XFILE, Object>> PreviewInfoEvaluatorProperty
+            = AvaloniaProperty.RegisterAttached<FileThumbnailBox, Control, Func<XFILE, Object>>("PreviewInfoEvaluator", null, inherits: true);
+        public static Func<XFILE, Object> GetPreviewInfoEvaluator(Control element) { return element.GetValue(PreviewInfoEvaluatorProperty); }
+        public static void SetGetPreviewInfoEvaluator(Control element, Func<XFILE, Object> value) { element.SetValue(PreviewInfoEvaluatorProperty, value); }
 
         #endregion
 
@@ -252,7 +246,8 @@ namespace InteropTypes.IO.Controls
 
             // find factory
 
-            var factory = _ThumbnailFactory;
+            var factory = GetFileThumbnailFactory(this);
+            factory ??= _DefaultThumbnailFactory;
             if (factory == null) return;            
 
             async Task _work()
@@ -297,7 +292,7 @@ namespace InteropTypes.IO.Controls
 
             if (f != null)
             {
-                var eval = _PreviewContentEvaluator;
+                var eval = GetValue(PreviewContentEvaluatorProperty);
                 var content = eval?.Invoke(f);
                 if (content != null) return content;
 
@@ -315,7 +310,7 @@ namespace InteropTypes.IO.Controls
         }
 
         [Bindable(true)]
-        internal Object EvaluatedPreviewInfo => _EvaluatedPreviewInfo?.Value ?? null;        
+        internal Object EvaluatedPreviewInfo => _PreviewEvaluatedInfo?.Value ?? null;        
 
         protected virtual Object EvaluatePreviewInfo()
         {
@@ -324,7 +319,7 @@ namespace InteropTypes.IO.Controls
 
             var def = $"Length: {f.Length}";
 
-            var eval = _PreviewInfoEvaluator;
+            var eval = GetValue(PreviewInfoEvaluatorProperty);
             if (eval != null) return eval(f) ?? def;
 
             return def;

@@ -21,7 +21,7 @@ namespace InteropTypes.IO
                 return await FilePreviewOptions._ThrottleAsync(options, () => GetStreamOrDefault(finfo, options));
             }
 
-            #if WINDOWS10_0_19041_0_OR_GREATER
+            #if WINDOWS8_0_19041_0_OR_GREATER
             return await Platforms.UWP.WindowsThumbnailService.GetThumbnailStreamAsync(finfo, options);
             #endif
 
@@ -40,7 +40,7 @@ namespace InteropTypes.IO
 
             if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options) && OperatingSystem.IsWindowsVersionAtLeast(6, 1)) return Platforms.Win32.IconExtractor.GetStreamOrDefault(finfo, options);
 
-            #if WINDOWS10_0_19041_0_OR_GREATER
+            #if WINDOWS8_0_19041_0_OR_GREATER
 
             return Platforms.UWP.WindowsThumbnailService.GetThumbnailStreamAsync(finfo, options).GetAwaiter().GetResult();
 
@@ -73,7 +73,7 @@ namespace InteropTypes.IO
                 return await FilePreviewOptions._ThrottleAsync(options, () => GetPreviewOrDefault(finfo, options));
             }
             
-            #if WINDOWS10_0_19041_0_OR_GREATER
+            #if WINDOWS8_0_19041_0_OR_GREATER
 
             return await Platforms.UWP.WindowsThumbnailService.GetThumbnailAsync(finfo, options);
 
@@ -94,7 +94,7 @@ namespace InteropTypes.IO
 
             if (FilePreviewOptions.ShouldExtractAssociatedIcon(finfo, options) && OperatingSystem.IsWindowsVersionAtLeast(6, 1)) return Platforms.Win32.IconExtractor.GetManagedBmpOrNull(finfo, options);
 
-            #if WINDOWS10_0_19041_0_OR_GREATER
+            #if WINDOWS8_0_19041_0_OR_GREATER
 
             return Platforms.UWP.WindowsThumbnailService.GetThumbnailAsync(finfo, options).GetAwaiter().GetResult();
 

@@ -32,20 +32,21 @@ namespace InteropTypes.IO.Controls
             ArgumentNullException.ThrowIfNull(item);
 
             var info = item.GetSource();
-            if (info == null) return false;
+            if (info == null) return false;            
+            if (!info.Exists) return false;
 
             if (!string.IsNullOrWhiteSpace(info.PhysicalPath))
             {
                 switch (info.IsDirectory)
                 {
                     case false:
-                        var img = GetThumbnail(new System.IO.FileInfo(info.PhysicalPath));                        
-                        item.SetImage(img);
+                        var dir = GetThumbnail(new System.IO.FileInfo(info.PhysicalPath));                        
+                        item.SetImage(dir);
                         return true;
 
                     case true:
-                        img = GetThumbnail(new System.IO.DirectoryInfo(info.PhysicalPath));                        
-                        item.SetImage(img);
+                        dir = GetThumbnail(new System.IO.DirectoryInfo(info.PhysicalPath));                        
+                        item.SetImage(dir);
                         return true;
                 }
             }
@@ -160,6 +161,8 @@ namespace InteropTypes.IO.Controls
     /// </remarks>
     class _FileThumbnailFallbackFactory : IFileThumbnailServer<AVLIMAGE>
     {
+        private static readonly string[] _SupportedImageFormats = new string[] { "jpg", "jpeg", "png", "gif", "bmp", "webp", "ico" };
+
         public virtual async Task<bool> UpdateClientAsync(IFileThumbnailClient<AVLIMAGE> item)
         {
             ArgumentNullException.ThrowIfNull(item);
@@ -167,8 +170,13 @@ namespace InteropTypes.IO.Controls
             var info = item.GetSource();
             if (info == null) return false;
             if (info.IsDirectory) return false;
+            if (!info.Exists) return false;
 
-            // ToDo: exit if is not image            
+            // ToDo: exit if is not image
+
+            var ext = System.IO.Path.GetExtension(info.Name).TrimStart('.').ToLowerInvariant();
+
+            if (!_SupportedImageFormats.Contains(ext)) return false;
 
             try
             {
@@ -185,5 +193,7 @@ namespace InteropTypes.IO.Controls
 
             return true;
         }
+
+        
     }
 }

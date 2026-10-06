@@ -23,7 +23,7 @@
 
 		<ScrollViewer Grid.Row="1">
 
-			<ItemsRepeater x:Name="myDirectoryFiles">
+			<ItemsRepeater x:Name="myDirectoryFiles" thumb:FileThumbnailBox.EnablePreviewPopup="False">
 
 				<ItemsRepeater.Layout>
 					<UniformGridLayout MinItemWidth="64" MinItemHeight="64" MinColumnSpacing="2" MinRowSpacing="2" />
@@ -32,7 +32,10 @@
 				
 				<ItemsRepeater.ItemTemplate>
 					<DataTemplate x:DataType="sysio:FileSystemInfo">
-						<thumb:FileThumbnailBox FileThumbnailFactory="{StaticResource myThumbnailsCache}" FileSystemSource="{Binding}" DoubleTapped="FileThumbnailBox_DoubleTapped" />
+						<thumb:FileThumbnailBox
+							FileThumbnailFactory="{StaticResource myThumbnailsCache}"
+							FileSystemSource="{Binding}"
+							DoubleTapped="FileThumbnailBox_DoubleTapped" />
 					</DataTemplate>
 				</ItemsRepeater.ItemTemplate>
 				

@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0;net8.0-windows10.0.19041.0;net10.0-windows10.0.19041.0</TargetFrameworks>
     <RootNamespace>InteropTypes.IO</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Disables classic COM interop support completely, forcing errors on legacy bindings -->
+    <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
   </PropertyGroup>
 
 
