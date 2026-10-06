@@ -3,25 +3,25 @@
   "isRoot": true,
   "tools": {
     "dotnet-mgcb": {
-      "version": "3.8.5",
+      "version": "3.8.5.1",
       "commands": [
         "mgcb"
       ]
     },
     "dotnet-mgcb-editor": {
-      "version": "3.8.5",
+      "version": "3.8.5.1",
       "commands": [
         "mgcb-editor"
       ]
     },
     "dotnet-mgcb-editor-windows": {
-      "version": "3.8.5",
+      "version": "3.8.5.1",
       "commands": [
         "mgcb-editor-windows"
       ]
     },
     "Microsoft.VisualStudio.SlnGen.Tool": {
-      "version": "12.0.32",
+      "version": "12.0.53",
       "commands": [
         "slngen"
       ]
